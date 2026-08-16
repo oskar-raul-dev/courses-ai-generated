@@ -1,0 +1,26 @@
+# =============================================================
+# values-local.yaml — override para TU MÁQUINA PERSONAL
+#
+# Aplica con:
+#   helm install lab charts/platform -f charts/platform/values.yaml \
+#        -f charts/platform/values-local.yaml
+#
+# Filosofía: en local queremos consumir pocos recursos y 1 réplica
+# de cada cosa para que quepa cómodo en tu laptop.
+# =============================================================
+
+global:
+  environment: local
+
+# En local basta 1 réplica de todo (menos consumo).
+catalog-node:
+  replicas: 1
+
+payments-go:
+  replicas: 1
+
+orders-java:
+  replicas: 1
+
+web-legacy:
+  replicas: 1

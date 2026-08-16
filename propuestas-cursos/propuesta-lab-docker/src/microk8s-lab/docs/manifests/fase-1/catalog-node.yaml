@@ -1,0 +1,80 @@
+# =============================================================
+# Fase 1 — catalog-node en YAML plano (sin Helm todavía)
+#
+# Este archivo tiene DOS objetos separados por "---":
+#   1. Deployment  → gestiona los pods (réplicas, imagen, probes)
+#   2. Service     → da una IP/DNS estable para llegar a esos pods
+#
+# Aplica con:  kubectl apply -f catalog-node.yaml
+# =============================================================
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-node
+  labels:
+    app: catalog-node
+spec:
+  # Cuántas copias del pod queremos. Con 2, si un pod muere,
+  # el otro sigue sirviendo mientras K8s recrea el caído.
+  replicas: 2
+
+  # El Deployment gestiona los pods que coincidan con este selector.
+  selector:
+    matchLabels:
+      app: catalog-node
+
+  template:
+    metadata:
+      labels:
+        app: catalog-node    # DEBE coincidir con el selector de arriba
+    spec:
+      containers:
+        - name: catalog-node
+          # Imagen que cargaremos al cluster con "kind load" (ver guía).
+          # imagePullPolicy: IfNotPresent evita que K8s intente bajarla
+          # de un registry remoto (no existe ahí, la cargamos a mano).
+          image: localhost/catalog-node:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+
+          # Probes: así K8s sabe si el contenedor está vivo y listo.
+          # readiness → ¿puede recibir tráfico ya?
+          # liveness  → ¿sigue sano o hay que reiniciarlo?
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          # Límites de recursos: buena práctica desde el día 1.
+          # requests = lo que el pod reserva; limits = su techo.
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-node
+spec:
+  # ClusterIP = IP interna sólo accesible dentro del cluster.
+  # Otros servicios llegan aquí por el nombre DNS "catalog-node".
+  type: ClusterIP
+  selector:
+    app: catalog-node      # enruta a los pods con esta label
+  ports:
+    - port: 3000           # puerto del Service
+      targetPort: 3000     # puerto del contenedor

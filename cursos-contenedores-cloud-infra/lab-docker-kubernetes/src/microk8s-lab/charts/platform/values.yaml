@@ -1,0 +1,61 @@
+# =============================================================
+# values.yaml — VALORES BASE del umbrella chart
+#
+# Estos son los valores por defecto, comunes a todos los ambientes.
+# Cada ambiente (local, e2e, qa...) sobreescribe sólo lo que cambia
+# mediante su propio values-<env>.yaml aplicado con:
+#   helm install ... -f values.yaml -f values-<env>.yaml
+#
+# La clave de nivel superior (ej. "catalog-node:") pasa esos valores
+# al subchart del mismo nombre. Así cada subchart lee su bloque.
+# =============================================================
+
+# ---- Valores globales, visibles por TODOS los subcharts ----
+# Se acceden en templates como {{ .Values.global.xxx }}
+global:
+  environment: base
+  imageRegistry: localhost      # en local usamos imágenes cargadas a kind
+  imagePullPolicy: IfNotPresent
+
+# ---- catalog-node ----
+catalog-node:
+  enabled: true
+  image:
+    repository: localhost/catalog-node
+    tag: dev
+  replicas: 2
+  port: 3000
+
+# ---- payments-go ----
+payments-go:
+  enabled: true
+  image:
+    repository: localhost/payments-go
+    tag: dev
+  replicas: 1
+  port: 8090
+
+# ---- orders-java ----
+orders-java:
+  enabled: true
+  image:
+    repository: localhost/orders-java
+    tag: dev
+  replicas: 1
+  port: 8080
+  # URLs de dependencias: nombres DNS internos de Kubernetes.
+  # <nombre-del-service>:<puerto>
+  env:
+    CATALOG_URL: "http://catalog-node:3000"
+    PAYMENTS_URL: "http://payments-go:8090"
+
+# ---- web-legacy ----
+web-legacy:
+  enabled: true
+  image:
+    repository: localhost/web-legacy
+    tag: dev
+  replicas: 1
+  port: 8080
+  env:
+    CATALOG_URL: "http://catalog-node:3000"

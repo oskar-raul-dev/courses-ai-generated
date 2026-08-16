@@ -1,0 +1,41 @@
+# =============================================================
+# Definición del cluster kind multi-nodo
+# Uso: kind create cluster --config kind/cluster.yaml --name lab
+#
+# Reproduce un cluster con 1 control-plane y 2 workers, similar
+# a un entorno "personal server" donde las cargas se reparten
+# entre varios nodos.
+# =============================================================
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: lab
+
+# Mapeo de puertos del host hacia el Ingress del cluster.
+# Esto permite acceder a los servicios desde tu navegador en
+# localhost. El nodo control-plane recibe el tráfico de Ingress.
+nodes:
+  - role: control-plane
+    # extraPortMappings expone puertos del contenedor-nodo al host.
+    # Los usaremos en la Fase 5 (Ingress) para llegar a las apps
+    # desde http://localhost.
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 8080
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 8443
+        protocol: TCP
+
+  - role: worker
+  - role: worker
+
+# NOTA sobre Podman rootless:
+# kind con Podman puede necesitar ajustes de cgroups/systemd.
+# Si "kind create cluster" hace timeout leyendo logs, aplica el
+# workaround del log driver descrito en docs/fase-0-setup.md.

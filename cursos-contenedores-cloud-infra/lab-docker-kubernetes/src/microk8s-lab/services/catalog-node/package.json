@@ -1,0 +1,12 @@
+{
+  "name": "catalog-node",
+  "version": "1.0.0",
+  "description": "Microservicio de catálogo para microk8s-lab",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

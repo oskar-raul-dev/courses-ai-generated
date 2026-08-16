@@ -1,0 +1,9 @@
+enabled: true
+image:
+  repository: localhost/orders-java
+  tag: dev
+replicas: 1
+port: 8080
+env:
+  CATALOG_URL: "http://catalog-node:3000"
+  PAYMENTS_URL: "http://payments-go:8090"

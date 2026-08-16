@@ -1,0 +1,30 @@
+# =============================================================
+# values-qa.yaml — override para QA
+#
+# Ambiente más cercano a producción: más réplicas, tags versionados
+# e inmutables (nunca "dev" o "latest"), pensado para que QA valide
+# builds candidatas a release.
+# =============================================================
+
+global:
+  environment: qa
+
+catalog-node:
+  replicas: 3
+  image:
+    tag: "1.0.0"        # versión inmutable candidata a release
+
+payments-go:
+  replicas: 2
+  image:
+    tag: "1.0.0"
+
+orders-java:
+  replicas: 3
+  image:
+    tag: "1.0.0"
+
+web-legacy:
+  replicas: 2
+  image:
+    tag: "1.0.0"

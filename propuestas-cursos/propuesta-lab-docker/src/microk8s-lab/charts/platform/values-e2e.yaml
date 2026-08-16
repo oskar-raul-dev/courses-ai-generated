@@ -1,0 +1,31 @@
+# =============================================================
+# values-e2e.yaml — override para PRUEBAS E2E DE DEVS
+#
+# Ambiente compartido donde los devs corren pruebas end-to-end.
+# Aquí sí queremos redundancia (2 réplicas) para que las pruebas
+# no se caigan si un pod se reinicia, y tags de imagen fijos por
+# versión en lugar de "dev" mutable.
+# =============================================================
+
+global:
+  environment: e2e
+
+catalog-node:
+  replicas: 2
+  image:
+    tag: e2e            # tag específico del ambiente e2e
+
+payments-go:
+  replicas: 2
+  image:
+    tag: e2e
+
+orders-java:
+  replicas: 2
+  image:
+    tag: e2e
+
+web-legacy:
+  replicas: 2
+  image:
+    tag: e2e
