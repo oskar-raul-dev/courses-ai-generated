@@ -1,0 +1,23 @@
+apiVersion: v2
+name: platform
+description: Umbrella chart que despliega todos los servicios del juguete
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+# Los subcharts son dependencias locales (viven en charts/).
+# El umbrella los agrupa para desplegar todo con un solo release.
+# Cada uno puede activarse/desactivarse desde values (enabled).
+dependencies:
+  - name: catalog-node
+    version: "0.1.0"
+    condition: catalog-node.enabled
+  - name: payments-go
+    version: "0.1.0"
+    condition: payments-go.enabled
+  - name: orders-java
+    version: "0.1.0"
+    condition: orders-java.enabled
+  - name: web-legacy
+    version: "0.1.0"
+    condition: web-legacy.enabled

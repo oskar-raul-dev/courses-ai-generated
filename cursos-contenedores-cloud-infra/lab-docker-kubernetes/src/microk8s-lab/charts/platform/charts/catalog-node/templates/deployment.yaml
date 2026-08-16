@@ -1,0 +1,58 @@
+# =============================================================
+# Template de Deployment para catalog-node.
+#
+# Todo lo que va entre {{ }} es Go templating: Helm lo evalúa y
+# lo reemplaza por el valor real de values.yaml al instalar.
+#   {{ .Values.replicas }}  -> lee "replicas" del values del subchart
+#   {{ .Release.Name }}     -> nombre del release (ej. "lab")
+#
+# Compara este archivo con docs/manifests/fase-1/catalog-node.yaml:
+# es el MISMO objeto, pero parametrizado. Ahí está el valor de Helm.
+# =============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  # Prefijamos con el nombre del release para evitar colisiones si
+  # instalas el chart más de una vez.
+  name: {{ .Release.Name }}-catalog-node
+  labels:
+    app: catalog-node
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: catalog-node
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: catalog-node
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: catalog-node
+          # Construimos la imagen concatenando repo:tag desde values.
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: {{ .Values.port }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.port }}
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"

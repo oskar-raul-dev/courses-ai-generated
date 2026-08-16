@@ -1,0 +1,6 @@
+apiVersion: v2
+name: orders-java
+description: Subchart del orquestador de pedidos
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

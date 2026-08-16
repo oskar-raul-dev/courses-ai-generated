@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-payments-go
+  labels:
+    app: payments-go
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: payments-go
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: payments-go
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: payments-go
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: {{ .Values.port }}
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.port }}
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ .Values.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"

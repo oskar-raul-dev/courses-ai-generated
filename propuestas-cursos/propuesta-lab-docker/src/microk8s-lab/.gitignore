@@ -1,0 +1,13 @@
+# Build artifacts
+services/orders-java/target/
+services/catalog-node/node_modules/
+*.war
+*.jar
+
+# Helm
+charts/platform/charts/*/charts/
+*.tgz
+
+# OS
+.DS_Store
+Thumbs.db

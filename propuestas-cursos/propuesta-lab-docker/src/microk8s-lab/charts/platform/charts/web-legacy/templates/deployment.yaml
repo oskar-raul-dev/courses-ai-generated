@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-web-legacy
+  labels:
+    app: web-legacy
+    release: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: web-legacy
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: web-legacy
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: web-legacy
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: {{ .Values.port }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          # Tomcat tarda en arrancar; damos margen en las probes.
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

@@ -1,0 +1,9 @@
+# Valores por defecto del subchart. El umbrella los sobreescribe
+# desde su values.yaml bajo la clave "catalog-node:".
+# Estos defaults permiten instalar el subchart solo, para pruebas.
+enabled: true
+image:
+  repository: localhost/catalog-node
+  tag: dev
+replicas: 1
+port: 3000

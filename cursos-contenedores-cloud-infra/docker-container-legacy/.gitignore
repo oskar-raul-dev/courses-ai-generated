@@ -1,0 +1,9 @@
+# El .vscode/ de la Fase 10 es material del curso —las tasks y el launch.json que
+# el estudiante escribe—, no configuración local del editor. Se versiona a propósito.
+!src/10-vscode-y-debugging/.vscode/
+
+# Documentos de trabajo de la reestructuración: registro histórico en disco,
+# fuera de la historia del repositorio por decisión del autor.
+mejoras.md
+mejoras_v2.md
+ajuste_estructura.md

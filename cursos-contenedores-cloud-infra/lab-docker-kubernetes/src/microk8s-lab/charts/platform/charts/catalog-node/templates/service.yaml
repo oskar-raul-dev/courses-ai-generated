@@ -1,0 +1,18 @@
+# Service para catalog-node.
+# El nombre del Service es "catalog-node" (SIN prefijo de release)
+# porque es el nombre DNS por el que otros servicios lo llaman:
+# http://catalog-node:3000. Ese nombre debe ser estable y predecible.
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-node
+  labels:
+    app: catalog-node
+spec:
+  type: ClusterIP
+  selector:
+    app: catalog-node
+    release: {{ .Release.Name }}
+  ports:
+    - port: {{ .Values.port }}
+      targetPort: {{ .Values.port }}
