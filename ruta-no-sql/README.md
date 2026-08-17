@@ -1,8 +1,8 @@
-# 🗺️ Ruta NoSQL — Aprende Modelos de Acceso, No Productos
+# 🗺️ Ruta NoSQL — Modelos de Acceso, No Productos
 
-Bienvenido a la **Ruta NoSQL 2026**: un camino completo para dominar cuándo, por qué y cómo usar cada familia de bases de datos modernas.
+Un camino completo para dominar cuándo, por qué y cómo usar cada familia de bases de datos modernas.
 
-> **La pregunta que contestamos:** No "¿qué base de datos es mejor?", sino "**¿qué modelo de acceso tiene mi dominio?**"
+> La pregunta que contestamos: no "¿qué base de datos es mejor?", sino "**¿qué modelo de acceso tiene mi dominio?**"
 
 ---
 
@@ -17,35 +17,40 @@ Cada curso enseña **un modelo de acceso** (no un producto). Los productos cambi
 
 ---
 
-## 📚 Los 11 Cursos
+## 📚 Familias NoSQL
 
-| # | Modelo | Curso | Proyecto | Situación |
-|---|--------|-------|---------|-----------|
-| 0 | 🍃 Documental | [**Proteo**](./00-proteo) | Catálogo multi-vertical + PIM | Próximo |
-| 1 | 🔑 Clave-valor | [**Portalón**](./01-portalon) | Gateway: rate limit, sesiones, colas | Planeado |
-| 2 | 🦆 Analítico embebido | [**Cristalería**](./02-cristaleria) | Pipeline analítico sin servidor | Planeado |
-| 3 | 🧬 Vectorial | [**Oráculo de Bolsillo**](./03-oraculo-de-bolsillo) | RAG con citas verificables | Planeado |
-| 4 | 🕸️ Grafos | [**Telaraña**](./04-telarana) | Detección de fraude en anillos | Planeado |
-| 5 | 🏛️ Columnar ancha | [**Centinela de Flota**](./05-centinela-de-flota) | Telemetría IoT con roll-ups | Planeado |
-| 6 | 🔍 Búsqueda | [**Buscafino**](./06-buscafino) | Búsqueda facetada como servicio | Planeado |
-| 7 | 📴 Offline-first | [**Bitácora de Campo**](./07-bitacora-de-campo) | Inspecciones de campo con sync | Planeado |
-| 8 | ⏱️ Series temporales | [**El Vigía**](./08-el-vigia) | Monitoreo de infraestructura | Planeado |
-| 9 | ⚡ NewSQL distribuido | [**Libro Mayor**](./09-libro-mayor) | Ledger transaccional cross-región | Planeado |
-| 10 | ⚖️ Políglota (capstone) | [**El Árbitro**](./10-el-arbitro) | Sistema con 3+ motores | Planeado |
+Cada curso cubre un modelo de acceso y lo mide contra competidores reales con benchmarks en `scripts/vs.ts`.
+
+| Modelo | Brief |
+|--------|-------|
+| 🍃 **Documental** | Datos flexibles, consultas sobre el árbol completo |
+| 🔑 **Clave-valor** | Velocidad pura, sin esquema, acceso por ID |
+| 🦆 **Analítico embebido** | OLAP local, sin servidor externo |
+| 🧬 **Vectorial** | Búsqueda semántica, embeddings, RAG |
+| 🕸️ **Grafos** | Relaciones profundas, patrones transversales |
+| 🏛️ **Columnar ancha** | Series temporales, roll-ups, telemetría |
+| 🔍 **Búsqueda** | Índices invertidos, facetas, precisión |
+| 📴 **Offline-first** | Sincronización eventual, móvil nativo |
+| ⏱️ **Series temporales** | Datos ordenados por tiempo, compresión |
+| ⚡ **NewSQL distribuido** | ACID cross-región sin sacrificar velocidad |
+| ⚖️ **Políglota** | Combinar 3+ motores coherentemente |
 
 ---
 
-## 🚀 Por Dónde Empezar
+## 🎯 Criterio de Cada Curso
 
-### Por impacto comercial + diferenciador técnico:
-1. 🧬 **Oráculo de Bolsillo** (3) — Vectorial, RAG, ChatGPT
-2. 📴 **Bitácora de Campo** (7) — Offline-first, móvil
-3. 🍃 **Proteo** (0) — Documental, datos flexibles
-4. 🔑 **Portalón** (1) — Clave-valor, velocidad pura
-5. 🕸️ **Telaraña** (4) — Grafos, relaciones profundas
+Cada curso responde tres preguntas concretas:
 
-### Por progresión pedagógica (recalibra tu instinto):
-Portalón → Cristalería → Oráculo de Bolsillo → Telaraña → Centinela de Flota → Buscafino → Bitácora de Campo → El Vigía → Libro Mayor → El Árbitro
+1. **¿Qué problema resuelve este modelo?** — El caso de uso que lo hace existir
+2. **¿Cuándo NO usarlo?** — Límites honestos, no marketing
+3. **¿Cómo medirlo?** — Benchmarks contra alternativas reales
+
+Los cursos incluyen:
+- Lecciones progresivas (00-setup, 01, 02, etc.)
+- Apéndices con profundidad
+- INSTINTOS.md: patrones acumulados
+- BENCHMARKS.md: números verificables
+- 30–40 ejercicios graduados 🟢🟡🟠🔴
 
 ---
 
@@ -63,45 +68,20 @@ Cada carpeta contiene:
 
 ---
 
-## 📌 Documentos Maestros
+## 📖 Documentos de Referencia
 
-Antes de arrancar cualquier curso, lee:
-
-1. **[01-ruta-nosql.md](./01-ruta-nosql.md)** — Índice de referencia, el mapa completo
-2. **[02-ruta-nosql-fundamentos.md](./02-ruta-nosql-fundamentos.md)** — Conceptos compartidos, por qué cada familia existe
-3. **[guia-estilo-base-ruta-nosql.md](./guia-estilo-base-ruta-nosql.md)** — Cómo se escriben los cursos (tono, convenciones)
+- **01-ruta-nosql.md** — Índice y roadmap completo
+- **02-ruta-nosql-fundamentos.md** — Conceptos compartidos entre familias
+- **guia-estilo-base-ruta-nosql.md** — Estándares editoriales y convenciones
 
 ---
 
-## 🧠 La Promesa de la Ruta Completa
+## 🎓 Al Terminar Esta Ruta
 
-> "Me presentan un dominio y no pregunto qué base usar: pregunto qué se lee
-> junto, qué se cruza en caliente, dónde viven las invariantes y quién va a
-> operar esto un martes a las 3 am.
->
-> Conozco diez familias, sé qué error comete cada una por gravedad, sé decir
-> 'esto es Postgres, no necesitas nada más' sin que me duela el ego — y sé
-> decir 'esto sí necesita Mongo/Neo4j/lo que sea' con números en la mano, no
-> con una bandera."
+No preguntarás "¿qué base de datos es mejor?". Preguntarás "¿qué modelo de acceso tiene mi dominio?". Conocerás diez familias, sus límites, y cuándo decir "Postgres alcanza" sin que te duela el ego — o cuándo argumentar "necesitamos Neo4j" con números en la mano, no con una bandera.
 
 ---
 
-## ⚠️ Lo Que NO Es Esta Ruta
+## 🚀 Empezar
 
-- **No es "aquí está el producto XYZ"** — es "aquí está el modelo que necesitas"
-- **No es comparación anecdótica** — medimos, nunca narramos
-- **No vende nada** — si un motor pierde, lo decimos con números
-- **No es tutorial quick-start** — es arquitectura defensible
-
----
-
-## 🤝 Contribuciones
-
-Cada curso es un esfuerzo colaborativo. Si encuentras:
-- Errores de medición → Abre un issue
-- Patrón no visto → Agrega a INSTINTOS.md
-- Producto nuevo que merecería estar en un "vs" → Propón un benchmark
-
----
-
-**¿Listo para empezar?** Elige un curso arriba o lee los documentos maestros primero. No hay camino único, pero hay un camino que se adapta a tu nivel.
+Cada carpeta de curso tiene su propio README. Lee el de una familia que te interese, o comienza con los documentos de referencia si quieres el panorama completo antes.
