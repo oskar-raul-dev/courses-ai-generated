@@ -8,7 +8,7 @@
 > | Sección | Estado |
 > |---|---|
 > | §1 El eje · §2 La frontera · §3 Los cuatro proyectos | ✅ **Vigentes.** Se cumplieron tal cual en el curso escrito |
-> | **§4 Camino base — 21 fases** | 🪦 **Superada.** El camino base quedó en **18 fases (00–17)**, definidas en [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §4, **y ya están escritas**. La tabla de §4 se conserva como registro de la propuesta anterior; **no es la numeración oficial** |
+> | **§4 Camino base** | 🪦 **Retirada.** El camino base quedó en **18 fases (00–17)**, definidas en [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §4, **y ya están escritas**. La tabla de 21 fases se eliminó |
 > | §5 Track IA · §6 Track Ciencia de datos | ✅ **Vigentes y en redacción.** Son **complementos del camino base**, no material a la carta — decisión de la §0, tomada el 13/09/2026 |
 >
 > **Qué pasó entre las 21 y las 18:** cuatro fusiones deliberadas —funciones y objetos, tipado y
@@ -146,47 +146,11 @@ Consultorio y Cartera, y están en `00-historia-de-aurea.md` §6.
 
 ---
 
-## 🪦 4. Camino base obligatorio — 21 fases *(superada: quedaron 18, y están escritas)*
+## 🪦 4. Camino base *(retirada)*
 
-> Se conserva como registro de la propuesta anterior. **La numeración oficial y el contenido real
-> del camino base están en `propuesta-fases-y-alcance.md` §4 y en los archivos `00-`…`17-` de la
-> raíz del curso.**
-
-### Bloque A · un archivo, stdlib pura, cero dependencias
-
-| Fase | Tema | Qué avanza |
-|---|---|---|
-| 00 | Ambiente, intérprete, versiones, `ruff`, y el mapa del ecosistema contra Maven | — |
-| 01 | Sintaxis y el modelo de datos: todo es objeto, mutabilidad, identidad ⇄ igualdad, unpacking | **el CLI nace** |
-| 02 ⭐ | Colecciones, iteradores, generadores, comprehensions, `itertools` | CLI |
-| 03 | Funciones de primera clase, closures, decoradores — y el reflejo de "clase con un solo método" | CLI |
-| 04 | Modelo de objetos: dataclasses, `Protocol`, dunder, MRO, y por qué heredas de más | CLI |
-| 05 | Errores sin checked exceptions, EAFP contra LBYL, context managers, `ExceptionGroup` | CLI |
-| 06 ⭐ | **El shell con esteroides**: `pathlib`, `subprocess`, señales, códigos de salida, `argparse`, encoding | CLI |
-| 07 | Formatos en la caja: `csv`, `json`, `tomllib`, `sqlite3`, `zipfile`, streaming | CLI |
-
-### Bloque B · la frontera
-
-| Fase | Tema | Qué avanza |
-|---|---|---|
-| 08 ⭐ | **De script a proyecto**: `uv`, venv, `pyproject.toml`, layout `src/`, distribución (pipx, zipapp, PEP 723, contenedor) | el CLI migra |
-| 09 | Tipado gradual: mypy/pyright en strict, `Protocol`, `TypedDict`, genéricos PEP 695 — y el refactor del Bloque A | CLI |
-| 10 | pytest: fixtures que no son `@BeforeEach`, `parametrize`, `conftest`, dobles, cobertura, Hypothesis | CLI |
-
-### Bloque C · aplicaciones y ecosistema
-
-| Fase | Tema | Qué avanza |
-|---|---|---|
-| 11 | FastAPI: Pydantic v2, async, OpenAPI, validación en el borde | **la API nace** |
-| 12 | SQL y persistencia: psycopg, SQLAlchemy 2.0 **Core contra ORM**, Alembic, y el duelo con Hibernate | API |
-| 13 | Django 5 mínimo + ⚖️ **veredicto FastAPI ⇄ Django** | **el back-office nace** |
-| 14 | Clientes HTTP, resiliencia, idempotencia, webhooks (httpx, reintentos, backoff) | API |
-| 15 ⭐ | Concurrencia y el GIL: threading, multiprocessing, asyncio, free-threading 3.13/3.14 — **todo medido** | los tres |
-| 16 | Lotes, colas y scheduling: Celery, RQ, `arq`, APScheduler, outbox, Valkey | **el batch nace** |
-| 17 | Observabilidad, configuración y seguridad: `logging`, structlog, OTel, `pickle`, `yaml.load`, `shell=True`, cadena de suministro | los cuatro |
-| 18 | Rendimiento y perfilado: cProfile, py-spy, memoria, y las salidas de emergencia (vectorización, Cython, PyO3) | los cuatro |
-| 19 ⭐ | Contenedor, arranque en frío, y **el duelo**: FastAPI ⇄ Django ⇄ Spring Boot 3 ⇄ Go, medido | la API ×2 |
-| 20 🏁 | Capstone, defensa y ⚖️ veredicto general: script, herramienta, aplicación… o Java | los cuatro |
+> La propuesta de 21 fases se retiró: el camino base quedó en 18 fases (00–17), ya escritas. La
+> numeración oficial está en `propuesta-fases-y-alcance.md` §4 y su porqué en §9.1. El número de
+> esta sección se conserva porque otros documentos citan §5 y §6.
 
 ---
 
