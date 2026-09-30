@@ -9,6 +9,8 @@
 > 46 mini proyectos), y la pregunta que abrió la conversación fue si se puede calcar esa forma
 > para Rust.
 > **Estado:** borrador de discusión. Nada de aquí está verificado con benchmarks propios.
+> **Ver también:** [`ideas-rust-herramientas.md`](ideas-rust-herramientas.md), la ruta corta
+> de herramientas (mock y simulador de pasarela) que se propuso como entrada a Rust.
 
 Hay una idea que ordena todo el documento y conviene ponerla primero:
 
