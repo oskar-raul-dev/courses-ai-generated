@@ -22,7 +22,8 @@ cambian aquí después y **nunca al revés**.
 Fuentes de verdad, en orden: `prompts/alcance-del-proyecto.md`,
 `prompts/guia-de-estilo-y-convenciones.md`, `prompts/propuesta-apendices-y-alcance.md`,
 `prompts/plantillas-de-capitulo.md` (plantilla de apéndice, la laxa),
-`prompts/formato-bitacora-de-medicion.md`, y los apéndices ya escritos. Los documentos
+`prompts/formato-bitacora-de-medicion.md`, `00-historia-de-condor.md` (la empresa del
+curso) y los apéndices ya escritos. Los documentos
 desechables no cuentan y no se citan.
 
 Reglas de apéndice:
@@ -35,7 +36,7 @@ Reglas de apéndice:
   explicación de contenedores, ese contenido no es de aquí.
 - **Nada sin ejecutar.** Ningún comando, ninguna versión, ninguna salida inventada. Lo no
   verificado se declara con esas palabras.
-- **Todo ejemplo usa el dominio de flota** con sus nombres fijos. Nunca `foo` ni `bar`.
+- **Todo ejemplo usa el dominio de Cóndor** con sus nombres fijos. Nunca `foo` ni `bar`.
 - **Declara qué queda fuera** en el encabezado, y dónde está.
 - Cierre con el bloque 🏷️ en su variante negativa, salvo `a02` y `a05`, que dejan archivos
   en el repositorio y llevan tag propio.
@@ -145,7 +146,7 @@ secciones de los motores ya vistos, y se cierra al final.
 ## Alcance
 
 Una sección por motor, todas con la misma forma: conectar desde el contenedor y desde el
-host · listar lo que haya · insertar un documento o fila del dominio de flota · consultarlo
+host · listar lo que haya · insertar un documento o fila del dominio de Cóndor · consultarlo
 · contar · borrar · salir. Motores: `mongosh`, `valkey-cli`, `duckdb`, `psql`, `cqlsh`,
 `cypher-shell`, API HTTP de Qdrant, `curl` contra OpenSearch, `cockroach sql`, Fauxton/HTTP
 de CouchDB.
@@ -203,19 +204,24 @@ curso **mide la forma, no la velocidad**, y esa decisión está declarada en §6
 ## # a05 — El dominio de flota y sus datos
 
 ```markdown
-Este es el chat del **Apéndice a05 — 🚚 El dominio de flota y sus datos**. Entregable:
+Este es el chat del **Apéndice a05 — ✈️ El dominio de flota y sus datos**. Entregable:
 `a05-el-dominio-de-flota.md` **más el generador**. **2 h.**
 
 {{marco común}}
 
 ## Alcance
 
-- El modelo conceptual completo con las nueve entidades y sus relaciones.
+- El modelo conceptual de Cóndor completo, con las diez entidades y sus relaciones
+  (`00-historia-de-condor.md` §6). Los volúmenes salen de los números de la casa (§5), no
+  se improvisan.
 - El generador en **TypeScript**, con **semilla determinista**: la misma medición en tu
   máquina y en la mía.
 - Los tres volúmenes del curso —10 k, 1 M y el de rotura, que cada familia calibra— y qué
   se usa para qué.
-- Los cargadores por motor, que son lo que se ejecuta al empezar cada fase A.
+- El **dataset canónico** (NDJSON por entidad, neutro respecto del modelo), su manifiesto
+  con el hash de cada archivo y los **casos plantados con respuesta conocida**. **Sin
+  cargadores por motor:** cargar es modelar, y cada fase A escribe el suyo; F01, el de
+  Postgres.
 - **La decisión que sostiene el curso entero, escrita aquí:** los datos son los mismos en
   las diez familias. Si cada minicurso trajera su propio ejemplo, no habría comparación
   posible y esto serían diez tutoriales en fila.
@@ -260,7 +266,12 @@ justo lo que queremos medir. Dilo así en el apéndice.
 
 ## Pendientes bloqueantes
 
-El modelo de embeddings de F15/F16 está sin elegir y condiciona la sección de Python.
+Ninguno de decisión (alcance §9, y §12, 17–18): TypeScript nativo en Node 24, sin compilar;
+Python con `uv` y `uv.lock`; el cliente de Valkey es `iovalkey` y el modelo
+de embeddings es `intfloat/multilingual-e5-small`, fijado por revisión. La sección de Python
+tiene que dejar escrita la revisión exacta y la comprobación ejecutada de que Python y
+`transformers.js` producen el mismo vector para el mismo texto. Si no coinciden, para y
+dímelo.
 
 ## Ejercicios: 8.
 
@@ -382,8 +393,10 @@ Este es el chat del **Apéndice a10 — ⚖️ Licencias y riesgo**. Entregable:
 SSPL, BSL y la Elastic License explicadas en lo que le importa a un ingeniero que tiene que
 meter esto en una empresa: qué puedes hacer, qué no, y **a partir de qué momento el
 problema deja de ser técnico**. Por qué este curso usa **Valkey** y no Redis, y
-**OpenSearch** y no Elasticsearch. Los forks, quién los mantiene y qué tan verosímil es su
-continuidad. Y qué preguntar —y a quién— antes de proponer un motor.
+**OpenSearch** y no Elasticsearch. Los tres casos que salieron de la sesión de laboratorio
+(alcance §12, 16, 19 y 20): ScyllaDB descartada por *source-available*, TimescaleDB con TSL
+aceptada y declarada, y CockroachDB, libre en un nodo o en `demo` pero con clave y telemetría
+en un clúster. Los forks, quién los mantiene y qué tan verosímil es su continuidad. Y qué preguntar —y a quién— antes de proponer un motor.
 
 ## Qué NO entra
 

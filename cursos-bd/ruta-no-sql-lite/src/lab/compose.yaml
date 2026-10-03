@@ -1,0 +1,197 @@
+# El laboratorio de la Ruta NoSQL Lite: un perfil por familia, más `base` (Postgres),
+# que es la línea base de todas las mediciones.
+#
+#   docker compose --profile base --profile documental up -d --wait
+#
+# Imágenes fijadas por digest del índice multiarquitectura (sirve en arm64 y amd64), con el
+# tag legible al lado. Verificado ejecutando en macOS arm64 el 29/09/2026: ver a02.
+# Puertos del host desplazados para no chocar con motores que ya tengas instalados; cada uno
+# se puede cambiar desde .env (ver .env.example).
+
+name: condor-lab
+
+services:
+  base:
+    profiles: [base]
+    image: pgvector/pgvector@sha256:2ba9ca5f2e7daa0f0e7723cba1ee9167bab54efd3640516a44ac1a928dd67e7a # 0.8.6-pg18
+    environment:
+      POSTGRES_PASSWORD: condor
+    # pg_stat_statements es parte del arnés de medida (a04)
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    # /dev/shm de 64 MB por defecto: la construcción en paralelo de un índice HNSW con
+    # maintenance_work_mem de 2 GB lo necesita entero (Fase 16, a09 E-35)
+    shm_size: 2560m
+    ports: ["${BASE_PORT:-15432}:5432"]
+    volumes: ["base-data:/var/lib/postgresql"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      retries: 60
+
+  documental:
+    profiles: [documental]
+    # 8.0.20 exacta, y es un parche temporal: las 8.0 posteriores se niegan a arrancar sobre los
+    # kernels 6.19–7.0.13, que es el que trae Docker Desktop 29.8.0 (a02, "MongoDB y el kernel")
+    image: mongo@sha256:098862b1339f031900ca66cf8fef799e616d6324fa41b9a263f2ec899552c1ef # 8.0.20
+    # replica set de un nodo: sin él no hay transacciones multi-documento
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports: ["${DOCUMENTAL_PORT:-27018}:27017"]
+    volumes: ["documental-data:/data/db"]
+    healthcheck:
+      # la primera vez inicia el replica set; después solo comprueba que responde
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]}).ok }"]
+      interval: 2s
+      retries: 60
+
+  clave-valor:
+    profiles: [clave-valor]
+    image: valkey/valkey@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd # 9.1 (9.1.2)
+    ports: ["${CLAVE_VALOR_PORT:-16379}:6379"]
+    volumes: ["clave-valor-data:/data"]
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 2s
+      retries: 60
+
+  series:
+    profiles: [series]
+    # imagen con Timescale License, no la -oss: roll-ups continuos y compresión son TSL (a10)
+    image: timescale/timescaledb@sha256:9dede0e3ccc071cf71935b17f76bf243331df0b1575338c8ac294640fcf12a36 # 2.30.1-pg18
+    environment:
+      POSTGRES_PASSWORD: condor
+    ports: ["${SERIES_PORT:-15433}:5432"]
+    volumes: ["series-data:/var/lib/postgresql"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      retries: 60
+
+  busqueda:
+    profiles: [busqueda]
+    image: opensearchproject/opensearch@sha256:fafe3fc3587088674669235575aa166228c48bdb940294a8cdbbc1da75236a40 # 3.8.0
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+    # heap de 512 MB: con 600 MB de límite muere por OOM (código 137); ver a02, "Memoria"
+    mem_limit: 1400m
+    ports: ["${BUSQUEDA_PORT:-19200}:9200"]
+    volumes: ["busqueda-data:/usr/share/opensearch/data"]
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9200/_cluster/health"]
+      interval: 3s
+      retries: 60
+
+  grafos:
+    profiles: [grafos]
+    image: neo4j@sha256:91fb0bf237c41b7b3dcbe84703aa0b82e0d7d067b16e1c8ab21f03fc679edf4e # 2026.09.0-community
+    environment:
+      NEO4J_AUTH: neo4j/condor-mro
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    mem_limit: 1g
+    ports:
+      - "${GRAFOS_HTTP_PORT:-17474}:7474"
+      - "${GRAFOS_BOLT_PORT:-17687}:7687"
+    volumes: ["grafos-data:/data"]
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "condor-mro", "RETURN 1"]
+      interval: 3s
+      retries: 60
+
+  vectorial:
+    profiles: [vectorial]
+    image: qdrant/qdrant@sha256:12364fe851b9f17356fc88189fc06d1b521262e04659ec7345975b00c9246a10 # v1.19.1
+    ports:
+      - "${VECTORIAL_HTTP_PORT:-16333}:6333"
+      - "${VECTORIAL_GRPC_PORT:-16334}:6334"
+    volumes: ["vectorial-data:/qdrant/storage"]
+    healthcheck:
+      # la imagen no trae curl: se abre el puerto con bash
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/6333 && printf 'GET /readyz HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q 200 <&3"]
+      interval: 2s
+      retries: 60
+
+  columnar:
+    profiles: [columnar]
+    image: cassandra@sha256:8819d1b7877ee6621751a761cc163332e9c3eaf671c8ef672f7c77a7c5bff05f # 5.0 (5.0.9)
+    environment:
+      # obligatorio: sin límite, Cassandra calcula el heap con la RAM de la máquina y en
+      # reposo ocupa 4,63 GiB
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 128M
+    mem_limit: 1600m
+    ports: ["${COLUMNAR_PORT:-19042}:9042"]
+    volumes: ["columnar-data:/var/lib/cassandra"]
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "SELECT release_version FROM system.local"]
+      interval: 5s
+      retries: 60
+
+  offline:
+    profiles: [offline]
+    image: couchdb@sha256:8cf5f8442585c346d2717ff0ad95605731d2f19f67b8367840baa8d3b24ebc31 # 3.5.2
+    environment:
+      COUCHDB_USER: condor
+      COUCHDB_PASSWORD: condor
+    ports: ["${OFFLINE_PORT:-15984}:5984"]
+    volumes: ["offline-data:/opt/couchdb/data"]
+    healthcheck:
+      # un nodo solo no crea _users ni _replicator: sin ellas, el log repite
+      # database_does_not_exist cada 5 s y no hay replicación persistente
+      test: ["CMD-SHELL", "curl -s -u condor:condor -X PUT http://localhost:5984/_users >/dev/null && curl -s -u condor:condor -X PUT http://localhost:5984/_replicator >/dev/null && curl -sf http://localhost:5984/_up"]
+      interval: 2s
+      retries: 60
+
+  newsql:
+    profiles: [newsql]
+    image: cockroachdb/cockroach@sha256:bc15746ef2c2493b2cfd46a76898a745587d068b1a259fff3c4447c3f3b36ea2 # v26.3.2
+    # un nodo: exento de licencia (a10)
+    command: ["start-single-node", "--insecure", "--cache=256MiB", "--max-sql-memory=256MiB"]
+    ports:
+      - "${NEWSQL_PORT:-26258}:26257"
+      - "${NEWSQL_UI_PORT:-18080}:8080"
+    volumes: ["newsql-data:/cockroach/cockroach-data"]
+    healthcheck:
+      test: ["CMD", "cockroach", "sql", "--insecure", "-e", "SELECT 1"]
+      interval: 3s
+      retries: 60
+
+  newsql-global:
+    profiles: [newsql-global]
+    image: cockroachdb/cockroach@sha256:bc15746ef2c2493b2cfd46a76898a745587d068b1a259fff3c4447c3f3b36ea2 # v26.3.2
+    # nueve nodos en tres regiones simuladas, con latencia entre regiones inyectada (F22).
+    # Exento de licencia. Los datos viven en memoria: no hay volumen y se pierden al apagar.
+    command: ["demo", "--nodes=9", "--global", "--insecure", "--no-example-database"]
+    # demo es un shell interactivo: sin terminal asignada, termina al arrancar
+    tty: true
+    stdin_open: true
+    # demo solo escucha en 127.0.0.1 y no tiene opción para cambiarlo: el puerto publicado es
+    # el de newsql-global-puerta, que comparte esta red y reenvía a 127.0.0.1:26257
+    ports: ["${NEWSQL_GLOBAL_PORT:-26259}:26300"]
+    healthcheck:
+      test: ["CMD", "cockroach", "sql", "--insecure", "--host=localhost:26257", "-e", "SELECT 1"]
+      interval: 5s
+      retries: 60
+
+  newsql-global-puerta:
+    profiles: [newsql-global]
+    image: alpine/socat@sha256:5ffbd6ae916cbad86a58fabe0d6d5a6fd5c2b47ddf031e82996baac9300e732f # 1.8.1.3
+    network_mode: "service:newsql-global"
+    command: ["TCP-LISTEN:26300,fork,reuseaddr", "TCP:127.0.0.1:26257"]
+    depends_on:
+      newsql-global:
+        condition: service_healthy
+
+volumes:
+  base-data:
+  documental-data:
+  clave-valor-data:
+  series-data:
+  busqueda-data:
+  grafos-data:
+  vectorial-data:
+  columnar-data:
+  offline-data:
+  newsql-data:

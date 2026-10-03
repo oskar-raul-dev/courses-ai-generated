@@ -148,6 +148,13 @@ la tabla de "atributos adicionales" de `SIGMA` en Cóndor son **el mismo anti-pa
 dos veces por dos equipos que no se conocen**. Cuando un error aparece dos veces en dos
 dominios distintos, deja de ser un error y pasa a ser un síntoma.
 
+Y un matiz de la **Fase 04** que el veredicto tiene que resistir: medido sobre un millón de piezas,
+**JSONB con GIN examinó exactamente lo mismo que Mongo** en la consulta polimórfica (1,00×), con un
+índice de menos de la mitad que el comodín. La tabla ancha con su tabla de atributos pierde contra los
+dos; contra JSONB, el polimorfismo solo no decide. Si la ficha de carga se queda en Mongo, que sea por
+la unidad de lectura del inspector y por la validación por tipo, y que tu comparación contra JSONB lo
+muestre.
+
 ## 📋 Criterios de aceptación
 
 ```text

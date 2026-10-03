@@ -110,7 +110,7 @@ causa.** Va al lado de la fuente de verdad, nunca en su lugar.
 |---|---|---|
 | Entorno | **Node + TypeScript** | |
 | Motor | **Valkey** · perfil `clave-valor` | CLI `valkey-cli`, más `MONITOR` y `SLOWLOG` para mirar qué pasa |
-| Cliente | Cliente compatible con el protocolo | `ioredis` es el camino conocido; el cliente unificado de Valkey es la alternativa. **La elección se declara en `a06`** y es en sí misma una decisión del curso |
+| Cliente | **`iovalkey`** | El fork de ioredis que mantiene valkey-io: MIT, JS puro y con la API conocida. Decidido en el alcance §12 (17); la versión vive en `a06` |
 | Atomicidad | **Lua del lado del servidor** (`EVAL`) | El rate limiting deslizante y el candado con expiración se escriben aquí, no en el cliente |
 | Línea base | **PostgreSQL** · perfil `base` | Tabla `UNLOGGED` para sesiones · `SELECT … FOR UPDATE SKIP LOCKED` para la cola, que es lo que hoy está bien hecho |
 | Driver de la base | `pg` | |
@@ -136,7 +136,15 @@ de `maxmemory` y la política de evicción sí entran, porque son el punto de ro
 
 Es la **Fase 05** con otro uniforme: el candado de la orden de trabajo abierta y la reserva del
 puesto con foso en el hangar son el mismo problema que el candado de aprovisionamiento de Nodo
-Sur, y fallan igual cuando no tienen expiración.
+Sur, y fallan igual cuando no tienen expiración. La **Fase 06** añade dos matices que conviene llevar
+puestos: un candado consultivo de Postgres no vence, pero se suelta solo cuando cae la conexión que lo
+tiene; y una expiración más corta que el trabajo que protege deja pasar el duplicado, que es el boss
+del Bloque I.
+
+Y un tercero, sobre el veredicto: en la Fase 06, una tabla `UNLOGGED` resolvió la sesión **en los
+mismos viajes que Valkey y con menos bytes**. Lo que ahí no se midió es justo el dolor de Nodo Sur: la
+sesión que se **refresca en cada petición**. Si tu medición de tuplas muertas y limpieza no muestra
+esa factura, el veredicto de las sesiones puede ser otro, y se escribe como salga.
 
 El puente más útil no es técnico sino de criterio: en Cóndor, `SIGMA` también tiene una tabla
 que se escribe en cada petición y que nadie ha mirado nunca. **Encontrarla es el ejercicio**.

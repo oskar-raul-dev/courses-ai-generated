@@ -1,7 +1,7 @@
 # ✈️ Cóndor MRO · Taller Aeronáutico de Reparación
 
 > La empresa del curso **Ruta NoSQL Lite**. Ficticia, y la única: todo lo narrativo del curso
-> sale de aquí — las autopsias de la Fase 00, el dominio que se modela diez veces, las nueve
+> sale de aquí — las autopsias de la Fase 00, el dominio que se modela diez veces, las diez
 > entidades, los tres volúmenes y el proyecto global.
 >
 > **Estado:** **la empresa del curso**, decisión cerrada. Durante la discusión se evaluaron
@@ -354,19 +354,22 @@ Son los que fijan los tres volúmenes del curso y no se improvisan por fase.
 | Aeronaves con registro de parámetros | 30 de 140 |
 | Reportes de piloto acumulados | ≈ 26.000 desde 2015 |
 
-**Los tres volúmenes del curso** salen de ahí y son los mismos en las diez familias:
+**Los tres volúmenes del curso** salen de ahí. Cada uno cuenta los registros de la entidad
+principal de la familia, y el resto de la empresa escala con estas mismas proporciones
+(detalle en `a05`):
 
-- **10 k** — un mes de operación de una base. Es el volumen de los ejemplos: cabe en pantalla
-  y se carga en segundos.
-- **1 M** — cinco años de la red entera. Es el volumen donde **empiezan a notarse las
-  decisiones de modelado**, y es donde se hacen las mediciones publicadas.
+- **10 k** — el volumen de los ejemplos: cabe en pantalla y se carga en segundos.
+- **1 M** — el volumen donde **empiezan a notarse las decisiones de modelado**, y donde se
+  hacen las mediciones publicadas. Con estos números, cinco años de la red son unas 54 000
+  órdenes de trabajo y más de 10 M de lecturas de vuelo: ninguna entidad llega sola a un
+  millón de forma natural, y por eso el volumen se fija por entidad y no por calendario.
 - **rotura** — el que cada familia calibra por su cuenta hasta que el motor falla de verdad.
 
 ---
 
 ## 6. 📖 El vocabulario de la casa
 
-Las **nueve entidades** del dominio, que son las mismas en las diez familias y que **ninguna
+Las **diez entidades** del dominio, que son las mismas en las diez familias y que **ninguna
 fase renombra**. En inglés, como manda la guía de estilo; el glosario es para leer el texto.
 
 | Entidad | Qué es en el hangar |

@@ -126,7 +126,7 @@ Python manda en la **ingesta** de embeddings, no en la consulta.
 | Ingesta de embeddings | **Python** | Es donde vive el ecosistema, y es el único tramo donde hace falta |
 | Consulta, arnés y evaluación | **TypeScript** | Los motores exponen REST y gRPC: **el mito de que "esto es de Python" se cae aquí**, y el miniproyecto lo demuestra |
 | Motor | **Qdrant** · perfil `vectorial` | `qdrant-client` desde Python para cargar, API HTTP desde TypeScript para consultar |
-| Modelo de embeddings | Pequeño, multilingüe y **fijado por nombre y revisión** | ⚠️ **Sin elegir todavía** — es un pendiente declarado en la guía §17 y condiciona `a06`. Entra como caja cerrada: **no se entrena nada** |
+| Modelo de embeddings | **`intfloat/multilingual-e5-small`**, fijado por revisión en `a06` | El mismo ONNX en Python (ingesta) y en `transformers.js` (consulta). Entra como caja cerrada: **no se entrena nada**. Ojo con los prefijos `query:`/`passage:` |
 | Línea base | **PostgreSQL** con `pgvector` · perfil `base` | Índice HNSW, y el mismo filtro por metadatos en `WHERE` |
 | Drivers | `psycopg` desde Python · `pg` desde TypeScript | |
 | Evaluación | Conjunto de casos en JSON, **armado con la catadora antes de montar el índice** | Es la pieza que decide si el miniproyecto vale algo |
@@ -161,6 +161,20 @@ mismo riesgo operativo y no es tecnológico.** El conocimiento que hace funciona
 está en una persona que se va a ir, y nadie lo ha escrito. Esta familia no lo escribe tampoco
 —no lo transforma en conocimiento— pero sí hace **buscable** el rastro que esa persona fue
 dejando durante veinte años sin saberlo. Eso es todo lo que hace, y es bastante.
+
+Y tres cosas que las Fases 15 y 16 midieron sobre Cóndor y que este miniproyecto tiene que tener en
+cuenta desde el primer día:
+
+- **Con pocos datos, Qdrant no construye el índice.** Por debajo de `indexing_threshold` busca
+  recorriendo todo, y acierta siempre. Ciento doce mil notas pueden quedar cerca de ese umbral: mira
+  `indexed_vectors_count` antes de medir nada "del índice".
+- **El filtro por metadatos es donde `pgvector` y Qdrant dejan de ser intercambiables.** Con un filtro
+  del 8 % de un millón de reportes, `pgvector` devolvió 1 fila de 10 por defecto y acertó la mitad con su
+  recorrido iterativo; Qdrant acertó 0,995. *"Solo lo que hay en bodega, de esta cosecha"* es justo un
+  filtro así: mide su selectividad antes de elegir motor.
+- **La memoria no se lee en `docker stats`.** Los dos motores leen sus datos a través de la caché del
+  sistema operativo, y `docker stats` la resta. El número que decide si cabe en la máquina de la
+  cooperativa está en el cgroup del contenedor.
 
 ## 📋 Criterios de aceptación
 

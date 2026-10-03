@@ -65,7 +65,7 @@ ambigüedad, qué significa *unidad de lectura*, qué hace un `$lookup` por dent
 | **V · El árbitro** | capstone políglota | F23–F25 | 40 h |
 
 Cada familia son **dos semanas en dos fases**: la A levanta y modela, la B rompe, mide y
-decide. Los apéndices y los proyectos boss van **fuera** de esas horas.
+decide. Los apéndices, los proyectos boss y los miniproyectos van **fuera** de esas horas.
 
 ---
 
@@ -77,31 +77,35 @@ curso sería una opinión.
 
 | Familia | Motor | Línea base | La parte del dominio que le toca |
 |---|---|---|---|
-| 🍃 Documental | MongoDB | Postgres JSONB | la ficha de vehículo, polimórfica de verdad |
-| 🔑 Clave-valor | Valkey | tabla `UNLOGGED` | sesiones, rate limiting, candados |
-| 🦆 Analítico embebido | DuckDB | Postgres | el tablero de costes |
-| ⏱️ Series temporales | TimescaleDB | Postgres particionado | la telemetría a bordo |
-| 🔍 Búsqueda | OpenSearch | Postgres FTS | el catálogo de repuestos |
-| 🕸️ Grafos | Neo4j | `WITH RECURSIVE` | el despiece y sus dependencias |
-| 🧬 Vectorial | Qdrant | `pgvector` | *"¿qué avería se parece a esta?"* |
-| 🏛️ Columnar ancha | Cassandra | Postgres particionado | la telemetría que no cabe en un nodo |
-| 📴 Offline-first | CouchDB + PouchDB | — | la app del técnico sin cobertura |
-| ⚡ NewSQL | CockroachDB | Postgres de un nodo | el libro de órdenes en tres regiones |
+| 🍃 Documental | MongoDB | Postgres JSONB | la ficha de aeronave, polimórfica de verdad |
+| 🔑 Clave-valor | Valkey | tabla `UNLOGGED` | reservas de hangar, candados, sesiones |
+| 🦆 Analítico embebido | DuckDB | Postgres | el costo por hora volada |
+| ⏱️ Series temporales | TimescaleDB | Postgres particionado | los parámetros de vuelo |
+| 🔍 Búsqueda | OpenSearch | Postgres FTS | el catálogo de partes |
+| 🕸️ Grafos | Neo4j | `WITH RECURSIVE` | la trazabilidad de cada pieza en el tiempo |
+| 🧬 Vectorial | Qdrant | `pgvector` | *"esto ya lo vimos"* en los reportes de piloto |
+| 🏛️ Columnar ancha | Cassandra | Postgres particionado | los parámetros que no caben en un nodo |
+| 📴 Offline-first | CouchDB + PouchDB | — | el técnico en una pista sin señal |
+| ⚡ NewSQL | CockroachDB | Postgres de un nodo | el expediente con tres autoridades en tres países |
 
 Todas las imágenes van **fijadas por digest** y con fecha de verificación ejecutada. Las
 versiones vigentes viven en el apéndice `a02` y en ningún otro sitio.
 
 ---
 
-## 🚚 Un dominio, diez modelos
+## ✈️ Una empresa, diez modelos
 
-**Mantenimiento de flota**, modelado diez veces. Fijar el dominio y variar solo el modelo es
-lo que hace comparables las mediciones; si cada familia trajera su propio ejemplo, esto
-serían diez tutoriales puestos en fila.
+**Cóndor MRO**, un taller aeronáutico de reparación que mantiene ciento cuarenta aeronaves
+de ocho operadores en tres países, modelado diez veces. Fijar el dominio y variar solo el
+modelo es lo que hace comparables las mediciones; si cada familia trajera su propio
+ejemplo, esto serían diez tutoriales puestos en fila.
 
-Vehículos que no tienen los mismos campos, un despiece con profundidad desconocida,
-telemetría que llega cada minuto, partes de avería escritos en prosa con jerga de taller, y
-un taller en la montaña donde no hay cobertura. Los datos se generan con semilla
+Aeronaves que no tienen los mismos campos, piezas que viajan entre aviones, almacenes y
+talleres aliados durante años, parámetros de vuelo que se descargan al aterrizar, reportes
+de piloto escritos con prisa y con jerga, un técnico que pasa tres días en pistas sin señal
+y un expediente que no puede salir de su país. Y debajo de todo, alguien que firma con su
+licencia que el avión puede volar. La empresa entera está en
+[`00-historia-de-condor.md`](00-historia-de-condor.md). Los datos se generan con semilla
 determinista: **la misma medición en tu máquina y en la mía**.
 
 ---
@@ -118,22 +122,39 @@ El curso puede permitírselo porque los minicursos son casi independientes.
 **Si solo vas a hacer un bloque, haz el 0 y el I.** Son 52 horas, cierran con su boss y
 salen con criterio utilizable, no con medio curso.
 
+> 📍 **Publicado hoy:** el Bloque 0 y el Bloque I completos —[F00](00-la-decision-que-se-hereda.md) a
+> [F06](06-clave-valor-romper-y-medir.md)—, con el boss *"La orden que entró dos veces"*, los
+> miniproyectos de Barlovento y Nodo Sur, y los diez apéndices en el estado que esas fases necesitan.
+> Qué está publicado y qué viene después, fase por fase, en
+> [`0-programa-del-curso.md`](0-programa-del-curso.md).
+
 ---
 
-## 🏆 Los proyectos boss
+## 🏆 Los proyectos boss y los miniproyectos
 
-- 🏆 **"El Taller"** — el boss global, acumulativo y **opcional**. Un sistema de
-  mantenimiento de flota que crece con el curso: cada bloque le añade un motor y una
+- 🏆 **"El Hangar"** — el boss global, acumulativo y **opcional**. El sistema que Cóndor
+  necesita para saber dónde está cada pieza y de dónde vino, y que crece con el curso: cada bloque le añade un motor y una
   capacidad. Es la única parte que se consume en orden, y es el mejor portafolio que deja la
   ruta.
-- 💀 **Un boss por bloque** — un encargo que solo se resuelve cruzando las familias de ese
-  bloque, y que empieza con un sistema roto. No es un ejercicio difícil con mejor nombre.
+- 💀 **Un boss por bloque** — un encargo interno de Cóndor que solo se resuelve cruzando
+  las familias de ese bloque, y que empieza con un sistema roto. No es un ejercicio difícil
+  con mejor nombre.
+- 🧰 **Un miniproyecto por familia** — el encargo de **otra empresa**: un puerto, un
+  proveedor de internet, una agencia de publicidad, una distribuidora eléctrica y una
+  cooperativa cafetera. Existe para demostrar que lo aprendido es un modelo de acceso y no
+  un truco del dominio. Opcional, de 4 a 6 h, y se anuncia al abrir cada fase B. El índice
+  está en [`propuestas-mini-proyectos.md`](propuestas-mini-proyectos.md).
 
 ---
 
 ## 📚 Cómo está organizado
 
+- **`00-historia-de-condor.md`** — la empresa del curso. No es una fase: es de donde sale
+  todo lo narrativo.
+- **`0-programa-del-curso.md`** — el temario en una página: horas, ejercicios, estado de cada fase y
+  orden de publicación.
 - **Fases** `00-…md` a `25-…md` — el curso. Dos por familia.
+- **Miniproyectos** `h-mini-01-…md` a `h-mini-10-…md` — uno por familia, de otra empresa.
 - **Apéndices** `a01-…md` a `a10-…md` — transversales a toda la ruta, de receta y no de
   pedagogía: laboratorio en tres plataformas, el `compose.yaml`, CLIs, el arnés de medida,
   el dominio y sus datos, lenguajes y drivers, Postgres como línea base, diccionario de
@@ -142,6 +163,9 @@ salen con criterio utilizable, no con medio curso.
   de reproducción), `a09-catalogo-de-errores.md` (todo error con su mensaje literal) e
   `INSTINTOS.md` (cada punto donde el instinto relacional falla, con la medición que lo
   prueba).
+- **`src/`** — el código que se ejecuta: el laboratorio (`src/lab/compose.yaml`, de `a02`), el
+  generador de datos (`src/lab/generator/`, de `a05`) y el entorno de TypeScript y Python con
+  sus versiones fijadas (`a06`). Cada fase deja el suyo en `src/NN-nombre/`.
 - **`prompts/`** — el aparato editorial: alcance, guía de estilo, propuestas de fases y
   apéndices, plantillas y los prompts de redacción.
 

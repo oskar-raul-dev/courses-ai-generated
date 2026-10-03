@@ -1,0 +1,11 @@
+{
+  "name": "condor-lab-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generador determinista del dataset canónico de Cóndor MRO (Ruta NoSQL Lite, a05)",
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "generate": "node src/generate.ts"
+  }
+}

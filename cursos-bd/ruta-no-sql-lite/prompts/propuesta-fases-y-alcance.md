@@ -6,7 +6,9 @@
 > **Precedencia:** por encima están [`alcance-del-proyecto.md`](alcance-del-proyecto.md) y
 > [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md). Por debajo, las
 > plantillas y los prompts, que se actualizan después y nunca al revés.
-> **Fecha:** 10 de septiembre de 2026
+> **Fecha:** 10 de septiembre de 2026 · **revisada** el 29 de septiembre de 2026 para
+> adoptar Cóndor MRO ([`00-historia-de-condor.md`](../00-historia-de-condor.md)) como dominio
+> y dar de alta los miniproyectos de familia.
 
 ---
 
@@ -15,7 +17,8 @@
 **252 h ÷ 12 h semanales ≈ 21 semanas ≈ 5 meses.** A 10 h semanales, 25 semanas ≈ 6 meses.
 
 Las horas de **apéndices no cuentan** dentro de las 252: son consulta bajo demanda. Los
-**boss tampoco**: el de bloque y el global son opcionales y viven fuera del calendario.
+**boss tampoco**: el de bloque y el global son opcionales y viven fuera del calendario, igual
+que los diez 🧰 miniproyectos de familia.
 
 | Bloque | Fases | Familias | Horas |
 |---|---|---|---|
@@ -51,11 +54,12 @@ el resto del documento porque el detalle por fase solo dice **qué cambia**:
 
 **Fase A — Levantar y modelar (10 h).** Motor arriba desde la receta de `a01`/`a02`; el
 📖 diccionario de la familia y el 🩻 de lo que funciona igual que en relacional; el dominio
-de flota modelado a la manera de la familia; el 🪞 *"tu instinto relacional dice… y esta
+de Cóndor modelado a la manera de la familia; el 🪞 *"tu instinto relacional dice… y esta
 vez se equivoca"* con su medición; y la ⚰️ **situación 3** —modelaste bien la familia pero
 como si fuera relacional— con números antes y después.
 
-**Fase B — Romper, medir y decidir (10 h).** La 🪞 apuesta falsable escrita antes de
+**Fase B — Romper, medir y decidir (10 h).** Abre anunciando el 🧰 miniproyecto de la
+familia —una línea y el enlace a su `h-mini`—; después, la 🪞 apuesta falsable escrita antes de
 ejecutar; la 📐 medición contra Postgres; el 💥 punto de rotura con su mensaje literal; el
 🚑 *"salir de aquí"* —índice, modelo, motor o arquitectura, en ese orden de coste—; las
 cinco preguntas respondidas para esta familia; y el ⚖️ veredicto honesto.
@@ -71,11 +75,15 @@ tesis con diez comprobaciones.
 
 Las ⚰️ autopsias como gancho, y la tesis entera antes de tocar un contenedor.
 
-**Qué entra:** las cinco autopsias del curso, con la estructura de §2.1 de la guía
-—decisión, mejor argumento de quien la tomó, factura a los dos años, coste de salida—:
-*"elegimos Mongo porque no queríamos joins"*, *"elegimos Cassandra porque escala"*,
-*"metimos el JSON completo y listo"*, *Redis como almacén primario*, *Elasticsearch como
-fuente de verdad*. Las dos situaciones —hype y zona de confort— presentadas como la misma
+**Qué entra:** las autopsias del curso, con la estructura de §2.1 de la guía —decisión,
+mejor argumento de quien la tomó, factura a los dos años, coste de salida—. **La central es
+la de Cóndor** (§3 de la historia): el sistema documental de Camilo, elegido con un
+argumento correcto —*"cada componente trae su propia ficha y el esquema va a cambiar"*—, el
+cruce con órdenes de trabajo escrito en la aplicación, y la factura de marzo de 2026: dos
+verdades sobre un actuador de tren y cuatro días de tres personas para reconstruirlo. Al
+lado, las autopsias de la industria que el resto del curso retoma: *"elegimos Cassandra
+porque escala"*, *"metimos el JSON completo y listo"*, *Redis como almacén primario*,
+*Elasticsearch como fuente de verdad*. Las dos situaciones —hype y zona de confort— presentadas como la misma
 decisión tomada por el mismo motivo malo. Y el aviso de que **casi siempre gana Postgres**,
 dicho en la primera fase y no al final.
 
@@ -90,9 +98,10 @@ paso regala la primera entrada del catálogo de errores:
 **Ejercicios: 12** (fase de criterio, exención declarada). De lectura y decisión: se
 entregan esquemas y decisiones reales y se pide diagnosticar qué falló y por qué.
 
-### 🚚 F01 — El dominio de flota y el arnés (5 h)
+### ✈️ F01 — El dominio de flota y el arnés (5 h)
 
-**Qué entra:** el dominio completo con sus nueve entidades; el generador de datos en
+**Qué entra:** el dominio de Cóndor completo con sus diez entidades (§6 de la historia) y
+los números de la casa que fijan los volúmenes (§5); el generador de datos en
 TypeScript con semilla determinista y los tres volúmenes (10 k, 1 M, rotura); el
 `compose.yaml` maestro con perfiles por familia; Postgres arriba como línea base; y **cómo
 se mide la forma** —viajes, examinados contra devueltos, particiones tocadas, fan-out,
@@ -129,8 +138,9 @@ un curso defendible**.
 
 ### 🍃 F03 — Documental: levantar y modelar (10 h) · MongoDB
 
-**Qué entra:** la ficha de vehículo, que es polimórfica de verdad —dos vehículos del mismo
-modelo no tienen los mismos campos—; embeber contra referenciar y la pregunta que lo
+**Qué entra:** la ficha de aeronave, que es polimórfica de verdad —un turbohélice, un
+monomotor de carga y un helicóptero no comparten casi nada, y dos aeronaves del mismo modelo
+tampoco, por el equipamiento opcional—; embeber contra referenciar y la pregunta que lo
 decide (unidad de lectura); índices sobre campos anidados y sobre arrays, con lo que eso
 cuesta; el límite de 16 MB por documento y qué crece sin cota en este dominio; y el
 `$lookup` con lo que de verdad hace por dentro.
@@ -140,7 +150,8 @@ en cuatro colecciones necesita 3 + N viajes para una lectura que la embebida res
 uno. Se mide.
 
 **⚰️ La situación 3:** Mongo modelado con referencias por todas partes y el join escrito en
-el código de la aplicación. Ahí se disolvió la frontera transaccional, y nadie lo anotó.
+el código de la aplicación. Ahí se disolvió la frontera transaccional, y nadie lo anotó. Es,
+literalmente, lo que le pasó al sistema de Camilo.
 
 **Ejercicios: 26.**
 
@@ -150,13 +161,14 @@ el código de la aplicación. Ahí se disolvió la frontera transaccional, y nad
 con un factor de degradación menor que 2× frente a Mongo"*. Se escribe antes.
 
 **Qué entra:** la medición contra JSONB en las tres consultas del dominio; el documento que
-crece sin cota —el historial embebido dentro del vehículo— y qué pasa al pasar de los 16
+crece sin cota —el historial de intervenciones embebido dentro de la aeronave— y qué pasa al pasar de los 16
 MB; las transacciones multi-documento, la exigencia de replica set y el error literal que
 produce el standalone; y la actualización de un array anidado, que es donde el modelo
 documental empieza a doler.
 
-**💥 Punto de rotura:** el documento que no cabe. Volumen exacto, mensaje literal
-(`BSONObjectTooLarge`), y qué se cambia para salir.
+**💥 Punto de rotura:** el documento que no cabe. Volumen exacto, mensaje literal —medido el
+29/09/2026: `Resulting document after update is larger than 16777216`, code 10334, a las 90 344
+lecturas embebidas; no `BSONObjectTooLarge`, como se esperaba—, y qué se cambia para salir.
 
 **⚖️ Veredicto:** cuándo NO usar documental — cuando la frontera transaccional cruza
 agregados, cuando la unidad de lectura son rebanadas y no el agregado entero, y cuando tus
@@ -166,8 +178,9 @@ documentos tienen todos las mismas claves, que es la señal de que tienes una ta
 
 ### 🔑 F05 — Clave-valor: levantar y modelar (10 h) · Valkey
 
-**Qué entra:** sesiones del terminal del taller, rate limiting por técnico, el candado de
-la orden de trabajo abierta, y una cola de trabajos pendientes; las estructuras que no son
+**Qué entra:** la reserva del puesto con foso —tres en Villavicencio y dos grupos pidiendo
+el mismo el mismo día—, el candado de la orden de trabajo abierta desde dos terminales, las
+sesiones del terminal de plataforma y una cola de trabajos pendientes; las estructuras que no son
 strings —hash, set ordenado, stream— y cuándo cada una; TTL y expiración como parte del
 modelo y no como limpieza; y **el modelo de acceso más puro que existe**: si no sabes la
 clave, no hay consulta.
@@ -182,8 +195,9 @@ persistencia configurada, o el día que la memoria se acaba.
 
 ### 🔑 F06 — Clave-valor: romper, medir y decidir (10 h)
 
-**🪞 Apuesta:** *"una tabla `UNLOGGED` de Postgres con la sesión indexada por clave llega a
-menos de 3× la latencia de Valkey y me ahorra un componente entero"*.
+**🪞 Apuesta:** *"una tabla `UNLOGGED` de Postgres con la sesión indexada por clave resuelve cada operación en los mismos viajes que Valkey y ocupa menos de 3× su memoria por sesión; lo que de verdad las separa es qué se pierde al reiniciar"*. Se mide en forma —viajes por operación, memoria por sesión, datos
+perdidos al reiniciar— y la latencia va solo como contexto (reformulada el 29/09/2026: la versión
+anterior apostaba en latencia, y el tiempo solo es argumento en F22).
 
 **Qué entra:** la medición contra la tabla `UNLOGGED`; qué pasa cuando la memoria se llena
 —`maxmemory`, las políticas de evicción y el error literal
@@ -199,9 +213,10 @@ de verdad, nunca en su lugar.
 
 **Ejercicios: 26.**
 
-> 💀 **Boss del Bloque I — "La avería duplicada".** Te entregan el sistema: catálogo en
-> Mongo, sesiones y candados en Valkey. Una avería entró dos veces hace tres meses y nadie
-> sabe cuándo ni por qué. Hay que reproducir la carrera, encontrar **qué frontera
+> 💀 **Boss del Bloque I — "La orden que entró dos veces".** Lo pide Yamile Cruz. Te
+> entregan el sistema: componentes en Mongo, reservas y candados en Valkey. Una orden de
+> trabajo entró dos veces hace tres meses, abierta desde dos terminales, y nadie sabe cuándo
+> ni por qué. Hay que reproducir la carrera, encontrar **qué frontera
 > transaccional se disolvió** entre los dos motores y entregar un informe con la medición
 > y el arreglo mínimo. Entregable: informe con comandos reproducibles.
 
@@ -215,7 +230,8 @@ etiqueta "NoSQL": **DuckDB habla SQL**.
 
 ### 🦆 F07 — Analítico embebido: levantar y modelar (10 h) · DuckDB
 
-**Qué entra:** el tablero de costes por modelo, taller y trimestre; almacenamiento por
+**Qué entra:** el costo por hora volada por modelo y por operador —el número sobre el que
+se cotiza Ala Continua, y que hoy Lucía arma a mano cruzando dos hojas de cálculo—; almacenamiento por
 columnas contra por filas, con el diagrama y la aritmética; Parquet como formato de
 intercambio; agregaciones sobre millones de filas sin servidor ni proceso aparte; y el
 pivote —esa tabla ancha de `CASE WHEN` que todo el mundo ha escrito— hecho como se debe.
@@ -249,7 +265,8 @@ los lectores son decenas. Nunca como base de la aplicación.
 
 ### ⏱️ F09 — Series temporales: levantar y modelar (10 h) · TimescaleDB
 
-**Qué entra:** la telemetría a bordo —una lectura por sensor y por minuto y por vehículo—;
+**Qué entra:** los parámetros de vuelo que se descargan al aterrizar —treinta aeronaves con
+registro, lecturas que llegan ordenadas y no se corrigen nunca—;
 hypertables y particionado por tiempo; los roll-ups continuos de minuto a hora a día; las
 políticas de retención y de compresión como **parte del modelo**, no como mantenimiento; y
 por qué una restricción —los datos llegan en orden y no se actualizan— **se convierte en
@@ -271,26 +288,29 @@ rendimiento de Timescale y me ahorra una extensión"*. El rival aquí **es** Pos
 es justamente el punto.
 
 **Qué entra:** medición de compresión —tamaño en disco antes y después— y de consultas por
-rango; la cardinalidad que mata: qué pasa cuando cada vehículo × sensor es una serie
+rango; la cardinalidad que mata: qué pasa cuando cada aeronave × parámetro es una serie
 distinta; el backfill de datos históricos contra una hypertable comprimida; y el coste de
 la retención mal configurada.
 
 **💥 Punto de rotura:** la explosión de cardinalidad.
 
-**⚖️ Veredicto:** series temporales cuando los datos llegan ordenados, no se actualizan y
+**⚖️ Veredicto:** declara que los roll-ups continuos y la compresión son Timescale License
+(alcance §12, 20). Series temporales cuando los datos llegan ordenados, no se actualizan y
 se consultan por rango. Si alguna de las tres no se cumple, no es tu familia.
 
 **Ejercicios: 26.**
 
 ### 🔍 F11 — Búsqueda: levantar y modelar (10 h) · OpenSearch
 
-**Qué entra:** el catálogo de repuestos con sinónimos, equivalencias y tolerancia a
-errores de tecleo; el índice invertido por dentro —analizadores, tokens, stemming— con el
+**Qué entra:** el catálogo de partes —ochenta mil referencias, con números alternos,
+equivalencias por modelo y proveedores que escriben el mismo número de cuatro formas— con
+sinónimos y tolerancia a errores de tecleo; el índice invertido por dentro —analizadores, tokens, stemming— con el
 diagrama; facetas y agregaciones; y el `mapping`, que es un esquema aunque se llame de
 otra forma.
 
 **🪞 El instinto que falla:** *"un `LIKE '%junta%'` ya busca"*. Busca, y escanea la tabla
-entera, y no encuentra "juntas" ni "junta tórica" ni "junta torica" sin tilde.
+entera, y no encuentra "juntas" ni "junta tórica" ni "junta torica" sin tilde. Ni el
+alterno que le habría ahorrado a Sandra la importación.
 
 **⚰️ La situación 3:** el motor de búsqueda como **fuente de verdad**. El día que se
 reindexa y algo no estaba en ningún otro sitio.
@@ -315,9 +335,10 @@ siempre reconstruible desde otro sitio.
 
 **Ejercicios: 28.**
 
-> 💀 **Boss del Bloque II — "El tablero que nadie puede reconstruir".** El tablero de
-> costes sale de DuckDB, las métricas de Timescale y el buscador de OpenSearch, y los tres
-> discrepan en la misma cifra. Encuentra de dónde sale cada número, cuál es el correcto y
+> 💀 **Boss del Bloque II — "El tablero que nadie puede reconstruir".** Lo pide Lucía
+> Arango, que va a renovar un contrato de Ala Continua con ese número. El costo por hora
+> volada sale de DuckDB, las horas de los parámetros de Timescale y las partes del buscador de
+> OpenSearch, y los tres discrepan en la misma cifra. Encuentra de dónde sale cada número, cuál es el correcto y
 > **por qué los otros dos no lo son**. Entregable: un informe de reconciliación con la
 > medición de cada camino.
 
@@ -330,8 +351,11 @@ relacional no es que salgan caras, es que no se escriben.
 
 ### 🕸️ F13 — Grafos: levantar y modelar (10 h) · Neo4j
 
-**Qué entra:** el despiece —qué pieza va dentro de qué conjunto— y el *"si cambio esta
-pieza, ¿qué más cae?"*; nodos, relaciones y propiedades, y por qué la relación es
+**Qué entra:** la trazabilidad de Cóndor en sus dos formas: el despiece —qué pieza va
+dentro de qué conjunto, que es un árbol— y la historia de instalación —qué pieza estuvo en
+qué aeronave y cuándo, construida con los retiros e instalaciones de `workOrder`, que
+**no** es un árbol: las piezas pasan por almacén, por talleres aliados, se intercambian y
+vuelven—; nodos, relaciones y propiedades, y por qué la relación es
 ciudadana de primera; Cypher lo justo para el dominio; y la cardinalidad de travesía, que
 es la medida que importa aquí.
 
@@ -355,7 +379,10 @@ que lo otro **no se puede escribir**.
 
 **Qué entra:** la medición de travesía por profundidad contra `WITH RECURSIVE`; la consulta
 de patrón, que es el argumento real; el grafo que no cabe en memoria; y el coste operativo
-de mantener un motor más por una consulta al mes.
+de mantener un motor más por una consulta al mes. La consulta de patrón tiene nombre en
+Cóndor: **la directiva que llega un jueves** —*¿en cuáles de nuestras aeronaves estuvo
+instalada alguna vez una pieza de este lote, y qué se desmontó junto con ella?*—, que hoy se
+contesta con cuatro días y la memoria de Yamile.
 
 **💥 Punto de rotura:** la consulta sin límite de profundidad sobre un grafo con ciclos.
 
@@ -372,8 +399,9 @@ mismo curso declara.
 
 ### 🧬 F15 — Vectorial: levantar y modelar (10 h) · Qdrant
 
-**Qué entra:** *"¿qué avería se parece a esta?"* sobre los partes de avería en prosa, con
-faltas y jerga de taller; qué es un embedding y qué no —sin entrenar nada—; distancia
+**Qué entra:** *"esto ya lo vimos"* sobre los reportes de piloto —veintiséis mil desde
+2015, tres líneas escritas con prisa, con jerga y con faltas: *"ruido metálico al bajar
+tren, intermitente"* tiene que encontrar *"golpeteo al extender"*—; qué es un embedding y qué no —sin entrenar nada—; distancia
 coseno contra producto interno; el índice HNSW y sus dos parámetros que importan; y el
 filtrado con metadatos, que es donde esta familia se vuelve útil de verdad.
 
@@ -405,9 +433,10 @@ la búsqueda exacta existe, es más barata y acierta más.
 
 **Ejercicios: 26.**
 
-> 💀 **Boss del Bloque III — "El técnico que ya vio esta avería".** Dado un parte de avería
-> nuevo, hay que devolver las cinco intervenciones históricas más parecidas **y** las
-> piezas que el despiece dice que podrían estar implicadas. Cruza grafo y vectores, y hay
+> 💀 **Boss del Bloque III — "Freddy ya vio esto".** Lo pide Hernán Peñaloza, que no
+> quiere que esa memoria siga viviendo en una sola persona. Dado un reporte de piloto nuevo,
+> hay que devolver las cinco intervenciones históricas más parecidas **y** las piezas que la
+> trazabilidad dice que podrían estar implicadas. Cruza grafo y vectores, y hay
 > que justificar con medición por qué cada motor hace la mitad que hace.
 
 ---
@@ -419,7 +448,9 @@ restricción ya no es el modelado, es la **distribución**.
 
 ### 🏛️ F17 — Columnar ancha: levantar y modelar (10 h) · Cassandra
 
-**Qué entra:** la telemetría cuando ya no cabe en un nodo; **modelar por consulta y no por
+**Qué entra:** los parámetros de vuelo cuando ya no caben en un nodo —las ciento cuarenta
+aeronaves con registro, miles de parámetros por segundo, escritos y jamás actualizados,
+consultados siempre por aeronave y por rango de fechas—; **modelar por consulta y no por
 entidad**, que es el cambio de paradigma más grande del curso; partition key contra
 clustering key y qué decide cada una; desnormalizar a propósito y mantener N tablas de lo
 mismo; y el modelo de consistencia ajustable con quórum.
@@ -453,7 +484,8 @@ trampa cara.
 
 ### 📴 F19 — Offline-first: levantar y modelar (10 h) · CouchDB + PouchDB
 
-**Qué entra:** la app del técnico en un taller sin cobertura; replicación bidireccional;
+**Qué entra:** la app de Freddy Manrique, el técnico itinerante que pasa tres días en
+pistas del Guaviare sin señal y hoy transcribe el viernes lo que vio el lunes; replicación bidireccional;
 la revisión de documento como historia y no como versión; **conflictos: detectarlos,
 resolverlos y decidir quién gana**; y qué es un CRDT y cuándo te ahorra escribir la
 resolución a mano.
@@ -463,7 +495,8 @@ es un caso de error: es el caso normal, y hay que diseñarlo.
 
 **⚰️ La situación 3:** resolución de conflictos por "el último que escribe gana", que en
 este dominio significa perder silenciosamente el trabajo del técnico que estuvo sin
-cobertura toda la mañana.
+cobertura toda la mañana — o que dos técnicos que trabajaron sobre la misma aeronave sin
+poder verse escriban cosas incompatibles sobre el mismo componente.
 
 **Ejercicios: 24.**
 
@@ -475,7 +508,7 @@ intervención manual"*.
 **Qué entra:** la medición del volumen de sincronización y del tamaño del historial de
 revisiones; el conflicto masivo, provocado a propósito con dos clientes editando lo mismo;
 la compactación de la base y qué se pierde; y el límite: qué tamaño de base local es
-razonable en el terminal del taller.
+razonable en la tableta del técnico.
 
 **💥 Punto de rotura:** la sincronización que no converge.
 
@@ -487,7 +520,9 @@ hay que decirlo.
 
 ### ⚡ F21 — NewSQL: levantar y modelar (10 h) · CockroachDB
 
-**Qué entra:** el libro de órdenes de trabajo con talleres en tres regiones; **la síntesis
+**Qué entra:** el expediente de la aeronave con tres autoridades en tres países —un
+operador estatal cuyo contrato exige que sus registros no salgan de su territorio, y una
+aeronave que hace rutina en el Coca y la inspección mayor en Bogotá—; **la síntesis
 del curso**: SQL y ACID sobre un sistema distribuido, y qué cuesta eso exactamente; rangos,
 réplicas y consenso sin misticismo; localidad de datos y por qué la geografía aparece en
 el esquema; y el reloj, que es el problema de fondo de todo esto.
@@ -496,14 +531,20 @@ el esquema; y el reloj, que es el problema de fondo de todo esto.
 hasta que una transacción cruza regiones y la latencia de la luz aparece en tu `COMMIT`.
 
 **⚰️ La situación 3:** NewSQL con el esquema copiado tal cual de Postgres, sin pensar la
-localidad, y cada transacción cruzando el Atlántico dos veces.
+localidad, y cada transacción cruzando una frontera dos veces — incluidos registros que,
+por contrato, no podían salir de su país.
 
 **Ejercicios: 26.**
 
 ### ⚡ F22 — NewSQL: romper, medir y decidir (10 h)
 
+**Laboratorio:** `cockroach demo --nodes=9 --global`, tres regiones con latencia inyectada y
+sin licencia (alcance §12, 19).
+
 **🪞 Apuesta:** *"un Postgres de un nodo con réplica de lectura resuelve este caso a una
-fracción del coste y de la latencia"*. Casi siempre es verdad, y esa es la lección.
+fracción del coste y de la latencia"*. Casi siempre es verdad, y esa es la lección. Lo que
+un Postgres de un nodo no puede dar es la **residencia de datos por autoridad**, y es ahí
+donde el caso de Cóndor se sostiene o se cae.
 
 **Qué entra:** la medición de latencia de commit por localidad —el único sitio del curso
 donde el tiempo **sí** es el argumento, porque es física y no hardware—; la contención
@@ -512,14 +553,15 @@ modelo de programación; y el coste operativo y económico real.
 
 **💥 Punto de rotura:** la transacción distribuida con contención alta.
 
-**⚖️ Veredicto:** NewSQL cuando necesitas ACID de verdad sobre varias regiones. Si una
-región basta, Postgres es más simple, más barato y más rápido.
+**⚖️ Veredicto:** NewSQL cuando necesitas ACID de verdad sobre varias regiones, o cuando
+la ley decide dónde vive cada fila. Si una región basta, Postgres es más simple, más barato y más rápido.
 
 **Ejercicios: 26.**
 
-> 💀 **Boss del Bloque IV — "El taller de la montaña".** Un taller sin cobertura fiable,
-> telemetría que sigue llegando y órdenes que se firman en tres regiones. Diseña el reparto
-> —qué vive en el terminal, qué en la columnar, qué en el libro distribuido—, **provoca las
+> 💀 **Boss del Bloque IV — "La estación del Coca".** Lo pide Lucía Arango antes de firmar
+> con un segundo operador estatal. Una estación sin cobertura fiable, parámetros de vuelo que
+> siguen llegando y un expediente que se firma en tres países. Diseña el reparto —qué vive
+> en la tableta, qué en la columnar, qué en el expediente distribuido—, **provoca las
 > tres roturas** del bloque y entrega el informe con las mediciones y las decisiones.
 
 ---
@@ -532,7 +574,7 @@ motor al lado **y pagar la factura de tenerlo**.
 
 ### ⚖️ F23 — El diseño: qué motor para qué parte (12 h)
 
-**Qué entra:** el sistema de flota completo, pasado por las cinco preguntas parte por
+**Qué entra:** el sistema de Cóndor completo, pasado por las cinco preguntas parte por
 parte; la decisión de qué motores entran de verdad y cuáles se descartan **con su razón
 escrita**; dónde está la fuente de verdad, que es la decisión que ordena todas las demás; y
 el diagrama del sistema con sus fronteras.
@@ -568,7 +610,23 @@ acumulados durante cinco meses.
 
 **Ejercicios: 24.**
 
-> 🏆 **El boss global "El Taller" cierra aquí.** Quien lo haya seguido desde el Bloque I
+> 💀 **Boss del Bloque V — "Las dos verdades".** Lo pide Lucía Arango para el comité que
+> decide si el sistema de Camilo se retira, y Camilo Duarte presenta la defensa de su
+> sistema: el entregable tiene que sobrevivirla. Te entregan `SIGMA` en Postgres y el
+> sistema de componentes en Mongo **ya divergidos**, con discrepancias sembradas por el
+> generador: piezas instaladas en aeronaves que ya no están en la flota, intercambios que
+> bifurcaron un número de serie sin dejar rastro, contadores de horas que no cuadran. Es el
+> actuador de marzo de 2026, multiplicado por cien. Hay que encontrar las discrepancias y
+> explicar de qué costura sale cada una; decidir cuál es la fuente de verdad y si el
+> sistema de Camilo **se retira o se queda como índice reconstruible**, con la razón
+> escrita; montar la costura —outbox o CDC— y medir su ventana de inconsistencia; y poner
+> la factura al lado de cada opción. Cierra el círculo que abrió F00 con la autopsia de ese
+> mismo sistema y aplica el triaje de *"ya elegiste mal, ¿ahora qué?"* de F02. El veredicto
+> puede ser que Camilo tenía razón en quedarse: si los números lo dicen, se escribe así.
+> Entregable: informe de reconciliación con sus comandos, diseño de la fuente de verdad y
+> la factura.
+
+> 🏆 **El boss global "El Hangar" cierra aquí.** Quien lo haya seguido desde el Bloque I
 > tiene el sistema entero funcionando y medido. Quien no, no ha perdido nada del curso: es
 > opcional por diseño y el capstone se hace igual sin él.
 
@@ -606,7 +664,8 @@ acumulados durante cinco meses.
 | 25 | La factura y el veredicto final | V | 14 | 24 |
 | | **Total** | | **252 h** | **636** |
 
-Más **cinco boss de bloque** 💀 y el boss global 🏆, todos fuera del conteo.
+Más **cinco boss de bloque** 💀, el boss global 🏆 y los **diez miniproyectos de familia**
+🧰 (4–6 h cada uno, anunciados al abrir cada fase B), todos fuera del conteo.
 
 ---
 
@@ -614,6 +673,7 @@ Más **cinco boss de bloque** 💀 y el boss global 🏆, todos fuera del conteo
 
 ```
 README.md
+00-historia-de-condor.md
 0-programa-del-curso.md
 00-la-decision-que-se-hereda.md
 01-el-dominio-de-flota-y-el-arnes.md
@@ -642,12 +702,20 @@ README.md
 24-poliglota-la-costura.md
 25-poliglota-la-factura.md
 a01-laboratorio-contenerizado.md … a10-licencias-y-riesgo.md
+propuestas-mini-proyectos.md
+h-mini-01-documental-barlovento.md … h-mini-10-newsql-barlovento.md
 INSTINTOS.md
 bitacora-de-medicion.md
 ```
 
 Dos dígitos en todo. Tags `fase-NN-<slug>`, prefijo de commit `fNN:`, ejercicios
-`fNN ejM:`. Los boss de bloque llevan tag propio `boss-bloque-<N>`.
+`fNN ejM:`. Los boss de bloque llevan tag propio `boss-bloque-<N>` y los miniproyectos
+`mini-NN-<slug>`. En `h-mini-NN`, el número es el orden de la familia (01–10), no el de la
+fase que cierra.
+
+`00-historia-de-condor.md` es la historia de la empresa del curso y **no es una fase**: va
+fuera de la numeración lectiva, igual que en el curso de Python, y F00 sigue siendo la
+primera fase.
 
 ---
 
@@ -655,9 +723,8 @@ Dos dígitos en todo. Tags `fase-NN-<slug>`, prefijo de commit `fNN:`, ejercicio
 
 - **Las versiones y digests de los diez motores**, hasta la sesión de verificación de
   laboratorio. Viven en `a02` cuando se fijen.
-- **Cassandra o ScyllaDB** en F17/F18: se decide midiendo cuál levanta con menos RAM en
-  las tres plataformas.
-- **El modelo de embeddings** de F15/F16, que condiciona `a06`.
+- ✅ Resueltos el 29/09/2026 (alcance §12, decisiones 16–18): F17/F18 con **Cassandra y el
+  heap fijado**, y F15/F16 con **`intfloat/multilingual-e5-small`**.
 - **Si el Bloque I se publica como entrega independiente** antes de tener el resto. La
   aritmética lo permite —son 40 h y cierran con su boss— y sería la forma barata de medir
   si hay audiencia antes de comprometer cinco meses.

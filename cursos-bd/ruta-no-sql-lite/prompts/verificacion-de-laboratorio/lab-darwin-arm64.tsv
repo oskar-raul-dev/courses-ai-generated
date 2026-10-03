@@ -1,0 +1,11 @@
+fecha	familia	persiste	ram_reposo	nota
+2026-09-29T21:39:46Z	base	SI	29.37MiB	
+2026-09-29T21:40:39Z	documental	SI	241.9MiB	
+2026-09-29T21:41:33Z	clave-valor	SI	10.38MiB	
+2026-09-29T21:42:26Z	series	SI	83.63MiB	
+2026-09-29T21:43:38Z	busqueda	SI	944.2MiB	
+2026-09-29T21:44:53Z	grafos	SI	429MiB	
+2026-09-29T21:45:49Z	vectorial	SI	222.6MiB	
+2026-09-29T21:47:57Z	columnar	SI	1.107GiB	
+2026-09-29T21:48:54Z	offline	SI	97.08MiB	
+2026-09-29T21:49:54Z	newsql	SI	344MiB	

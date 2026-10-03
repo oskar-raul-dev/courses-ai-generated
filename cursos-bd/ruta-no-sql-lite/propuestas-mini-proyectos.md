@@ -6,8 +6,8 @@
 > empresa, con otro dolor, y existe para demostrar que lo aprendido es un modelo de acceso y
 > no un truco del dominio del curso.
 > **Fecha:** 14 de septiembre de 2026
-> **Estado:** propuesta. El reparto de §3 está decidido; las horas y el encaje en el calendario
-> (§6) están abiertos.
+> **Estado:** **decidido** el 29/09/2026: el reparto de §3, el encaje de §6 y las cuatro
+> decisiones de §7.
 > **Precedencia:** por debajo de [`prompts/alcance-del-proyecto.md`](prompts/alcance-del-proyecto.md)
 > y de la [guía de estilo](prompts/guia-de-estilo-y-convenciones.md). Las empresas salen de
 > [`prompts/propuestas-historias.md`](prompts/propuestas-historias.md); la empresa del curso es
@@ -137,13 +137,13 @@ fase y no lleva su aparato.
 | # | Familia | Entorno | Motor · perfil | Driver o cliente | Línea base |
 |---|---|---|---|---|---|
 | 01 | 🍃 Documental | TypeScript | MongoDB · `documental` | `mongodb` (sin ODM) | Postgres JSONB + GIN |
-| 02 | 🔑 Clave-valor | TypeScript + **Lua** | Valkey · `clave-valor` | cliente de protocolo, **por decidir en `a06`** | Tabla `UNLOGGED` |
+| 02 | 🔑 Clave-valor | TypeScript + **Lua** | Valkey · `clave-valor` | `iovalkey` | Tabla `UNLOGGED` |
 | 03 | 🦆 Analítico | **Python** (arnés en TS) | DuckDB · `analitico` | cliente de Python + CLI | Postgres, tabla ancha |
 | 04 | ⏱️ Series | TypeScript | TimescaleDB · `series` | `pg` — es una extensión | Postgres particionado |
 | 05 | 🔍 Búsqueda | TypeScript | OpenSearch · `busqueda` | HTTP + cliente de JS | Postgres `tsvector` + GIN |
 | 06 | 🕸️ Grafos | TypeScript | Neo4j · `grafos` | `neo4j-driver` · Cypher | `WITH RECURSIVE` con corte de ciclos |
 | 07 | 🧬 Vectorial | **Python** ingesta · TS consulta | Qdrant · `vectorial` | `qdrant-client` + HTTP | `pgvector` con HNSW |
-| 08 | 🏛️ Columnar | TypeScript | Cassandra · `columnar` **(o ScyllaDB, sin decidir)** | `cassandra-driver` · CQL | Postgres particionado |
+| 08 | 🏛️ Columnar | TypeScript | Cassandra · `columnar` | `cassandra-driver` · CQL | Postgres particionado |
 | 09 | 📴 Offline | TypeScript de punta a punta | CouchDB + PouchDB · `offline` | HTTP · IndexedDB | **ninguna, y se declara** |
 | 10 | ⚡ NewSQL | TypeScript | CockroachDB · `newsql` | **`pg`**, el mismo de Postgres | Postgres de un nodo con réplica |
 
@@ -158,9 +158,9 @@ es una extensión; NewSQL, porque habla su protocolo; y analítico embebido, por
 la tesis del curso visible en una columna: **la etiqueta no decide nada, el modelo de acceso
 sí.**
 
-**Dos casillas están sin cerrar y las dos bloquean escritura:** el cliente de Valkey y el
-dilema Cassandra contra ScyllaDB. Las dos son pendientes ya declarados en la guía §17, y las
-dos se resuelven midiendo, no opinando.
+**Las dos casillas que bloqueaban escritura se cerraron el 29/09/2026** (alcance §12,
+16–17). El cliente de Valkey es `iovalkey`. Columnar ancha va con Cassandra: se midió la RAM,
+las dos cupieron con el heap fijado, y decidió la licencia.
 
 ---
 
@@ -181,10 +181,13 @@ La historia extendida de las cinco está en `prompts/propuestas-historias.md` §
 
 ---
 
-## 6. ⏱️ Horas y encaje — decisión abierta
+## 6. ⏱️ Horas y encaje — decidido: opción A
 
-Los miniproyectos **no están presupuestados todavía** y hay tres formas de meterlos, con costos
-distintos:
+> ✅ **Decidido el 29/09/2026: opción A.** Los miniproyectos van fuera de las 252 h, son
+> opcionales, de 4 a 6 h cada uno, y **se anuncian al abrir la fase B**, no al cerrarla. El
+> conteo de ejercicios de las fases no cambia. Las tres opciones quedan abajo como registro.
+
+Había tres formas de meterlos, con costos distintos:
 
 **Opción A — fuera de las 252 h, como los boss.** Diez encargos opcionales de 4 a 6 horas cada
 uno, al cierre de su minicurso. **Coste: 0 h de calendario**, y es coherente con cómo el curso
@@ -205,15 +208,16 @@ fase entera, y eso vale más que las horas que ocupa.
 
 ---
 
-## 7. ❓ Lo que queda por decidir
+## 7. ✅ Decisiones cerradas
 
-1. **La opción de §6**, que es la única que afecta al calendario y al conteo de ejercicios.
-2. **Si `h-mini-NN-*.md` se declara como familia de archivos** en la convención de nombres de
-   `prompts/propuesta-fases-y-alcance.md` §10 y en la guía de estilo §5.2. Hoy el repositorio
-   solo contempla `NN-`, `aNN-` y los prefijos de track. **Es un prefijo nuevo y hay que
-   registrarlo** o cada sesión futura va a querer renumerarlo.
-3. **Si los miniproyectos llevan tag de git propio.** La propuesta es `mini-NN-<slug>`, en su
-   propio espacio, para que `git tag -l 'fase-*'` siga siendo el índice limpio del curso.
-4. **Si las cinco empresas necesitan su propio archivo de historia** o basta con los tres
-   párrafos de cada `h-mini` más la ficha de `prompts/propuestas-historias.md`. La propuesta es
-   que **basta**: la única empresa que merece historia larga es la que se mide.
+Las cuatro se cerraron el 29/09/2026, y todas con el valor propuesto:
+
+1. **Encaje: opción A** (§6). Fuera de las 252 h, anunciados al abrir la fase B.
+2. **`h-mini-NN-<familia>-<empresa>.md` es una familia de archivos del curso**, registrada en
+   la guía de estilo §5.2 y en `prompts/propuesta-fases-y-alcance.md` §10. Los diez archivos
+   conservan su nombre; ninguna sesión futura los renumera.
+3. **Tag de git propio `mini-NN-<slug>`**, en su propio espacio, para que
+   `git tag -l 'fase-*'` siga siendo el índice limpio del curso.
+4. **Las cinco empresas no llevan archivo de historia propio.** Bastan los tres párrafos de
+   cada `h-mini` y la ficha de `prompts/propuestas-historias.md`: la única empresa que merece
+   historia larga es la que se mide.

@@ -114,7 +114,7 @@ sobre el mismo dato.** Reconocer eso es el objetivo real de este encargo.
 | Pieza | Qué se usa | Nota |
 |---|---|---|
 | Entorno | **Node + TypeScript** | |
-| Motor | **Cassandra** · perfil `columnar` | ⚠️ **Cassandra o ScyllaDB sigue sin decidirse**: es un pendiente declarado y se resuelve midiendo cuál levanta con menos RAM en las tres plataformas, no por preferencia. Las dos hablan CQL, así que el modelado no cambia |
+| Motor | **Cassandra** · perfil `columnar` | Con el heap fijado por el `compose.yaml` de la ruta. ScyllaDB habla el mismo CQL y el modelado no cambiaría, pero se descartó por licencia (alcance §12, 16) |
 | CLI | `cqlsh` | Y `nodetool` para mirar tablas, histogramas y compactaciones |
 | Driver | `cassandra-driver` de Node | |
 | Línea base | **PostgreSQL** con particionado declarativo · perfil `base` | Más la tabla con tres índices de hoy, construida como villano |

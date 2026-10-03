@@ -1,0 +1,121 @@
+# Compose de la sesión de verificación de laboratorio (T10).
+# No es el compose.yaml de la ruta: es el banco de pruebas del que sale a02.
+# Sin puertos publicados a propósito: todo se mide con `docker compose exec`,
+# así no choca con otros laboratorios que haya en la máquina.
+
+name: rnl-t10
+
+services:
+  base:
+    profiles: [base]
+    image: pgvector/pgvector:0.8.6-pg18
+    environment:
+      POSTGRES_PASSWORD: condor
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements"]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      retries: 60
+
+  documental:
+    profiles: [documental]
+    # 8.0.20 exacta, y es un parche temporal: ver hallazgos.md §H1. Desde la 8.0.21, mongod
+    # se niega a arrancar sobre los kernels 6.19–7.0.13, y la VM de Docker Desktop 29.8.0 trae
+    # 7.0.12-linuxkit. La 8.0.20 arranca porque es anterior a esa protección, no porque esté
+    # libre del fallo de fondo (tcmalloc contra rseq). Se vuelve a la 8.0 vigente cuando la
+    # VM traiga un kernel 7.0.14 o posterior.
+    image: mongo:8.0.20
+    # replica set de un nodo: sin él no hay transacciones multi-documento
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    healthcheck:
+      # inicia el replica set la primera vez y después solo comprueba que hay primario
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]}).ok }"]
+      interval: 2s
+      retries: 60
+
+  clave-valor:
+    profiles: [clave-valor]
+    image: valkey/valkey:9.1
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 2s
+      retries: 60
+
+  series:
+    profiles: [series]
+    # la imagen sin -oss: los roll-ups continuos y la compresión son Timescale License
+    image: timescale/timescaledb:2.30.1-pg18
+    environment:
+      POSTGRES_PASSWORD: condor
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      retries: 60
+
+  busqueda:
+    profiles: [busqueda]
+    image: opensearchproject/opensearch:3.8.0
+    environment:
+      discovery.type: single-node
+      DISABLE_SECURITY_PLUGIN: "true"
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:9200/_cluster/health"]
+      interval: 3s
+      retries: 60
+
+  grafos:
+    profiles: [grafos]
+    image: neo4j:2026.09.0-community
+    environment:
+      NEO4J_AUTH: neo4j/condor-mro
+      NEO4J_server_memory_heap_max__size: 512m
+      NEO4J_server_memory_pagecache_size: 256m
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "condor-mro", "RETURN 1"]
+      interval: 3s
+      retries: 60
+
+  vectorial:
+    profiles: [vectorial]
+    image: qdrant/qdrant:v1.19.1
+    healthcheck:
+      # la imagen no trae curl: se abre el puerto con bash
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/6333 && printf 'GET /readyz HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q 200 <&3"]
+      interval: 2s
+      retries: 60
+
+  columnar:
+    profiles: [columnar]
+    image: cassandra:5.0
+    environment:
+      # obligatorio: por defecto toma 4,63 GiB en reposo (medido el 29/09/2026)
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 128M
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "SELECT release_version FROM system.local"]
+      interval: 5s
+      retries: 60
+
+  offline:
+    profiles: [offline]
+    image: couchdb:3.5.2
+    environment:
+      COUCHDB_USER: condor
+      COUCHDB_PASSWORD: condor
+    healthcheck:
+      # un nodo solo no crea las bases de sistema: sin ellas, el log repite
+      # database_does_not_exist cada 5 s y no hay replicación persistente (hallazgos.md §H9)
+      test: ["CMD-SHELL", "curl -s -u condor:condor -X PUT http://localhost:5984/_users >/dev/null && curl -s -u condor:condor -X PUT http://localhost:5984/_replicator >/dev/null && curl -sf http://localhost:5984/_up"]
+      interval: 2s
+      retries: 60
+
+  newsql:
+    profiles: [newsql]
+    image: cockroachdb/cockroach:v26.3.2
+    command: ["start-single-node", "--insecure", "--cache=256MiB", "--max-sql-memory=256MiB"]
+    healthcheck:
+      test: ["CMD", "cockroach", "sql", "--insecure", "-e", "SELECT 1"]
+      interval: 3s
+      retries: 60

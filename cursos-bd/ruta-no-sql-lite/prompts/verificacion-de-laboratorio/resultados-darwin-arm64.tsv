@@ -1,0 +1,13 @@
+fecha	plataforma	familia	imagen	digest	segundos_a_healthy	ram_reposo
+2026-09-29T06:44:27Z	darwin-arm64	base	pgvector/pgvector:0.8.6-pg18	pgvector/pgvector@sha256:2ba9ca5f2e7daa0f0e7723cba1ee9167bab54efd3640516a44ac1a928dd67e7a	3	32.55MiB
+2026-09-29T06:48:39Z	darwin-arm64	documental	mongo:8.0	mongo@sha256:4968f22d0c6c10ef29952f3e807f62872ba22b3312f25803564fbfc08255efc2	NO-HEALTHY(unhealthy,245s)	0B
+2026-09-29T06:49:48Z	darwin-arm64	clave-valor	valkey/valkey:9.1	valkey/valkey@sha256:418652cfb58ef879d4978c33553735d7147016032d5aefaa14c828e611eb9dfd	3	11.81MiB
+2026-09-29T06:51:21Z	darwin-arm64	series	timescale/timescaledb:2.30.1-pg18	timescale/timescaledb@sha256:9dede0e3ccc071cf71935b17f76bf243331df0b1575338c8ac294640fcf12a36	3	88.41MiB
+2026-09-29T06:54:01Z	darwin-arm64	busqueda	opensearchproject/opensearch:3.8.0	opensearchproject/opensearch@sha256:fafe3fc3587088674669235575aa166228c48bdb940294a8cdbbc1da75236a40	17	1020MiB
+2026-09-29T07:11:36Z	darwin-arm64	grafos	neo4j:2026.09.0-community	neo4j@sha256:91fb0bf237c41b7b3dcbe84703aa0b82e0d7d067b16e1c8ab21f03fc679edf4e	13	529.1MiB
+2026-09-29T10:59:05Z	darwin-arm64	vectorial	qdrant/qdrant:v1.19.1	qdrant/qdrant@sha256:12364fe851b9f17356fc88189fc06d1b521262e04659ec7345975b00c9246a10	3	58.24MiB
+2026-09-29T11:39:15Z	darwin-arm64	columnar	cassandra:5.0	cassandra@sha256:8819d1b7877ee6621751a761cc163332e9c3eaf671c8ef672f7c77a7c5bff05f	1190	1.285GiB
+2026-09-29T15:26:21Z	darwin-arm64	newsql	cockroachdb/cockroach:v26.3.2	cockroachdb/cockroach@sha256:bc15746ef2c2493b2cfd46a76898a745587d068b1a259fff3c4447c3f3b36ea2	4	317.7MiB
+2026-09-29T15:27:32Z	darwin-arm64	documental	mongo:8.0.20	mongo@sha256:098862b1339f031900ca66cf8fef799e616d6324fa41b9a263f2ec899552c1ef	4	115.2MiB
+2026-09-29T15:29:37Z	darwin-arm64	columnar	cassandra:5.0	cassandra@sha256:8819d1b7877ee6621751a761cc163332e9c3eaf671c8ef672f7c77a7c5bff05f	62	1.157GiB
+2026-09-29T17:53:52Z	darwin-arm64	offline	couchdb:3.5.2	couchdb@sha256:8cf5f8442585c346d2717ff0ad95605731d2f19f67b8367840baa8d3b24ebc31	5	98.84MiB

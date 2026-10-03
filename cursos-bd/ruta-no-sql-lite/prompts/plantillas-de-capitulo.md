@@ -1,9 +1,9 @@
 # 🧩 Plantillas de capítulo
 ## Ruta NoSQL Lite
 
-Los tres esqueletos que se copian al abrir un chat nuevo: **fase A** (levantar y modelar),
-**fase B** (romper, medir y decidir) y **apéndice**. Las dos primeras son rígidas y se
-siguen literales; la de apéndice es deliberadamente laxa, porque un apéndice de
+Los cuatro esqueletos que se copian al abrir un chat nuevo: **fase A** (levantar y modelar),
+**fase B** (romper, medir y decidir), **fase del Bloque 0** (F00–F02) y **apéndice**. Las tres
+de fase son rígidas y se siguen literales; la de apéndice es deliberadamente laxa, porque un apéndice de
 contenedores y uno de licencias no se parecen en nada.
 
 Junto con [`alcance-del-proyecto.md`](alcance-del-proyecto.md), la
@@ -46,7 +46,7 @@ tres o cuatro párrafos. Si el bloque acaba de empezar, se presenta el bloque.}}
 ## 🎯 2. Objetivos de esta fase
 
 {{3 a 5 objetivos verificables. "Entender X" no es verificable; "modelar la ficha de
-vehículo de forma que una lectura completa cueste un solo viaje, y demostrarlo con
+aeronave de forma que una lectura completa cueste un solo viaje, y demostrarlo con
 explain" sí lo es.}}
 
 ---
@@ -84,10 +84,10 @@ en las dos direcciones, y enlace a a08 para el diccionario completo.}}
 
 ## 🧩 6. Modelar el dominio a la manera de esta familia
 
-{{El grueso de la fase. Regla del andamio en cada concepto: problema del dominio de flota
+{{El grueso de la fase. Regla del andamio en cada concepto: problema del dominio de Cóndor
 primero, mecanismo después, comando con salida real al final. Nombres de entidad fijos:
-vehicle, part, partCatalog, assembly, workOrder, reading, failureReport, technician,
-workshop, supplier.}}
+aircraft, part, partCatalog, assembly, workOrder, reading, pirep, technician, hangar,
+supplier.}}
 
 {{Cada decisión de modelado lleva su porqué, aunque sea media línea entre paréntesis.}}
 
@@ -140,7 +140,7 @@ confirma → salida. Todos los mensajes literales se copian a a09-catalogo-de-er
 
 {{Ver §9 de la guía. Agrupados por dificultad con encabezado de rango, conteo en el
 título, al menos un tercio de diagnóstico o medición, cada uno con Objetivo o Pregunta,
-todos anclados al dominio de flota.}}
+todos anclados al dominio de Cóndor.}}
 
 ## 🟢 Fácil — {{tema}} (1–{{a}})
 ## 🟡 Intermedio — {{tema}} ({{a+1}}–{{b}})
@@ -196,6 +196,10 @@ Mismo bloque de metadatos. Cambian las secciones del cuerpo.
 ## 🧭 1. Dónde estamos
 ## 🎯 2. Objetivos de esta fase
 
+{{Cierra con el anuncio del miniproyecto de la familia, en una línea y sin repetir el
+encargo: "🧰 **Miniproyecto de esta familia:** [{{empresa}} — {{el dolor en una frase}}](h-mini-NN-{{familia}}-{{empresa}}.md).
+Opcional, fuera de las horas del curso, y no entra a la bitácora."}}
+
 ## 🪞 3. La apuesta
 
 > 🪞 **Apuesta antes de ejecutar.** {{La predicción con su número esperado, escrita ANTES
@@ -237,8 +241,9 @@ también va, si corresponde, el "esto lo resuelve Postgres y así lo medimos".}}
 ## 📚 12. Referencias
 ## 🏁 13. Resultado de la fase
 
-{{Si esta fase cierra un bloque, aquí va además el 💀 boss de bloque en su propio apartado,
-y la nota del 🏆 boss global —siempre marcada como opcional—.}}
+{{Si esta fase cierra un bloque, aquí va además el 💀 boss de bloque en su propio apartado
+—un encargo interno de Cóndor, en voz de quien lo pide—, y la nota del 🏆 boss global El
+Hangar, siempre marcada como opcional.}}
 ````
 
 ---
@@ -259,7 +264,99 @@ y la nota del 🏆 boss global —siempre marcada como opcional—.}}
 - **Los tres documentos vivos se alimentan al cerrar la fase**: mediciones a
   `bitacora-de-medicion.md`, errores literales a `a09-catalogo-de-errores.md`, el 🪞 a
   `INSTINTOS.md`.
-- 🗑️ **No se cita nunca** `nuevas-ideas.md` ni `plan-accion-creacion-docs-base.md`.
+- 🧰 **El miniproyecto se anuncia, no se mide.** Ningún número de un `h-mini` entra a la
+  bitácora ni sostiene un argumento de la fase.
+- 🗑️ **No se cita nunca** un archivo `_desechable-*`.
+
+---
+
+# 🧭 Plantilla de fase del Bloque 0 — el instrumento
+
+Para F00, F01 y F02, que no tienen familia ni motor propio y por eso no encajan en las
+plantillas A y B (decidido el 29/09/2026). Rígida como aquellas: se sigue literal. La sección 4
+es la única que cambia de contenido según la fase.
+
+````markdown
+# {{emoji}} Fase {{NN}} — {{la promesa concreta del documento}}
+
+> **Curso:** Ruta NoSQL Lite · Fase {{NN}} de 25 · Bloque 0 — El instrumento · **{{X}} h**
+> **Motor:** {{ninguno — esta fase se lee | solo PostgreSQL `postgres@sha256:{{digest}}`}}
+> **Entorno de ejecución:** {{ninguno | TypeScript}}
+> **Depende de:** {{nada | Fase NN-1}} · **Habilita:** Fase {{NN+1}}
+> **Apéndices de apoyo:** {{ninguno | a01, a02, a05, a06, a07}}
+> **Fecha de verificación ejecutada:** {{DD/MM/AAAA | no aplica: esta fase no ejecuta nada}}
+> **Objetivo:** {{una frase, verificable}}
+
+---
+
+## 🧭 1. Dónde estamos
+
+{{En F00: por qué existe este curso y a quién le habla. En F01 y F02: qué dejó la fase
+anterior. Prosa, tres o cuatro párrafos.}}
+
+---
+
+## 🎯 2. Objetivos de esta fase
+
+{{3 a 5 objetivos verificables.}}
+
+---
+
+## 🚫 3. Qué NO entra todavía
+
+{{Con destino exacto: fase o apéndice.}}
+
+---
+
+## {{emoji}} 4. {{El grueso de la fase}}
+
+{{F00: las autopsias ⚰️ —la central de Cóndor y las de la industria—, con la estructura de
+§2.1 de la guía, y las dos situaciones —hype y zona de confort— como la misma decisión.
+F01: el dominio, el generador, el cargador de Postgres y cómo se mide la forma, con su
+prueba de fuego. F02: las cinco preguntas, cada una con el modo de fallo que predice, y el
+triaje de "ya elegiste mal".}}
+
+---
+
+## 🐘 5. Casi siempre gana Postgres
+
+{{Dicho pronto y en voz alta (§12 de la guía): en F00 como aviso, en F01 como la línea base
+que se monta, en F02 como la respuesta por defecto de las cinco preguntas.}}
+
+---
+
+## ⚠️ 6. Errores comunes y diagnóstico
+
+{{En F00 y F02, errores de criterio: la pregunta superficial que no discrimina. En F01,
+errores de laboratorio con su mensaje literal.}}
+
+---
+
+## 📋 7. Checklist de validación
+
+```text
+[ ] {{verificable}}
+```
+
+---
+
+## 🧪 8. Ejercicios ({{total}})
+
+{{12 en F00 y F02 (exención declarada, §9 de la guía), de lectura y decisión. 22 en F01, la
+mitad de medir y leer planes.}}
+
+---
+
+## 📚 9. Referencias
+
+---
+
+## 🏁 10. Resultado de la fase
+
+> **La señal de que quedó bien:** {{criterio en forma de cita.}}
+
+> 🏷️ **Tag:** `fase-{{NN}}-{{slug}}` · prefijo de commit `f{{NN}}:`
+````
 
 ---
 
@@ -293,7 +390,7 @@ de infraestructura, casi siempre `docker-container-legacy/`.}}
 ## {{Sección}}
 
 {{Formato libre. Lo que sí se mantiene: secciones cortas que responden a UNA pregunta,
-ejemplo mínimo ejecutable —no ejemplo completo—, y los nombres del dominio de flota
+ejemplo mínimo ejecutable —no ejemplo completo—, y los nombres del dominio de Cóndor
 siempre que haya datos.}}
 
 ---

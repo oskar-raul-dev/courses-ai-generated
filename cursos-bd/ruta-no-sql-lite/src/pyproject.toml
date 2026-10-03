@@ -1,0 +1,12 @@
+[project]
+name = "ruta-no-sql-lite"
+version = "1.0.0"
+description = "Código Python de la Ruta NoSQL Lite: solo vectorial y analítico embebido (a06)"
+requires-python = "==3.13.*"
+dependencies = [
+  "duckdb==1.5.6",
+  "numpy==2.5.3",
+  "psycopg[binary]==3.3.6",
+  "qdrant-client==1.19.1",
+  "sentence-transformers==6.1.0",
+]

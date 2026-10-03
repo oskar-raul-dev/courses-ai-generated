@@ -5,10 +5,14 @@
 > que sale todo lo narrativo, al estilo de `00-historia-de-aurea.md` en el curso de Python—
 > con sus fortalezas, sus debilidades y lo que cuesta adoptar cada una.
 > **Fecha:** 14 de septiembre de 2026
-> **Estado:** **decisión abierta.** Ninguna está elegida. Cuando se elija, se escribe
-> `00-historia-de-<empresa>.md` en la raíz del curso y **se cierra la decisión 3 de
-> [`alcance-del-proyecto.md`](alcance-del-proyecto.md) §12**, que hoy dice "mantenimiento de
-> flota" sin historia detrás.
+> **Estado:** **decidido. Ganó Cóndor MRO** (§3.1), con renombrado 1:1 del dominio. La
+> historia vive en [`00-historia-de-condor.md`](../00-historia-de-condor.md), y la decisión 3
+> de [`alcance-del-proyecto.md`](alcance-del-proyecto.md) §12 quedó cerrada el 29/09/2026.
+> Las cinco preguntas de §6 están resueltas: el boss global es **El Hangar**, la historia va
+> fuera de la numeración de fases y los boss de bloque son encargos internos. Cinco de las
+> otras candidatas aportan los miniproyectos de familia
+> ([`propuestas-mini-proyectos.md`](../propuestas-mini-proyectos.md)). El resto del documento
+> queda como registro de la discusión.
 > **Precedencia:** por debajo del alcance y de la
 > [guía de estilo](guia-de-estilo-y-convenciones.md). Lo que este documento propone no entra
 > en vigor hasta que se refleje en el alcance y en

@@ -134,7 +134,7 @@ vez hace dos meses.
 
 **Qué entra:** una sección por motor, todas con la misma forma —conectar desde el
 contenedor y desde el host, listar lo que haya, insertar un documento o fila de ejemplo del
-dominio de flota, consultarlo, contar, borrar, salir—: `mongosh`, `valkey-cli`, `duckdb`,
+dominio de Cóndor, consultarlo, contar, borrar, salir—: `mongosh`, `valkey-cli`, `duckdb`,
 `psql`, `cqlsh`, `cypher-shell`, la API HTTP de Qdrant, `curl` contra OpenSearch,
 `cockroach sql` y Fauxton/HTTP de CouchDB.
 
@@ -176,13 +176,17 @@ en §6 del alcance.
 
 ---
 
-## 7. 🚚 a05 — El dominio de flota y sus datos (2 h)
+## 7. ✈️ a05 — El dominio de flota y sus datos (2 h)
 
-**Qué entra:** el modelo conceptual completo con sus nueve entidades y sus relaciones; el
+**Qué entra:** el modelo conceptual de Cóndor completo, con sus diez entidades y sus
+relaciones (`00-historia-de-condor.md` §6), y los números de la casa que fijan los
+volúmenes (§5); el
 generador en TypeScript con **semilla determinista**, para que la medición sea la misma en
 tu máquina y en la mía; los tres volúmenes del curso (10 k, 1 M y el de rotura, que cada
-familia calibra); y los cargadores por motor, que son lo que se ejecuta al empezar cada
-fase A.
+familia calibra, contando la entidad principal de cada familia); y los casos plantados con
+respuesta conocida. **No entran los cargadores por motor** (decidido el 29/09/2026): cargar
+es modelar, así que cada fase A escribe el suyo sobre el dataset canónico, y F01 escribe el
+de Postgres con el esquema relacional de referencia.
 
 **La decisión que sostiene el curso entero y va escrita aquí:** los datos son los mismos
 en las diez familias. Si cada minicurso trajera su propio ejemplo, no habría comparación
@@ -296,7 +300,9 @@ más el aviso de producto cartesiano de Cypher y los de conflicto de replicació
 **Qué entra:** SSPL, BSL y la Elastic License explicadas en lo que le importa a un
 ingeniero que tiene que meter esto en una empresa: qué puedes hacer, qué no, y **a partir
 de qué momento el problema deja de ser técnico**. Por qué este curso usa **Valkey** y no
-Redis, y **OpenSearch** y no Elasticsearch. Los forks, quién los mantiene y qué tan
+Redis, y **OpenSearch** y no Elasticsearch; por qué se descartó ScyllaDB (*source-available*
+desde la 2025.1) y por qué **TimescaleDB con TSL sí se acepta**; y qué exige la *CockroachDB
+Software License* —un nodo o `demo`, libres; un clúster, clave y telemetría—. Los forks, quién los mantiene y qué tan
 verosímil es su continuidad. Y qué preguntar —y a quién— antes de proponer un motor.
 
 **Qué NO entra:** asesoría legal. Se dice explícitamente: esto orienta la conversación con
@@ -310,7 +316,12 @@ quien sí sabe, no la sustituye.
 
 - **`a02` no se puede cerrar** hasta la sesión de verificación de laboratorio: los digests
   y la tabla de RAM salen de ejecutar, no de la documentación.
-- **`a06` depende del modelo de embeddings** que se elija para F15/F16.
+- ✅ **`a06` ya tiene sus dos decisiones** (alcance §12, 17–18): `iovalkey` como cliente de
+  Valkey y `intfloat/multilingual-e5-small`, fijado por revisión, como modelo de
+  embeddings. Falta la revisión exacta y la comprobación de que Python y TypeScript
+  producen el mismo vector.
+- **`a02` fija el heap de Cassandra obligatoriamente** (`MAX_HEAP_SIZE=512M`): por defecto,
+  en reposo, toma 4,63 GiB.
 - **`a03` y `a09` se cierran al final del curso** por construcción, aunque su esqueleto se
   cree con la primera fase que los alimente.
 - **Si aparece un undécimo apéndice**, el candidato más probable es uno de observabilidad

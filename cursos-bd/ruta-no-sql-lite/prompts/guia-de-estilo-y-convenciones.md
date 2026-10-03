@@ -116,15 +116,15 @@ coach, solemnidad de manual, y esa forma tan cómoda de enseñar que consiste en
   desnormalizar.
 
   ```text
-  UNA LECTURA DE LA FICHA DE VEHÍCULO
+  UNA LECTURA DE LA FICHA DE AERONAVE
 
   documental          referenciado al estilo relacional
   ───────────         ─────────────────────────────────
   app                 app
    │                   │
-   │ 1 viaje           ├── 1 viaje → vehicles
+   │ 1 viaje           ├── 1 viaje → aircraft
    ▼                   ├── 1 viaje → engines
-  vehicles             ├── 1 viaje → options  (N)
+  aircraft             ├── 1 viaje → options  (N)
   (1 documento)        └── 1 viaje → warranty
                               = 3 + N viajes
   ```
@@ -146,7 +146,7 @@ ya sabe, y no dejar ambiguo nada de lo que no**.
 
 Todo concepto nuevo se presenta en tres tiempos y en este orden:
 
-1. **El problema primero**, y siempre en el dominio de flota. *"Necesitas saber qué órdenes
+1. **El problema primero**, y siempre en el dominio de Cóndor. *"Necesitas saber qué órdenes
    de trabajo tocaron la pieza X el trimestre pasado. En la colección que modelaste el
    martes, eso son cuántos viajes… ¿lo calculas antes de ejecutar?"*
 2. **El mecanismo después.** El nombre y la definición mínima: lo justo para usarlo hoy,
@@ -219,14 +219,14 @@ resuelve es ruido, y el lector deja de creerse las promesas del texto.
 > —nombres de archivo, rutas, variables de entorno, identificadores, colecciones, campos,
 > claves, targets— y **todos los comentarios van en español con tildes**.
 
-- **Nombres del dominio, fijos en todo el curso** y en inglés: `vehicle`, `part`,
-  `partCatalog`, `assembly`, `workOrder`, `reading`, `failureReport`, `technician`,
-  `workshop`, `supplier`. Una fase no renombra una entidad; si necesita una nueva, la
-  declara y se añade aquí.
+- **Nombres del dominio, fijos en todo el curso** y en inglés: `aircraft`, `part`,
+  `partCatalog`, `assembly`, `workOrder`, `reading`, `pirep`, `technician`, `hangar`,
+  `supplier`. Qué es cada una está en `00-historia-de-condor.md` §6. Una fase no renombra
+  una entidad; si necesita una nueva, la declara y se añade aquí.
 - **`camelCase` para campos** en los motores que no imponen otra cosa; `snake_case` en
   Postgres, Timescale, DuckDB, Cassandra y CockroachDB, que es lo idiomático allí. La
   incoherencia es deliberada y se explica una vez, en `a08`.
-- **Nunca `foo`, `bar` ni `test1`.** Todo ejemplo usa el dominio de flota con datos que
+- **Nunca `foo`, `bar` ni `test1`.** Todo ejemplo usa el dominio de Cóndor con datos que
   parezcan reales.
 - **Bloques de código con su lenguaje declarado**: `ts`, `python`, `sql`, `javascript`,
   `yaml`, `bash`, `text` para salida de terminal.
@@ -251,6 +251,11 @@ que `a09` no quede después de `a10`. Documentos vivos: `INSTINTOS.md` y
 apéndice y documento vivo a la vez — **no hay un catálogo aparte del apéndice**. Todo en
 minúsculas y con guiones, salvo los que el repositorio ya fija en mayúsculas.
 
+Los **miniproyectos de familia** son una familia de archivos propia:
+`h-mini-NN-<familia>-<empresa>.md`, donde `NN` es el orden de la familia en el curso (01
+documental … 10 NewSQL) y **no** el número de la fase que cierran. Viven en la raíz del
+curso, su índice es `propuestas-mini-proyectos.md`, y no se renumeran.
+
 ---
 
 ## 6. 📐 Cómo se presenta una medición
@@ -270,7 +275,7 @@ evidencia.
 Formato recomendado, y suficiente:
 
 ```markdown
-> 📐 **Medición — ficha de vehículo, lectura completa** · 1 M · `mongo@sha256:…` ·
+> 📐 **Medición — ficha de aeronave, lectura completa** · 1 M · `mongo@sha256:…` ·
 > verificado el 12/09/2026
 >
 > | | documentos examinados | devueltos | viajes |
@@ -278,7 +283,7 @@ Formato recomendado, y suficiente:
 > | embebido | 1 | 1 | 1 |
 > | referenciado | 1 + 3 + N | 1 | 3 + N |
 >
-> Reproducir: `npm run measure -- vehicle-read --shape embedded --volume 1m`
+> Reproducir: `npm run measure -- aircraft-read --shape embedded --volume 1m`
 ```
 
 **Los tiempos son contexto, nunca argumento.** Pueden aparecer —son legítimos y a veces
@@ -332,6 +337,8 @@ documento`. Nada de `Fase 03 — MongoDB` a secas.
 - 🔥 **Opcional o ampliación.** Fuera del alcance base. En ejercicios es el escalón por
   encima de 🔴.
 - 💀 **Boss.** Cierra un bloque, no una fase. Ver §9.
+- 🧰 **Miniproyecto.** El encargo de otra empresa que cierra una familia. Se anuncia al
+  abrir la fase B. Ver §9.3.
 - 🟢🟡🟠🔴 **Dificultad de ejercicios.** La escala completa está en §9.
 - 🚧 **Fuera de alcance por ahora**, siempre con destino explícito.
 - ⭐ **Valoración bibliográfica y nada más.** De una a cinco estrellas, solo en secciones
@@ -397,7 +404,8 @@ Los esqueletos completos, con placeholders, están en
 
 1. Título y metadatos
 2. 🧭 **Dónde estamos**
-3. 🎯 **Objetivos**
+3. 🎯 **Objetivos**, cerrando con el anuncio del 🧰 **miniproyecto** de la familia: una
+   línea y el enlace a su `h-mini` (§9.3)
 4. 🪞 **La apuesta falsable**, escrita antes de ejecutar
 5. 📐 **La medición contra la línea base** — el grueso de la fase
 6. 💥 **El punto de rotura**
@@ -418,6 +426,11 @@ destino explícito. Es material de autoría.
 **Longitud:** 4.000–5.000 palabras de **cuerpo**, medido cortando el documento por el
 encabezado de 🧪 Ejercicios. El aparato de ejercicios añade entre 1.300 y 2.800 palabras
 encima, y eso está bien: la banda vigila la densidad de la prosa, no el peso del archivo.
+
+**Las fases del Bloque 0 (F00–F02) tampoco siguen las plantillas A y B**, porque no tienen
+familia ni motor propio. Tienen la suya, igual de rígida, en `plantillas-de-capitulo.md`
+(decidido el 29/09/2026). **Y su longitud se escala por horas:** F00 (4 h) y F02 (3 h) van en
+**2.000–3.000 palabras de cuerpo**; F01 se calibra en el paso 1 de su prompt.
 
 **Los apéndices no siguen esta plantilla.** Usan índice de salto rápido, secciones cortas,
 una tabla de "cuándo usar qué" al final y de 5 a 10 ejercicios de consulta.
@@ -444,7 +457,7 @@ una tabla de "cuándo usar qué" al final y de 5 a 10 ejercicios de consulta.
   | | Nivel | Qué pide |
   |---|---|---|
   | 🟢 | Fácil | Reproducir lo que la fase acaba de mostrar |
-  | 🟡 | Intermedio | Aplicar el patrón a otra parte del dominio de flota |
+  | 🟡 | Intermedio | Aplicar el patrón a otra parte del dominio de Cóndor |
   | 🟠 | Difícil | Combinar patrones, diagnosticar, decidir entre alternativas |
   | 🔴 | Muy difícil | Abierto o adversarial: se entrega algo roto y hay que razonarlo |
   | 🔥 | Extra | Ampliaciones fuera del alcance base |
@@ -497,12 +510,32 @@ cruza al menos dos familias y se entrega como artefacto —un informe con medici
 modelo migrado, un diagnóstico con su comando—. Si al escribirlo te cabe en tres líneas,
 era un 🔴 con mejor nombre.
 
-### 9.2 El boss global "El Taller"
+**Es un encargo interno de Cóndor.** Lo pide alguien de la empresa —con nombre, de los de
+`00-historia-de-condor.md` §2— y tiene una consecuencia si sale mal. Esa persona es la que
+recibe el entregable, y el encargo se escribe en su voz.
 
-Opcional, acumulativo y fuera de las horas del curso. Cada bloque le añade un motor y una
-capacidad. **Se referencia al cierre de cada bloque, no al de cada fase**, y siempre
-marcado como opcional: quien sigue el curso suelto no lo necesita y no debe sentir que le
-falta algo.
+### 9.2 El boss global "El Hangar"
+
+Opcional, acumulativo y fuera de las horas del curso. Es el sistema de
+`00-historia-de-condor.md` §7, y cada bloque le añade un motor y una capacidad. **Se
+referencia al cierre de cada bloque, no al de cada fase**, y siempre marcado como
+opcional: quien sigue el curso suelto no lo necesita y no debe sentir que le falta algo.
+
+### 9.3 El miniproyecto de familia
+
+Uno por familia, y **ninguno es de Cóndor**: cada uno viene de otra empresa y existe para
+demostrar que lo aprendido es un modelo de acceso y no un truco del dominio. Opcional, de
+4 a 6 h, fuera de las horas del curso y fuera del conteo de ejercicios.
+
+Tres reglas lo mantienen en su sitio:
+
+- **Se anuncia al abrir la fase B, no al cerrarla**, con una línea y el enlace a su
+  `h-mini`. Un encargo que el lector conoce desde el principio cambia cómo lee la fase.
+- **No entra a la bitácora de medición.** Se observan medidas estructurales, pero todo lo
+  que se publica se mide sobre Cóndor. Si una fase cita un número de un miniproyecto como
+  evidencia, está mal.
+- **La fase no repite el encargo**: enlaza al `h-mini`, que es autosuficiente. Su índice y
+  su plantilla están en `propuestas-mini-proyectos.md`.
 
 ---
 
@@ -567,11 +600,13 @@ Son cinco, y son lo que distingue a este curso de un resumen de documentación:
 - **Los apéndices no repiten lo que explica una fase, y viceversa: se enlazan.** Si dos
   documentos explican lo mismo, uno de los dos está mal.
 - **Una fase no cita el temario ni el plan de trabajo**, cita a otra fase o a un apéndice.
-- 🗑️ **Los documentos desechables no se citan nunca.** `nuevas-ideas.md` y
-  `plan-accion-creacion-docs-base.md` son andamio de trabajo y van a desaparecer; ningún
-  archivo del curso puede enlazarlos ni apoyarse en ellos. La comprobación está en §15.
+- 🗑️ **Los documentos desechables no se citan nunca.** Los archivos `_desechable-*` son
+  andamio de trabajo y pueden desaparecer; ningún archivo del curso puede enlazarlos ni
+  apoyarse en ellos. La comprobación está en §15.
 - **Git:** tags `fase-NN-<slug>` y prefijo de commit `fNN:`; ejercicios `fNN ejM: …`. Los
-  apéndices no llevan tag propio salvo que dejen archivos en el repositorio.
+  apéndices no llevan tag propio salvo que dejen archivos en el repositorio. Los
+  miniproyectos llevan tag en su propio espacio, `mini-NN-<slug>`, para que
+  `git tag -l 'fase-*'` siga siendo el índice limpio del curso.
 
 ---
 
@@ -610,13 +645,13 @@ Crecen durante todo el curso y son producto, no apuntes.
 [ ] Postgres aparece como línea base y no como adorno
 [ ] Ejercicios: 20–30 (12 en F00 y F02), agrupados, con conteo en el título
 [ ] Al menos un tercio de los ejercicios son de diagnóstico o medición
-[ ] Cada ejercicio tiene Objetivo o Pregunta, y usa nombres del dominio de flota
+[ ] Cada ejercicio tiene Objetivo o Pregunta, y usa nombres del dominio de Cóndor
 [ ] Ninguna explicación de Docker pasa de dos párrafos; lo demás enlaza
-[ ] Cuerpo entre 4.000 y 5.000 palabras, medido sin el aparato de ejercicios
+[ ] Cuerpo entre 4.000 y 5.000 palabras (2.000–3.000 en F00 y F02), sin el aparato de ejercicios
 [ ] Todo pendiente abierto tiene destino explícito
 [ ] Tuteo en todo el documento; cero voseo, cero "usted"
 [ ] Código en inglés, comentarios en español con tildes
-[ ] grep -rn "nuevas-ideas\|plan-accion-creacion-docs-base" no devuelve nada
+[ ] grep -ln "_desechable-" *.md en la raíz del curso no devuelve nada
 ```
 
 ---
@@ -649,7 +684,8 @@ convenciones de markdown, nombres de archivo y flujo de git.
 - **Las versiones y digests de los diez motores están sin fijar** hasta la sesión de
   verificación de laboratorio. Mientras tanto, ningún documento publica un número de
   versión. Cuando se fijen, viven en `a02` y esta guía solo apunta allí.
-- **El modelo de embeddings del minicurso vectorial** está sin elegir. Condiciona `a06` y
-  la Fase 15.
-- **Cassandra o ScyllaDB** para columnar ancha: se decide midiendo cuál levanta con menos
-  RAM en las tres plataformas, no por preferencia.
+- ✅ **Resueltos el 29/09/2026** (alcance §12, decisiones 16–18): columnar ancha con
+  **Cassandra y el heap fijado**, cliente de Valkey **`iovalkey`**, y modelo de embeddings
+  **`intfloat/multilingual-e5-small`**. Queda pendiente para la sesión de laboratorio medir
+  Cassandra en Linux (WSL2 se valida al trabajar el curso). La paridad del embedding entre
+  Python y TypeScript ya está verificada (29/09/2026).

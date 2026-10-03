@@ -134,7 +134,7 @@ que era local. La geografía tiene que estar en el esquema, y eso hay que diseñ
 | CLI | `cockroach sql` | |
 | Driver | **`pg`, el mismo cliente de Postgres** | Habla el protocolo de Postgres, y eso es medio argumento comercial de la familia — **y también la fuente de su trampa** |
 | Línea base | **PostgreSQL de un nodo con réplica de lectura** · perfil `base` | Es lo que la mayoría haría. Hay que medirlo bien, no descartarlo de entrada |
-| Localidad | Particionamiento por región declarado **en el esquema** | ⚠️ Qué está disponible exactamente en la edición libre se verifica en la sesión de laboratorio y se declara. La geografía va en el esquema, no en la infraestructura |
+| Localidad | Particionamiento por región declarado **en el esquema** | `cockroach demo --nodes=9 --global`: tres regiones con latencia inyectada y `REGIONAL BY ROW`, sin licencia (alcance §12, 19). La geografía va en el esquema, no en la infraestructura |
 | Laboratorio de fallos | **Toxiproxy** | Latencia entre regiones inyectada y partición de red limpia. Sin esto el miniproyecto es teoría |
 | Medición | `EXPLAIN ANALYZE` (rangos tocados, saltos de red) · abortos y reintentos **contados en el cliente** · latencia de confirmación | **La única familia donde el tiempo es el argumento**, porque es física (`formato-bitacora-de-medicion.md` §2.4) |
 | Datos | Generador del curso | Cargas en trasbordo entre los dos países, con contención provocada sobre las mismas |

@@ -1,0 +1,5 @@
+fecha: 2026-09-29T21:52:34Z · memoria de la VM/host: 7934 MiB
+A · base + una JVM [base busqueda] · up rc=0 en 17 s · healthy 2/2 · laboratorio 948 MiB · otros contenedores 1253 MiB · caídos/OOM: ninguno
+B · base + las tres JVM [base busqueda grafos columnar] · up rc=0 en 71 s · healthy 4/4 · laboratorio 2634 MiB · otros contenedores 1268 MiB · caídos/OOM: ninguno
+C · todo menos newsql-global [base documental clave-valor series busqueda grafos vectorial columnar offline newsql] · up rc=0 en 80 s · healthy 10/10 · laboratorio 3516 MiB · otros contenedores 1228 MiB · caídos/OOM: ninguno
+D · todo [base documental clave-valor series busqueda grafos vectorial columnar offline newsql newsql-global] · up rc=0 en 84 s · healthy 10/11 · laboratorio 3578 MiB · otros contenedores 1267 MiB · caídos/OOM: /condor-lab-newsql-global-1 true exited;

@@ -3,7 +3,8 @@
 
 > **Qué es este documento:** la fuente de verdad de **qué** enseña el curso, a quién y con
 > qué límites. Lo que no esté aquí, no está en el curso.
-> **Fecha de cierre de esta versión:** 10 de septiembre de 2026
+> **Fecha de cierre de esta versión:** 10 de septiembre de 2026 · **revisada** el 29 de
+> septiembre de 2026 para adoptar Cóndor MRO como dominio y dar de alta los miniproyectos
 > **Precedencia:** manda este documento, después
 > [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md) —que decide
 > **cómo** se escribe—, después las dos propuestas de alcance, y las plantillas y prompts
@@ -171,6 +172,13 @@ Los tiempos se anotan **como contexto, nunca como argumento**, y siempre con la 
 la versión y el digest de imagen al lado. Un veredicto del curso jamás se sostiene sobre
 un milisegundo.
 
+Medir la forma es también lo que hace pagable **la hipoteca de mantenimiento**. Un curso
+legacy se puede congelar porque todo lo que enseña está EOL; aquí los diez motores se
+mueven solos. Por eso las imágenes van fijadas por digest y no por tag, cada documento
+declara su fecha de verificación ejecutada y el texto apunta al mecanismo y no a la
+versión. Lo que envejece de verdad son los `compose.yaml`, y esos se actualizan en diez
+minutos.
+
 Y sobre eso se montan las dos anclas que impiden que el curso degenere en resumen de
 documentación —el único riesgo serio que tiene—:
 
@@ -184,51 +192,71 @@ documentación —el único riesgo serio que tiene—:
 
 ---
 
-## 7. 🚚 El dominio: mantenimiento de flota
+## 7. ✈️ El dominio: Cóndor MRO
 
 Un dominio único para todo el curso, modelado diez veces. **Fijar el dominio y variar solo
 el modelo es lo que hace comparables las mediciones**; si cada familia trajera su propio
 ejemplo de juguete, no habría curso, habría diez tutoriales en fila.
 
-El sistema: una empresa que mantiene una flota de vehículos industriales. Talleres,
-técnicos, repuestos, telemetría a bordo y un historial de averías que nadie ha sabido
-explotar.
+El sistema: **Cóndor MRO**, un taller aeronáutico de reparación que mantiene una flota de
+ciento cuarenta aeronaves de ocho operadores en tres países, desde seis bases. La empresa,
+su gente, sus sistemas heredados y sus números viven en
+[`00-historia-de-condor.md`](../00-historia-de-condor.md), que es la fuente de todo lo
+narrativo del curso. Este apartado fija solo lo que el modelo de datos necesita.
 
-**Las entidades del dominio, que son las mismas en las diez familias:**
+> ⚠️ **El curso no enseña regulación aeronáutica.** Autoridades, certificados y programas
+> están simplificados hasta el punto exacto en que le sirven al modelo de datos. Si algo
+> choca con la realidad del oficio, gana el modelo de datos.
 
-- `vehicle` — la ficha: matrícula, modelo, año, configuración, equipamiento opcional. Dos
-  vehículos del mismo modelo no tienen los mismos campos, y ahí empieza todo.
-- `part` y `partCatalog` — repuestos, con referencias cruzadas, equivalencias y
-  compatibilidades por modelo.
-- `assembly` — despiece: qué pieza va dentro de qué conjunto, y qué se arrastra al
-  cambiarla. Profundidad variable y desconocida de antemano.
-- `workOrder` — la orden de trabajo: qué se hizo, quién, cuándo, con qué piezas y cuánto
-  costó. Es la entidad con frontera transaccional de verdad.
-- `reading` — telemetría a bordo: una lectura por sensor y por minuto, por vehículo.
-  Millones de filas que nunca se actualizan.
-- `failureReport` — el parte de avería escrito por el técnico, en prosa, con faltas de
-  ortografía y jerga de taller.
-- `technician`, `workshop`, `supplier` — el resto del elenco.
+**Las diez entidades del dominio, que son las mismas en las diez familias:**
+
+- `aircraft` — la ficha de la aeronave: matrícula, modelo, año, configuración y
+  equipamiento opcional. Dos aeronaves del mismo modelo no tienen los mismos campos, y ahí
+  empieza todo.
+- `part` — la pieza instalable **con identidad propia**: número de serie, horas, ciclos y
+  su propia historia, que no es la de ningún avión.
+- `partCatalog` — el catálogo: números de parte, alternos, equivalentes por modelo y
+  proveedores.
+- `assembly` — el conjunto (motor, tren, hélice): contiene piezas y se instala como una sola
+  cosa. La diferencia con `part` es de identidad, no de tamaño.
+- `workOrder` — la orden de trabajo: qué se hizo, quién, cuándo, qué se instaló y qué se
+  retiró. Es la entidad con frontera transaccional de verdad, y su historia es la que
+  construye el grafo de trazabilidad.
+- `reading` — la lectura descargada al aterrizar: parámetro de vuelo, horas, ciclos. Llega
+  ordenada y no se corrige nunca.
+- `pirep` — el reporte del piloto, en prosa telegráfica, con jerga y con faltas.
+- `technician` — el técnico y su licencia, que es lo que decide qué puede firmar.
+- `hangar` — la base o el taller.
+- `supplier` — el proveedor de partes **y** el taller aliado, distinguidos por su tipo.
+
+**La frontera transaccional del dominio es la liberación al servicio**: un inspector firma,
+con su licencia, que todo lo instalado en la aeronave tiene trazabilidad válida. Es
+también frontera legal, y es la que el curso vuelve a encontrar en cada familia.
 
 **Cómo ilumina cada familia, sin forzar nada:**
 
 | Familia | La parte del dominio que le toca |
 |---|---|
-| Documental | la ficha de vehículo, polimórfica por modelo y equipamiento |
-| Clave-valor | sesiones del terminal del taller, rate limiting, el candado de la orden abierta |
-| Analítico embebido | el tablero de costes por modelo, taller y trimestre |
-| Series temporales | la telemetría a bordo y sus roll-ups |
-| Búsqueda | el catálogo de repuestos con sinónimos, tolerancia a errores y facetas |
-| Grafos | el despiece y el *"si cambio esta pieza, ¿qué más cae?"* |
-| Vectorial | *"¿qué avería se parece a esta?"* sobre los partes en prosa |
-| Columnar ancha | la telemetría cuando ya no cabe en un nodo |
-| Offline-first | la app del técnico en un taller sin cobertura |
-| NewSQL | el libro de órdenes de trabajo con talleres en tres regiones |
+| Documental | la ficha de aeronave, polimórfica por modelo y equipamiento |
+| Clave-valor | la reserva del puesto de hangar, el candado de la orden abierta, las sesiones del terminal de plataforma |
+| Analítico embebido | el costo por hora volada, por modelo y por operador: el precio de venta de Ala Continua |
+| Series temporales | los parámetros de vuelo que se descargan al aterrizar, y sus roll-ups |
+| Búsqueda | el catálogo de partes: números, alternos y equivalencias, tecleados mal |
+| Grafos | la trazabilidad: *"¿en qué aeronaves estuvo instalada alguna vez una pieza de este lote, y qué se desmontó junto con ella?"* — profundidad y camino desconocidos, a través del tiempo |
+| Vectorial | *"esto ya lo vimos"*: qué reporte de piloto se parece a este |
+| Columnar ancha | los parámetros de vuelo cuando son las ciento cuarenta aeronaves y ya no caben en un nodo |
+| Offline-first | el técnico itinerante en una pista del Guaviare sin señal |
+| NewSQL | el expediente de la aeronave con tres autoridades, tres países y residencia de datos por contrato |
 
-**Tres volúmenes fijos para todo el curso**, generados con semilla determinista para que
-la medición sea la misma en tu máquina y en la mía: **10 k** (desarrollo y ejemplos), **1
-M** (donde empiezan a notarse las decisiones de modelado) y **el volumen de rotura**, que
-cada familia calibra por su cuenta.
+**Tres volúmenes para todo el curso**, generados con semilla determinista para que la
+medición sea la misma en tu máquina y en la mía: **10 k** (desarrollo y ejemplos), **1 M**
+(donde empiezan a notarse las decisiones de modelado) y **el volumen de rotura**, que cada
+familia calibra por su cuenta. **El volumen cuenta los registros de la entidad principal de
+cada familia** —`part` en documental, `reading` en series, `pirep` en vectorial…—, y el resto
+del dataset escala con las proporciones de Cóndor. Por eso "los mismos datos" significa el
+mismo generador, la misma semilla y las mismas proporciones, y **dentro de cada familia, el
+motor y Postgres cargan exactamente los mismos bytes**, comprobados por hash. El detalle está
+en `a05`, que decidió así el 29/09/2026.
 
 ---
 
@@ -272,6 +300,11 @@ dos cursos paralelos:
   adivinar qué entorno necesita antes de empezar.
 - La sintaxis de ambos entornos se delega a `a06`, con tabla de equivalencias. Las fases
   enlazan; no reexplican.
+- **TypeScript se ejecuta nativo en Node 24** (`node script.ts`), sin compilar y sin `tsx`: el
+  código del curso usa solo sintaxis "borrable" (sin `enum` ni *parameter properties*), y
+  `tsc` queda opcional para comprobar tipos. **Python se gestiona con `uv` y un `uv.lock`**,
+  que fija el intérprete y las dependencias transitivas y reproduce el entorno exacto en
+  las tres plataformas. Decidido el 29/09/2026.
 
 **Contenedores:** Docker Compose es el camino principal y **cada receta trae su
 equivalente Podman al lado**. Sin Kubernetes en ninguna parte del curso, ni como
@@ -319,8 +352,11 @@ cambia aquí y después en todo lo demás, nunca al revés.
 2. **Idioma:** español latinoamericano neutro con tuteo. Código, comandos, nombres de
    archivo, identificadores y salida de terminal en inglés; comentarios de código en
    español con tildes.
-3. **Dominio único:** mantenimiento de flota (§7), con tres volúmenes fijos y semilla
-   determinista.
+3. **Dominio único: Cóndor MRO** (§7), la empresa de
+   [`00-historia-de-condor.md`](../00-historia-de-condor.md), con diez entidades fijas,
+   tres volúmenes fijos y semilla determinista. Las otras candidatas quedan registradas en
+   [`propuestas-historias.md`](propuestas-historias.md), y cinco de ellas aportan los
+   miniproyectos de familia (§13).
 4. **Postgres montado en todos los minicursos** como línea base (§8).
 5. **Se mide la forma, no la velocidad** (§6), con una apuesta falsable y un punto de
    rotura por familia.
@@ -333,7 +369,8 @@ cambia aquí y después en todo lo demás, nunca al revés.
 9. **Ejercicios: 20–30 por fase**, la banda del repositorio, calibrada fase por fase.
 10. **Apéndices transversales al curso y no por minicurso**, diez en total, de receta y no
     de pedagogía. Ver [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md).
-11. **Boss global acumulativo "El Taller"** más un 💀 boss por bloque (§13).
+11. **Boss global acumulativo "El Hangar"**, cinco 💀 boss de bloque —uno por cada bloque
+    del I al V; el Bloque 0 no lleva— y un 🧰 miniproyecto por familia (§13).
 12. **Stack mixto TypeScript/Python** con la regla de §9.
 13. **Duración objetivo: 252 h ≈ 21 semanas a 12 h semanales**, unos cinco meses. A 10 h
     semanales son seis.
@@ -345,6 +382,46 @@ cambia aquí y después en todo lo demás, nunca al revés.
 15. **`a01`, `a02`, `a05` y `a06` se escriben antes de la primera fase**; sin ellos no hay
     laboratorio. `a03`, `a04`, `a08` y `a09` crecen con el curso. `a07` y `a10` se
     escriben cuando toca su familia.
+16. **Columnar ancha se hace con Cassandra, y con el heap fijado.** Se midió el 29/09/2026
+    en macOS arm64, en reposo y con un nodo. **Cassandra con `MAX_HEAP_SIZE=512M`: 1,04 GiB
+    y 60 s hasta aceptar CQL; con la configuración por defecto, 4,63 GiB**, porque calcula
+    el heap a partir de la RAM de la máquina. **ScyllaDB: entre 90 y 420 MiB y 6 s.**
+    Con el heap fijado, las dos caben en el presupuesto, así que la RAM dejó de
+    discriminar y **decidió la licencia**: desde la 2025.1, ScyllaDB es *source-available*
+    y su última versión AGPL está congelada, que es el mismo motivo por el que el curso usa
+    Valkey y OpenSearch. Consecuencias: el `compose.yaml` fija el heap **obligatoriamente**
+    (`a02`), ScyllaDB aparece en `a10` como caso de licencia y en el veredicto de F18 como
+    alternativa. Linux se mide en la sesión de laboratorio; WSL2, al trabajar el curso.
+17. **El cliente de Valkey en TypeScript es `iovalkey`**, el fork de ioredis que mantiene
+    valkey-io: MIT, JS puro y sin binario nativo que pueda fallar en alguna de las tres
+    plataformas. Además tiene la API que el lector ya conoce. Se descartaron `ioredis`,
+    que ahora mantiene Redis Inc. y sería incoherente con haber elegido Valkey por licencia,
+    y `@valkey/valkey-glide`, el cliente oficial, por su núcleo nativo y su API distinta.
+    Está en versión 0.x, y eso se declara en `a06`.
+18. **El modelo de embeddings es `intfloat/multilingual-e5-small`**: MIT, multilingüe, 384
+    dimensiones, **fijado por revisión** en `a06` y nunca entrenado. Se eligió porque trae
+    su ONNX en el mismo repositorio, de modo que la ingesta en Python y la consulta en
+    TypeScript (con `transformers.js`) cargan los mismos pesos. Exige los prefijos
+    `query:` y `passage:`, y **si olvidarlos cuesta recall es una apuesta de F15, no un
+    hecho**: en la sesión de laboratorio, con cinco reportes, el orden no cambió. La paridad
+    se verificó el 29/09/2026: Python y TypeScript dan el mismo vector, con una diferencia
+    máxima de 1,5 × 10⁻⁷ (`verificacion-de-laboratorio/hallazgos.md` §H8).
+19. **NewSQL en varias regiones con `cockroach demo --global`, sin licencia.** F21 modela
+    sobre un nodo (`start-single-node`, en el compose). F22 y el boss del Bloque IV miden
+    sobre `cockroach demo --nodes=9 --global`: nueve nodos en tres regiones con latencia
+    inyectada, **exento de licencia y de telemetría**. Medido el 29/09/2026: fila local a
+    67–69 ms y remota a 133–134 ms, con 1,71 GiB (§H10). Se descartó el clúster con
+    licencia *Enterprise Free*, porque obliga a cada lector a registrarse, a aceptar
+    telemetría y a renovar la clave cada año, y sin ella queda limitado a 5 transacciones a
+    los 7 días (§H5). El precio se declara: datos en memoria que se recargan en cada sesión,
+    y latencia simulada, no una red real.
+20. **TimescaleDB con la imagen TSL, declarada.** Los roll-ups continuos y la compresión, que
+    son el núcleo de F09, están bajo Timescale License (*source-available*) y no vienen en
+    la imagen `-oss` (§H4). Se aceptan con la licencia escrita en `a10` y en el veredicto de
+    F10, donde además **es parte del argumento**: el particionado declarativo de Postgres
+    no tiene esa restricción. Es la única excepción al criterio de licencias con el que se
+    eligieron Valkey y OpenSearch y se descartó ScyllaDB, y la diferencia se dice: en
+    ScyllaDB había una alternativa libre que no perdía contenido; aquí no la hay.
 
 **Excepciones declaradas al `CLAUDE.md` del repositorio**, con su porqué, tal como exige
 el propio `CLAUDE.md`:
@@ -364,16 +441,28 @@ el propio `CLAUDE.md`:
 
 ## 13. 🏆 Los proyectos boss
 
-- 🏆 **"El Taller" — el boss global.** Un sistema de mantenimiento de flota que crece con
-  el curso: cada bloque le añade un motor y una capacidad. **Opcional y fuera de las 252
-  h**, porque es la única parte del curso que se consume en el orden canónico. Es el mejor
+- 🏆 **"El Hangar" — el boss global.** El sistema que Cóndor aprobó en marzo de 2026: saber
+  dónde está cada pieza, de dónde vino y qué sostiene su trazabilidad. Crece con el curso,
+  y cada bloque le añade un motor y una capacidad. **Opcional y fuera de las 252 h**,
+  porque es la única parte del curso que se consume en el orden canónico. Es el mejor
   portafolio que deja la ruta.
-- 💀 **El boss de bloque.** Un encargo que solo se resuelve cruzando las familias de ese
-  bloque, y que empieza con un sistema roto o un encargo completo. **No es un ejercicio 🔴
-  con mejor nombre**: si cabe en tres líneas, no era un boss.
+- 💀 **El boss de bloque.** Un encargo interno de Cóndor que solo se resuelve cruzando las
+  familias de ese bloque. Lo pide alguien de la empresa, tiene una consecuencia si sale mal
+  y empieza con un sistema roto o un encargo completo. **No es un ejercicio 🔴 con mejor
+  nombre**: si cabe en tres líneas, no era un boss.
+- 🧰 **El miniproyecto de familia.** Uno por familia, diez en total, y **ninguno es de
+  Cóndor**: cada uno viene de otra empresa, con otro dolor, y existe para demostrar que lo
+  aprendido es un modelo de acceso y no un truco del dominio. **Opcional, fuera de las 252
+  h, de 4 a 6 h cada uno, y se anuncia al abrir la fase B.** Se construye y se razona, pero
+  **no entra a la bitácora de medición**: todo lo que se mide se mide sobre Cóndor. El
+  índice y el criterio están en
+  [`propuestas-mini-proyectos.md`](../propuestas-mini-proyectos.md).
 - ⚖️ **El capstone políglota (Bloque V) no es ninguno de los dos.** Es contenido normal del
   curso, con sus fases y sus ejercicios, y es la conclusión que la ruta lleva prometiendo
   cinco meses: añadir un motor al lado **y pagar la factura de tenerlo**.
+  Su boss de bloque es otra cosa y va aparte: el capstone diseña añadiendo motores, y el
+  boss del Bloque V —*"Las dos verdades"*— empieza con dos sistemas ya divergidos y puede
+  terminar **retirando** uno.
 
 ---
 
