@@ -1,8 +1,0 @@
-enabled: true
-image:
-  repository: localhost/web-legacy
-  tag: dev
-replicas: 1
-port: 8080
-env:
-  CATALOG_URL: "http://catalog-node:3000"

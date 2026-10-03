@@ -1,6 +1,0 @@
-enabled: true
-image:
-  repository: localhost/payments-go
-  tag: dev
-replicas: 1
-port: 8090

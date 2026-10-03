@@ -1,12 +1,22 @@
-# 🗺️ Propuesta de fases, apéndices y alcance
+# 🗺️ Propuesta de fases y alcance
 ## Laboratorio de contenedores y Kubernetes local
 
 Este documento es la **fuente de verdad estructural del curso**. Fija el arco, la secuencia
 numerada de fases, el encargo de cada una, los apéndices, el cuaderno de incidentes, las
 convenciones de archivo y de git, y las decisiones cerradas con su porqué.
 
-Manda sobre la guía de estilo y sobre las plantillas. Solo `alcance-del-proyecto.md` está por
-encima, y únicamente en lo que toca al encuadre, al perfil del lector y a las versiones fijadas.
+> **Precedencia:** debajo del [alcance](alcance-del-proyecto.md), de la
+> [guía](guia-de-estilo-y-convenciones.md) y del [contrato del cluster](contrato-del-cluster.md).
+> Si una fase de aquí contradice a uno de los tres, gana el otro y esto se corrige. Las plantillas
+> y los prompts copian de aquí el peso y los ejercicios (§11).
+> **Fecha:** 14/09/2026, revisada el 30/09/2026 con las decisiones D1–D18 (§12). **Estado:** temario
+> cerrado (D1–D31). Lo marcado ⏳ no es una decisión sino un valor que sale de la verificación de
+> laboratorio (P11).
+
+Una advertencia que vale para todo el documento: **las apuestas y las roturas escritas aquí son
+candidatas**. La fase las reescribe en su paso 1 si el laboratorio sugiere algo mejor, y las deja
+fijas **antes** de medir. Lo mismo con los mensajes de error que se citan: son los que se esperan, y
+la fase publica el que salió.
 
 > 🧭 **La pregunta que ordena el curso entero:** *¿qué te da el contenedor, qué te da el
 > orquestador, y qué te sigue tocando escribir a ti?*
@@ -40,7 +50,9 @@ programación.
 que hace posible el alcance: el curso publica el **contrato** de cada servicio y el **prompt** que
 lo genera, y el código resultante vive en `src/`. El lector puede regenerarlo, escribirlo a mano o
 usar el que viene — y en los tres casos el curso funciona igual, porque **ninguna fase enseña a
-programar el endpoint**. El detalle está en `a02`.
+programar el endpoint**. Lo sostienen un contrato OpenAPI por servicio, una suite de conformidad en
+Hurl y una matriz de prompts escalonados (contrato del cluster §6); el detalle publicado está en
+`a03`.
 
 **🪦 El sistema se construye en oleadas horizontales, no servicio por servicio.** Tres oleadas
 —esqueleto, almacén propio y el flujo que los cruza— repartidas por el arco, cada una tocando los
@@ -48,22 +60,37 @@ cuatro servicios a la vez con una capa fina. Y dentro de cada patrón nuevo, **`
 servicio piloto** y los otros tres lo siguen. El detalle está en la §4.1, y es la decisión de
 método que hace que ninguna fase de infraestructura tenga que depurar lógica de negocio.
 
-**🪦 Cuatro servicios, cuatro runtimes, un frontend tonto.** `inventory` en Spring Boot con Java
-21, `catalog` en PHP con Laravel, `replenish` en Node con TypeScript y NestJS, `pricing` en Go, y
+**🪦 Cuatro servicios, cuatro runtimes, un frontend tonto.** `inventory` en Spring Boot 4 con Java
+25 LTS, `catalog` en PHP con Laravel, `replenish` en Node con TypeScript y NestJS, `pricing` en Go, y
 `storefront` en React con Vite servido como estático. Cada runtime está elegido por la lección de
-plataforma que compra, no por variedad — la tabla completa está en la §3.
+plataforma que compra, no por variedad — la tabla completa está en la §3. **Sin Jakarta EE ni
+MicroProfile**: no suman una lección que los otros cuatro no den.
+
+**🪦 La JVM es la de Java 25, tal cual.** Hoy la JVM sabe que corre en un contenedor y dimensiona el
+heap contra el límite del cgroup. La autopsia del `OOMKilled` se escribe sobre esa JVM y no sobre la
+de hace diez años. Las JVM anteriores y MicroProfile quedan como extensión futura, fuera de este
+curso (alcance §15).
+
+**🪦 Gateway API es la única entrada al sistema.** El controlador de Ingress más usado del
+ecosistema, ingress-nginx, se retiró en marzo de 2026. El curso no despliega ni un objeto `Ingress`;
+el recurso aparece solo en el diccionario de traducción.
 
 **🪦 Un solo Postgres con una base y un usuario por servicio.** *Database-per-service* es el
 principio, y el laboratorio lo implementa con la credencial en vez de con el hardware, para caber
 en la memoria del lector. **La divergencia se declara en voz alta** en la fase que la estrena:
 en producción esto son instancias separadas, y esto es exactamente lo que se pierde.
 
-**🪦 El laboratorio tiene que correr en una máquina de 8 GB.** Es una restricción de diseño, no una
-molestia. De ahí salen tres perfiles de despliegue —`minimo`, `lab` y `medicion`— y la
-observabilidad deliberadamente flaca de la §3.
+**🪦 El laboratorio ocupa lo menos posible.** Es una restricción de diseño, no una molestia. kind
+de **un solo nodo** por defecto, la observabilidad **encendida y apagada por pieza**, y tres
+perfiles de despliegue —`minimo`, `lab` y `medicion`—. La meta es que `minimo` entre en 8 GB; lo
+que se publica es lo medido en la verificación de laboratorio.
 
-**🪦 kind es el cluster del curso.** k3d, minikube, MicroK8s y Docker Desktop se miden una vez, con
-el arnés, y se archivan.
+**🪦 kind es el cluster del curso.** k3d, minikube y el Kubernetes de Docker Desktop se miden una
+vez, con el arnés, y se archivan. MicroK8s sale de la comparación: fuera de Linux exige una máquina
+virtual más, y eso no compara clusters sino instaladores.
+
+**🪦 El punto de entrada es un Taskfile.** Corre igual en PowerShell, macOS y Linux, y ninguna
+instrucción del curso exige `make` ni un shell POSIX en Windows.
 
 **🪦 No hay reparto horario.** Un curso donde media hora se va esperando a que un cluster levante o
 a que una imagen de Java se construya no puede estimar horas con honestidad, y una cifra inventada
@@ -77,8 +104,8 @@ contra qué romperse.
 **🪦 El cuaderno de incidentes es un archivo propio**, con IDs globales que no se reasignan. El
 lector lo consulta por síntoma, no por fase.
 
-**🪦 Las versiones exactas se fijan en `alcance-del-proyecto.md`**, con su fecha de verificación,
-antes de escribir la primera línea que las use. Ninguna se pone de memoria en este documento.
+**🪦 Las versiones exactas se fijan en `a01`**, por digest y con su fecha de verificación, antes de
+escribir la primera línea que las use. Ninguna se pone de memoria en este documento.
 
 ---
 
@@ -89,10 +116,13 @@ descontar stock → disparar reposición si el stock cae bajo el umbral. Es el f
 elegido porque es la **transacción distribuida más honesta que cabe en un laboratorio**: cuatro
 servicios, cuatro bases lógicas, y una compensación que significa algo cuando falla a la mitad.
 
-> ⚠️ **La empresa todavía no tiene nombre ni historia.** Se decide aparte y vive en
-> `00-historia-de-<empresa>.md`, en la raíz del curso, que será la fuente de verdad de todo lo
-> narrativo: personajes, cifras, cronología y reglas de negocio. **Este documento fija la
-> estructura; ninguna fase inventa dominio por su cuenta.**
+> 🏘️ **La empresa es Droguerías La Vecina**, y su historia vive en
+> [`00-historia-de-la-vecina.md`](../00-historia-de-la-vecina.md): personajes, cifras, cronología y
+> reglas de negocio. El curso es el **proyecto Paracelso**: el POC con que la cooperativa prueba
+> salir de su monolito en WebLogic y Oracle, que la unidad de I+D Alquimia construye en **La
+> Rebotica**, un laboratorio en portátiles. La venta del curso es la de una droguería, y la reposición incluye
+> el **préstamo entre droguerías**, que es una `replenishmentOrder` cuyo origen es otra `store`.
+> **Este documento fija la estructura; ninguna fase inventa dominio por su cuenta.**
 
 Lo que sí está fijado desde aquí, porque es contrato técnico y no narrativa, son los **nombres de
 los servicios y de las entidades**, en inglés como manda la guía de estilo:
@@ -101,8 +131,8 @@ los servicios y de las entidades**, en inglés como manda la guía de estilo:
 
 Y los cinco servicios: **`catalog`**, **`inventory`**, **`replenish`**, **`pricing`**,
 **`storefront`**. Ninguna fase los renombra. El detalle de qué gana cada uno en cada fase vive en
-`contrato-del-cluster.md`, que es de lectura obligatoria antes de tocar cualquier cosa bajo
-`charts/` o `kind/`.
+[`contrato-del-cluster.md`](contrato-del-cluster.md), que es de lectura obligatoria antes de tocar
+cualquier cosa bajo `src/lab/`.
 
 ---
 
@@ -115,7 +145,7 @@ otras no enseñan.
 
 | Servicio | Stack | La lección de plataforma que compra |
 |---|---|---|
-| `inventory` | Spring Boot 3 · Java 21 | La JVM contra los `limits` del cgroup. **El `OOMKilled` es la clase magistral del curso** y solo la da Java. Además arranca lento, lo que obliga a entender `readinessProbe` de verdad |
+| `inventory` | Spring Boot 4 · Java 25 LTS | La JVM contra los `limits` del cgroup. **El `OOMKilled` es la clase magistral del curso** y solo la da Java: la JVM de hoy sabe que está en un contenedor, y aun así muere cuando el heap configurado más la memoria que no es heap pasan el límite. Además arranca lento, lo que obliga a entender `readinessProbe` de verdad, y el AOT cache es su respuesta moderna |
 | `catalog` | PHP · Laravel | El modelo de proceso que no encaja: PHP-FPM y nginx son **dos procesos en un pod**. Quién responde el health check, y por qué "un request, un proceso" hace que el HPA por CPU se comporte distinto a todo lo demás |
 | `replenish` | Node · TypeScript · NestJS | El consumidor de eventos y el lado asíncrono de la saga. Y el *event loop* como tercer modelo de concurrencia frente a hilos y procesos |
 | `pricing` | Go | El **suelo y el techo del experimento**: la imagen más pequeña y el arranque más rápido. Es el control de todas las mediciones y el sujeto de la fase de gRPC |
@@ -123,7 +153,9 @@ otras no enseñan.
 
 ### 3.2 Los datos y el bus
 
-**PostgreSQL** como base del laboratorio, con una base y un usuario por servicio.
+**PostgreSQL** como base del laboratorio, con una base y un usuario por servicio, desplegado con
+la **imagen oficial y un `StatefulSet` propio**: sin charts de terceros, porque el lector tiene que
+ver los campos y porque el catálogo de imágenes más usado para esto cambió sus condiciones en 2025.
 **SQLite** en tres sitios elegidos y en ninguno más: el primer despliegue sin dependencias, las
 pruebas donde el SQL no es el punto, y el experimento 🧨 del stock fantasma.
 **Testcontainers** para todo lo que sí toque SQL de verdad — y la decisión se mide, con el tiempo
@@ -144,18 +176,36 @@ justo lo que el lector necesita ver.
 | Métricas | Prometheus binario único, configuración a mano, retención corta | El lector escribe el `scrape_config` y entiende el modelo de *pull* |
 | Dashboards | Grafana con dashboards provisionados | Efímera y sin persistencia. Los dashboards son código y se versionan |
 | Logs | Loki monolítico y Fluent Bit como `DaemonSet` | Fluent Bit es el recolector más liviano que existe, y el `DaemonSet` es contenido |
-| Trazas | Tempo monolítico, **apagado por defecto** | Solo se enciende en la Parte IV, donde por fin hay algo que trazar |
-| Escalado | metrics-server | No es opcional: sin él no hay HPA |
+| Trazas | Tempo monolítico, **apagado por defecto**, y **los SDKs de OpenTelemetry** en los servicios | Solo se enciende en la Parte IV, donde por fin hay algo que trazar. OpenTelemetry es el estándar de instrumentación, y el lector lo va a encontrar en todas partes |
+| Escalado | metrics-server | No es opcional: sin él no hay HPA. Es la única pieza que queda encendida cuando la observabilidad se apaga |
+
+**Cada pieza se enciende y se apaga por separado** —métricas, tableros, logs, trazas—, porque la
+observabilidad es lo que más memoria consume del laboratorio. Ninguna fase la exige entera salvo la
+que la enseña, y cada fase declara en su encabezado qué piezas necesita.
 
 ### 3.4 Los tres perfiles de despliegue
 
-No son cosmética: son parte del arnés de medición y del presupuesto de memoria.
+No son cosmética: son parte del arnés de medición y del presupuesto de memoria. La definición exacta
+está en el contrato del cluster §5.
 
-- **`minimo`** — servicios y Postgres, observabilidad apagada, un solo nodo worker, todo a una
-  réplica. Es el perfil de las Partes 0 a II.
-- **`lab`** — todo encendido, dos nodos worker. Es el de las Partes III y IV.
+- **`minimo`** — kind de **un solo nodo**, servicios y Postgres, observabilidad apagada, todo a una
+  réplica. Es el perfil por defecto de las Partes 0 a II.
+- **`lab`** — control-plane y dos workers, con lo que la fase encienda. Se usa donde el curso
+  necesita más de un nodo de verdad: la topología (F07), el escalado (F16), el `DaemonSet` (F18), y
+  las Partes III y IV.
 - **`medicion`** — únicamente lo que se está midiendo, para que los números no los contamine nada
   más.
+
+### 3.5 La entrada al sistema: Gateway API
+
+El sistema se expone con **Gateway API**: un `GatewayClass` que pone el controlador, un `Gateway`
+compartido en su namespace, y una `HTTPRoute` por servicio que el equipo del servicio escribe. El
+controlador es **Envoy Gateway** (D12): implementa la especificación sin anotaciones propias, y el
+proxy que despliega es el mismo Envoy que el lector va a encontrar debajo de muchos mesh y
+balanceadores. La Fase 10 nombra las alternativas con sus ventajas y desventajas. El
+`Service` del `Gateway` recibe su dirección de **cloud-provider-kind**, o de `extraPortMappings` con
+un `NodePort` si en alguna plataforma eso no llega al host ⏳. Siempre sobre los puertos 8080 y 8443
+del host, porque Podman sin privilegios no publica los privilegiados.
 
 ---
 
@@ -189,7 +239,7 @@ antes de empezar el siguiente.
 > 🧭 **Infra primero, dominio después.** El dominio es ruido mientras aprendes la plataforma.
 > Cuando la fase trata sobre `readinessProbe`, lo último que quieres es estar depurando por qué la
 > venta no descuenta stock — y al revés, cuando llega la saga quieres toda tu atención ahí y no en
-> si el Ingress enruta bien.
+> si el Gateway enruta bien.
 
 Son tres, y cada una aterriza en la fase que la necesita, no al principio del curso:
 
@@ -241,6 +291,9 @@ una forma explícita de saber cuál está activo y de alternar entre ellos.
 WSL 2, macOS Apple Silicon y Linux amd64—, sin nota al pie y sin condescendencia: se dan las tres
 instrucciones, en ese orden.
 
+**🏚️ Y presenta el patrimonio**: lo que La Vecina ya tiene y con lo que arranca el taller
+—Contingencia, el portal y la Braqui (`a16`)—, sin levantarlo todavía.
+
 **🩺 Estrena el cuaderno de incidentes** con los cuatro fallos de instalación que se llevan por
 delante a más gente: WSL 2 que no arranca, virtualización deshabilitada, la máquina de Podman que
 no levanta, y el socket al que no tienes permiso.
@@ -252,7 +305,9 @@ no levanta, y el socket al que no tienes permiso.
 
 #### 📦 Fase 01 — Tu primer contenedor, y tu primer Dockerfile · *media*
 
-**Construye:** la imagen de `pricing` —el servicio más pequeño— y un contenedor corriendo.
+**Construye:** la imagen de **la Braqui**, la pieza del patrimonio más simple de empaquetar —Node,
+un solo proceso— y un contenedor corriendo. Es código que existe, con sus mañas, y no un ejemplo
+hecho para la fase. (`pricing` todavía no existe: nace en la Fase 02.)
 
 **Trae:** los tres sustantivos (imagen, contenedor, tag) y el modelo mental que los separa; los
 verbos del trabajo diario (`run`, `ps`, `logs`, `exec`, `stop`, `rm`); la anatomía de un
@@ -274,8 +329,12 @@ la Fase 03.
 
 #### 🧩 Fase 02 — Compose: el sistema entero en un archivo · *media*
 
-**🌊 Oleada 0 — el esqueleto.** Los cuatro servicios y el `storefront` corriendo con un solo
-comando, cada uno exponiendo `/health` y un endpoint que devuelve JSON fijo. **Sin base de datos y
+**🏚️ Primero, el patrimonio en un archivo**: Contingencia con su Postgres, el portal y la Braqui,
+levantados con `task legacy:up` (perfil `legacy`). Es "lo que hay", y el lector lo ve correr antes
+de construir nada.
+
+**🌊 Después, la Oleada 0 — el esqueleto.** Los cuatro servicios nuevos y el `storefront` corriendo
+al lado del patrimonio con un solo comando, cada uno exponiendo `/health` y un endpoint que devuelve JSON fijo. **Sin base de datos y
 sin lógica de negocio**, y eso es deliberado: lo que esta fase enseña es la **forma** del sistema
 —cuatro procesos, una red, resolución por nombre— y el dominio solo la taparía.
 
@@ -290,6 +349,10 @@ las tres oleadas delante, para que el lector no arrastre la sensación de que le
 **🦭 Estrena el marcador de divergencia** en un sitio inocuo: `docker compose` y `podman compose`
 no son el mismo programa, hay más de una implementación, y conviene saberlo antes de que la
 diferencia aparezca donde duele.
+
+**🌊 Y estrena el método de generación:** el esqueleto sale de los prompts G0 de `a03`, y la suite
+de conformidad en Hurl lo valida contra compose. Es la primera vez que el lector ve que un servicio
+es válido porque pasa la suite, no porque alguien lo escribió de una forma concreta.
 
 **Difiere:** la 🪞 de dónde se rompe el instinto de compose a la Fase 06. Aquí compose se usa y se
 disfruta; la crítica llega cuando haya con qué compararla.
@@ -318,7 +381,7 @@ rollout sin cortes; y usuarios, permisos y rootless, en la medida exacta en que 
 
 **Construye:** el Dockerfile multi-stage definitivo de los cuatro servicios y del frontend.
 
-**Trae:** el patrón multi-stage resuelto cuatro veces, y **la constatación de que el patrón es uno
+**Trae:** `dive` para ver las capas por dentro; el patrón multi-stage resuelto cuatro veces, y **la constatación de que el patrón es uno
 y cada runtime lo paga distinto**; las imágenes base y su costo —musl contra glibc, el shell que
 ya no tienes para depurar—; el caché de capas, el orden de instrucciones y el `.dockerignore`; y
 el digest frente al tag, que es la causa raíz de toda una familia de *"pero si yo desplegué el
@@ -339,6 +402,10 @@ virtual frente al WSL en cada plataforma.
 dos motores. La medición se publica; **ejecutarla es opcional para el lector**, que puede no tener
 los dos instalados.
 
+**🦭 Y la divergencia que más muerde en el resto del curso:** `kind load docker-image` supone Docker;
+con Podman, la imagen viaja como archivo (`podman save` y `kind load image-archive`). Se resuelve
+aquí una vez y la tarea `images:load` la esconde después.
+
 **🔥 Deja como opcional:** generar manifiestos desde contenedores corriendo. Es un puente
 conceptual bonito y produce YAML que nadie desplegaría tal cual.
 
@@ -357,6 +424,10 @@ pueda traducir cualquier archivo que tenga hoy en su trabajo. Y **qué no tiene 
 — le dices al cluster qué quieres, no qué haga, y algo trabaja sin parar para que la realidad se
 parezca. Sin esto, Kubernetes es una API rara; con esto, casi todo se deduce.
 
+**🦭 Y el puente en la otra dirección:** `podman kube play` corre un manifiesto de Kubernetes sin
+cluster. Es la prueba más corta de que el YAML describe un deseo y no un orquestador, y le deja al
+lector una forma de probar un `Deployment` sin levantar nada.
+
 **🚫 Deja fuera, declarándolo:** compose como herramienta de producción. No lo es, y decirlo es
 parte del contenido.
 
@@ -366,15 +437,17 @@ Es la mitad *"esto es lo que la plataforma te da"*, y es a lo que el lector vino
 
 #### ☸️ Fase 07 — El cluster local · *media*
 
-**Construye:** el cluster de kind desde su archivo de configuración, con un nodo de control y los
-workers, y los `extraPortMappings` que hacen que el Ingress se vea desde el host.
+**Construye:** los dos clusters del curso desde sus archivos de configuración: el de un nodo del
+perfil `minimo`, que es el de todos los días, y el de control-plane con dos workers del perfil
+`lab`, que se levanta aquí para ver la topología y se apaga hasta que haga falta.
 
-**Trae:** la topología y qué corre en cada nodo; `kubectl`, contextos y la higiene de no
-equivocarse de cluster; y por qué `localhost` llega o no llega a tu pod, que es la primera
-frustración universal.
+**Trae:** la topología y qué corre en cada nodo, y por qué un solo nodo alcanza para casi todo lo
+que el curso enseña; `kubectl`, contextos y la higiene de no equivocarse de cluster; y por qué
+`localhost` llega o no llega a tu pod, que es la primera frustración universal.
 
-**📏 Mide:** kind, k3d, minikube y MicroK8s — tiempo de arranque, memoria en reposo y si dan
-multi-nodo. Y después se archivan: **kind es el cluster del curso.**
+**📏 Mide:** kind, k3d, minikube y el Kubernetes de Docker Desktop — tiempo de arranque, memoria en
+reposo y si dan multi-nodo, sobre los dos motores donde se pueda. Y después se archivan: **kind es
+el cluster del curso.**
 
 #### 🚀 Fase 08 — El primer despliegue, en YAML plano ⭐ · *densa*
 
@@ -397,7 +470,8 @@ patrón que `pricing` estrenó en la Fase 08.
 lectura y escritura, **sin llamarse entre ellos todavía**: `catalog` sirve productos de verdad,
 `inventory` registra movimientos y devuelve existencias, `replenish` crea y lista órdenes,
 `pricing` resuelve precios. Todo en **SQLite, dentro del pod**, y eso es una deuda 💸 declarada con
-fecha de cobro: la Fase 12.
+fecha de cobro: la Fase 12. Es el paso G1 de la matriz de generación, y la suite de conformidad del
+paso corre ya contra el cluster.
 
 **Trae:** `Namespace` como frontera, labels y selectores como el mecanismo que lo une todo, el DNS
 interno entre namespaces, y el primer `ConfigMap` con las URLs de los vecinos —que todavía nadie
@@ -408,27 +482,50 @@ destino escrita.
 
 #### 🌐 Fase 10 — La entrada al sistema · *media*
 
-**Construye:** el Ingress con dominio local, y el `storefront` accesible desde el navegador del
-host.
+**Construye:** el controlador de Gateway API, un `Gateway` compartido en el namespace `gateway`, y
+una `HTTPRoute` por servicio: `storefront.localhost` para el frontend y `api.localhost` con ruteo
+por prefijo a los cuatro backends, accesibles desde el navegador del host.
 
-**Trae:** los tipos de `Service` y **por qué `LoadBalancer` se queda en `Pending` para siempre en
-local**, que es el primer 🚧 *"hasta aquí llega el laboratorio"* del curso; el `Ingress` y su
-controlador, y el concepto de que un objeto no hace nada sin alguien que lo implemente; el dominio
-local y por qué tu navegador llega y tu `curl` no.
+**Trae:** los tipos de `Service` y **por qué `LoadBalancer` se queda en `Pending`** en un cluster
+recién creado. Después, cloud-provider-kind lo resuelve delante del lector, y esa es la lección: **un
+objeto no hace nada sin alguien que lo implemente**, y en la nube ese alguien te factura una IP. Es
+el primer 🚧 del curso. Luego, el reparto de papeles de Gateway API —quien opera la
+infraestructura pone el `GatewayClass` y el `Gateway`, y cada equipo escribe su `HTTPRoute`— y por
+qué ese reparto es lo que faltaba en el modelo anterior. Y el dominio local, con por qué tu
+navegador llega y tu `curl` a veces no.
 
-**Sección corta sobre Gateway API:** se nombra, se muestra la diferencia, y se sigue con Ingress —
-que es lo que el lector va a encontrar en la mayoría de clusters.
+**⚖️ Las otras implementaciones, con lo que ganan y lo que pierden:** Traefik (liviano y con
+Ingress y Gateway en el mismo controlador, a cambio de su propio modelo de configuración), NGINX
+Gateway Fabric (la continuidad para quien viene de NGINX), kgateway (Envoy con extensiones de API
+gateway), y Istio o Cilium (la entrada como parte del mesh o del CNI, con todo lo que eso suma). La
+tabla es de criterio, no de medición: solo Envoy Gateway se instala.
+
+**📖 Sección corta sobre `Ingress`**, solo como traducción: qué es, por qué lo vas a encontrar en
+clusters ajenos, cómo se lee uno y cómo se traduce a `HTTPRoute`. **No se despliega ninguno.** Y la
+nota honesta de por qué: el controlador más usado se retiró en marzo de 2026, y sus anotaciones no
+eran portables entre controladores.
+
+**🏚️ El *strangler*, en el camino base (D27):** Contingencia entra al cluster en el namespace
+`legacy`, detrás del mismo `Gateway`, y una `HTTPRoute` reparte por pesos el tráfico de precios
+entre Contingencia y `pricing`, hasta que Contingencia no recibe nada. Es la forma de sacarle
+tráfico a un sistema sin apagarlo, y es lo que Paracelso tiene que hacer con el Siga de verdad.
+
+**🩺 Incidente:** la `HTTPRoute` que no se engancha al `Gateway` —el `parentRef` apunta al namespace
+equivocado, o el `Gateway` no admite rutas de otros namespaces— y devuelve 404 sin que ningún pod
+se entere.
 
 #### ⚙️ Fase 11 — Configuración y secretos ⭐ · *media*
 
 **Trae:** `ConfigMap` y variables de entorno, con la lección de que cambiar un ConfigMap no
-reinicia nada; `Secret` y la verdad incómoda de que base64 no es cifrado; y **la pieza central de
+reinicia nada —en la voz de la historia, *"salió la circular de precios y las droguerías siguen
+cobrando lo viejo"*: el tope regulado de `pricing` es configurable y su tabla vive en un
+`ConfigMap`—; `Secret` y la verdad incómoda de que base64 no es cifrado; y **la pieza central de
 la fase: la configuración horneada en build frente a la inyectada en arranque.**
 
 El `storefront` es el caso perfecto y se demuestra con dos despliegues de la misma imagen: su
 `API_URL` se fija al compilar, y el contenedor espera inyectarla al arrancar. Ese desajuste es la
 causa raíz de la mitad de los *"funciona en QA y no en producción"* de cualquier aplicación de
-página única.
+página única. El arreglo es el paso G2: el `storefront` lee su configuración al arrancar.
 
 **🚫 Deja fuera, declarándolo:** los gestores de secretos externos. Exigen infraestructura que el
 laboratorio no tiene y no cambian ninguna decisión local.
@@ -442,12 +539,14 @@ desaparece según qué réplica conteste.** Nadie olvida un bug que no produce n
 
 Ahí se cobra la deuda 💸 que la Fase 09 dejó declarada.
 
-**Construye:** Postgres en el cluster como `StatefulSet`, con su PVC y su `Service` headless, y los
-cuatro servicios apuntando a su propia base con su propia credencial.
+**Construye:** Postgres en el cluster como `StatefulSet` escrito a mano sobre la imagen oficial,
+con su PVC y su `Service` headless, y los cuatro servicios apuntando a su propia base con su propia
+credencial (paso G3).
 
 **Trae:** volúmenes, `PersistentVolume`, `PersistentVolumeClaim` y `StorageClass`, todos motivados
 por el fallo de arriba; identidad estable y arranque ordenado; `Job` y `CronJob` para el seed y las
-migraciones; y **el orden de la migración contra el rollout**, con la pregunta que nadie se hace a
+migraciones —el seed es el script de Python de `a01` (D31), empaquetado en una imagen y corrido como
+`Job`—; y **el orden de la migración contra el rollout**, con la pregunta que nadie se hace a
 tiempo: qué pasa si dos réplicas migran a la vez.
 
 **⚖️ Y un veredicto honesto:** vas a poner Postgres en el cluster en este laboratorio, y
@@ -455,6 +554,19 @@ probablemente no deberías hacerlo en producción. Aquí está por qué.
 
 **Declara la divergencia:** un servidor con una base por servicio en vez de instancias separadas,
 y qué se pierde con eso.
+
+**⚰️ La autopsia, de la historia y en vivo:** la Braqui integrada al Siga leyendo y escribiendo en
+sus tablas (historia §1.11). En el laboratorio no se cuenta: el patrimonio la trae funcionando así,
+sondeando las tablas de Contingencia, y la fase lo muestra antes de que `replenish` tenga su base.
+Integrar por la base de datos fue la decisión razonable de quien quería una sola verdad, y ató a dos
+equipos a un mismo esquema y a un mismo calendario de despliegue. Es la que justifica *una base por
+servicio*, y la que hace honesta la divergencia del laboratorio: una base y un usuario por servicio,
+y ninguna tabla compartida.
+
+**🏚️ Y el script de la Braqui (D30, historia §1.9):** el aviso de traslados por archivo pasa de su
+`cron` dentro del contenedor a un `CronJob`. `concurrencyPolicy: Forbid` y `activeDeadlineSeconds`
+reemplazan el archivo de bloqueo, y con él el bloqueo que se queda puesto después de un reinicio.
+Es lo que la plataforma sí arregla; las otras mañas del script quedan anotadas para la Parte IV.
 
 #### 📦 Fase 13 — Helm: el paquete · *densa*
 
@@ -471,6 +583,12 @@ dejó como Jobs sueltos.
 
 **Trae:** `upgrade`, `rollback`, `--dry-run` y el *diff* previo — la red de seguridad que hace que
 el lector se atreva a tocar; y los tres perfiles de la §3.4 en uso real, incluido el de medición.
+
+**🏘️ La segunda cadena (D24):** el mismo chart instalado una segunda vez, como el release
+`tenant-b` en el namespace `apps-b`, para "la cadena de Don Rodrigo", con su propio archivo de
+valores (marca, tope regulado, réplicas). Es la cuarta pregunta del encargo de la historia y la
+prueba de que la configuración vive en los valores y no en el código. Se apaga al terminar la
+fase: el perfil `minimo` no la lleva.
 
 **Sección corta sobre Kustomize:** que hay dos escuelas —plantillas contra parches— y en qué se
 diferencian.
@@ -489,10 +607,23 @@ Y la observación que solo un curso políglota puede hacer: **el mismo campo del
 distintas según lo que corre debajo.** Spring Boot tarda segundos, Go milisegundos, y PHP-FPM está
 "listo" antes de poder atender de verdad.
 
-Después, `requests` y `limits`: qué le prometes al planificador y qué te impone el cgroup.
+La readiness deja de ser trivial en esta fase (paso G4): cada servicio comprueba lo que de verdad
+necesita para atender, y nada más.
 
-**⚰️ La autopsia central del curso: el `OOMKilled` de la JVM.** El heap que no sabe que está en un
-contenedor, el pod que muere sin escribir ni un error, y el arreglo. Con números antes y después.
+Después, `requests` y `limits`: qué le prometes al planificador y qué te impone el cgroup. Y
+`ResourceQuota` y `LimitRange` por namespace, con las dos cadenas de la F14 encendidas: que una
+cadena en quincena no le quite la máquina a la otra (D24).
+
+**⚰️ La autopsia central del curso: el `OOMKilled` de la JVM de hoy.** Java 25 sabe que está en un
+contenedor y dimensiona el heap contra el límite, así que la historia no es la del heap ignorante
+de hace diez años. Es la de la decisión razonable que la rompe: un `-Xmx` copiado de cuando el
+servicio corría en una VM, o un `MaxRAMPercentage` subido cerca del cien "para aprovechar la
+memoria", con la memoria que no es heap —metaspace, pilas de hilos, buffers directos, caché de
+código— empujando por encima del límite. El pod muere sin escribir ni un error, y el arreglo se
+mide antes y después.
+
+**🔥 Sección corta: el AOT cache.** La respuesta de la JVM actual al arranque lento, medida contra
+la readiness de `inventory`. La comparación completa con la compilación nativa es el apéndice `a08`.
 
 #### 📈 Fase 16 — Escalado y rollout · *densa*
 
@@ -503,15 +634,22 @@ primera vez en todo el curso que un servicio llama a otro por trabajo de negocio
 porque es lo que da carga real a la medición de esta fase, material que observar a la Parte III y
 algo que romper a la Parte IV.
 
+Es el paso G5, y trae consigo el apagado limpio ante `SIGTERM` en los cuatro servicios.
+
 El aviso a `replenish` se hace **sin esperar respuesta, registrando el resultado en el log**: la
-venta no puede fallar porque el servicio de reposición esté caído. Es una decisión deliberada y
+venta no puede fallar porque el servicio de reposición esté caído. Es, en la historia, el préstamo
+entre vecinas: si la droguería no tiene, se pide a otra. Es una decisión deliberada y
 deja sembrada la pregunta que la Fase 25 responde — *¿y si esa llamada se pierde?*
 
 **Trae:** escalado manual y HPA, con su decepción honesta incluida — el HPA reacciona tarde, mide
 una sola métrica, y con PHP-FPM se comporta distinto que con Node; las estrategias de rollout,
 `maxSurge` y `maxUnavailable`; y **el apagado limpio**, con `terminationGracePeriodSeconds` y el
 `preStop` que le da tiempo al balanceador a enterarse. Ahí se cobra lo que la Fase 03 sembró sobre
-`SIGTERM`.
+`SIGTERM`. metrics-server entra aquí, y con él el primer incidente de un cluster local: el HPA que
+muestra `<unknown>` porque el kubelet de kind no presenta un certificado que metrics-server acepte.
+
+Es la fase que enciende por primera vez el perfil `lab`: sin más de un nodo, el reparto de réplicas
+no enseña nada.
 
 **📏 Mide:** con carga generada, cuántas réplicas de cada runtime sostienen la misma tasa de
 peticiones, y cuánta memoria cuesta cada una. Es la tabla que cierra la tesis de la Parte II.
@@ -526,7 +664,9 @@ Aquí el sistema deja de ser un diagrama y se vuelve algo que se rompe.
 #### 📊 Fase 17 — Métricas y dashboards · *densa*
 
 **Construye:** Prometheus con su `scrape_config` escrito a mano, Grafana con dashboards
-provisionados como código, y los cuatro servicios exponiendo `/metrics`.
+provisionados como código, y los cuatro servicios exponiendo `/metrics` (paso G6). Estrena los
+interruptores de observabilidad: la fase mide cuánto cuesta cada pieza encendida, y el lector
+aprende a apagarla cuando no la usa.
 
 **Trae:** los tres pilares y cuándo sirve cada uno —métricas para saber que algo va mal, logs para
 saber qué, trazas para saber dónde—, que es el criterio que separa diagnosticar de adivinar; el
@@ -541,8 +681,9 @@ es un ejercicio vacío.
 
 #### 🔎 Fase 18 — Logs · *media*
 
-**Construye:** los cuatro servicios logueando JSON estructurado a stdout, Fluent Bit como
-`DaemonSet` y Loki recibiéndolo todo.
+**Construye:** los cuatro servicios logueando JSON estructurado a stdout (paso G7), Fluent Bit como
+`DaemonSet` en el perfil `lab` —en un solo nodo, un `DaemonSet` no se distingue de un
+`Deployment`— y Loki recibiéndolo todo.
 
 **Trae:** la regla operativa —a stdout, nunca a archivo— y la fricción real de conseguirla en Java
 y en PHP, que por defecto loguean texto plano; el `DaemonSet` como el objeto que explica cómo
@@ -550,19 +691,23 @@ funciona un recolector; y LogQL para buscar una venta a través de cuatro servic
 
 #### 🔐 Fase 19 — TLS y certificados ⭐ · *densa*
 
-**Construye:** una CA propia, el certificado del Ingress firmado con su SAN correcto, montado como
-`Secret` TLS, y la confianza instalada en el host. Después, cert-manager con un emisor propio que
-lo renueva solo.
+**Construye:** una CA propia, el certificado del listener HTTPS del `Gateway` firmado con su SAN
+correcto, montado como `Secret` TLS, y la confianza instalada en el host. Después, cert-manager con
+un emisor propio que lo renueva solo, y trust-manager para repartir la CA a los pods que la
+necesitan.
 
 **Trae:** la cadena de confianza entendida de una vez, que es lo que casi nadie tiene claro del
 todo; y el patrón de emisión automática que el lector va a encontrar en cualquier cluster real.
 
 **🧨 Y abre el laboratorio de incidentes de certificados**, que es el mejor activo individual del
 curso: certificado expirado, CA desconocida, SAN incorrecto, clave y certificado desparejados,
-cert-manager que no emite, y mTLS sin certificado de cliente. Cada uno con su síntoma, su
-evidencia, su causa y su primer comando.
+cert-manager que no emite, mTLS sin certificado de cliente, y **el registry local con CA propia**:
+el `x509: certificate signed by unknown authority` al traer una imagen, que se arregla en tres
+sitios distintos según quién tire de ella —Docker, Podman o el containerd de los nodos de kind—. Es
+el mejor 🦭 del curso. Cada uno con su síntoma, su evidencia, su causa y su primer comando.
 
-**Incluye** mTLS entre servicios en su versión a mano. La versión con mesh es apéndice.
+**Incluye** mTLS entre `inventory` y `pricing` en su versión a mano (paso G8). La versión con mesh
+es apéndice.
 
 #### 🛡️ Fase 20 — Seguridad del pod y de la red · *media*
 
@@ -572,7 +717,17 @@ un Secret—; y `NetworkPolicy`.
 
 **🧨 Con el experimento que lo justifica:** por defecto, en un cluster, **todo el mundo puede
 hablar con todo el mundo**. Se demuestra exponiendo la base de datos por accidente, y se arregla en
-dos minutos. Es la lección de seguridad más transferible del curso.
+dos minutos. Es la lección de seguridad más transferible del curso. Y la segunda lección, que llega
+sola: una `NetworkPolicy` no hace nada si la red del cluster no la aplica. Si kindnet la aplica en
+la versión fijada, se dice; si no, la fase instala el CNI que la aplique ⏳.
+
+**🏘️ Y el aislamiento entre cadenas (D24):** con las dos cadenas de la F14 encendidas, una
+`NetworkPolicy` que impide que los servicios de `apps-b` lleguen a los de `apps` y a sus bases. Lo
+que la `NetworkPolicy` no resuelve —datos de las dos cadenas en el mismo Postgres, identidad— se
+declara como frontera de un SaaS de verdad, fuera del curso.
+
+**🩺 Incidentes:** `runAsNonRoot` contra una imagen que corre como root, y la política de *default
+deny* que corta también el DNS.
 
 **🔥 Deja como apéndice:** el service mesh. Es la respuesta real a media Parte IV y verlo funcionar
 cambia el criterio, pero cuesta memoria, un plano de control entero y complejidad conceptual
@@ -598,8 +753,9 @@ Es donde el curso demuestra su tesis: **nada de esto lo resuelve Kubernetes.**
 
 #### 🔥 Fase 22 — Resiliencia, y el generador de caos · *media*
 
-**Construye:** el generador de caos del curso —código propio, no una herramienta externa— que
-inyecta latencia, errores intermitentes y respuestas malformadas entre servicios.
+**Construye:** el generador de caos del curso —código propio en Go, generado como los servicios, no
+una herramienta externa— que inyecta latencia, errores intermitentes y respuestas malformadas entre
+servicios. Y las respuestas en `inventory` (paso G9).
 
 **Trae:** el fallo en cascada, el timeout que no pusiste, el reintento que empeora las cosas; y
 timeouts, backoff y circuit breaker como respuestas. **Con la pregunta que ordena la parte
@@ -616,13 +772,27 @@ Protobuf. Y **enciende Tempo**: aquí por fin hay algo que trazar.
 va a una sola réplica.** Es sutil, es medible, y es específico de la combinación. Exactamente el
 tipo de cosa que este curso existe para enseñar.
 
-**Trae también** las trazas distribuidas y el `trace-id` propagado, que es lo único que responde
-*"¿por qué esta venta tardó ocho segundos?"* cuando pasó por cuatro servicios.
+**Trae también** las trazas distribuidas con OpenTelemetry y el `trace-id` propagado, que es lo único
+que responde *"¿por qué esta venta tardó ocho segundos?"* cuando pasó por cuatro servicios. Es el
+paso G10, y es donde los cuatro runtimes se separan otra vez: agente en Java, SDK en Node y en Go, y
+extensión en PHP.
 
 #### 🎬 Fase 24 — La saga orquestada · *densa*
 
 **Construye:** el flujo de venta como saga coordinada por `inventory`, con sus compensaciones
-escritas a mano.
+escritas a mano (paso G11). Es el préstamo entre vecinas de la historia: reservar en la droguería
+que tiene, despachar, cobrar; y si algo falla, liberar la reserva, reembolsar, o dejar el pedido
+**pendiente** con aviso al cliente. *"Siempre llega"* no significa *"siempre llega ya"*.
+
+**🏚️ Abre con el procedimiento (D28):** hoy el préstamo es un procedimiento en PL/pgSQL dentro de
+Contingencia, una transacción en una sola base. La fase lo saca de la base y lo convierte en una
+saga entre servicios: es la única pieza del PL/SQL de la historia que Paracelso toca, y la toca para
+sacarla de la base.
+
+**⚰️ Y con la saga que ya existía (D30):** el aviso de traslados por archivo es un proceso de dos
+pasos entre dos sistemas —Contingencia descuenta, la Braqui despacha— sin ninguna compensación. Si
+el traslado no llega, nadie devuelve la unidad. Se muestra antes de escribir la primera
+compensación, y es el origen de los huérfanos de los lunes.
 
 **Trae:** que no hay transacción distribuida gratis, y que **"deshacer" es una operación de
 negocio, no técnica**. Se provoca el fallo a mitad de saga con el generador de caos de la Fase 22 y
@@ -634,7 +804,12 @@ se observa el sistema a medio compensar.
 Funciona. Se reinicia un consumidor durante una venta, y el mensaje **no existió nunca**. La
 motivación de todo lo que sigue se siente en vez de explicarse.
 
-**Construye:** la misma coreografía sobre NATS con JetStream, con entrega *al menos una vez*.
+**Construye:** la misma coreografía sobre NATS con JetStream, con entrega *al menos una vez* (paso
+G12).
+
+**🏚️ El antecedente (D30):** el `.txt` leído a medio subir y el `.ok` que llega antes que su
+archivo son el mismo mensaje que no existió nunca, en la versión de 2020: nadie confirma la
+lectura y nadie mide la pérdida. El *ack* de JetStream es lo que al script le faltó siempre.
 
 **Trae:** el desacoplamiento por eventos; el contraste directo con la saga orquestada y el ⚖️
 veredicto de cuándo conviene cada una, que es lo que nadie te dice; y la factura inmediata del
@@ -642,10 +817,19 @@ arreglo: **si entrego al menos una vez, entrego dos veces.**
 
 #### 🔁 Fase 26 — Idempotencia y outbox ⭐ · *densa*
 
+**🧨 Abre con las dos motos**: dos droguerías contestan el mismo pedido de préstamo y al cliente le
+llegan dos motos con el mismo inhalador.
+
+**🏚️ Y con los dos parches que no alcanzaron (D30):** la tabla de archivos procesados usa como
+clave el nombre del archivo, y el lote reintentado genera otro nombre con los mismos traslados; y
+el `.txt` se escribe después del commit, que es la escritura dual tal como la hizo La Vecina. La
+clave de idempotencia es el ID del traslado, y el outbox reemplaza al archivo.
+
 **Trae:** claves de idempotencia y operaciones que se pueden repetir sin daño, que es la
 consecuencia directa de la fase anterior; y **el patrón outbox** — escribir el evento en la misma
 transacción que el dato, con un proceso aparte que lo publica. Resuelve la escritura dual, que es
-el bug distribuido más común y el peor diagnosticado.
+el bug distribuido más común y el peor diagnosticado. Es el paso G13, y el publicador del outbox es
+el sitio natural para mostrar un contenedor *sidecar* nativo.
 
 **🚫 Deja fuera, declarándolo:** event sourcing y CQRS. Son patrones de arquitectura de datos, no
 de infraestructura, y se comen un curso entero.
@@ -654,7 +838,8 @@ de infraestructura, y se comen un curso entero.
 
 #### ⚖️ Fase 27 — El veredicto honesto, y el proyecto final · *densa*
 
-**El veredicto:** cuándo **no** necesitabas nada de esto. Un árbol de decisión honesto que empieza
+**El veredicto:** cuándo **no** necesitabas nada de esto, en dos ramas: La Vecina sola, y La
+Vecina con una segunda cadena encima, que es la que cambia la cuenta. Un árbol de decisión honesto que empieza
 por la pregunta que el curso lleva veintisiete fases ganándose el derecho a hacer: ¿esto lo
 resolvía un contenedor y un servicio del sistema? ¿Lo resolvía compose en una máquina? ¿De verdad
 necesitas un orquestador, o necesitas dos servidores y una lista de comprobación?
@@ -664,76 +849,82 @@ que el laboratorio nunca pudo darte: un plano de control gestionado y su disponi
 balanceador de verdad, multi-zona, autoescalado de nodos, identidad de carga de trabajo, y el coste
 como restricción de diseño.
 
-**El proyecto final:** desplegar un servicio nuevo de cero —su imagen, su subchart, sus probes, sus
-límites, sus métricas, su entrada en el Ingress y su papel en la saga— sin que ninguna fase lo
-explique. Es el mejor criterio de éxito que el curso puede darse.
+**El proyecto final:** desplegar un servicio nuevo de cero —su contrato, su imagen, su subchart, sus
+probes, sus límites, sus métricas, su `HTTPRoute` y su papel en la saga— sin que ninguna fase lo
+explique, y hacer que la suite de conformidad y el tablero de la plataforma lo reconozcan sin tocar a
+los otros cuatro. Es el mejor criterio de éxito que el curso puede darse.
 
 ---
 
+
 ## 6. 🎨 Apéndices
 
-No cuentan como camino base y no llevan peso declarado. Formato de consulta rápida: índice de
-salto, secciones cortas, una guía final de "cuándo usar qué" y entre cinco y diez ejercicios
-breves.
+No cuentan como camino base y no llevan peso declarado. Qué cubre cada uno, qué deja fuera y cuándo
+se escribe está en [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md); aquí va
+solo el mapa.
 
 | Apéndice | Qué es |
 |---|---|
-| `a01` | Solución de problemas del ambiente, por plataforma. La cola larga de la Fase 00 |
-| `a02` | **Los prompts de generación de los servicios.** El contrato de cada uno y el prompt que lo produce. Es la pieza que sostiene la decisión de método de la §1 |
-| `a03` | Referencia rápida de `kubectl` y de k9s |
-| `a04` | 🔥 Arquitecturas y builds multiplataforma: ARM contra amd64, y la imagen que corre lentísima bajo emulación |
-| `a05` | 🔥 Construir imágenes sin Docker: Buildah, Kaniko, y los constructores por lenguaje |
-| `a06` | 🔥 MongoDB y el `StatefulSet` de varios miembros: arranque ordenado y failover |
-| `a07` | 🔥 Qué cambia cuando el frontend necesita un runtime: renderizado en servidor |
-| `a08` | 🔥 Service mesh: mTLS automático, reintentos y métricas de red sin tocar el código |
-| `a09` | 🔥 GitOps, de lectura: qué resuelve, qué cuesta, y por qué no está en el camino base |
-| `a10` | 🔥 Operators y recursos propios, de lectura. El lector los va a encontrar en cualquier cluster real |
-| `a11` | 🔥 Respaldo y restauración de los datos del cluster |
-| `a12` | 🔥 Las GUI del cluster: cuándo ayudan y cuándo estorban |
-| `a13` | 🌩️ El diccionario local ⇄ nube, consolidado y en las dos direcciones |
+| `a01` | **El laboratorio**: versiones fijadas, el Taskfile, los perfiles y el presupuesto de memoria. El único sitio del curso donde vive una versión |
+| `a02` | Solución de problemas del ambiente, por plataforma. La cola larga de la Fase 00 |
+| `a03` | **Los contratos y los prompts de generación**: OpenAPI, la suite Hurl y la matriz de pasos. Sostiene la decisión de método de la §1 |
+| `a04` | Referencia rápida de `kubectl` y de k9s |
+| `a05` | 📖 Los diccionarios: compose ⇄ Kubernetes, `Ingress` ⇄ Gateway API, local ⇄ nube 🌩️ |
+| `a06` | 🔥 Arquitecturas y builds multiplataforma: ARM contra amd64, y la imagen que corre lentísima bajo emulación |
+| `a07` | 🔥 Construir imágenes sin Docker: Buildah, Kaniko y los constructores por lenguaje |
+| `a08` | 🔥 La JVM nativa: compilación nativa contra AOT cache, medido |
+| `a09` | 🔥 Qué cambia cuando el frontend necesita un runtime: renderizado en servidor |
+| `a10` | 🔥 Service mesh: mTLS automático, reintentos y métricas de red sin tocar el código |
+| `a11` | 🔥 GitOps, de lectura |
+| `a12` | 🔥 Operators y recursos propios, de lectura |
+| `a13` | 🔥 Respaldo y restauración de los datos del cluster |
+| `a14` | 🔥 Las GUI del cluster y de los motores: cuándo ayudan y cuándo estorban |
+| `a15` | 🔥 Un `StatefulSet` de varios miembros: arranque ordenado y failover |
+| `a16` | 🏚️ **El patrimonio**, de laboratorio: Contingencia, el portal y la Braqui, cómo están hechos y con qué prompts. Se escribe antes de F00, en la tanda T1b |
 
 ---
 
 ## 7. 📓 El cuaderno de incidentes
 
-Un único archivo, `cuaderno-incidentes.md`, con **24 incidentes** de IDs globales que no se
-reasignan. Cada uno lleva: índice por síntoma, enunciado, evidencia observable, pistas graduadas,
-solución, y espacio para la bitácora del lector.
-
-Y cada uno traduce a git con el par de tags `inc/<ID>/<slug>-roto` e `inc/<ID>/<slug>-fix`, de
-modo que el `git diff` entre los dos **es** la corrección aislada del ruido de la fase.
+Un único archivo, `cuaderno-incidentes.md`, con **27 incidentes** de IDs globales que no se
+reasignan. Su especificación completa, con el catálogo de IDs reservados, está en
+[`formato-cuaderno-incidentes.md`](formato-cuaderno-incidentes.md).
 
 | Familia | Cuántos | De dónde salen |
 |---|---|---|
-| 🩺 Ambiente | 4 | Fase 00 |
-| ☸️ Plataforma | 14 | Fases 08 a 21 |
-| 🔐 Certificados | 6 | Fase 19 |
+| 🩺 Ambiente | 5 | Fase 00 (el 27, el proxy corporativo, se sumó después y conserva su número) |
+| ☸️ Plataforma | 15 | Fases 08 a 16 y 20 |
+| 🔐 Certificados | 7 | Fase 19 |
 
-El catálogo de plataforma, que es el grueso: imagen que nunca se cargó al cluster · tag inexistente ·
-`CrashLoopBackOff` por permisos · por variable ausente · por puerto ocupado · `OOMKilled` de la JVM ·
-`Pending` por recursos · `Pending` por PVC sin enlazar · readiness que nunca pasa a verde ·
-liveness demasiado agresiva · DNS que no resuelve por namespace equivocado · `Service` sin
-endpoints · Ingress con 404 por ruta · ConfigMap cambiado que no reinicia nada.
+Cada incidente traduce a git con el par de tags `inc/<ID>/<slug>-roto` e `inc/<ID>/<slug>-fix`, de
+modo que el `git diff` entre los dos **es** la corrección aislada del ruido de la fase, y la tarea
+`task inc:break -- <ID>` lleva el laboratorio al estado roto sin tocar el historial.
 
 > 🧭 **El formato es el mismo siempre:** qué provocar, qué síntoma esperar, **qué mirar en los
 > primeros treinta segundos**, cuál es la causa, cómo se arregla, y cómo se previene. El tercer
 > punto es el que hace útil al cuaderno; sin él es una lista de errores.
 
+Las roturas de la Parte IV —el tráfico gRPC en una sola réplica, el mensaje que se pierde en el
+pub/sub, la venta cobrada dos veces— son **experimentos 🧨 de su fase**, no incidentes: su causa es
+de diseño y no se diagnostica con `kubectl`.
+
 ---
 
 ## 8. 📏 Las mediciones del curso
 
-Seis, todas con el mismo arnés, todas consolidadas en `BENCHMARKS.md` con la declaración del
-entorno de referencia.
+Seis, todas con el mismo arnés (`task measure`), todas consolidadas en `BENCHMARKS.md` con la
+declaración del entorno de referencia y el formato de la guía §6.1. Más una de preparación, la del
+presupuesto de memoria, que se publica en `a01`.
 
-| Fase | Hipótesis, en una línea |
-|---|---|
-| 04 | El costo de empaquetar cada runtime: tamaño, build en frío, build con caché, arranque |
-| 05 | Los dos motores: creación del cluster, build y memoria del host en reposo |
-| 07 | Los cuatro clusters locales: arranque, memoria en reposo, multi-nodo |
-| 12 | Pruebas contra SQLite frente a pruebas contra el motor real: tiempo de suite y fidelidad |
-| 16 | Réplicas necesarias por runtime para sostener la misma tasa, y memoria por réplica |
-| 23 | Distribución del tráfico gRPC entre réplicas, antes y después del arreglo |
+| ID | Fase | Hipótesis, en una línea |
+|---|---|---|
+| B-00 | `a01` | Cuánta memoria del host ocupa cada perfil, con cada motor, en macOS arm64 |
+| B-04 | 04 | El costo de empaquetar cada runtime: tamaño, build en frío, build con caché, arranque |
+| B-05 | 05 | Los dos motores: creación del cluster, build y memoria del host en reposo |
+| B-07 | 07 | Los clusters locales: arranque, memoria en reposo, multi-nodo |
+| B-12 | 12 | Pruebas contra SQLite frente a pruebas contra el motor real: tiempo de suite y fidelidad |
+| B-16 | 16 | Réplicas necesarias por runtime para sostener la misma tasa, y memoria por réplica |
+| B-23 | 23 | Distribución del tráfico gRPC entre réplicas, antes y después del arreglo |
 
 Y las reglas de honestidad, que son las que hacen que el curso sobreviva a un lector escéptico:
 se publica lo que salió y no lo que esperabas · **el empate se llama empate** · nada de números
@@ -744,20 +935,16 @@ nunca se extrapola.
 
 ## 9. 📁 Convención de nombres y de git
 
-**Fases:** `NN-tema.md`, de `00-` a `27-`, minúsculas con guiones y dos dígitos.
-**Apéndices:** `aNN-tema.md`, de `a01-` a `a13-`.
-**Documentos de raíz:** `0-ESTRUCTURA-CURSO.md`, `00-convencion-de-git-y-tags.md`,
-`00-historia-de-<empresa>.md`, `README.md`, `BENCHMARKS.md`, `INSTINTOS.md`,
-`cuaderno-incidentes.md`.
-**Código:** un único directorio de proyecto bajo `src/`, porque el curso construye **un solo
-artefacto** que crece fase a fase, y no una carpeta por capítulo.
+**Fases:** `NN-slug.md`, de `00-` a `27-`, con los slugs de §11.
+**Apéndices:** `aNN-slug.md`, de `a01-` a `a16-`, con los slugs de la propuesta de apéndices §2.
+**Documentos de raíz:** `00-historia-de-la-vecina.md`, `00-convencion-de-git-y-tags.md`,
+`BENCHMARKS.md`, `INSTINTOS.md`, `cuaderno-incidentes.md`; y al final, `README.md` y
+`0-ESTRUCTURA-CURSO.md`.
+**Código:** un único proyecto, `src/lab/`, porque el curso construye **un solo artefacto** que crece
+fase a fase. Su estructura está en el contrato del cluster §2.
 
-**Tags:** `fase-NN` anotado, con el checklist de cierre en el mensaje. **Commits:** `fase NN: …`, y
-los de ejercicio `fase NN ejMM: …`. **Incidentes:** el par `inc/<ID>/<slug>-roto` e
-`inc/<ID>/<slug>-fix`, con el ID que el cuaderno ya tiene reservado y nunca uno inventado.
-
-Los apéndices **no llevan tag propio**, porque el código que explican lo escriben las fases. Solo
-se etiquetan (`apendice-aNN`) si dejan archivos versionados.
+**Git:** el del contrato del cluster §8 — tags `fase-NN-<slug>`, commits `fNN:`, incidentes con su
+par de tags, y apéndices sin tag salvo `a01`, `a03` y `a16`.
 
 ---
 
@@ -769,33 +956,93 @@ texto se detiene: **no se dice dónde estaría ese material.**
 cgroups y namespaces por dentro · SBOM, firma de imágenes y cadena de suministro · gestores de
 secretos externos · alertas y cadena de guardia · event sourcing y CQRS · desplegar en una nube de
 pago · escribir un Operator propio · un segundo motor relacional · Kafka · compose como herramienta
-de producción · profundidad de negocio en el dominio de inventario, que se mantiene mínimo a
-propósito.
+de producción · **`Ingress` y sus controladores**, salvo como traducción · **JVM anteriores a la 25,
+Jakarta EE y MicroProfile** · la semilla de ciencia de datos · profundidad de negocio en el dominio
+de inventario, que se mantiene mínimo a propósito.
 
 Si algo interesante aparece fuera de alcance mientras se escribe, se registra como **pendiente 📌**
 con su destino sugerido. No se infla la fase actual.
 
 ---
 
-## 11. 🚦 Lo que sigue, y lo que queda abierto
+## 11. 📊 Resumen de fases
 
-**Lo que sigue, en este orden:**
+| # | Archivo | Parte | Peso | Ejercicios | Incidentes | 📏 |
+|---|---|---|---|---|---|---|
+| 00 | `00-el-ambiente.md` | 0 | media | 20 | 01–04, 27 | |
+| 01 | `01-primer-contenedor-y-dockerfile.md` | 0 | media | 20 | | |
+| 02 | `02-compose-el-sistema-en-un-archivo.md` | 0 | media | 20 | | |
+| 03 | `03-el-contenedor-por-dentro.md` | I | media | 20 | | |
+| 04 | `04-empaquetar-los-cuatro-runtimes.md` ⭐ | I | densa | 24 | | B-04 |
+| 05 | `05-los-dos-motores.md` | I | ligera | 12 | | B-05 |
+| 06 | `06-del-compose-al-cluster.md` | I | densa | 24 | | |
+| 07 | `07-el-cluster-local.md` | II | media | 20 | | B-07 |
+| 08 | `08-el-primer-despliegue.md` ⭐ | II | densa | 24 | 05–06 | |
+| 09 | `09-los-cuatro-servicios-dentro.md` | II | media | 20 | 07 | |
+| 10 | `10-la-entrada-al-sistema.md` | II | media | 20 | 08 | |
+| 11 | `11-configuracion-y-secretos.md` ⭐ | II | media | 20 | 09–10 | |
+| 12 | `12-estado-y-almacenamiento.md` | II | densa | 24 | 11 | B-12 |
+| 13 | `13-helm-el-paquete.md` | II | densa | 24 | | |
+| 14 | `14-helm-en-operacion.md` | II | media | 20 | | |
+| 15 | `15-salud-y-recursos.md` ⭐ | II | densa | 24 | 12–15 | |
+| 16 | `16-escalado-y-rollout.md` | II | densa | 24 | 16–17 | B-16 |
+| 17 | `17-metricas-y-dashboards.md` | III | densa | 24 | | |
+| 18 | `18-logs.md` | III | media | 20 | | |
+| 19 | `19-tls-y-certificados.md` ⭐ | III | densa | 24 | 18–24 | |
+| 20 | `20-seguridad-del-pod-y-de-la-red.md` | III | media | 20 | 25–26 | |
+| 21 | `21-diagnostico.md` | III | densa | 24 | | |
+| 22 | `22-resiliencia-y-caos.md` | IV | media | 20 | | |
+| 23 | `23-grpc-y-el-balanceo.md` ⭐ | IV | densa | 24 | | B-23 |
+| 24 | `24-la-saga-orquestada.md` | IV | densa | 24 | | |
+| 25 | `25-la-coreografia.md` | IV | densa | 24 | | |
+| 26 | `26-idempotencia-y-outbox.md` ⭐ | IV | densa | 24 | | |
+| 27 | `27-el-veredicto-y-el-proyecto-final.md` | Cierre | densa | 12 | | |
+| | **Total** | | | **604** | **27** | **6** |
 
-1. La **historia de la empresa** —`00-historia-de-<empresa>.md`—, que desbloquea todo lo narrativo
-   y sin la cual ninguna fase se puede escribir sin inventar dominio.
-2. `alcance-del-proyecto.md`, con las versiones fijadas y su fecha de verificación.
-3. `guia-de-estilo-y-convenciones.md` y `plantillas-de-capitulo.md`.
-4. `contrato-del-cluster.md`, obligatorio antes de cualquier fase de la Parte II en adelante.
-5. Los formatos de medición y de cuaderno, y después los prompts de fase.
+Catorce fases densas, doce medias, una ligera y el cierre. Los slugs son canónicos: una fase no se
+renombra una vez escrita.
 
-**Lo que queda abierto, y no bloquea:**
+---
 
-- **El nombre y la historia de la empresa**, con las dos o tres candidatas de retail que se
-  evalúan aparte. El criterio que tienen que aguantar: una **transacción distribuida con
-  consecuencia real**, no solo movimientos de stock, porque la Parte IV se apoya entera en eso.
-- **Las versiones exactas** de los cuatro runtimes, de kind, de Helm y del stack de
-  observabilidad. Se fijan con su fecha de verificación y no se ponen de memoria.
-- **El orden de escritura** de las fases, que no tiene por qué ser el numérico. Las candidatas a
-  escribirse primero son la 04 y la 12: la primera fija el arnés de medición del que dependen
-  otras cinco, y la segunda es la que más puede obligar a reescribir la Parte II si su experimento
-  no sale como se espera.
+## 📌 12. Registro de decisiones
+
+Lo que sostiene este temario. **Cerradas por Oskar el 30/09/2026**, salvo D30 y D31: D1–D5 al resolver
+las contradicciones del material preliminar, D8–D17 sobre la propuesta de valores, D18–D25 al
+cerrar la historia y sus pendientes, D26–D29 al decidir el patrimonio de arranque, D30 el
+02/10/2026, al sumar a la historia el aviso de traslados por archivo, y D31 el 03/10/2026, al fijar
+Python como lenguaje de scripting. Si una decisión cambia, se cambia primero en su sitio y después
+aquí.
+
+| ID | Decisión | Valor | Estado | Manda en |
+|---|---|---|---|---|
+| D1 | Stack | Spring Boot 4 · Java 25, Laravel con PHP-FPM + nginx, NestJS · Node 24, Go, React · Vite. Sin Jakarta EE ni MicroProfile | ✅ | alcance §7.2 |
+| D2 | Piloto | `pricing` | ✅ | §4.2 |
+| D3 | JVM | Java 25 tal cual; JVM anteriores y MicroProfile como extensión futura fuera del curso | ✅ | alcance §15 |
+| D4 | Entrada | Gateway API; ningún objeto `Ingress` desplegado | ✅ | alcance §8, §3.5 |
+| D5 | Tamaño | Mínimo posible: kind de un nodo por defecto, observabilidad por piezas, tres perfiles; lo publicado es lo medido | ✅ | alcance §7.4 |
+| D6 | Código de `src/` preliminar | Borrado `src/microk8s-lab`; se conserva `switch-container.ps1` para revisarlo en T1 | ✅ | — |
+| D7 | Desechables | `06-…`, `07-…` y el temario candidato pasan a `_desechable-*` | ✅ | — |
+| D8 | Punto de entrada | Taskfile (go-task) | ✅ | contrato §7 |
+| D9 | Plataformas | **El autor verifica solo en macOS arm64.** Windows 11 y Linux se escriben desde la documentación oficial, marcados como no verificados, y se verifican al hacer el curso | ✅ | alcance §8, guía §12 |
+| D10 | Método de generación | OpenAPI 3.1 + suite Hurl + matriz G0–G13, y **Swagger UI** en un contenedor para documentar los contratos; Claude Code como herramienta de referencia | ✅ | contrato §6–§7, `a03` |
+| D11 | Ejercicios | 12 / 20 / 24 por peso; 12 en F27 | ✅ | guía §9 |
+| D12 | Controlador de Gateway | **Envoy Gateway**. La Fase 10 nombra las alternativas (Traefik, NGINX Gateway Fabric, kgateway, Istio, Cilium) con ventajas y desventajas, sin instalarlas | ✅ | §3.5, contrato §9 |
+| D13 | Cuaderno | 26 incidentes; se suma el del registry con CA propia (27 con D20) | ✅ | formato del cuaderno |
+| D14 | Apéndices | Quince, renumerados (dieciséis con `a16`, D19); se suman `a01` (laboratorio), `a05` (diccionarios) y `a08` (JVM nativa) | ✅ | propuesta de apéndices |
+| D15 | Mesh (`a10`) | **Istio** en modo ambient; Linkerd y Cilium nombrados como alternativas | ✅ | propuesta de apéndices |
+| D16 | Comparación de clusters | kind, k3d, minikube y el Kubernetes de Docker Desktop; MicroK8s fuera | ✅ | Fase 07 |
+| D17 | Versiones | **Todo en su última LTS**, y donde no haya línea LTS, en su última estable, a la fecha de la verificación; por digest en `a01` | ✅ | `a01` |
+| D18 | La empresa | **Droguerías La Vecina**, cooperativa de droguistas de Santander que creció a Boyacá, Cundinamarca y Bogotá; el curso es su POC, el proyecto Paracelso de la unidad Alquimia, construido en La Rebotica | ✅ | historia |
+| D19 | El patrimonio | **Reescrita el 01/10/2026**: el taller arranca con el patrimonio de La Vecina —Contingencia (el código del Siga en Eclipse GlassFish y Postgres), el portal y la Braqui—, creado con prompts antes de escribir capítulos (tanda T1b) e insumo de los servicios nuevos | ✅ | alcance §12, `a16` |
+| D20 | Incidente del proxy | El proxy corporativo con inspección TLS entra como incidente **27**, de ambiente, reservado por la F00 | ✅ | formato del cuaderno |
+| D21 | Nube en el diccionario | Columnas OCI y Azure, con AWS y Google nombradas; el curso no elige | ✅ | `a05` |
+| D22 | Dominio | Fuera fórmula, lotes, cadena de frío, control especial y EPS; "pendiente" como estado de compensación; préstamo como `replenishmentOrder` entre `store` | ✅ | alcance §7.1, historia §8 |
+| D23 | Precio regulado | Regla configurable de `pricing` (tope), con su tabla en un `ConfigMap` | ✅ | contrato §3, Fase 11 |
+| D24 | El producto embrionario | La idea de vender el sistema como SaaS (historia §1.12–§1.13) entra como motivo de negocio, como la cuarta pregunta del POC y con **nivel 2**: la rama nueva del veredicto en F27, un segundo release del chart (`tenant-b` en `apps-b`) en F14, cuotas por namespace en F15 y aislamiento entre cadenas en F20. Sin apéndice propio | ✅ | historia, alcance §7.1 y §11, contrato §4 |
+| D25 | Motor de `a15` | NATS con JetStream en tres miembros: ya está en el stack y su quórum deja provocar el failover | ✅ | propuesta de apéndices |
+| D26 | Contingencia y Postgres | La base del patrimonio es Contingencia, y Postgres viene de la historia: entró en 2016 porque el comité no definió a tiempo las licencias de Oracle | ✅ | historia §1.7, alcance §12 |
+| D27 | *Strangler* | Camino base, en la Fase 10, con Contingencia detrás del `Gateway` | ✅ | F10 |
+| D28 | El procedimiento del préstamo | La Fase 24 lo lleva de PL/pgSQL en Contingencia a una saga entre servicios; es el único PL/SQL que el curso toca | ✅ | F24, `a16` |
+| D29 | `a16` | Pasa de 🔥 a apéndice de laboratorio, "El patrimonio", con su tanda propia (T1b) antes de F00 | ✅ | propuesta de apéndices |
+| D30 | El aviso de traslados por archivo | La historia (§1.9, §1.11) suma la integración de 2020 entre el Siga y la Braqui: un `.txt` con su `.ok` en una carpeta compartida y un script de Python cada cinco minutos, con tres parches. **No abre track ni incidentes nuevos** (el cuaderno sigue en 27): entra al patrimonio de `a16` y sirve de hilo a F12 (`CronJob`), F24 (saga sin compensaciones), F25 (mensaje perdido) y F26 (idempotencia por nombre y escritura dual). Python entra como lenguaje de scripting del laboratorio, no como un stack | ✅ | historia §1.9, `a16`, F12, F24–F26 |
+| D31 | Python para scripting | Python es el lenguaje de los scripts del laboratorio —uno solo para los tres sistemas, en vez de un `.sh` y un `.ps1`—, con `venv` y un `requirements.txt` por directorio de scripts. **Sin apéndice propio**: una sección corta en `a01` con lo mínimo y un ejemplo, el seed con Faker, que la F12 corre como `Job`. Ningún servicio está escrito en Python | ✅ | alcance §8, `a01`, F12 |
