@@ -116,14 +116,20 @@ docker run --rm -it \
   bash
 ```
 
-```text
-HOST                              CONTENEDOR
-tu-proyecto/  ──bind mount──▶  /workspace/
-                                 ├── package.json        ← host
-                                 ├── src/                ← host
-                                 └── node_modules/       ← VOLUMEN, no host
-                                        ▲
-                     miproyecto-node10-modules
+```mermaid
+flowchart LR
+    subgraph HOST
+        P["tu-proyecto/"]
+    end
+    subgraph CT["CONTENEDOR · /workspace/"]
+        PJ["package.json ← host"]
+        S["src/ ← host"]
+        NM["node_modules/ ← VOLUMEN, no host"]
+    end
+    V[("miproyecto-node10-modules")]
+    P -- "bind mount" --> PJ
+    P -- "bind mount" --> S
+    V -- "named volume" --> NM
 ```
 
 El segundo mount se aplica **sobre un subdirectorio del primero** y gana. Resultado: editas

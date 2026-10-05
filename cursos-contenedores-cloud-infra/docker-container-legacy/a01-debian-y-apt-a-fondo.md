@@ -16,7 +16,7 @@ Debian 10 y te sientes perdido**.
 | Si tu pregunta es… | Ve a |
 |---|---|
 | "¿Por qué hay `apt`, `apt-get`, `apt-cache` y `dpkg`?" | [§1](#1--cuatro-comandos-y-una-división-que-tiene-sentido) |
-| "¿De dónde saca APT los paquetes?" | [§2](#2--el-sourceslist-por-dentro) |
+| "¿De dónde saca APT los paquetes?" | [§2](#2-️-el-sourceslist-por-dentro) |
 | "¿Qué es un mirror y necesito uno?" | [§3](#3--mirrors-y-por-qué-aquí-no-hacen-falta) |
 | "¿`Depends`, `Recommends`, `Suggests`?" | [§4](#4--las-tres-relaciones-entre-paquetes) |
 | "¿Qué se descarga exactamente y dónde queda?" | [§5](#5--índices-y-archivos-son-cosas-distintas) |
@@ -198,17 +198,11 @@ Ese número es la cantidad real de paquetes que arrastra `curl`. Suele sorprende
 
 Es la distinción que explica el diseño del `RUN` de [F03](03-apt-y-utilidades.md).
 
-```text
-apt-get update
-    │  descarga los ÍNDICES: qué paquetes existen, versiones, hashes
-    ▼
-/var/lib/apt/lists/          ← decenas de MB de listas
-
-apt-get install curl
-    │  descarga los ARCHIVOS .deb y los instala
-    ▼
-/var/cache/apt/archives/     ← los .deb descargados
-/usr/bin/curl                ← el resultado
+```mermaid
+flowchart TD
+    U["apt-get update"] -- "descarga los ÍNDICES:<br/>qué paquetes existen, versiones, hashes" --> L["/var/lib/apt/lists/<br/>decenas de MB de listas"]
+    I["apt-get install curl"] -- "descarga los ARCHIVOS .deb<br/>y los instala" --> A["/var/cache/apt/archives/<br/>los .deb descargados"]
+    I --> B["/usr/bin/curl<br/>el resultado"]
 ```
 
 **Y por qué se borra solo uno.** El `RUN` del curso hace

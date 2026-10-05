@@ -15,11 +15,11 @@ hacen falta, son la parte más frágil de un proyecto legacy.
 
 | Si tu pregunta es… | Ve a |
 |---|---|
-| "¿Meto el navegador en mi imagen o no?" | [§1](#1--la-decisión-de-arquitectura) |
-| "Mis tests de Karma usan PhantomJS" | [§1.1](#11--el-que-ya-no-está-phantomjs) |
+| "¿Meto el navegador en mi imagen o no?" | [§1](#1-️-la-decisión-de-arquitectura) |
+| "Mis tests de Karma usan PhantomJS" | [§1.1](#11-el-que-ya-no-está-phantomjs) |
 | "¿Qué librerías necesita un Chromium headless?" | [§2](#2--las-dependencias-gráficas-y-por-qué) |
 | "Uso Cypress" | [§3](#3--cypress-dos-estrategias) |
-| "Uso Selenium" | [§4](#4--selenium-contenedor-aparte) |
+| "Uso Selenium" | [§4](#4-️-selenium-contenedor-aparte) |
 | "Uso Puppeteer" | [§5](#5--puppeteer-y-el-chromium-que-se-descarga-solo) |
 | "Estoy en un Mac ARM y nada funciona" | [§6](#6--arm64-donde-esto-se-pone-serio) |
 | "Me falla y no sé por dónde empezar" | [§7](#7--diagnóstico) |
@@ -30,19 +30,14 @@ hacen falta, son la parte más frágil de un proyecto legacy.
 
 Hay dos formas de darle un navegador a tus tests, y la elección importa más de lo que parece.
 
-```text
-OPCIÓN A — todo en una imagen        OPCIÓN B — contenedor aparte
-──────────────────────────────       ───────────────────────────
-┌──────────────────────────┐         ┌───────────────────────┐
-│ legacy-node-toolchain    │         │ legacy-node-toolchain │
-│  + Node + tests          │         │  tests                │
-│  + Chromium              │         └──────────┬────────────┘
-│  + 25 librerías gráficas │                    │ WebDriver / CDP
-└──────────────────────────┘                    ▼
-                                     ┌───────────────────────┐
-                                     │ selenium/standalone-* │
-                                     │ o browserless/chrome  │
-                                     └───────────────────────┘
+```mermaid
+flowchart TD
+    subgraph OA["OPCIÓN A — todo en una imagen"]
+        A["legacy-node-toolchain<br/>+ Node + tests<br/>+ Chromium<br/>+ 25 librerías gráficas"]
+    end
+    subgraph OB["OPCIÓN B — contenedor aparte"]
+        B1["legacy-node-toolchain<br/>tests"] -- "WebDriver / CDP" --> B2["selenium/standalone-*<br/>o browserless/chrome"]
+    end
 ```
 
 **La opción A** es más simple de arrancar y engorda la imagen entre 300 y 500 MB con librerías
@@ -187,17 +182,9 @@ Para Selenium la estrategia preferida es la opción B, sin discusión: las imág
 `selenium/standalone-*` traen el navegador, el driver y el servidor ya resueltos, incluidas las
 veinticinco librerías de §2.
 
-```text
-┌───────────────────────┐
-│ legacy-node-toolchain │
-│  tus tests            │
-└──────────┬────────────┘
-           │ WebDriver, puerto 4444
-           ▼
-┌────────────────────────────┐
-│ selenium/standalone-chrome │
-│  navegador + driver        │
-└────────────────────────────┘
+```mermaid
+flowchart TD
+    A["legacy-node-toolchain<br/>tus tests"] -- "WebDriver, puerto 4444" --> B["selenium/standalone-chrome<br/>navegador + driver"]
 ```
 
 Los dos contenedores necesitan verse, y para eso hace falta una red — que es de **[F18](18-networking-de-contenedores.md)**:
@@ -235,17 +222,10 @@ escrita.
 
 Puppeteer tiene un comportamiento propio que conviene conocer antes de que te sorprenda:
 
-```text
-npm install puppeteer
-        │
-        ▼
-    install.js
-        │
-        ▼
-descarga un Chromium concreto, de una URL concreta
-        │
-        ▼
-lo guarda en un caché local
+```mermaid
+flowchart TD
+    A["npm install puppeteer"] --> B["install.js"]
+    B --> C["descarga un Chromium concreto,<br/>de una URL concreta"] --> D["lo guarda en un caché local"]
 ```
 
 Cada versión de Puppeteer está atada a una **revisión exacta** de Chromium. Por ejemplo,
@@ -309,24 +289,17 @@ que no existe, y no menciona la arquitectura en ningún momento.
 
 El orden que ahorra tiempo, de la comprobación más barata a la más cara:
 
-```text
-1. ¿Existe el ejecutable del navegador?
-      which chromium · ls del caché de Puppeteer o Cypress
-             │ no ──▶ problema de descarga o de instalación
-             ▼ sí
-2. ¿Es de la arquitectura correcta?
-      file /ruta/al/binario
-             │ no ──▶ §6
-             ▼ sí
-3. ¿Le faltan librerías?
-      ldd /ruta/al/binario | grep 'not found'
-             │ sí ──▶ §2, instala los paquetes que falten
-             ▼ no
-4. ¿Arranca a mano?
-      /ruta/al/binario --headless --no-sandbox --dump-dom https://example.com
-             │ no ──▶ lee su error: suele ser /dev/shm o el sandbox
-             ▼ sí
-5. Ahora sí, el problema está por encima: en Cypress, Selenium o tus tests
+```mermaid
+flowchart TD
+    Q1{"1 · ¿existe el ejecutable del navegador?<br/>which chromium · ls del caché de Puppeteer o Cypress"}
+    Q1 -- "no" --> R1["problema de descarga o de instalación"]
+    Q1 -- "sí" --> Q2{"2 · ¿es de la arquitectura correcta?<br/>file /ruta/al/binario"}
+    Q2 -- "no" --> R2["§6"]
+    Q2 -- "sí" --> Q3{"3 · ¿le faltan librerías?<br/>ldd /ruta/al/binario #124; grep 'not found'"}
+    Q3 -- "sí" --> R3["§2, instala los paquetes que falten"]
+    Q3 -- "no" --> Q4{"4 · ¿arranca a mano?<br/>/ruta/al/binario --headless --no-sandbox --dump-dom https://example.com"}
+    Q4 -- "no" --> R4["lee su error: suele ser /dev/shm o el sandbox"]
+    Q4 -- "sí" --> R5["5 · ahora sí, el problema está por encima:<br/>en Cypress, Selenium o tus tests"]
 ```
 
 > 🧠 **El patrón a memorizar.** Los pasos 1 a 4 son del **navegador**; el 5 es de **tu suite**.

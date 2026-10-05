@@ -58,18 +58,13 @@ Al terminar deberías poder:
 
 La confusión que causa más problemas en esta parte del curso:
 
-```text
-┌─ EL IDE ────────────────┐  edita texto, resalta sintaxis, lanza comandos,
-│  VS Code, WebStorm, Vim │  conecta un debugger. Corre en TU host, moderno.
-└─────────────────────────┘
-
-┌─ EL RUNTIME ────────────┐  ejecuta tu código. Node 10 dentro del contenedor,
-│  Node 10 en Debian 10   │  Debian 10, glibc de 2019.
-└─────────────────────────┘
-
-┌─ EL PROYECTO ───────────┐  tu código y sus dependencias. Vive en el host,
-│  package.json, src/     │  se ejecuta en el contenedor.
-└─────────────────────────┘
+```mermaid
+flowchart LR
+    IDE["EL IDE · VS Code, WebStorm, Vim<br/>edita texto, resalta sintaxis, lanza comandos,<br/>conecta un debugger. Corre en TU host, moderno."]
+    PR["EL PROYECTO · package.json, src/<br/>tu código y sus dependencias. Vive en el host,<br/>se ejecuta en el contenedor."]
+    RT["EL RUNTIME · Node 10 en Debian 10<br/>ejecuta tu código. Node 10 dentro del contenedor,<br/>Debian 10, glibc de 2019."]
+    IDE -- "edita" --> PR
+    RT -- "ejecuta" --> PR
 ```
 
 **El IDE no es Node.** VS Code trae su propio Node embebido para funcionar, y no tiene nada

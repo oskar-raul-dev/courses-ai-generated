@@ -56,24 +56,13 @@ Al terminar deberías poder:
 Lo primero que sorprende al mirarlo de cerca: **el comando `docker` casi no hace nada**. Es un
 cliente que habla con un servicio.
 
-```text
-docker run ...
-     │
-     │  API HTTP sobre un socket Unix
-     ▼
-  dockerd                    ← el daemon: siempre corriendo, normalmente como root
-     │
-     ▼
-  containerd                 ← gestiona el ciclo de vida y las imágenes
-     │
-     ▼
-  containerd-shim            ← un proceso por contenedor
-     │
-     ▼
-  runc                       ← crea el contenedor y se retira
-     │
-     ▼
-  tu proceso                 ← PID 1 del contenedor (F16)
+```mermaid
+flowchart TD
+    C["docker run ..."] -- "API HTTP sobre un socket Unix" --> D["dockerd<br/>el daemon: siempre corriendo, normalmente como root"]
+    D --> CD["containerd<br/>gestiona el ciclo de vida y las imágenes"]
+    CD --> S["containerd-shim<br/>un proceso por contenedor"]
+    S --> R["runc<br/>crea el contenedor y se retira"]
+    R --> P["tu proceso<br/>PID 1 del contenedor (F16)"]
 ```
 
 ### 4.1 El socket
@@ -136,21 +125,12 @@ ps -ef | grep -E 'dockerd|containerd|shim' | grep -v grep
 
 La frase famosa es *"Podman es daemonless"*, y como toda frase famosa necesita matices.
 
-```text
-podman run ...
-     │
-     │  fork-exec: el proceso lo lanza TU comando, con TU usuario
-     ▼
-  libpod                     ← la biblioteca donde vive la lógica
-     │
-     ▼
-  conmon                     ← un monitor por contenedor
-     │
-     ▼
-  crun  o  runc              ← crea el contenedor y se retira
-     │
-     ▼
-  tu proceso
+```mermaid
+flowchart TD
+    C["podman run ..."] -- "fork-exec: el proceso lo lanza TU comando, con TU usuario" --> L["libpod<br/>la biblioteca donde vive la lógica"]
+    L --> M["conmon<br/>un monitor por contenedor"]
+    M --> R["crun o runc<br/>crea el contenedor y se retira"]
+    R --> P["tu proceso"]
 ```
 
 ### 5.1 El modelo fork-exec
@@ -562,7 +542,7 @@ pstree -p $(pgrep -f 'dockerd|containerd' | head -1) 2>/dev/null | head -20
 pstree -p $$ | head -20        # desde tu shell, con el contenedor de Podman corriendo
 ```
 
-**Objetivo:** un diagrama ASCII por motor —de los de esta casa— que llegue desde el proceso
+**Objetivo:** un diagrama por motor —a mano, o en Mermaid como los de esta fase— que llegue desde el proceso
 más alto hasta el `sleep` de dentro del contenedor, nombrando cada eslabón: cliente, demonio,
 `containerd`, `shim`, `runc` en un caso; cliente, `conmon`, `crun`/`runc` en el otro.
 

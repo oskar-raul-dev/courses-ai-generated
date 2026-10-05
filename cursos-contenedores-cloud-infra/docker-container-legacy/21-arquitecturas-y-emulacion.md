@@ -137,16 +137,13 @@ Puppeteer y Cypress; y las herramientas antiguas que nunca publicaron ARM64.
 Cuando ejecutas `docker pull debian/eol:buster` en un Mac ARM y en un PC Intel, obtienes
 **imágenes distintas** con el mismo nombre. No es magia: es una indirección del formato OCI.
 
-```text
-tag: debian/eol:buster
-        │
-        ▼
-   IMAGE INDEX  (a veces llamado "manifest list")
-        │
-        ├── linux/amd64   → manifest → config + capas amd64
-        ├── linux/arm64   → manifest → config + capas arm64
-        ├── linux/386     → …
-        └── linux/s390x   → …
+```mermaid
+flowchart TD
+    T["tag: debian/eol:buster"] --> I["IMAGE INDEX<br/>(a veces llamado «manifest list»)"]
+    I --> A["linux/amd64 → manifest → config + capas amd64"]
+    I --> R["linux/arm64 → manifest → config + capas arm64"]
+    I --> X["linux/386 → …"]
+    I --> S["linux/s390x → …"]
 ```
 
 El cliente mira su propia plataforma, elige la entrada correspondiente y descarga **solo esa**.
@@ -323,30 +320,20 @@ equivocadas sobre el rendimiento.
 
 **A · Emulación de máquina completa** — lo que hace una VM:
 
-```text
-host ARM64
-   ↓
-QEMU emula una máquina x86-64 entera
-   ↓
-kernel Linux x86-64
-   ↓
-todo el userspace x86-64
+```mermaid
+flowchart TD
+    H["host ARM64"] --> Q["QEMU emula una máquina x86-64 entera"]
+    Q --> K["kernel Linux x86-64"] --> U["todo el userspace x86-64"]
 ```
 
 Emula CPU, memoria, dispositivos y arranca **otro kernel**. Es potente y **lento**.
 
 **B · QEMU en modo usuario** — lo que hacen los contenedores:
 
-```text
-kernel Linux ARM64            ← uno solo, el nativo
-        │
-        ├── programa ARM64  → CPU directa, velocidad nativa
-        │
-        └── programa x86-64
-                ↓
-              qemu-x86_64      ← traduce instrucciones al vuelo
-                ↓
-              CPU ARM64
+```mermaid
+flowchart TD
+    K["kernel Linux ARM64<br/>uno solo, el nativo"] --> A["programa ARM64"] --> CPU1["CPU directa, velocidad nativa"]
+    K --> X["programa x86-64"] --> Q["qemu-x86_64<br/>traduce instrucciones al vuelo"] --> CPU2["CPU ARM64"]
 ```
 
 **No hay segundo kernel.** El kernel es ARM64 y las llamadas al sistema se traducen; solo se
@@ -361,14 +348,10 @@ Falta la pieza que lo conecta: cuando el kernel intenta ejecutar un binario que 
 **`binfmt_misc`** es un mecanismo del kernel de Linux que permite registrar manejadores para
 formatos de binario, identificados por sus primeros bytes —el *magic number*—.
 
-```text
-el kernel intenta ejecutar un ELF x86-64
-        ↓
-mira su tabla de binfmt_misc
-        ↓
-"este formato lo maneja /usr/bin/qemu-x86_64"
-        ↓
-lanza QEMU con el binario como argumento
+```mermaid
+flowchart TD
+    A["el kernel intenta ejecutar un ELF x86-64"] --> B["mira su tabla de binfmt_misc"]
+    B --> C["«este formato lo maneja /usr/bin/qemu-x86_64»"] --> D["lanza QEMU con el binario como argumento"]
 ```
 
 Puedes verlo, en Linux:

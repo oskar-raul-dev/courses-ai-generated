@@ -17,8 +17,8 @@ buscar cuando la fuente original ya no existe.
 |---|---|
 | "¿Qué demuestra un checksum?" | [§1](#1--checksum-la-huella-del-contenido) |
 | "¿Cómo verifico una firma de Node?" | [§2](#2--gpg-la-firma-que-dice-quién) |
-| "La URL que necesito ya no existe" | [§3](#3--las-cinco-máquinas-del-tiempo) |
-| "¿Cuánta verificación necesito?" | [§4](#4--niveles-de-confianza) |
+| "La URL que necesito ya no existe" | [§3](#3-️-las-cinco-máquinas-del-tiempo) |
+| "¿Cuánta verificación necesito?" | [§4](#4-️-niveles-de-confianza) |
 
 ---
 
@@ -85,16 +85,11 @@ SHASUMS256.txt.sig    la firma, binaria
 
 **La cadena de confianza completa:**
 
-```text
-una clave pública de Node en la que confías
-        ▼
-verificas la firma de SHASUMS256.txt
-        ▼
-ahora sabes que los hashes son auténticos
-        ▼
-verificas el tarball contra su hash
-        ▼
-sabes que el tarball es el que Node publicó
+```mermaid
+flowchart TD
+    A["una clave pública de Node en la que confías"] --> B["verificas la firma de SHASUMS256.txt"]
+    B --> C["ahora sabes que los hashes son auténticos"] --> D["verificas el tarball contra su hash"]
+    D --> E["sabes que el tarball es el que Node publicó"]
 ```
 
 **El eslabón que hay que resolver aparte** es el primero: cómo consigues la clave de forma

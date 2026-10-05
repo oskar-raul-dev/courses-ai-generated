@@ -220,11 +220,10 @@ docker builder prune          # borra caché de build no usada
 El modelo mental de "una imagen es una pila de capas" es útil y está incompleto. En el
 modelo OCI una imagen es:
 
-```text
-manifest
-   │
-   ├── config      ← metadatos: Env, Entrypoint, Cmd, WorkingDir, Labels, arquitectura
-   └── layers[]    ← los cambios de filesystem, cada uno un blob comprimido
+```mermaid
+flowchart TD
+    M["manifest"] --> C["config<br/>metadatos: Env, Entrypoint, Cmd, WorkingDir, Labels, arquitectura"]
+    M --> L["layers[]<br/>los cambios de filesystem, cada uno un blob comprimido"]
 ```
 
 La imagen es una **estructura compuesta**, no un tarball gigante. El manifest apunta a un
@@ -248,14 +247,9 @@ produjo cada capa y cuánto pesa.
 
 Cada capa es un **conjunto de cambios** respecto a la anterior:
 
-```text
-base
- ↓
-capa 1: agrega A
- ↓
-capa 2: agrega B
- ↓
-capa 3: elimina A
+```mermaid
+flowchart TD
+    B["base"] --> C1["capa 1: agrega A"] --> C2["capa 2: agrega B"] --> C3["capa 3: elimina A"]
 ```
 
 El filesystem final no muestra `A`. Pero **los bytes que llegaron en la capa 1 no

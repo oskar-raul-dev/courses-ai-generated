@@ -26,18 +26,14 @@ dentro de WSL2, y unos pocos cambian. Este apéndice es esa lista.
 
 Antes que ningún comando, esto. **Es la diferencia entre un laboratorio ágil y uno lentísimo.**
 
-```text
-❌ C:\Users\tu-usuario\proyectos\legacy-app
-       │  el proyecto está en el filesystem de WINDOWS
-       │  cada acceso desde el contenedor cruza una frontera cara
-       ▼
-   WSL2 → Docker → contenedor
-
-✅ \\wsl$\Ubuntu\home\tu-usuario\proyectos\legacy-app
-   —o, desde dentro de WSL2— /home/tu-usuario/proyectos/legacy-app
-       │  el proyecto está en el filesystem de LINUX
-       ▼
-   Docker → contenedor          ← sin cruce
+```mermaid
+flowchart TD
+    subgraph MAL["❌ el proyecto en el filesystem de WINDOWS"]
+        W["C:\Users\tu-usuario\proyectos\legacy-app"] -- "cada acceso desde el contenedor<br/>cruza una frontera cara" --> W2["WSL2 → Docker → contenedor"]
+    end
+    subgraph BIEN["✅ el proyecto en el filesystem de LINUX"]
+        L["\\wsl$\Ubuntu\home\tu-usuario\proyectos\legacy-app<br/>o, desde dentro de WSL2: /home/tu-usuario/proyectos/legacy-app"] -- "sin cruce" --> L2["Docker → contenedor"]
+    end
 ```
 
 > 🧭 **La regla, y no admite matices: si trabajas con WSL2, tu proyecto vive dentro de WSL2.**

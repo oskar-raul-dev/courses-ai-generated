@@ -65,13 +65,10 @@ Esta fase enseña el vocabulario, no la construcción industrial. Quedan fuera, 
 Es la confusión más común al empezar, y arrastrarla hace que todo lo demás parezca
 arbitrario. Las tres cosas existen en momentos diferentes:
 
-```text
-Dockerfile          docker build          imagen              docker run        contenedor
-   texto      ─────────────────────▶   artefacto      ─────────────────────▶    proceso
-   receta                              inmutable                                en ejecución
-
-   editas                              se guarda                                arranca,
-   con vim                             en tu disco                              vive, muere
+```mermaid
+flowchart LR
+    D["Dockerfile<br/>texto · receta<br/>editas con vim"] -- "docker build" --> I["imagen<br/>artefacto inmutable<br/>se guarda en tu disco"]
+    I -- "docker run" --> C["contenedor<br/>proceso en ejecución<br/>arranca, vive, muere"]
 ```
 
 El **Dockerfile** es una receta de construcción. Es texto plano, no una máquina virtual ni

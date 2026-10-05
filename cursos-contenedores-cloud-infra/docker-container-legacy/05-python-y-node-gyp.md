@@ -84,23 +84,11 @@ Parece absurdo hasta que sigues la cadena. Alguna dependencia —probablemente t
 probablemente `node-sass`— contiene un addon nativo. Para compilarlo, npm invoca a
 `node-gyp`. Y **`node-gyp` está escrito en Python**.
 
-```text
-tu proyecto Vue 2
-     │ npm install
-     ▼
-alguna dependencia con addon nativo
-     │
-     ▼
-node-gyp            ← escrito en Python
-     │
-     ▼
-Makefile generado
-     │
-     ▼
-make → g++ / gcc    ← lo que instalamos en F04
-     │
-     ▼
-addon.node
+```mermaid
+flowchart TD
+    P["tu proyecto Vue 2"] -- "npm install" --> A["alguna dependencia con addon nativo"]
+    A --> G["node-gyp<br/>escrito en Python"] --> MK["Makefile generado"]
+    MK --> MAKE["make → g++ / gcc<br/>lo que instalamos en F04"] --> N["addon.node"]
 ```
 
 Python no aparece porque tu proyecto lo use. Aparece porque **la herramienta de construcción
@@ -117,26 +105,12 @@ declarativa en los archivos que el toolchain del sistema sabe usar**.
 
 En Linux, el recorrido completo:
 
-```text
-binding.gyp                    ← lo escribe el autor del paquete
-    │
-    ▼
-node-gyp configure             ← lee binding.gyp, resuelve las cabeceras de Node
-    │
-    ▼
-build/Makefile                 ← generado, no escrito a mano
-    │
-    ▼
-node-gyp build
-    │
-    ▼
-make                           ← F04
-    │
-    ▼
-g++ / gcc                      ← F04
-    │
-    ▼
-build/Release/addon.node       ← una librería compartida con otra extensión
+```mermaid
+flowchart TD
+    B["binding.gyp<br/>lo escribe el autor del paquete"] --> C["node-gyp configure<br/>lee binding.gyp, resuelve las cabeceras de Node"]
+    C --> M["build/Makefile<br/>generado, no escrito a mano"] --> NB["node-gyp build"]
+    NB --> MK["make<br/>F04"] --> G["g++ / gcc<br/>F04"]
+    G --> R["build/Release/addon.node<br/>una librería compartida con otra extensión"]
 ```
 
 Ese `.node` final es una librería compartida de Linux con la extensión cambiada. Puedes

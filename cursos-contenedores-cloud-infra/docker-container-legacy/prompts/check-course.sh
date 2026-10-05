@@ -179,7 +179,7 @@ PY
 # ─────────────────────────────────────────────────────────────────────────────
 comprobar "⭐ solo en 35-referencias.md" <<'PY'
 import glob, os
-IGNORAR = {'35-referencias.md', 'mejoras.md', 'mejoras_v2.md', 'ajuste_estructura.md'}
+IGNORAR = {'35-referencias.md'}
 for f in glob.glob('*.md') + glob.glob('src/**/*.md', recursive=True):
     if os.path.basename(f) in IGNORAR:
         continue
@@ -193,12 +193,10 @@ PY
 comprobar "sin andamiaje (_source/, mapa-de-corte…)" <<'PY'
 import re, glob, os
 PROHIBIDO = re.compile(r'_source/|mapa-de-corte|ajuste_estructura\.md|mejoras(_v2)?\.md')
-# los documentos de trabajo y las herramientas locales no son material publicado:
-# hablan del andamiaje precisamente porque su tema es el andamiaje
-IGNORAR = {'mejoras.md', 'mejoras_v2.md', 'ajuste_estructura.md',
-           'explicacion_script_integridad.md'}
+# prompts/ no es material publicado: la guía y la propuesta hablan del andamiaje
+# precisamente porque documentan cómo se quitó
 for f in glob.glob('**/*.md', recursive=True):
-    if os.path.basename(f) in IGNORAR:
+    if f.startswith('prompts/'):
         continue
     for i, ln in enumerate(open(f, encoding='utf-8'), 1):
         if PROHIBIDO.search(ln):

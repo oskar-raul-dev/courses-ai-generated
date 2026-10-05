@@ -292,14 +292,10 @@ Ninguna, y esa es la lección:
 Puppeteer es **caso D** de [F14](14-abi-libc-y-prebuilds.md) §4.4, y por eso se comporta distinto a los otros tres: no
 compila nada. Descarga un navegador entero.
 
-```text
-npm install puppeteer
-      ↓
-  install.js
-      ↓
-descarga un Chromium de una revisión concreta, de una URL concreta
-      ↓
-lo guarda en un caché
+```mermaid
+flowchart TD
+    A["npm install puppeteer"] --> B["install.js"]
+    B --> C["descarga un Chromium de una revisión concreta,<br/>de una URL concreta"] --> D["lo guarda en un caché"]
 ```
 
 `puppeteer@5.5.0` —de 2020, y que declara necesitar Node ≥ 10.18.1, así que nuestro baseline

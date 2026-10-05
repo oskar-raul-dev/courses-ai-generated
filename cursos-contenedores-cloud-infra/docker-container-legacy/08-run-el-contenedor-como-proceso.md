@@ -97,13 +97,13 @@ proceso principal termina —bien o mal—, el contenedor pasa a `Exited`. Por e
 `docker run -d imagen` con `CMD ["bash"]` muere al instante: `bash` sin entrada que leer
 termina de inmediato.
 
-```text
-imagen  ──create──▶  Created  ──start──▶  Running  ──proceso termina──▶  Exited
-                                             │                             │
-                                             │                          start
-                                             ◀─────────────────────────────┘
-                                                        rm
-                                             ────────────────────────▶  ya no existe
+```mermaid
+stateDiagram-v2
+    [*] --> Created: create, desde la imagen
+    Created --> Running: start
+    Running --> Exited: el proceso termina
+    Exited --> Running: start
+    Exited --> [*]: rm, ya no existe
 ```
 
 ---

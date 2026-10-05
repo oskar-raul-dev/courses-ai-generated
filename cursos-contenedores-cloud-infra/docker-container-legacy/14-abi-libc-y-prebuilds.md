@@ -88,15 +88,12 @@ concretas.
 Compilar C++ en cada `npm install` es lento, así que muchos paquetes publican binarios ya
 compilados para las combinaciones más comunes:
 
-```text
-npm instala el paquete
-       ↓
-script de install (postinstall)
-       ↓
-¿hay un prebuilt compatible con mi plataforma, arquitectura y ABI?
-       ↓
-   ├── sí → descargarlo. Rápido y silencioso
-   └── no → compilar. Aquí entra el toolchain de F04
+```mermaid
+flowchart TD
+    A["npm instala el paquete"] --> B["script de install (postinstall)"]
+    B --> Q{"¿hay un prebuilt compatible con<br/>mi plataforma, arquitectura y ABI?"}
+    Q -- "sí" --> S["descargarlo. Rápido y silencioso"]
+    Q -- "no" --> N["compilar. Aquí entra el toolchain de F04"]
 ```
 
 **Es el caso que más problemas da en legacy**, y §7 explica por qué.

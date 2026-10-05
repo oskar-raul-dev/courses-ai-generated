@@ -125,18 +125,15 @@ vas a encontrar.
 
 ### 5.3 Las otras fuentes, ordenadas por fiabilidad
 
-```text
-más fiable
-    │
-    ├── package-lock.json        lo que se instaló de verdad
-    ├── el CI histórico          .travis.yml, .gitlab-ci.yml, workflows —dicen qué Node usaban
-    ├── .nvmrc                   la versión que el equipo usaba en local
-    ├── engines                  lo que el autor esperaba
-    ├── la fecha de los commits  te da la época
-    ├── el README                a menudo desactualizado
-    │
-    └── los comentarios del código
-menos fiable
+```mermaid
+flowchart TD
+    MAS(["más fiable"]) --> A["package-lock.json<br/>lo que se instaló de verdad"]
+    A --> B["el CI histórico<br/>.travis.yml, .gitlab-ci.yml, workflows: dicen qué Node usaban"]
+    B --> C[".nvmrc<br/>la versión que el equipo usaba en local"]
+    C --> D["engines<br/>lo que el autor esperaba"]
+    D --> E["la fecha de los commits<br/>te da la época"]
+    E --> F["el README<br/>a menudo desactualizado"]
+    F --> G["los comentarios del código"] --> MENOS(["menos fiable"])
 ```
 
 > 🧭 **El CI histórico es la joya escondida.** Un `.travis.yml` con `node_js: - "10"` es
@@ -401,17 +398,14 @@ reconocerlos. Estos ocho cubren casi todo lo que te vas a encontrar.
 Cuando algo falla y no sabes por qué, la técnica que más rinde es **reducir**: quitar variables
 hasta que quede la mínima cosa que todavía falla.
 
-```text
-tu proyecto entero falla
-         │
-         ├── ¿falla el fixture de control?  ── sí → el problema es el laboratorio
-         │                                       no ↓
-         ├── ¿falla con solo las dependencias de producción?
-         ├── ¿falla instalando una sola dependencia sospechosa?
-         ├── ¿falla con un package.json de tres líneas?
-         │
-         ▼
-    el caso mínimo que reproduce el fallo
+```mermaid
+flowchart TD
+    T["tu proyecto entero falla"] --> Q1{"¿falla el fixture de control?"}
+    Q1 -- "sí" --> LAB["el problema es el laboratorio"]
+    Q1 -- "no" --> Q2["¿falla con solo las dependencias de producción?"]
+    Q2 --> Q3["¿falla instalando una sola dependencia sospechosa?"]
+    Q3 --> Q4["¿falla con un package.json de tres líneas?"]
+    Q4 --> MIN["el caso mínimo que reproduce el fallo"]
 ```
 
 **Las dos reglas de método**, que atraviesan el curso entero y que **[F30](30-troubleshooting-metodo-y-herramientas.md)** formaliza:

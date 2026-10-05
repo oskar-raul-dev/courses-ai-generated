@@ -25,16 +25,16 @@ todo el laboratorio funciona igual — lo único que cambia es cómo se conecta 
 
 ## 1. 🧭 Dos caminos, y una recomendación
 
-```text
-NIVEL A — integración nativa            NIVEL B — modo universal
-────────────────────────────            ────────────────────────
-WebStorm                                WebStorm (solo edita)
-  ↓ Remote Node interpreter                ↓ terminal
-Docker                                  Docker CLI
-  ↓                                        ↓
-legacy-node-toolchain                   node --inspect en el contenedor
-                                           ↓
-El IDE gestiona el contenedor           attach del debugger por puerto
+```mermaid
+flowchart TD
+    subgraph NA["NIVEL A — integración nativa"]
+        A1["WebStorm"] -- "Remote Node interpreter" --> A2["Docker"] --> A3["legacy-node-toolchain"]
+        A3 -.- A4["El IDE gestiona el contenedor"]
+    end
+    subgraph NB["NIVEL B — modo universal"]
+        B1["WebStorm (solo edita)"] -- "terminal" --> B2["Docker CLI"]
+        B2 --> B3["node --inspect en el contenedor"] --> B4["attach del debugger por puerto"]
+    end
 ```
 
 **Nivel A** es más cómodo: WebStorm sabe que tu runtime está en Docker, ejecuta scripts de npm

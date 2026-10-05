@@ -18,8 +18,8 @@ es su aplicación final: cada paso del workflow es algo que ya has ejecutado a m
 |---|---|
 | "¿Qué debe hacer un CI de este curso?" | [§1](#1--los-tres-trabajos-y-el-orden-que-importa) |
 | "Dame el workflow" | [§2](#2--el-workflow-completo) |
-| "¿Qué hace mal casi todo el mundo?" | [§3](#3--las-tres-cosas-que-casi-nadie-hace-bien) ⚠️ |
-| "¿Y multi-plataforma?" | [§4](#4--multi-plataforma-en-ci) |
+| "¿Qué hace mal casi todo el mundo?" | [§3](#3-️-las-tres-cosas-que-casi-nadie-hace-bien) ⚠️ |
+| "¿Y multi-plataforma?" | [§4](#4-️-multi-plataforma-en-ci) |
 
 ---
 

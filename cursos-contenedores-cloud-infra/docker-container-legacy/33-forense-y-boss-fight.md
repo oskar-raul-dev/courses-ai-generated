@@ -246,14 +246,13 @@ Construir la tuya es un ejercicio mecánico, y por eso vale la pena hacerlo ante
 
 Reducir hasta el mínimo —[F20](20-validacion-sistematica-y-evidencia.md) §9— pero del **entorno**, no del proyecto:
 
-```text
-tu laboratorio completo falla
-    │
-    ├── imagen base pelada + un comando         ¿falla?
-    ├── + el toolchain, sin montajes            ¿falla?
-    ├── + el bind mount                         ¿falla?
-    ├── + el volumen                            ¿falla?
-    └── + tu proyecto                           ← aquí apareció
+```mermaid
+flowchart TD
+    F["tu laboratorio completo falla"] --> S1["imagen base pelada + un comando<br/>¿falla?"]
+    S1 --> S2["+ el toolchain, sin montajes<br/>¿falla?"]
+    S2 --> S3["+ el bind mount<br/>¿falla?"]
+    S3 --> S4["+ el volumen<br/>¿falla?"]
+    S4 --> S5["+ tu proyecto<br/>aquí apareció"]
 ```
 
 Cada escalón añade **una** variable. El primero que falla es tu capa.

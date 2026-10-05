@@ -56,14 +56,16 @@ la pregunta que importa:       ¿a qué UID corresponde eso FUERA?
 
 Las dos combinaciones que existen:
 
-```text
-MODELO ROOTFUL                     MODELO ROOTLESS
-uid 0 dentro                       uid 0 dentro
-   │ sin traducción                   │ user namespace
-   ▼                                  ▼
-uid 0 fuera  = root del host       uid 1000 fuera = tu usuario
-
-si escapa: es root en tu máquina   si escapa: es tú, ni más ni menos
+```mermaid
+flowchart TD
+    subgraph RF["MODELO ROOTFUL"]
+        F1["uid 0 dentro"] -- "sin traducción" --> F2["uid 0 fuera = root del host"]
+        F2 -.- F3["si escapa: es root en tu máquina"]
+    end
+    subgraph RL["MODELO ROOTLESS"]
+        L1["uid 0 dentro"] -- "user namespace" --> L2["uid 1000 fuera = tu usuario"]
+        L2 -.- L3["si escapa: eres tú, ni más ni menos"]
+    end
 ```
 
 **El mismo `id` dentro del contenedor, dos consecuencias radicalmente distintas.** De ahí que

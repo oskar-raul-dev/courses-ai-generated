@@ -19,11 +19,11 @@ quieren la discusión entera.
 | "¿Y NodeSource? Tienen repositorios oficiales" | [§2](#2--por-qué-no-nodesource) |
 | "¿Por qué no compilar Node desde el código fuente?" | [§3](#3--por-qué-no-compilar-desde-source) |
 | "`FROM node:10` es una línea. ¿Por qué sesenta?" | [§4](#4--por-qué-no-from-node10) |
-| "¿Cómo encuentra el sistema el comando `node`?" | [§5](#5--el-path-y-por-qué-npm-run-lo-cambia) |
+| "¿Cómo encuentra el sistema el comando `node`?" | [§5](#5-️-el-path-y-por-qué-npm-run-lo-cambia) |
 | "¿Puedo instalar `@angular/cli` global, aunque sea una vez?" | [§6](#6--clis-globales-la-excepción-y-su-precio) |
 | "¿Qué hace exactamente `npx`?" | [§7](#7--npx-cómodo-y-peligroso-a-partes-iguales) |
 | "¿Por qué no hay Yarn?" | [§8](#8--yarn-todavía-no) |
-| "Quiero construir con otras versiones de Node" | [§9](#9--parametrizar-el-conjunto-de-versiones) |
+| "Quiero construir con otras versiones de Node" | [§9](#9-️-parametrizar-el-conjunto-de-versiones) |
 | "¿Cuánto cuesta la emulación en Apple Silicon?" | [§10](#10--riesgos-de-la-emulación-lo-que-sí-importa) |
 
 ---
@@ -37,16 +37,10 @@ calidad: es de arquitectura.
 **Ya tenemos un mecanismo de aislamiento.** Se llama contenedor. Añadir `nvm` mete una capa
 más que no resuelve nada nuevo:
 
-```text
-Host
-  ↓
-Docker / Podman        ← aísla el sistema entero
-  ↓
-Contenedor
-  ↓
-nvm                    ← aísla versiones de Node… dentro de algo ya aislado
-  ↓
-Node
+```mermaid
+flowchart TD
+    H["Host"] --> D["Docker / Podman<br/>aísla el sistema entero"] --> C["Contenedor"]
+    C --> N["nvm<br/>aísla versiones de Node… dentro de algo ya aislado"] --> NO["Node"]
 ```
 
 **Perdemos control sobre lo que queremos controlar.** El diseño de [F06](06-instalacion-node.md) fija explícitamente

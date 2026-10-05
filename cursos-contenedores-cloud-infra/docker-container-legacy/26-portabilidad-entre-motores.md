@@ -60,15 +60,12 @@ los motores.
 
 ### 4.2 macOS — dos capas más
 
-```text
-tu comando (macOS)
-    │
-    ▼
-VM Linux del motor          ← Docker Desktop, Podman Machine o Colima
-    │
-    ├── kernel Linux
-    ├── file sharing        ← virtiofs, gRPC-FUSE… los bind mounts pasan por aquí
-    └── contenedor
+```mermaid
+flowchart TD
+    C["tu comando (macOS)"] --> VM["VM Linux del motor<br/>Docker Desktop, Podman Machine o Colima"]
+    VM --> K["kernel Linux"]
+    VM --> FS["file sharing<br/>virtiofs, gRPC-FUSE… los bind mounts pasan por aquí"]
+    VM --> CT["contenedor"]
 ```
 
 **Los bind mounts cruzan la frontera macOS ↔ VM**, y ese cruce es el cuello de botella real de
@@ -255,17 +252,15 @@ En VS Code, la configuración equivalente es indicarle qué socket usar.
 
 ### 7.1 El diagnóstico, en orden
 
-```text
-1. ¿funciona el motor desde la terminal?        podman run --rm alpine echo ok
-       │ no → el problema es el motor, no el IDE
-       ▼ sí
-2. ¿existe el socket compatible?                ls -la $XDG_RUNTIME_DIR/podman/podman.sock
-       │ no → §7, levántalo
-       ▼ sí
-3. ¿el cliente de Docker lo alcanza?            DOCKER_HOST=... docker ps
-       │ no → permisos o ruta del socket
-       ▼ sí
-4. ahora sí, es configuración del IDE           mira su log de Dev Containers
+```mermaid
+flowchart TD
+    Q1{"1 · ¿funciona el motor desde la terminal?<br/>podman run --rm alpine echo ok"}
+    Q1 -- "no" --> R1["el problema es el motor, no el IDE"]
+    Q1 -- "sí" --> Q2{"2 · ¿existe el socket compatible?<br/>ls -la $XDG_RUNTIME_DIR/podman/podman.sock"}
+    Q2 -- "no" --> R2["§7, levántalo"]
+    Q2 -- "sí" --> Q3{"3 · ¿el cliente de Docker lo alcanza?<br/>DOCKER_HOST=... docker ps"}
+    Q3 -- "no" --> R3["permisos o ruta del socket"]
+    Q3 -- "sí" --> R4["4 · ahora sí, es configuración del IDE<br/>mira su log de Dev Containers"]
 ```
 
 > 🧭 **La regla que evita perder tardes: compatibilidad del IDE ≠ compatibilidad del motor.**

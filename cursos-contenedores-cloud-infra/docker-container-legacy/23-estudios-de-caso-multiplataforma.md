@@ -228,38 +228,18 @@ de un mes no vas a saber qué motor ni qué traducción produjeron esos resultad
 Para un proyecto **nuevo** en Apple Silicon, la respuesta sería fácil: ARM64 nativo. Nuestro
 caso es legacy, y por eso hace falta el árbol.
 
-```text
-                    proyecto legacy
-                           │
-                           ▼
-        ¿tiene dependencias nativas (categoría C o D)?
-                    │              │
-                   no             sí
-                    │              │
-                    ▼              ▼
-              ARM64 nativo   ¿hay prebuilds ARM64 para todas?
-              🟢 rápido            │            │
-              y sin traducir      sí           no
-                                   │            │
-                                   ▼            ▼
-                            ARM64 nativo   ¿compilan en ARM64
-                            🟢             sin tocar el proyecto?
-                                             │           │
-                                            sí          no
-                                             │           │
-                                             ▼           ▼
-                                      ARM64 nativo   AMD64 emulado
-                                      🟡 más lento    🟡 el baseline
-                                      al instalar     del curso
-                                                          │
-                                                          ▼
-                                              ¿el rendimiento es inaceptable?
-                                                     │          │
-                                                    no         sí
-                                                     │          │
-                                                     ▼          ▼
-                                                  quédate    CI amd64
-                                                             o VM completa
+```mermaid
+flowchart TD
+    P["proyecto legacy"] --> Q1{"¿tiene dependencias nativas<br/>(categoría C o D)?"}
+    Q1 -- "no" --> R1["ARM64 nativo<br/>🟢 rápido y sin traducir"]
+    Q1 -- "sí" --> Q2{"¿hay prebuilds ARM64<br/>para todas?"}
+    Q2 -- "sí" --> R2["ARM64 nativo 🟢"]
+    Q2 -- "no" --> Q3{"¿compilan en ARM64<br/>sin tocar el proyecto?"}
+    Q3 -- "sí" --> R3["ARM64 nativo<br/>🟡 más lento al instalar"]
+    Q3 -- "no" --> R4["AMD64 emulado<br/>🟡 el baseline del curso"]
+    R4 --> Q4{"¿el rendimiento<br/>es inaceptable?"}
+    Q4 -- "no" --> R5["quédate"]
+    Q4 -- "sí" --> R6["CI amd64<br/>o VM completa"]
 ```
 
 ### 7.1 "Sin modificar el proyecto" es la frontera

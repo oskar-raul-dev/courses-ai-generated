@@ -18,7 +18,7 @@ línea del YAML se corresponde con algo que ya sabes hacer a mano**.
 |---|---|
 | "¿Qué es Compose y qué no es?" | [§1](#1--qué-es-y-qué-no-es) |
 | "¿Cómo se traduce mi `docker run`?" | [§2](#2--traducción-línea-por-línea) |
-| "¿Cuál es el caso donde gana?" | [§3](#3--el-escenario-que-lo-justifica-selenium) |
+| "¿Cuál es el caso donde gana?" | [§3](#3-️-el-escenario-que-lo-justifica-selenium) |
 | "¿Y con Podman?" | [§4](#4--compose-con-podman) |
 | "¿Cuándo NO usarlo?" | [§5](#5--guía-rápida-cuándo-usar-qué) |
 

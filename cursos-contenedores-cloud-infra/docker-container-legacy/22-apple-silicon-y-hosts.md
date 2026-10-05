@@ -23,16 +23,12 @@ otra vez:
 > `darwin-arm64` antes de la 16. Así que la pregunta no es *"¿contenedor o nativo?"* — es
 > **dónde ocurre la traducción y quién la administra**.
 
-```text
-Mac Apple Silicon, proyecto con Node 10
-    │
-    ├── nvm install 10          → tarball darwin-x64 + Rosetta 2
-    │                             emulación implícita, no declarada, no reproducible
-    │
-    └── contenedor
-            ├── linux/arm64     → binario oficial ARM64, sin traducción
-            └── linux/amd64     → binario oficial x86-64, traducción declarada
-                                  en --platform y reproducible en cualquier host
+```mermaid
+flowchart TD
+    M["Mac Apple Silicon, proyecto con Node 10"] --> N["nvm install 10<br/>tarball darwin-x64 + Rosetta 2<br/>emulación implícita, no declarada, no reproducible"]
+    M --> C["contenedor"]
+    C --> A["linux/arm64<br/>binario oficial ARM64, sin traducción"]
+    C --> X["linux/amd64<br/>binario oficial x86-64, traducción declarada<br/>en --platform y reproducible en cualquier host"]
 ```
 
 La diferencia entre las dos ramas no es el rendimiento. Es que **la de abajo la escribes tú en
@@ -97,15 +93,14 @@ Silicon. Es lo que usa tu `nvm install 10`: descarga un `node-darwin-x64` y macO
 un kernel Linux ARM64. Lo puede traducir **QEMU** —lo estándar— o, si el motor lo soporta,
 **Rosetta expuesta a la VM**, que Apple hizo posible con su framework de virtualización.
 
-```text
-CASO A                              CASO B
-tu terminal de macOS                dentro de la VM Linux
-    │                                   │
-node (darwin-x64)                   node (linux-x64)
-    │                                   │
-Rosetta 2 de macOS                  QEMU  o  Rosetta expuesta a la VM
-    │                                   │
-CPU ARM                             CPU ARM
+```mermaid
+flowchart TD
+    subgraph SA["CASO A · tu terminal de macOS"]
+        A1["node (darwin-x64)"] --> A2["Rosetta 2 de macOS"] --> A3["CPU ARM"]
+    end
+    subgraph SB["CASO B · dentro de la VM Linux"]
+        B1["node (linux-x64)"] --> B2["QEMU o Rosetta expuesta a la VM"] --> B3["CPU ARM"]
+    end
 ```
 
 **Por qué importa la diferencia:** en el caso A la emulación es **implícita** —nadie la declara

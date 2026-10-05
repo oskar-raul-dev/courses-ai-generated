@@ -123,18 +123,16 @@ docker pull debian          →  docker.io/library/debian:latest
 
 Aquí está el mecanismo. Una imagen no es un archivo: es un pequeño grafo.
 
-```text
-IMAGE INDEX                    ← opcional: solo si es multi-plataforma
-  │  "para amd64 usa este manifest; para arm64 este otro"
-  │
-  ├── MANIFEST (amd64)
-  │     ├── config  ────────▶  CONFIG BLOB    ← Env, Cmd, Entrypoint, arquitectura…
-  │     └── layers  ────────▶  LAYER BLOB 1   ← un tar.gz con un diff de filesystem
-  │                            LAYER BLOB 2
-  │                            LAYER BLOB 3
-  │
-  └── MANIFEST (arm64)
-        └── … sus propios blobs
+```mermaid
+flowchart LR
+    I["IMAGE INDEX<br/>opcional: solo si es multi-plataforma"]
+    I -- "para amd64" --> MA["MANIFEST (amd64)"]
+    I -- "para arm64" --> MR["MANIFEST (arm64)"]
+    MA -- "config" --> CB["CONFIG BLOB<br/>Env, Cmd, Entrypoint, arquitectura…"]
+    MA -- "layers" --> L1["LAYER BLOB 1<br/>un tar.gz con un diff de filesystem"]
+    MA -- "layers" --> L2["LAYER BLOB 2"]
+    MA -- "layers" --> L3["LAYER BLOB 3"]
+    MR --> O["… sus propios blobs"]
 ```
 
 **Blob** — un trozo de datos opaco, identificado por el hash de su contenido. Las capas son

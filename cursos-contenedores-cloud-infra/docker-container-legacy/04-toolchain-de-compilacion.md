@@ -65,21 +65,11 @@ npm  →  descarga el paquete  →  copia archivos .js  →  listo
 Ahí no hace falta ningún compilador. Pero algunos paquetes incluyen o dependen de código
 escrito en C o C++ —los llamados **addons nativos**— y entonces el flujo se bifurca:
 
-```text
-npm
- │
- ▼
-paquete con componente nativo
- │
- ▼
-¿hay binario precompilado compatible?
- │
- ├── sí → descargarlo y usarlo          ← rápido, silencioso, y no siempre disponible
- │
- └── no → compilar localmente
-             │
-             ▼
-          toolchain C/C++     ← lo que instalamos en esta fase
+```mermaid
+flowchart TD
+    NPM["npm"] --> P["paquete con componente nativo"] --> Q{"¿hay binario precompilado compatible?"}
+    Q -- "sí" --> DL["descargarlo y usarlo<br/>rápido, silencioso, y no siempre disponible"]
+    Q -- "no" --> CL["compilar localmente"] --> T["toolchain C/C++<br/>lo que instalamos en esta fase"]
 ```
 
 Ese segundo camino es el que hay que tener preparado, y la razón es de época.

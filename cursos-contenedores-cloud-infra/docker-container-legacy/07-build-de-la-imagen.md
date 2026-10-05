@@ -58,26 +58,12 @@ Esta fase enseña a construir; la mecánica interna es de la Parte II:
 Cuando ejecutas `docker build` no estás arrancando un contenedor normal. Estás pidiéndole a
 un **builder** que procese una definición de construcción y produzca un resultado.
 
-```text
-┌────────────────────┐
-│ Dockerfile         │  la receta
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│ Build context      │  los archivos que el builder puede ver
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│ Opciones           │  --platform, --tag, --build-arg, --no-cache…
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│ Builder            │  BuildKit (Docker) · Buildah (Podman)
-└─────────┬──────────┘
-          │
-┌─────────▼──────────┐
-│ Resultado          │  una imagen — pero no necesariamente
-└────────────────────┘
+```mermaid
+flowchart TD
+    D["Dockerfile<br/>la receta"] --> C["Build context<br/>los archivos que el builder puede ver"]
+    C --> O["Opciones<br/>--platform, --tag, --build-arg, --no-cache…"]
+    O --> B["Builder<br/>BuildKit (Docker) · Buildah (Podman)"]
+    B --> R["Resultado<br/>una imagen — pero no necesariamente"]
 ```
 
 Esa última línea importa más de lo que parece: **el build es un proceso y la imagen es uno de

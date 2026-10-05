@@ -127,25 +127,28 @@ distinguir la corrección mínima de la solución estructural.
 
 Un fallo en este laboratorio está en una de estas ocho capas. Situarlo es la mitad del trabajo.
 
-```text
-┌─ 8 · PROYECTO ────────────  tu código, package.json, lockfile
-├─ 7 · DEPENDENCIAS ────────  node_modules, addons nativos, ABI
-├─ 6 · RUNTIME ─────────────  Node, npm, Python, el toolchain
-├─ 5 · IMAGEN ──────────────  capas, Dockerfile, paquetes del sistema
-├─ 4 · CONTENEDOR ──────────  proceso, PID 1, señales, límites
-├─ 3 · MONTAJES ────────────  bind mounts, volúmenes, permisos
-├─ 2 · MOTOR ───────────────  Docker o Podman, daemon, VM
-└─ 1 · HOST ────────────────  tu máquina, red, disco, arquitectura
+```mermaid
+flowchart TD
+    P8["8 · PROYECTO<br/>tu código, package.json, lockfile"]
+    P7["7 · DEPENDENCIAS<br/>node_modules, addons nativos, ABI"]
+    P6["6 · RUNTIME<br/>Node, npm, Python, el toolchain"]
+    P5["5 · IMAGEN<br/>capas, Dockerfile, paquetes del sistema"]
+    P4["4 · CONTENEDOR<br/>proceso, PID 1, señales, límites"]
+    P3["3 · MONTAJES<br/>bind mounts, volúmenes, permisos"]
+    P2["2 · MOTOR<br/>Docker o Podman, daemon, VM"]
+    P1["1 · HOST<br/>tu máquina, red, disco, arquitectura"]
+    P8 --- P7 --- P6 --- P5 --- P4 --- P3 --- P2 --- P1
 ```
 
 **La estrategia que menos tiempo pierde: prueba por los extremos, no de arriba abajo.**
 
-```text
-¿funciona el fixture de control 00-node-smoke?
-    │ no  → el problema está en las capas 1–5. Tu proyecto es inocente
-    │ sí  → el problema está en las capas 6–8
-    ▼
-en cada mitad, repite: parte por el medio
+```mermaid
+flowchart TD
+    Q{"¿funciona el fixture de control<br/>00-node-smoke?"}
+    Q -- "no" --> A["el problema está en las capas 1–5<br/>tu proyecto es inocente"]
+    Q -- "sí" --> B["el problema está en las capas 6–8"]
+    A --> R["en cada mitad, repite: parte por el medio"]
+    B --> R
 ```
 
 Es una búsqueda binaria, y es la razón de que ese fixture exista desde [F11](11-validar-tu-proyecto.md) §5.1.

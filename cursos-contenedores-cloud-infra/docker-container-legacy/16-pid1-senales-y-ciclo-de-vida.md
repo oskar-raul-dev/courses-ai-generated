@@ -141,16 +141,15 @@ no ejecuta nada, y todo lo que tuviera en memoria se pierde.
 
 ### 6.1 Qué hace `docker stop`, segundo a segundo
 
-```text
-docker stop mi-contenedor
-   │
-   ├─ t=0s    SIGTERM al PID 1
-   │            └── el proceso puede cerrar ordenadamente
-   │
-   ├─ ...     espera el periodo de gracia (10 segundos por defecto)
-   │
-   └─ t=10s   si sigue vivo → SIGKILL
-                └── muerte inmediata, sin limpieza
+```mermaid
+sequenceDiagram
+    participant S as docker stop mi-contenedor
+    participant P as PID 1 del contenedor
+    S->>P: t=0s · SIGTERM
+    Note over P: el proceso puede cerrar ordenadamente
+    Note over S,P: espera el periodo de gracia (10 segundos por defecto)
+    S->>P: t=10s · si sigue vivo, SIGKILL
+    Note over P: muerte inmediata, sin limpieza
 ```
 
 Y las variantes:
@@ -391,20 +390,16 @@ columna `PPID`, que ya no es `0`.
 
 ## 9. ♻️ El ciclo de vida completo
 
-```text
-        ┌──────────┐  create  ┌──────────┐  start  ┌──────────┐
-imagen ─┤          ├─────────▶│ Created  ├────────▶│ Running  │
-        └──────────┘          └──────────┘         └────┬─────┘
-                                    ▲                   │
-                                    │            ┌──────┴───────┐
-                                 start      stop │              │ pause
-                                    │            ▼              ▼
-                              ┌─────┴────┐  ┌─────────┐   ┌─────────┐
-                              │  Exited  │◀─┤(gracia) │   │ Paused  │
-                              └─────┬────┘  └─────────┘   └─────────┘
-                                    │ rm
-                                    ▼
-                                (ya no existe)
+```mermaid
+stateDiagram-v2
+    state "periodo de gracia" as Gracia
+    [*] --> Created: create, desde la imagen
+    Created --> Running: start
+    Running --> Gracia: stop
+    Gracia --> Exited
+    Running --> Paused: pause
+    Exited --> Running: start
+    Exited --> [*]: rm, ya no existe
 ```
 
 Los comandos, con lo que hace falta saber de cada uno:

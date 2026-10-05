@@ -208,13 +208,11 @@ docker run --rm --network legacy-net legacy-node-toolchain:phase09 \
 **`api` funciona como nombre de host** porque Docker corre un DNS interno en las redes de
 usuario, y resuelve los nombres de los contenedores conectados a ellas.
 
-```text
-red legacy-net
-┌────────────────────────────────────────┐
-│  api  172.18.0.2  ◀── DNS: "api"       │
-│                                        │
-│  web  172.18.0.3  ── curl http://api  ─┘
-└────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph NET["red legacy-net"]
+        WEB["web · 172.18.0.3"] -- "curl http://api<br/>el DNS de la red resuelve «api»" --> API["api · 172.18.0.2"]
+    end
 ```
 
 Dos detalles que ahorran tiempo:

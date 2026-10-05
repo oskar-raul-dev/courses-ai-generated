@@ -61,15 +61,15 @@ Al terminar deberías poder:
 Dev Containers hace que **VS Code se parta en dos**: la interfaz sigue en tu máquina, y un
 servidor —*VS Code Server*— se instala y corre **dentro del contenedor**.
 
-```text
-TU HOST                          EL CONTENEDOR
-┌────────────────────┐           ┌──────────────────────────┐
-│ VS Code (la UI)    │◀─────────▶│ VS Code Server           │
-│  ventanas, teclas  │           │  extensiones del proyecto│
-│  extensiones de UI │           │  terminal integrada      │
-└────────────────────┘           │  Node 10, npm, gcc…      │
-                                 │  tu proyecto en /workspace│
-                                 └──────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph HOST["TU HOST"]
+        UI["VS Code (la UI)<br/>ventanas, teclas<br/>extensiones de UI"]
+    end
+    subgraph CT["EL CONTENEDOR"]
+        SRV["VS Code Server<br/>extensiones del proyecto<br/>terminal integrada<br/>Node 10, npm, gcc…<br/>tu proyecto en /workspace"]
+    end
+    UI <--> SRV
 ```
 
 La diferencia práctica con el Modo A es **una sola** y lo cambia todo:

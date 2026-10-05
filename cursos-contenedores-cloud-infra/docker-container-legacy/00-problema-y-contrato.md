@@ -52,37 +52,34 @@ dependencias, compilar, probarse y ejecutarse.
 En una máquina de hoy, la propuesta de reconstruirlo en el sistema operativo es
 incómoda de entrada:
 
-```text
-Windows 11
-macOS actual
-Apple Silicon
-Linux moderno
-        │
-        └── "Instala Node 10 aquí" 😬
+```mermaid
+flowchart LR
+    W["Windows 11"] --> N["«Instala Node 10 aquí» 😬"]
+    M["macOS actual"] --> N
+    A["Apple Silicon"] --> N
+    L["Linux moderno"] --> N
 ```
 
 La estrategia del curso es no pelear esa batalla. El host se queda moderno y limpio; el
 entorno viejo se encapsula:
 
-```text
-HOST MODERNO
-    │
-    ├── editor
-    ├── Git
-    └── código fuente
-            │
-            ▼
-    Docker / Podman
-            │
-            ▼
-    CONTENEDOR LINUX
-            │
-            ├── Debian 10
-            ├── Node legacy
-            ├── npm
-            ├── Python
-            ├── compiladores
-            └── herramientas auxiliares
+```mermaid
+flowchart TD
+    subgraph H["HOST MODERNO"]
+        ED["editor"]
+        GIT["Git"]
+        SRC["código fuente"]
+    end
+    ENG["Docker / Podman"]
+    subgraph C["CONTENEDOR LINUX"]
+        D10["Debian 10"]
+        NL["Node legacy"]
+        NPM["npm"]
+        PY["Python"]
+        CC["compiladores"]
+        HA["herramientas auxiliares"]
+    end
+    H --> ENG --> C
 ```
 
 ### 3.1 🍎 El caso donde el contenedor deja de ser comodidad
@@ -146,15 +143,13 @@ b11ce837867e50d1b2bf09da6a85336bedfa257bf92f34712aeb94360c0bcd6e  node-v10.24.1-
 La plataforma que te falta en el host la tienes dentro del contenedor, y encima con dos
 caminos en vez de uno solo impuesto por el sistema operativo:
 
-```text
-Mac Apple Silicon
-    │
-    ├── Node 10 nativo en macOS        ❌ no existe darwin-arm64 antes de la 16
-    ├── Node 10 vía Rosetta 2          ⚠️  binario Intel, emulación que no controlas
-    │
-    └── contenedor Linux
-            ├── Node 10 linux/arm64    ✅ binario oficial, nativo en tu CPU
-            └── Node 10 linux/amd64    ✅ binario oficial, traducido y aislado
+```mermaid
+flowchart TD
+    MAC["Mac Apple Silicon"] --> N1["Node 10 nativo en macOS<br/>❌ no existe darwin-arm64 antes de la 16"]
+    MAC --> N2["Node 10 vía Rosetta 2<br/>⚠️ binario Intel, emulación que no controlas"]
+    MAC --> CT["contenedor Linux"]
+    CT --> A1["Node 10 linux/arm64<br/>✅ binario oficial, nativo en tu CPU"]
+    CT --> A2["Node 10 linux/amd64<br/>✅ binario oficial, traducido y aislado"]
 ```
 
 En Windows, Linux y Mac Intel el contenedor es una decisión de higiene: te ahorra ensuciar

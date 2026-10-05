@@ -16,9 +16,9 @@ completo, con lo que se gana y lo que se pierde en cada dirección.
 | Si tu pregunta es… | Ve a |
 |---|---|
 | "¿Por qué root, si todo el mundo dice que está mal?" | [§1](#1--por-qué-el-laboratorio-corre-como-root) |
-| "¿Qué riesgo estoy asumiendo de verdad?" | [§2](#2--el-precio-de-root-sin-dramatizar) |
+| "¿Qué riesgo estoy asumiendo de verdad?" | [§2](#2-️-el-precio-de-root-sin-dramatizar) |
 | "¿Qué se rompe si cambio a non-root?" | [§3](#3--qué-se-rompe-exactamente) |
-| "Quiero hacerlo. ¿Cómo?" | [§4](#4--cómo-hacerlo-bien) |
+| "Quiero hacerlo. ¿Cómo?" | [§4](#4-️-cómo-hacerlo-bien) |
 | "¿Y con Podman?" | [§5](#5--podman-cambia-la-conversación) |
 
 ---

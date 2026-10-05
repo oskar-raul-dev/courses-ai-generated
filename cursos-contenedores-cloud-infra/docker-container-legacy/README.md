@@ -138,7 +138,6 @@ Y lo que **no** está verificado también se dice: los comandos `podman` de
 ## Estándares editoriales
 
 Prosa en español latinoamericano neutro con tuteo; **código, identificadores y APIs en inglés**,
-comentarios de código en español. Las convenciones completas están en
-[`prompts/guia-de-estilo-y-convenciones.md`](prompts/guia-de-estilo-y-convenciones.md), y el
-alcance —qué entra en cada fase y qué no— en
-[`prompts/propuesta-fases-y-alcance.md`](prompts/propuesta-fases-y-alcance.md).
+comentarios de código en español. Los diagramas de arquitectura y de flujo están en Mermaid, que
+GitHub dibuja directamente; los árboles de archivos, las salidas de terminal y las fichas de cierre
+de cada fase siguen en texto plano, porque así se leen y se copian mejor.

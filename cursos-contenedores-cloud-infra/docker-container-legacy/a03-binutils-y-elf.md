@@ -15,7 +15,7 @@ mirando** y añade las que quedaron fuera.
 | Si tu pregunta es… | Ve a |
 |---|---|
 | "¿Qué es exactamente un ELF?" | [§1](#1--qué-es-un-elf) |
-| "¿Cómo llega un `.c` a ser un ejecutable?" | [§2](#2--las-cuatro-etapas-y-qué-herramienta-actúa-en-cada-una) |
+| "¿Cómo llega un `.c` a ser un ejecutable?" | [§2](#2-️-las-cuatro-etapas-y-qué-herramienta-actúa-en-cada-una) |
 | "¿Qué me dice `readelf` que no me diga `file`?" | [§3](#3--las-herramientas-que-de-verdad-usarás) |
 | "Un `.node` no carga y no sé por qué" | [§4](#4--el-recetario-de-diagnóstico) |
 
@@ -26,20 +26,15 @@ mirando** y añade las que quedaron fuera.
 **ELF** —*Executable and Linkable Format*— es el formato de los binarios de Linux. Ejecutables,
 librerías compartidas, objetos intermedios y volcados de memoria: todos son ELF.
 
-```text
-┌─────────────────────┐
-│ ELF header          │  qué tipo es, para qué arquitectura, dónde empieza
-├─────────────────────┤
-│ Program headers     │  cómo cargarlo en memoria — al ejecutar
-├─────────────────────┤
-│ .text               │  el código máquina
-│ .rodata             │  constantes
-│ .data / .bss        │  variables
-│ .dynsym / .dynstr   │  símbolos dinámicos — quién llama a quién
-│ .dynamic            │  qué librerías necesita
-├─────────────────────┤
-│ Section headers     │  cómo enlazarlo — al compilar
-└─────────────────────┘
+```mermaid
+flowchart TD
+    subgraph ELF["un archivo ELF, de arriba abajo"]
+        H["ELF header<br/>qué tipo es, para qué arquitectura, dónde empieza"]
+        PH["Program headers<br/>cómo cargarlo en memoria — al ejecutar"]
+        S[".text · el código máquina<br/>.rodata · constantes<br/>.data / .bss · variables<br/>.dynsym / .dynstr · símbolos dinámicos — quién llama a quién<br/>.dynamic · qué librerías necesita"]
+        SH["Section headers<br/>cómo enlazarlo — al compilar"]
+        H --- PH --- S --- SH
+    end
 ```
 
 **Y el dato que explica medio [F14](14-abi-libc-y-prebuilds.md):** el ELF header dice **para qué arquitectura** es el binario,
@@ -61,20 +56,12 @@ nativo no carga.
 
 ## 2. 🏗️ Las cuatro etapas, y qué herramienta actúa en cada una
 
-```text
-hello.c
-   │  cpp — preprocesador: resuelve #include y #define
-   ▼
-hello.i
-   │  cc1 — compilador: C → ensamblador
-   ▼
-hello.s
-   │  as — ENSAMBLADOR (Binutils)
-   ▼
-hello.o          ← objeto: código máquina con símbolos sin resolver
-   │  ld — ENLAZADOR (Binutils)
-   ▼
-hello            ← ejecutable ELF
+```mermaid
+flowchart TD
+    C["hello.c"] -- "cpp · preprocesador:<br/>resuelve #35;include y #35;define" --> I["hello.i"]
+    I -- "cc1 · compilador: C → ensamblador" --> S["hello.s"]
+    S -- "as · ENSAMBLADOR (Binutils)" --> O["hello.o<br/>objeto: código máquina con símbolos sin resolver"]
+    O -- "ld · ENLAZADOR (Binutils)" --> E["hello<br/>ejecutable ELF"]
 ```
 
 **`gcc` no compila: orquesta.** Llama a los cuatro y por eso parece uno solo. Compruébalo:
@@ -174,23 +161,16 @@ por sección.
 
 El orden de [F14](14-abi-libc-y-prebuilds.md) §8, con lo que responde cada paso:
 
-```text
-1. file <bin>
-      → ¿es un ELF? ¿de qué arquitectura?
-      ├── no es ELF          → la descarga falló (F04 §10)
-      └── otra arquitectura  → F21 §7
-
-2. ldd <bin> | grep 'not found'
-      → ¿le falta alguna librería?
-      └── sí → instala el paquete (sin -dev): F15 §5
-
-3. readelf -V <bin> | grep GLIBC | sort -u
-      → ¿exige una glibc más nueva que 2.28?
-      └── sí → F14 §6.1
-
-4. nm -D --undefined-only <bin>
-      → ¿qué símbolo falta exactamente?
-      └── búscalo con nm -D --defined-only en la librería sospechosa
+```mermaid
+flowchart TD
+    S1{"1 · file #lt;bin#gt;<br/>¿es un ELF? ¿de qué arquitectura?"}
+    S1 -- "no es ELF" --> R1["la descarga falló (F04 §10)"]
+    S1 -- "otra arquitectura" --> R2["F21 §7"]
+    S1 -- "ELF de tu arquitectura" --> S2{"2 · ldd #lt;bin#gt; #124; grep 'not found'<br/>¿le falta alguna librería?"}
+    S2 -- "sí" --> R3["instala el paquete (sin -dev): F15 §5"]
+    S2 -- "no" --> S3{"3 · readelf -V #lt;bin#gt; #124; grep GLIBC #124; sort -u<br/>¿exige una glibc más nueva que 2.28?"}
+    S3 -- "sí" --> R4["F14 §6.1"]
+    S3 -- "no" --> S4["4 · nm -D --undefined-only #lt;bin#gt;<br/>¿qué símbolo falta exactamente?<br/>búscalo con nm -D --defined-only en la librería sospechosa"]
 ```
 
 **Los tres primeros resuelven casi todo.** El cuarto es para el caso raro en que el módulo carga

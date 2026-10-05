@@ -66,15 +66,10 @@ OverlayFS se monta con cuatro directorios, y toda esta fase cabe en entender qu�
 - **`workdir`** — un directorio de trabajo interno que el kernel necesita para hacer atómicas ciertas operaciones. Tiene que estar en el mismo filesystem que `upperdir`, y no es asunto tuyo lo que hay dentro.
 - **`merged`** — el punto de montaje, la vista unificada. Es lo que el proceso ve como `/`.
 
-```text
-                merged/          ← lo que ve el proceso: un / normal
-                   ▲
-     ┌─────────────┴─────────────┐
-     │                           │
-  upperdir/                   lowerdir/
-  escribible                  solo lectura, apilado
-  (el contenedor)             lower2 : lower1 : base
-                              (las capas de la imagen)
+```mermaid
+flowchart BT
+    U["upperdir/<br/>escribible<br/>(el contenedor)"] --> M["merged/<br/>lo que ve el proceso: un / normal"]
+    L["lowerdir/<br/>solo lectura, apilado<br/>lower2 : lower1 : base<br/>(las capas de la imagen)"] --> M
 ```
 
 ---
@@ -780,17 +775,17 @@ a tener el día que pase de verdad.
 
 ## 19. 🏁 Resultado de la fase
 
-```text
-IMAGEN                          CONTENEDOR
-capas de solo lectura           una capa escribible
-lowerdir (compartido)     +     upperdir (efímero, por contenedor)
-                                        │
-                                        ▼
-                                     merged  ← el / que ve el proceso
-                                        ▲
-                          bind mounts y volumes se montan ENCIMA,
-                          fuera del overlay: no copy-up, no whiteouts,
-                          sobreviven al docker rm
+```mermaid
+flowchart TD
+    subgraph IMAGEN
+        L["lowerdir (compartido)<br/>capas de solo lectura"]
+    end
+    subgraph CONTENEDOR
+        U["upperdir (efímero, por contenedor)<br/>una capa escribible"]
+    end
+    L --> M["merged<br/>el / que ve el proceso"]
+    U --> M
+    BM["bind mounts y volumes<br/>se montan ENCIMA, fuera del overlay:<br/>no copy-up, no whiteouts, sobreviven al docker rm"] -. "encima" .-> M
 ```
 
 > **La señal de que quedó bien:** cuando veas crecer una imagen o un contenedor, ya no preguntas *"¿por qué pesa tanto?"* sino *"¿en qué capa entró eso, y en cuál se supone que se fue?"* — y sabes qué comando responde cada una.

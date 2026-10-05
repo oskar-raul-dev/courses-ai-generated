@@ -11,6 +11,11 @@ Si dudas entre dos formas de escribir algo, gana la que le sirva más a alguien
 que mañana tiene que revivir un proyecto de 2018 en un MacBook con chip M4 y no
 sabe por dónde empezar.
 
+> 📝 **Revisada el 05/10/2026** contra los lineamientos de producción del
+> repositorio. Lo que este curso hace distinto de los valores por defecto del
+> `CLAUDE.md` está declarado en §16, que se agregó después del checklist para no
+> renumerar nada: §14 sigue siendo el checklist.
+
 ---
 
 ## 1. 🧭 Principio rector
@@ -112,27 +117,35 @@ funciona".
   ✅  No hay contradicción: son dos contextos distintos y la regla es la misma.
   ```
 
-- **Diagramas ASCII en bloques `text`.** Es una marca de la casa y se usa sin
-  timidez para mostrar arquitecturas, flujos y jerarquías. Un diagrama vale más
-  que dos párrafos cuando hay capas involucradas:
+- **Diagramas en Mermaid.** Se usan sin timidez para mostrar arquitecturas,
+  flujos, estados y árboles de decisión: un diagrama vale más que dos párrafos
+  cuando hay capas involucradas. Van en un bloque `mermaid`, con la frase de
+  antes diciendo qué mirar. Hasta el 05/10/2026 eran ASCII en bloques `text`, la
+  marca de la casa de entonces; el cambio y su criterio están en §16.1.
 
-  ```text
-  HOST MODERNO
-      │
-      ├── editor
-      ├── Git
-      └── código fuente
-              │
-              ▼
-      Docker / Podman
-              │
-              ▼
-      CONTENEDOR LINUX
-              │
-              ├── Debian 10
-              ├── Node legacy
-              └── toolchain
+  ````markdown
+  ```mermaid
+  flowchart TD
+      subgraph H["HOST MODERNO"]
+          ED["editor"]
+          GIT["Git"]
+          SRC["código fuente"]
+      end
+      ENG["Docker / Podman"]
+      subgraph C["CONTENEDOR LINUX"]
+          D10["Debian 10"]
+          NL["Node legacy"]
+          TC["toolchain"]
+      end
+      H --> ENG --> C
   ```
+  ````
+
+- **Lo que no es un diagrama se queda en `text`**: árboles de archivos, salidas
+  de terminal, checklists, las fichas de «Resultado de la fase», comparativas en
+  dos columnas, correspondencias `a → b` y la anatomía de un nombre
+  (`node-v10.24.1-linux-x64.tar.xz` con una flecha por campo). Se leen mejor
+  alineados y se copian tal cual.
 
 - **Listas antes que tablas en comparativas extensas.** Cuando compares tres
   motores, cuatro distribuciones o cinco estrategias de instalación, **usa una
@@ -449,6 +462,12 @@ concreta del documento`. Nada de `Fase 07 — Build` a secas.
 - 🧠 **Modelo mental.** La frase que hay que llevarse, no el detalle.
 - 🩺 **Diagnóstico.** El comando que confirma o descarta una hipótesis.
 - 🪦 **Retiro.** Cuando algo cumple su función y sale del laboratorio.
+- 🧭 **Principio.** La regla que ordena una decisión o una frontera entre fases.
+- 🚨 **Seguridad.** Lo que expone secretos o el host: un `ARG` con una
+  contraseña, el socket de Docker montado, un puerto publicado en `0.0.0.0`.
+- 🦭 **¿Y Podman?** La nota corta cuando Podman difiere y la diferencia no
+  merece la ruta completa de §11.
+- ⚰️ **Autopsia.** Un anti-patrón recurrente, con lo que cuesta.
 
 No hace falta usarlos todos en cada documento. Se usan cuando aportan.
 
@@ -749,10 +768,14 @@ El curso no se casa con un producto, pero tampoco pretende que sean idénticos.
   precedente de cómo hacerlo bien).
 - **Las versiones no se contradicen.** El baseline de §5.2 manda. Cualquier
   desviación se declara con ⚠️ en el documento que la introduce.
-- **Fuentes de verdad, en este orden:** (1) instrucciones del proyecto
-  (`CLAUDE.md`), (2) `prompts/idea_tutorial.md`, (3) `00-problema-y-contrato.md`,
-  (4) esta guía, (5) fases ya escritas y aprobadas, (6) decisiones explícitas
-  del chat actual.
+- **Fuentes de verdad, en este orden:** (1) `prompts/propuesta-fases-y-alcance.md`,
+  que dice qué entra en cada fase; (2) esta guía, que dice cómo se escribe;
+  (3) `00-problema-y-contrato.md`, el contrato técnico del laboratorio;
+  (4) fases ya escritas y aprobadas; (5) decisiones explícitas del chat actual,
+  que valen hasta que se trasladan arriba. El `CLAUDE.md` del repositorio va por
+  encima de todos como valor por defecto, y esta guía lo reemplaza donde §16 lo
+  declara. La idea original del curso (`idea_tutorial.md`) se borró el
+  05/10/2026: ya estaba absorbida en §1–§4.
 
 ---
 
@@ -791,7 +814,8 @@ analítico —no acartonado, pero tampoco el lugar para el chiste.
 - [ ] Explica el problema antes que la herramienta, y el porqué de cada decisión.
 - [ ] **Ningún comando queda sin explicar.** Ni las opciones.
 - [ ] Prosa antes que listas; listas antes que tablas en comparativas extensas;
-      diagramas `text` donde hay capas.
+      diagramas en Mermaid donde hay capas o flujo, y `text` solo para lo que no
+      es diagrama (§3, §16.1).
 - [ ] Sin prosa telegrama: como mucho una o dos frases aisladas por sección, el
       resto en párrafos (§3).
 - [ ] Todos los comandos corren con las versiones fijadas de §5.2, sin rangos ni
@@ -847,5 +871,111 @@ Anotados acá para no bloquear la escritura, pero conviene resolverlos:
   estudiante, y se duplica en `src/all-dockerfiles/` para quien quiera leer los
   Dockerfiles seguidos. La convención completa está en §5.1.
 
-El backlog de trabajo del curso —lo que queda por hacer y en qué orden— se lleva
-aparte. Esta guía no lo duplica.
+El curso está cerrado y no tiene plan de producción: lo que queda abierto está en
+§16.4. Esta guía no lleva backlog.
+
+---
+
+## 16. 🧾 Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 05/10/2026**, en la revisión del curso contra los
+> lineamientos de producción del repositorio. Va después del checklist para no
+> renumerar: el resto del `prompts/` y `check-course.sh` citan esta guía por
+> número de sección. El curso es anterior a esos lineamientos; casi todo lo que
+> aquí se declara ya era su práctica, y desde ahora está escrito como decisión.
+
+El `CLAUDE.md` del repositorio da **valores por defecto**, y esta guía los
+reemplaza donde lo declara: la regla general, el valor de este curso y por qué.
+Lo que esta sección no menciona se hereda tal cual.
+
+| Regla general del repositorio | Lo que hace este curso | Por qué |
+|---|---|---|
+| Comentarios dentro del código en inglés | **En español** (§5); identificadores, rutas y tags en inglés | El comentario es el canal del *porqué*, y el curso piensa en español |
+| Audiencia que no necesita lo básico | **Nada se da por sabido** (§4): ni Docker, ni Linux | El lector llega por un proyecto roto, no por Docker; el README pide un lenguaje y terminal, nada más |
+| Forma de lección setup → conceptos → antipatrones → traducción → ejercicios → veredicto | **La plantilla de diez secciones de §8**, cerrada con «La señal de que quedó bien» | Es un taller incremental sobre una sola imagen. El veredicto honesto no es por fase: F00 §7 y §9 fijan dónde no sirve (producción, migrar el proyecto) y F23 decide entre ARM64 nativo y AMD64 emulado |
+| 20–30 ejercicios por sección, 🟢🟡🟠🔴 | **20 a 35 obligatorios** con 🔥 y 💀 encima, y cuatro fases exentas (§9). Publicado: de 20 a 30 | La cifra la fija lo que la fase enseña; 35 es el techo, no la meta |
+| Ejercicios con solución de referencia o rúbrica | **Sin solucionario**: cada ejercicio cierra con `Objetivo:` o `Pregunta:`; solo F34 trae rúbrica | Decisión de la propuesta §8, tomada al cortar el curso; la autoverificación es esa línea |
+| `0-ESTRUCTURA-CURSO.md` antes de la primera lección | **`0-programa-del-curso.md`**, con las rutas de lectura por perfil | El curso lo escribió con ese nombre y lo citan el README y las entradas de Parte; renombrarlo rompe el bloqueo de contenido |
+| `BENCHMARKS.md` e `INSTINTOS.md` | **No existen.** Las mediciones van en su fase, con condiciones declaradas (F23, F26); los instintos, en las Notas de época | El curso mide poco y en contexto; un documento aparte quedaría casi vacío |
+| Diccionario de traducción en los dos sentidos | **No aplica**: no hay paradigma de origen. Hace su papel el glosario (a16) | El curso enseña un entorno, no traduce de otro |
+| Diagramas a criterio de quien escribe | **Mermaid**, con las excepciones de §16.1 (D-12) | Pedido explícito del autor en la revisión del 05/10/2026 |
+| Fecha de vigencia en cada encabezado | **Solo donde hubo verificación ejecutada** (ocho documentos) o revisión de documentación externa (§7.1) | Una fecha en un documento que no se reverificó promete algo que no se hizo |
+| Emoji en `###` con moderación | **Igual**, y además los títulos de ruta y de bloque de `0-programa-del-curso.md` y de las entradas de Parte | Son navegación, no adorno |
+| `.gitignore` centralizado | **En la raíz del curso**, porque hay código en `src/` de varias fases | Se sostiene solo, para cuando el curso viaje a su propio repositorio |
+
+### 16.1 D-12 · Diagramas en Mermaid
+
+**Decidido el 05/10/2026 por el autor, en la revisión del curso.** Todo
+diagrama —arquitectura, flujo, secuencia, estados, árbol de decisión, capas— va
+en un bloque `mermaid`. Se quedan en `text` los árboles de archivos, las salidas
+de terminal, los checklists, las fichas de «Resultado de la fase» (`IMAGEN …`,
+`SABES …`), las comparativas en dos columnas, las correspondencias `a → b`, las
+líneas de tiempo y la anatomía de un nombre: no son diagramas, y alineados en
+monoespaciado se leen mejor.
+
+La revisión convirtió **58 diagramas en 36 documentos**, y cada uno se dibujó con
+`mmdc` antes de publicarlo. Tres criterios para los que vengan:
+
+- **`flowchart TD`** para cadenas y árboles de decisión; **`LR`** para lo que
+  cruza la frontera host ↔ contenedor; **`subgraph`** para las zonas (host,
+  contenedor, VM).
+- **`stateDiagram-v2`** para el ciclo de vida de un contenedor (F08, F16) y
+  **`sequenceDiagram`** para lo que ocurre en el tiempo (`docker stop` en F16).
+  Al convertir el de F16 se corrigió un error del ASCII: `start` sobre un
+  contenedor `Exited` lo lleva a `Running`, no a `Created`.
+- **Caracteres que Mermaid interpreta**: `<…>` se escribe `#lt;…#gt;`, `|`
+  dentro de un nodo `#124;` y `#` delante de una palabra `#35;`. Las rutas de
+  Windows se escriben tal cual dentro de comillas.
+
+### 16.2 Documentos de `prompts/` y lo que hace su papel
+
+El curso es anterior a las plantillas de producción y está cerrado, así que no
+se crean a posteriori. Esto es lo que cumple cada función:
+
+- **Alcance y propuesta:** `propuesta-fases-y-alcance.md`, que es a la vez el
+  alcance (qué entra y qué no en cada fase) y la propuesta. Sus cifras de
+  palabras y de ejercicios son las del 03/09/2026, antes de escribir; las
+  vigentes están en el README.
+- **Plan de producción:** no hay. Lo fue `ajuste_estructura.md`, que se borró el
+  05/10/2026 como desechable: la migración que describía ya estaba ejecutada y
+  sus decisiones viven en la propuesta y en esta guía.
+- **Diccionario de términos:** §3 (qué se queda en inglés) y el glosario a16.
+- **Contrato de nombres:** §5.1 (archivos, imagen, tags, scripts) y §5.2
+  (versiones fijadas).
+- **Plantillas de capítulo:** §8 (fase), §8 al final (apéndice) y §9 (ejercicios).
+- **Formatos propios:** §13 (incidentes), y en `src/` las plantillas que usa el
+  lector: `VALIDATION-REPORT.template.md` (F11) y `30-TROUBLESHOOTING-REPORT.md`
+  (F30).
+- **Prompts de fase:** no se conservaron; el curso ya no se escribe por fases.
+- **Callouts heredados:** seis de un solo uso (🥇, ⚔️, 🛑, 🥊, 🗓️, 🧾) quedan
+  como están; el verificador los tolera y no se usan en texto nuevo.
+
+### 16.3 Verificación
+
+Tres herramientas, desde la raíz del curso, y ninguna toca Docker:
+
+```bash
+python3 prompts/verificar-corpus.py                 # validaciones base + aviso DIAGRAMA
+python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el repositorio público
+bash prompts/check-course.sh                        # las trece comprobaciones de integridad
+```
+
+- `verificar-corpus.py` es la subclase del perfil `courses-ia` de
+  `verificador_base.py` (copia de la base de los lineamientos), con los callouts
+  de §7 y el encabezado de §7.1. Su aviso `DIAGRAMA` marca un bloque `text` con
+  esquinas de caja o flechas verticales; un diagrama dibujado solo con `├─` y
+  `│` se le escapa, y se revisa a mano.
+- `--publicacion` agrega los errores de la etapa de publicación: ningún enlace a
+  `prompts/` ni mención de material privado en un documento publicado.
+- `check-course.sh` cubre lo que la base no ve: ejercicios numerados y su
+  conteo, la banda de §9, las citas `FNN §x.y`, los punteros a `src/` y el
+  índice contra el árbol. Su explicación está en `explicacion_script_integridad.md`.
+
+### 16.4 Lo que queda abierto
+
+- **El apéndice a17, compilar Node desde fuente**, está diseñado pero no
+  escrito: el curso publica salidas reales y hace falta una sesión de
+  laboratorio antes. El protocolo está fuera del curso, en el borrador de
+  complemento de `propuestas-cursos/`, y ningún documento publicado lo enlaza.
+- **Los comandos `podman` de F24, F25 y F26** están contrastados con la
+  documentación oficial, no ejecutados, y sus cabeceras lo declaran.

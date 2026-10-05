@@ -11,6 +11,12 @@ palabras ya escritas en dos partes, 36 fases cortas y 16 apéndices opcionales.
 > **Problema que resuelve:** cuatro documentos superan las 17.000 palabras (~70
 > páginas cada uno) y mezclan el camino mínimo con la enciclopedia de producto
 > **Fecha:** 3 de septiembre de 2026
+> **Revisión del 05/10/2026:** este documento hace también de alcance del curso
+> (guía §16.2). Las cifras de palabras, horas y ejercicios son las del corte, antes de
+> escribir: las vigentes están en el README. En particular, §1 y §8 dicen **20 ejercicios
+> por fase práctica**, y la guía §9 los recalibró después a una banda de 20 a 35 decidida
+> fase por fase. `ajuste_estructura.md`, el plan que ejecutó este corte, se borró ese día
+> como desechable.
 
 ---
 

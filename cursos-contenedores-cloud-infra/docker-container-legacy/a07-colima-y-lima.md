@@ -16,8 +16,8 @@ explica **qué hay debajo**, que resulta ser bastante más configurable que las 
 | Si tu pregunta es… | Ve a |
 |---|---|
 | "¿Qué es Lima y qué es Colima?" | [§1](#1--lima-y-colima-quién-hace-qué) |
-| "¿Cómo lo arranco para este curso?" | [§2](#2--arrancar-para-el-laboratorio) |
-| "¿Cómo elijo la arquitectura de la VM?" | [§3](#3--la-decisión-que-solo-colima-te-deja-tomar) |
+| "¿Cómo lo arranco para este curso?" | [§2](#2-️-arrancar-para-el-laboratorio) |
+| "¿Cómo elijo la arquitectura de la VM?" | [§3](#3-️-la-decisión-que-solo-colima-te-deja-tomar) |
 | "¿Y el rendimiento de los bind mounts?" | [§4](#4--virtiofs-y-el-cruce-de-la-frontera) |
 | "¿Merece la pena frente a Docker Desktop?" | [§5](#5--guía-rápida-cuándo-usar-qué) |
 
@@ -34,19 +34,11 @@ virtualización de Apple o QEMU.
 **Colima** —*Containers on Lima*— usa Lima por debajo y añade lo que falta: un runtime de
 contenedores dentro de la VM y la integración para que tu CLI de Docker le hable.
 
-```text
-tu terminal (macOS)
-    │  docker / nerdctl
-    ▼
-Colima              ← configura el runtime y expone el socket
-    │
-    ▼
-Lima                ← gestiona la VM
-    │
-    ▼
-VM Linux            ← vz de Apple, o QEMU
-    │
-    └── containerd o Docker Engine → tus contenedores
+```mermaid
+flowchart TD
+    T["tu terminal (macOS)"] -- "docker / nerdctl" --> C["Colima<br/>configura el runtime y expone el socket"]
+    C --> L["Lima<br/>gestiona la VM"] --> VM["VM Linux<br/>vz de Apple, o QEMU"]
+    VM --> R["containerd o Docker Engine"] --> CT["tus contenedores"]
 ```
 
 > 🧭 **Por qué esta separación importa.** Docker Desktop y Podman Desktop también arrancan una
@@ -110,16 +102,10 @@ cuarta —**una VM x86-64 completa**— es la que Colima hace práctica:
 colima start --profile intel --arch x86_64 --vm-type qemu --cpu 4 --memory 8
 ```
 
-```text
-Mac ARM64
-    │
-    ▼
-QEMU emula una MÁQUINA x86-64 completa      ← emulación de máquina, F21 §7.2 caso A
-    │
-    ▼
-kernel Linux x86-64
-    │
-    └── contenedores amd64 → NATIVOS dentro de esa VM
+```mermaid
+flowchart TD
+    M["Mac ARM64"] --> Q["QEMU emula una MÁQUINA x86-64 completa<br/>emulación de máquina, F21 §7.2 caso A"]
+    Q --> K["kernel Linux x86-64"] --> C["contenedores amd64<br/>NATIVOS dentro de esa VM"]
 ```
 
 **Y la diferencia con la ruta 2 es sutil e importante.** En la ruta 2 el kernel es ARM64 y QEMU

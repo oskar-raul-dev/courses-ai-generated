@@ -4,7 +4,10 @@
 > comprueba que el curso no se ha roto por dentro.
 > **Para quién:** para ti dentro de seis meses, cuando vuelvas a tocar el curso y no te
 > acuerdes de por qué existe cada comprobación.
-> **Estado:** documento **local**, igual que el script. No entra en el repositorio por ahora.
+> **Estado:** versionado junto con el script desde el commit inicial del curso. Desde el
+> 05/10/2026 el script convive con `verificar-corpus.py`, que hace las validaciones base de los
+> lineamientos del repositorio (enlaces, anclas, callouts, diagramas); este documento explica
+> solo `check-course.sh`. Cómo se reparten está en la guía §16.3.
 
 Este documento no asume que sepas Bash, ni Python, ni qué es un *exit code*. Sigue la misma
 regla que el curso: **cada decisión responde a "¿por qué estamos haciendo esto?"**.
@@ -241,7 +244,9 @@ lo vigila.
 ### 5.10 Sin andamiaje
 
 Busca menciones a los documentos de trabajo de la reestructuración —`_source/`,
-`mapa-de-corte.md`, `mejoras.md`— dentro de documentos que sí publica el curso.
+`mapa-de-corte.md`, `mejoras.md`, `ajuste_estructura.md`— dentro de documentos que sí publica el
+curso. `prompts/` queda fuera: la guía y la propuesta los nombran a propósito, para contar cómo
+se quitaron.
 
 **Por qué existe:** el andamiaje de una migración tiende a filtrarse al material del estudiante.
 Ya pasó una vez, con el glosario citando un directorio que iba a desaparecer.
@@ -299,6 +304,8 @@ bastante:
   y **subcuenta sistemáticamente**: hay ejercicios cuyo carácter diagnóstico está en el montaje
   y no en el vocabulario. Una heurística mala es peor que ninguna, así que se dejó fuera.
 - **Que cada fase declare su fecha de revisión** cuando cite documentación externa volátil.
+- **Las anclas de los enlaces y la forma de los diagramas.** Ya no le faltan al curso: las
+  revisa `verificar-corpus.py` (guía §16.3), y por eso este script no las duplica.
 - **Enlaces externos vivos.** Requiere red y da falsos positivos por *rate limiting*; es más
   ruido que señal para correrlo en cada commit.
 

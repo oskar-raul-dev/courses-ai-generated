@@ -102,19 +102,16 @@ Que funciona y **no debería ser tu flujo de trabajo normal**. 😄
 
 Y aquí está el motivo de que dos personas del mismo equipo no se pongan de acuerdo.
 
-```text
-LINUX NATIVO                        macOS / WINDOWS con Docker Desktop
-────────────                        ──────────────────────────────────
-tu host                             tu host (macOS)
-   │ mismo kernel                      │  file sharing (virtiofs, gRPC-FUSE)
-   ▼                                   ▼
-contenedor                          VM Linux
-                                       │
-                                       ▼
-                                    contenedor
-
-el UID viaja tal cual               la capa de compartición traduce
-→ archivos de root                  → archivos con TU usuario
+```mermaid
+flowchart TD
+    subgraph LN["LINUX NATIVO"]
+        H1["tu host"] -- "mismo kernel" --> C1["contenedor"]
+        C1 -.- N1["el UID viaja tal cual<br/>→ archivos de root"]
+    end
+    subgraph MW["macOS / WINDOWS con Docker Desktop"]
+        H2["tu host (macOS)"] -- "file sharing (virtiofs, gRPC-FUSE)" --> VM["VM Linux"] --> C2["contenedor"]
+        C2 -.- N2["la capa de compartición traduce<br/>→ archivos con TU usuario"]
+    end
 ```
 
 Docker Desktop introduce una máquina virtual y un mecanismo de compartición de archivos que

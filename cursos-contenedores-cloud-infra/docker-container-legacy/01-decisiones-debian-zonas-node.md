@@ -172,24 +172,13 @@ con crisis de identidad. 😄
 
 El laboratorio se divide en tres zonas:
 
-```text
-┌─ ZONA A · HOST ────────────────────────────────┐
-│  Git · repositorio · código fuente             │
-│  configuración del proyecto · editor o IDE     │
-└────────────────────┬───────────────────────────┘
-                     │ bind mount
-┌────────────────────▼───────────────────────────┐
-│ ZONA B · TOOLCHAIN CONTAINER                   │
-│  Debian 10 · Node · npm · Python               │
-│  compiladores · Git y utilidades               │
-│  dependencias del sistema                      │
-└────────────────────┬───────────────────────────┘
-                     │ solo si el proyecto lo pide
-┌────────────────────▼───────────────────────────┐
-│ ZONA C · BROWSER TESTING (opcional)            │
-│  Chromium · Firefox · Selenium standalone      │
-│  Xvfb · librerías gráficas                     │
-└────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    A["ZONA A · HOST<br/>Git · repositorio · código fuente<br/>configuración del proyecto · editor o IDE"]
+    B["ZONA B · TOOLCHAIN CONTAINER<br/>Debian 10 · Node · npm · Python<br/>compiladores · Git y utilidades<br/>dependencias del sistema"]
+    C["ZONA C · BROWSER TESTING (opcional)<br/>Chromium · Firefox · Selenium standalone<br/>Xvfb · librerías gráficas"]
+    A -- "bind mount" --> B
+    B -. "solo si el proyecto lo pide" .-> C
 ```
 
 La **Zona C** solo aparece cuando el proyecto la necesita, y vive en su propio contenedor,
@@ -206,11 +195,19 @@ contenedor: no hay copia ni sincronización.
 
 Dentro del contenedor, el proyecto siempre vive en la misma ruta:
 
-```text
-HOST                          CONTENEDOR
-C:\dev\old-vue          ──┐
-/Users/oskar/dev/old-vue ─┼── bind mount ──▶  /workspace
-/home/me/proyecto       ──┘
+```mermaid
+flowchart LR
+    subgraph HOST
+        W["C:\dev\old-vue"]
+        M["/Users/oskar/dev/old-vue"]
+        L["/home/me/proyecto"]
+    end
+    subgraph CONTENEDOR
+        WS["/workspace"]
+    end
+    W -- "bind mount" --> WS
+    M -- "bind mount" --> WS
+    L -- "bind mount" --> WS
 ```
 
 Usar `/workspace` siempre tiene una ventaja concreta: todas las guías, scripts y ejemplos
@@ -238,12 +235,10 @@ concretos.
 
 Por eso el montaje es doble:
 
-```text
-código fuente
-HOST ───────────── bind mount ─────────▶ /workspace
-
-node_modules
-NAMED VOLUME ───── volume mount ───────▶ /workspace/node_modules
+```mermaid
+flowchart LR
+    H["HOST<br/>código fuente"] -- "bind mount" --> WS["/workspace"]
+    V[("NAMED VOLUME<br/>node_modules")] -- "volume mount" --> NM["/workspace/node_modules"]
 ```
 
 El segundo mount va **encima** del primero, sobre un subdirectorio. Si eso te parece raro

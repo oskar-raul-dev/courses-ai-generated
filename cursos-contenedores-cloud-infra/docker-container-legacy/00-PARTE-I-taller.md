@@ -35,14 +35,19 @@ librerías del sistema, las utilidades.
 De esa separación salen casi todas las decisiones que vas a ver, y conviene tenerla clara
 desde el principio porque explica cosas que si no parecen arbitrarias:
 
-```text
-TU MÁQUINA (el host)              EL CONTENEDOR
-─────────────────────             ──────────────────────
-código fuente          ─bind──▶   /workspace
-editor, Git, ramas                Node 10 / 12 / 14 / 16
-                                  GCC, make, pkg-config
-node_modules  ◀─named volume──▶   Python 2.7 y 3.7
-                                  utilidades Linux
+```mermaid
+flowchart LR
+    subgraph H["TU MÁQUINA (el host)"]
+        SRC["código fuente"]
+        ED["editor, Git, ramas"]
+    end
+    subgraph C["EL CONTENEDOR"]
+        WS["/workspace"]
+        TC["Node 10 / 12 / 14 / 16<br/>GCC, make, pkg-config<br/>Python 2.7 y 3.7<br/>utilidades Linux"]
+    end
+    NM[("node_modules")]
+    SRC -- "bind mount" --> WS
+    NM -- "named volume" --> WS
 ```
 
 `node_modules` es el caso interesante: **no vive en ninguno de los dos lados por
