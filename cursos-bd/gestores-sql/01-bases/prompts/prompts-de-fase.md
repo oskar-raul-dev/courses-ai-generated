@@ -19,8 +19,9 @@ contrastado no está terminada.
 > ningún archivo `_desechable-*`: el curso no los cita.
 
 > ⚠️ **Antes de la primera fase con herramientas (F01).** Tienen que estar escritos y verificados
-> `a01`, `a02`, `a03` y `a04`, y cerrada la tanda de verificación (P8). Sin versiones fijadas,
-> ninguna fase puede publicar una salida.
+> `a01`, `a02`, `a03` y `a04`. La tanda de verificación (P8) está cerrada desde el 03/10/2026
+> (`prompts/verificacion-de-laboratorio/hallazgos.md`); sin esos apéndices, ninguna fase puede
+> publicar una salida.
 
 ---
 
@@ -35,8 +36,9 @@ aplícalo.**
 Fuentes de verdad, en este orden: (1) `prompts/alcance-del-proyecto.md`,
 (2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/propuesta-fases-y-alcance.md` (la
 ficha de esta fase es el piso del contenido), (4) `prompts/propuesta-apendices-y-alcance.md`,
-(5) `prompts/plantillas-de-capitulo.md`, (6) los apéndices y las fases ya escritos y aprobados,
-(7) las decisiones de esta sesión. Los documentos desechables no cuentan y no se citan.
+(5) `prompts/plantillas-de-capitulo.md`, (6) lo verificado en
+`prompts/verificacion-de-laboratorio/hallazgos.md` (P8) y en `prompts/inventario-de-fuentes.md` (P9),
+(7) los apéndices y las fases ya escritos y aprobados, (8) las decisiones de esta sesión. Los documentos desechables no cuentan y no se citan.
 
 Reglas que no se negocian:
 - **Nada se publica sin haberse ejecutado o verificado.** Ninguna salida de `radb`, `sqlite3`, un
@@ -115,8 +117,8 @@ motor de motores. Entregables: `00-el-sistema-de-bases-de-datos.md` y
 
 ## Pendientes que pueden bloquear
 
-La lectura base (Navathe cap. 1) y los recursos de la bibliografía tienen que estar en `a08`
-verificados (P9). Si no lo están, dilo en el paso 1.
+La lectura base (Navathe cap. 1) y los recursos de la bibliografía tienen que estar en `a08`, que
+abre su esqueleto desde `prompts/inventario-de-fuentes.md` (P9). Si no lo están, dilo en el paso 1.
 
 ## Cómo quiero que trabajes
 
@@ -273,8 +275,9 @@ Esta es la sesión de la **Fase 05 — 📐 Restricciones y operaciones de actua
 ## Puntos de cuidado
 
 - **Cada violación con su mensaje literal de SQLite**, provocada en la sesión.
-- **El comportamiento por defecto de `foreign_keys`** en SQLite (y si cambia por versión o por
-  compilación) se verifica antes de escribir el 🪞; si P8 no lo dejó claro, para y pregunta.
+- **El comportamiento por defecto de `foreign_keys`** en SQLite: P8 (H6) lo dejó en `0` en SQLite
+  3.46.1, con la fila huérfana aceptada sin error; la fase lo vuelve a ejecutar en la sesión antes de
+  escribir el 🪞. Si cambia por versión o por compilación, no se verificó: dilo así.
 - La tabla de "qué viola qué" (inserción, borrado y modificación contra cada tipo de restricción) es
   el centro de la fase: completa, sin huecos.
 - Las restricciones que el modelo no expresa (la nota dentro de la escala del país, el total del
@@ -429,9 +432,9 @@ Esta es la sesión de la **Fase 10 — 📐 Del álgebra a SQL, operador por ope
   profundiza en F11.
 - **La división en SQL**: doble `NOT EXISTS` (que es el ∀ con ¬∃ de F09) y por conteo; el caso donde
   la de conteo falla con duplicados, ejecutado.
-- **La afirmación sobre MySQL y `EXCEPT` (8.0.31)** se verifica en la documentación oficial en la
-  sesión; si no se puede, se escribe en términos genéricos ("motores que no tuvieron `EXCEPT`") y se
-  declara.
+- **La afirmación sobre MySQL y `EXCEPT`** quedó verificada en P9 en el manual de MySQL 8.0:
+  *"`EXCEPT` was added in MySQL 8.0.31"*, con `DISTINCT` por defecto y `ALL`. La sesión vuelve a
+  abrir la URL antes de citarla; si no responde, se escribe en términos genéricos y se declara.
 - **Prueba de fuego:** cada consulta SQL de la fase tiene su expresión de álgebra, y **los dos
   resultados coinciden** sobre los datos chicos. Donde no coinciden (multiconjuntos, `NULL`), la
   diferencia es el contenido.
@@ -459,9 +462,9 @@ Entregables: `11-null-y-multiconjuntos.md` y su solucionario.
 
 ## Puntos de cuidado
 
-- **Qué implementa SQLite de los operadores de bolsas** (`UNION ALL`, `INTERSECT ALL`, `EXCEPT ALL`)
-  se verifica antes de escribir. Lo que no implemente se dice, se escribe la alternativa y se remite
-  en prosa a los cursos de motor.
+- **Qué implementa SQLite de los operadores de bolsas**: `UNION ALL` sí; `INTERSECT ALL` y
+  `EXCEPT ALL`, **no** (P8, H6, `near "ALL": syntax error`). Se vuelve a ejecutar en la sesión; lo que
+  no implementa se dice, se escribe la alternativa y se remite en prosa a los cursos de motor.
 - **La crítica de Date a `NULL`** se presenta con sus argumentos **y con los de la otra parte**
   (Codd y los dos tipos de marcas, la práctica de la industria). Tono de la guía §2: honesto con las
   dos posiciones.
@@ -495,7 +498,9 @@ Esta es la sesión de la **Fase 12 — 📐 Vistas y el problema de actualizarla
   salida, sin adelantar la teoría de triggers de F36.
 - **La ambigüedad de traducir una actualización** sobre una vista de join se muestra con un
   contraejemplo concreto de dos traducciones válidas y distintas.
-- `WITH CHECK OPTION`: si SQLite no lo soporta, se explica con el estándar y se declara.
+- `WITH CHECK OPTION`: SQLite **no lo soporta** (P8, H6, `near "WITH": syntax error`), y **ninguna
+  vista de SQLite es actualizable** sin `INSTEAD OF`. Se explica con el estándar, se declara, y el 🔥
+  lo ejecuta en el PostgreSQL de `a09` si ya existe.
 - Es una fase corta y de muchos ejercicios: carga hacia ✍️ ("¿es actualizable esta vista? ¿por
   qué?") y 🔎.
 
@@ -849,8 +854,9 @@ solucionario y el verificador `bplus` (con su sección en `a05`).
   75 columnas, que deben coincidir con la salida de `bplus`.
 - **El 🪞 del UUID**: la ocupación de las hojas con claves crecientes contra aleatorias, calculada o
   simulada con `bplus`, y dicho como modelo.
-- **`dbstat` o `sqlite3_analyzer`** solo si P8 confirmó que están disponibles; si no, la ventana a
-  SQLite se omite y se dice.
+- **`dbstat` y `sqlite3_analyzer`** están disponibles en `mdm-lab` (P8, H8; el segundo viene en el
+  paquete `sqlite3-tools` de Debian). En las plataformas del lector no se verificaron: la fase lo
+  dice, y la ventana a SQLite es complementaria, nunca el centro.
 - Al menos la mitad de los ejercicios son ✍️ de trazas.
 
 {{protocolo}}

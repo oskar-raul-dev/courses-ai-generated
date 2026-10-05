@@ -251,7 +251,8 @@ fundacionales por fase. RelaX aparece como complemento visual opcional.
 > ⚠️ **Ningún recurso se cita sin comprobarlo en la misma sesión**: libro con edición y capítulo,
 > URL con su código de estado, curso con su plataforma, idioma, si es de pago 💲 y la fecha de
 > verificación. A igual calidad, gana el gratuito y el que está en español. Las ediciones y el mapa
-> de capítulos se fijan en la tanda de fuentes y viven en `a08-mapa-de-bibliografia.md`.
+> de capítulos se fijaron en la tanda de fuentes (P9, 03/10/2026, `prompts/inventario-de-fuentes.md`)
+> y viven en `a08-mapa-de-bibliografia.md`.
 
 ---
 
@@ -267,7 +268,8 @@ fundacionales por fase. RelaX aparece como complemento visual opcional.
 - 🔥 **Un contenedor opcional con todo lo anterior** (`a09`), para quien prefiera no instalar nada,
   con un PostgreSQL extra para practicar `GRANT` y `REVOKE` en F34. Se cita, nunca se exige.
 
-Las versiones se fijan en la tanda de verificación, con fecha, y viven en los apéndices `a01`–`a03`.
+Las versiones se fijaron en la tanda de verificación (P8, 03/10/2026,
+`prompts/verificacion-de-laboratorio/hallazgos.md`) y viven en los apéndices `a01`–`a03`.
 
 ---
 

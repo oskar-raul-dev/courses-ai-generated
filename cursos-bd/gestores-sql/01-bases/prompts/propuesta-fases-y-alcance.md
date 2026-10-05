@@ -77,8 +77,10 @@ resumen, ejercicios con su solucionario aparte, bibliografía en cuatro grupos y
 
 Las fichas de este documento dicen **qué cambia de fase a fase**:
 
-- **Lectura base** — el capítulo de Navathe 7.ª ed. que la fase sigue. ⚠️ Los números de capítulo
-  son de memoria y **se confirman en P9**, junto con los de los otros cuatro textos.
+- **Lectura base** — el capítulo de Navathe 7.ª ed. que la fase sigue. Los capítulos de los cinco
+  textos están verificados (P9, `inventario-de-fuentes.md`); **las secciones no**, porque no hay un
+  índice completo legítimo publicado, así que la ficha nombra el tema en palabras y la fase cita el
+  capítulo.
 - **Qué entra** — el piso de la fase, no el techo.
 - **Verificación** — con qué se comprueba lo que se muestra: ✍️ papel, `radb`, SQLite, un
   verificador o el mini motor.
@@ -170,7 +172,8 @@ anotan y se resuelven en el esquema relacional o en la aplicación.
 
 ### 🧩 F03 — ER extendido y notaciones (10 h · 32 ejercicios) · 🏛️
 
-**Lectura base:** Navathe, cap. 4. **Depende de:** F02 · **Habilita:** F13.
+**Lectura base:** Navathe, cap. 4 y apéndice A (notaciones alternativas). **Depende de:** F02 ·
+**Habilita:** F13.
 
 **Qué entra:** subclases, superclases y herencia; especialización y generalización; restricciones
 de disyunción y de completitud, y sus cuatro combinaciones; jerarquías y retículos; categorías
@@ -196,7 +199,7 @@ El corazón del curso, junto con el Bloque III. El lector sale escribiendo cualq
 
 ### 📐 F04 — El modelo relacional, formalmente (10 h · 38 ejercicios)
 
-**Lectura base:** Navathe, cap. 5 (§5.1). Date, *An Introduction…*, caps. 3 y 6. **Depende de:**
+**Lectura base:** Navathe, cap. 5 (los conceptos del modelo). Date, *An Introduction…*, caps. 3 y 6. **Depende de:**
 F01 · **Habilita:** F05, F06. **Apéndices de apoyo:** a06, a07.
 
 **Qué entra:** dominio, atributo, tupla y relación como **conjunto** de tuplas; grado y
@@ -218,7 +221,8 @@ cierto punto.
 
 ### 📐 F05 — Restricciones y operaciones de actualización (10 h · 36 ejercicios) · 🏛️
 
-**Lectura base:** Navathe, cap. 5 (§5.2–5.3). **Depende de:** F04 · **Habilita:** F06, F12, F36.
+**Lectura base:** Navathe, cap. 5 (las restricciones y las actualizaciones). Date, *An
+Introduction…*, cap. 9. **Depende de:** F04 · **Habilita:** F06, F12, F36.
 
 **Qué entra:** restricciones inherentes, explícitas (de esquema) y semánticas (de aplicación);
 restricciones de dominio, de clave y de `NULL`; integridad de entidad e integridad referencial;
@@ -231,7 +235,8 @@ actualización, en anticipo de F29.
 violación.
 
 **🪞 candidato:** *"Tu instinto dice que la clave foránea protege la integridad siempre… y en SQLite
-se equivoca si no activaste `foreign_keys`"* (verificar el comportamiento por defecto en P8).
+se equivoca si no activaste `foreign_keys`"*. Verificado en P8 (H6): `PRAGMA foreign_keys` vale `0`
+por defecto y la fila huérfana entra sin error.
 
 **⚖️ candidato:** `ON DELETE CASCADE` como atajo que borra más de lo que nadie quería.
 
@@ -241,7 +246,7 @@ se equivoca si no activaste `foreign_keys`"* (verificar el comportamiento por de
 
 ### 📐 F06 — Álgebra relacional I: operaciones unarias (12 h · 40 ejercicios) · 🧵
 
-**Lectura base:** Navathe, cap. 8 (§8.1). **Depende de:** F05 · **Habilita:** F07.
+**Lectura base:** Navathe, cap. 8 (las operaciones unarias). **Depende de:** F05 · **Habilita:** F07.
 **Apéndices de apoyo:** a03, a07.
 
 **Qué entra:** el álgebra como lenguaje cerrado; **σ**: condición, selectividad, conmutatividad y
@@ -261,7 +266,7 @@ sin `DISTINCT` no elimina duplicados. Se verifica contando tuplas en `radb` y en
 
 ### 📐 F07 — Álgebra relacional II: conjuntos, joins y división (14 h · 45 ejercicios) · 🧵 🏛️
 
-**Lectura base:** Navathe, cap. 8 (§8.2–8.3). Date, *An Introduction…*, cap. 7. **Depende de:** F06
+**Lectura base:** Navathe, cap. 8 (las operaciones de conjuntos y las binarias). Date, *An Introduction…*, cap. 7. **Depende de:** F06
 · **Habilita:** F08, F09, F10.
 
 **Qué entra:** compatibilidad de unión; **∪, ∩ y −**, sus propiedades (∪ e ∩ conmutan y asocian; −
@@ -287,7 +292,7 @@ implementan como operador y conviene saber por qué.
 
 ### 📐 F08 — Álgebra relacional III: operaciones extendidas (12 h · 40 ejercicios) · 🧵
 
-**Lectura base:** Navathe, cap. 8 (§8.4). **Depende de:** F07 · **Habilita:** F10, F26.
+**Lectura base:** Navathe, cap. 8 (las operaciones adicionales). **Depende de:** F07 · **Habilita:** F10, F26.
 
 **Qué entra:** proyección generalizada (atributos calculados); **γ**: funciones de agregación y
 agrupamiento, y por qué rompe la clausura de conjuntos si no se cuida; la operación de clausura
@@ -305,7 +310,8 @@ conmutan libremente); el optimizador lo sabe y el lector también tiene que sabe
 
 ### 📐 F09 — Cálculo relacional (12 h · 36 ejercicios)
 
-**Lectura base:** Navathe, cap. 8 (§8.6–8.7). Date, *An Introduction…*, cap. 8. **Depende de:** F07
+**Lectura base:** Navathe, cap. 8 (los cálculos de tuplas y de dominios) y apéndice C
+(QBE). Date, *An Introduction…*, cap. 8. **Depende de:** F07
 · **Habilita:** F10. **Apéndices de apoyo:** a06.
 
 **Qué entra:** cálculo relacional de tuplas: variables de tupla, rangos, fórmulas atómicas,
@@ -327,15 +333,15 @@ garantizan por sintaxis.
 
 ### 📐 F10 — Del álgebra a SQL, operador por operador (14 h · 45 ejercicios) · 🧵
 
-**Lectura base:** Navathe, caps. 6 y 7. Date, *SQL and Relational Theory*, caps. 1–4 y 10. *SQL
-Cookbook*, recetas de diferencia y división. **Depende de:** F07, F08, F09 · **Habilita:** F11, F12.
+**Lectura base:** Navathe, caps. 6 y 7. Date, *SQL and Relational Theory*, caps. 6 y 7 (el álgebra en
+SQL), y 10 y 11 (la lógica). *SQL Cookbook*, cap. 3 (la diferencia). **Depende de:** F07, F08, F09 · **Habilita:** F11, F12.
 
 **Qué entra:** cada operador del álgebra en SQL y de vuelta, con la tabla de traducción en las dos
 direcciones; **π sin `DISTINCT` devuelve un multiconjunto**; **la diferencia en todas sus formas**
 —`EXCEPT` contra `EXCEPT ALL`, `NOT EXISTS`, `LEFT JOIN … IS NULL` y `NOT IN`—, cuál es equivalente
 a cuál y **cuál falla con `NULL`**, con el contraejemplo; cómo se escribía la diferencia en motores
-sin `EXCEPT` (en MySQL hasta la 8.0.31, a confirmar en P9); **la división, que SQL nunca tuvo**: con
-doble `NOT EXISTS` y con conteo, y por qué la de conteo falla con duplicados; `INTERSECT` y sus
+sin `EXCEPT` (en MySQL hasta la 8.0.30: `EXCEPT` llegó en la 8.0.31, verificado en P9); **la
+división, que SQL nunca tuvo**: con doble `NOT EXISTS` y con conteo, y por qué la de conteo falla con duplicados; `INTERSECT` y sus
 alternativas; outer union; la clausura con `WITH RECURSIVE` (prerrequisitos de `subject`); la
 subconsulta correlacionada como cálculo de tuplas.
 
@@ -353,7 +359,8 @@ bajo `NULL`).
 
 ### 📐 F11 — `NULL`, lógica de tres valores y multiconjuntos (10 h · 36 ejercicios) · 🧵
 
-**Lectura base:** Navathe, caps. 5 y 7. Date, *SQL and Relational Theory*, caps. 3–4. **Depende
+**Lectura base:** Navathe, caps. 5 y 7. Date, *SQL and Relational Theory*, caps. 3–4 y apéndice C;
+*An Introduction…*, cap. 19. **Depende
 de:** F10 · **Habilita:** F12, F26.
 
 **Qué entra:** las tablas de verdad de `UNKNOWN`; `NULL` en comparaciones, en `WHERE` frente a
@@ -363,9 +370,10 @@ de:** F10 · **Habilita:** F12, F26.
 álgebra de conjuntos dejan de valer con bolsas; la crítica de Date a `NULL`, presentada con sus
 argumentos y con los de la otra parte.
 
-**Verificación:** SQLite para cada caso, con la salida literal. ⚠️ Si SQLite no implementa
-`INTERSECT ALL` o `EXCEPT ALL`, se dice, se escribe la alternativa y se remite a los cursos de motor
-(verificar en P8).
+**Verificación:** SQLite para cada caso, con la salida literal. ⚠️ **SQLite no implementa
+`INTERSECT ALL` ni `EXCEPT ALL`** (P8, H6: `near "ALL": syntax error`): se dice, se escribe la
+alternativa y se remite a los cursos de motor. `radb`, además, trata dos `NULL` como iguales en ∪, ∩
+y − (H5), que es el contraste directo con σ.
 
 **🪞 candidato:** *"Tu instinto dice que `NULL = NULL` es verdadero… y esta vez se equivoca"*: es
 `UNKNOWN`, y `WHERE` lo descarta.
@@ -377,7 +385,8 @@ cuándo vale la pena.
 
 ### 📐 F12 — Vistas y el problema de actualizarlas (6 h · 30 ejercicios)
 
-**Lectura base:** Navathe, cap. 7 (§7.3). Date, *An Introduction…*, cap. 10. **Depende de:** F05,
+**Lectura base:** Navathe, cap. 7 (vistas). Date, *An Introduction…*, cap. 10; *SQL and
+Relational Theory*, cap. 9. **Depende de:** F05,
 F10 · **Habilita:** F13, F36.
 
 **Qué entra:** la vista como consulta con nombre y como nivel externo de ANSI/SPARC; vistas
@@ -387,7 +396,9 @@ una actualización de la vista a las relaciones base, con contraejemplo; `WITH C
 triggers `INSTEAD OF` como salida, en anticipo de F36.
 
 **Verificación:** SQLite (incluido lo que SQLite no permite actualizar en una vista y cómo lo
-resuelve con `INSTEAD OF`).
+resuelve con `INSTEAD OF`). Verificado en P8 (H6): **ninguna vista de SQLite es actualizable**
+(`cannot modify … because it is a view`), `INSTEAD OF` funciona, y **`WITH CHECK OPTION` no existe**
+en SQLite: se enseña como la define el estándar, y se ejecuta en el PostgreSQL 🔥 de `a09`.
 
 **⚖️ candidato:** una vista que oculta un join caro sigue siendo un join caro.
 
@@ -424,7 +435,7 @@ entrenamiento de los algoritmos.
 
 ### 🧱 F14 — Guías informales de diseño y anomalías (8 h · 30 ejercicios)
 
-**Lectura base:** Navathe, cap. 14 (§14.1). **Depende de:** F13 · **Habilita:** F15.
+**Lectura base:** Navathe, cap. 14 (las guías informales de diseño). **Depende de:** F13 · **Habilita:** F15.
 
 **Qué entra:** las cuatro guías informales (semántica clara, sin redundancia, sin `NULL` evitables,
 sin tuplas espurias); anomalías de inserción, borrado y modificación, con su ejemplo en **la
@@ -440,7 +451,8 @@ F15 en adelante.
 
 ### 🧮 F15 — Dependencias funcionales (14 h · 45 ejercicios)
 
-**Lectura base:** Navathe, cap. 14 (§14.2) y cap. 15 (§15.1). Date, *An Introduction…*, cap. 11.
+**Lectura base:** Navathe, caps. 14 (la definición de DF) y 15 (inferencia, clausura y
+recubrimiento mínimo). Date, *An Introduction…*, cap. 11.
 **Depende de:** F14 · **Habilita:** F16, F17, F18. **Apéndices de apoyo:** a05, a06.
 
 **Qué entra:** definición formal; **una DF es del esquema, no del estado** (el precio de la línea
@@ -465,7 +477,8 @@ esquemas reales se hace bien, y la fase muestra cuándo no.
 
 ### 🧱 F16 — Formas normales: de 1FN a FNBC (12 h · 42 ejercicios)
 
-**Lectura base:** Navathe, cap. 14 (§14.3–14.5). **Depende de:** F15 · **Habilita:** F17, F18.
+**Lectura base:** Navathe, cap. 14 (las formas normales hasta FNBC). Date, *An Introduction…*,
+cap. 12. **Depende de:** F15 · **Habilita:** F17, F18.
 
 **Qué entra:** atributos primos y no primos; 1FN y lo que viola (atributos multivaluados y
 anidados); 2FN y 3FN **en su versión basada en la clave primaria y en la versión general**
@@ -485,7 +498,7 @@ claves candidatas superpuestas.
 
 ### 🧮 F17 — Propiedades de las descomposiciones (12 h · 40 ejercicios)
 
-**Lectura base:** Navathe, cap. 15 (§15.2). Date, *An Introduction…*, cap. 12. **Depende de:** F16
+**Lectura base:** Navathe, cap. 15 (las propiedades de las descomposiciones). Date, *An Introduction…*, cap. 12. **Depende de:** F16
 · **Habilita:** F18.
 
 **Qué entra:** descomposición y propiedad de atributos; **preservación de dependencias**:
@@ -504,7 +517,7 @@ elección es una restricción que hay que controlar con un join o con un trigger
 
 ### 🧮 F18 — Algoritmos de diseño relacional (12 h · 40 ejercicios)
 
-**Lectura base:** Navathe, cap. 15 (§15.3). **Depende de:** F17 · **Habilita:** F19, F20.
+**Lectura base:** Navathe, cap. 15 (los algoritmos de diseño). **Depende de:** F17 · **Habilita:** F19, F20.
 
 **Qué entra:** **síntesis a 3FN** con join sin pérdida y preservación de dependencias, con la
 demostración de ambas propiedades; **descomposición a FNBC** con join sin pérdida; el no
@@ -522,7 +535,7 @@ atributos que nadie consulta por separado); el criterio de diseño sigue haciend
 
 ### 🧱 F19 — Más allá de FNBC (12 h · 36 ejercicios)
 
-**Lectura base:** Navathe, cap. 14 (§14.6–14.7) y cap. 15 (§15.4–15.7). Date, *An Introduction…*,
+**Lectura base:** Navathe, caps. 14 y 15 (DMV, DJ, 4FN y 5FN). Date, *An Introduction…*,
 cap. 13. **Depende de:** F18 · **Habilita:** F20.
 
 **Qué entra:** dependencias multivaluadas (↠): definición, intuición y reglas de inferencia; 4FN y
@@ -542,7 +555,7 @@ normalizar más… y esta vez se equivoca"*: 4FN y 5FN viven justo ahí.
 
 ### 🧱 F20 — Desnormalización y diseño físico (10 h · 30 ejercicios)
 
-**Lectura base:** Navathe, cap. 17 (diseño físico y tuning; ubicación a confirmar en P9). **Depende
+**Lectura base:** Navathe, cap. 17 (el diseño físico). **Depende
 de:** F18 · **Habilita:** F21, F33.
 
 **Qué entra:** cuándo romper la norma y qué se paga, en anomalías y en mantenimiento; tablas de
@@ -568,7 +581,8 @@ y la miden en lo que cada motor implementa.
 
 ### 💾 F21 — Discos, bloques y organización de archivos (10 h · 32 ejercicios)
 
-**Lectura base:** Navathe, cap. 16 (§16.1–16.7). Petrov, *Database Internals*, caps. 1–3.
+**Lectura base:** Navathe, cap. 16 (discos y organización de archivos) y apéndice B.
+Petrov, *Database Internals*, caps. 1–3.
 **Depende de:** F20 · **Habilita:** F22, F23.
 
 **Qué entra:** jerarquía de memoria; discos y SSD (lo que cambia y lo que no para el modelo de
@@ -589,7 +603,7 @@ SSD); sirve para comparar, no para predecir tiempos.
 
 ### 💾 F22 — Hashing (10 h · 34 ejercicios)
 
-**Lectura base:** Navathe, cap. 16 (§16.8). **Depende de:** F21 · **Habilita:** F25, F26.
+**Lectura base:** Navathe, cap. 16 (hashing). **Depende de:** F21 · **Habilita:** F25, F26.
 
 **Qué entra:** hashing interno y externo; funciones de hash y colisiones; hashing estático con
 cubetas y desbordes, y su degradación; **hashing extensible** (directorio, profundidad global y
@@ -606,7 +620,7 @@ agrega a `a05`.
 
 ### 💾 F23 — Índices de uno y varios niveles (8 h · 32 ejercicios)
 
-**Lectura base:** Navathe, cap. 17 (§17.1–17.2). **Depende de:** F21 · **Habilita:** F24.
+**Lectura base:** Navathe, cap. 17 (índices de uno y varios niveles). **Depende de:** F21 · **Habilita:** F24.
 
 **Qué entra:** índice primario, de agrupamiento (*clustering*) y secundario; denso y disperso;
 cuántos índices de cada tipo puede tener un archivo; índices multinivel y su *fan-out*; el costo en
@@ -620,7 +634,7 @@ bloques de cada uno, calculado.
 
 ### 🌳 F24 — Árboles B y B+ (12 h · 45 ejercicios) · 🏛️
 
-**Lectura base:** Navathe, cap. 17 (§17.3). Petrov, *Database Internals*, caps. 2 y 4. Bayer y
+**Lectura base:** Navathe, cap. 17 (árboles B y B+). Petrov, *Database Internals*, caps. 2 y 4. Bayer y
 McCreight (1972). **Depende de:** F23 · **Habilita:** F25, F26.
 
 **Qué entra:** orden de un árbol B y de un B+, y la diferencia entre nodos internos y hojas;
@@ -629,7 +643,8 @@ completa; altura mínima y máxima, y el número de accesos; carga masiva (*bulk
 ocupación; **por qué una clave aleatoria fragmenta** y una creciente no.
 
 **Verificación:** verificador `bplus` (inserción y borrado con traza ASCII de 75 columnas), y SQLite
-como ventana (`sqlite3_analyzer` o `dbstat`, si P8 confirma que están disponibles).
+como ventana (`sqlite3_analyzer` o `dbstat`: los dos disponibles en `mdm-lab`, P8 H8; en las
+plataformas del lector, sin verificar).
 
 **🪞 candidato:** *"Tu instinto dice que da igual si la clave primaria es un UUID aleatorio o un
 entero creciente… y esta vez se equivoca"*: se calcula la ocupación de las hojas en los dos casos.
@@ -642,7 +657,7 @@ entero creciente… y esta vez se equivoca"*: se calcula la ocupación de las ho
 
 ### 💾 F25 — Otras estructuras de índice (10 h · 34 ejercicios)
 
-**Lectura base:** Navathe, cap. 17 (§17.4–17.6). Petrov, *Database Internals*, cap. 7 (LSM). O'Neil
+**Lectura base:** Navathe, cap. 17 (otras estructuras de índice). Petrov, *Database Internals*, cap. 7 (LSM). O'Neil
 et al. (1996). **Depende de:** F22, F24 · **Habilita:** F26.
 
 **Qué entra:** índices sobre varias claves y el orden de las columnas; índices de cuadrícula
@@ -690,7 +705,7 @@ tamaños, memoria e índices.
 
 ### ⚙️ F27 — Optimización heurística (10 h · 34 ejercicios)
 
-**Lectura base:** Navathe, cap. 19 (§19.1). **Depende de:** F26 · **Habilita:** F28.
+**Lectura base:** Navathe, cap. 19 (la optimización heurística). **Depende de:** F26 · **Habilita:** F28.
 
 **Qué entra:** árboles de consulta y grafos de consulta; **las reglas de transformación del
 álgebra**, con su demostración o su referencia; empujar σ y π hacia las hojas; reordenar joins por
@@ -705,7 +720,8 @@ optimizado.
 
 ### ⚙️ F28 — Optimización basada en costo (14 h · 36 ejercicios)
 
-**Lectura base:** Navathe, cap. 19 (§19.2–19.5). Selinger et al. (1979). **Depende de:** F27 ·
+**Lectura base:** Navathe, cap. 19 (la estimación de costos). Date, *An Introduction…*,
+cap. 18. Selinger et al. (1979). **Depende de:** F27 ·
 **Habilita:** F33.
 
 **Qué entra:** las estadísticas del catálogo; **selectividad y estimación de cardinalidad** de
@@ -752,7 +768,7 @@ la de conflicto.
 
 ### 🔒 F30 — Control de concurrencia (14 h · 42 ejercicios)
 
-**Lectura base:** Navathe, cap. 21. **Depende de:** F29 · **Habilita:** F31, F32.
+**Lectura base:** Navathe, cap. 21. Petrov, *Database Internals*, cap. 5. **Depende de:** F29 · **Habilita:** F31, F32.
 
 **Qué entra:** bloqueos compartidos y exclusivos; **2PL** básico, conservador, estricto y riguroso,
 con la demostración de que 2PL garantiza serializabilidad por conflicto; *deadlock* y *starvation*:
@@ -815,7 +831,7 @@ La teoría de lo que el DBA hace, sin motor. Lo operativo de cada producto está
 
 ### 🛠️ F33 — El DBA y su trabajo (8 h · 28 ejercicios)
 
-**Lectura base:** Navathe, caps. 1 y 17 (diseño físico y tuning; a confirmar en P9). **Depende de:**
+**Lectura base:** Navathe, caps. 1 y 17 (el diseño físico). **Depende de:**
 F20, F28 · **Habilita:** F34, F35.
 
 **Qué entra:** las funciones del DBA; el catálogo y el diccionario de datos, y qué guarda cada uno;
@@ -851,7 +867,8 @@ se equivoca"*: en cascada quita también los que se concedieron a partir de él.
 
 ### 💾 F35 — Respaldo y continuidad (10 h · 30 ejercicios)
 
-**Lectura base:** Navathe, cap. 22 (§22.8, respaldo y recuperación ante catástrofes; a confirmar).
+**Lectura base:** Navathe, cap. 22 (el respaldo y la recuperación ante catástrofes; la
+sección exacta, sin verificar).
 **Depende de:** F32 · **Habilita:** F37.
 
 **Qué entra:** respaldo completo, incremental y diferencial; respaldo lógico contra físico; archivado
@@ -872,7 +889,7 @@ calcula.
 
 ### ⚡ F36 — Bases activas: triggers (10 h · 30 ejercicios)
 
-**Lectura base:** Navathe, cap. 26 (§26.1). **Depende de:** F05, F12 · **Habilita:** F37.
+**Lectura base:** Navathe, caps. 26 (las bases activas) y 7 (los triggers en SQL). **Depende de:** F05, F12 · **Habilita:** F37.
 
 **Qué entra:** el modelo evento-condición-acción; triggers de fila y de sentencia; `BEFORE`,
 `AFTER` e `INSTEAD OF`; **terminación y confluencia** de un conjunto de reglas, y cómo se analizan
@@ -954,8 +971,10 @@ de SQLite); **qué gana el ingeniero** (reconocer el patrón con su nombre, eleg
 migrar lo que todavía corre, leer lo que otros no pueden, entender por qué ganó lo declarativo); el
 mapa de los modelos y sus fechas.
 
-**Verificación:** ✍️ papel. ⚠️ Qué motor usa hoy cada producto, desde qué versión y con qué licencia
-se verifica en P9: varios cambiaron de motor en los últimos años.
+**Verificación:** ✍️ papel. Qué motor usa hoy cada producto y desde cuándo está verificado en P9
+(`inventario-de-fuentes.md` §8.1): ESE en Active Directory, LMDB en OpenLDAP desde la 2.5, FSFS en
+Subversion con Berkeley DB obsoleto desde la 1.8, SQLite en RPM desde Fedora 33, IRIS en Epic desde
+2020. Las licencias, sin verificar: la fase las comprueba si las nombra.
 
 **🪞 candidato:** *"Tu instinto de ingeniero moderno dice que esto es historia… y esta vez se
 equivoca"*.
@@ -1094,33 +1113,39 @@ referencia va en prosa, sin enlace.
 
 ### 12.2 Para tocar: implementaciones open source
 
-⚠️ **Sin verificar**, salvo lo que se consultó en PyPI el 02/10/2026 (`lmdb`, ZODB, `yottadb`). P8 y
-P9 comprueban existencia, licencia, mantenimiento y plataformas.
+Verificado en P8 (`verificacion-de-laboratorio/hallazgos.md`, H12) y P9 (`inventario-de-fuentes.md`
+§8.2) el 03/10/2026: **corridos en contenedor** GnuCOBOL 3.2, Harbour 3.2.0, YottaDB r2.06 (con el
+paquete `yottadb` de Python), `lmdb` 3.0.0 y ZODB 6.3; **comprobado que existen y se mantienen** ESE,
+Hercules y Berkeley DB; **sin verificar** GT.M y las licencias.
 
 | Modelo o idea | Implementación | Qué permite palpar |
 |---|---|---|
 | Archivos indexados (COBOL) | GnuCOBOL | archivos `INDEXED` y `RELATIVE` |
-| xBase | Harbour (compatible con Clipper) | `USE`, `SEEK`, `SKIP` sobre `.dbf` |
+| xBase | Harbour 3.2.0 (compatible con Clipper; se compila desde el fuente) | `USE`, `SEEK`, `SKIP` sobre `.dbf` |
 | Jerárquico (*globals*) | YottaDB (AC08) o GT.M | una base jerárquica en producción |
 | Motor *standalone* | LMDB con `lmdb` de Python (AC07) | *sets* con `dupsort` |
 | Grafo de objetos | ZODB (AC05) | navegación por referencias y N+1 |
 | Motores clave-valor | `dbm` de Python, Berkeley DB | la capa de abajo, sin modelo |
-| ISAM de Active Directory | ESE (publicado por Microsoft; solo Windows) | cursores `Seek` y `Move` |
+| ISAM de Active Directory | ESE (abierto por Microsoft con licencia MIT; sin correr) | cursores `Seek` y `Move` |
 | Directorio | OpenLDAP (solo mención) | un árbol con esquema sobre LMDB |
 | Mainframe | Hercules (emulador) | el entorno de IMS e IDMS, que no son libres |
 
 ### 12.3 Bibliografía del bloque
 
-⚠️ **Nada verificado todavía.** Pasa por P9. No cuenta contra el tope de cinco textos.
+Verificado en P9 (`inventario-de-fuentes.md` §8.3), salvo lo que se marca. No cuenta contra el tope
+de cinco textos.
 
 - **Papers:** Codd (1970); Bachman, *The Programmer as Navigator* (CACM, 1973); el informe CODASYL
-  DBTG (1971); *ACM Computing Surveys* de marzo de 1976 (Taylor y Frank; Tsichritzis y Lochovsky);
+  DBTG (1971, **sin verificar**); *ACM Computing Surveys* 8(1), marzo de 1976 (Taylor y Frank; Tsichritzis
+  y Lochovsky; Michaels, Mittman y Carlson, la comparación relacional contra CODASYL);
   Stonebraker y Hellerstein, *What Goes Around Comes Around* (2005); Stonebraker y Pavlo, *What
   Goes Around Comes Around… And Around…* (2024); Olson, Bostic y Seltzer, *Berkeley DB* (1999).
-- **Libros:** Elmasri y Navathe (los apéndices de los modelos jerárquico y de red, si la 7.ª edición
-  los conserva o están en línea); ediciones antiguas de Date, que traían IMS e IDMS; Kleppmann,
-  *Designing Data-Intensive Applications*, cap. 2.
-- **Videos y cursos:** las clases de historia de Andy Pavlo en CMU; el material de IBM sobre IMS.
+- **Libros:** Elmasri y Navathe 7.ª, **apéndices D (jerárquico) y E (red)**, que la 7.ª conserva;
+  ediciones antiguas de Date, que traían IMS e IDMS (**cuáles, sin verificar**); Kleppmann,
+  *Designing Data-Intensive Applications*, 1.ª ed. (2017), cap. 2 (**hay 2.ª ed. de marzo de 2026**,
+  con Riccomini; su capítulo equivalente, sin verificar).
+- **Videos y cursos:** las clases de historia de Andy Pavlo en CMU; el material de IBM sobre IMS
+  (**los dos, sin verificar**).
 
 ---
 
@@ -1198,15 +1223,13 @@ contenido exista.
 
 ## 📌 15. Lo que esta propuesta deja pendiente
 
-- **Los capítulos y secciones de Navathe 7.ª ed.** de cada ficha son de memoria; se confirman en P9,
-  junto con los de Date, *SQL and Relational Theory*, Petrov y *SQL Cookbook*.
-- **`radb` sobre tablas `STRICT`**, su sintaxis exacta de invocación y su comportamiento con `NULL`
-  (P8).
-- **Lo que SQLite implementa y lo que no** de lo que citan las fichas: `INTERSECT ALL` y
-  `EXCEPT ALL` (F11), `foreign_keys` por defecto (F05), `dbstat` y `sqlite3_analyzer` (F24),
-  actualización de vistas (F12) (P8).
-- **MySQL y `EXCEPT` desde la 8.0.31** (F10), a confirmar en la documentación oficial (P9).
+P8 y P9 cerraron el 03/10/2026 los capítulos de los cinco textos, `radb` sobre `STRICT`, lo que
+SQLite implementa, MySQL y `EXCEPT`, y el bloque A.C.; lo resuelto ya está en cada ficha. Queda:
+
+- **Las secciones de Navathe**, que no se pudieron verificar (`inventario-de-fuentes.md` §2): las
+  fichas nombran el tema, y la fase cita el capítulo.
 - **El verificador de hashing** (F22) es candidato; si se escribe, entra en `a05`.
-- **Las implementaciones y la bibliografía del bloque A.C.** (§12.2 y §12.3), en P8 y P9.
+- **Lo marcado "sin verificar" en el inventario de fuentes** (§9 de ese documento): lo resuelve la
+  fase que lo necesite, en su paso 1.
 - **Las horas** de cada fase se recalibran en el paso 1 de su prompt; si cambian, cambian aquí
   primero.

@@ -34,9 +34,9 @@ comandos, salidas) no pueden escribirse antes de que la tanda de verificación l
 > dentro, ese contenido no es de este curso: va un enlace a la documentación oficial o a
 > `docker-container-legacy/`.
 
-> ⚠️ **Ninguna versión se escribe de memoria.** Donde esta propuesta dice "se fija en P8", el número
-> sale de la tanda de verificación, con fecha, y vive en el apéndice correspondiente. Las fases
-> apuntan allí y no repiten el número.
+> ⚠️ **Ninguna versión se escribe de memoria.** Las versiones salieron de la tanda de verificación
+> (P8, 03/10/2026, `verificacion-de-laboratorio/hallazgos.md`) y viven en el apéndice
+> correspondiente. Las fases apuntan allí y no repiten el número.
 
 ---
 
@@ -123,9 +123,12 @@ Se nombra en una línea y se remite allí, en prosa mientras ese curso no exista
 provocar el error de tipo, respaldar con `.backup` y con `VACUUM INTO`, comprobar la copia, y un
 caso de copia hecha mal (solo el `.db` con el `-wal` pendiente) para reconocer el síntoma.
 
-**Verificaciones pendientes (P8):** la versión que trae cada gestor en cada plataforma y si admite
-`STRICT`; que `winget`, Chocolatey y Scoop tengan paquete de la CLI y cómo se llama; el
-comportamiento literal de una copia hecha con el `-wal` pendiente.
+**Verificado en P8 (H3, H6, H7, H10, H11):** Debian 13, Ubuntu 24.04 y 26.04, Fedora 44 y Arch traen
+SQLite entre 3.45.1 y 3.53.4, todas con `STRICT` (mínimo: 3.37.0); el paquete se llama `sqlite3` en
+`apt` y `sqlite` en `dnf`, `pacman`, Homebrew, Chocolatey (también `sqlite.shell`) y Scoop, y
+`SQLite.SQLite` en winget; la copia hecha con el `-wal` pendiente **pasa `integrity_check`** y pierde
+en silencio lo que vivía en el `-wal`. **Pendiente de Oskar:** las recetas de macOS y Windows; ojo con
+que `sqlite` de Homebrew es *keg-only* y no reemplaza al `sqlite3` de macOS en el `PATH`.
 
 ---
 
@@ -138,7 +141,7 @@ verificadores y el mini motor, igual en las tres plataformas.
 
 - **Instalar Python 3** en las tres plataformas: el instalador de python.org, `brew`, `winget` y el
   gestor de la distribución; el lanzador `py` de Windows y la casilla del `PATH` que nadie marca.
-  La versión mínima que exige el curso se fija en P8.
+  La versión mínima que exige el curso es la **3.10** (P8, H9).
 - **Crear, activar y desactivar un `venv`**, en una tabla por shell: bash y zsh, PowerShell (con la
   política de ejecución que bloquea el script de activación y cómo se levanta solo para el usuario)
   y `cmd`. Cómo se reconoce que está activo.
@@ -161,9 +164,11 @@ está en `a04`.
 PowerShell, reproducir el entorno desde `requirements.txt`, generar diez alumnos con semilla fija y
 comprobar que el resultado coincide con el del apéndice, escribir un proveedor propio mínimo.
 
-**Verificaciones pendientes (P8):** la versión mínima de Python que necesitan `radb` y Faker juntos;
-el mensaje literal de la política de ejecución de PowerShell; que la salida de Faker con la semilla
-y la versión fijadas sea idéntica en las tres plataformas.
+**Verificado en P8 (H9, H10):** Python 3.10 como mínimo (por Faker 40.40.0; corrido en 3.10.22); la
+salida de Faker con semilla y versión fijadas es **idéntica** en arm64 y x86-64, en Debian, Fedora y
+Arch, y con Python 3.10 y 3.14; con Faker 30.0.0 cambia. En Debian y Ubuntu, `venv` exige el paquete
+`python3-venv`, con un mensaje literal registrado. **Pendiente de Oskar:** el mensaje de la política de
+ejecución de PowerShell y las recetas de Windows y macOS.
 
 ---
 
@@ -195,10 +200,12 @@ RelaX, que solo aparece como mención en la bibliografía.
 generado, escribir una división con primitivos y comprobar el resultado, y provocar y reconocer un
 error de sintaxis típico.
 
-**Verificaciones pendientes (P8):** que `radb` funcione sobre tablas `STRICT` (si no, se decide en
-esa tanda si las bases se crean en dos variantes, guía §17); la versión de Python que exige en la
-práctica; la sintaxis exacta de invocación y de configuración; que se instale igual en Windows,
-macOS y Linux.
+**Verificado en P8 (H2–H5):** `radb` 3.0.5 **funciona sobre tablas `STRICT`** (una sola variante de
+las bases); exige Python 3.5 según su metadato, y el curso pide 3.10 por Faker; se invoca con
+`radb base.db -i archivo.ra` y se configura con `~/.radb.ini` (`db.database = …`); **SQLAlchemy va
+fijado en 2.0.54**, porque con la 2.1 tipa `REAL` como `unknown`; la sintaxis, los mensajes de error,
+`NULL` y el SQL generado (`-d`) están registrados. Se instaló igual en cinco distribuciones Linux;
+**Windows y macOS, pendientes de Oskar**.
 
 ---
 
@@ -230,8 +237,11 @@ hechas, y las fases que las diseñan llegan al mismo esquema por su cuenta.
 apéndice, regenerar con otra semilla y ver qué cambia, agregar una relación siguiendo las
 convenciones.
 
-**Verificaciones pendientes (P8):** que el generador produzca los mismos datos en las tres
-plataformas con la versión fijada de Faker; que los `.db` resultantes funcionen con `radb`.
+**Verificado en P8 (H3, H9):** Faker con semilla y versión fijadas da los mismos datos en las
+arquitecturas y distribuciones probadas, y un `.db` `STRICT` funciona con `radb`. Dos reglas para el
+generador: **fechas en `TEXT` ISO 8601**, porque `STRICT` no admite `DATE`, y **nada relativo a hoy**
+(`date_of_birth`, `date_this_year`), porque cambia con la fecha aunque la semilla sea la misma; se usa
+`date_between` con fechas fijas.
 
 ---
 
@@ -321,7 +331,9 @@ definición donde se define.
 encontrar el término inglés de un concepto y al revés, escribir en `radb` una expresión dada en
 Unicode.
 
-**Verificaciones pendientes (P9):** la terminología de las ediciones en español de los libros.
+**No verificable en P9** (`inventario-de-fuentes.md` §4): la terminología de las traducciones solo
+estaba en copias no autorizadas. `a07` fija la del curso y deja la columna de las traducciones con
+"sin verificar".
 
 ---
 
@@ -347,8 +359,10 @@ las fases lo tomen de aquí.
 **Ejercicios: 5**, de consulta: encontrar la lectura base de una fase, encontrar un curso gratuito
 en español de un bloque, ubicar un paper y su fecha.
 
-**Verificaciones pendientes (P9):** todo. Ediciones vigentes, capítulos, traducciones, URLs con su
-código de estado, si cada curso sigue abierto y si es de pago.
+**Verificado en P9** (`inventario-de-fuentes.md`, 03/10/2026): ediciones, traducciones, capítulos
+de los cinco textos, cursos de CMU, Berkeley, Stanford y Coursera, y veinte papers por DOI. **Sin
+verificar:** Udemy (403 a toda consulta automática), el precio de Coursera y lo que lista el §9 del
+inventario. El esqueleto de `a08` vuelve a comprobar cada URL el día que la publica.
 
 ---
 
@@ -374,8 +388,9 @@ que es materia de `02-postgresql`. **El curso cita este apéndice como alternati
 **Ejercicios: 5**, de consulta: levantar el contenedor, abrir una base del curso desde dentro,
 comprobar que un cambio queda en el `.db` del disco, levantar el PostgreSQL y conectarse.
 
-**Verificaciones pendientes (P8):** las imágenes base y sus versiones; que el volumen montado
-funcione igual en las tres plataformas; el consumo de memoria del PostgreSQL extra.
+**Verificado en P8 (H1):** la imagen `python:3.14.8-slim-trixie` con SQLite 3.46.1 sirve de base (es la
+de `mdm-lab`), y el volumen montado funciona en macOS arm64. **Pendiente para T12**, al crear `mdm-pg`:
+el PostgreSQL extra y su consumo de memoria, y el volumen en Windows y Linux.
 
 ---
 
@@ -400,9 +415,11 @@ que necesite contenedor.
 **Ejercicios: 5**, de consulta: comprobar cada herramienta, compilar AC09 con tu compilador, abrir
 una base LMDB vacía desde Python.
 
-**Verificaciones pendientes (P8):** que el paquete `lmdb` traiga LMDB incluido y no exija instalarlo
-aparte; que GnuCOBOL y Harbour tengan paquete en los tres sistemas; los *flags* exactos de ANSI C en
-GCC y en Visual C++.
+**Verificado en P8 (H12):** `lmdb` 3.0.0 **trae LMDB 0.9.36 incluido**; GnuCOBOL 3.2 tiene paquete en
+Debian, Fedora, Homebrew y Chocolatey, **no en Scoop ni en winget**; **Harbour no tiene paquete** en
+Debian ni en Fedora, y en Homebrew está en la 3.0.0 y marcado obsoleto: se compila la 3.2.0 desde el
+fuente (o el binario de GitHub en Windows); en GCC, `-std=c89 -pedantic -Wall -Wextra -Werror`.
+**Pendiente de Oskar:** los *flags* de Visual C++, que no tiene modo C89.
 
 ---
 
@@ -413,11 +430,12 @@ cualquier otra herramienta del bloque sin versión nativa tenga dónde correr.
 
 **Qué entra:**
 
-- **YottaDB en contenedor**, con la imagen oficial si P8 la confirma, las bases de `school` montadas
-  como volumen y el paquete `yottadb` de Python conectado desde dentro.
+- **YottaDB en contenedor**, con la imagen oficial `yottadb/yottadb` (P8, H12), las bases de
+  `school` montadas como volumen y el paquete `yottadb` de Python conectado desde dentro.
 - **Los comandos con Docker y su equivalente con Podman.**
-- **Cualquier otra herramienta del bloque** que P8 encuentre sin versión nativa en alguna
-  plataforma.
+- **Cualquier otra herramienta del bloque sin versión nativa** en alguna plataforma. P8 no encontró
+  ninguna más: Harbour no tiene paquete en Debian ni en Fedora, pero se compila desde el fuente, y eso
+  es de `aca-01`.
 - **El `compose.yaml`** queda en `src/aca-02-contenedores/`.
 
 **Qué NO entra:** enseñar Docker, que se enlaza a `docker-container-legacy/`; administrar YottaDB.
@@ -427,20 +445,22 @@ A.C., y viceversa.
 **Ejercicios: 5**, de consulta: levantar YottaDB, escribir y leer un *global* desde la consola,
 conectarse desde Python, comprobar que los datos sobreviven a un reinicio del contenedor.
 
-**Verificaciones pendientes (P8):** que exista una imagen oficial de YottaDB y su arquitectura (en
-particular, si corre en macOS arm64 sin emulación); que el paquete `yottadb` de Python funcione
-dentro del contenedor (sus wheels publicados son solo para Linux x86-64).
+**Verificado en P8 (H12):** la imagen oficial `yottadb/yottadb:r2.06` es multiarquitectura y **corre
+nativa en macOS arm64**; el paquete `yottadb` 2.0.1 de Python se compila desde el fuente dentro del
+contenedor (con `gcc`, `python3-dev`, `python3-venv` y `libffi-dev`) y lee los *globals*. AC08 no
+necesita el caso de reserva.
 
 ---
 
 ## 14. 📌 Pendientes de este documento
 
-- **Todas las versiones** —SQLite, Python, `radb`, Faker, `lmdb`, ZODB, YottaDB, GnuCOBOL, Harbour,
-  los compiladores y las imágenes de contenedor— se fijan en P8 y viven en su apéndice.
-- **`radb` con `STRICT`**: si no funciona, afecta a a01, a03 y a04 a la vez, y se decide en P8 (guía
-  §17).
-- **La terminología de las ediciones en español** que fija a07, y el inventario completo de a08, se
-  resuelven en P9.
+- **Las versiones** —SQLite, Python, `radb`, SQLAlchemy, Faker, `lmdb`, ZODB, YottaDB, GnuCOBOL,
+  Harbour, GCC y las imágenes— quedaron fijadas en P8 (`verificacion-de-laboratorio/hallazgos.md`) y
+  pasan a su apéndice. **Pendientes de Oskar** (plan §2.3): las recetas de macOS y Windows, el
+  mensaje de PowerShell y los *flags* de Visual C++. **Pendiente de T12**: el PostgreSQL de `a09`.
+- **`radb` con `STRICT`**: funciona (H3); una sola variante de las bases.
+- **La terminología de las ediciones en español** que fija a07 no se pudo verificar; el inventario de
+  a08 sale de `inventario-de-fuentes.md` (P9).
 - **Los cuatro apéndices que dejan archivos** (a04, a05, a09 y aca-02) tienen su carpeta en `src/`
   con el mismo nombre que el apéndice. Para cuando Oskar commitee, se propone que lleven tag propio
   en el espacio `apendice-aNN-<slug>` (y `apendice-aca-NN-<slug>`); los demás no llevan tag.

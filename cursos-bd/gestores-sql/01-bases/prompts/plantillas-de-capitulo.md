@@ -96,7 +96,7 @@ verificación.}}
 > Reproducir: `{{comando exacto}}`
 
 ```text
--- radb
+// radb
 {{la expresión, con identificadores en inglés, p. ej.:}}
 \project_{name} \select_{city = 'Lima'} supplier;
 ```

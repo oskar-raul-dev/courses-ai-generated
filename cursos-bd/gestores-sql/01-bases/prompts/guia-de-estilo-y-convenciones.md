@@ -226,14 +226,17 @@ cerrarse en algún documento del curso. Un pendiente que nunca se resuelve es ru
   abstractas declaradas como tales.
 - **Bloques de código con su lenguaje declarado**: `sql`, `python`, `c`, `bash`, `powershell`,
   `text` para salida y diagramas. Las consultas de `radb` van en bloques `text` con la primera línea
-  de comentario `-- radb`.
+  de comentario `// radb`. **Nunca `--`**: no es comentario en `radb`, y el bloque copiado a un `.ra`
+  falla en la primera línea (P8, H4).
 - **SQL portable por defecto.** Si una consulta usa algo propio de SQLite, se dice.
 - **Un bloque, una idea.** Si el fragmento hace tres cosas, se parte en tres con prosa entre medias.
 
 ### 5.1 Versiones
 
 - **Ninguna versión se escribe de memoria.** SQLite, Python, `radb`, Faker y cualquier herramienta
-  se fijan en la tanda de verificación y viven en `a01`–`a03`; las fases apuntan allí.
+  se fijaron en la tanda de verificación (P8, `prompts/verificacion-de-laboratorio/hallazgos.md`) y
+  viven en `a01`–`a03`; las fases apuntan allí. **SQLAlchemy va fijado en la 2.0**: con la 2.1, `radb`
+  tipa las columnas `REAL` como `unknown` (H2).
 - **Toda fase declara su fecha de verificación**: el día en que se ejecutó todo lo que muestra.
 - **Si algo no se verificó, se dice con esas palabras**: *"esto no lo ejecuté; la documentación de
   SQLite 3.x lo describe así"*. Declarar lo que no se verificó es la marca de la casa.
@@ -330,7 +333,7 @@ Formato recomendado, y suficiente:
 > 🔎 **Verificación — proveedores que suministran todas las partes rojas** · `radb` · `supply`
 > (datos chicos) · verificado el 15/10/2026
 >
-> Reproducir: `radb supply.db < 07/division-red-parts.ra`
+> Reproducir: `radb supply.db -i 07/division-red-parts.ra`
 ```
 
 Seguido del bloque `text` con la salida literal.
@@ -688,11 +691,19 @@ donde se dijo, convenciones de markdown, nombres de archivo, prefijo de track y 
 
 ---
 
-## 17. 📌 Pendientes que afectan a esta guía
+## 17. 📌 Lo que la tanda de verificación resolvió para esta guía
 
-- **Las versiones de SQLite, Python, `radb` y Faker** se fijan en la tanda de verificación; hasta
-  entonces ninguna fase publica un número de versión.
-- **Que `radb` funcione sobre tablas `STRICT`** está sin verificar. Si no funciona, se decide en esa
-  tanda si las bases se crean sin `STRICT` para `radb` y con `STRICT` para SQL, y se reescribe §6.
-- **La sintaxis exacta de invocación de `radb`** del ejemplo de §6 es ilustrativa hasta que se
-  verifique.
+Cerrado en P8 el 03/10/2026; el detalle, con las salidas literales, está en
+`prompts/verificacion-de-laboratorio/hallazgos.md`.
+
+- **Versiones fijadas** (tabla inicial de los hallazgos): Python 3.10 como mínimo, SQLite 3.37.0 como
+  mínimo por `STRICT`, `radb` 3.0.5, SQLAlchemy 2.0.54 y Faker 40.40.0, fijados en el
+  `requirements.txt` del curso. Las fases siguen sin publicar números: apuntan a `a01`–`a03`.
+- **`radb` funciona sobre tablas `STRICT`** (H3). Las bases se crean en una sola variante, `STRICT`,
+  y §6 queda como está. Dos consecuencias para `a04`: las fechas van en `TEXT` con formato ISO 8601,
+  porque `STRICT` no admite `DATE`, y las bases no usan `ANY` ni `BLOB`, que `radb` tipa mal.
+- **La invocación de `radb`** es `radb base.db -i archivo.ra` (H4), y es la que usa §6. El SQL
+  generado se ve con `-d` (H5).
+- **`NULL` en `radb`** se imprime como `None`; σ sigue la lógica de tres valores, y ∪, ∩ y − tratan dos
+  `NULL` como iguales (H5). Es material de F11, no una regla de esta guía.
+

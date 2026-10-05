@@ -1,0 +1,6 @@
+\select_{city = 1} supplier;
+\select_{colour = 'Red'} part;
+suppliers;
+\project_{city} supplier \union \project_{supplier_id} supplier;
+\project_{name} supplier \union part;
+\project_{name} supplier

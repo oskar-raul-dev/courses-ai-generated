@@ -1,0 +1,21 @@
+# Laboratorio de producción de 01-bases (plan de producción §2.4).
+# Sin puertos publicados: se trabaja con `docker compose exec`.
+# Desde esta carpeta:  docker compose up -d --build lab
+name: mdm
+
+services:
+  lab:
+    build: .
+    image: mdm-lab:p8
+    container_name: mdm-lab
+    labels:
+      curso: "01-bases"
+    volumes:
+      # La raíz del repositorio, montada en /curso: los .db y las salidas quedan en el disco.
+      - ../../../../..:/curso
+
+networks:
+  default:
+    name: mdm-net
+    labels:
+      curso: "01-bases"

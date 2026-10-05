@@ -1,0 +1,20 @@
+// P8: un ejemplo por operador de radb sobre supply-mini (STRICT).
+/* comentario de bloque */
+\rename_{s_id, s_name, s_status, s_city} supplier;
+\rename_{s: *} supplier;
+\project_{supplier_id} (\select_{part_id = 2} shipment);
+\project_{name} (supplier \join shipment);
+\project_{s.name, p.name} (\rename_{s: *} supplier \join_{s.city = p.city} \rename_{p: *} part);
+\project_{supplier_id} supplier \diff \project_{supplier_id} shipment;
+\project_{city} supplier \union \project_{city} part;
+\project_{city} supplier \intersect \project_{city} part;
+\project_{supplier_id} (supplier \cross part);
+\aggr_{color: count(part_id), avg(weight)} part;
+\aggr_{count(supplier_id)} supplier;
+\select_{status is null} supplier;
+\select_{status is not null and city like 'P%'} supplier;
+\select_{status <> 20} supplier;
+red_parts :- \project_{part_id} (\select_{color = 'Red'} part);
+red_parts;
+\list;
+\sqlexec_{SELECT COUNT(*) FROM shipment};

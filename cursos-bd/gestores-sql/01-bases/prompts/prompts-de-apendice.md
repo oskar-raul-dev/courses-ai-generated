@@ -9,7 +9,7 @@ cambian allí, se cambian aquí después y **nunca al revés**.
 
 > ⚠️ **El orden importa.** `a01`, `a02` y `a03` son el suelo del laboratorio y se escriben **antes
 > de F01**, en ese orden, y **después de la tanda de verificación (P8)**: todo lo que muestran se
-> ejecutó en las tres plataformas. `a08` abre su esqueleto **antes de F00**; `a04` va antes de F02;
+> ejecutó en contenedor (Linux) o lo verificó Oskar (macOS y Windows); lo que no, se declara. `a08` abre su esqueleto **antes de F00**; `a04` va antes de F02;
 > `a06` y el esqueleto de `a07` antes de F04; `a05` nace con F15. `a07` y `a08` son vivos y **se
 > cierran al final del curso**. `a09` va después de `a01`–`a03`; `aca-01` con AC01 y `aca-02` con
 > AC08.
@@ -25,8 +25,8 @@ Fuentes de verdad, en orden: (1) `prompts/alcance-del-proyecto.md`,
 (2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/propuesta-fases-y-alcance.md`,
 (4) `prompts/propuesta-apendices-y-alcance.md`, (5) `prompts/plantillas-de-capitulo.md`
 (Plantilla 6, la de apéndice, que es laxa), (6) lo verificado en
-`prompts/verificacion-de-laboratorio/` (P8) y en el inventario de fuentes (P9), (7) las fases y
-apéndices ya escritos. Los documentos desechables no cuentan y no se citan.
+`prompts/verificacion-de-laboratorio/hallazgos.md` (P8) y en `prompts/inventario-de-fuentes.md`
+(P9), (7) las fases y apéndices ya escritos. Los documentos desechables no cuentan y no se citan.
 
 Reglas de apéndice:
 - **Esto no se lee de corrido.** Índice de salto rápido, secciones cortas que responden a UNA
@@ -103,9 +103,13 @@ una línea y se remite en prosa.
 
 ## Pendientes que pueden bloquear
 
-Lo verificado en P8: versión por gestor y plataforma, nombre del paquete en `winget`, Chocolatey y
-Scoop, y el comportamiento literal de una copia hecha con el `-wal` pendiente. Si algo de eso no
-está en `prompts/verificacion-de-laboratorio/`, dilo en el paso 1.
+Verificado en P8 (`prompts/verificacion-de-laboratorio/hallazgos.md`, H6, H7, H10 y H11): la
+versión por distribución Linux, el nombre del paquete en cada gestor, y la copia con el `-wal`
+pendiente, que **pasa `integrity_check`** y pierde datos en silencio (el ejercicio usa la variante de
+las 100 filas). **Sigue abierto:** las recetas de macOS y
+Windows, que verifica Oskar o se declaran "no verificadas en esta plataforma"; y el `sqlite` de
+Homebrew es *keg-only*, así que la receta de macOS tiene que resolver el `PATH`. Pregúntalo en el
+paso 1 si Oskar no lo verificó todavía.
 
 ## Ejercicios: 8, de consulta
 
@@ -129,7 +133,7 @@ Esta es la sesión del **Apéndice a02 — 🐍 Python, `venv` y Faker**. Entreg
 
 - **Instalar Python 3** en las tres plataformas: python.org, `brew`, `winget` y el gestor de la
   distribución; el lanzador `py` de Windows y la casilla del `PATH`. La versión mínima del curso
-  sale de P8.
+  es la 3.10 (P8, H9).
 - **Crear, activar y desactivar un `venv`**, en una tabla por shell: bash/zsh, PowerShell (con la
   política de ejecución que bloquea la activación, su mensaje literal y cómo se levanta solo para el
   usuario) y `cmd`. Cómo se reconoce que está activo.
@@ -149,8 +153,11 @@ porque viene con Python, y lo dice una vez); el diseño de las bases, que está 
 
 ## Pendientes que pueden bloquear
 
-La versión mínima de Python que necesitan `radb` y Faker juntos, el mensaje literal de PowerShell y
-que la salida de Faker con semilla y versión fijadas sea idéntica en las tres plataformas (P8).
+Verificado en P8 (H9, H10): Python 3.10 como mínimo; Faker idéntico entre arquitecturas y
+distribuciones con semilla y versión fijadas; el mensaje literal de Debian y Ubuntu cuando falta
+`python3-venv`. El `requirements.txt` de `src/` copia el de `prompts/verificacion-de-laboratorio/`,
+**con SQLAlchemy fijado en 2.0.54** (H2). **Sigue abierto:** el mensaje literal de PowerShell y las
+recetas de Windows y macOS, de Oskar o declaradas.
 
 ## Ejercicios: 8, de consulta
 
@@ -194,9 +201,11 @@ menciona en la bibliografía.
 
 ## Pendientes que pueden bloquear
 
-Que `radb` funcione sobre tablas `STRICT`: si P8 dice que no, **para en el paso 1**, porque afecta a
-`a01`, `a04` y a la guía §6 a la vez y la decisión no es tuya. También la sintaxis exacta de
-invocación y la versión de Python que exige en la práctica.
+Ninguno de los de P8: `radb` 3.0.5 **funciona sobre tablas `STRICT`** (H3); la invocación es
+`radb base.db -i archivo.ra` y la configuración, `~/.radb.ini` (H4); los mensajes de error, `NULL` y
+el SQL generado con `-d` están en H4 y H5, y el aviso de "configuration file" que sale siempre sin
+`.radb.ini` también. Los comentarios son `//` y `/* */`, nunca `--`. Si al ejecutar algo no coincide
+con los hallazgos, **para en el paso 1**.
 
 ## Ejercicios: 8, de consulta
 
@@ -243,8 +252,10 @@ que adelante lo que esas fases deben descubrir.
 
 ## Pendientes que pueden bloquear
 
-Que los datos generados sean idénticos en las tres plataformas y que los `.db` funcionen con `radb`
-(P8). El tamaño de los volúmenes grandes lo fijan las fases que los necesitan (F21–F28); si no está
+Verificado en P8 (H3, H9): los datos generados son idénticos entre arquitecturas con la versión
+fijada, y un `.db` `STRICT` funciona con `radb`. El generador guarda **las fechas en `TEXT` ISO 8601**
+y **no usa nada relativo a hoy** (`date_of_birth`, `date_this_year`), sino `date_between` con fechas
+fijas; las bases no usan `ANY` ni `BLOB`. El tamaño de los volúmenes grandes lo fijan las fases que los necesitan (F21–F28); si no está
 decidido, propón uno en el paso 1.
 
 ## Ejercicios: 6, de consulta
@@ -360,7 +371,8 @@ esqueleto antes de F04; cada fase lo alimenta en su propia sesión, y se cierra 
 - **La convención de relaciones abstractas y de planes** (`R(A, B, C)`, `AB → C`,
   `r1(X); w2(X); c1`).
 - **El glosario español ↔ inglés, en las dos direcciones**, con las entradas de F00–F03 si ya están
-  escritas, y la columna "traducción de la edición en español" cuando P9 la haya fijado.
+  escritas, y la columna "traducción de la edición en español" **vacía, con "sin verificar"**: P9 no
+  pudo comprobarla (`prompts/inventario-de-fuentes.md` §4).
 - **Cada entrada remite a la fase y al número de definición** donde se define.
 
 ## Qué NO entra
@@ -369,7 +381,8 @@ Definiciones largas: el glosario remite, no explica.
 
 ## Pendientes que pueden bloquear
 
-La terminología de las ediciones en español (P9). Donde no esté fijada, la entrada lo dice.
+La terminología de las ediciones en español no se pudo verificar en P9: la columna va con "sin
+verificar", y ninguna entrada afirma cómo traduce un libro un término.
 
 ## Ejercicios: 6, de consulta
 
@@ -386,16 +399,17 @@ concepto y al revés; escribir en `radb` una expresión dada en Unicode.
 ```markdown
 Esta es la sesión del **Apéndice a08 — 📚 Mapa de bibliografía y recursos**. Entregable:
 `a08-mapa-de-bibliografia.md`. **1 h de consulta.** **Documento vivo**: esta sesión escribe el
-esqueleto antes de F00, con lo que P9 dejó verificado; cada fase agrega lo suyo, y se cierra al
-final.
+esqueleto antes de F00, con lo que P9 dejó verificado en `prompts/inventario-de-fuentes.md`; cada
+fase agrega lo suyo, y se cierra al final.
 
 {{marco común}}
 
 ## Alcance del esqueleto
 
 - **Los cinco textos del camino base** (alcance §9) con edición, año, editorial y traducción al
-  español si existe, y **la tabla libro × fase** con capítulo o sección, hasta donde P9 la haya
-  confirmado.
+  español si existe, y **la tabla libro × fase** con el capítulo de cada texto (P9 verificó capítulos,
+  no secciones), y la advertencia de que las traducciones al español son de ediciones anteriores y
+  numeran distinto.
 - **Los cursos por bloque**: Udemy y Coursera, con plataforma, idioma, si son de pago 💲 y la fecha
   de verificación; los cursos completos de YouTube (CMU 15-445/645, Berkeley CS186, la serie de
   Jennifer Widom), con la clase concreta por fase cuando se sepa.
@@ -446,8 +460,9 @@ su propio apéndice (`aca-02`); administrar PostgreSQL, que es materia de `02-po
 
 ## Pendientes que pueden bloquear
 
-Las imágenes base, sus versiones y que el volumen montado funcione igual en las tres plataformas
-(P8).
+Verificado en P8 (H1): `python:3.14.8-slim-trixie` como base y el volumen en macOS arm64. Se
+verifican en esta sesión, al crear `mdm-pg` (plan §2.4): el PostgreSQL extra y su memoria, y el
+volumen en Windows y Linux, o se declaran.
 
 ## Ejercicios: 5, de consulta
 
@@ -489,8 +504,11 @@ La teoría de los modelos (AC00–AC05); enseñar C, COBOL o xBase; todo lo que 
 
 ## Pendientes que pueden bloquear
 
-Que `lmdb` traiga LMDB incluido; que GnuCOBOL y Harbour tengan paquete en los tres sistemas; los
-*flags* exactos de ANSI C en GCC y en Visual C++ (P8).
+Verificado en P8 (H12): `lmdb` trae LMDB 0.9.36 incluido; GnuCOBOL 3.2 con paquete en Debian,
+Fedora, Homebrew y Chocolatey (no en Scoop ni en winget); Harbour 3.2.0 sin paquete en Linux, se
+compila desde el fuente (tarball sin carpeta raíz, `ldconfig` sobre `/usr/local/lib/harbour`); en GCC,
+`-std=c89 -pedantic -Wall -Wextra -Werror`. **Sigue abierto:** los *flags* de Visual C++, de Oskar o
+declarados.
 
 ## Ejercicios: 5, de consulta
 
@@ -510,11 +528,11 @@ Se escribe con AC08.
 
 ## Alcance
 
-- **YottaDB en contenedor**, con la imagen oficial si P8 la confirma, las bases de `school` montadas
-  como volumen y el paquete `yottadb` de Python conectado desde dentro.
+- **YottaDB en contenedor**, con la imagen oficial `yottadb/yottadb` (P8, H12), las bases de
+  `school` montadas como volumen y el paquete `yottadb` de Python conectado desde dentro.
 - **Docker como camino principal y Podman al lado.**
-- **Cualquier otra herramienta del bloque** que P8 haya encontrado sin versión nativa en alguna
-  plataforma.
+- **Cualquier otra herramienta del bloque sin versión nativa** en alguna plataforma; P8 no encontró
+  ninguna más.
 
 ## Qué NO entra
 
@@ -523,9 +541,9 @@ a09**: el contenedor del camino base no carga con las herramientas del bloque A.
 
 ## Pendientes que pueden bloquear
 
-Que exista una imagen oficial de YottaDB, su arquitectura (si corre en macOS arm64 sin emulación) y
-que el paquete `yottadb` funcione dentro del contenedor, porque sus wheels publicados son solo para
-Linux x86-64 (P8).
+Ninguno de los de P8 (H12): `yottadb/yottadb:r2.06` es multiarquitectura y corre nativa en macOS
+arm64, y el paquete `yottadb` 2.0.1 se compila desde el fuente dentro del contenedor (`gcc`,
+`python3-dev`, `python3-venv`, `libffi-dev`), cargando antes `ydb_env_set`.
 
 ## Ejercicios: 5, de consulta
 

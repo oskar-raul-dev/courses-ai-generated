@@ -1,0 +1,4 @@
+radb==3.0.5
+SQLAlchemy==2.0.54
+antlr4-python3-runtime==4.13.2
+Faker==40.40.0

@@ -102,8 +102,10 @@ propio prompt, en `prompts-de-apendice.md`).
 - **L5** monta L1 sobre el módulo `dbm` de Python: la separación entre motor y modelo, ejecutada.
 - **El 🪞 del puntero O(1)**: un recorrido por punteros en L1 con su contador de bloques, contra el
   mismo recorrido en memoria.
-- GnuCOBOL y Harbour son 🔥: si P8 no confirmó que se instalan, los ejercicios que los usan se marcan
-  🚧 con destino.
+- GnuCOBOL y Harbour son 🔥. P8 (H12) los corrió en contenedor: GnuCOBOL 3.2 con un archivo
+  `INDEXED`, y Harbour 3.2.0 compilado desde el fuente con un `.dbf` y `SEEK`. Harbour no tiene
+  paquete en Debian ni en Fedora, y en Homebrew está obsoleto: los ejercicios que lo usan remiten a
+  la receta de `aca-01`.
 
 {{protocolo}}
 ```
@@ -307,7 +309,8 @@ producción**. Entregables: `ac08-caso-yottadb.md`, su solucionario, los scripts
   secundario hecho a mano, citando F23 por número; el costo de mantenerlo en cada escritura se cuenta.
 - **El contexto real (VistA, otros sistemas clínicos)** se verifica en fuentes primarias, o se dice
   en general.
-- Si P8 no confirmó la imagen de YottaDB y el paquete de Python dentro del contenedor, **para en el
+- P8 (H12) confirmó la imagen `yottadb/yottadb:r2.06`, nativa en arm64, y el paquete `yottadb`
+  2.0.1 compilado dentro del contenedor. Si al levantar `mdm-yottadb` algo no coincide, **para en el
   paso 1**: la fase entera depende de eso, y el caso de reserva (el `.dbf`) ocupa su lugar.
 
 {{protocolo}}

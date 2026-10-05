@@ -1,0 +1,6 @@
+// P8: el SQL que genera radb y el trato de NULL en los operadores de conjunto.
+\project_{city} supplier;
+\project_{status} supplier \diff \project_{status} (\select_{city = 'Athens'} supplier);
+\project_{status} (\select_{city = 'Athens'} supplier) \intersect \project_{status} supplier;
+\project_{status} supplier \union \project_{status} supplier;
+\project_{name} (\select_{color = 'Red'} part \join shipment);
