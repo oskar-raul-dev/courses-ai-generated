@@ -85,8 +85,11 @@ Los nombres de archivo son canónicos y no se renumeran.
   unas treinta líneas y su tarea `seed:generate`—. Es el mismo seed que la F12 corre como `Job`.
 - **No entra:** instalar nada (es la Fase 00), explicar ninguna herramienta, enseñar Python ni
   `venv`: el lector sabe buscarlos.
-- **Depende de:** la verificación de laboratorio (P11). Lleva tag propio porque deja
-  `src/lab/Taskfile.yml` y `src/lab/kind/`.
+- **Depende de:** la verificación de laboratorio (P11, hecha el 03/10/2026; sus hallazgos están en
+  `prompts/verificacion-de-laboratorio/hallazgos.md`). **B-00 se publica en tres entregas**: la
+  infraestructura por perfil y por motor en T1, el perfil `legacy` en T1b y los cinco servicios en
+  T2; cada entrega declara lo que falta. Lleva tag propio porque deja `src/lab/Taskfile.yml` y
+  `src/lab/kind/`.
 
 ## 4. 🩺 a02 — Solución de problemas del ambiente (8 ejercicios)
 
@@ -208,8 +211,9 @@ Los nombres de archivo son canónicos y no se renumeran.
   historia) contra su versión en PL/pgSQL de Contingencia: `NULL` y texto vacío, secuencias, `NVL`,
   `ROWNUM`. Es contexto para la Fase 24, no tema del curso.
 - **No entra:** WebLogic, Oracle Database, migrar datos, ni el *strangler* (es la Fase 10).
-- **Depende de:** P11 (la imagen de GlassFish, nativa en arm64, y los servicios SOAP en la versión
-  fijada). Lleva tag propio: `apendice-a16-patrimonio`.
+- **Depende de:** P11, ya hecha: la imagen oficial de Eclipse GlassFish 8.0.4 es arm64 nativa, pesa
+  1 GB, corre con JDK 21 (no con el 25 del curso, y se dice) y trae Metro y JAXB, así que los
+  servicios SOAP no necesitan nada extra. Lleva tag propio: `apendice-a16-patrimonio`.
 
 ---
 

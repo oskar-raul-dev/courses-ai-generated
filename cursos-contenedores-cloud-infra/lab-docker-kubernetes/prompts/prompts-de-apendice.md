@@ -62,8 +62,12 @@ Esta es la sesión del **Apéndice a01 — 🧰 El laboratorio**. Entregable: `a
 La ficha a01, completa.
 
 ## Qué vigilar
-- **Bloqueado por P11.** Las versiones, los digests y la tabla de memoria salen de la verificación de
-  laboratorio. Si P11 no está hecha, para y dímelo.
+- **Sale de P11.** Las versiones, los digests y la orden de magnitud de la memoria están en
+  `prompts/verificacion-de-laboratorio/hallazgos.md` (H4, H11, H18); el borrador del Taskfile, los
+  archivos de kind y el seed, en `prompts/verificacion-de-laboratorio/borrador/`. Las versiones se
+  vuelven a comprobar el día que se escribe `a01`: si alguna cambió, gana la nueva y se anota.
+- **B-00 en tres entregas** (ficha a01): aquí solo la infraestructura, con tres corridas por celda;
+  el perfil `legacy` llega en T1b y los servicios en T2. La tabla lo dice en su encabezado.
 - **Este es el único sitio del curso donde vive una versión.** Todo lo demás apunta aquí.
 - **La tabla de memoria (B-00) es la promesa del curso**: perfil por perfil, motor por motor, en
   macOS arm64, con la memoria asignada a la máquina virtual de cada motor, y la columna de Windows y
@@ -166,8 +170,8 @@ La ficha a16, completa, con la historia §1.7, §1.8, §1.9, §1.11, §3 y §5.3
 - **Las mañas son a propósito y salen de la historia**: el portal con credenciales en el `.env` y
   sin pruebas, la Braqui leyendo tablas ajenas, el script que escribe después del commit y deduplica
   por nombre de archivo, Contingencia que se enciende cuando el Siga no contesta. No se arreglan aquí: las arregla el curso, fase por fase, y cada una tiene su destino.
-- **Verifica en el paso 1** que la versión de Eclipse GlassFish fijada en `a01` corra nativa en
-  arm64 y traiga los servicios SOAP (JAX-WS con JAXB), o qué hay que agregarle.
+- **GlassFish ya está verificado** (P11, H18): 8.0.4 nativa en arm64, con JDK 21 y con Metro y JAXB
+  incluidos. En el paso 1, solo confirma que el digest de `a01` sigue siendo el vigente.
 - **La memoria del perfil `legacy` se mide** y se agrega a la tabla de `a01`: el patrimonio tiene
   que caber en el presupuesto de la Parte 0.
 - **La nota de licencias va en una línea y desde la historia**: Contingencia ya era GlassFish y

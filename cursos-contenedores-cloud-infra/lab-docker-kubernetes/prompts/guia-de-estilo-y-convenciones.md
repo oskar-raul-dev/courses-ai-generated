@@ -429,14 +429,19 @@ Gateway API, cert-manager, Prometheus, Grafana, Loki, Tempo, OpenTelemetry, Dock
 especificaciones (OCI, Gateway API, OpenAPI, TLS en sus RFC), después libros, después charlas,
 blogs y vídeos. **Siempre se advierte cuando un enlace apunta a otra versión.**
 
-**Libros base del curso** (edición y año comprobados en la tanda P11, y citados por esa edición):
+**Libros base del curso** (edición y año comprobados el 03/10/2026, en la tanda P11, y citados por
+esa edición):
 
-- Brendan Burns, Joe Beda, Kelsey Hightower y Lachlan Evenson, *Kubernetes: Up and Running*.
-- Marko Lukša, *Kubernetes in Action*.
-- Betsy Beyer y otros, *Site Reliability Engineering* (Google), de lectura libre.
-- Sam Newman, *Building Microservices*.
-- Chris Richardson, *Microservices Patterns*.
-- Charity Majors, Liz Fong-Jones y George Miranda, *Observability Engineering*.
+- Brendan Burns, Joe Beda, Kelsey Hightower y Lachlan Evenson, *Kubernetes: Up and Running*, 3.ª
+  edición, O'Reilly, 2022.
+- Marko Lukša y Kevin Conner, *Kubernetes in Action*, 2.ª edición, Manning, 2026.
+- Betsy Beyer, Chris Jones, Jennifer Petoff y Niall Richard Murphy (eds.), *Site Reliability
+  Engineering*, O'Reilly, 2016, de lectura libre en https://sre.google/sre-book/table-of-contents/.
+- Sam Newman, *Building Microservices*, 2.ª edición, O'Reilly, 2021.
+- Chris Richardson, *Microservices Patterns*, Manning, 2018. La 2.ª edición está en acceso
+  anticipado (MEAP) y se nombra como "en preparación", sin citar sus capítulos.
+- Charity Majors, Liz Fong-Jones, George Miranda y Austin Parker, *Observability Engineering*, 2.ª
+  edición, O'Reilly, 2026.
 
 Formato: URL completa, título y una nota de qué versión cubre y por qué vale. Cada fase cierra sus
 referencias con un **orden de lectura sugerido**, y puede sumar charlas y tutoriales en vídeo
@@ -570,9 +575,7 @@ Todo lo demás del `CLAUDE.md` aplica tal cual, incluidos `BENCHMARKS.md` e `INS
 
 ## 18. 📌 Pendientes que afectan a esta guía
 
-- **Versiones y digests sin fijar** hasta la verificación de laboratorio (P11). Cuando se fijen,
-  viven en `a01` y esta guía solo apunta allí.
-- **Ediciones de los libros base** sin comprobar (P11).
-
-Los dos son de verificación, no de decisión: ninguno cambia una regla de esta guía.
+- ✅ **Versiones y digests** verificados en P11 (03/10/2026). Viven en `a01`, que los publica en T1, y
+  esta guía solo apunta allí.
+- ✅ **Ediciones de los libros base** comprobadas (§11).
 - ✅ **La empresa** está cerrada: Droguerías La Vecina (D18).

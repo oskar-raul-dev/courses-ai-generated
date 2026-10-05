@@ -81,7 +81,7 @@ difiere, se corrige aquí.
 | 02 | La máquina dice que no puede virtualizar | la virtualización figura deshabilitada; ninguna VM arranca | 🟢 |
 | 03 | La máquina de Podman no levanta | `podman machine start` falla o la máquina no existe para WSL | 🟡 |
 | 04 | El CLI no encuentra el motor que está corriendo | *cannot connect* / un esquema de socket no soportado | 🟡 |
-| 27 | En el portátil de la empresa no baja ninguna imagen | `x509: certificate signed by unknown authority` en el primer `pull`, por el proxy corporativo que inspecciona TLS | 🟡 |
+| 27 | En el portátil de la empresa no baja ninguna imagen | `pinging container registry registry-1.docker.io: … tls: failed to verify certificate: x509: certificate signed by unknown authority` en el primer `pull`, por el proxy corporativo que inspecciona TLS (reproducido con Podman en P11; con Docker Desktop, no reproducido) | 🟡 |
 
 ### ☸️ Plataforma
 
@@ -99,7 +99,7 @@ difiere, se corrige aquí.
 | 14 | 15 | Kubernetes reinicia un pod que estaba bien | reinicios crecientes, `Liveness probe failed` bajo carga | 🟠 |
 | 15 | 15 | La réplica nueva no encuentra dónde vivir | `Pending` con `Insufficient memory` | 🟡 |
 | 16 | 16 | El despliegue se quedó a la mitad | rollout sin avanzar, `ProgressDeadlineExceeded` | 🟠 |
-| 17 | 16 | El autoescalador no ve nada | el HPA muestra `<unknown>`; metrics-server sin datos | 🟡 |
+| 17 | 16 | El autoescalador no ve nada | el HPA muestra `<unknown>`; `kubectl top` → `error: Metrics API not available`; el log de metrics-server: `x509: cannot validate certificate for <IP del nodo> because it doesn't contain any IP SANs` | 🟡 |
 | 25 | 20 | Endurecí el pod y dejó de arrancar | `CreateContainerConfigError`: *runAsNonRoot* y la imagen corre como root | 🟡 |
 | 26 | 20 | Cerré la red y se rompió todo, hasta lo permitido | fallos de resolución de nombres tras un *default deny* | 🔴 |
 
@@ -113,7 +113,7 @@ difiere, se corrige aquí.
 | 21 | El `Gateway` rechaza su propio certificado | la clave privada no corresponde al certificado | 🟢 |
 | 22 | cert-manager no emite nada | el `Certificate` nunca llega a `Ready` | 🟠 |
 | 23 | `pricing` rechaza a `inventory` con mTLS | `tls: certificate required` | 🟠 |
-| 24 | El cluster no puede traer imágenes del registry propio | `x509` en el pull; se arregla en tres sitios distintos | 🔴 |
+| 24 | El cluster no puede traer imágenes del registry propio | `ErrImagePull` con `failed to do request: Head "https://lab-registry:5000/v2/…": tls: failed to verify certificate: x509: certificate signed by unknown authority`; se arregla en tres sitios distintos | 🔴 |
 
 **Por qué los IDs 25 y 26 van después de los de certificados:** los IDs siguen el orden de las
 fases que los reservan, y la Fase 19 va antes que la 20. **Y por qué el 27 es de la Fase 00:** se
@@ -139,8 +139,10 @@ mismos siete pasos:
 
 ## 6. 🔁 Tres formas de llegar al sistema roto
 
-1. **Desde el tag:** `git switch --detach inc/<ID>/<slug>-roto` y desplegar como siempre. Es la
-   forma canónica, y la única que garantiza el estado exacto.
+1. **Desde el tag**, en el clon del repositorio del curso (el lector construye en su propio
+   repositorio: `00-convencion-de-git-y-tags.md`): `git worktree add --detach ../inc-<ID>
+   inc/<ID>/<slug>-roto`, o `git switch --detach` sobre el mismo tag, y desplegar como siempre. Es
+   la forma canónica, y la única que garantiza el estado exacto.
 2. **Con la tarea:** `task inc:break -- <ID>` aplica sobre el laboratorio actual el cambio mínimo que
    lo rompe, y `task inc:fix -- <ID>` lo revierte. Sirve cuando el lector ya avanzó y no quiere
    volver atrás en git.
@@ -247,7 +249,12 @@ Fuentes de verdad, en orden: `prompts/alcance-del-proyecto.md`,
   declara con la tanda que la debe.
 - Cada entrada tiene sus **treinta segundos** y su **primer comando** con la línea de salida que
   importa. Una entrada sin eso se reescribe.
-- **Ninguna solución vive en su fase**: la fase muestra el síntoma y enlaza.
+- **Ninguna solución vive en su fase**: la fase muestra el síntoma y enlaza. **Excepción declarada
+  (D40, confirmada por Oskar el 05/10/2026):** las autopsias de la F19 («el certificado puesto a mano»)
+  y de la F20 («cerrar la red sin abrir el DNS») cuentan la causa de los incidentes 18 y 26, porque la
+  autopsia necesita sus números y esos números salen de reproducir esos incidentes. Para quien leyó la
+  fase, esos dos incidentes son práctica de reconocer el síntoma desde afuera, no de adivinar la causa.
+  No se abre ninguna otra excepción sin una decisión nueva.
 - El índice por síntoma empieza por lo que el lector ve, con el literal que salió.
 - Los tags `inc/<ID>/…` y las tareas `inc:break` existen para cada incidente de plataforma y de
   certificados, y el `git diff` entre `-roto` y `-fix` es solo la corrección.
@@ -264,9 +271,11 @@ Fuentes de verdad, en orden: `prompts/alcance-del-proyecto.md`,
 ## 12. 📌 Pendientes de este documento
 
 - ✅ **D13** y **D20** cerradas: 27 incidentes, con el 24 del registry y el 27 del proxy corporativo.
-- ⏳ Los síntomas de 08, 17, 24 y 26 dependen de piezas que se fijan en la verificación de
-  laboratorio (la versión de Envoy Gateway, metrics-server, el registry local y el CNI). Son de
-  verificación: el catálogo y sus IDs no cambian.
+- ✅ La verificación de laboratorio (P11, 03/10/2026) fijó las piezas: Envoy Gateway 1.9, metrics-server
+  0.9, el registry con CA propia y kindnet, que sí aplica `NetworkPolicy`. Ya salieron literales los
+  síntomas de **17, 24 y 27**. Los de **08** (la `HTTPRoute` sin aceptar) y **26** (el *default
+  deny* que corta el DNS) siguen como esperados hasta que sus fases los provoquen, como cualquier
+  otro incidente del catálogo.
 - ✅ **Las voces de los encargos** ya existen (historia §9): Yolanda para el mostrador, Wilson para
   los domicilios, Luz Marina para arquitectura, Valentina para plataforma, y la mesa de ayuda para
   el 27.

@@ -1041,5 +1041,7 @@ El de la ficha F27, completo.
 
 ## 🧾 Recordatorio de cierre del curso
 
-Cuando la F27 cierre, el curso todavía no está publicado: faltan los apéndices 🔥, el cierre de los
-que crecen, los README y `0-ESTRUCTURA-CURSO.md`. El orden está en el plan de producción.
+El curso se cerró el 05/10/2026: las 28 fases, los apéndices 🔥, el cierre de los que crecen, el README y
+`0-ESTRUCTURA-CURSO.md`. El plan de producción se borró con los demás desechables; lo que una sesión futura necesita
+saber del estado está en `0-ESTRUCTURA-CURSO.md`, en la propuesta de fases §12 (decisiones D1–D43) y en
+`verificacion-de-laboratorio/hallazgos.md`.

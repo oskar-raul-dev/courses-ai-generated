@@ -4,8 +4,8 @@
 > **Qué es este documento:** la fuente de verdad de **qué** enseña el curso, a quién y con qué
 > límites. Lo que no esté aquí no está en el curso.
 > **Fecha de esta versión:** 30 de septiembre de 2026. Consolida la propuesta de fases del 14/09 y
-> las decisiones de la sesión del 30/09; los documentos preliminares quedan como registro en
-> `prompts/_desechable-*` y no se citan.
+> las decisiones de la sesión del 30/09. Los documentos preliminares (`prompts/_desechable-*`) se borraron
+> al cerrar la producción, el 05/10/2026; el registro de decisiones sigue en la propuesta de fases §12.
 > **Precedencia:** manda este documento. Después viene
 > [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md), que decide **cómo** se
 > escribe; después [`contrato-del-cluster.md`](contrato-del-cluster.md), que fija los nombres
@@ -14,8 +14,8 @@
 > curso no haya declarado como excepción (§12).
 > **Estado de las decisiones:** el registro vive en
 > [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §12. Lo que depende de la
-> verificación de laboratorio (versiones y presupuesto de memoria) se fija en `a01` cuando esa
-> verificación esté hecha. Todas las decisiones están cerradas (D1–D31).
+> verificación de laboratorio (versiones y presupuesto de memoria) se fija en `a01`; la verificación
+> se hizo el 03/10/2026. Todas las decisiones están cerradas (D1–D32).
 
 ---
 
@@ -214,9 +214,12 @@ un `StatefulSet` propio**, sin charts de terceros · **SQLite** en tres sitios y
 **Testcontainers** para las pruebas que sí tocan SQL · **Valkey** como caché y como el pub/sub
 deliberadamente frágil · **NATS con JetStream** como bus de la coreografía en serio.
 
-**Las versiones exactas no están en este documento.** Se fijan en la verificación de laboratorio
+**Las versiones exactas no están en este documento.** Se fijaron en la verificación de laboratorio
 (P11), con la regla **"todo en su última LTS, y donde no haya línea LTS, en su última estable, a
-la fecha de la verificación"**, y viven en un solo sitio: `a01`.
+la fecha de la verificación"**, y viven en un solo sitio: `a01`. La regla tiene una condición que
+la verificación hizo explícita (D32): **la última estable que soportan todas las piezas juntas**. El
+nodo de Kubernetes va una versión detrás de la última porque el controlador de Gateway todavía no
+soporta la más nueva, y eso se dice en `a01` con esas palabras.
 
 ### 7.3 El código es andamiaje, y se genera asistido
 
@@ -257,6 +260,12 @@ El laboratorio **se diseña para ocupar lo menos posible**, y eso decide piezas:
 La meta es que **`minimo` entre en un equipo de 8 GB** en las tres plataformas. El requisito que se
 publica no es la meta sino **lo medido** en la verificación de laboratorio, perfil por perfil, y si
 algún perfil no entra se achica el perfil, no se sube el requisito sin decirlo.
+
+**Lo que dijo la verificación (P11), sin los servicios todavía:** la infraestructura de `minimo` con
+toda la observabilidad encendida ocupa unos 2,1 GiB de la máquina virtual de Podman y 2,6 GiB de la
+de Docker, así que **la máquina virtual necesita 4 GiB** (la de Podman por defecto, de 2 GiB,
+colapsa) y queda un margen de 1,4 a 1,8 GiB para los cinco servicios. Que `minimo` quepa en un
+portátil de 8 GB se decide en T2, cuando los servicios existan y se midan.
 
 ---
 

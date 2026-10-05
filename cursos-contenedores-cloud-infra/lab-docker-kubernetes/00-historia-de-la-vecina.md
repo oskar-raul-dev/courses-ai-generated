@@ -224,8 +224,8 @@ En noviembre de 2013 Oracle anunció que **no habría versión comercial de Glas
 a sus clientes comerciales pasar a **WebLogic**. Entre 2014 y 2015 el equipo migró el Siga, a
 tiempo y sin caídas; es el proyecto que Luz Marina cita cuando alguien dice que en La Vecina no
 saben migrar. De esa migración quedó una herencia que nadie revisa: los parámetros de arranque de la
-JVM, con un `-Xmx` fijo que se copia de servidor en servidor desde 2015 y que nadie recuerda quién
-eligió. **Con WebLogic empezó la factura por procesador**, razonable en 2015 y creciente con cada
+JVM, con un `-Xmx4096m` fijo que se copia de servidor en servidor desde 2015 y que nadie recuerda
+quién eligió. **Con WebLogic empezó la factura por procesador**, razonable en 2015 y creciente con cada
 servidor que vino después.
 
 ### 1.7 🔌 2016: el apagón, la copia en espera y Contingencia
@@ -482,8 +482,9 @@ La fricción vino por los dos lados:
 
 En septiembre de 2025 Don Aurelio fue en representación del consejo a un congreso del sector
 droguero en Cartagena. En la cena de la segunda noche le tocó al lado de **Don Rodrigo Restrepo**,
-dueño de una cadena de cuarenta droguerías en el Valle de Aburrá, que llevaba media hora quejándose
-de lo que le cobraba su proveedor de software. Don Aurelio sacó el celular y le mostró los tableros
+dueño de Droguerías Río Negro (cuarenta droguerías que nacieron en Rionegro y hoy cubren el Valle de
+Aburrá). Don Rodrigo llevaba media hora quejándose de lo que le cobraba su proveedor de software.
+Don Aurelio sacó el celular y le mostró los tableros
 del Siga en el BI: los préstamos del día por zona, los domicilios por hora, la reposición de la
 semana, las droguerías en rojo por faltantes.
 
@@ -662,7 +663,8 @@ Cáceres**, financiera, convierte cada propuesta en pesos por mes y es la primer
 si la caja se congela. Los de compras, logística y comercial aparecen cuando la decisión les toca:
 el de logística, porque Wilson trabaja para él; el comercial, porque el Club Vecinos es suyo.
 
-**Don Rodrigo Restrepo**, dueño de una cadena de cuarenta droguerías en el Valle de Aburrá. No es
+**Don Rodrigo Restrepo**, dueño de Droguerías Río Negro: cuarenta droguerías que empezaron en
+Rionegro, en el Oriente antioqueño, y hoy están en todo el Valle de Aburrá. No es
 de la cooperativa ni es cliente: es la pregunta de Cartagena con nombre propio, y la primera
 persona a la que nadie le puede prometer nada.
 

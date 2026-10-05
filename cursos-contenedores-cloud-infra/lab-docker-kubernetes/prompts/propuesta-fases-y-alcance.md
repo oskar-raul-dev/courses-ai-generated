@@ -10,8 +10,8 @@ convenciones de archivo y de git, y las decisiones cerradas con su porqué.
 > Si una fase de aquí contradice a uno de los tres, gana el otro y esto se corrige. Las plantillas
 > y los prompts copian de aquí el peso y los ejercicios (§11).
 > **Fecha:** 14/09/2026, revisada el 30/09/2026 con las decisiones D1–D18 (§12). **Estado:** temario
-> cerrado (D1–D31). Lo marcado ⏳ no es una decisión sino un valor que sale de la verificación de
-> laboratorio (P11).
+> cerrado (D1–D32). La verificación de laboratorio (P11) se hizo el 03/10/2026, y lo que fijó está
+> en D32.
 
 Una advertencia que vale para todo el documento: **las apuestas y las roturas escritas aquí son
 candidatas**. La fase las reescribe en su paso 1 si el laboratorio sugiere algo mejor, y las deja
@@ -203,9 +203,10 @@ compartido en su namespace, y una `HTTPRoute` por servicio que el equipo del ser
 controlador es **Envoy Gateway** (D12): implementa la especificación sin anotaciones propias, y el
 proxy que despliega es el mismo Envoy que el lector va a encontrar debajo de muchos mesh y
 balanceadores. La Fase 10 nombra las alternativas con sus ventajas y desventajas. El
-`Service` del `Gateway` recibe su dirección de **cloud-provider-kind**, o de `extraPortMappings` con
-un `NodePort` si en alguna plataforma eso no llega al host ⏳. Siempre sobre los puertos 8080 y 8443
-del host, porque Podman sin privilegios no publica los privilegiados.
+`Service` del proxy del `Gateway` es un **`NodePort` fijo** que el cluster de kind publica en el
+host con `extraPortMappings` (D32): en macOS, la dirección que cloud-provider-kind le da a un
+`LoadBalancer` no llega al host. Siempre sobre los puertos 8080 y 8443 del host, porque Podman sin
+privilegios no publica los privilegiados.
 
 ---
 
@@ -402,9 +403,13 @@ virtual frente al WSL en cada plataforma.
 dos motores. La medición se publica; **ejecutarla es opcional para el lector**, que puede no tener
 los dos instalados.
 
-**🦭 Y la divergencia que más muerde en el resto del curso:** `kind load docker-image` supone Docker;
-con Podman, la imagen viaja como archivo (`podman save` y `kind load image-archive`). Se resuelve
-aquí una vez y la tarea `images:load` la esconde después.
+**🦭 Y la divergencia que más muerde en el resto del curso:** `kind load docker-image` supone Docker
+(con Podman responde *"not present locally"* aunque la imagen esté); con Podman, la imagen viaja
+como archivo (`podman save` y `kind load image-archive`), y se construye como `docker.io/lab/<svc>`
+porque Podman la nombraría `localhost/lab/<svc>` y el pod que pide `lab/<svc>` no la encontraría.
+Se resuelve aquí una vez y la tarea `images:load` la esconde después. Las otras dos que P11
+encontró: `podman compose` delega en el `docker-compose` de Docker Desktop, y la máquina de Podman
+por defecto (2 GiB) no alcanza para el laboratorio.
 
 **🔥 Deja como opcional:** generar manifiestos desde contenedores corriendo. Es un puente
 conceptual bonito y produce YAML que nadie desplegaría tal cual.
@@ -489,7 +494,14 @@ por prefijo a los cuatro backends, accesibles desde el navegador del host.
 **Trae:** los tipos de `Service` y **por qué `LoadBalancer` se queda en `Pending`** en un cluster
 recién creado. Después, cloud-provider-kind lo resuelve delante del lector, y esa es la lección: **un
 objeto no hace nada sin alguien que lo implemente**, y en la nube ese alguien te factura una IP. Es
-el primer 🚧 del curso. Luego, el reparto de papeles de Gateway API —quien opera la
+el primer 🚧 del curso, y tiene una segunda mitad honesta: en macOS esa IP no llega al host, y el
+mapeo de puertos de cloud-provider-kind publica uno efímero distinto en cada creación. Por eso el
+laboratorio entra por un `NodePort` fijo que kind publica en `127.0.0.1:8080` (D32).
+
+**🧨 La rotura natural, en el perfil `lab`:** Envoy Gateway crea el `Service` del proxy con
+`externalTrafficPolicy: Local`; cuando el proxy cae en un worker, el `NodePort` del control-plane
+—el único mapeado al host— no reenvía y el navegador se queda esperando. Se arregla con
+`externalTrafficPolicy: Cluster` en el `EnvoyProxy`, y se explica qué se pierde (la IP de origen). Luego, el reparto de papeles de Gateway API —quien opera la
 infraestructura pone el `GatewayClass` y el `Gateway`, y cada equipo escribe su `HTTPRoute`— y por
 qué ese reparto es lo que faltaba en el modelo anterior. Y el dominio local, con por qué tu
 navegador llega y tu `curl` a veces no.
@@ -526,6 +538,10 @@ El `storefront` es el caso perfecto y se demuestra con dos despliegues de la mis
 `API_URL` se fija al compilar, y el contenedor espera inyectarla al arrancar. Ese desajuste es la
 causa raíz de la mitad de los *"funciona en QA y no en producción"* de cualquier aplicación de
 página única. El arreglo es el paso G2: el `storefront` lee su configuración al arrancar.
+
+**🏚️ Y el `.env` del portal (`a16`):** las credenciales SOAP de Contingencia viven versionadas en
+el repositorio y horneadas en la imagen desde 2019. Con el portal ya en el namespace `legacy` (F10),
+la fase las pasa a un `Secret` y muestra lo que no se arregla con eso: el historial de git.
 
 **🚫 Deja fuera, declarándolo:** los gestores de secretos externos. Exigen infraestructura que el
 laboratorio no tiene y no cambian ninguna decisión local.
@@ -703,8 +719,10 @@ todo; y el patrón de emisión automática que el lector va a encontrar en cualq
 curso: certificado expirado, CA desconocida, SAN incorrecto, clave y certificado desparejados,
 cert-manager que no emite, mTLS sin certificado de cliente, y **el registry local con CA propia**:
 el `x509: certificate signed by unknown authority` al traer una imagen, que se arregla en tres
-sitios distintos según quién tire de ella —Docker, Podman o el containerd de los nodos de kind—. Es
-el mejor 🦭 del curso. Cada uno con su síntoma, su evidencia, su causa y su primer comando.
+sitios distintos según quién tire de ella —el motor del host, el containerd de los nodos de kind y
+los clientes del host—. Es el mejor 🦭 del curso: Docker no lo muestra con `localhost`, porque trata
+`127.0.0.0/8` como registry inseguro por defecto, y Podman sí, porque no hace esa excepción y la CA
+va dentro de su máquina. Cada uno con su síntoma, su evidencia, su causa y su primer comando.
 
 **Incluye** mTLS entre `inventory` y `pricing` en su versión a mano (paso G8). La versión con mesh
 es apéndice.
@@ -718,8 +736,9 @@ un Secret—; y `NetworkPolicy`.
 **🧨 Con el experimento que lo justifica:** por defecto, en un cluster, **todo el mundo puede
 hablar con todo el mundo**. Se demuestra exponiendo la base de datos por accidente, y se arregla en
 dos minutos. Es la lección de seguridad más transferible del curso. Y la segunda lección, que llega
-sola: una `NetworkPolicy` no hace nada si la red del cluster no la aplica. Si kindnet la aplica en
-la versión fijada, se dice; si no, la fase instala el CNI que la aplique ⏳.
+sola: una `NetworkPolicy` no hace nada si la red del cluster no la aplica. kindnet sí la aplica en
+la versión fijada (verificado en P11), y la fase lo dice, con la advertencia de que no es
+universal.
 
 **🏘️ Y el aislamiento entre cadenas (D24):** con las dos cadenas de la F14 encendidas, una
 `NetworkPolicy` que impide que los servicios de `apps-b` lleguen a los de `apps` y a sus bases. Lo
@@ -1010,8 +1029,9 @@ Lo que sostiene este temario. **Cerradas por Oskar el 30/09/2026**, salvo D30 y 
 las contradicciones del material preliminar, D8–D17 sobre la propuesta de valores, D18–D25 al
 cerrar la historia y sus pendientes, D26–D29 al decidir el patrimonio de arranque, D30 el
 02/10/2026, al sumar a la historia el aviso de traslados por archivo, y D31 el 03/10/2026, al fijar
-Python como lenguaje de scripting. Si una decisión cambia, se cambia primero en su sitio y después
-aquí.
+Python como lenguaje de scripting, y D32 el 03/10/2026, con lo que fijó la verificación de
+laboratorio (P11). D33 y D34 las cerró Oskar durante la producción; D35 a D43 las tomaron las sesiones de producción por defecto, y Oskar las revisó y confirmó el 05/10/2026 (con la marca de la segunda cadena en D37 y la excepción del cuaderno en D40). Si una decisión cambia, se cambia primero en
+su sitio y después aquí.
 
 | ID | Decisión | Valor | Estado | Manda en |
 |---|---|---|---|---|
@@ -1046,3 +1066,15 @@ aquí.
 | D29 | `a16` | Pasa de 🔥 a apéndice de laboratorio, "El patrimonio", con su tanda propia (T1b) antes de F00 | ✅ | propuesta de apéndices |
 | D30 | El aviso de traslados por archivo | La historia (§1.9, §1.11) suma la integración de 2020 entre el Siga y la Braqui: un `.txt` con su `.ok` en una carpeta compartida y un script de Python cada cinco minutos, con tres parches. **No abre track ni incidentes nuevos** (el cuaderno sigue en 27): entra al patrimonio de `a16` y sirve de hilo a F12 (`CronJob`), F24 (saga sin compensaciones), F25 (mensaje perdido) y F26 (idempotencia por nombre y escritura dual). Python entra como lenguaje de scripting del laboratorio, no como un stack | ✅ | historia §1.9, `a16`, F12, F24–F26 |
 | D31 | Python para scripting | Python es el lenguaje de los scripts del laboratorio —uno solo para los tres sistemas, en vez de un `.sh` y un `.ps1`—, con `venv` y un `requirements.txt` por directorio de scripts. **Sin apéndice propio**: una sección corta en `a01` con lo mínimo y un ejemplo, el seed con Faker, que la F12 corre como `Job`. Ningún servicio está escrito en Python | ✅ | alcance §8, `a01`, F12 |
+| D32 | Lo que fijó P11 | (1) **El nodo de kind en 1.36**: D17 se aplica como "la última estable que soportan todas las piezas", y Envoy Gateway 1.9 llega hasta Kubernetes 1.36. (2) **La entrada**: `extraPortMappings` + `NodePort` fijo 30080/30443 con `externalTrafficPolicy: Cluster`; cloud-provider-kind solo se muestra en la F10. (3) **Las imágenes con Podman** se construyen como `docker.io/lab/<svc>` y se cargan por archivo. (4) **4 GiB para la máquina virtual** de cada motor. (5) **Python 3.12 o superior**, sin versión exacta, porque el `venv` hereda la del sistema | ✅ | contrato §4, §5 y §7, `a01`, F05, F10 |
+| D33 | El contrato REST de G1 | Revisado por Oskar el 03/10/2026. **Los datos maestros se editan; el estado se cambia con hechos.** `inventory`: la existencia solo cambia por movimientos —no hay `PUT /stock`—; los `ADJUSTMENT` exigen `reasonCode` y aceptan `reference` (el archivo de traslados perdido, la orden); el **`COUNT`** registra lo contado y guarda la diferencia con signo, y el primer `RESTOCK` o `COUNT` crea la existencia con umbral 0; el umbral se cambia con `PATCH`. `catalog`: `status` (`ACTIVE`/`DISCONTINUED`) con `PATCH`, descontinuar exige `reasonCode`, y se mantiene `POST`. `replenish`: una orden no se edita; se cancela en `PENDING` con `reasonCode` y se crea otra con `replacesOrderId`, y la cancelación pasa de G11 a G1 (la saga la reusa con `SAGA_COMPENSATION`). Los códigos de razón son **una tabla de datos por servicio** (`GET /reason-codes`), no un enum del contrato | ✅ | `src/lab/contracts/openapi/`, `a03`, `CLAUDE.md` de los servicios |
+| D34 | `catalog` en dos contenedores | Decidida por Oskar el 03/10/2026, al abrir T3. **PHP-FPM y nginx son dos contenedores**, no dos procesos en una imagen: `lab/catalog` es FPM con la aplicación, y nginx es la imagen oficial sin privilegios con un `nginx.conf` del repositorio. En compose comparten red con `network_mode: service:catalog` (el puente a la F06: eso es un pod); en la F09 son dos contenedores del mismo pod. Evita un supervisor de procesos como proceso 1 (F03) y deja a la F15 la pregunta de quién responde la sonda | ✅ | contrato §2 y §3, F04, F09, F15 |
+| D35 | G1 | Tomada por la sesión de T4 con permiso de Oskar ("por default"); **confirmada por Oskar el 05/10/2026**. El SQLite de G1 vive en `DATA_DIR` (`/var/lib/<svc>`), una carpeta de la imagen a nombre del usuario; el esquema se crea al arrancar y solo se siembran los códigos de razón. El `storefront` pide `GET {API}/catalog/products` desde el navegador, con la dirección horneada al compilar (`http://api.localhost:8080`): en la F09 no llega, la F10 abre la puerta (con CORS en el `Gateway`) y la F11 cobra el horneado. Las imágenes llevan además el tag del paso (`:g1`), que piden los manifiestos con `IfNotPresent`. La suite corre en el cluster con `task conformance TARGET=cluster -- G1` | ✅ | `a03`, contrato §3, F09–F11 |
+| D36 | T5 | Tomadas por la sesión de T5 con permiso de Oskar ("sigue con T4 y T5"); **confirmadas por Oskar el 05/10/2026**. **F10:** la fachada REST de precios de Contingencia (`PriceFacadeServlet`, con `X-Contestado-Por`) detrás de un nginx en su mismo pod (8081), porque Envoy Gateway rechaza `URLRewrite` dentro de un `backendRef`; el *strangler* reparte por pesos en la `HTTPRoute` de `pricing`, con un `ReferenceGrant` y un `Job` que migra los 64 precios; CORS con el **filtro del estándar** (`HTTPRouteCORS`), no con la `SecurityPolicy` de Envoy Gateway. **F11:** G2 con la plantilla de la imagen de nginx (`/config.json` con `API_BASE_URL` y `BRAND_NAME`, `no-store`; `index.html` con `no-cache`); un tag por servicio (`STEP_TAGS`, el del último paso que lo cambió); los valores de los `Secret` en `.secrets/` (fuera de git), y Contingencia leyendo el mismo `Secret` que el portal; el `.env` del portal re-incluido en git (`!legacy/portal/.env`) porque la raíz ignora todos los `.env`. **F12:** Postgres 18 en un `StatefulSet` propio en `data`, con una base y un usuario por servicio (credenciales generadas por `scripts/data/credentials.py`); G3 con `DATABASE_URL` y **el SQLite de G1 como respaldo cuando no está** (compose sigue igual); migraciones con un comando de cada servicio, como `Job`, que `task deploy` corre antes de aplicar; el seed carga por la API (`load.py`); las pruebas de `pricing` con Testcontainers para B-12; la Braqui en `legacy` y el aviso de traslados como `CronJob`, con la carpeta compartida en un PVC. **Quedan abiertas a propósito:** la carrera de `inventory` (F16) y el `INTEGER` de los precios (ejercicio de F12) | ✅ | `a03`, contrato §2 y §3, F10–F12 |
+| D37 | T6 | Tomadas por la sesión de T6 (Oskar: "trabaja en esta sesión tandas T6-T10"); **confirmadas por Oskar el 05/10/2026**. **F13:** chart paraguas `charts/platform` (release `lab` en `apps`) con un subchart por servicio y una librería `lab-common` que es dependencia del paraguas y que los subcharts usan por el espacio global de plantillas (un subchart no se instala solo); el `Deployment` de cada servicio queda escrito en su subchart, y solo `Service`, `HTTPRoute` y el `Job` de migraciones van en la librería; el tag de cada imagen sin valor por defecto (`required`), pasado por `task deploy` desde `STEP_TAGS`; namespace, `Secret` de las bases, Postgres, la puerta y el patrimonio fuera del chart; migraciones como hooks `pre-install,pre-upgrade` y el seed `post-install`; el hash de los `ConfigMap` en el pod; el `nginx.conf` de `catalog` como enlace simbólico; la mudanza recomendada es borrar y reinstalar (15,7 s de corte), no `--take-ownership`; `task deploy FORCE=true` agrega `--force-conflicts` y `inc:fix` lo usa. **F14:** `task deploy` con `--rollback-on-failure --history-max 10`; `task deploy:diff` con `--three-way-merge`; `values.schema.json` en el paraguas (réplicas enteras, hosts que terminan en `.localhost`); la segunda cadena con hosts `*.tenant-b.localhost`, marca **Droguerías Río Negro** (Oskar, 05/10/2026: la cadena de Don Rodrigo nació en Rionegro; no se encontró ninguna cadena real con ese nombre), cuarenta droguerías en el seed, y bases `<svc>_tenant_b` en el mismo Postgres (`task platform:postgres TENANT=tenant-b`); Kustomize solo como comparación en `deploy/kustomize/lab` | ✅ | contrato §2, §4 y §7, F13, F14 |
+| D38 | T7 | Tomadas por la sesión de T7; **confirmadas por Oskar el 05/10/2026**. **Historia:** el `-Xmx` heredado de WebLogic pasa a ser `-Xmx4096m` (§1.6); la autopsia de la F15 usa `-Xms4096m -Xmx4096m`, porque solo con `-Xmx` la JVM no murió. **G4:** readiness por la base con un segundo de límite, sin vecinos; `inventory` sin Actuator (`ApplicationAvailability`); el manejador de `error` del pool de `pg`. **Chart:** sondas y recursos medidos por servicio, sin límite de CPU; `pricing` con 128 MiB de límite desde la F16; cuotas y `LimitRange` en `apps` (1.536 MiB / 3 GiB) y `apps-b` (1 GiB / 1,5 GiB); `preStop` de 5 s, `maxSurge 1`/`maxUnavailable 0`, `progressDeadlineSeconds 120`; HPA por valor, y sin `replicas` en el `Deployment` cuando existe. **Incidentes:** 12 = `MaxRAMPercentage=95` con `AlwaysPreTouch`; 13 = la contraseña del `Secret` de `replenish`; 14 = la liveness de `catalog` a 1 s con carga; 15 = Postgres pidiendo 4 GiB en `data` (en `apps`, la cuota lo rechaza antes); 16 = una `DATABASE_URL` equivocada en la versión nueva de `inventory`; 17 = metrics-server sin `--kubelet-insecure-tls`. **G5:** la venta con `RestClient` sin timeouts, la carrera cerrada con `FOR UPDATE`, el aviso en un hilo virtual por la cantidad del umbral, y la venta desde la página con CORS en las rutas de `pricing` e `inventory`; el contrato de `/sales` suma 422 y 503. 🔥 `Dockerfile.aot` fuera del chart. B-16 a 300 peticiones/s en el perfil `medicion` sobre `lab` | ✅ | historia §1.6, contrato, F15, F16, `a03` |
+| D39 | T8 | Tomadas por la sesión de T8; **confirmadas por Oskar el 05/10/2026**. **G6:** el histograma `http_server_requests_seconds` (method, uri, status) con el nombre de Spring en los cuatro; lo que no tiene ruta, `uri="/**"`; `inventory` con Actuator solo para `/metrics` y la primera métrica de negocio (`lab_sales_total`); APCu en `catalog`; `@prometheus-io/client` en `replenish`. **Observabilidad:** subcharts del umbrella con sus objetos en `observability`; `scrape_config` a mano con las labels del contrato y cAdvisor recortado a dos métricas; Grafana anónimo con rol `Editor` y un tablero RED; `task obs:on` guarda los interruptores en `.observability.json` (no versionado), encender `logs` enciende Grafana y Prometheus. **F17 y F18 corren en el cluster `lab` con los valores de `minimo`**, por la memoria (H154–H155). **G7:** campos `time`, `level`, `service`, `msg` y la línea `request` con `method`, `uri`, `path`, `status`, `duration_ms`, `request_id`; el id de `X-Request-Id`, que pone Envoy, y que `inventory` reenvía; la única línea en texto aceptada, `Picked up JAVA_TOOL_OPTIONS`; la suite de G7 con un verificador de logs en Python. **Loki y Fluent Bit:** un proceso y un `DaemonSet` sin `toleration` del control-plane; etiquetas `namespace`, `service`, `container`. **Antipatrones medidos:** la ruta cruda como etiqueta (F17) y el `request_id` como etiqueta de Loki (F18) | ✅ | contrato, F17, F18, `a01`, `a03` |
+| D40 | T9 | Tomadas por la sesión de T9; **confirmadas por Oskar el 05/10/2026**. **F19:** la CA del laboratorio con `cryptography` (`scripts/tls/certs.py`), claves en `.secrets/tls/`; listener `https` en el 8443 con `Terminate`; cert-manager y trust-manager por OCI con imágenes por digest, `ClusterIssuer lab-ca` de tipo CA y el `Certificate` de la puerta de 24 h; el `Bundle` reparte la CA a los namespaces con `part-of: lab`; la confianza en el host la instaló Oskar en su llavero el 05/10/2026 (H270; receta en `a01`). **G8:** `pricing` con un 8443 mTLS y el 8080 en HTTP; `inventory` con *SSL bundle* PEM y recarga; `global.mtls.enabled` encendido desde F19; la dirección `https` solo en el `Deployment` de `inventory`. **Registry:** `lab-registry` (`registry:3` por digest) con tareas `registry:*`. **Incidentes:** 18 = un certificado de 2 min puesto a mano (uno ya vencido no lo carga la puerta); 21 = un `Secret` TLS en YAML; 22 = el emisor sin su `Secret`; 23 = el bundle sin certificado de cliente; 24 = los nodos sin `certs.d`. **F20:** `global.podSecurity.enabled` y `global.networkPolicy.enabled` encendidos desde F20; `emptyDir` en `/tmp`; Postgres como 999; 25 = `runAsNonRoot` en Postgres; 26 = sin `allow-dns`. **F21:** casos de práctica sin ID; la revisión del cuaderno aceptó dos desviaciones: 01–03 y 27 dicen la línea de su primer comando en prosa (son de ambiente), y **las autopsias de F19 y F20 cuentan la causa de los incidentes 18 y 26** desde la decisión que los produce (excepción declarada en el formato del cuaderno) | ✅ | contrato, F19, F20, F21, cuaderno, `a01`, `a03` |
+| D41 | T10 | Tomadas por la sesión de T10; **confirmadas por Oskar el 05/10/2026**. **F22:** el generador de caos en Go (solo biblioteca estándar) entre `inventory` y `catalog`, con perfiles de ciudad; G9 con el núcleo de Resilience4j 2.3.0 (sin su integración con Spring), timeouts de 1 s y 2 s, 3 intentos con espera y circuito al 50 %; el `POST` a `replenish` sin reintentos. **F23 / G10:** `pricing` sirve `GetPrice` en el 9090 con el mismo mTLS del 8443; el código de Go se genera con `task proto` y se versiona, el de Java lo genera Maven con `--build-context proto`; **por defecto, `global.grpc.balancing: client` (headless `pricing-grpc` con `round_robin`) y `global.grpc.maxConnectionAge: 10s`**, porque B-23 midió que el balanceo en el cliente solo no ve una réplica nueva (0 de 1200); en producción, la edad se mediría en minutos. El proxy de capa 7 queda sin medir (ejercicio 21, `a10`). Trazas: Tempo 3 con `backend_worker` (no `compactor`); OpenTelemetry por variables `OTEL_*` del chart, apagado con `OTEL_SDK_DISABLED`; `Context.current().wrap(...)` en el hilo del aviso a `replenish`; `task obs:trace` para leer una traza en la terminal. **Abierto:** con Tempo caído, `catalog` (PHP) cuelga peticiones hasta 15 s al exportar; la fase lo deja medido y como ejercicio 22 (timeout corto o un Collector en el nodo), sin arreglarlo en el chart | ✅ | contrato, F22, F23, `a01`, `a03`, `BENCHMARKS.md` |
+| D42 | T11 | Tomadas por la sesión de T11 (Oskar: "sigue con T11-T16"); **confirmadas por Oskar el 05/10/2026**. **F24 / G11:** el préstamo (`POST /loans`, 202) como saga orquestada en `inventory`, con el estado en `loans` y `loan_steps`; **orden RESERVE → DISPATCH → CHARGE → RECEIVE**: la ficha decía "reservar, despachar, cobrar" y el contrato de `replenish` ya pedía la cancelación como compensación, así que el cobro va al final como pivote (lo que más cuesta deshacer) y el reembolso no se escribe (ejercicio 23); el cobro es una fila de `sales` del destino sin movimiento; `LOAN_RELEASED` y `SAGA_COMPENSATION` como códigos de razón; `BACKORDERED` sin compensar; el barrido `@Scheduled` cada 30 s con reclamo por `UPDATE` condicionado; un span por paso; `task chaos:on TARGET=replenish`. **F25 / G12:** el evento `lab.inventory.stock-low` en `x-lab-events` del OpenAPI (no AsyncAPI); Valkey y NATS en `data`, fuera del chart, con `task bus:on|off`, y el chart solo escribe `EVENT_BUS`, la dirección y la regla de salida de la red; imágenes `-alpine` (cambio de los digests de P11, por el shell); la coreografía es el aviso de la venta, no el préstamo (que queda orquestado: la comparación es entre los dos). **F26 / G13:** `Idempotency-Key` en `sales`, `loans` y órdenes con índice único parcial; `processed_events` (y no un índice único sobre `source_event_id`, que los repetidos ya existentes habrían impedido); outbox solo con NATS (Valkey sigue publicando directo, como bus frágil); el publicador en Go como sidecar nativo con la misma imagen de `inventory`; la saga reintenta el despacho con la clave y lo busca al compensar; **la cancelación idempotente** (un cambio de contrato que encontró el laboratorio). Las trazas quedan apagadas al cerrar T11 | ✅ | contrato, F24–F26, `a01`, `a03` |
+| D43 | T14 | Tomada por la sesión de T14; **confirmada por Oskar el 05/10/2026**. **F23:** con Tempo caído y las trazas encendidas, `catalog` (PHP, que exporta al final de cada petición) cuelga hasta el corte de la puerta (H202). **El chart no se cambia**: el fallo es la lección de la sección 6 de la F23 y su ejercicio 22 pide el arreglo (bajar el timeout del exportador, o un Collector en el nodo); con las trazas apagadas, el valor de todos los perfiles salvo `obs:on traces`, no aparece. **Herramientas:** `task inc:break|fix` toma `PROFILE` y `CLUSTER` (`INC_CONTEXT`, `INC_VALUES`); B-04 acepta `--path` y guarda la imagen con tag. | ✅ | F23, `a01`, Taskfile |
