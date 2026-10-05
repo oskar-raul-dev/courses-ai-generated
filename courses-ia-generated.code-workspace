@@ -1,0 +1,51 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.colorTheme": "Better Selenized Light",
+		"editor.minimap.enabled": false,
+		"editor.fontSize": 15,
+		"editor.fontFamily": "'Lucida Console', Menlo, Monaco, 'Courier New', monospace",
+		"zenMode.hideLineNumbers": false,
+		"zenMode.hideStatusBar": false,
+		"zenMode.centerLayout": false,
+		"zenMode.hideActivityBar": false,
+		"editor.stickyScroll.enabled": false,
+		"terminal.integrated.fontFamily": "'Lucida Console', Menlo, Monaco, 'Courier New', monospace",
+		"workbench.colorCustomizations": {
+			"terminal.background": "#151515",
+			"terminal.foreground": "#D0D0D0",
+			"terminalCursor.background": "#D0D0D0",
+			"terminalCursor.foreground": "#D0D0D0",
+			"terminal.ansiBlack": "#e24646",
+			"terminal.ansiBlue": "#6FC2EF",
+			"terminal.ansiBrightBlack": "#505050",
+			"terminal.ansiBrightBlue": "#6FC2EF",
+			"terminal.ansiBrightCyan": "#12CFC0",
+			"terminal.ansiBrightGreen": "#ACC267",
+			"terminal.ansiBrightMagenta": "#E1A3EE",
+			"terminal.ansiBrightRed": "#FB9FB1",
+			"terminal.ansiBrightWhite": "#F5F5F5",
+			"terminal.ansiBrightYellow": "#DDB26F",
+			"terminal.ansiCyan": "#12CFC0",
+			"terminal.ansiGreen": "#ACC267",
+			"terminal.ansiMagenta": "#E1A3EE",
+			"terminal.ansiRed": "#FB9FB1",
+			"terminal.ansiWhite": "#D0D0D0",
+			"terminal.ansiYellow": "#DDB26F"
+		},
+		"terminal.integrated.mouseWheelZoom": true,
+		"terminal.integrated.fontSize": 14,
+		"window.zoomLevel": 1.4,
+		"editor.mouseWheelZoom": true,
+		"claudeCode.useTerminal": true,
+		"claudeCode.useCtrlEnterToSend": true,
+		"workbench.editor.enablePreview": false,
+		"workbench.editor.enablePreviewFromQuickOpen": false,
+  		"workbench.editor.enablePreviewFromCodeNavigation": false,
+		"markdown.preview.fontSize": 18
+	}
+}
