@@ -310,32 +310,32 @@ upgrade-assistant analyze src\legacy\Sige.Billing\Sige.Billing.csproj
 Y la salida se clasifica a mano en tres categorías, porque **la herramienta no distingue la tercera** y es
 la peligrosa:
 
-```text
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│ 1. NO EXISTE — falla al compilar. Es la mejor de las tres: te enteras enseguida. │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│  System.Web.HttpContext              → inyección explícita del contexto          │
-│  System.ServiceModel (WCF servidor)  → CoreWCF, o minimal APIs                   │
-│  AppDomain.CreateDomain              → no hay equivalente; hay que rediseñar     │
-│  CrystalDecisions.*                  → no existe para .NET moderno (ver 5.4)     │
-└──────────────────────────────────────────────────────────────────────────────────┘
+Cada caja es una categoría, y cada flecha va de la API heredada a lo que la reemplaza:
 
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│ 2. EXISTE CON OTRA FORMA — falla al compilar y la conversión es mecánica.        │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│  System.Data.SqlClient               → Microsoft.Data.SqlClient                  │
-│  BinaryFormatter                     → System.Text.Json (y es una mejora)        │
-│  Thread.Abort                        → CancellationToken (fase 05)               │
-└──────────────────────────────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│ 3. COMPILA Y REVIENTA — la categoría que la herramienta no marca. ⚠️             │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│  ConfigurationManager.AppSettings    → devuelve null. Silenciosamente.           │
-│  ConfigurationManager.ConnectionStrings → lo mismo, y es peor: la cadena         │
-│  Registry.* (paquete de compat.)     → existe; en no-Windows lanza en ejecución  │
-│  System.Drawing.Common               → existe; fuera de Windows, no              │
-└──────────────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph C1["1 · NO EXISTE — falla al compilar. Es la mejor de las tres: te enteras enseguida."]
+        direction LR
+        A1["System.Web.HttpContext"] --> R1["inyección explícita del contexto"]
+        A2["System.ServiceModel (WCF servidor)"] --> R2["CoreWCF, o minimal APIs"]
+        A3["AppDomain.CreateDomain"] --> R3["no hay equivalente; hay que rediseñar"]
+        A4["CrystalDecisions.*"] --> R4["no existe para .NET moderno (ver 5.4)"]
+    end
+    subgraph C2["2 · EXISTE CON OTRA FORMA — falla al compilar y la conversión es mecánica."]
+        direction LR
+        B1["System.Data.SqlClient"] --> S1["Microsoft.Data.SqlClient"]
+        B2["BinaryFormatter"] --> S2["System.Text.Json (y es una mejora)"]
+        B3["Thread.Abort"] --> S3["CancellationToken (fase 05)"]
+    end
+    subgraph C3["3 · COMPILA Y REVIENTA — la categoría que la herramienta no marca ⚠️"]
+        direction LR
+        D1["ConfigurationManager.AppSettings"] --> T1["devuelve null. Silenciosamente."]
+        D2["ConfigurationManager.ConnectionStrings"] --> T2["lo mismo, y es peor: la cadena"]
+        D3["Registry.* (paquete de compat.)"] --> T3["existe; en no-Windows lanza en ejecución"]
+        D4["System.Drawing.Common"] --> T4["existe; fuera de Windows, no"]
+    end
+    C1 ~~~ C2 ~~~ C3
+    style C3 stroke:#d9534f,stroke-width:2px
 ```
 
 **El patrón a memorizar**

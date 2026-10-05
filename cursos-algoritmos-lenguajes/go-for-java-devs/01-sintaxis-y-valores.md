@@ -207,12 +207,11 @@ tercer elemento del slice original ahora dice `PATCHED`.
 **Por qué.** Un slice **no es** un contenedor: es una **cabecera de tres campos**
 que apunta a un arreglo:
 
-```text
-slice = { ptr → arreglo de respaldo,  len,  cap }
-
-movements:  ptr → [SALE][REFUND][VOID][DEPOSIT]    len=4  cap=4
-firstTwo:   ptr → [SALE][REFUND][VOID][DEPOSIT]    len=2  cap=4
-                   ↑ el MISMO arreglo
+```mermaid
+flowchart LR
+    MV["movements<br/>cabecera: ptr · len=4 · cap=4"] -- "ptr" --> AR
+    FT["firstTwo<br/>cabecera: ptr · len=2 · cap=4"] -- "ptr" --> AR
+    AR["arreglo de respaldo, el MISMO para los dos<br/>[SALE] [REFUND] [VOID] [DEPOSIT]"]
 ```
 
 `firstTwo` tiene `len=2` pero `cap=4`: el arreglo de respaldo tiene sitio. Cuando

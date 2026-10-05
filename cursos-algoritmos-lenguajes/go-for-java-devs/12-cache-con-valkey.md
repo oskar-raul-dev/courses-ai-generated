@@ -97,9 +97,18 @@ client, err := valkey.NewClient(valkey.ClientOption{
 **Cache-aside (o *lazy loading*).** El que usa el 95% de los sistemas, y el que
 AtlasSync usa:
 
-```text
-leer:     mirar caché → si falla, leer origen → guardar en caché → devolver
-escribir: escribir origen → INVALIDAR la clave (no actualizarla)
+```mermaid
+flowchart TD
+    subgraph LE["leer"]
+        direction LR
+        L1{"mirar caché"} -- "acierto" --> L4["devolver"]
+        L1 -- "falla" --> L2["leer origen"] --> L3["guardar en caché"] --> L4
+    end
+    subgraph ES["escribir"]
+        direction LR
+        E1["escribir origen"] --> E2["INVALIDAR la clave<br/>(no actualizarla)"]
+    end
+    LE ~~~ ES
 ```
 
 ```go
@@ -128,12 +137,22 @@ func (s *Service) Country(ctx context.Context, code string) (Country, error) {
 
 **Y su condición de carrera**, que casi nadie menciona:
 
-```text
-t0  Goroutine A: falla la caché, lee de Mongo → obtiene población 52.000.000
-t1  Goroutine B: escribe en Mongo población 53.000.000, invalida la clave
-t2  Goroutine A: guarda en caché el valor VIEJO (52.000.000)
-
-→ La caché queda con un dato obsoleto y el TTL es lo único que lo arregla.
+```mermaid
+sequenceDiagram
+    participant A as Goroutine A
+    participant K as Caché
+    participant M as Mongo
+    participant B as Goroutine B
+    Note over A,B: t0
+    A->>K: Get: falla la caché
+    A->>M: lee de Mongo
+    M-->>A: población 52.000.000
+    Note over A,B: t1
+    B->>M: escribe población 53.000.000
+    B->>K: invalida la clave
+    Note over A,B: t2
+    A->>K: guarda el valor VIEJO (52.000.000)
+    Note over K: La caché queda con un dato obsoleto,<br/>y el TTL es lo único que lo arregla.
 ```
 
 La ventana es pequeña y **existe**. Las defensas reales:

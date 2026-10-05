@@ -762,3 +762,55 @@ fechado. Verifica la fecha antes de copiar un patrón.
       clave de API.
 - [ ] Incluye "La señal de que quedó bien" y el bloque 🏷️ del tag (§9.1).
 - [ ] Los ☕ nuevos que aparezcan quedan anotados para `INSTINTOS.md`.
+
+---
+
+## 14. Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 05/10/2026**, en la revisión del curso contra los lineamientos de
+> producción del repositorio. Va después del checklist para no renumerar nada: §13 sigue siendo el
+> checklist. Esta guía se escribió antes de que esos lineamientos existieran; lo que aquí se declara
+> ya era la práctica del curso, y desde ahora está escrito como decisión.
+
+El `CLAUDE.md` del repositorio da **valores por defecto**, y esta guía los reemplaza donde lo
+declara: la regla general, el valor nuevo y por qué. Lo que esta sección no menciona se hereda tal
+cual.
+
+| Regla general del repositorio | Lo que hace este curso | Por qué |
+|---|---|---|
+| Comentarios dentro del código en inglés | **En español, con tildes**, igual que los mensajes de error (§5) | El comentario es el canal del *porqué*, y el curso piensa en español; los identificadores siguen en inglés |
+| Apéndices `aNN-` | **Ninguno** (alcance §9) | "Diciendo y haciendo" pierde sentido si hay que saltar a otro archivo para ejecutar el siguiente comando |
+| Código ejecutable del curso en `src/` | **No hay `src/` ni `.gitignore` de curso**: el lector construye los cuatro servicios en su propio repositorio (`00-convencion-de-git-y-tags.md`) | El curso enseña a escribirlos; entregarlos hechos le quitaría el ejercicio. La única pieza que sí se entregaría hecha es el gemelo Spring Boot (§14.2) |
+| Ninguna salida inventada; lo no ejecutado se marca | **Las salidas de las fases son ilustrativas**, y así se le declara al lector en `0-ESTRUCTURA-CURSO.md` §6 y en el README. Las cifras que cuentan las mide el lector en `BENCHMARKS.md` | Decisión del 05/10/2026: las salidas no se ejecutaron al escribir el curso. Enseñan a leer la herramienta; ninguna sostiene una afirmación |
+| Diagramas a criterio de quien escribe | **Mermaid**, salvo árboles de archivos, salidas y correspondencias (D-12, §14.1) | Pedido explícito del autor en la revisión del 05/10/2026 |
+
+### 14.1 D-12 · Diagramas en Mermaid
+
+**Decidido el 05/10/2026 por el autor, en la revisión del curso.** Todo diagrama —arquitectura, flujo,
+secuencia, estructura en memoria— va en un bloque `mermaid`, con una frase antes que diga qué mirar.
+Quedan en `text` los árboles de archivos, las salidas de terminal, las correspondencias en columnas
+(`cpu → ¿dónde se gasta…?`), las listas de pasos con flechas y las líneas de tiempo de un incidente,
+que no son diagramas.
+
+La revisión convirtió siete: el slice compartido (F01), cache-aside y su carrera, como
+`sequenceDiagram` (F12), la transacción con punto de control y sus dos ventanas de fallo (F13), JVM
+frente a Go (F16) y la plataforma del capstone (F17).
+
+### 14.2 Deudas y ausencias declaradas
+
+- **El gemelo Spring Boot no se publicó.** El alcance §13, la historia §7, `proyecto-04-clearinghouse.md`
+  y la F16 lo dan por entregado en `reference/clearinghouse-spring/`, y no existe; el alcance §9
+  tampoco lo incluye en la estructura. Desde el 05/10/2026 la F16 y el README lo avisan al lector.
+  Cuando se escriba, se revisa además la versión: el curso nombra **Spring Boot 3**, y conviene
+  medir contra la línea vigente con fecha y fuente.
+- **Las versiones no tienen fecha ni fuente** (go1.25.1, PostgreSQL 16, MongoDB 7, Valkey 8). Quedan
+  como están; la próxima sesión que toque el curso las verifica antes de cambiar nada.
+- **Plan de producción, diccionario de términos, contrato de nombres y README de `prompts/`** no
+  existen con esos nombres: el curso es anterior a los lineamientos y está cerrado. Hacen su papel el
+  diccionario del dominio del alcance §5.2, los `proyecto-0N-*.md` (nombres de cada servicio) y
+  `prompts-extendidos-fases.md` (los prompts de fase).
+- **`aprendizaje.md` está en `prompts/`, pero es para el lector**: el método de estudio. Como
+  `prompts/` no se publica, si se quiere que el lector lo tenga hay que sacarlo a la raíz del curso.
+- **Verificador:** `prompts/verificar-corpus.py`, subclase del perfil `courses-ia` de
+  `prompts/verificador_base.py`, con los marcadores y callouts de §8. Se corre desde la raíz del curso
+  con `python3 prompts/verificar-corpus.py`.

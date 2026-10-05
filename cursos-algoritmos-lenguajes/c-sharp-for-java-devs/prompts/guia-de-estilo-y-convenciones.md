@@ -695,3 +695,48 @@ cualquier párrafo que se lea como burla se reescribe.
 - [ ] Incluye "La señal de que quedó bien" en el cierre.
 - [ ] Lleva el bloque 🏷️ del tag al final, con el número correcto (§8.2).
 - [ ] **No hay ningún apéndice** ni ninguna promesa de uno.
+
+---
+
+## 14. Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 05/10/2026**, en la revisión del curso contra los lineamientos de
+> producción del repositorio. Va después del checklist para no renumerar nada (§13 sigue siendo el
+> checklist, y así lo citan los demás documentos de `prompts/`). Esta guía se escribió antes de que
+> esos lineamientos existieran: lo que aquí se declara ya era la práctica del curso, y desde ahora
+> está escrito como decisión.
+
+El `CLAUDE.md` del repositorio da **valores por defecto**, y la guía de un curso los reemplaza cuando
+lo declara: la regla general, el valor nuevo y por qué. Lo que esta sección no menciona se hereda tal
+cual. **Esto matiza la cascada de §12**: las "instrucciones del proyecto" que encabezan esa lista dan
+el valor por defecto, y cada excepción de esta sección manda sobre ellas.
+
+| Regla general del repositorio | Lo que hace este curso | Por qué |
+|---|---|---|
+| Comentarios dentro del código en inglés | **En español, con tildes**, igual que los mensajes de error y de log (§5) | El comentario es el canal del *porqué*, y el curso piensa en español; los identificadores siguen en inglés |
+| 20–30 ejercicios por sección | **20 mínimo, 25 techo** (§9) | El miniproyecto 🧱 consolida la fase; pasar de 25 es relleno |
+| Cada ejercicio con solución de referencia o rúbrica | **Sin solución ni rúbrica publicadas.** La evaluación verificable de cada fase es el miniproyecto, con sus criterios de aceptación (`formato-de-miniproyectos.md`); los ejercicios son enunciados accionables (§9) | Decisión del 05/10/2026: 619 soluciones duplicarían el curso, y para este lector el criterio del ejercicio está en su enunciado y en la medición que pide |
+| Apéndices `aNN-` | **Ninguno** (alcance §6) | Todo es fase o sección de fase |
+| Diagramas a criterio de quien escribe | **Mermaid** para los diagramas; ASCII en `text` solo para árboles de archivos, muestras de datos y salidas (D-12, abajo) | Pedido explícito del autor en la revisión del 05/10/2026 |
+
+### 14.1 D-12 · Diagramas en Mermaid
+
+**Decidido el 05/10/2026 por el autor, en la revisión del curso.** Todo diagrama del curso —flujo,
+árbol de decisión, secuencia, categorías con su correspondencia— va en un bloque `mermaid`, con una
+frase antes que diga qué mirar en él. Quedan en bloque `text` los árboles de archivos, las muestras de
+datos (CSV, ancho fijo), las salidas de terminal y las listas con formato, que no son diagramas.
+
+La revisión convirtió los dos que había: el árbol de decisión de la fase 24 (§5.1) y las tres
+categorías de APIs de la fase 11 (§5.2). Las demás piezas en `text` se revisaron y se quedan como
+están, por ser de las clases de arriba.
+
+### 14.2 Lo que el curso no tiene, y por qué
+
+- **Plan de producción:** el curso se escribió antes de que los lineamientos lo pidieran y está
+  cerrado; no se reconstruye.
+- **Diccionario de términos y contrato de nombres** con esos nombres de archivo: hacen ese papel
+  §5.2 de esta guía (el diccionario del dominio) y `congelamiento-de-nombres.md` (los nombres
+  técnicos congelados). No se renombran, por el bloqueo de contenido.
+- **Verificador:** `prompts/verificar-corpus.py`, subclase del perfil `courses-ia` de
+  `prompts/verificador_base.py`, con los callouts y marcadores de §7. Se corre desde la raíz del
+  curso con `python3 prompts/verificar-corpus.py`.

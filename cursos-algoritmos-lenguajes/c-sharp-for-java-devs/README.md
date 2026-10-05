@@ -125,9 +125,12 @@ su veredicto con umbral, y **el avance de al menos uno de los seis proyectos** q
 curso.
 
 El código vive en `src/`, con dos soluciones que conviven: la heredada sobre .NET Framework 4.8 y
-la nueva sobre .NET 10. Y un tercer directorio, `src/duelo/`, que no es parte del sistema: ahí viven
-las dos implementaciones del mismo endpoint —ASP.NET Core y Spring Boot— que la fase 23 mide y que no
-entran en producción. Cada fase cerrada lleva su tag anotado, cada miniproyecto el suyo con el
+la nueva sobre .NET 10. El curso te entrega el punto de partida: el arnés de medición
+`Cordillera.Bench` con sus pruebas, y el sistema heredado SIGE —esquema, procedimientos almacenados,
+eventos extendidos, acceso a datos y formularios—. El resto de los proyectos lo construyes tú, fase
+a fase, con los nombres que fija cada una, y cada miniproyecto 🧱 va en su `src/fases/NN-nombre/mini/`. Y la fase 23 te hace armar un tercer directorio,
+`src/duelo/`, que no es parte del sistema: ahí viven las dos implementaciones del mismo endpoint
+—ASP.NET Core y Spring Boot— que esa fase mide y que no entran en producción. Cada fase cerrada lleva su tag anotado, cada miniproyecto el suyo con el
 número de su medición en el mensaje, y las deudas técnicas 💸 que el curso deja a propósito se
 cobran con un `git diff` entre dos tags. La convención completa está en
 [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md); los números, en

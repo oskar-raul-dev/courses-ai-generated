@@ -399,6 +399,9 @@ El curso funciona si quien lo termina puede:
 - 🪦 **La empresa es Áurea**, con la historia de `00-historia-de-aurea.md` como fuente.
 - 🪦 **Código en inglés, comentarios y narrativa en español.** Guía de estilo §5.
 - 🪦 **Todo "mejor que" lleva número.** Sin benchmark, no se afirma.
+- 🪦 **Diagramas en Mermaid** (`D-12` de los lineamientos del repositorio), decidido por el autor el
+  05/10/2026; árboles de archivos, datos y salidas siguen en `text`. Las excepciones del curso a
+  esos lineamientos están en la guía §15.
 - 🪦 **Los complementos `ia` y `ds` son parte del curso, no de la carta.** Diecisiete secciones,
   con la misma plantilla, la misma medición y el mismo miniproyecto que una fase base, sobre los
   cuatro proyectos de IA y datos de Áurea. Nombre y tags en `propuestas-fases-base-ia-datos.md`

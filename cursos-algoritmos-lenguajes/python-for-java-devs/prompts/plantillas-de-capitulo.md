@@ -246,3 +246,70 @@ proyecto. **Nunca "un apéndice": no existen.**}}
   tiene que poder mostrarlo (guía §11), y la frontera de la historia clínica no se cruza.
 - **Si aparece material que "sería un buen apéndice"**, tiene tres destinos legítimos: sección
   de esta fase, fase propia, o 📌 con su razón escrita.
+
+---
+
+# 🍽️ Plantilla de sección de la carta
+
+Agregada el 05/10/2026 (guía §14). Es **guía y no molde**: las ocho secciones van en este orden,
+pero una sección puede fundir dos si el tema lo pide, y 🪞, 🩻 y 📖 aparecen solo cuando hay un
+reflejo de Java que recalibrar. Unas 400 líneas.
+
+````markdown
+# {{emoji}} {{tt}}{{NN}} — {{Nombre}}
+
+> Python para desarrolladores Java senior · **Carta** · Track `{{tt}}` — {{nombre del track}} ·
+> sección {{N}} de {{M}}
+> Se lee suelta: no hace falta ninguna otra sección de la carta. {{Conviene haber leído la Fase NN.}}
+> Versiones verificadas contra PyPI el 05/10/2026 · Código escrito sin ejecutar: las salidas
+> rotuladas «Salida esperada, sin correr» no salen de una corrida.
+
+---
+
+## 🎯 1. Qué problema resuelve
+
+{{El problema concreto, y quién lo tiene. En Áurea si le sirve al tema; con su propio ejemplo si
+no. Dos o tres párrafos.}}
+
+## 🧠 2. El modelo
+
+{{La idea que hace que el resto encaje. 🪞 si hay un reflejo de Java que se rompe; 📖 si hay
+traducción en las dos direcciones; un diagrama Mermaid si hay estructura que mostrar.}}
+
+## 💻 3. El ejemplo que corre
+
+{{Instalación (`uv add …` o el `compose.yaml`), el código completo en un bloque por archivo,
+cómo se ejecuta, y la salida rotulada.}}
+
+## ⚠️ 4. Lo que se rompe
+
+{{Las dos o tres trampas reales, cada una con su síntoma y su arreglo.}}
+
+## ⚖️ 5. Cuándo NO usarla
+
+{{Contra qué pierde, con número o con su medición ⏳; y la alternativa.}}
+
+## 🧪 6. Ejercicios ({{8–12}})
+
+**🟢 Fácil (1–{{n}})**
+1. {{…}} **Criterio:** {{verificable}}.
+
+**🟡 Intermedio** · **🟠 Difícil** · **🔴 Muy difícil** (con *Rúbrica:* de tres o cuatro puntos)
+
+## 📚 7. Referencias
+
+{{Documentación oficial, PyPI, artículos; orden de lectura sugerido.}}
+
+## 🚀 8. Cierre
+
+{{Qué te llevas, y La señal de que quedó bien.}}
+
+> 🏷️ **Cierra la sección con su tag**, cuando los ejercicios que elegiste estén hechos:
+>
+> ```bash
+> git tag -a op-{{tt}}-fase-{{NN}} -m "op {{tt}}{{NN}} cerrada: <lo que hiciste, en una línea>"
+> ```
+>
+> Los commits llevan su prefijo (`op {{tt}}{{NN}}: …`) y los de ejercicio su número
+> (`op {{tt}}{{NN}} ej07: …`).
+````

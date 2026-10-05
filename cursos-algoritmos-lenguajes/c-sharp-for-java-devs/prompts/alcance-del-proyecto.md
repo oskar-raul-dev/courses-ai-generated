@@ -411,6 +411,9 @@ El curso funciona si quien lo termina puede:
   (`propuesta-fases-y-alcance.md` §10.2).
 - 🪦 **El curso no puede apagar el sistema.** Cualquier fase cuya propuesta implique una
   ventana de parada de la editorial está mal diseñada.
+- 🪦 **D-12 · Diagramas en Mermaid** (decidido el 05/10/2026, en la revisión del curso contra los
+  lineamientos del repositorio). Los árboles de archivos, las muestras de datos y las salidas
+  siguen en `text`. Guía de estilo §14.1, junto con las demás excepciones declaradas.
 
 **Y la secuencia de fases también está cerrada**: veinticinco fases, 00 a 24, en
 [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §4, con el alcance detallado de

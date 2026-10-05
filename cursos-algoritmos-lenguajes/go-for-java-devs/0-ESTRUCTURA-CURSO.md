@@ -175,6 +175,13 @@ por profundidad— se resolvieron por la otra salida que el formato admite:
 **suavizar la afirmación a lo estructural**, porque ninguna de las dos cambia una
 decisión de diseño.
 
+> ⚠️ **Las salidas que muestran las fases son ilustrativas, no medidas.** Los bloques
+> de salida —un `benchstat`, una traza de `GODEBUG=gctrace=1`, un benchmark con
+> `-cpu=1,4,8,16`— enseñan **cómo se lee** lo que vas a obtener, y sus cifras no
+> salen de una corrida del curso. Las únicas que cuentan son las tuyas: las anotas
+> en la tabla de la entrada de [`BENCHMARKS.md`](BENCHMARKS.md), con tu máquina, y
+> si contradicen el veredicto provisional, gana tu número.
+
 ---
 
 ## 💸 7. Las deudas técnicas y dónde se pagan

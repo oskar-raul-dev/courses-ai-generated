@@ -664,3 +664,137 @@ nombra.
 - [ ] **No se nombra ningún otro curso ni ningún archivo de fuera de esta carpeta.** El curso es
       autocontenido (`alcance-del-proyecto.md` §0), y una exclusión se declara sin decir dónde
       estaría el material excluido.
+
+---
+
+## 14. La carta: forma, excepciones y reglas de producción
+
+> 📝 **Sección agregada el 05/10/2026**, al abrir la escritura de la carta. Va después del
+> checklist para no renumerar nada: §13 sigue siendo el checklist del camino base y de los
+> complementos. Lo que aquí se decide manda sobre la carta y solo sobre la carta. Las decisiones
+> marcadas *por defecto* las tomó la sesión para no bloquearse y esperan revisión del autor.
+
+### 14.1 Lo que el autor decidió (05/10/2026)
+
+- **Se escribe la carta entera**, encadenada, en el orden de `propuestas-temas-opcionales.md` §19
+  (primero los tracks con encargo en Áurea, después los demás). El orden y el estado viven en
+  [`plan-de-produccion-carta.md`](plan-de-produccion-carta.md).
+- **Forma ligera, unas 400 líneas por sección**: problema → modelo → ejemplo que corre → lo que se
+  rompe → cuándo NO usarla → ejercicios → referencias → cierre. El esqueleto está en
+  [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md), *Plantilla de sección de la carta*.
+- **El código se escribe por inspección, sin ejecutar.** Cada sección lo declara en su
+  encabezado, y toda salida que muestre va rotulada **«Salida esperada, sin correr»**. La deuda de
+  ejecución se lleva en el plan, y una tanda de verificación final la paga.
+- **Prueba de humo cuando es barata** (*por defecto, a revisar*). Si el ejemplo corre con
+  dependencias de PyPI y sin servicios, la sesión lo corre en un contenedor `python:3.14.7` antes de
+  cerrar la sección. Entonces el encabezado dice **«Código probado el 05/10/2026 con Python 3.14.7,
+  en contenedor»** (o «probado en parte», diciendo qué), y sus salidas se rotulan **«Salida
+  (Python 3.14.7, 05/10/2026)»**. En las cinco primeras secciones la prueba encontró dos errores
+  reales —un dígito de verificación mal calculado y una fecha sin zona que FHIR rechaza—: por eso
+  se hace aunque el autor no la exija.
+- **Lo que pasó en la práctica (actualizado el 05/10/2026, al cerrar T19).** La prueba de humo
+  dejó de ser la excepción: se extendió a servicios en contenedores con red propia y sin puertos
+  publicados, y **de las 156 secciones de T1–T19, 150 están probadas enteras y 6 en parte**
+  (op002, op013, op019, op029, op036 y op120, marcadas 🟡 en el plan, con lo que falta dicho en su
+  encabezado). «Por inspección» queda como el piso, no como la norma: una sección nueva se prueba
+  salvo que no se pueda, y entonces lo declara.
+
+### 14.2 Excepciones a las reglas de la carta y del repositorio
+
+| Regla general | Lo que hace la carta | Por qué |
+|---|---|---|
+| 20–30 ejercicios por sección (valor por defecto del repositorio; 20–25 en este curso, §9) | **8 a 12 ejercicios**, con el mismo reparto 🟢🟡🟠🔴 y la misma escala de §9 | Decisión del autor: una sección suelta de 400 líneas no sostiene veinte ejercicios sin relleno |
+| Cada ejercicio con solución de referencia o rúbrica | **Cada ejercicio cierra con `**Criterio:**` verificable**; los 🔴 llevan además una rúbrica de tres o cuatro puntos. No se publican soluciones | *Por defecto, a revisar*: el criterio verificable es lo que el lector necesita para saber si terminó, y una solución escrita por inspección sería código sin correr presentado como respuesta |
+| El código de cada documento vive en `src/<nombre del documento>/` (§8.2) | **El código va en la sección**, completo y en un solo bloque por archivo; `src/opNNN-…/` se crea en la tanda de verificación, al ejecutarlo | *Por defecto, a revisar*: escribir cada archivo dos veces sin poder correrlo duplica el riesgo de que diverjan, que es justo lo que la regla de `src/` quiere evitar |
+| Ninguna salida inventada | Las salidas van **rotuladas como esperadas y sin correr**; ningún número de rendimiento se presenta como medido | Mismo método que las mediciones `⏳` del curso: la especificación se publica, el número espera |
+| Diagramas a criterio de quien escribe | **Mermaid**, salvo árboles de archivos, salidas y correspondencias en columnas, que van en `text` | *Por defecto, a revisar*: es la elección que el autor pidió el 05/10/2026 para los cursos de esta familia; el camino base no se convierte aquí |
+| Una sección por plataforma | **Linux y macOS**; lo que solo corre en Windows se dice y no se escribe | El curso no fija Windows, y la carta no lo agrega |
+
+### 14.3 Reglas de producción que heredan todas las secciones
+
+- **Versiones desde [`inventario-verificado.md`](inventario-verificado.md)**, que genera
+  `check-inventario.py` contra PyPI. Una sección no nombra una versión que no esté ahí; si nombra
+  un paquete nuevo, se agrega al inventario y se regenera antes. Un paquete marcado 💤 se nombra con
+  su fecha y su veredicto (quieto porque está terminado, o quieto porque está muerto: §18 de la
+  propuesta).
+- **URL por código de estado**, verificadas al cerrar cada tanda. Aterrizar en la portada de la
+  documentación cuenta como roto.
+- **Autocontenida y suelta**: una sección enlaza fases del camino base y documentos del curso, y
+  secciones de la carta **anteriores** a ella; nunca una posterior, y nunca otra cosa de fuera de
+  esta carpeta.
+- **Áurea cuando le sirve al tema**, con los nombres de la historia y el diccionario de §5.1; un
+  ejemplo propio cuando no. Ningún dato clínico identificable en ningún ejemplo (historia §5).
+- **Los servicios corren en contenedores** con un `compose.yaml` dentro de la sección, imágenes
+  oficiales con etiqueta fija y puertos por defecto (el lector los reconoce).
+- **Fusiones y mudanzas de la propuesta, ya aplicadas a la numeración** (plan §5): `cl` vive dentro
+  de `ui` como `ui10`–`ui12`; `ed05` se muda a `ui01`; `au04` se muda a `qa09` y el track `au`
+  queda en siete secciones; `vz` se recorta a cuatro; EPUB es un 🔴 desafío de `ar06`.
+- **Reparto de `qa` y `ob`** alrededor del cierre nocturno (*por defecto, a revisar*): `qa` prueba
+  el cierre **antes** de que corra —integración, propiedades, carga—; `ob` lo observa **mientras**
+  corre y después —bitácoras, métricas, trazas, alertas—. Ninguna sección de un track repite un
+  ejemplo del otro.
+- **Track `cv`**: camino (a) de la propuesta §13. La técnica se enseña con rostros del propio lector
+  o sintéticos, y **ninguna imagen de paciente** aparece ni se sugiere; `cv05` y `cv08` dicen por
+  qué Áurea no puede desplegar reconocimiento.
+
+### 14.4 Checklist de una sección de la carta
+
+- [ ] Encabezado con track, posición, «se lee suelta», fecha de versiones y la declaración de
+      si el código se probó (entero, en parte —diciendo qué— o sin ejecutar).
+- [ ] Se lee sin haber leído ninguna otra sección de la carta.
+- [ ] Explica qué problema resuelve la herramienta **y cuándo no usarla** (⚖️).
+- [ ] Un ejemplo completo, con su instalación (`uv add …` o `compose.yaml`), identificadores en
+      inglés y comentarios en español **en todos los lenguajes**, también C, Rust o Typst (§5).
+- [ ] Toda salida rotulada («Salida esperada, sin correr» o la de la prueba de humo); ningún
+      número presentado como medido.
+- [ ] Toda versión nombrada está en `inventario-verificado.md`; los 💤 llevan su fecha.
+- [ ] Ninguna comparación sin número, o sin la medición `⏳` que la sostendría.
+- [ ] 8–12 ejercicios con rangos 🟢🟡🟠🔴, cada uno con `**Criterio:**`, y rúbrica en los 🔴.
+- [ ] Referencias con URL completa y verificada, y orden de lectura.
+- [ ] Cierra con La señal de que quedó bien y el bloque 🏷️ `op-<tt>-fase-NN`.
+- [ ] Enlaza solo hacia atrás, y nada de fuera de esta carpeta.
+
+---
+
+## 15. Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 05/10/2026**, en la revisión de `prompts/` contra los lineamientos de
+> producción del repositorio (`zz-instrucciones/`). Va al final para no renumerar nada: §13 sigue
+> siendo el checklist y §14 la carta, y así los citan los demás documentos. Esta guía se escribió
+> antes de que esos lineamientos existieran: lo que aquí se declara ya era la práctica del curso, y
+> desde ahora está escrito como decisión.
+
+El `CLAUDE.md` del repositorio y las plantillas de los lineamientos dan **valores por defecto**; esta
+guía los reemplaza donde lo dice. Lo que esta sección no menciona se hereda tal cual. Las
+excepciones propias de la carta están en §14.2.
+
+| Regla general | Lo que hace este curso | Por qué |
+|---|---|---|
+| Comentarios dentro del código en inglés (repositorio) | **En español, con tildes**, igual que los mensajes de error y de log (§5) | El comentario es el canal del *porqué*, y el curso piensa en español; los identificadores siguen en inglés |
+| 20–30 ejercicios por sección (repositorio) | **20 mínimo, 25 ideal** por fase (§9); 8–12 en la carta (§14.2) | El miniproyecto obligatorio consolida la fase; más volumen sería relleno |
+| Solución de referencia o rúbrica por ejercicio (repositorio); solución plegada en 🟢🟡 (plantilla) | **Sin soluciones publicadas.** En el camino base, la evaluación verificable es el miniproyecto con sus criterios de aceptación (`formato-de-miniproyectos.md`); en la carta, cada ejercicio cierra con `**Criterio:**` y los 🔴 con rúbrica | Los ejercicios son enunciados accionables y verificables (§9); escribir cientos de soluciones duplicaría el curso |
+| Apéndices `aNN-` y su propuesta | **Ninguno** (alcance §6) | Todo es fase, complemento o sección de la carta |
+| Diagramas a criterio de quien escribe (`D-12` de los lineamientos) | **Mermaid** para los diagramas; `text` para árboles de archivos, muestras de datos, salidas y correspondencias en columnas | Pedido explícito del autor el 05/10/2026 para los cursos de esta familia. La carta ya lo cumple; la conversión del camino base y de los complementos es una tarea aparte, pendiente |
+
+### 15.1 Lo que el curso no tiene, y qué hace su papel
+
+- **Diccionario de términos** con ese nombre de archivo: hace su papel §5.1 de esta guía (el
+  diccionario del dominio, de español a identificador en inglés).
+- **Contrato de nombres** con ese nombre de archivo: lo hacen [`contrato-del-cli.md`](contrato-del-cli.md)
+  (los nombres del CLI de Patricia, congelados fase a fase) y §5.1. No se renombran, por el bloqueo
+  de contenido.
+- **Plan de producción del camino base y de los complementos:** se escribieron antes de que los
+  lineamientos lo pidieran, y su registro está en `README.md` (las tandas T0–T13). La carta sí tiene
+  el suyo: [`plan-de-produccion-carta.md`](plan-de-produccion-carta.md), con la forma de la
+  plantilla (§1–§9, incluido el registro de directorios de `zz-code/`).
+- **Propuesta de apéndices y prompts de apéndice:** no hay apéndices.
+- **Fecha de versión en el encabezado** de cada documento de `prompts/`: solo la llevan el plan y
+  el inventario, que cambian a diario. Los demás fechan cada cambio en el propio texto, como esta
+  sección.
+- **Verificador:** [`verificar-corpus.py`](verificar-corpus.py), subclase del perfil `courses-ia`
+  de [`verificador_base.py`](verificador_base.py) (copia idéntica a la de los lineamientos), con los
+  chequeos `CARTA-*` de la carta. Se corre desde la raíz del curso con
+  `python3 prompts/verificar-corpus.py`. Con `--perfil=publicacion` todavía falla: emoji en `###`
+  (permitidos en este repositorio) y dos enlaces de `ia01` a `prompts/`, que se resuelven en la
+  etapa de publicación.
+

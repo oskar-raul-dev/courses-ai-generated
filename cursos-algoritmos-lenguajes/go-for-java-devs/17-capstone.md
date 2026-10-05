@@ -74,29 +74,15 @@ sitio:
 Cuatro binarios que arrancan no son un sistema. Lo que los convierte en uno es que
 **el trabajo fluye entre ellos y las garantías se sostienen en las fronteras**.
 
-```text
-┌─────────────┐  sync HTTP   ┌──────────────────┐
-│ storeagent  │─────────────▶│  ClearingHouse   │
-│  (SQLite)   │   F10        │   (PostgreSQL)   │
-└─────────────┘              └────────┬─────────┘
-                                      │ cierre por lotes · F13
-                                      ▼
-                             ┌──────────────────┐      ┌──────────────┐
-                             │    OpsReport     │─────▶│   outbox     │
-                             │  (PostgreSQL)    │ F13  │  (misma tx)  │
-                             └────────┬─────────┘      └──────┬───────┘
-                                      │ reporte                │ SKIP LOCKED
-                                      │ en streaming           ▼
-                                      │ F13            ┌──────────────┐
-                                      ▼                │  EventRelay  │
-                              ┌───────────────┐        │ (PostgreSQL) │
-                              │  CSV/JSON/HTML│        └──────┬───────┘
-                              └───────────────┘               │ HMAC, reintentos
-                                                              │ F10, F12
-                    ┌──────────────┐   tipo de cambio         ▼
-                    │  AtlasSync   │◀─────────────────  ┌──────────────┐
-                    │(Mongo+Valkey)│       F11, F12     │ fakeconsumer │
-                    └──────────────┘                    └──────────────┘
+```mermaid
+flowchart TD
+    SA["storeagent<br/>(SQLite)"] -- "sync HTTP · F10" --> CH["ClearingHouse<br/>(PostgreSQL)"]
+    CH -- "cierre por lotes · F13" --> OR["OpsReport<br/>(PostgreSQL)"]
+    OR -- "F13" --> OB["outbox<br/>(misma tx)"]
+    OR -- "reporte en streaming · F13" --> RP["CSV/JSON/HTML"]
+    OB -- "SKIP LOCKED" --> ER["EventRelay<br/>(PostgreSQL)"]
+    ER -- "HMAC, reintentos · F10, F12" --> FC["fakeconsumer"]
+    FC -- "tipo de cambio · F11, F12" --> AS["AtlasSync<br/>(Mongo+Valkey)"]
 ```
 
 **Y las fronteras, que es donde vive todo lo que el curso enseñó:**

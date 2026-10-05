@@ -92,13 +92,15 @@ test**:
 
 Aquí está el mecanismo central de la fase, y cabe en un diagrama:
 
-```text
-┌─ TRANSACCIÓN ────────────────────────────────────┐
-│  1. leer N movimientos desde el último cursor    │
-│  2. conciliarlos                                  │
-│  3. escribir los asientos resultantes             │
-│  4. ESCRIBIR EL PUNTO DE CONTROL (nuevo cursor)   │
-└───────────── COMMIT ─────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph TX["TRANSACCIÓN"]
+        direction TB
+        S1["1. leer N movimientos desde el último cursor"] --> S2["2. conciliarlos"]
+        S2 --> S3["3. escribir los asientos resultantes"]
+        S3 --> S4["4. ESCRIBIR EL PUNTO DE CONTROL<br/>(nuevo cursor)"]
+    end
+    TX --> CM(["COMMIT"])
 ```
 
 **El punto de control va dentro de la misma transacción que el trabajo.** Esa es
@@ -112,12 +114,20 @@ toda la idea, y es lo que hace el lote reanudable de verdad:
 Si el punto de control se escribiera **fuera** de la transacción, habría dos
 ventanas de error:
 
-```text
-commit del trabajo → ☠️ fallo → punto de control NO escrito
-   → al reanudar, se reprocesa lo ya hecho → DUPLICADOS (salvo idempotencia)
-
-punto de control escrito → ☠️ fallo → commit del trabajo NO hecho
-   → al reanudar, se salta trabajo → PÉRDIDA SILENCIOSA, que es peor
+```mermaid
+flowchart TD
+    subgraph V1["Primero el trabajo, después el punto de control"]
+        direction LR
+        A1["commit del trabajo"] --> F1["☠️ fallo"] --> N1["punto de control NO escrito"]
+        N1 --> R1["al reanudar, se reprocesa lo ya hecho<br/>→ DUPLICADOS (salvo idempotencia)"]
+    end
+    subgraph V2["Primero el punto de control, después el trabajo"]
+        direction LR
+        A2["punto de control escrito"] --> F2["☠️ fallo"] --> N2["commit del trabajo NO hecho"]
+        N2 --> R2["al reanudar, se salta trabajo<br/>→ PÉRDIDA SILENCIOSA, que es peor"]
+    end
+    V1 ~~~ V2
+    style R2 stroke:#d9534f,stroke-width:2px
 ```
 
 **La segunda es la que mata**, porque no deja rastro: el lote termina "bien" y

@@ -25,10 +25,15 @@ lo abre. Quien escribe una fase lo lee entero antes de teclear la primera línea
 > [`propuestas-fases-base-ia-datos.md`](propuestas-fases-base-ia-datos.md) §0.
 >
 > **Y después** viene el material **a la carta**: secciones opcionales, sueltas, que se leen cuando
-> alguien necesita un tutorial concreto de una herramienta. Su inventario y su orden de escritura
-> están en [`propuestas-temas-opcionales.md`](propuestas-temas-opcionales.md), y **no se rigen por
+> alguien necesita un tutorial concreto de una herramienta. Su inventario está en
+> [`propuestas-temas-opcionales.md`](propuestas-temas-opcionales.md), y **no se rigen por
 > las mismas reglas que el camino base** — no se les exige miniproyecto ni medición, y no tienen
-> que pasar por el dominio de Áurea.
+> que pasar por el dominio de Áurea. Sus reglas están en la guía §14.
+>
+> 🚧 **La carta, en producción desde el 05/10/2026**: 176 secciones `opNNN-<tt>NN-…` en 22 tracks.
+> **T1–T19 cerradas (156 de 176)**, casi todas probadas en contenedor; siguen T20 `gi`, T21 `cv`,
+> T22 `ed`, T23 (README y estructura) y T24 (verificación diferida y `src/`). El estado, la
+> numeración y la bitácora viven en [`plan-de-produccion-carta.md`](plan-de-produccion-carta.md).
 
 ---
 
@@ -91,6 +96,7 @@ El orden de escritura recomendado, y no es el orden de los números:
 | 4 | **08**, y luego el **Bloque C** (10-16) | En orden, porque cada proyecto crece sobre el anterior |
 | 5 | Fase **17**, y después `BENCHMARKS.md` e `INSTINTOS.md` | El cierre necesita todas las mediciones hechas |
 | 6 | Los complementos **`ia01`–`ia08`** y **`ds01`–`ds09`**, en ese orden | Construyen los cuatro proyectos de IA y datos sobre el código del camino base. El prompt sale de `prompts-de-tracks-ia-ds.md` |
+| 7 | **La carta**, una tanda por track | Se retoma por la línea «Dónde está» del plan de la carta; las reglas están en la guía §14 y el esqueleto en `plantillas-de-capitulo.md` |
 
 ### Las tandas del turno 6
 
@@ -132,6 +138,10 @@ sección**.
 | `prompts-de-fase.md` | El marco común + los 18 prompts del camino base | — |
 | `prompts-de-tracks-ia-ds.md` | El marco común + los 17 prompts de `ia` y `ds` | Las 17 secciones complementarias |
 | `contrato-del-cli.md` | La forma del CLI fase por fase, congelada | Las fases 01-09 y 15 |
+| `plan-de-produccion-carta.md` | El plan de la carta: tandas, estado, numeración `opNNN`, bitácora y directorios de `zz-code/` | El orden y el estado de la carta |
+| `inventario-verificado.md` | Las versiones de PyPI por track, verificadas; lo genera `check-inventario.py` | Toda versión que nombra una sección de la carta |
+| `check-inventario.py` | Consulta PyPI y regenera el inventario (`python3 prompts/check-inventario.py <tt>`) | — |
+| `verificador_base.py` · `verificar-corpus.py` | El verificador de los lineamientos del repositorio y la subclase del curso, con los chequeos de la carta (`python3 prompts/verificar-corpus.py`) | — |
 
 ### Material que **no** manda
 

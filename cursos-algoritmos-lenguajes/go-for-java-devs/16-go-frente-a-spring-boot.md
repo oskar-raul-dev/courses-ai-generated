@@ -97,6 +97,13 @@ la comparación no vale nada y todo el mundo lo sabrá.**
 
 **3. No se enseña a escribirlo.** Se lee, se compara y se mide.
 
+> ⚠️ **El gemelo todavía no se publica con el curso.** `reference/clearinghouse-spring/`
+> está pendiente, así que hoy esta fase se lee y se prepara —la suite de contrato, el
+> conjunto de datos, los comandos de B-24—, pero el duelo no se puede correr con el
+> material del curso. Si quieres correrlo ya, el gemelo lo escribes tú con las tres
+> reglas de arriba, y la regla de la suite de contrato pasa a ser también tu prueba de
+> que lo escribiste bien.
+
 > 🧭 **Regla del proyecto.** Antes de medir nada, **las dos implementaciones tienen
 > que pasar la misma suite de contrato HTTP y producir asientos byte a byte
 > idénticos** sobre el mismo conjunto de datos. Si no lo hacen, no estás comparando
@@ -116,14 +123,18 @@ milisegundos, y concluyes que Go es 230 veces más rápido. Y entonces mides el
 **Por qué.** La JVM no es lenta: **es lenta al principio**. Y la razón es que su
 modelo de ejecución es distinto, no peor:
 
-```text
-JVM:
-  arranque → interpretar bytecode → perfilar qué se ejecuta mucho →
-  compilar a código máquina con C1 → recompilar con C2 optimizando
-  AGRESIVAMENTE con la información de ejecución real
-
-Go:
-  compilar todo a código máquina ANTES → ejecutar
+```mermaid
+flowchart TD
+    subgraph JV["JVM"]
+        direction LR
+        J1["arranque"] --> J2["interpretar bytecode"] --> J3["perfilar qué<br/>se ejecuta mucho"]
+        J3 --> J4["compilar a código<br/>máquina con C1"] --> J5["recompilar con C2 optimizando<br/>AGRESIVAMENTE con la información<br/>de ejecución real"]
+    end
+    subgraph GO["Go"]
+        direction LR
+        G1["compilar todo a código máquina ANTES"] --> G2["ejecutar"]
+    end
+    JV ~~~ GO
 ```
 
 El JIT de la JVM **sabe cosas que un compilador anticipado no puede saber**: qué

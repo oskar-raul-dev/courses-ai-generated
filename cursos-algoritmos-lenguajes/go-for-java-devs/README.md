@@ -84,6 +84,11 @@ una JVM sin configurar es hacer trampa.
 Y termina diciendo **dónde quedarse en Spring Boot es la decisión correcta**.
 Si el resultado fuera "Go gana en todo", el curso estaría mal escrito.
 
+> ⚠️ El gemelo Spring Boot de ClearingHouse **todavía no se publica** con el curso:
+> la Fase 16 explica cómo seguir sin él. Y las cifras que verás en las salidas de las
+> fases son ilustrativas; las que cuentan son las que mides tú en
+> [`BENCHMARKS.md`](BENCHMARKS.md).
+
 ---
 
 ## 🗺️ Por dónde empezar

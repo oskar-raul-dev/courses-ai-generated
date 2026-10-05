@@ -268,67 +268,39 @@ No hay software nuevo. Lo que se escribe son tres artefactos, y los tres son de 
 
 ### 5.1 El árbol de decisión ⚖️ — cuándo NO usar lo que este curso enseña
 
-```text
-¿Tienes un sistema heredado que funciona y da dinero?
-│
-├─ NO ─────► Este curso te sirve a medias. Las fases 00-06 y 15-20 sí; el resto
-│            resuelve un problema que no tienes. Y ojo con el consejo de un curso
-│            de migración aplicado a un sistema nuevo: te va a hacer conservador
-│            donde puedes permitirte no serlo.
-│
-└─ SÍ
-   │
-   ├─ ¿Alguien pide funciones nuevas en él?
-   │   │
-   │   ├─ NO, y no cambia desde hace años
-   │   │   └─► ⛔ **NO LO MIGRES.** Es el módulo de inventario. Es "el Fox".
-   │   │        Envuélvelo si necesitas leerlo, y escribe cuánto cuesta dejarlo
-   │   │        quieto. Migrarlo es orgullo de ingeniería (F24, admisión 2).
-   │   │
-   │   └─ SÍ, y duele cada vez
-   │       └─► Sigue.
-   │
-   ├─ ¿Cuánta gente lo va a mantener cuando tú no estés?
-   │   │
-   │   ├─ Una o dos personas
-   │   │   └─► ⛔ **NO adoptes nada que ellas no dominen.** Ni Kubernetes (F20),
-   │   │        ni un framework de JavaScript (F18), ni Semantic Kernel (F22),
-   │   │        ni microservicios. El costo de operación sale de las mismas manos
-   │   │        que arreglan el cierre nocturno.
-   │   │
-   │   └─ Un equipo con área de plataforma
-   │       └─► Los umbrales de este curso son demasiado conservadores para ti.
-   │            Súbelos, y quédate con la metodología.
-   │
-   ├─ ¿Sabes qué hace el sistema, con pruebas que lo demuestren?
-   │   │
-   │   ├─ NO
-   │   │   └─► ⛔ **NO TOQUES NADA TODAVÍA.** Caracterizar primero (F08). Una
-   │   │        migración sin red es una reescritura con otro nombre, y la
-   │   │        reescritura es lo que Clara rechazó en 2021 con razón.
-   │   │
-   │   └─ SÍ
-   │       └─► Sigue.
-   │
-   ├─ ¿Tienes la factura de lo que pagas hoy, desglosada?
-   │   │
-   │   ├─ NO
-   │   │   └─► ⛔ **NO PROPONGAS NADA.** Sin línea base no hay comparación, y sin
-   │   │        comparación tu propuesta es el traslado de 2020 otra vez (F20).
-   │   │
-   │   └─ SÍ
-   │       └─► Sigue, y marca cada línea con cómo crece.
-   │
-   └─ ¿Tu decisión depende de que una plataforma sea más rápida que otra?
-       │
-       ├─ SÍ
-       │   └─► ⚠️ Mídelo antes de creerlo, con la declaración de defendibilidad
-       │        publicada (F23). Es probable que empate a tu volumen — y si
-       │        empata, tu decisión dependía de otra cosa y conviene saber de qué.
-       │
-       └─ NO
-           └─► ✅ Entonces estás decidiendo por las razones correctas: la gente,
-                el dominio, el dinero y el riesgo. Adelante.
+Se lee de arriba abajo, y cada pregunta se hace solo si la anterior te dejó seguir: un ⛔ termina el
+recorrido ahí, y la única salida verde está al fondo.
+
+```mermaid
+flowchart TD
+    Q0{"¿Tienes un sistema heredado<br/>que funciona y da dinero?"}
+    A0["Este curso te sirve a medias. Las fases 00-06 y 15-20 sí;<br/>el resto resuelve un problema que no tienes. Y ojo con el<br/>consejo de un curso de migración aplicado a un sistema nuevo:<br/>te va a hacer conservador donde puedes permitirte no serlo."]
+    Q1{"¿Alguien pide funciones<br/>nuevas en él?"}
+    A1["⛔ NO LO MIGRES. Es el módulo de inventario. Es «el Fox».<br/>Envuélvelo si necesitas leerlo, y escribe cuánto cuesta<br/>dejarlo quieto. Migrarlo es orgullo de ingeniería<br/>(F24, admisión 2)."]
+    Q2{"¿Cuánta gente lo va a mantener<br/>cuando tú no estés?"}
+    A2["⛔ NO adoptes nada que ellas no dominen. Ni Kubernetes (F20),<br/>ni un framework de JavaScript (F18), ni Semantic Kernel (F22),<br/>ni microservicios. El costo de operación sale de las mismas<br/>manos que arreglan el cierre nocturno."]
+    B2["Los umbrales de este curso son demasiado<br/>conservadores para ti. Súbelos, y quédate<br/>con la metodología."]
+    Q3{"¿Sabes qué hace el sistema,<br/>con pruebas que lo demuestren?"}
+    A3["⛔ NO TOQUES NADA TODAVÍA. Caracterizar primero (F08).<br/>Una migración sin red es una reescritura con otro nombre,<br/>y la reescritura es lo que Clara rechazó en 2021 con razón."]
+    Q4{"¿Tienes la factura de lo que<br/>pagas hoy, desglosada?"}
+    A4["⛔ NO PROPONGAS NADA. Sin línea base no hay comparación,<br/>y sin comparación tu propuesta es el traslado de 2020<br/>otra vez (F20)."]
+    Q5{"¿Tu decisión depende de que una plataforma<br/>sea más rápida que otra?"}
+    A5["⚠️ Mídelo antes de creerlo, con la declaración de<br/>defendibilidad publicada (F23). Es probable que empate<br/>a tu volumen — y si empata, tu decisión dependía de<br/>otra cosa y conviene saber de qué."]
+    B5["✅ Entonces estás decidiendo por las razones<br/>correctas: la gente, el dominio, el dinero<br/>y el riesgo. Adelante."]
+
+    Q0 -- NO --> A0
+    Q0 -- SÍ --> Q1
+    Q1 -- "NO, y no cambia desde hace años" --> A1
+    Q1 -- "SÍ, y duele cada vez" --> Q2
+    Q2 -- "Una o dos personas" --> A2
+    Q2 -- "Un equipo con área de plataforma" --> B2
+    B2 --> Q3
+    Q3 -- NO --> A3
+    Q3 -- SÍ --> Q4
+    Q4 -- NO --> A4
+    Q4 -- "SÍ: marca cada línea con cómo crece" --> Q5
+    Q5 -- SÍ --> A5
+    Q5 -- NO --> B5
 ```
 
 ### 5.2 El checklist que te llevas al trabajo

@@ -29,6 +29,14 @@ lo abre. Quien escribe una fase lo lee entero antes de teclear la primera línea
 > este curso se impone, y quedan escritas como errores documentados también en
 > `0-ESTRUCTURA-CURSO.md` §4.
 
+> 📝 **Revisión contra los lineamientos del repositorio (05/10/2026).** El curso se escribió antes de
+> que existieran los lineamientos de producción del repositorio, y se revisó contra ellos sin
+> renombrar ni reordenar nada. Lo que diverge quedó declarado en la **guía §14**: comentarios en
+> español, la banda de 20–25 ejercicios, ejercicios sin solución publicada (el miniproyecto es la
+> evaluación verificable), ningún apéndice, y **D-12: diagramas en Mermaid** (los dos que había se
+> convirtieron). El curso ganó su verificador, `verificar-corpus.py`, y el `README.md` del curso
+> dejó de describir un `src/duelo/` que el lector todavía no armó.
+
 ---
 
 ## 📖 Orden de lectura
@@ -137,6 +145,7 @@ propuesta:
 | `prompts-de-documentos-de-encuadre.md` | Los 5 prompts del encuadre | — |
 | `prompts-de-fase.md` | El marco común + los 25 prompts | — |
 | `como-escribir-el-curso.md` | El procedimiento | — |
+| `verificar-corpus.py` + `verificador_base.py` | El verificador del curso: enlaces, anclas, restos, callouts. Se corre desde la raíz del curso | — |
 
 **Si al escribir aparece una contradicción, se arregla en el documento de arriba primero.**
 Parchear la fase y dejar la propuesta desactualizada es cómo empiezan las divergencias que nadie
