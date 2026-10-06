@@ -240,7 +240,11 @@ tapaste el síntoma una capa más arriba.}}
   (be-09), **16** (be-12), **18** (be-13), **19** (be-05) y **20** (be-15). Antes de
   redactar uno, se lee su hermano: aquel archivo ya está publicado y describe qué cambia
   entre las dos capas. Si divergen, gana el hermano publicado.
-- **Todo el código corre con el stack fijado** (`decisiones-y-versiones.md`): React 16.14,
+- **Todo el código corre con el stack fijado** (`00-decisiones-y-versiones.md`): React 16.14,
   react-scripts 4.0.3, Redux Toolkit 1.8.6, redux-observable 1.2.0, RxJS 6.6.7, Router
   5.3.4, axios 0.21.4, Jest 26, RTL 11, Node 14.21.3.
 - **Nada de culpabilización** en el post-mortem, ni siquiera implícita (guía §13).
+- **Si el enunciado o la solución necesitan un diagrama**, va en Mermaid (guía §17.1):
+  una race condition se dibuja como `sequenceDiagram` entre componente, store, epic y mock.
+  La secuencia de acciones tal como la muestra Redux DevTools no es un diagrama: es la
+  evidencia que el alumno tiene que reconocer en su pantalla, y se queda en texto.

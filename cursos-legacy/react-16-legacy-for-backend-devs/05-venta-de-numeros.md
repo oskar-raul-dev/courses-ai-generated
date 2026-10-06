@@ -49,10 +49,14 @@ Esto es, con nombre y apellido, **contención sobre un recurso escaso.** Un núm
 
 Cada número vive una máquina de estados chica pero estricta:
 
-```
-available ──reserve──► reserved ──sell──► sold
-    ▲                      │
-    └──────expire──────────┘
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> available
+    available --> reserved: reserve
+    reserved --> sold: sell
+    reserved --> available: expire
+    sold --> [*]
 ```
 
 - **`available`**: nadie lo tiene. Es el estado inicial de los 10 000.
@@ -82,7 +86,7 @@ El rollback es la parte que todo el mundo olvida, y por la que aparecen los bugs
 
 ### La forma del error legible se hereda, con un tipo nuevo
 
-Fase 4 fijó que el store nunca guarda el error crudo de axios (no es serializable y RTK protesta), sino un objeto `{ message, type }` que arma `toReadableError(error)`. Fase 5 **reutiliza esa misma forma** para que la UI de venta hable el mismo idioma de errores que ya habla la UI de rifas. Recuerda el caso mixto de la §4 de la guía: la *key* va en inglés, el *valor* de `message` en español, porque lo lee el usuario.
+Fase 4 fijó que el store nunca guarda el error crudo de axios (no es serializable y RTK protesta), sino un objeto `{ message, type }` que arma `toReadableError(error)`. Fase 5 **reutiliza esa misma forma** para que la UI de venta hable el mismo idioma de errores que ya habla la UI de rifas. Recuerda el caso mixto de la convención de idioma del curso: la *key* va en inglés, el *valor* de `message` en español, porque lo lee el usuario.
 
 Los tipos que venían de Fase 4 son `'timeout'`, `'http'`, `'malformed'` y `'unknown'`. La venta agrega uno: **`'conflict'`**, para cuando el backend responde `409 Conflict` porque el número ya estaba vendido. Ese tipo es el que le permite a la UI decir "ese número ya se vendió, elige otro" en vez del genérico "ocurrió un error". Un tipo nuevo, mismo esquema; no inventamos otro shape.
 
@@ -697,7 +701,7 @@ La Fase 6 toma todo lo que dejaste marcado como deuda acá —la expiración, la
 
 - **La virtualización con `react-window` 💸 ya tiene ejercicio 🔥, pero no tiene
   número.** Sin un tiempo de montaje de referencia, el ejercicio no es
-  verificable como pide §9 de la guía. → Medir el montaje del tablero de 10 000
+  verificable, que es lo que se le pide a todo ejercicio. → Medir el montaje del tablero de 10 000
   celdas y fijar el umbral.
 - **El `Map` de timers fuera del store** es una decisión de diseño que Fase 6
   jubila 🪦 explícitamente (§5.2) al reemplazarla por `timer` + `takeUntil`. El

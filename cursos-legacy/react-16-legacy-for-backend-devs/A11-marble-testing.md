@@ -320,7 +320,7 @@ rápido, más claro y no depende de RxJS.
 **Mezclar `rxjs-marbles` 7.x con RxJS 6.** El paquete ata su major a la de RxJS.
 `npm install rxjs-marbles` a secas te trae la 7 contra tu RxJS 6.6.7, y los
 tests fallan con errores de scheduler que no dicen nada útil. Va pineado a
-`6.0.1` (D9, `prompts/decisiones-y-versiones.md`).
+`6.0.1` (D9, `00-decisiones-y-versiones.md`).
 
 **Olvidar `ActionsObservable`.** `redux-observable` 1.x espera que `action$` sea
 un `ActionsObservable`, no un Observable pelado, porque de ahí sale `ofType`.

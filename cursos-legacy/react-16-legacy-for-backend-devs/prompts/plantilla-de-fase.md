@@ -155,7 +155,7 @@ allí y por qué es el paso natural.}}
 
 - Las horas deben coincidir con el presupuesto de `00-alcance-del-proyecto.md`
   (§1 y §7) y sumar 96 en total.
-- Toda versión de dependencia sale de `prompts/decisiones-y-versiones.md`; todo porqué
+- Toda versión de dependencia sale de `00-decisiones-y-versiones.md`; todo porqué
   histórico del sistema sale de `00-historia-del-sistema.md`. No se reinventan
   en la fase.
 - No contradigas nombres de slices, acciones o componentes de fases previas (todos en inglés, ver `prompts/diccionario-codigo-ingles.md`).
@@ -172,8 +172,14 @@ allí y por qué es el paso natural.}}
 - Enlaza la pieza forense y los incidentes que correspondan a esta fase.
 - Ninguna decisión técnica queda abierta: si la fase necesita una versión, una
   librería o un dato del dominio que no esté decidido, se decide y se registra en
-  `prompts/decisiones-y-versiones.md` o `00-historia-del-sistema.md` **antes** de escribir el
+  `00-decisiones-y-versiones.md` o `00-historia-del-sistema.md` **antes** de escribir el
   código. Los 📌 Pendientes son para material que sobró, no para decisiones sin
   tomar.
 - Autocontenido (guía §11): cada referencia cruzada resuelve a un archivo real,
   ninguna decisión queda "pendiente de confirmar", cero dependencias externas.
+- **Diagramas en Mermaid** (guía §17.1): `stateDiagram-v2` para ciclos de vida,
+  `sequenceDiagram` para lo que pasa entre capas, `flowchart` para el resto. Los
+  árboles de archivos, las salidas de terminal y los registros de DevTools se
+  quedan en texto. Cada diagrama se dibuja antes de darlo por bueno.
+- Al cerrar, `python3 prompts/verificar-corpus.py` desde la raíz del curso
+  (guía §17.3).

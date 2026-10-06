@@ -27,7 +27,7 @@ Hasta ahora la rifa "cerraba" con una precondición plana: los epics y la UI mir
 - **Persistencia del resultado / auditoría del sorteo** (guardar quién consultó, cuándo, con qué `checkedAt`) más allá de dejarlo en el store → se retoma con trazabilidad en Fase 8 y en el dashboard de Fase 9.
 - **Marble testing formal del `pollingEpic`** (cancelación verificada con canicas) → `A11-marble-testing.md` §8, y se aplica en la Fase 10. Acá se explica el modelo mental y se prueba a mano en Network; el test automatizado se escribe después.
 - **Reloj de servidor / desfase de hora cliente-servidor.** Comparamos contra el reloj del navegador (`Date.now()`). Si el cliente tiene la hora mal, el cierre se corre. Mitigarlo (sincronizar con el servidor) es un incidente de la Fase 8/forense, no de acá. 💸
-- **Librería de fechas** (`date-fns` / `luxon` / `Day.js`) → **decidido: no se adopta ninguna** (`prompts/decisiones-y-versiones.md`). Fase 7 resuelve TZ con `Date` nativo, y el porqué está abajo. Formatear "cierra en 2h 15m" con librería queda como ejercicio 🔥.
+- **Librería de fechas** (`date-fns` / `luxon` / `Day.js`) → **decidido: no se adopta ninguna** (`00-decisiones-y-versiones.md`). Fase 7 resuelve TZ con `Date` nativo, y el porqué está abajo. Formatear "cierra en 2h 15m" con librería queda como ejercicio 🔥.
 
 ---
 
@@ -59,7 +59,7 @@ El `pollingEpic` es un módulo aparte, sin clase ni hook. La guarda de hora dura
 
 ## 💻 5. Implementación y código comentado
 
-Recuerda el reparto de capas: la **guarda de tiempo** es lógica pura de frontend/store; el **polling** es un epic; el **mock de lotería** es backend (Fase 3, que extendemos acá para modelar "todavía no salió"). Los nombres heredados están congelados por la nota de continuidad Fase 6 → Fase 7 y el `prompts/diccionario-codigo-ingles.md`: código en inglés, comentarios y UI en español.
+Recuerda el reparto de capas: la **guarda de tiempo** es lógica pura de frontend/store; el **polling** es un epic; el **mock de lotería** es backend (Fase 3, que extendemos acá para modelar "todavía no salió"). Los nombres heredados están congelados por la nota de continuidad Fase 6 → Fase 7 y la convención del README (§Convenciones): código en inglés, comentarios y UI en español.
 
 ### 5.1 La guarda de hora dura — `src/features/raffles/closing.js`
 
@@ -548,7 +548,7 @@ export const boardRefreshEpic = (action$) =>
 
 El foco forense es **correlacionar el intervalo de peticiones con el ciclo de vida del epic** en la pestaña Network. Abre Network, filtra por `results`, y verifica tres cosas: (a) los `GET /results/:id` empiezan al `START_POLLING` y salen cada `POLLING_INTERVAL_MS`; (b) ante un `500` inyectado por el caos, ves los reintentos con los gaps del backoff (500ms, 1s, 2s) y luego el tick vuelve al ritmo normal; (c) —lo crítico— al despachar `STOP_POLLING`, al pasar la hora de cierre, o al hacer logout, **los `GET` paran**. Un polling sano deja de aparecer en Network; un polling con leak sigue golpeando el `3002` para siempre.
 
-**Ejercicio "rompe a propósito y observa":** quita `resultReceived.type` del `takeUntil` del `pollingEpic` y deja el resto igual. Corre el mock con la rifa ya cerrada (para que `/results` devuelva `200` con ganador). Observa en Network que, tras recibir el resultado, el polling **sigue** pidiendo `/results` cada 3s aunque ya no hay nada nuevo que traer: es un leak silencioso que drena servidor y batería. Vuelve a poner el notifier y confirma que ahora para en el primer `200`. Escribe el post-mortem (plantilla Guía de Estilo §12) de por qué un `takeUntil` incompleto es indistinguible de uno correcto hasta que miras la red.
+**Ejercicio "rompe a propósito y observa":** quita `resultReceived.type` del `takeUntil` del `pollingEpic` y deja el resto igual. Corre el mock con la rifa ya cerrada (para que `/results` devuelva `200` con ganador). Observa en Network que, tras recibir el resultado, el polling **sigue** pidiendo `/results` cada 3s aunque ya no hay nada nuevo que traer: es un leak silencioso que drena servidor y batería. Vuelve a poner el notifier y confirma que ahora para en el primer `200`. Escribe el post-mortem (con los ocho puntos del post-mortem de `cuaderno-incidentes.md`) de por qué un `takeUntil` incompleto es indistinguible de uno correcto hasta que miras la red.
 
 > 📓 De esta fase salen los incidentes **16** y **17** de `cuaderno-incidentes.md`. El 16 no se reproduce si no declaras la zona horaria del navegador, y el 17 comparte síntoma con dos causas distintas que se separan contando peticiones en Network.
 
@@ -591,7 +591,7 @@ El foco forense es **correlacionar el intervalo de peticiones con el ciclo de vi
 26. Diseña el polling de **dos rifas simultáneas** (Fase 9 lo necesitará): cambia el `switchMap` externo a `mergeMap` por `raffleId` y explica qué se rompería si dejaras `switchMap` (un `START_POLLING` de la rifa 2 mataría el de la rifa 1). Verifica en Network que ambos corren en paralelo y se cancelan independientes.
 27. Reproduce el bug del **reloj del cliente**: adelanta la hora del navegador 3 horas y muestra que `isPastClosing` cierra la rifa antes de tiempo. Diseña (sin implementar del todo) cómo un `serverNow` bajado en cada respuesta mitigaría esto, y qué fase debería pagarlo.
 28. Escribe un mini marble diagram (en comentario) de `timer(0, 3000)` con `takeUntil` cortando en el tercer tick, como anticipo del marble testing de Fase 10. Marca dónde se limpia la suscripción.
-29. **Post-mortem completo** (plantilla Guía de Estilo §12) de un incidente real simulado: "el polling de resultados siguió golpeando la lotería toda la noche tras el logout de todos los operadores, y el proveedor nos bloqueó por abuso". Síntoma, reproducción, evidencia (Network), causa raíz (`takeUntil` sin `LOGOUT`), corrección, prueba de regresión, prevención, sin culpabilización.
+29. **Post-mortem completo** (con los ocho puntos del post-mortem de `cuaderno-incidentes.md`) de un incidente real simulado: "el polling de resultados siguió golpeando la lotería toda la noche tras el logout de todos los operadores, y el proveedor nos bloqueó por abuso". Síntoma, reproducción, evidencia (Network), causa raíz (`takeUntil` sin `LOGOUT`), corrección, prueba de regresión, prevención, sin culpabilización.
 30. **🔥 avanzado:** haz el backoff del `pollingEpic` con *jitter* (aleatorizado) para evitar que, si mil clientes empiezan a polear al mismo cierre, todos reintenten en sincronía (thundering herd) y tumben la lotería. Explica el problema y muestra el cambio en el `retryWhen`.
 
 **🔥 Opcionales**
@@ -665,7 +665,7 @@ Fase 8 —**liquidación + dinero**— toma ese `resolved` con su `winningNumber
 - **La librería de fechas (`date-fns` / `luxon` / `Day.js`) sigue sin decidir.**
   La fase resuelve la zona horaria con `Date` nativo a propósito, y eso está bien
   justificado; lo que falta es el lugar donde vive la decisión. → Queda anotada
-  acá; la decisión de no adoptarla está cerrada en `prompts/decisiones-y-versiones.md`.
+  acá; la decisión de no adoptarla está cerrada en `00-decisiones-y-versiones.md`.
 - **El tipo `'stale'` está reservado en el catálogo de `error.type` y no se
   materializa 💸.** Un catálogo con una entrada que nunca ocurre confunde al que
   depura. → O se materializa en esta fase, o se saca del catálogo y se anota como

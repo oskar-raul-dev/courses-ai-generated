@@ -42,7 +42,7 @@ Eres senior: sabes qué es un test unitario y por qué un test que depende del r
 
 **Qué trae CRA 4 y qué no.** `react-scripts` 4.0.3 ya configura **Jest 26** y **React Testing Library 11** (con `@testing-library/jest-dom` y `@testing-library/user-event`); `src/setupTests.js` ya importa los matchers. No instalas Jest ni configuras `jest.config`. Lo único que sumas para esta fase es `rxjs-marbles` (dev dependency) para los epics y `cypress` para el smoke. No toques versiones (D7): `package-lock.json` manda.
 
-> **Nota de convivencia.** Igual que el código de la app mezcla class y hooks, los tests de esta fase testean **ambos** con la misma herramienta: RTL no distingue entre un componente de clase (`RaffleTable`) y uno funcional (`MetricCard`), porque testea la **salida renderizada**, no la implementación. Ese es justo el argumento de "testear comportamiento, no implementación" (guía §5): un test que no sabe si adentro hay una clase o un hook es un test que sobrevive a la refactorización de Fase 11.
+> **Nota de convivencia.** Igual que el código de la app mezcla class y hooks, los tests de esta fase testean **ambos** con la misma herramienta: RTL no distingue entre un componente de clase (`RaffleTable`) y uno funcional (`MetricCard`), porque testea la **salida renderizada**, no la implementación. Ese es justo el argumento de "testear comportamiento, no implementación": un test que no sabe si adentro hay una clase o un hook es un test que sobrevive a la refactorización de Fase 11.
 
 ---
 
@@ -80,7 +80,7 @@ CRA 4 corre los tests con `react-scripts test` (modo watch por defecto; `CI=true
 ```bash
 # rxjs-marbles para los epics (D9); cypress para el smoke.
 # --save-dev: son dependencias de desarrollo, no van al bundle.
-# Las versiones van PINEADAS: ver prompts/decisiones-y-versiones.md §3.
+# Las versiones van PINEADAS: ver 00-decisiones-y-versiones.md §3.
 npm install --save-dev rxjs-marbles@6.0.1 cypress@10.11.0
 ```
 

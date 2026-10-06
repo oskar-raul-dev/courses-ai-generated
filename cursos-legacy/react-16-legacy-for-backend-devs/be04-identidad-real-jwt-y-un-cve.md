@@ -881,7 +881,7 @@ también el `userID`, sacado del token y no del cuerpo. Compárala con la de
 
 **🔴 Muy difícil (28–32)**
 
-28. **Post-mortem.** Escribe `server/postmortem-jwt.md` según la guía §13: síntoma (una dependencia central archivada con un aviso sin parche), evidencia (el aviso, las fechas, la versión afectada), causa raíz, corrección, prueba de regresión y prevención. **Sin culpabilización**: adoptar `dgrijalva/jwt-go` en 2020 era la decisión correcta con la información de 2020. La prevención tiene que ser un mecanismo verificable, no "estar más atentos".
+28. **Post-mortem.** Escribe `server/postmortem-jwt.md` según los ocho puntos del post-mortem de `cuaderno-incidentes.md`: síntoma (una dependencia central archivada con un aviso sin parche), evidencia (el aviso, las fechas, la versión afectada), causa raíz, corrección, prueba de regresión y prevención. **Sin culpabilización**: adoptar `dgrijalva/jwt-go` en 2020 era la decisión correcta con la información de 2020. La prevención tiene que ser un mecanismo verificable, no "estar más atentos".
 29. Diseña e implementa ese mecanismo: algo que avise cuando una dependencia del `go.mod` quede archivada o adquiera un aviso. Puede ser tosco (`govulncheck` en CI, un script contra la API de avisos). `be09` lo va a querer en el pipeline.
 30. Argumenta por escrito si el token debería guardarse en `localStorage` —donde está hoy— o en una cookie `HttpOnly`. Defiende las dos posturas con XSS y CSRF sobre la mesa, y después responde la pregunta que de verdad importa acá: **¿podrías cambiarlo sin tocar el frontend?** Deja la conclusión en el mapa de deuda.
 31. Diseña la implementación completa de *refresh tokens* para este sistema: endpoints, almacenamiento, rotación, revocación. Enumera **exactamente** qué archivos del frontend habría que tocar y calcula si eso cabe dentro de la excepción `D27`. Concluye si se haría, y con qué plan.
@@ -924,7 +924,7 @@ del panorama de seguridad de la API.
 > Los datos del CVE de esta fase se confirmaron contra el aviso oficial al
 > escribirla, y aun así el procedimiento correcto es abrirlo. Las referencias a
 > libros son de memoria y pueden ser inexactas. Cualquier discrepancia de
-> versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 

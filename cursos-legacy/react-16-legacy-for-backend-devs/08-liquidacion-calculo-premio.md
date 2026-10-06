@@ -857,7 +857,7 @@ esta fase, **suman exacto**.
   del costo real del `find` en el dashboard de Fase 9.
 - **La librería de dinero (`dinero.js` / `big.js`) sigue sin decidir.** La fase
   usa enteros nativos a propósito y lo justifica bien; la decisión de adoptar una
-  librería queda cerrada en `prompts/decisiones-y-versiones.md`: no se adopta. → No
+  librería queda cerrada en `00-decisiones-y-versiones.md`: no se adopta. → No
   integrarla al código base sin esa confirmación.
 - **"Liquidé dos veces la misma rifa" es el error común #3 y no llegó a incidente
   propio.** El incidente 18 cubre el centavo de diferencia, que es más sutil pero

@@ -1,0 +1,22 @@
+# .gitignore único del curso, en su raíz. El curso no trae código: la aplicación y el
+# backend del track BE los construye el lector en su propio repositorio, con el
+# .gitignore que le deja CRA (Fase 0). Este solo cubre lo que el sistema operativo
+# y los editores dejan al leer y editar el curso.
+# Se sostiene solo: el curso se publica como repositorio propio y el .gitignore de la
+# raíz del repositorio de cursos no viaja con él.
+
+# macOS, Windows y Linux
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+.directory
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Cachés de Python que deja el verificador al correr
+__pycache__/

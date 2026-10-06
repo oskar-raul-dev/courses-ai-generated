@@ -370,8 +370,8 @@ Tu curso enseña `redux-observable` porque el sistema lo adoptó en 2022 (D2), y
 razón: para orquestación asíncrona compleja —cancelación, debounce,
 coordinación de streams, polling que se apaga solo— los epics son excelentes.
 Pero parte de madurar como mantenedor es saber **cuándo un epic es demasiado**,
-y qué usarías en su lugar. La propia guía de estilo del curso lo dice: a veces
-un thunk basta, y sobreusar RxJS es un antipatrón.
+y qué usarías en su lugar. La Fase 6 ya lo decía al presentar los epics: a
+veces un thunk basta, y sobreusar RxJS es un antipatrón.
 
 | Herramienta | Mental model | Brilla en | Se queda corta / sobra en |
 |---|---|---|---|

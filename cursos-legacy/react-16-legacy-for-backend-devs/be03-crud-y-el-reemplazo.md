@@ -914,7 +914,7 @@ contrato escrito.
 30. **Diagnóstico + regresión.** Ticket: *"desde el martes, cuando vendo un número el nombre del comprador aparece en blanco, pero solo a veces"*. Con lo que sabes de `C-03` y del Caso A, enumera las causas candidatas ordenadas por probabilidad, di cómo descartas cada una y escribe la prueba de regresión de la que sobreviva.
 31. Escribe el generador de "diff de contrato": un programa que tome dos respuestas JSON —la del mock guardada y la de tu binario— y reporte diferencias de estructura y de tipo, ignorando valores. Úsalo sobre los doce endpoints.
 32. Argumenta si la columna `users.token` debería existir. Defiende primero que sí (el contrato la exige), después que no (una credencial en claro en la base es un hallazgo de seguridad), y decide con qué criterio se resuelve el empate en un sistema real que no puede tocar su cliente.
-33. **Post-mortem.** Escribe el post-mortem del reemplazo como si algo hubiera salido mal en producción: qué falló, cuánto tardaron en notarlo, cómo volvieron atrás y qué control habría cambiado el resultado. Según la guía §13, sin culpabilización.
+33. **Post-mortem.** Escribe el post-mortem del reemplazo como si algo hubiera salido mal en producción: qué falló, cuánto tardaron en notarlo, cómo volvieron atrás y qué control habría cambiado el resultado. Según los ocho puntos del post-mortem de `cuaderno-incidentes.md`, sin culpabilización.
 
 **🔥 Opcionales**
 
@@ -951,7 +951,7 @@ nombre a lo que hiciste.
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros son de memoria y pueden ser inexactas. La documentación de
 > Postgres tiene una versión por URL; fija el 13. Cualquier discrepancia de
-> versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -1005,10 +1005,10 @@ abandonada y arrastra un CVE, y migrar al fork con su post-mortem.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/decisiones-y-versiones.md` §7** el tag `mock-retirado`
-  y, si se quiere, en `00-convencion-de-git-y-tags.md` como tag de hito del track
-  BE. Es el único tag del curso que no sigue el patrón `fase-…`, y está
-  justificado: marca un evento, no un cierre de fase.
+- ✅ **Registrado en `00-convencion-de-git-y-tags.md`** (§Los tags de hito del
+  track BE) el tag `mock-retirado`. Con `track-be-completo` de `be09`, son los
+  únicos del curso que no siguen el patrón `fase-…`, y está justificado: marcan
+  un evento, no un cierre de fase.
 - **La columna `users.token` (migración `000002`) tiene fecha de vencimiento.**
   `be04` debe borrarla en su propia migración y decirlo explícitamente: es la
   parte visible de cobrar la deuda. Si `be04` la deja, la deuda no se pagó.

@@ -383,7 +383,7 @@ diez líneas → y el resto por saltos.
 
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros y videos son de memoria y pueden ser inexactas. La fuente
-> de verdad de versiones es `prompts/decisiones-y-versiones.md` §7.
+> de verdad de versiones es `00-decisiones-y-versiones.md` §7.
 
 ---
 

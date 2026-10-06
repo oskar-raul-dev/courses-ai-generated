@@ -29,8 +29,7 @@ terminal del servidor.
 ## ✅ 2. Qué queda listo al terminar
 
 - [ ] `server/go.mod` con `go 1.19` y `gorilla/mux` v1.8.0 como única
-      dependencia; el layout de `server/` creado según
-      `prompts/diccionario-codigo-ingles.md` §7bis.3.
+      dependencia; el layout de `server/` creado según el árbol de §5.1.
 - [ ] El binario compila con `go build ./...` y arranca con `go run ./cmd/api`,
       escuchando en el puerto que indique `PORT`.
 - [ ] `GET /health` responde `200` con `{"status":"ok"}` y su `X-Request-Id`.
@@ -1013,7 +1012,7 @@ una función.
 29. **Diagnóstico + regresión.** Te entregan este bug: "cada tanto, dos peticiones distintas aparecen en el log con el mismo `X-Request-Id`". Reprodúcelo (pista: `newRequestID` no es el único camino por el que se asigna un id), determina la causa raíz y escribe la prueba de regresión que lo habría atrapado.
 30. **Diagnóstico.** Un `500` del backend llega al navegador y `toReadableError` de la Fase 4 lo convierte en "Error de red" en vez de "Error del servidor". El backend jura que respondió `500`. Encuentra la causa en la cadena de middlewares, arréglala y demuestra el antes y el después con dos capturas de Network.
 31. Argumenta por escrito si `GET /health` debe reportar `503` cuando la base de datos no responde —caso que llega en `be02`— o mantenerse en `200` mientras el proceso viva. Defiende la postura contraria a la tuya y decide con qué criterio se resuelve, sabiendo que el orquestador de `be09` va a matar el contenedor según esa respuesta.
-32. **Post-mortem.** Escribe el post-mortem del incidente ficticio "el backend se caía entero tres veces por día y nadie sabía por qué", con la causa raíz en la falta de `recover`, según la guía §13: síntoma, evidencia, causa raíz, corrección, prueba de regresión, prevención. Sin culpabilización.
+32. **Post-mortem.** Escribe el post-mortem del incidente ficticio "el backend se caía entero tres veces por día y nadie sabía por qué", con la causa raíz en la falta de `recover`, según los ocho puntos del post-mortem de `cuaderno-incidentes.md`: síntoma, evidencia, causa raíz, corrección, prueba de regresión, prevención. Sin culpabilización.
 
 **🔥 Opcionales**
 
@@ -1052,7 +1051,7 @@ cómodo.
 > referencias a libros son de memoria y pueden ser inexactas. Casi todo el
 > material bueno de Go en la web asume la versión más reciente; cuando algo no
 > compile con `go 1.19`, el que manda es
-> `prompts/decisiones-y-versiones.md` §7.
+> `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -1100,11 +1099,9 @@ justifica la regla del motor de `be08`.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/decisiones-y-versiones.md` §7.4** la variable `PORT` y
+- ✅ **Registrado en `00-decisiones-y-versiones.md` como `D24`:** la variable `PORT` y
   la convención del puerto de transición: mientras el mock viva (be01 y be02) el
-  binario arranca en `3011`; desde `be03` toma el `3001` por defecto. Hoy está
-  decidido en el código de esta fase y comentado en `main.go`, pero la fuente de
-  verdad de puertos debería recogerlo.
+  binario arranca en `3011`; desde `be03` toma el `3001` por defecto.
 - **Registrar en el régimen de crecimiento de `server/CONTRACT.md`** la forma de
   `POST /_chaos` que esta fase define (`{"level":"off|low|high"}` → `200` con el
   nivel vigente, `400` ante nivel desconocido sin cambiar nada) y `GET /health`.

@@ -393,7 +393,7 @@ sirve o te mete en problemas— → el §4 antes de generar nada → y el resto 
 
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros y videos son de memoria y pueden ser inexactas. La fuente
-> de verdad de versiones es `prompts/decisiones-y-versiones.md` §7, donde
+> de verdad de versiones es `00-decisiones-y-versiones.md` §7, donde
 > `gofakeit` v6.19.x figura como dependencia **exclusiva de este apéndice**.
 
 ---

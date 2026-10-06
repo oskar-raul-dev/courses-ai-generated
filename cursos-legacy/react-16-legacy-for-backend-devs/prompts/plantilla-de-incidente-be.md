@@ -210,3 +210,7 @@ con ellos.}}
 - **La prueba de regresión declara su motor.** Si toca concurrencia, bloqueos,
   zonas horarias o SQL específico, corre contra PostgreSQL o no vale (`D18`).
 - **Nada de culpabilización** en el post-mortem, ni siquiera implícita (guía §13).
+- **Si el enunciado o la solución necesitan un diagrama**, va en Mermaid (guía
+  §17.1): `sequenceDiagram` entre navegador, backend y PostgreSQL para lo que
+  ocurre en el tiempo. Los logs con `X-Request-Id`, las salidas de `psql` y de
+  `go test -race` son evidencia literal y se quedan en texto.

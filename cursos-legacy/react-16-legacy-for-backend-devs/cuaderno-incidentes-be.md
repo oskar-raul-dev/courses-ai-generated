@@ -18,8 +18,9 @@ en `cuaderno-incidentes.md` y **nunca se reasigna**.
 > están en rangos distintos. El cuaderno base conserva la reserva y apunta acá.
 >
 > La estructura, las reglas y el tono son **exactamente los mismos**. Lo que
-> cambia son las herramientas, y está registrado en
-> `prompts/plantilla-de-incidente-be.md`.
+> cambia son las herramientas —logs, `psql`, `pg_stat_activity`, `EXPLAIN`,
+> `go test -race`, `docker`— y una pregunta que encabeza cada enunciado: **de
+> qué lado del cable está la causa**.
 
 **Prerrequisito:** haber terminado la fase que cada incidente indica. Adelantarte
 no es imposible, pero vas a pelear con herramientas que todavía no conoces —y en

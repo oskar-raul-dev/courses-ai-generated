@@ -9,7 +9,7 @@ aplicar un hotfix que no rompa otras tres cosas**.
 No necesitas acceso a ningún sistema previo, ni a un repositorio de empresa, ni
 a un instructor. Todo lo que el curso usa lo construyes tú a lo largo de las
 fases, con las versiones y los comandos exactos escritos en
-`prompts/decisiones-y-versiones.md`.
+`00-decisiones-y-versiones.md`.
 
 ## 🏢 El sistema: Rifas y Chances S.A.S.
 
@@ -115,6 +115,12 @@ commits con el prefijo de la fase, un tag anotado por fase cerrada, y los pares
 `-roto` / `-fix` que convierten cada incidente resuelto en un `git diff` que se
 entiende dentro de seis meses.
 
+**Y dos documentos de consulta**, que no se leen de corrido:
+`00-decisiones-y-versiones.md`, con cada versión congelada, el `package.json` y el
+`go.mod` de referencia, los puertos y las decisiones D1–D29 con su porqué; y
+`00-alcance-del-proyecto.md`, con qué cubre el curso, qué deja fuera y cuántas
+horas lleva cada track.
+
 ## 🔥 Track BE opcional — el backend de verdad (be00–be09)
 
 Las doce fases de arriba se completan **enteras contra el mock**, y ahí termina
@@ -130,9 +136,8 @@ no cuentan en las 96) donde reemplazas `json-server` por un backend real en **Go
 > 🧭 **Se apaga el mock, se levanta el binario de Go en el mismo puerto `3001`, y
 > la aplicación React no cambia ni un archivo.**
 
-Se puede empezar **en cuanto termines la Fase 8**. El encuadre completo
-—justificación, alcance y programa— está en
-`prompts/propuesta-fases-backend.md`.
+Se puede empezar **en cuanto termines la Fase 8**. Las versiones y las decisiones
+propias del track (D14–D29) están en la §7 de `00-decisiones-y-versiones.md`.
 
 | # | Fase | Foco |
 |---|---|---|
@@ -172,7 +177,7 @@ Toolkit 1.8.6 · redux-observable 1.2.0 · RxJS 6.6.7 · React Router 5.3.4 · a
 0.21.4 · Bootstrap 4.6.2 · Jest 26 · React Testing Library 11 · chart.js 2.9.4.
 
 Las versiones exactas, el `package.json` completo, qué instala cada fase y el
-porqué de cada decisión están en **`prompts/decisiones-y-versiones.md`**, que es la
+porqué de cada decisión están en **`00-decisiones-y-versiones.md`**, que es la
 fuente de verdad. Si un número aparece en dos sitios y no coinciden, gana ese
 archivo.
 
@@ -207,7 +212,25 @@ la fase (`f04: …`), un tag anotado por fase cerrada y pares de tags
 
 El código va **en inglés** (identificadores, endpoints, constantes). Los
 comentarios, los textos de interfaz y toda la narrativa van **en español
-latinoamericano con tuteo**. El detalle está en
-`prompts/guia-de-estilo-y-convenciones.md`, que es la fuente de verdad
-editorial, y el diccionario de términos del dominio en
-`prompts/diccionario-codigo-ingles.md`.
+latinoamericano con tuteo**. Para no dudar al nombrar algo, estos son los
+términos del dominio y su nombre en código:
+
+| En el curso | En el código | En la base (track BE) |
+|---|---|---|
+| rifa | `raffle` | `raffles` |
+| número | `number` | `raffle_numbers` |
+| venta | `Sale`, `sellNumber` | `sales` |
+| participante | `participant` | `participants` |
+| resultado | `result` | — |
+| liquidación | `settlement` | `settlements` |
+| pago del premio | `PrizePayout` | `prize_payouts` |
+| hora de cierre | `closesAt` | `closes_at` |
+
+Los estados de una rifa son `draft` → `open` → `closed` → `resolved` →
+`settled`, y los de un número, `available` → `reserved` → `sold`. Los nombres
+se arman con esos términos y verbos en inglés: `fetchRaffles`, `sellNumber`,
+`raffleSlice`, `pollingEpic`, `selectOpenRaffles`. En el backend, las tablas van
+en plural y `snake_case`, las etiquetas JSON en `camelCase` como las consume el
+frontend, y la columna puede llamarse distinto que la etiqueta
+(`raffle_numbers` frente a `numbers`): la etiqueta es el contrato, la columna
+no.

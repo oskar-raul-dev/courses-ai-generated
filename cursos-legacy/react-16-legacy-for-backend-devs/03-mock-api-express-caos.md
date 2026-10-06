@@ -35,7 +35,8 @@ de resultados en la Fase 7.
 > narrativa, los comentarios y los textos de interfaz siguen en
 > **español**. Por eso vas a ver `raffles`, `createChaosMiddleware` y
 > `status: 'open'` en el código, pero `"Token inválido o expirado"` como
-> mensaje al usuario. El detalle está en `prompts/diccionario-codigo-ingles.md`.
+> mensaje al usuario. Los términos del dominio y su nombre en código están en
+> el README del curso (§Convenciones).
 
 ---
 
@@ -442,8 +443,8 @@ module.exports = { rafflesNumbersRouter };
 //
 // 📝 Nota de diseño (Fase 3): el caos completo se activa acá desde ya,
 // aunque nadie lo consuma todavía desde un epic — eso llega en la Fase 6
-// y Fase 7. La decisión se tomó explícitamente en el chat de esta fase
-// para que Fase 6-7 hereden un mock ya inestable y se concentren en el
+// y Fase 7. Se decidió así a propósito, para que las Fases 6 y 7
+// hereden un mock ya inestable y se concentren en el
 // epic (polling, cancelación, retry), no en armar el caos del mock.
 
 const express = require("express");
@@ -891,7 +892,7 @@ volver a loguearte, no sobre un mundo ideal.
 > porque no debe competir con el cierre.
 
 - **La tabla de niveles de caos tiene cuatro columnas** y una de ellas ("uso
-  típico") es una frase larga por celda — la señal exacta que §3 de la guía da
+  típico") es una frase larga por celda — la señal exacta
   para dejar de usar tabla. → Reescribirla como lista con subtítulos `off` /
   `low` / `high`.
 - **Cambiar `CHAOS_LEVEL` en caliente** (un `POST /_chaos`) aparece como ejercicio

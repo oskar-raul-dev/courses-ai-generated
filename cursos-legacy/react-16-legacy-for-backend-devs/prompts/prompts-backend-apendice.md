@@ -3,7 +3,7 @@
 
 Cada prompt está listo para copiar y pegar en un chat nuevo. Los datos ya están
 completados según `prompts/propuesta-fases-backend.md` y
-`prompts/decisiones-y-versiones.md` §7.
+`00-decisiones-y-versiones.md` §7.
 
 Los apéndices se crean **bajo demanda, cuando una fase los referencia** — no
 hace falta seguir este orden. Son material de **consulta rápida**, no de lectura
@@ -26,7 +26,7 @@ Go, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16 para el track BE), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) entregables aprobados de
 fases BE relevantes, (8) decisiones de este chat.
@@ -71,7 +71,7 @@ compose, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) el apéndice A9 del track
 base (entornos y contenedores) para no contradecirlo, (8) decisiones de este
@@ -119,7 +119,7 @@ dialectos, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be02 ya escrita, de la que
 este apéndice es la referencia extendida, (8) decisiones de este chat.
@@ -168,7 +168,7 @@ del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16 y §13), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be04 ya escrita, (8)
 decisiones de este chat.
@@ -214,7 +214,7 @@ PostgreSQL, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be05 ya escrita, de la que
 este apéndice es la referencia extendida, (8) decisiones de este chat.
@@ -256,7 +256,7 @@ del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be06 ya escrita y la Fase
 7 del track base, (8) decisiones de este chat.
@@ -297,7 +297,7 @@ correlación, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be01 ya escrita, la Fase 2
 del track base (el interceptor que lee el X-Request-Id) y el apéndice A13
@@ -341,7 +341,7 @@ aplicada, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be04 ya escrita y
 bea-04, (8) decisiones de este chat.
@@ -387,7 +387,7 @@ BE, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) TODAS las fases be00-be09
 ya escritas, más el apéndice A12 del track base como modelo estructural, (8)
@@ -437,7 +437,7 @@ apéndice OPCIONAL 🔥 dentro de un track ya opcional.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7) be03 y be08 ya escritas,
 (8) decisiones de este chat.

@@ -665,7 +665,7 @@ Todos anclados al dominio de rifas y a los identificadores en inglés vigentes. 
 14. Agrega una acción síncrona `clearError` al `authSlice` y despáchala al desmontar `LoginPage` con un `useEffect`. Justifica por qué conviene.
 15. Convierte el mensaje de error del store en un componente reutilizable `AuthError` que reciba el texto por prop.
 16. Documenta en 5 pasos cómo reproducir el "loop de redirección infinito" y luego cómo evitarlo. (Diagnóstico.)
-17. Haz que `RaffleListPage` (que es una clase con `connect()`) lea `selectCurrentUser` vía `connect(mapStateToProps)` y muestre "Hola, {name}" arriba del listado. Esto estrena la convivencia `connect()` + `useSelector()` que pide la guía.
+17. Haz que `RaffleListPage` (que es una clase con `connect()`) lea `selectCurrentUser` vía `connect(mapStateToProps)` y muestre "Hola, {name}" arriba del listado. Esto estrena la convivencia `connect()` + `useSelector()` que vas a encontrar en cualquier base de esta época.
 
 **🟠 Difícil (18–24)**
 

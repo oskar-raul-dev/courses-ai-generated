@@ -10,7 +10,7 @@ qué versiones congela y cómo se reparte en fases y apéndices.
 > **Fecha:** 4 de septiembre de 2026.
 > **Track base afectado:** ninguno. Las fases 0-11 no cambian ni una línea.
 > **Fuentes de verdad que respeta:** `prompts/instrucciones-del-proyecto.md`,
-> `00-alcance-del-proyecto.md`, `prompts/decisiones-y-versiones.md`,
+> `00-alcance-del-proyecto.md`, `00-decisiones-y-versiones.md`,
 > `prompts/guia-de-estilo-y-convenciones.md`, `prompts/plantilla-de-fase.md`.
 > **Documentos que obliga a tocar:** ver §10.
 
@@ -185,7 +185,7 @@ contraste es contenido de `be09`, no un problema a esconder.
 
 ### Puertos
 
-Cuatro procesos. Los tres primeros ya existen en `decisiones-y-versiones.md` §5
+Cuatro procesos. Los tres primeros ya existen en `00-decisiones-y-versiones.md` §5
 y no se mueven.
 
 - **`3000`** — dev server de CRA. Sirve la SPA.
@@ -464,7 +464,7 @@ tengan a qué referirse.
 1. **`README.md`** — sección nueva del track opcional 🔥, con su tabla de fases,
    su tabla de apéndices, su presupuesto de horas declarado aparte de las 96, y
    el prerrequisito.
-2. **`prompts/decisiones-y-versiones.md`** — bloque de decisiones del backend
+2. **`00-decisiones-y-versiones.md`** — bloque de decisiones del backend
    (continuando la numeración D14 en adelante), el `go.mod` completo, qué
    instala cada fase BE, y el cuarto puerto. Sigue siendo la fuente de verdad
    única de versiones, ahora también para Go.

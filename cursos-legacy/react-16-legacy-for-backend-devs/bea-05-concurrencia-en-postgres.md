@@ -446,7 +446,7 @@ quieras la teoría completa.
 > documentación de Postgres tiene **una versión por URL**: si aterrizas en la
 > última, cambia el número a 13 antes de creerle. Las referencias a libros son de
 > memoria y pueden ser inexactas. La fuente de verdad de versiones es
-> `prompts/decisiones-y-versiones.md` §7.
+> `00-decisiones-y-versiones.md` §7.
 
 ---
 

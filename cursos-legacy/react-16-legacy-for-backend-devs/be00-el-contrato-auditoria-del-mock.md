@@ -678,7 +678,7 @@ esto desde siempre".
 27. **Diagnóstico.** Argumenta si `C-01` debe entrar al régimen estricto o al de crecimiento. Defiende la postura contraria a la tuya en cuatro líneas y después decide, por escrito, con qué criterio se resuelve el empate.
 28. Toma la excepción `C-06` y escribe su alternativa: el contrato de un backend que honre `GET /users?email=&password=` con `bcrypt` y JWT sin tocar el frontend. Enumera qué se pierde pedagógicamente y qué riesgo real queda vivo. Después justifica por qué el track eligió la excepción.
 29. **Diagnóstico + prevención.** Diseña la prueba de contrato mínima que habría detectado `C-03` el día que se escribió el `sellNumberEpic`, y ubica en qué capa tendría que haber corrido para ser útil.
-30. Escribe el post-mortem de `C-05` como si el bug hubiera costado cuatro horas de un incidente en producción: síntoma, evidencia, causa raíz, corrección, prueba de regresión y prevención. Sin culpabilización, según la guía §13.
+30. Escribe el post-mortem de `C-05` como si el bug hubiera costado cuatro horas de un incidente en producción: síntoma, evidencia, causa raíz, corrección, prueba de regresión y prevención. Sin culpabilización, según los ocho puntos del post-mortem de `cuaderno-incidentes.md`.
 
 **🔥 Opcionales**
 
@@ -715,7 +715,7 @@ midiendo.
 > verifícalos. Las referencias a libros y videos son de memoria y pueden ser
 > inexactas — confirma título, autor y edición antes de citarlas en un
 > documento tuyo. Y cuando un enlace cubra una versión distinta a la del curso,
-> el que manda es `prompts/decisiones-y-versiones.md`.
+> el que manda es `00-decisiones-y-versiones.md`.
 
 ---
 
@@ -762,10 +762,10 @@ del navegador y encontrarlo, con nombre propio, en el log del servidor.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/diccionario-codigo-ingles.md` §7bis.3** las dos rutas
-  nuevas que introduce esta fase: `server/CONTRACT.md` y `server/smoke.sh`, más
-  el directorio `server/evidence/`. Hecho al escribir la fase; verificar que
-  sobrevive a futuras ediciones del diccionario.
+- ✅ **Resuelto: las rutas nuevas que introduce esta fase** —`server/CONTRACT.md`,
+  `server/smoke.sh` y el directorio `server/evidence/`— quedaron fijadas como
+  rutas canónicas del backend, y `be01` §5.1 las incluye en el árbol de
+  `server/`.
 - **`C-06` afecta a `be04` y al comando de verificación de todas las fases
   posteriores.** Desde `be04`, el `git diff` de la sección 2 lleva la exclusión
   `':!src/api/authService.js'`. Que ninguna fase entre `be04` y `be09` lo olvide.

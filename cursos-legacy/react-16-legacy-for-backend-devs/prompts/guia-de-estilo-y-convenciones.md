@@ -2,8 +2,9 @@
 ## Tutorial React 16 — Rifas y chances
 
 Esta guía es la fuente de verdad editorial del proyecto. Cualquier chat que
-produzca un `.md` la sigue. Su objetivo es simple: que los ~30 documentos del
-tutorial se lean como escritos por la misma mano, con la misma voz y el mismo
+produzca un `.md` la sigue. Su objetivo es simple: que los ~50 documentos del
+tutorial —doce fases, trece apéndices, el track BE con sus veinte documentos, los
+dos cuadernos de incidentes y el encuadre— se lean como escritos por la misma mano, con la misma voz y el mismo
 criterio, y que todos apunten al mismo lugar — mantener un sistema legacy sin
 romperlo.
 
@@ -18,6 +19,12 @@ encima del hombro.
 > operativo. **El ajuste de las fases preexistentes está terminado** (§4.6
 > describe el proceso y queda como referencia histórica); las fases nuevas se
 > escriben directamente con la convención.
+
+> 🧾 **Lineamientos del repositorio (revisión del 05/10/2026):** el curso es
+> anterior a los lineamientos de producción del repositorio. Lo que hace
+> distinto de sus valores por defecto, la convención de diagramas en Mermaid
+> (D-12), la verificación y lo que falta para cerrarlo están en §17, que se
+> agregó después de §16 para no renumerar.
 
 ---
 
@@ -625,7 +632,8 @@ redux-observable → RxJS operators → volver al epic."*
 - **React Router 5:** https://v5.reactrouter.com
 - **Bootstrap 4.6:** https://getbootstrap.com/docs/4.6
 - **Testing:** https://jestjs.io · https://testing-library.com ·
-  https://playwright.dev
+  https://docs.cypress.io (el smoke de la Fase 10 es Cypress, D6; el alcance
+  nombra Playwright como alternativa, pero ninguna fase lo usa)
 - **MDN** para JavaScript base (Promises, Intl, etc.):
   https://developer.mozilla.org
 
@@ -656,7 +664,7 @@ De ahí salen cuatro prohibiciones concretas al escribir:
 - **No difieras una decisión a una confirmación externa.** Nada de "pendiente de
   confirmar contra el sistema real" ni "cuando el equipo defina la versión". Si el
   curso necesita una versión, una librería o un dato del dominio, **se decide y se
-  registra** en `prompts/decisiones-y-versiones.md` (versiones y stack) o en
+  registra** en `00-decisiones-y-versiones.md` (versiones y stack) o en
   `00-historia-del-sistema.md` (por qué el sistema es como es), y se cita desde ahí.
 - **No inventes contexto en el aire.** Si una fase necesita explicar por qué un
   componente está feo, el porqué vive en `00-historia-del-sistema.md` y la fase lo
@@ -665,6 +673,13 @@ De ahí salen cuatro prohibiciones concretas al escribir:
 - **No dependas de material que el estudiante no pueda conseguir.** Un video de
   YouTube que puede desaparecer es una sugerencia, no un requisito; el contenido
   necesario para completar una fase está siempre en la fase.
+- **No cites `prompts/`.** Nada de esta carpeta viaja con el curso cuando se
+  publica: ni esta guía, ni el diccionario, ni las plantillas, ni los prompts.
+  Un documento publicado no la nombra ni la enlaza, tampoco en los 📌
+  Pendientes. Si el lector necesita algo de aquí, se dice en prosa o se sube a
+  un documento publicado, como se hizo con `00-decisiones-y-versiones.md` y con
+  los ocho puntos del post-mortem (§13). `verificar-corpus.py --publicacion` lo
+  comprueba (§17.3).
 
 📝 **De dónde viene esta sección.** Antes decía "Confidencialidad (NDA)" y
 regulaba cómo hablar de un sistema corporativo real que el curso usaba como
@@ -685,7 +700,7 @@ ahora explicitar es gratis, porque no hay nada que ocultar.
   `NN-slug-en-minusculas.md` (`04-rifas-crud.md`), los apéndices
   `AN-slug-en-minusculas.md` (`A3-node-y-npm.md`), y los documentos de encuadre
   y editoriales igual (`00-alcance-del-proyecto.md`,
-  `prompts/decisiones-y-versiones.md`). Sin guiones bajos, sin mayúsculas
+  `00-decisiones-y-versiones.md`). Sin guiones bajos, sin mayúsculas
   internas y **sin tildes**: separador es el guion.
 
   🔥 **El track BE opcional usa su propio prefijo, en el mismo directorio:** las
@@ -711,7 +726,7 @@ ahora explicitar es gratis, porque no hay nada que ocultar.
   mantienen idénticos entre fases (todos en inglés, §4.4). Si algo se renombra,
   se documenta el cambio y se ajustan las fases afectadas.
 - **Fuentes de verdad, en este orden:** (1) `prompts/instrucciones-del-proyecto.md`,
-  (2) `00-alcance-del-proyecto.md`, (3) `prompts/decisiones-y-versiones.md` para cualquier
+  (2) `00-alcance-del-proyecto.md`, (3) `00-decisiones-y-versiones.md` para cualquier
   versión o decisión técnica y `00-historia-del-sistema.md` para cualquier porqué
   del sistema, (4) esta guía, (5)
   `prompts/diccionario-codigo-ingles.md` para cualquier término de código, (6)
@@ -726,7 +741,7 @@ ahora explicitar es gratis, porque no hay nada que ocultar.
   🔥 **Para el track BE se intercala una fuente más**, entre la (2) y la (3):
   `prompts/propuesta-fases-backend.md`, que es el encuadre del track —qué deuda
   cobra cada fase, el presupuesto de horas y el alcance. Para versiones sigue
-  mandando `prompts/decisiones-y-versiones.md`, ahora en su §7.
+  mandando `00-decisiones-y-versiones.md`, ahora en su §7.
 
 ---
 
@@ -746,6 +761,11 @@ Cada incidente sigue esta estructura de ocho puntos:
 
 El tono acá baja un punto de humor. Un post-mortem es sereno y analítico —no
 acartonado, pero tampoco el lugar para el chiste.
+
+La lista de arriba está publicada para el lector en `cuaderno-incidentes.md`
+(§El post-mortem en ocho puntos). Un ejercicio de post-mortem cita **esa**
+sección —«según los ocho puntos del post-mortem de `cuaderno-incidentes.md`»—,
+nunca esta guía (§11).
 
 Los puntos 1 a 6 tienen traducción exacta a git, y conviene pedirla: el par de
 tags `inc/<ID>/<slug>-roto` e `inc/<ID>/<slug>-fix` deja el síntoma y la
@@ -796,6 +816,10 @@ está en `00-convencion-de-git-y-tags.md`, y las fases lo enlazan desde su bloqu
       `apendice-` + el slug del archivo) y el prefijo de commit correcto
       (§8.1). En los apéndices de consulta pura, el bloque dice que no llevan
       tag propio.
+- [ ] Todo diagrama nuevo va en Mermaid (§17.1); árboles de archivos, salidas
+      de terminal, registros de DevTools y anatomías se quedan en texto.
+- [ ] Ninguna mención a `prompts/` ni a esta guía (§11).
+- [ ] `python3 prompts/verificar-corpus.py` y su `--publicacion` en cero (§17.3).
 
 ---
 
@@ -958,3 +982,193 @@ Rige §11 completa, y encima una restricción propia: **este track no remite a
 ningún otro curso del catálogo**, exista o no uno de contenedores. Todo lo que el
 alumno necesite para construir la imagen y el pipeline vive en `bea-02`,
 escrito como receta cerrada y verificable de principio a fin.
+
+---
+
+## 17. 🧾 Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 05/10/2026**, en la revisión del curso contra los
+> lineamientos de producción del repositorio. Va después de §16 para no
+> renumerar: el resto de `prompts/` y varias fases citan esta guía por número
+> de sección. El curso es anterior a esos lineamientos; casi todo lo que aquí
+> se declara ya era su práctica, y desde ahora está escrito como decisión.
+
+El `CLAUDE.md` del repositorio da **valores por defecto**, y esta guía los
+reemplaza donde lo declara: la regla general, el valor de este curso y por qué.
+Lo que esta sección no menciona se hereda tal cual.
+
+| Regla general del repositorio | Lo que hace este curso | Por qué |
+|---|---|---|
+| Comentarios dentro del código en inglés | **En español** (§4); identificadores, rutas y tablas en inglés | El comentario es el canal del *porqué*, y el curso piensa en español |
+| Forma de lección setup → conceptos → antipatrones → traducción → ejercicios → veredicto | **La plantilla de nueve secciones de §8**, cerrada con «La señal de que quedó bien» y el bloque 🏷️ | Es un curso de mantenimiento: el veredicto no es cuándo no usar React 16, sino cuándo no modernizar. Lo dan la Fase 11 (§4 y §5.5), A8 y A12 |
+| 20–30 ejercicios por sección | **25 a 35 por fase** (§9) y 5–10 por apéndice. Publicado: 28–30 en el track base, 29–34 en el BE, 6–9 en los apéndices | Media jornada de práctica por fase; 35 es el techo, no la meta |
+| Ejercicios con solución de referencia o rúbrica | **Sin solucionario en las fases**: cada enunciado es verificable por sí mismo (§9). La solución de referencia, colapsada, vive en los dos cuadernos de incidentes | El músculo que entrena el curso es el diagnóstico; los incidentes son donde una solución publicada enseña algo |
+| `0-ESTRUCTURA-CURSO.md` antes de la primera lección | **`00-alcance-del-proyecto.md`** en la raíz, más el README | Se escribió con ese nombre y lo citan las fases, `instrucciones-del-proyecto.md` y §12; renombrarlo rompe el bloqueo de contenido |
+| `BENCHMARKS.md` e `INSTINTOS.md` | **No existen.** Las mediciones van en su fase con sus condiciones (`be09` §8); los instintos del lector de backend, en las analogías de §5.2 y las 📝 Notas de época | El curso mide poco y en contexto; un documento aparte quedaría casi vacío |
+| Diccionario de traducción en los dos sentidos | **Dos piezas**: `diccionario-codigo-ingles.md` (español → inglés del código) y las tablas de equivalencia vieja ↔ nueva de A5, A6, A7 y A8 | El paradigma de origen es el backend, y §5.2 limita la analogía a abrir la puerta y decir dónde se rompe |
+| Recursos 🪞 ⚰️ 🩻 del `CLAUDE.md` | **🩻 sí; ⚰️ no**: la autopsia la hacen el par 💸 deuda → 💸 pago de deuda (§7.3) y los post-mortems de §13. 🪞 es la retrospectiva del mes, al final del cuaderno de incidentes | La deuda que se declara y se paga es la forma propia del curso de mostrar un antipatrón con su costo |
+| Apéndices `a01-…` | **`A1-…` a `A13-…`** en el track base; `bea-NN-…` en el BE, como pide el `CLAUDE.md` | El `CLAUDE.md` admite el estilo viejo en cursos que ya lo usan; §12 explica por qué el BE lleva dos dígitos |
+| Tags del track opcional en `be-fase-<slug>` | **`fase-beNN-<slug>`** (§8.1 y `00-convencion-de-git-y-tags.md`) | El curso decidió lo contrario a propósito: `git tag -l 'fase-*'` devuelve las veintidós fases en orden porque los dos tracks comparten repo y línea de tiempo. Cambiarlo rompe el bloqueo de contenido |
+| Código ejecutable en `src/` del curso | **No hay `src/`**: el alumno construye la aplicación en su propio repo, fase a fase, y el curso publica los fragmentos | Es la tesis del curso: el código se escribe y se rompe a mano. Por lo mismo no hace falta `.gitignore` de curso para código (§17.4) |
+| Fecha de vigencia en cada encabezado | **Sin fecha**: el encabezado de fase dice curso, número de fase y horas (§8) | Las versiones están congeladas en `00-decisiones-y-versiones.md`; la fecha no promete nada que la congelación no diga ya |
+| Diagramas a criterio de quien escribe | **Mermaid**, con las excepciones de §17.1 (D-12) | Pedido explícito del autor en la revisión del 05/10/2026 |
+| Callouts 📝 🧭 🧠 ⚠️ 💡 | **Esos, más los de §7** (📚 🪦 y los marcadores 💸 🔥 ⭐ 🏷️) y 🩻 🧪 📓 | 📓 señala, desde una fase, los incidentes que produce. Dos callouts de un solo uso (🔑, 🚀) quedan como están y no se usan en texto nuevo |
+
+### 17.1 D-12 · Diagramas en Mermaid
+
+**Decidido el 05/10/2026 por el autor, en la revisión del curso.** Todo
+diagrama nuevo —flujo, estados, secuencia, capas, árbol de decisión— va en un
+bloque `mermaid`. Se quedan en texto, porque no son diagramas y en
+monoespaciado se leen mejor:
+
+- los **árboles de archivos** (`src/`, `server/`, `mock/`);
+- las **salidas de terminal y de logs** (`[req-id …]`, una sesión de `psql`);
+- los **registros de acciones de Redux DevTools**, que son una salida que el
+  lector tiene que reconocer en su pantalla (F05 §6, incidente 11);
+- las **anatomías** de un hash o de un token (`be04`, `bea-04`);
+- las **correspondencias** `a → b` (archivo → tag, en
+  `00-convencion-de-git-y-tags.md`) y las **cadenas de una sola línea**
+  (`borrador → abierta → …`, la cadena de middlewares de `cuaderno-incidentes-be.md`).
+
+Criterios para los que vengan, en el orden en que se eligen:
+
+- **`stateDiagram-v2`** para los ciclos de vida: los estados de un número
+  (`available` → `reserved` → `sold`), los de una rifa (`draft` → `open` →
+  `closed` → `resolved` → `settled`). Los nombres de estado van en inglés, como
+  en el código (§4); las etiquetas de transición, con el nombre de la acción.
+- **`sequenceDiagram`** para lo que pasa en el tiempo entre capas: componente →
+  store → epic → mock, o navegador → backend Go → PostgreSQL en el track BE.
+  Es el diagrama natural de una race condition y del cierre del círculo con
+  `X-Request-Id` (§16.4).
+- **`flowchart TD`** para cadenas y árboles de decisión; **`LR`** para lo que
+  cruza el cable frontend ↔ backend; **`subgraph`** para las capas que §5.5
+  pide distinguir (componente, store, epic, backend).
+- **Texto de los nodos en español** y nombres de código en inglés, igual que la
+  prosa. Caracteres que Mermaid interpreta: `<…>` se escribe `#lt;…#gt;`, `|`
+  dentro de un nodo `#124;`, y las etiquetas con paréntesis, dos puntos o
+  barras van entre comillas.
+- **Cada diagrama se dibuja antes de publicarlo** (`mmdc`, o la vista previa de
+  GitHub) y la prosa que lo rodea no lo repite: lo explica.
+
+```mermaid
+stateDiagram-v2
+    [*] --> available
+    available --> reserved: reserve
+    reserved --> sold: sell
+    reserved --> available: expire
+    sold --> [*]
+```
+
+> 🧭 **El ejemplo de arriba es el diagrama que reemplazó** al ASCII de la Fase 5
+> §4 (`available ──reserve──► reserved …`), el único bloque del curso que el
+> verificador marcaba como `DIAGRAMA`. Se convirtió el 05/10/2026, con
+> `direction LR` para que se lea de izquierda a derecha como el original.
+
+### 17.2 Documentos de `prompts/` y lo que hace su papel
+
+El curso es anterior a las plantillas de producción y está cerrado, así que no
+se crean a posteriori. Esto es lo que cumple cada función:
+
+- **Alcance:** `00-alcance-del-proyecto.md`, en la raíz, porque el lector
+  también lo lee. Para el track BE, además, `propuesta-fases-backend.md`.
+- **Propuesta de fases y de apéndices:** del track base no se conservó como
+  documento aparte; su papel lo hacen el alcance (§6 y §7) y los bloques de
+  `prompts-a-por-fase.md` y `prompts-a-por-apendice.md`. Del BE,
+  `propuesta-fases-backend.md` §7 y §8.
+- **Plan de producción:** no hay. El curso se escribió antes de que existiera la
+  plantilla; su estado vive en el README del curso y en §15.
+- **Diccionario de términos:** §3 (qué se queda en inglés) y
+  `diccionario-codigo-ingles.md` (el código del dominio).
+- **Contrato de nombres:** `00-decisiones-y-versiones.md`, **publicado** en la
+  raíz del curso (versiones, el `package.json` y el `go.mod` de referencia,
+  puertos, D1–D29), §4.4 y
+  `diccionario-codigo-ingles.md` §4 y §7bis (nombrado y rutas), y
+  `00-convencion-de-git-y-tags.md` (ramas y tags).
+- **Plantillas de capítulo:** `plantilla-de-fase.md`; el formato de apéndice, al
+  final de §8.
+- **Formatos propios:** `plantilla-de-incidente.md` y `plantilla-de-incidente-be.md`
+  (el enunciado), y `preparaciones-de-incidentes.md` y
+  `preparaciones-de-incidentes-be.md` (el estado roto de cada rama, que no se
+  enlaza desde los cuadernos).
+- **Prompts de sesión:** `instrucciones-del-proyecto.md` (el marco común),
+  `prompts-a-*` y `prompts-b-*` (track base, en dos tiempos) y
+  `prompts-backend-*` (track BE). Son **registro de cómo se escribió**: donde
+  contradicen a una fase publicada, gana la fase. El caso conocido es el de
+  `bea-02`, cuyo prompt pide runtime Debian por cgo; la fase `be09` resolvió
+  D19 con una etiqueta de compilación, y el apéndice publicado recoge las dos
+  versiones. Las decisiones D24–D29 nacieron al escribir el track y no están en
+  sus prompts.
+- **Manual de operación:** `prompts/README.md`.
+
+### 17.3 Verificación
+
+Desde la raíz del curso, y ninguna toca nada:
+
+```bash
+python3 prompts/verificar-corpus.py                 # validaciones base + aviso DIAGRAMA
+python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el repositorio público
+```
+
+- `verificar-corpus.py` es la subclase del perfil `courses-ia` de
+  `verificador_base.py` (copia de la base de los lineamientos), con los callouts
+  y el emoji en `###` de esta guía y el encabezado de §8. Su aviso `DIAGRAMA`
+  marca un bloque sin lenguaje o `text` con puntas de flecha o esquinas de caja
+  en dos líneas; un diagrama dibujado solo con `├─` y `│` se le escapa, y se
+  revisa a mano.
+- `--publicacion` agrega los errores de la etapa de publicación: ningún enlace a
+  `prompts/` ni mención de material privado, y el error propio `CITA-PROMPTS`,
+  que marca cada documento publicado que **nombra** un archivo de `prompts/`
+  aunque no lo enlace.
+- **Línea base:** los dos comandos salen en **0 errores y 0 avisos** desde el
+  05/10/2026. Antes de la limpieza de ese día había 3 `ANCLA-FE0F`, 1 `DIAGRAMA`
+  y 56 `CITA-PROMPTS` (§17.4).
+- `CITA-PROMPTS` solo ve nombres de archivo. Una cita a «la guía» o a «la guía
+  §13» sin nombre de archivo se le escapa: se busca a mano con
+  `grep -rn -i "gu[ií]a §\|de la gu[ií]a" *.md`, y en el curso publicado solo
+  pueden salir guías externas (la de `sqlx`, la de Redux).
+
+### 17.4 El cierre del 05/10/2026 y lo que queda
+
+El contenido está completo: doce fases, trece apéndices, el track BE (diez fases
+y diez apéndices) y los dos cuadernos de incidentes (veinte y dieciséis). La
+revisión del 05/10/2026 encontró lo que impedía publicarlo y lo corrigió en el
+mismo día, en dos pasos: primero `prompts/`, después el curso.
+
+**Lo que se corrigió en el curso:**
+
+1. **El curso remitía al lector a `prompts/`**: 56 menciones en 33 documentos,
+   más 25 citas a «la guía» sin nombre de archivo. Decisión del autor: el curso
+   no cita `prompts/` porque es material de elaboración.
+   - `decisiones-y-versiones.md` **subió a la raíz** como
+     `00-decisiones-y-versiones.md`, porque es material del lector: el
+     `package.json` y el `go.mod` de referencia, qué instala cada fase y los
+     puertos. Se redactó para el lector (fuera la historia de su escritura y
+     las instrucciones al redactor) y ganó lo que las fases decían que tenía y
+     no tenía: la decisión de **no adoptar librería de fechas ni de dinero**
+     (F07, F08 y A10 la daban por registrada) y **D29**, la política de tiempo
+     de `be06`, que su 📌 Pendiente pedía registrar.
+   - Las diez menciones al diccionario se reescribieron en prosa, y el README
+     (§Convenciones) ganó la tabla mínima de términos del dominio en las tres
+     capas, que es lo que el lector necesitaba de él.
+   - Los ocho puntos del post-mortem se publicaron en `cuaderno-incidentes.md`
+     (§El post-mortem en ocho puntos), y los doce ejercicios que decían
+     «según la guía §13» (o «§12», que además era un número equivocado) citan
+     ahora esa sección.
+   - `00-convencion-de-git-y-tags.md` ganó §Los tags de hito del track BE
+     (`mock-retirado`, `track-be-completo`), que `be03` y `be09` pedían
+     registrar.
+   - Los 📌 Pendientes que decían «Registrar en `prompts/…`» se marcaron ✅
+     con su destino real.
+2. **Tres enlaces `ANCLA-FE0F`** en A4 y A5, corregidos con `--corregir-fe0f`.
+3. **El diagrama de la Fase 5 §4**, a Mermaid (§17.1).
+4. **`.gitignore` mínimo** en la raíz del curso: no hay código que ignorar,
+   solo lo del sistema operativo y los editores.
+
+**Lo que queda:**
+
+- **Validar el curso ejecutándolo de nuevo.** Las salidas se ejecutaron al
+  escribirlo, pero el curso es anterior al método de tandas con casillas de
+  *escrita* y *corrida*, y no quedó registro. La revalidación está planificada
+  en `_desechable-plan-de-validacion.md`, para hacerse en una sesión futura.
+- **La licencia** del repositorio público: la elige el autor en la etapa de
+  publicación.

@@ -397,7 +397,7 @@ que sea tokens.
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las guías de
 > OWASP se reeditan y sus números cambian entre ediciones. Las referencias a
 > libros y videos son de memoria y pueden ser inexactas. La fuente de verdad de
-> versiones es `prompts/decisiones-y-versiones.md` §7.
+> versiones es `00-decisiones-y-versiones.md` §7.
 
 ---
 

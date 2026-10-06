@@ -11,7 +11,7 @@
 
 1. [Por qué esto importa en mantenimiento](#1-por-qué-esto-importa-en-mantenimiento)
 2. [Anatomía lado a lado: la misma vista en clase y en hook](#2-anatomía-lado-a-lado)
-3. [🗺️ Tabla grande de equivalencias (ciclo de vida ↔ hooks)](#3--tabla-grande-de-equivalencias)
+3. [🗺️ Tabla grande de equivalencias (ciclo de vida ↔ hooks)](#3-️-tabla-grande-de-equivalencias)
 4. [Estado: `this.state` / `setState` ⟷ `useState`](#4-estado-thisstate--setstate--usestate)
 5. [Props: `this.props` ⟷ argumentos de la función](#5-props-thisprops--argumentos-de-la-función)
 6. [Efectos: los tres momentos del ciclo de vida ⟷ `useEffect`](#6-efectos--useeffect)
@@ -19,7 +19,7 @@
 8. [Contexto: `contextType` / `Consumer` ⟷ `useContext`](#8-contexto--usecontext)
 9. [🔍 Leer código mezclado sin marearte](#9--leer-código-mezclado-sin-marearte)
 10. [Convertir una clase a hook, paso a paso (didáctico)](#10-convertir-una-clase-a-hook-paso-a-paso)
-11. [⚠️ Trampas comunes](#11--trampas-comunes)
+11. [⚠️ Trampas comunes](#11-️-trampas-comunes)
 12. [🧪 Ejercicios](#-ejercicios-8)
 13. [📚 Referencias](#-referencias)
 

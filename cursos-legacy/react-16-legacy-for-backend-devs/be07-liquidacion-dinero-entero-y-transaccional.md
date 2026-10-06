@@ -637,7 +637,7 @@ esa línea en `dinero.md`: es el argumento entero de §4.2 en tres líneas de lo
 26. Diseña la prueba basada en propiedades que verifique, para entradas generadas al azar, que recaudo, premio y margen siempre cumplen `margin == totalCollected - prizeAmount` y que los pagos suman el premio. Explica por qué esta clase de prueba es especialmente apropiada para dinero.
 27. Diseña el mecanismo de **corrección** de una liquidación errónea sin borrar nada: qué tabla, qué campos, cómo se calcula el saldo vigente, y cómo se presenta. Argumenta por qué la contabilidad lleva cuatrocientos años haciéndolo con asientos de compensación y no con un `UPDATE`.
 28. **Diagnóstico + regresión.** Ticket: *"la liquidación de la rifa de agosto dice que recaudamos 340.000 y el listado de ventas suma 355.000"*. Enumera las causas candidatas ordenadas por probabilidad —incluida la posibilidad de que ninguna sea un bug—, di cómo descartas cada una con una consulta, y escribe la regresión.
-29. **Post-mortem.** Escribe el post-mortem de *"repartimos el premio dos veces"* según la guía §13, ubicando la causa raíz en la falta de idempotencia ante un reintento del cliente con el mock caótico. La prevención tiene que distinguir la restricción de la base, el comportamiento idempotente y la consulta de auditoría, y explicar qué cubre cada uno.
+29. **Post-mortem.** Escribe el post-mortem de *"repartimos el premio dos veces"* según los ocho puntos del post-mortem de `cuaderno-incidentes.md`, ubicando la causa raíz en la falta de idempotencia ante un reintento del cliente con el mock caótico. La prevención tiene que distinguir la restricción de la base, el comportamiento idempotente y la consulta de auditoría, y explicar qué cubre cada uno.
 
 **🔥 Opcionales**
 
@@ -672,7 +672,7 @@ completa.
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros son de memoria y pueden ser inexactas. La documentación de
 > Postgres tiene una versión por URL; fija el 13. Cualquier discrepancia de
-> versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -723,11 +723,10 @@ que vienes acumulando desde `be02` converge ahí.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/diccionario-codigo-ingles.md` §7bis.1** la entidad
-  `PrizePayout` / `prize_payouts`, y en §7bis.2 los nombres de la aritmética
-  (`TotalCollected`, `PrizeAmount`, `Margin`, `PrizeShare`), que son la
-  traducción literal de los de `settlementMath.js` y **tienen que seguir
-  siéndolo**.
+- ✅ **Resuelto: la entidad `PrizePayout` / `prize_payouts`** quedó entre los
+  términos del dominio del README (§Convenciones). Los nombres de la aritmética
+  (`TotalCollected`, `PrizeAmount`, `Margin`, `PrizeShare`) son la traducción
+  literal de los de `settlementMath.js` y **tienen que seguir siéndolo**.
 - **Coherencia con `A10`, verificada y con una excepción.** Las reglas se
   portaron sin cambios; lo único que no se sostiene igual es el desbordamiento:
   `int64` desborda en silencio donde el `number` de JS pierde precisión de forma

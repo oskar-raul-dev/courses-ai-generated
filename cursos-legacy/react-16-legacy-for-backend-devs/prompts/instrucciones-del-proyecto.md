@@ -49,7 +49,7 @@ del dominio; no inventes traducciones ad hoc que rompan consistencia con
 fases anteriores.
 
 STACK FIJO
-prompts/decisiones-y-versiones.md es la fuente de verdad única de versiones: trae el
+00-decisiones-y-versiones.md es la fuente de verdad única de versiones: trae el
 package.json completo, las decisiones D1-D13 con su porqué, qué instala cada
 fase y los tres puertos. NINGUNA versión queda pendiente: si falta una, se
 decide y se registra allá antes de escribir código. Resumen: Node 14.21.3 con
@@ -89,8 +89,8 @@ en las 96 y que NO son prerrequisito de nada. Reemplaza el mock del
 puerto 3001 por un backend en Go 1.19 contra PostgreSQL 13 sin que el
 frontend cambie una linea, y paga las deudas que las fases 2, 5, 7 y 8
 declararon. Se puede empezar al terminar la Fase 8. Su encuadre esta en
-prompts/propuesta-fases-backend.md, sus versiones y decisiones D14-D23 en
-prompts/decisiones-y-versiones.md §7, y sus convenciones editoriales en
+prompts/propuesta-fases-backend.md, sus versiones y decisiones D14-D29 en
+00-decisiones-y-versiones.md §7, y sus convenciones editoriales en
 prompts/guia-de-estilo-y-convenciones.md §16. Si el chat no es de una fase
 be*, este track no aplica: no lo menciones ni lo asumas.
 
@@ -98,8 +98,9 @@ TRACK FORENSE
 Cada fase incluye una actividad de diagnóstico. Integra progresivamente:
 Chrome/React/Redux DevTools, Network, source maps, request-id, UAT vs PROD,
 reproducción de bugs intermitentes, debug de epics, detección de
-suscripciones sin cancelar, hotfixes y pruebas de regresión. El curso tiene
-15-20 incidentes simulados; al menos 4 sobre RxJS/epics. Cada incidente:
+suscripciones sin cancelar, hotfixes y pruebas de regresión. El track base
+tiene 20 incidentes simulados en cuaderno-incidentes.md (al menos 4 sobre
+RxJS/epics) y el track BE 16 en cuaderno-incidentes-be.md. Cada incidente:
 síntoma, reproducción, evidencia, causa raíz, corrección, prueba de
 regresión, prevención, post-mortem sin culpabilización.
 
@@ -121,7 +122,10 @@ REGLAS EDITORIALES
 Español latinoamericano neutro con tuteo (nunca voseo) en toda la narrativa.
 Markdown. Tono semi formal, cálido y directo. Prosa antes que listas; listas
 antes que tablas en comparativas extensas; tablas solo para lo corto y
-genuinamente tabular, tres columnas como máximo. Código
+genuinamente tabular, cuatro columnas como máximo y ninguna celda de más de
+una línea. Diagramas (flujo, estados, secuencia, capas) en Mermaid; árboles
+de archivos, salidas de terminal, registros de DevTools y anatomías de un
+token se quedan en texto (guía §17.1). Código
 mínimo, ejecutable y coherente con las versiones fijadas, con identificadores
 en inglés (ver regla de idioma). No contradigas fases anteriores (ni en
 pedagogía ni en nombres de código). Distingue frontend / store / epic /
@@ -133,8 +137,9 @@ referencias pueden ser inexactas y deben verificarse.
 
 ENTREGABLES
 Cada chat produce UN archivo .md. Fuentes de verdad, en orden: (1) estas
-instrucciones, (2) 00-alcance-del-proyecto.md, (3) prompts/decisiones-y-versiones.md
-para cualquier versión o decisión técnica, (4)
+instrucciones, (2) 00-alcance-del-proyecto.md, (3) 00-decisiones-y-versiones.md
+para cualquier versión o decisión técnica y 00-historia-del-sistema.md para
+cualquier porqué del sistema, (4)
 prompts/guia-de-estilo-y-convenciones.md, (5)
 prompts/diccionario-codigo-ingles.md, (6) prompts/plantilla-de-fase.md —con
 00-convencion-de-git-y-tags.md como su anexo para todo lo que toque git, repos y
@@ -147,8 +152,11 @@ Nada de lo que escribas puede depender de material que el estudiante no
 tenga. Prohibido: citar archivos que no existen en el repositorio, remitir a
 un repo de empresa, decir "confírmalo contra el sistema real" o dejar una
 versión "pendiente". Si el curso necesita un dato, se inventa con criterio,
-se registra en 00-historia-del-sistema.md o prompts/decisiones-y-versiones.md, y se cita
-desde ahí. Toda referencia cruzada tiene que resolver a un archivo real.
+se registra en 00-historia-del-sistema.md o 00-decisiones-y-versiones.md, y se cita
+desde ahí. Toda referencia cruzada tiene que resolver a un archivo real. Ningún
+documento publicado nombra ni enlaza nada de prompts/: es material de
+elaboración y no viaja con el curso; lo que el lector necesita de aquí se dice
+en prosa o se sube a un documento publicado.
 ```
 
 ---
@@ -158,7 +166,7 @@ desde ahí. Toda referencia cruzada tiene que resolver a un archivo real.
 1. Copia el bloque de arriba en el campo "Instrucciones del proyecto".
 2. Sube al Project Knowledge los documentos de detalle, que son los que
    existen en el repositorio: `00-alcance-del-proyecto.md`,
-   `00-historia-del-sistema.md`, `prompts/decisiones-y-versiones.md`,
+   `00-historia-del-sistema.md`, `00-decisiones-y-versiones.md`,
    `prompts/guia-de-estilo-y-convenciones.md`,
    `prompts/diccionario-codigo-ingles.md`, `prompts/plantilla-de-fase.md`,
    `00-convencion-de-git-y-tags.md` y `cuaderno-incidentes.md`.
@@ -170,3 +178,11 @@ desde ahí. Toda referencia cruzada tiene que resolver a un archivo real.
 4. Si ya tienes fases escritas con identificadores en español, ajústalas
    primero (ver `prompts/guia-de-estilo-y-convenciones.md` §4.6) antes de que
    sirvan de referencia a fases nuevas.
+5. Al cerrar cualquier edición, corre `python3 prompts/verificar-corpus.py`
+   desde la raíz del curso (guía §17.3).
+
+> 📝 **Estado al 05/10/2026:** el curso está escrito entero y este bloque queda
+> como registro de cómo se produjo y como marco para editarlo. Lo que el
+> curso hace distinto de los lineamientos del repositorio, y lo que falta para
+> cerrarlo, está en la guía §17; el manual de esta carpeta, en
+> `prompts/README.md`.

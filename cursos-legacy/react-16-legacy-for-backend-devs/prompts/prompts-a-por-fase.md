@@ -28,7 +28,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Consola, Network tab, React DevTools básicos.
 - Incidentes del cuaderno que esta fase puede resolver: 🟢 básicos de configuración y CORS.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -42,7 +42,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Distinguir siempre frontend / store / epic / backend.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -74,7 +74,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Componente que no re-renderiza — cómo saber por qué.
 - Incidentes del cuaderno que esta fase puede resolver: 🟢 de estructura y navbar.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -87,7 +87,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -119,7 +119,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Debug de interceptor axios — request-id, correlación.
 - Incidentes del cuaderno que esta fase puede resolver: 🟢 de login y auth.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -135,7 +135,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Distinguir siempre frontend / store / epic / backend.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -167,7 +167,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Simular caos con Express — cómo reacciona la SPA.
 - Incidentes del cuaderno que esta fase puede resolver: 🟡 de CORS, latencia, fallos.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -179,7 +179,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Distinguir siempre frontend / store / epic / backend.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -211,7 +211,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Redux DevTools — time-travel, replay de acciones.
 - Incidentes del cuaderno que esta fase puede resolver: 🟡 de slice y estado.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -226,7 +226,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Distinguir siempre frontend / store / epic / backend.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -258,7 +258,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Race condition de venta — cómo se manifiesta en el store.
 - Incidentes del cuaderno que esta fase puede resolver: 🟡-🟠 de venta duplicada, race conditions.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -276,7 +276,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -308,7 +308,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Debug de epics — memory leak por no takeUntil, switchMap vs mergeMap, epic que no cancela.
 - Incidentes del cuaderno que esta fase puede resolver: 🟠-🔴 de epics, memory leaks, cancelación mal hecha.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -324,7 +324,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -356,7 +356,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Polling que no para al desmontar componente.
 - Incidentes del cuaderno que esta fase puede resolver: 🟠 de polling infinito, hora dura, TZ.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -371,7 +371,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -403,7 +403,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Bug de dinero — floats vs enteros, redondeo silencioso.
 - Incidentes del cuaderno que esta fase puede resolver: 🟠 de dinero mal redondeado, cálculo erróneo.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -418,7 +418,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -450,7 +450,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Performance del dashboard — useMemo mal aplicado.
 - Incidentes del cuaderno que esta fase puede resolver: 🟠 de performance, re-renders excesivos.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -465,7 +465,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Distinguir siempre frontend / store / epic / backend.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -497,7 +497,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Test de epic con marbles — cómo asegurar timing.
 - Incidentes del cuaderno que esta fase puede resolver: 🔴 de bugs intermitentes, race conditions esquivas.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript. JSDoc donde aporte.
@@ -513,7 +513,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -545,7 +545,7 @@ Contexto de esta fase (ver 00-alcance-del-proyecto.md §5 y §7):
 - Pieza forense de esta fase: Test de regresión que reproduce el bug antes del fix.
 - Incidentes del cuaderno que esta fase puede resolver: 🔴 finales de reflexión.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D1 React/React DOM 16.14.0 (punto final de referencia exacto).
 - D3 JavaScript plano ES2019, sin TypeScript.
@@ -561,7 +561,7 @@ Estilo del código de esta fase (prompts/guia-de-estilo-y-convenciones.md §5):
 - Explicar diferencia entre corrección mínima y refactorización cuando haya un fix.
 
 No hace falta preguntarme por versiones o decisiones de stack: ya están
-todas confirmadas en prompts/decisiones-y-versiones.md. Si algo específico de esta
+todas confirmadas en 00-decisiones-y-versiones.md. Si algo específico de esta
 fase no está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B

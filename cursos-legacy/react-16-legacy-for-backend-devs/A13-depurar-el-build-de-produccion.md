@@ -176,7 +176,8 @@ minifican. Buscar `"Ese número ya fue vendido"` dentro del bundle te deja parad
 justo al lado del código que quieres leer.
 
 > 💡 **Ese último truco es la razón práctica de una convención del curso.** Los
-> textos de interfaz van en español y las claves en inglés (guía §4). En un
+> textos de interfaz van en español y las claves en inglés (README,
+> §Convenciones). En un
 > bundle minificado eso te da dos alfabetos de anclas para buscar, y ninguno se
 > minifica. No fue el motivo de la regla, pero es un beneficio real.
 

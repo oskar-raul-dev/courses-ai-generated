@@ -165,7 +165,7 @@ vista; la alternativa lo escondía.
 ### Las tablas del dominio, y por qué `numbers` se llama `raffle_numbers`
 
 El `db.json` tiene una colección `numbers`. La tabla se llama `raffle_numbers`,
-como fija `prompts/diccionario-codigo-ingles.md` §7bis.1. No es capricho ni
+como fija la convención de nombres del backend (README, §Convenciones). No es capricho ni
 inconsistencia: **la etiqueta JSON es la frontera del contrato y la columna no
 lo es**. El frontend recibe `{"raffleId":1,"number":"0347","status":"available"}`
 y nunca ve un nombre de tabla. Adentro mandan las convenciones de SQL —plural,
@@ -221,7 +221,7 @@ go get github.com/jmoiron/sqlx@v1.3.5 \
 ```sql
 -- Esquema inicial del dominio de rifas.
 --
--- Convenciones (prompts/diccionario-codigo-ingles.md §7bis.2):
+-- Convenciones de nombres del backend:
 --   tablas en plural y snake_case; dinero en BIGINT de centavos, coherente
 --   con A10; instantes en TIMESTAMPTZ, coherente con el contrato de be00.
 
@@ -978,7 +978,7 @@ lugar correcto para esto es un middleware de instrumentación, y eso es
 30. **Diagnóstico + regresión.** Te entregan este ticket: *"desde ayer, las rifas creadas aparecen con la hora de cierre corrida una hora"*. Con lo que sabes de la Divergencia 2, enumera las cinco causas posibles ordenadas por probabilidad, di cómo descartarías cada una con una sola consulta, y escribe la prueba de regresión.
 31. Escribe el par de pruebas contradictorias que `be08` va a necesitar: una que **pase en SQLite y falle en Postgres**, y otra que haga exactamente lo contrario. Documenta ambas con su justificación.
 32. Toma la interfaz `Store` y argumenta si debería vivir en el paquete `raffle` o en el paquete que la consume. Defiende las dos posturas con el argumento de las interfaces implícitas y decide con un criterio operativo, no estético.
-33. **Post-mortem.** Escribe el post-mortem del incidente ficticio *"la suite estaba verde y el despliegue rompió la creación de rifas"*, con causa raíz en `LastInsertId`. Según la guía §13: síntoma, evidencia, causa raíz, corrección, prueba de regresión, prevención. La prevención tiene que ser una regla verificable, no "tener más cuidado".
+33. **Post-mortem.** Escribe el post-mortem del incidente ficticio *"la suite estaba verde y el despliegue rompió la creación de rifas"*, con causa raíz en `LastInsertId`. Según los ocho puntos del post-mortem de `cuaderno-incidentes.md`: síntoma, evidencia, causa raíz, corrección, prueba de regresión, prevención. La prevención tiene que ser una regla verificable, no "tener más cuidado".
 
 **🔥 Opcionales**
 
@@ -1016,7 +1016,7 @@ completo de divergencias, que es donde vive el detalle que acá solo se mide.
 > referencias a libros son de memoria y pueden ser inexactas. La documentación de
 > Postgres tiene una versión por URL — si aterrizas en la última, cambia el
 > número a 13 antes de creerle. Cualquier discrepancia de versiones la resuelve
-> `prompts/decisiones-y-versiones.md` §7.
+> `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -1062,15 +1062,14 @@ pasa o no pasa, y la aplicación React no cambia ni un archivo.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/diccionario-codigo-ingles.md` §7bis.2** la aclaración de
-  nombres de store: `sqlStore` cuando una implementación sirve a los dos motores
-  (el caso de esta fase) y `<motor><Dominio>Store` cuando es específica de uno
-  (el caso que llega en `be05` con `FOR UPDATE`). Hecho al escribir la fase.
-- **Registrar en `prompts/decisiones-y-versiones.md` §7** dos decisiones que esta
-  fase cierra y que estaban abiertas: **DDL por dialecto** (que `D20` dejaba a
-  criterio de `be02`) y **`/health` responde `503`** (que `be01` dejó al
-  ejercicio 31). Las dos afectan a `be09` y conviene que estén en la fuente de
-  verdad, no solo en la fase.
+- ✅ **Resuelto: los nombres de store** quedaron como convención del backend:
+  `sqlStore` cuando una implementación sirve a los dos motores (el caso de esta
+  fase) y `<motor><Dominio>Store` cuando es específica de uno (el caso que llega
+  en `be05` con `FOR UPDATE`).
+- ✅ **Registradas en `00-decisiones-y-versiones.md` como `D25` y `D26`** las dos
+  decisiones que esta fase cierra y que estaban abiertas: **DDL por dialecto**
+  (que `D20` dejaba a criterio de `be02`) y **`/health` responde `503`** (que
+  `be01` dejó al ejercicio 31). Las dos afectan a `be09`.
 - **Registrar en `server/evidence/divergencias.md`** que es entregable citable:
   `be08` lo usa como base de su regla del motor y `bea-03` lo amplía a
   diccionario completo. Que `be08` no lo reescriba desde cero.

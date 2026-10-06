@@ -45,6 +45,25 @@ cambió tu criterio.
 > es la lección más transferible del curso, y es lo primero que te van a pedir en
 > un equipo de mantenimiento real.
 
+### El post-mortem en ocho puntos
+
+Cada incidente se cierra con un post-mortem, y es la misma estructura que piden
+los ejercicios de post-mortem de las fases:
+
+1. **Síntoma**, en palabras del usuario.
+2. **Pasos de reproducción** exactos.
+3. **Evidencia observable**: consola, Network, DevTools, logs.
+4. **Causa raíz**, hasta la línea o el commit.
+5. **Corrección** aplicada.
+6. **Prueba de regresión** que falla antes del fix y pasa después.
+7. **Prevención**: un test, un feature flag o una alerta.
+8. **Análisis sin culpabilización** (*blameless*): se mira el sistema y el
+   proceso, no a la persona.
+
+Los puntos 1 a 6 tienen traducción exacta a git —el par de tags `-roto` / `-fix`
+de `00-convencion-de-git-y-tags.md`—, y el tono baja un punto de humor: un
+post-mortem es sereno y analítico.
+
 ### Convención de commits
 
 El asunto del commit sigue este formato, para que `git log --oneline` se lea como
@@ -207,8 +226,8 @@ viven en su propio archivo:
 incidentes del curso: porque el track BE es opcional, y quien haga solo las 96
 horas del track base no debería encontrarse dieciséis incidentes de Go y Postgres
 intercalados entre los suyos. La divergencia está declarada allá y los rangos de
-IDs no colisionan. Su plantilla —igual a esta, con las herramientas del backend en
-vez de las del navegador— está en `prompts/plantilla-de-incidente-be.md`.
+IDs no colisionan. Sus enunciados siguen la misma estructura que estos, con las
+herramientas del backend en vez de las del navegador.
 
 **Seis de los dieciséis son hermanos de incidentes de este cuaderno**: mismo
 síntoma, otra capa, otra causa raíz. Resolverlos en pareja enseña más que

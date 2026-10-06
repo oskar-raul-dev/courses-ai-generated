@@ -216,7 +216,7 @@ por qué.
 **Fase 10.** *Estaba* declarada como deuda: las versiones se dejaban al
 `package-lock`.
 
-**Se pagó** al crear `prompts/decisiones-y-versiones.md`: `rxjs-marbles@6.0.1` y
+**Se pagó** al crear `00-decisiones-y-versiones.md`: `rxjs-marbles@6.0.1` y
 `cypress@10.11.0` van pineadas en `package.json`, y el porqué del pin de
 `rxjs-marbles` —su major está atado al de RxJS— está documentado en D9.
 
@@ -335,7 +335,7 @@ así a propósito?*
 - Fase 11 §5.3 — el caso trabajado de hotfix mínimo frente a refactorización,
   que es la aplicación práctica de este archivo.
 - `00-historia-del-sistema.md` §4 — por qué cada cosa quedó como quedó.
-- `prompts/decisiones-y-versiones.md` — las decisiones que **no** son deuda, sino
+- `00-decisiones-y-versiones.md` — las decisiones que **no** son deuda, sino
   restricciones firmes del proyecto. La diferencia importa: una restricción no
   se paga, se respeta.
 

@@ -200,7 +200,7 @@ git commit -m "f00: andamiaje inicial de CRA 4.0.3"
 
 De ahí en adelante, los commits llevan el prefijo de la fase —`f00:`, `f01:`, `f04:`— y los de ejercicio además su número: `f04 ej17: filtro por estado de rifa`. Un prefijo, nada más; con eso `git log --oneline --grep '^f04'` te devuelve todo lo que hiciste en la Fase 4.
 
-CRA ya te dejó un `.gitignore` correcto; antes del primer commit confirma que `node_modules/` y `build/` están adentro y que **`package-lock.json` no lo está** — esa foto exacta del árbol de dependencias sí se versiona, y es la decisión **D7** de `prompts/decisiones-y-versiones.md`: el lockfile manda y se instala con `npm ci`.
+CRA ya te dejó un `.gitignore` correcto; antes del primer commit confirma que `node_modules/` y `build/` están adentro y que **`package-lock.json` no lo está** — esa foto exacta del árbol de dependencias sí se versiona, y es la decisión **D7** de `00-decisiones-y-versiones.md`: el lockfile manda y se instala con `npm ci`.
 
 Y al terminar la fase —con el checklist de la sección 2 en verde, no antes— marcas el hito con un tag anotado:
 
@@ -556,15 +556,15 @@ Pero una tarjeta suelta no es una app. Ahora mismo tienes una sola pantalla que 
 
 - ~~**Presupuesto horario sin fuente única.**~~ **Resuelto:** manda
   `00-alcance-del-proyecto.md`; las versiones y decisiones técnicas mandan desde
-  `prompts/decisiones-y-versiones.md`.
+  `00-decisiones-y-versiones.md`.
 - ~~**La tabla de entornos de §5 tiene seis columnas.**~~ **Resuelto:** el bloque
   entero se extrajo a `A9-entornos-y-contenedores.md`, donde la comparativa está
   reescrita como lista con subtítulos (§2) y la tabla de runtimes bajó a tres
-  columnas, como manda §3 de la guía.
+  columnas, como pide la regla de tablas cortas del curso.
 - ~~**Windows 11 sobre Apple Silicon sin ejercicio.**~~ **Resuelto:** vive en el
   A9 §6, con su 🔥 al final del apéndice.
 - ~~**`node-sass` frente a `sass`.**~~ **Resuelto:** el porqué histórico está en
-  `prompts/decisiones-y-versiones.md` (D11) y la fricción de instalación en el A9 §1.
+  `00-decisiones-y-versiones.md` (D11) y la fricción de instalación en el A9 §1.
 - ~~**La rifa hardcodeada 💸** se declara acá y se paga en Fase 3.~~
   **Resuelto:** se paga en **Fase 4 §5.5**, marcada explícitamente como 💸 Pago
   de deuda. La fase que corresponde era la 4, no la 3 — hasta que no hay store,

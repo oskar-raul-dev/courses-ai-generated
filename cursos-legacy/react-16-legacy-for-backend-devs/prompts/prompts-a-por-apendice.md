@@ -30,7 +30,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
   customización de paleta con Sass.
 
 Decisiones confirmadas que aplican a este apéndice
-(prompts/decisiones-y-versiones.md — no se reabren en este chat):
+(00-decisiones-y-versiones.md — no se reabren en este chat):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019, sin TypeScript.
 - D11 Sass = dart-sass, sin node-sass. Compatibilidad macOS ARM.
@@ -66,7 +66,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
 - Contenido esperado: Tokens Sass, mixins, cómo el código real extiende
   Bootstrap, convenciones de nombramiento.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D1 React/React DOM 16.14.0.
 - D11 Sass = dart-sass.
 
@@ -97,7 +97,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
 - Contenido esperado: package.json, package-lock.json, npm ci vs npm i,
   semver, .nvmrc, reproducibilidad.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D7 package-lock.json es norma; no se tocan versiones sin justificar.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -127,7 +127,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
 - Contenido esperado: Qué hace Webpack bajo CRA, qué es eject (y por qué
   no), estructura de carpetas de CRA.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D1 React/React DOM 16.14.0.
 
 Confírmame que tienes el contexto y quedamos listos para el Prompt B
@@ -157,7 +157,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
 - Contenido esperado: Cómo leer código mezclado, equivalencias de ciclo de
   vida ↔ hooks, componentDidMount → useEffect, etc.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019.
 
@@ -189,7 +189,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
   actions, createReducer vs reducers manuales, createSlice, patrones de
   store, immer integration.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019.
 - D4 Redux Toolkit 1.8.x en código nuevo.
@@ -223,7 +223,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
   cuándo usarlo, ejemplo mínimo, error común, y cómo probarlo con marbles
   (rxjs-marbles, D9).
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D1 React/React DOM 16.14.0.
 - D3 JavaScript plano ES2019.
 - D2 redux-observable 1.2.0 + RxJS 6.6.7.
@@ -256,7 +256,7 @@ Contexto de este apéndice (ver 00-alcance-del-proyecto.md §6 y §7):
 - Contenido esperado: React 17, 18, Server Components — solo pinceladas,
   sin profundidad. Comparativa de mental models (legacy vs moderno).
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md):
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md):
 - D1 React/React DOM 16.14.0 es punto final. No usar APIs 17/18 en código
   principal.
 - Este apéndice es SOLO COMPARACIÓN y CONTEXTO HISTÓRICO.

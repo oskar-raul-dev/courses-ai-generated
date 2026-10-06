@@ -393,14 +393,14 @@ Uso combinado:
 
 ## 8. Convenciones de nombramiento
 
-Coherentes con la guía de estilo del proyecto y el diccionario código-inglés:
+Coherentes con la convención de idioma del curso (README, §Convenciones):
 
 - **Clases, variables, mixins y functions van en inglés.** `.raffle-card`, no
   `.tarjeta-rifa`. `status-color`, no `color-estado`. Solo la narrativa y el
   texto que ve el usuario van en español.
 - **Estados en inglés como valores de código.** `"open"`, `"sold"`, `"reserved"`
   — nunca `"abierta"` en un token o mixin. La traducción a español ocurre en la
-  UI (ver A5 y la guía), no en el Sass.
+  UI (ver A5), no en el Sass.
 - **Modificadores con BEM ligero.** Bloque `.number-cell`, modificador
   `.number-cell--sold` (doble guion). No mezclamos con la convención de utilidad
   de Bootstrap; las clases propias son BEM, las de Bootstrap son de Bootstrap.

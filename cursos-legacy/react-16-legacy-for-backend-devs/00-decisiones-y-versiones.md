@@ -7,10 +7,10 @@ Este archivo existe para que el curso se sostenga solo. Cada vez que una fase
 escribe `(D4)` o dice "la versión fijada", apunta acá. Si un número de versión
 aparece en dos archivos y no coinciden, **gana este**.
 
-Antes de que existiera, las decisiones circulaban como códigos `D1`…`D13`
-repartidos por diez archivos y una cita a un `DECISIONES-CONFIRMADAS.md` que
-nunca se escribió. Eso convertía cada duda de versión en arqueología. Acá está
-todo junto, con el porqué al lado.
+En un sistema real, estas decisiones suelen estar repartidas entre un
+`package.json`, tres hilos de correo y la memoria de alguien que ya no está.
+Eso convierte cada duda de versión en arqueología. Acá está todo junto, con el
+porqué al lado.
 
 ---
 
@@ -245,6 +245,29 @@ El detalle completo de entornos, contenedores y paridad con producción vive en
 
 ---
 
+### Lo que se decidió no adoptar: librería de fechas y librería de dinero
+
+Dos dependencias que cualquiera esperaría encontrar y que el proyecto **no
+tiene**, a propósito. Que no estén es una decisión, no un olvido, y por eso
+vive acá.
+
+**Fechas: sin `date-fns`, `luxon` ni `Day.js`.** La Fase 7 resuelve la hora
+dura de cierre con `Date` nativo: para *comparar dos instantes* basta con
+milisegundos desde epoch, y `a.getTime() > b.getTime()` es exacto. Una librería
+recién gana cuando hay que *formatear* o *hacer aritmética de calendario* en una
+zona horaria ("cierra en 2h 15m", "un día hábil"), y eso queda como ejercicio 🔥
+de la Fase 7. **Qué la vuelve revisable:** que la presentación de fechas en
+zona del usuario pase a ser parte del código principal.
+
+**Dinero: sin `dinero.js`, `big.js` ni `decimal.js`.** Los montos van en enteros
+de centavos (Fase 8 y `A10-aritmetica-de-dinero.md`): una sola moneda, montos
+que caben de sobra en el entero seguro, y operaciones que son sumar,
+multiplicar por un entero y dividir con resto. **Qué la vuelve revisable:**
+varias monedas con subdivisiones distintas, conversión de divisas o montos que
+puedan desbordar el entero seguro. A10 §7 cuenta el razonamiento completo.
+
+---
+
 ## 3. El `package.json` de referencia
 
 Este es el `package.json` completo del proyecto al terminar el curso. Cada fase
@@ -377,12 +400,13 @@ lo que instaló npm, gana lo que instaló npm y hay que averiguar por qué.
 
 ---
 
-## 7. Track BE (opcional) — decisiones D14–D23 🔥
+## 7. Track BE (opcional) — decisiones D14–D29 🔥
 
 Todo lo de esta sección pertenece al **track opcional de backend** (`be00`–`be09`
 y sus apéndices `bea-NN`). El track base se completa con el mock y **no depende
-de nada de acá**. El encuadre completo —justificación, fases y horas— vive en
-`prompts/propuesta-fases-backend.md`.
+de nada de acá**. El encuadre —por qué existe el track, qué deuda cobra cada
+fase y cuántas horas lleva— está en el README del curso (§Track BE) y en
+`be00-el-contrato-auditoria-del-mock.md`.
 
 La regla del §1 sigue mandando igual: ninguna versión se cambia sin justificarlo
 por escrito.
@@ -420,7 +444,7 @@ resucita— es exactamente el tipo de evento que define la vida de un sistema
 legacy. Se trabaja como contenido 💸, no como accidente.
 
 **Qué la vuelve revisable.** Un segundo archivado sin sucesor claro. Verifica el
-estado del repositorio al escribir la fase; no lo cites de memoria.
+estado del repositorio cuando lo leas; no lo cites de memoria.
 
 ---
 
@@ -439,8 +463,9 @@ apuntando a la original.
 **Qué la vuelve revisable.** Nada. La secuencia abandono → CVE → fork **es** el
 contenido de la fase; quitarla vaciaría `be04`.
 
-⚠️ Cita el identificador del CVE y las fechas desde el aviso oficial. No los
-escribas de memoria.
+⚠️ El identificador del CVE y sus fechas salen del aviso oficial, que es lo que
+cita `be04`. Si los necesitas para un post-mortem, cítalos desde ahí y no de
+memoria.
 
 ---
 
@@ -660,6 +685,31 @@ trazabilidad; `be08` hereda `TestConcurrentSell` y la evidencia de SQLite.
 
 **Qué la vuelve revisable.** Nada dentro del track. Volver al modelo de estado
 implicaría renunciar al índice único, que es el punto.
+
+---
+
+#### D29 — El proceso corre en UTC; la zona de Bogotá es solo de presentación
+
+**Qué se fijó.** En `be06`: el proceso corre con `TZ=UTC`, todo instante se
+guarda en `TIMESTAMPTZ` y toda comparación se hace entre instantes. La sesión de
+base fija `TimeZone=America/Bogota` **solo** para que la serialización de salida
+coincida con el contrato que el frontend ya consume. El borde del cierre es el
+mismo que en el frontend: `now >= closesAt` significa cerrada, heredado de
+`isPastClosing`.
+
+📝 **Por qué con esa jerarquía.** La zona de presentación no participa en
+ninguna decisión. Un servidor que compara en hora local depende de la
+configuración de la máquina donde corre, y el mismo binario decide distinto en
+tu laptop y en el contenedor.
+
+📎 **Consecuencias.** `main.go` fija `TZ=UTC` al arrancar (`be06` §5), así que
+la decisión no depende de la imagen ni del runner. `be08` prueba la comparación
+de instantes contra PostgreSQL (la regla del motor de `D18`) y comprueba que
+`closesAt` sale con offset y no con `Z`.
+
+**Qué la vuelve revisable.** Que el contrato cambie a UTC explícito (`Z`) en la
+salida. Ahí la sesión de base deja de necesitar la zona, y el frontend tiene que
+aceptarlo primero.
 
 ---
 

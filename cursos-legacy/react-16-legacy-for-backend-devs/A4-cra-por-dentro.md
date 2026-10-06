@@ -32,7 +32,7 @@ el puerto `3000`, el CRUD mock en `3001` y la lotería mock en `3002` (Fase 3).
 5. [Customizar sin `eject`](#5-customizar-sin-eject)
 6. [`eject`: qué hace y por qué (casi) nunca](#6-eject-qué-hace-y-por-qué-casi-nunca)
 7. [Performance: code splitting, lazy, source maps](#7-performance-hints)
-8. [🗺️ Tabla: cuándo hacer qué](#8--tabla-cuándo-hacer-qué)
+8. [🗺️ Tabla: cuándo hacer qué](#8-️-tabla-cuándo-hacer-qué)
 9. [🧪 Ejercicios cortos](#-ejercicios-cortos-7)
 10. [📚 Referencias](#-referencias)
 

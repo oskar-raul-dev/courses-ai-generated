@@ -393,7 +393,7 @@ los errores comunes → el aviso `GHSA-w73w-5m7g-f7qc` entero antes de migrar �
 > Los datos del CVE se confirmaron contra el aviso oficial al escribir este
 > apéndice, y aun así el procedimiento correcto es abrirlo. Las referencias a
 > libros y videos son de memoria y pueden ser inexactas. La fuente de verdad de
-> versiones es `prompts/decisiones-y-versiones.md` §7.
+> versiones es `00-decisiones-y-versiones.md` §7.
 
 ---
 

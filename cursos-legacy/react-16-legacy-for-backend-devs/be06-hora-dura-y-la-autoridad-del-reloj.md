@@ -670,7 +670,7 @@ el ticket.
 28. **Diagnóstico + regresión.** Ticket: *"a los vendedores de la costa se les cierra la rifa una hora antes que a los del interior"*. Enumera las cinco causas candidatas ordenadas por probabilidad, di cómo descartas cada una con una sola consulta o una sola línea de log, y escribe la prueba de regresión de la que sobreviva.
 29. Diseña la política de tiempo completa del sistema como documento para quien entre nuevo: qué se guarda, en qué tipo, en qué zona corre cada proceso, quién decide, cómo se serializa y qué está prohibido. Máximo una página, y tiene que poder aplicarse sin leer código.
 30. Argumenta si el sistema debería guardar, además del instante, la **zona en que se expresó** el cierre. Construye el caso de negocio que lo haría necesario —una regla recurrente— y decide si este dominio lo tiene. Deja la conclusión en `bea-06`.
-31. **Post-mortem.** Escribe el post-mortem de *"vendimos doscientos números después del cierre y nadie lo notó hasta la liquidación"* según la guía §13, ubicando la causa raíz en la autoridad del reloj. La prevención tiene que explicar por qué una validación en el frontend no habría bastado, sin culpar a quien la escribió.
+31. **Post-mortem.** Escribe el post-mortem de *"vendimos doscientos números después del cierre y nadie lo notó hasta la liquidación"* según los ocho puntos del post-mortem de `cuaderno-incidentes.md`, ubicando la causa raíz en la autoridad del reloj. La prevención tiene que explicar por qué una validación en el frontend no habría bastado, sin culpar a quien la escribió.
 
 **🔥 Opcionales**
 
@@ -705,7 +705,7 @@ monótono en `pkg.go.dev/time` cuando un test te falle sin motivo aparente →
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros y videos son de memoria y pueden ser inexactas. La
 > documentación de Postgres tiene una versión por URL; fija el 13. Cualquier
-> discrepancia de versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> discrepancia de versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -760,7 +760,7 @@ repartido y la rifa sin liquidar.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/decisiones-y-versiones.md` §7** la política de tiempo:
+- ✅ **Registrada en `00-decisiones-y-versiones.md` como `D29`** la política de tiempo:
   proceso en `TZ=UTC`, sesión de base en `America/Bogota` **solo** para
   serializar, todo instante en `TIMESTAMPTZ`, comparación por instantes, y el
   borde del cierre (`now >= closesAt` → cerrado) heredado de `isPastClosing`.

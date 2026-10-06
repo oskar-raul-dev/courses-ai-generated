@@ -3,7 +3,7 @@
 
 Cada prompt está listo para copiar y pegar en un chat nuevo. Los datos ya están
 completados según `prompts/propuesta-fases-backend.md` y
-`prompts/decisiones-y-versiones.md` §7. Solo cópialo tal cual al abrir el chat
+`00-decisiones-y-versiones.md` §7. Solo cópialo tal cual al abrir el chat
 de esa fase.
 
 Son los prompts **A** —los que cargan el contexto y confirman el encuadre—. La
@@ -26,7 +26,7 @@ mock, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16 para el track BE), (6)
 prompts/diccionario-codigo-ingles.md (§7bis para Go y SQL), (7)
 prompts/plantilla-de-fase.md, (8) las fases 0-8 del track base ya escritas y
@@ -56,7 +56,7 @@ Contexto de esta fase:
 - Deuda del track base que cobra: ninguna todavía. Prepara el terreno para
   cobrarlas todas.
 
-Decisiones confirmadas que aplican (prompts/decisiones-y-versiones.md — no se
+Decisiones confirmadas que aplican (00-decisiones-y-versiones.md — no se
 reabren en este chat):
 - D21 El backend Go tomará el puerto 3001 y honrará el contrato del mock.
 - D22 El caos se reimplementa en Go con doble control (ruta POST /_chaos y
@@ -67,7 +67,7 @@ el frontend heredado NO SE TOCA. El backend se adapta al contrato existente,
 nunca al revés.
 
 No hace falta preguntarme por versiones ni decisiones de stack: están todas
-en prompts/decisiones-y-versiones.md §7. Si algo específico de esta fase no
+en 00-decisiones-y-versiones.md §7. Si algo específico de esta fase no
 está definido, pregúntame antes de asumir.
 
 Confírmame que tienes el contexto y quedamos listos para el prompt de
@@ -85,7 +85,7 @@ monolito, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00 ya cerrada y aprobada, (9) decisiones
@@ -143,7 +143,7 @@ chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00 y be01 cerradas y aprobadas, (9)
@@ -205,7 +205,7 @@ chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00, be01 y be02 cerradas y aprobadas, y
@@ -262,7 +262,7 @@ un CVE, del track BE opcional del tutorial React 16 + Rifas y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16 y §13 para el post-mortem),
 (6) prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00-be03 cerradas, y las fases 2 y 3 del
@@ -325,7 +325,7 @@ chances. Es una de las dos fases ⭐ del track.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00-be04 cerradas, y LA FASE 5 DEL TRACK
@@ -379,7 +379,7 @@ y chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00-be05 cerradas, y la Fase 7 del track
@@ -429,7 +429,7 @@ chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00-be06 cerradas, y la Fase 8 más el
@@ -477,7 +477,7 @@ chances.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00-be07 cerradas, y la Fase 10 del track
@@ -531,7 +531,7 @@ la fase de cierre del track.
 Actúa siguiendo las instrucciones del proyecto. Fuentes de verdad, en este
 orden: (1) prompts/instrucciones-del-proyecto.md, (2)
 00-alcance-del-proyecto.md, (3) prompts/propuesta-fases-backend.md, (4)
-prompts/decisiones-y-versiones.md §7, (5)
+00-decisiones-y-versiones.md §7, (5)
 prompts/guia-de-estilo-y-convenciones.md (§16), (6)
 prompts/diccionario-codigo-ingles.md (§7bis), (7)
 prompts/plantilla-de-fase.md, (8) be00-be08 cerradas, y los apéndices A3, A9

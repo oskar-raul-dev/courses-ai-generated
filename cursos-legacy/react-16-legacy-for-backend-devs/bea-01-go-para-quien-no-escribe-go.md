@@ -506,7 +506,7 @@ resulte cómodo.
 > todo el material bueno de Go en la web asume la versión más reciente**: cuando
 > algo no compile con `go 1.19`, revisa la §11 antes de dudar de tu código, y
 > recuerda que la fuente de verdad de versiones es
-> `prompts/decisiones-y-versiones.md` §7.
+> `00-decisiones-y-versiones.md` §7.
 
 ---
 

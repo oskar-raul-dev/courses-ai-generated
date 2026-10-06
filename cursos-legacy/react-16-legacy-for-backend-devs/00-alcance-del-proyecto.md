@@ -121,10 +121,9 @@ El curso son archivos `.md` autocontenidos, sin dependencias externas:
   ninguna fase.
 - **1 cuaderno de incidentes** → `cuaderno-incidentes.md` (archivo único:
   índice, enunciados, pistas y soluciones).
-- **Editorial**, en `prompts/`: `decisiones-y-versiones.md` (versiones y
-  decisiones D1-D13), `guia-de-estilo-y-convenciones.md`,
-  `diccionario-codigo-ingles.md`, `plantilla-de-fase.md` y los `prompts-*.md`
-  de redacción.
+- **De consulta**, en la raíz: `00-decisiones-y-versiones.md` (versiones,
+  `package.json` y `go.mod` de referencia, puertos y las decisiones D1–D29) y
+  `00-convencion-de-git-y-tags.md` (ramas, tags y commits).
 
 El track forense **no tiene archivos propios**: vive dentro de la §6 de cada
 fase y del cuaderno de incidentes. Los smoke tests y los tests de regresión
@@ -149,7 +148,7 @@ lejos del código que explica no se lee.
   3001 sin que el frontend cambie una línea, y que paga las deudas 💸 que las
   fases 2, 5, 7 y 8 declararon y no podían saldar. **No cuenta en las 96 horas
   y no es prerrequisito de nada**; se puede empezar al terminar la Fase 8. Su
-  encuadre completo está en `prompts/propuesta-fases-backend.md`.
+  encuadre completo está en el README del curso (§Track BE) y en `be00`.
 
 ---
 
@@ -177,10 +176,10 @@ ejercicio 🔥. No se infla la fase actual.
 ## 9. Restricciones de versiones
 
 Todas las versiones están **congeladas y decididas** en
-`prompts/decisiones-y-versiones.md`, que es la fuente de verdad única: el
+`00-decisiones-y-versiones.md`, que es la fuente de verdad única: el
 `package.json` completo, qué instala cada fase, los tres puertos y el porqué
 de cada decisión (D1–D13). El track BE opcional añade allí mismo sus decisiones
-D14–D23, su `go.mod` y su cuarto puerto, en la §7 de ese archivo.
+D14–D29, su `go.mod` y su cuarto puerto, en la §7 de ese archivo.
 
 El resumen, para orientarse: Node 14.21.3 con npm 6 · React 16.14.0 ·
 react-scripts 4.0.3 · Redux 4.1.2 · Redux Toolkit 1.8.6 · React-Redux 7.2.9 ·

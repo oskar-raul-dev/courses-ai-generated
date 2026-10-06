@@ -35,7 +35,7 @@ patrón a memorizar, prueba de fuego, mini-repaso, la señal de que quedó
 bien) donde el contenido lo pida.
 
 Código: ejecutable, mínimo, coherente con el stack confirmado
-(prompts/decisiones-y-versiones.md), sin contradecir fases anteriores. Dominio:
+(00-decisiones-y-versiones.md), sin contradecir fases anteriores. Dominio:
 siempre rifas y chances; autocontenido (guía §11), sin depender de material externo.
 
 Foco de esta fase:
@@ -67,7 +67,7 @@ Mantén sin cambios: {{secciones que ya quedaron bien}}.
 
 Antes de reescribir, confírmame en una línea qué vas a cambiar en cada
 punto. Si una corrección contradice una decisión ya aprobada en
-prompts/decisiones-y-versiones.md, avísame explícitamente en vez de aplicarla
+00-decisiones-y-versiones.md, avísame explícitamente en vez de aplicarla
 en silencio.
 
 Cuando quede aprobado, genera la versión final completa del archivo.

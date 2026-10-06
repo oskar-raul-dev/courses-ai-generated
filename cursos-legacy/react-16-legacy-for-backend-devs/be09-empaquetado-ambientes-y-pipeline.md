@@ -714,7 +714,7 @@ no arranque.
 > en ninguna otra fase — las versiones de las acciones de GitHub se retiran varias
 > veces al año y el YAML de 5.5 va a envejecer antes que el resto del curso. Las
 > referencias a libros son de memoria y pueden ser inexactas. Cualquier
-> discrepancia de versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> discrepancia de versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -770,12 +770,13 @@ Esa es la tesis del track, y ahora la tienes demostrada con tus propias manos.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/decisiones-y-versiones.md` §7** el cierre de `D19`, que
+- ✅ **Registrado en `00-decisiones-y-versiones.md`** el cierre de `D19`, que
   llevaba siete fases abierta: **no se cambia de driver, se etiqueta la
   compilación**. El binario de producción va sin cgo y `mattn/go-sqlite3` queda
   detrás de `-tags sqlite` para pruebas. `modernc.org/sqlite` se mide y se
-  descarta. Y anotar el giro: la pregunta de `D19` estaba mal planteada.
-- **Registrar también el tag de hito `track-be-completo`**, junto con
+  descarta. El registro anota también el giro: la pregunta de `D19` estaba mal
+  planteada.
+- ✅ **Registrado el tag de hito `track-be-completo`**, junto con
   `mock-retirado` de `be03`, en `00-convencion-de-git-y-tags.md` como los dos
   únicos tags del track que no siguen el patrón `fase-…`.
 - **El YAML de 5.5 es la parte del curso que más rápido envejece.** Conviene

@@ -430,7 +430,7 @@ Los ejercicios de la última fase son distintos: algunos son de código, pero mu
 
 - https://legacy.reactjs.org/docs/hooks-effect.html — `useEffect` y su equivalencia con los métodos de ciclo de vida de clase. Es la doc que respalda la migración de §5.2.
 - https://react-redux.js.org/api/hooks — `useSelector`/`useDispatch`, el reemplazo de `connect()`. Fíjate en react-redux 7.2.x.
-- https://redux-toolkit.js.org/rtk-query/overview — RTK Query, mencionada por D4 (`prompts/decisiones-y-versiones.md`). Leerla como comparación, no como algo a adoptar: el proyecto usa `createAsyncThunk`.
+- https://redux-toolkit.js.org/rtk-query/overview — RTK Query, mencionada por D4 (`00-decisiones-y-versiones.md`). Leerla como comparación, no como algo a adoptar: el proyecto usa `createAsyncThunk`.
 - https://rxjs.dev/deprecations/breaking-changes — cambios de RxJS 6 → 7. Útil para el ejercicio 22; el código principal se queda en 6.6.7.
 
 **Migración (leer con criterio, apuntan a versiones más nuevas)**
@@ -496,7 +496,7 @@ Fin del curso. El sistema es tuyo para mantener.
   de actualización (§4 del apéndice).
 - ~~**La tabla de deuda de §5.1 tiene cinco columnas.**~~ **Resuelta con la
   misma extracción:** en el A12 el inventario es una lista con subtítulos, como
-  manda §3 de la guía, y cada entrada tiene el espacio para explicar su porqué
+  pide la regla de tablas cortas del curso, y cada entrada tiene el espacio para explicar su porqué
   en prosa en vez de comprimirlo en una celda.
 - ~~**El cierre del curso no menciona el cuaderno de incidentes.**~~
   **Resuelto:** §9 enlaza la 🪞 retrospectiva del mes.

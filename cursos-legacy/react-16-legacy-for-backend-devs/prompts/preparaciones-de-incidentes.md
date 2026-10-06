@@ -169,7 +169,7 @@ rm -rf node_modules package-lock.json
 ```
 
 Es el `package.json` que el curso decidió **no** tener (decisión D11 de
-`decisiones-y-versiones.md`), devuelto a su estado de 2021. No hay que tocar
+`00-decisiones-y-versiones.md`), devuelto a su estado de 2021. No hay que tocar
 `src/index.scss`: los `@import` de Sass son idénticos para las dos
 implementaciones, y que el código de estilos no cambie es justamente parte de la
 lección.

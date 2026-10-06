@@ -371,7 +371,7 @@ motivo aparente.
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros y videos son de memoria y pueden ser inexactas. La
 > documentación de Postgres tiene **una versión por URL**: fija el 13. La fuente
-> de verdad de versiones es `prompts/decisiones-y-versiones.md` §7.
+> de verdad de versiones es `00-decisiones-y-versiones.md` §7.
 
 ---
 

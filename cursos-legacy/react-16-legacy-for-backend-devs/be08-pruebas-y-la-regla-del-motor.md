@@ -722,7 +722,7 @@ verificada.
 30. Argumenta por escrito si SQLite debería seguir en el proyecto. Defiende primero eliminarlo —una sola verdad, cero divergencias, cero riesgo de falso positivo— y después conservarlo, y decide con un criterio operativo. Si decides eliminarlo, enumera qué se pierde.
 31. **Diagnóstico + regresión.** Ticket: *"la suite lleva tres semanas en verde y ayer se rompió la creación de rifas en producción"*. Reconstruye las tres hipótesis más probables, di cómo descartas cada una, y escribe la prueba que faltaba.
 32. Diseña la prueba basada en propiedades del sistema completo: para cualquier secuencia de ventas, reservas y liquidaciones, ninguna rifa termina con más ventas que números ni con pagos que no sumen su premio. Impleméntala con generación aleatoria y semilla fija.
-33. **Post-mortem.** Escribe el post-mortem de *"la suite verde autorizó un despliegue roto"* según la guía §13, con la causa raíz en el motor de pruebas. **Sin culpabilización**: usar SQLite en las pruebas es una práctica extendida y razonable, y quien la eligió tenía buenos motivos. La prevención tiene que ser un mecanismo, no una advertencia.
+33. **Post-mortem.** Escribe el post-mortem de *"la suite verde autorizó un despliegue roto"* según los ocho puntos del post-mortem de `cuaderno-incidentes.md`, con la causa raíz en el motor de pruebas. **Sin culpabilización**: usar SQLite en las pruebas es una práctica extendida y razonable, y quien la eligió tenía buenos motivos. La prevención tiene que ser un mecanismo, no una advertencia.
 
 **🔥 Opcionales**
 
@@ -755,7 +755,7 @@ verificada.
 
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros son de memoria y pueden ser inexactas. Cualquier
-> discrepancia de versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> discrepancia de versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 

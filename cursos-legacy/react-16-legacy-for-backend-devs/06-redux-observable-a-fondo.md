@@ -550,7 +550,7 @@ Este es uno de los ≥4 incidentes de RxJS/epics del curso. Su post-mortem (sin 
 27. Refactoriza `sellNumberEpic` y `retrySellEpic` a un helper común `sellRequest$(payload)` sin cambiar el comportamiento observable de ninguno. Justifica qué quedó en el helper y qué en cada epic.
 28. Explica, en prosa, cómo debuggearías un epic que dispara una acción *después* de que el componente se desmontó: qué miras en Redux DevTools, qué en React DevTools, y cómo correlacionas ambos con un request ID.
 29. Compara (sin implementar) cómo se vería la cancelación de la venta perdedora en `redux-saga` (con `takeLatest`/`cancel`) frente al `switchMap` de esta fase. ¿Qué se gana y qué se pierde en legibilidad de mantenimiento?
-30. Escribe el post-mortem completo (plantilla de la Guía de Estilo §12: síntoma, reproducción, evidencia, causa raíz, corrección, prueba de regresión, prevención, sin culpabilización) del leak del `boardRefreshEpic` cazado en la pieza forense.
+30. Escribe el post-mortem completo (los ocho puntos del post-mortem de `cuaderno-incidentes.md`: síntoma, reproducción, evidencia, causa raíz, corrección, prueba de regresión, prevención, sin culpabilización) del leak del `boardRefreshEpic` cazado en la pieza forense.
 
 **🔥 Opcionales**
 - 🔥 Prototipa el `pollingEpic` de resultados (Fase 7) usando `timer(0, 3000)` + `takeUntil('STOP_POLLING')`, pegándole a un endpoint fake — sin integrarlo al store real todavía.
@@ -620,8 +620,9 @@ Fase 7 —**cierre por hora y polling de resultados**— toma el patrón `timer`
   tienen fecha de pago. → `A7-redux-observable-epica-por-epica.md`, o ejercicio 🔴
   de extracción de operador propio.
 - **Los nombres de auth de Fase 2 conviven en dos estilos.** `LOGOUT` en
-  `SCREAMING_SNAKE_CASE` junto a los thunks de RTK es coherente con §4.4 de la
-  guía, pero se lee como inconsistencia si no se explica. → 📝 Nota de época que
+  `SCREAMING_SNAKE_CASE` junto a los thunks de RTK es coherente con la
+  convención del curso (los *types* a mano en mayúsculas, los de RTK generados),
+  pero se lee como inconsistencia si no se explica. → 📝 Nota de época que
   diga por qué las dos convenciones son correctas a la vez.
 - **`mergeMap` frente a `switchMap` se explica bien y se ejercita poco.** Es la
   decisión de operador que más bugs produce. → Dos ejercicios 🟠 más, uno por cada

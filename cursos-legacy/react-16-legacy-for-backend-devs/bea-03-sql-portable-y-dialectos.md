@@ -394,7 +394,7 @@ mitad de este apéndice— → `datatype3.html` para entender el §6 → y volve
 > versión de SQLite son especialmente importantes acá: **una función que hoy
 > existe puede no existir en la 3.35**, que es la cota del track. Comprueba
 > siempre contra tu versión antes de asumir. La fuente de verdad de versiones es
-> `prompts/decisiones-y-versiones.md` §7.
+> `00-decisiones-y-versiones.md` §7.
 
 ---
 

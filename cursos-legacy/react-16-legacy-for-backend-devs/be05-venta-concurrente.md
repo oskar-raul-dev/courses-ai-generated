@@ -754,7 +754,7 @@ ahora te dice cuánto esperó un vendedor por un número que ya no era suyo.
 31. Argumenta si `raffle_numbers.status` debería existir ahora que `sales` es la verdad. Enumera qué se rompería si se calculara al vuelo, mide el costo de esa consulta con volumen, y decide. Recuerda que el contrato de `be00` no se puede cambiar.
 32. **Diagnóstico + regresión.** Ticket: *"el día del sorteo de agosto vendimos tres números dos veces, pero solo en los números redondos"*. Explica por qué el sesgo hacia los números redondos es una pista y no ruido, reconstruye la causa, y escribe la prueba de regresión que la habría atrapado.
 33. Diseña cómo detectarías **hoy**, con una sola consulta, si alguna vez se vendió un número dos veces en el histórico. Después explica por qué esa consulta no puede escribirse sobre el modelo de `be03` y qué te dice eso sobre modelar hechos.
-34. **Post-mortem.** Escribe el post-mortem de la venta duplicada del ejercicio 32 según la guía §13. La sección de prevención tiene que distinguir tres niveles —la restricción de la base, la prueba de concurrencia y el criterio de revisión de código— y explicar por qué hacen falta los tres.
+34. **Post-mortem.** Escribe el post-mortem de la venta duplicada del ejercicio 32 según los ocho puntos del post-mortem de `cuaderno-incidentes.md`. La sección de prevención tiene que distinguir tres niveles —la restricción de la base, la prueba de concurrencia y el criterio de revisión de código— y explicar por qué hacen falta los tres.
 
 **🔥 Opcionales**
 
@@ -791,7 +791,7 @@ que es donde vive el detalle que acá solo se toca.
 > ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
 > referencias a libros son de memoria y pueden ser inexactas. La documentación de
 > Postgres tiene una versión por URL; fija el 13. Cualquier discrepancia de
-> versiones la resuelve `prompts/decisiones-y-versiones.md` §7.
+> versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 
@@ -845,14 +845,14 @@ backend no.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Registrar en `prompts/decisiones-y-versiones.md` §7** la decisión de esta
+- ✅ **Registrada en `00-decisiones-y-versiones.md` como `D28`** la decisión de esta
   fase: **la venta se modela como hecho (`sales`) y no como estado**, con el
   `UNIQUE (raffle_id, number)` como última línea de defensa, y el bloqueo
   pesimista como camino principal por observabilidad, no por rendimiento. Afecta
   a `be07` (trazabilidad) y a `be08` (suite de concurrencia).
-- **Registrar en `prompts/diccionario-codigo-ingles.md` §7bis.1** la entidad
-  nueva: `Sale` / `sales`, y el campo `soldBy`. Es un término del dominio que
-  antes no existía y que `be07` va a usar.
+- ✅ **Resuelto: la entidad nueva `Sale` / `sales`** quedó entre los términos
+  del dominio del README (§Convenciones), con su campo `soldBy`. Es un término
+  que antes no existía y que `be07` usa.
 - **`raffle_numbers.status` pasó de verdad a proyección.** Que `be07` y `be08` lo
   traten como tal: cualquier consulta de negocio sobre ventas va contra `sales`;
   `status` existe porque el contrato de `be00` lo exige.
@@ -863,8 +863,8 @@ backend no.
   comprobación de la hora dura dentro de esa transacción es una línea, no un
   rediseño. Y el worker de expiración es el precedente del trabajo que va a
   cerrar rifas por reloj.
-- **`be07` hereda `sales` como registro inmutable**, que es exactamente lo que su
-  prompt pide para la trazabilidad, y el `WithTx` ya montado.
+- **`be07` hereda `sales` como registro inmutable**, que es exactamente lo que
+  necesita para la trazabilidad, y el `WithTx` ya montado.
 - **`be08` hereda dos entregables directos:** `TestConcurrentSell` (que ya falla
   contra el código vulnerable, que es la propiedad que lo hace válido) y el
   informe de SQLite del paso 4, que es la evidencia de su regla del motor. Que no

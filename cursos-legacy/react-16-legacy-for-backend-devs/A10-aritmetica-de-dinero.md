@@ -345,7 +345,7 @@ ganadores, y si mañana alguien reescribe el reparto entero.
 
 Existen `dinero.js`, `big.js` y `decimal.js`, y todas resuelven bien este
 problema. El proyecto **no adopta ninguna**, y la decisión está cerrada en
-`prompts/decisiones-y-versiones.md`.
+`00-decisiones-y-versiones.md`.
 
 El motivo no es que las librerías sean malas. Es que el dominio no las necesita:
 todos los montos de una rifa caben holgadamente dentro del entero seguro, las

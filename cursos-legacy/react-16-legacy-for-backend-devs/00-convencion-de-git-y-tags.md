@@ -26,7 +26,7 @@ Al empezar la Fase 0 haces `git init` en el proyecto que crea CRA
 (`raffles-app`), y ese repo te acompaña las doce fases. Si más adelante haces el
 track BE opcional 🔥, el backend en Go **no estrena repositorio**: vive en
 `server/` dentro del mismo proyecto, con el frontend en la raíz sin moverse
-(`prompts/propuesta-fases-backend.md` §9). Un repo, dos mundos, una raya en la
+(`be01-go-y-la-forma-del-monolito.md` §5.1). Un repo, dos mundos, una raya en la
 arena entre ellos.
 
 Esa raya no es cosmética, y se defiende con git. La regla que gobierna el track
@@ -160,6 +160,23 @@ código de 2022 con un comando.
 > (`git checkout -b intento-2`). Para volver a tu línea principal,
 > `git checkout master`.
 
+### Los tags de hito del track BE
+
+El track BE opcional suma dos tags anotados que no cierran una fase sino que
+marcan un **evento**, y por eso son los únicos del curso que no siguen el patrón
+`fase-…`:
+
+```bash
+git tag -a mock-retirado -m "🪦 json-server fuera del sistema"        # en be03
+git tag -a track-be-completo -m "🔥 Track BE terminado: 10 fases, 84 horas, frontend intacto"   # en be09
+```
+
+`mock-retirado` es el punto al que vuelves si necesitas comparar el sistema con
+y sin el mock: antes de él, el `3001` lo sirve `json-server`; después, el binario
+de Go. `track-be-completo` cierra el track entero, y junto con `pre-backend-go`
+deja el diff completo del track a un comando:
+`git diff pre-backend-go..track-be-completo`.
+
 ---
 
 ## 🧪 Tags de ejercicios (opcional, pero baratos)
@@ -220,7 +237,7 @@ abrir un archivo.
 El `cuaderno-incidentes.md` plantea veinte incidentes —el número vendido dos
 veces, el epic que sigue pidiendo al servidor después del logout, la rifa que
 vendió pasada la hora de cierre— y pide resolverlos con la estructura de
-post-mortem de ocho puntos de la guía de estilo (§13): síntoma, repro,
+post-mortem de ocho puntos que el propio cuaderno explica: síntoma, repro,
 evidencia, causa raíz, corrección, prueba de regresión, prevención, y el
 análisis sin culpabilización.
 

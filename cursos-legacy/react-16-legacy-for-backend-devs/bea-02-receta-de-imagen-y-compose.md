@@ -493,7 +493,7 @@ llegues a `be09` y quieras entender qué estás copiando.
 > imagen se mueven, la sintaxis del `compose` evoluciona y las buenas prácticas
 > de Docker cambian cada pocos años. Verifica cada URL y cada etiqueta antes de
 > apoyarte en ellas. Las versiones fijas del track —`postgres:13`,
-> `golang:1.19`— salen de `prompts/decisiones-y-versiones.md` §7 y esas sí no se
+> `golang:1.19`— salen de `00-decisiones-y-versiones.md` §7 y esas sí no se
 > mueven.
 
 ---
