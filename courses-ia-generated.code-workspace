@@ -38,7 +38,7 @@
 			"terminal.ansiYellow": "#DDB26F"
 		},
 		"terminal.integrated.mouseWheelZoom": true,
-		"terminal.integrated.fontSize": 14,
+		"terminal.integrated.fontSize": 13,
 		"window.zoomLevel": 1.4,
 		"editor.mouseWheelZoom": true,
 		"claudeCode.useTerminal": true,
