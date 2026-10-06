@@ -11,7 +11,8 @@
 > Desktop 29.8.0 (kernel de la VM `7.0.12-linuxkit`). Lo que no se puede contenerizar —las recetas
 > nativas de macOS y Windows— se consultó en el registro de cada gestor y queda **pendiente de
 > Oskar** (§H11).
-> **Fecha:** 03/10/2026, salvo donde se diga otra.
+> **Fecha:** 03/10/2026, salvo donde se diga otra. **H13** se agregó el 05/10/2026, en la tanda
+> P11, y es la única que no corrió en contenedor (revisión estática con `mmdc`).
 
 ---
 
@@ -505,6 +506,36 @@ yottadb 2.0.1 · ^student(1) = Ana · hijos de ^student: ['1', '2']
 
 ---
 
+## H13 · Mermaid: la convención de diagramas del curso · 05/10/2026
+
+**Qué se probó.** Que la convención de la guía §3.2 (D-12, D20) dibuja con la herramienta con que se
+van a verificar las fases: `mmdc` 12.0.0, el Mermaid CLI que Oskar tiene instalado en la máquina de
+producción, que trae Mermaid 12.1.0. Es revisión estática de Markdown, no ejecución del curso, y por
+eso corrió fuera de contenedor (guía §11.1). Doce prototipos, en
+`zz-code/gestores-sql-01-bases-20261005-7fcc/prototipos/`, con sus SVG y cinco PNG revisados a ojo en
+su `salidas/`.
+
+| Prototipo | Sintaxis | Resultado |
+|---|---|---|
+| Boceto con óvalos: entidad, relación, atributos clave, multivaluado y derivado, min-max | `flowchart LR` | dibuja |
+| Entidad débil `[[…]]` y relación identificadora `{{…}}` con aristas `===` | `flowchart LR` | dibuja |
+| Formas nuevas `@{ shape: ellipse }`, `diamond`, `procs` | `flowchart` | **falla**: `No such shape: ellipse.` |
+| Pata de gallo con atributos tipados, `PK`, `FK`, `PK, FK` | `erDiagram` | dibuja |
+| Especialización en pata de gallo: subtipos con `\|\|--o\|` y `"is a (d, total)"`, discriminador comentado | `erDiagram` | dibuja |
+| Diagrama de clases con generalización, multiplicidad y nota `{disjoint, complete}` | `classDiagram` | dibuja |
+| Árbol B+ con enlaces entre hojas punteados | `flowchart TD` | dibuja |
+| Árbol de consulta con σ, ⋈ y π en Unicode | `flowchart BT` | dibuja |
+| Grafo de precedencia con ciclo, grafo de autorización, Bachman, árbol jerárquico | `flowchart` | dibujan |
+
+- **El óvalo es el estadio `(["…"])`**: la forma `ellipse` no existe en esta versión. El círculo
+  doble `((("…")))` sirve para el multivaluado, aunque sale más grande que los demás atributos.
+- **El `<u>…</u>` de la clave se dibuja subrayado en `mmdc`.** **Sin verificar en GitHub**, que
+  sanea el HTML de las etiquetas y puede usar otra versión de Mermaid: se comprueba al publicar la
+  primera fase con un boceto (F02). Alternativa ya decidida si no lo respeta: el sufijo `(PK)`.
+- **Los símbolos del álgebra** (σ, π, ⋈) dentro de un nodo entre comillas se dibujan bien.
+
+---
+
 ## 📌 Lo que P8 deja abierto
 
 - **macOS y Windows** (H11), pendientes de Oskar o declarados.
@@ -514,6 +545,7 @@ yottadb 2.0.1 · ^student(1) = Ana · hijos de ^student: ['1', '2']
 - **Podman**: no instalado en la máquina de producción; los equivalentes se escriben desde la
   documentación y se declaran no verificados (plan §2.3).
 - **Harbour con `-gtcgi`**, al escribir AC01.
+- **Mermaid en GitHub** (H13): el `<u>` de la clave y la versión, al publicar F02.
 - **Imágenes base descargadas en P8**, sin la etiqueta `curso=01-bases` porque son de Docker Hub:
   `python:3.14.8-slim-trixie`, `python:3-slim`, `python:3.10-slim`, `debian:13`, `ubuntu:24.04`,
   `ubuntu:26.04`, `fedora:latest`, `archlinux:latest` y `yottadb/yottadb:r2.06`. Se borran solo con

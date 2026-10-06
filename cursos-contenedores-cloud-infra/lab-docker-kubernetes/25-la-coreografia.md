@@ -407,7 +407,7 @@ que esperaron un minuto a que `replenish` volviera.
 | el lote que revisa si quedó algo | `num_pending` en `/jsz` | lo pendiente es un número que se puede alarmar |
 
 Y al revés: un stream con un solo consumidor y sin réplicas es una cola en una base de datos, con mejor herramienta. Las
-filas de la nube están en [a05](a05-diccionarios.md#-local--nube).
+filas de la nube están en [a05](a05-diccionarios.md#️-local--nube).
 
 🌩️ En la nube, el bus es un servicio gestionado, replicado en varias zonas, que no pierde lo que confirmó. 🚧 Lo que no
 te da: que tu consumidor aguante el mensaje repetido, y que tu publicador no pierda el evento entre su commit y el bus.

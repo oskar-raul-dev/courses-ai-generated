@@ -1,5 +1,5 @@
 # 📎 Prompts iniciales por apéndice
-## El motor de motores — 11 sesiones, 11 entregables
+## El motor de motores — 12 sesiones, 12 entregables
 
 Cada sección es el prompt completo de un apéndice, listo para pegar en la sesión que lo redacta.
 Los valores salen de [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md); si
@@ -10,7 +10,7 @@ cambian allí, se cambian aquí después y **nunca al revés**.
 > ⚠️ **El orden importa.** `a01`, `a02` y `a03` son el suelo del laboratorio y se escriben **antes
 > de F01**, en ese orden, y **después de la tanda de verificación (P8)**: todo lo que muestran se
 > ejecutó en contenedor (Linux) o lo verificó Oskar (macOS y Windows); lo que no, se declara. `a08` abre su esqueleto **antes de F00**; `a04` va antes de F02;
-> `a06` y el esqueleto de `a07` antes de F04; `a05` nace con F15. `a07` y `a08` son vivos y **se
+> `a10` también va antes de F02; `a06` y el esqueleto de `a07` antes de F04; `a05` nace con F15. `a07` y `a08` son vivos y **se
 > cierran al final del curso**. `a09` va después de `a01`–`a03`; `aca-01` con AC01 y `aca-02` con
 > AC08.
 
@@ -22,11 +22,12 @@ cambian allí, se cambian aquí después y **nunca al revés**.
 ## Marco (no lo repitas, aplícalo)
 
 Fuentes de verdad, en orden: (1) `prompts/alcance-del-proyecto.md`,
-(2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/propuesta-fases-y-alcance.md`,
-(4) `prompts/propuesta-apendices-y-alcance.md`, (5) `prompts/plantillas-de-capitulo.md`
-(Plantilla 6, la de apéndice, que es laxa), (6) lo verificado en
-`prompts/verificacion-de-laboratorio/hallazgos.md` (P8) y en `prompts/inventario-de-fuentes.md`
-(P9), (7) las fases y apéndices ya escritos. Los documentos desechables no cuentan y no se citan.
+(2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/contrato-de-nombres.md` y
+`prompts/diccionario-de-terminos.md`, (4) `prompts/propuesta-fases-y-alcance.md`,
+(5) `prompts/propuesta-apendices-y-alcance.md`, (6) `prompts/plantillas-de-capitulo.md`
+(Plantilla 6, la de apéndice, que es laxa), (7) lo verificado en
+`prompts/verificacion-de-laboratorio/hallazgos.md` (P8, H13) y en `prompts/inventario-de-fuentes.md`
+(P9), (8) las fases y apéndices ya escritos. Los documentos desechables no cuentan y no se citan.
 
 Reglas de apéndice:
 - **Esto no se lee de corrido.** Índice de salto rápido, secciones cortas que responden a UNA
@@ -34,22 +35,31 @@ Reglas de apéndice:
 - **Un apéndice no repite lo que explica una fase: enlaza.** Si dos documentos explican lo mismo,
   uno de los dos está mal. Si la fase todavía no existe, la referencia va en prosa, sin enlace.
 - **Los de instalación dan comandos y nada más**, con el comando que verifica cada paso, en las
-  tres plataformas. No enseñan Python, ni gestores de paquetes, ni Docker: el mecanismo se enlaza
-  (documentación oficial o `docker-container-legacy/`). Más de dos párrafos de explicación de una
+  tres plataformas. No enseñan Python, ni gestores de paquetes, ni Docker: el mecanismo se enlaza a
+  la documentación oficial (otros cursos del repositorio, solo en prosa y sin enlace: D-03). Más de dos párrafos de explicación de una
   herramienta es señal de que ese contenido no es de aquí.
 - **Nada sin ejecutar.** Ningún comando, ninguna versión, ninguna salida inventada. Las versiones
   salen de P8, con fecha. Lo no verificado se declara con esas palabras, donde el lector lo
   necesita.
 - **Identificadores en inglés, comentarios en español con tildes.** Todo ejemplo usa `school`,
   `supply` o relaciones abstractas declaradas; nunca `foo`, `bar`, `tabla1` ni `grade` solo.
-- **Notación Unicode, nunca LaTeX. Diagramas ASCII de 75 columnas como máximo.**
+- **Notación Unicode, nunca LaTeX. Diagramas en Mermaid con la sintaxis de la guía §3.2**,
+  dibujados con `python3 prompts/verificar-diagramas.py`; trazas y salidas en `text` de 75 columnas
+  como máximo.
+- **Los nombres, del contrato; las palabras, del diccionario.** Lo nuevo se agrega allí primero.
 - **Declara qué queda fuera** en el encabezado, y dónde está.
 - **Ejercicios: 5 a 10**, cortos y de consulta: buscar algo, cambiar un valor y observar, provocar
   un error típico y reconocerlo por su mensaje literal.
 - **Toda prueba corre dentro de un contenedor `mdm-*` con la etiqueta `curso=01-bases`**, nunca en
-  la máquina de Oskar; sin puertos publicados, y si hace falta uno, en `127.0.0.1` y en el rango
-  `56000–56099`, nunca el puerto por defecto del producto (guía §11.1). Lo que no se puede
+  la máquina de Oskar (guía §11.1): inventario inicial de Docker a un log; sin puertos publicados, y
+  si hace falta uno, alto y aleatorio (`-p 127.0.0.1::PUERTO` y `docker port`). El apéndice que se
+  publica sí puede usar los puertos por defecto (lo decide el contrato §2). Lo que no se puede
   contenerizar (recetas de macOS y Windows) se le pide a Oskar o se declara no verificado.
+- **El código y las salidas de tus pruebas van a tu directorio de `zz-code/`**
+  (`python3 zz-code/nuevo.py gestores-sql-01-bases`), registrado en el plan §9. Ningún documento del
+  curso cita `zz-code/`.
+- **No toques ningún `README.md`**; al cerrar, `python3 prompts/verificar-corpus.py` sin errores y el
+  plan al día.
 - **Git lo maneja Oskar.** No commitees. Los apéndices que dejan archivos en `src/` (a04, a05, a09,
   aca-02) proponen su tag `apendice-aNN-<slug>` en el cierre; los demás no llevan tag.
 ```
@@ -232,7 +242,9 @@ Esta es la sesión del **Apéndice a04 — 🏫 Las bases de ejemplo y su genera
   `guardian`, `enrollment`, `teaching_assignment`, `assessment`, `score` y `classroom`.
 - **`supply` con pedidos**: `supplier`, `part`, `project`, `shipment`, `customer`, `sales_order` y
   `order_line`.
-- De cada una: diagrama ER en ASCII (75 columnas), esquema relacional, **DDL `STRICT`** con sus
+- De cada una: diagrama en pata de gallo (`erDiagram`, con remisión a `a10` para leerlo; doce
+  entidades como máximo por diagrama, así que `school` puede ir en dos), esquema relacional,
+  **DDL `STRICT`** con sus
   restricciones, **datos chicos escritos a mano** (los que se siguen en papel), **el generador con
   Faker** para los volúmenes grandes, con su semilla y su versión fijada, y **recrear cada base desde
   cero en un comando**.
@@ -299,8 +311,10 @@ funcionan.
   la salida que se publica es la de esa ejecución.
 - **El formato de entrada de las relaciones abstractas y las DF** se fija la primera vez (F15) y no
   cambia después.
-- **Las trazas** (clausura, *chase*, B+) se imprimen en ASCII de 75 columnas, para que se puedan
-  pegar en un solucionario tal cual.
+- **Las trazas** (clausura, *chase*, B+) se imprimen en texto de 75 columnas, para que se puedan
+  pegar en un solucionario tal cual, en un bloque `text`: son salida, no diagrama (guía §3.2).
+- **Ningún verificador emite Mermaid** salvo que una fase lo pida y se agregue aquí: el diagrama del
+  texto se dibuja a mano y se contrasta con la traza.
 
 ## Ejercicios: 8, de consulta
 
@@ -370,8 +384,9 @@ esqueleto antes de F04; cada fase lo alimenta en su propia sesión, y se cierra 
   lo que ya está decidido: proyección, selección, joins, división, dependencias, planes.
 - **La convención de relaciones abstractas y de planes** (`R(A, B, C)`, `AB → C`,
   `r1(X); w2(X); c1`).
-- **El glosario español ↔ inglés, en las dos direcciones**, con las entradas de F00–F03 si ya están
-  escritas, y la columna "traducción de la edición en español" **vacía, con "sin verificar"**: P9 no
+- **El glosario español ↔ inglés, en las dos direcciones**, que publica para el lector lo que fija
+  `prompts/diccionario-de-terminos.md` (con sus mismas decisiones de §6), con las entradas de
+  F00–F03 si ya están escritas, y la columna "traducción de la edición en español" **vacía, con "sin verificar"**: P9 no
   pudo comprobarla (`prompts/inventario-de-fuentes.md` §4).
 - **Cada entrada remite a la fase y al número de definición** donde se define.
 
@@ -455,7 +470,8 @@ Esta es la sesión del **Apéndice a09 — 🐳 El curso en un contenedor**. Ent
 
 ## Qué NO entra
 
-Enseñar Docker (se enlaza `docker-container-legacy/`); las herramientas del bloque A.C., que tienen
+Enseñar Docker (documentación oficial; otros cursos, solo en prosa, D-03); las herramientas del
+bloque A.C., que tienen
 su propio apéndice (`aca-02`); administrar PostgreSQL, que es materia de `02-postgresql`.
 
 ## Pendientes que pueden bloquear
@@ -470,6 +486,52 @@ Levantar el contenedor; abrir una base del curso desde dentro; comprobar que un 
 `.db` del disco; levantar el PostgreSQL y conectarse.
 
 {{protocolo}} El cierre propone el tag `apendice-a09-el-curso-en-un-contenedor`.
+```
+
+---
+
+## # a10 — Notaciones de diagramas
+
+```markdown
+Esta es la sesión del **Apéndice a10 — 🧭 Notaciones de diagramas**. Entregable:
+`a10-notaciones-de-diagramas.md`. **2 h de consulta.** Se escribe **antes de F02** (T3).
+
+{{marco común}}
+
+## Alcance
+
+La ficha a10 de la propuesta de apéndices (§15), completa: el boceto con óvalos, la pata de gallo
+con lo que no dibuja, el diagrama de clases de dominio en UML, Chen y min-max como traducción de los
+libros, los esquemas relacionales, una sección corta por cada otro tipo de diagrama del curso y la
+tabla de "qué notación para qué".
+
+## Qué NO entra
+
+La teoría del modelado (F02, F03, F13): el apéndice la usa con ejemplos y no la explica. La sintaxis
+completa de Mermaid ni su instalación.
+
+## Qué vigilar
+
+- **Es un minitutorial sin ser un tutorial de Mermaid** (D19): cada sección empieza por la notación
+  —qué significa cada símbolo, cómo se lee— y el código Mermaid viene después, como la forma de
+  escribirla. Si una sección explica Mermaid por Mermaid, se corta.
+- **La convención es la de la guía §3.2 y los prototipos de H13**; no la cambies. Si al escribir
+  aparece algo que no dibuja (un extremo, una forma), dilo en el paso 1 y se corrige la guía primero.
+- **Los ejemplos son de `school` y `supply`**, con los nombres del contrato §5 y los verbos del
+  diccionario §5.4, y el mismo fragmento recorre todas las notaciones para que se puedan comparar.
+- **Chen y min-max no tienen sintaxis propia en Mermaid**: el apéndice los enseña a leer en los
+  libros y los traduce; el boceto de F02 se parece a Chen y se dice en qué no lo es.
+- **Cada bloque `mermaid` se dibuja con `verificar-diagramas.py`** antes de cerrar, y la sesión mira
+  a ojo al menos un PNG por notación (`mmdc -i … -o ….png`), en su directorio de `zz-code/`.
+- **Lo que GitHub no verificó** (el `<u>` de la clave, H13) se declara con esas palabras.
+
+## Ejercicios: 8, de consulta
+
+Los de la ficha: traducir un fragmento entre notaciones, leer un Chen de libro y escribirlo en pata
+de gallo, encontrar la cardinalidad al revés en un `erDiagram`, dibujar una especialización con su
+etiqueta, un árbol de consulta y un grafo de precedencia.
+
+{{protocolo}} Sin tag: no deja código en `src/`.
 ```
 
 ---
@@ -536,7 +598,7 @@ Se escribe con AC08.
 
 ## Qué NO entra
 
-Enseñar Docker (se enlaza `docker-container-legacy/`) y administrar YottaDB. **Es independiente de
+Enseñar Docker (documentación oficial; otros cursos, solo en prosa, D-03) y administrar YottaDB. **Es independiente de
 a09**: el contenedor del camino base no carga con las herramientas del bloque A.C., y viceversa.
 
 ## Pendientes que pueden bloquear

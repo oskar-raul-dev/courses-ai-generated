@@ -258,18 +258,16 @@ $ docker compose -f compose/compose.yaml up -d
 Diez segundos muerto, y diez minutos, o diez días, hasta que alguien vuelva a correr `up -d`. **En
 compose, el bucle de reconciliación eres tú.** Kubernetes saca a la persona del bucle:
 
-```text
-EL BUCLE DE RECONCILIACIÓN
-
-  tú ──► "quiero 2 réplicas de pricing" ──► API (el estado deseado, guardado)
-                                                 │
-                                                 ▼
-        ┌──────────────────────────────── controlador ◄──────────────┐
-        │  1. observa: ¿cuántos pods de pricing hay listos?           │
-        │  2. compara: deseado 2 · actual 1                          │
-        │  3. actúa:   crea un pod                                   │
-        └──────────────────────► el cluster (lo que de verdad corre) ─┘
-                                 y vuelve a empezar, sin parar
+```mermaid
+flowchart TD
+    TU["tú"] -- "«quiero 2 réplicas de pricing»" --> API["API<br/>el estado deseado, guardado"]
+    API --> O
+    subgraph CTRL["el controlador"]
+        O["1. observa<br/>¿cuántos pods de pricing hay listos?"] --> C["2. compara<br/>deseado 2 · actual 1"]
+        C --> A["3. actúa<br/>crea un pod"]
+    end
+    A --> CL["el cluster<br/>lo que de verdad corre"]
+    CL -- "y vuelve a empezar, sin parar" --> O
 ```
 
 Le dices al cluster **qué quieres**, no qué haga. Un controlador observa, compara y actúa, y vuelve a

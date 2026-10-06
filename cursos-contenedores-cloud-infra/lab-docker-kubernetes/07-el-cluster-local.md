@@ -27,7 +27,7 @@ corta tenía cuatro nombres, y Germán le pidió lo de siempre:
 > *"No me diga cuál le gusta, Valentina. Dígame cuál, por qué, y con qué número."*
 
 Esta fase responde con B-07 y con los dos clusters del curso, que ya existen desde
-[a01](a01-el-laboratorio.md#-el-taskfile-tarea-por-tarea) y que aquí se miran por dentro: el de un
+[a01](a01-el-laboratorio.md#️-el-taskfile-tarea-por-tarea) y que aquí se miran por dentro: el de un
 nodo del perfil `minimo`, que es el de todos los días, y el de tres nodos del perfil `lab`, que se
 levanta, se mira y se apaga hasta la [Fase 16](16-escalado-y-rollout.md).
 
@@ -364,7 +364,7 @@ nube de pago.
 | el contexto `kind-minimo` | el contexto que genera la CLI del proveedor | identidades del proveedor en el `kubeconfig` |
 | `extraPortMappings` al host | un balanceador del proveedor ([Fase 10](10-la-entrada-al-sistema.md)) | una IP pública |
 
-Las filas de esta tabla inauguran el diccionario local ⇄ nube de [a05](a05-diccionarios.md#-local--nube).
+Las filas de esta tabla inauguran el diccionario local ⇄ nube de [a05](a05-diccionarios.md#️-local--nube).
 
 ---
 

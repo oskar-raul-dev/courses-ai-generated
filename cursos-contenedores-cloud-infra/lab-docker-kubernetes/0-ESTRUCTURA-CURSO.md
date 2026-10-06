@@ -204,5 +204,5 @@ llevan sus condiciones al lado; no tienen identificador porque no se repiten fue
 Agregar **un servicio nuevo** al sistema, de cero y sin tocar el código de los otros cuatro, y que la plataforma lo
 reconozca como a uno más: contrato, imagen, subchart, sondas y límites medidos, métricas y logs, un papel en la saga o
 en la coreografía, y su suite. Siete criterios de aceptación, todos comandos, y uno de salida. El enunciado está en la
-[Fase 27](27-el-veredicto-y-el-proyecto-final.md#-6-el-proyecto-final), y se hizo una vez de punta a punta antes de
+[Fase 27](27-el-veredicto-y-el-proyecto-final.md#️-6-el-proyecto-final), y se hizo una vez de punta a punta antes de
 publicarlo.

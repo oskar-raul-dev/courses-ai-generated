@@ -24,7 +24,7 @@ comportamiento de un proveedor de nube que no se haya verificado, que no se prom
 - [Las reglas de los tres diccionarios](#-las-reglas-de-los-tres-diccionarios)
 - [compose ⇄ Kubernetes](#-compose--kubernetes)
 - [`Ingress` ⇄ Gateway API](#-ingress--gateway-api)
-- [Local ⇄ nube](#-local--nube)
+- [Local ⇄ nube](#️-local--nube)
 - [Cuándo usar qué](#-cuándo-usar-qué)
 - [Referencias](#-referencias)
 - [Ejercicios](#-ejercicios-6)
@@ -303,7 +303,7 @@ cambian cuando son diez cadenas y no dos.
 
 ### 🔴 Ejercicio 6 — La oferta del proveedor
 Un proveedor le ofrece a La Vecina "Kubernetes gestionado con todo incluido". Usa las tres preguntas de la
-[Fase 27](27-el-veredicto-y-el-proyecto-final.md#-5-el-diccionario-local--nube-consolidado) y la columna 🚧 para leer la
+[Fase 27](27-el-veredicto-y-el-proyecto-final.md#️-5-el-diccionario-local--nube-consolidado) y la columna 🚧 para leer la
 oferta.
 
 **Criterio:** media página: qué filas de la tabla cubre la oferta, cuáles deja en manos del equipo, y la que más

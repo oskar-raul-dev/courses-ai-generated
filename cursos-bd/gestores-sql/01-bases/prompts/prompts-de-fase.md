@@ -14,9 +14,14 @@ bloquear). Si la ficha cambia, el prompt se revisa después y **nunca al revés*
 contrastado no está terminada.
 
 > ⚠️ **Antes de la primera sesión.** Ten a mano, en este orden: `prompts/alcance-del-proyecto.md`,
-> `prompts/guia-de-estilo-y-convenciones.md`, `prompts/propuesta-fases-y-alcance.md`,
+> `prompts/guia-de-estilo-y-convenciones.md`, `prompts/contrato-de-nombres.md`,
+> `prompts/diccionario-de-terminos.md`, `prompts/propuesta-fases-y-alcance.md`,
 > `prompts/propuesta-apendices-y-alcance.md` y `prompts/plantillas-de-capitulo.md`. **No uses**
-> ningún archivo `_desechable-*`: el curso no los cita.
+> ningún archivo `_desechable-*` como fuente: el curso no los cita. El plan de producción
+> (`_desechable-plan-de-produccion.md`) solo dice el orden y el estado.
+>
+> **Vigencia:** 2026-10-05 (revisado con los lineamientos de producción: diagramas en Mermaid,
+> Docker con puertos aleatorios, pruebas en `zz-code/` y el verificador del curso).
 
 > ⚠️ **Antes de la primera fase con herramientas (F01).** Tienen que estar escritos y verificados
 > `a01`, `a02`, `a03` y `a04`. La tanda de verificación (P8) está cerrada desde el 03/10/2026
@@ -34,11 +39,13 @@ aplícalo.**
 ## Marco (no lo repitas, aplícalo)
 
 Fuentes de verdad, en este orden: (1) `prompts/alcance-del-proyecto.md`,
-(2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/propuesta-fases-y-alcance.md` (la
-ficha de esta fase es el piso del contenido), (4) `prompts/propuesta-apendices-y-alcance.md`,
-(5) `prompts/plantillas-de-capitulo.md`, (6) lo verificado en
-`prompts/verificacion-de-laboratorio/hallazgos.md` (P8) y en `prompts/inventario-de-fuentes.md` (P9),
-(7) los apéndices y las fases ya escritos y aprobados, (8) las decisiones de esta sesión. Los documentos desechables no cuentan y no se citan.
+(2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/contrato-de-nombres.md` y
+`prompts/diccionario-de-terminos.md`, (4) `prompts/propuesta-fases-y-alcance.md` (la ficha de esta
+fase es el piso del contenido), (5) `prompts/propuesta-apendices-y-alcance.md`,
+(6) `prompts/plantillas-de-capitulo.md`, (7) lo verificado en
+`prompts/verificacion-de-laboratorio/hallazgos.md` (P8, H13) y en `prompts/inventario-de-fuentes.md`
+(P9), (8) los apéndices y las fases ya escritos y aprobados, (9) las decisiones de esta sesión. Los
+documentos desechables no cuentan y no se citan.
 
 Reglas que no se negocian:
 - **Nada se publica sin haberse ejecutado o verificado.** Ninguna salida de `radb`, `sqlite3`, un
@@ -49,7 +56,11 @@ Reglas que no se negocian:
 - **Identificadores en inglés en todas partes, también en el álgebra**; comentarios de código en
   español con tildes. Bases fijas: `school` y `supply` (nombres en `a04`), o relaciones abstractas
   declaradas. Nunca `grade` solo, `foo` ni `tabla1`.
-- **Unicode, nunca LaTeX. Diagramas ASCII de 75 columnas como máximo.**
+- **Unicode, nunca LaTeX. Diagramas en Mermaid con la sintaxis de la guía §3.2**: bocetos con
+  óvalos hasta F02, pata de gallo desde F03, y dibujados con `python3 prompts/verificar-diagramas.py`
+  antes de cerrar. Las trazas tabulares y las salidas, en `text` de 75 columnas como máximo.
+- **Los nombres, del contrato; las palabras, del diccionario.** Si falta uno, se agrega allí primero.
+- **Otros cursos del repositorio, solo en prosa y sin enlace** (D-03).
 - **Definiciones y teoremas numerados por fase**; los de otras fases se citan por número, no se
   redefinen.
 - **Ejercicios originales**, nunca copiados de un libro; la bibliografía remite a los del libro por
@@ -57,12 +68,20 @@ Reglas que no se negocian:
 - **Ningún recurso bibliográfico se cita sin comprobarlo en la sesión**; el inventario está en `a08`.
 - **Ningún enlace a un documento que todavía no existe**: la referencia va en prosa.
 - **Toda prueba corre dentro de un contenedor `mdm-*` con la etiqueta `curso=01-bases`**, nunca en
-  la máquina de Oskar; sin puertos publicados, y si hace falta uno, en `127.0.0.1` y en el rango
-  `56000–56099`, nunca el puerto por defecto del producto (guía §11.1). Lo que no se puede
-  contenerizar (recetas de macOS y Windows) se le pide a Oskar o se declara no verificado.
+  la máquina de Oskar (guía §11.1): inventario inicial de Docker a un log; sin puertos publicados, y
+  si hace falta uno, alto y aleatorio (`-p 127.0.0.1::PUERTO` y `docker port`), nunca el de por
+  defecto. Lo que no se puede contenerizar (recetas de macOS y Windows) se le pide a Oskar o se
+  declara no verificado.
+- **El código y las salidas de tus pruebas van a tu directorio de `zz-code/`**
+  (`python3 zz-code/nuevo.py gestores-sql-01-bases`), registrado en el plan §9; nada en el
+  scratchpad. Ningún documento del curso cita `zz-code/`.
 - La plantilla de fase se sigue literal, sin secciones extra ni reordenadas. Git lo maneja Oskar: no
-  commitees ni etiquetes.
-- En la misma sesión: términos nuevos a `a07`, recursos nuevos a `a08`, 🪞 nuevos a `INSTINTOS.md`.
+  commitees ni etiquetes; borra solo archivos nombrados, nunca directorios.
+- No toques ningún `README.md` ni crees `0-ESTRUCTURA-CURSO.md`: lo que deberían decir, a 📌.
+- En la misma sesión: términos nuevos al diccionario y a `a07`, recursos nuevos a `a08`, 🪞 nuevos a
+  `INSTINTOS.md`, nombres nuevos al contrato §8.
+- Al cerrar, `python3 prompts/verificar-corpus.py` sin errores y el plan al día (§3, §6, §7, §8 y
+  §9), con los tags para Oskar.
 ```
 
 Y el **protocolo de tres pasos**, que cierra todos los prompts:
@@ -79,7 +98,9 @@ por tipo; (e) cualquier contradicción con lo ya escrito — dímela, no la resu
 escribir y copia la salida literal. Si aparece una duda nueva, **para y pregunta** en vez de
 rellenar con un supuesto plausible.
 **Paso 3 — Autoverificación** contra el checklist de §15 de la guía, reportada en lista corta, con
-el conteo de palabras del cuerpo y el de ejercicios por dificultad y tipo.
+el conteo de palabras del cuerpo y el de ejercicios por dificultad y tipo, la salida de
+`verificar-corpus.py` y de `verificar-diagramas.py`, lo que creció (diccionario, `a07`, `a08`,
+`INSTINTOS.md`, contrato), las decisiones que tomaste por defecto y los tags para Oskar.
 ```
 
 ---
@@ -174,16 +195,17 @@ Esta es la sesión de la **Fase 02 — 🧩 Modelo entidad-relación**. Entregab
 ## Identidad
 
 - Fase 02 de 37 · Bloque I · **10 h** · **34 ejercicios** · Depende de F01 · Habilita F03 y F13
-- Herramientas: papel · Apéndices: a04, a07
+- Herramientas: papel · Apéndices: a04, a07, a10
 - Plantilla 1. Longitud: 4.500–6.500 palabras.
 - Ficha: propuesta de fases, §4, F02.
 
 ## Puntos de cuidado
 
-- **Convención de diagramas ER en ASCII.** Es la primera fase con diagramas: propón en el paso 1 la
-  convención de Chen en ASCII de 75 columnas (cajas para entidades, rombos o su equivalente legible
-  para relaciones, cardinalidades y min-max) y, una vez aprobada, fíjala en `a07`. Todas las fases
-  siguientes la usan.
+- **Los diagramas son bocetos con óvalos** (`flowchart`, guía §3.2), con la convención que ya fijó
+  `a10`: no la reinventes. **La pata de gallo no aparece todavía** (D20); a lo sumo, una línea en el
+  cierre que anuncie que F03 cambia de notación.
+- **Primera fase publicada con un boceto**: comprueba si GitHub dibuja el `<u>` de la clave (H13). Si
+  no se puede comprobar en la sesión, dilo en el paso 3 para que Oskar lo mire al publicar.
 - **El diseño de `school` se construye, no se revela.** Tiene que converger con el esquema de `a04`,
   pero la fase muestra las decisiones discutibles (¿la calificación es atributo o entidad? ¿el
   apoderado es entidad débil?) con sus argumentos. Si el diseño que sale diverge de `a04`, **dilo, no
@@ -201,20 +223,24 @@ Esta es la sesión de la **Fase 02 — 🧩 Modelo entidad-relación**. Entregab
 Esta es la sesión de la **Fase 03 — 🧩 ER extendido y notaciones**. Entregables:
 `03-er-extendido-y-notaciones.md` y su solucionario.
 
-{{marco común}} Añade: F02 cerrada, con la convención de diagramas ASCII ya fijada en `a07`.
+{{marco común}} Añade: F02 cerrada y `a10` escrito.
 
 ## Identidad
 
 - Fase 03 de 37 · Bloque I · **10 h** · **32 ejercicios** · Depende de F02 · Habilita F13
-- Herramientas: papel · Apéndices: a04, a07
+- Herramientas: papel · Apéndices: a04, a07, a10
 - Plantilla 1. Longitud: 4.500–6.500 palabras. Lleva recuadro 🏛️.
 - Ficha: propuesta de fases, §4, F03.
 
 ## Puntos de cuidado
 
-- **Las cuatro notaciones lado a lado** (Chen, pata de gallo, UML y min-max) sobre el mismo fragmento
-  de `school`, en ASCII. La pata de gallo en ASCII necesita su propia convención: propónla en el
-  paso 1 y agrégala a `a07`.
+- **Aquí empieza la pata de gallo** (D20), y desde aquí la usa todo diagrama ER, EER y de esquema.
+  Preséntala con el mismo fragmento de `school` que F02 dibujó como boceto, para que el lector vea la
+  traducción, y **remite a `a10`** para el detalle: la fase no repite el apéndice.
+- **Las notaciones lado a lado** (el boceto de F02, la pata de gallo en `erDiagram` y el diagrama de
+  clases de UML en `classDiagram`, con Chen y min-max como traducción de los libros) sobre el mismo
+  fragmento. Lo que la pata de gallo no dibuja —la especialización— va con la convención de la guía
+  §3.2 (subtipo con `"is a (d, total)"`).
 - La diferencia entre **categoría (tipo unión) y generalización** suele confundirse: dale un
   contraejemplo propio en ⚠️ Errores conceptuales.
 - El recuadro 🏛️ presenta los diagramas de Bachman en dos líneas, sin enseñarlos.
@@ -519,7 +545,7 @@ Esta es la sesión de la **Fase 13 — 📐 Del ER/EER al modelo relacional**. E
 
 - Fase 13 de 37 · Bloque II ⭐ · **10 h** · **38 ejercicios** · Depende de F02, F03, F05 y F12 ·
   Habilita F14
-- Herramientas: SQLite y `radb` · Apéndices: a04, a07
+- Herramientas: SQLite y `radb` · Apéndices: a04, a07, a10
 - Plantilla 1. Longitud: 4.500–6.500 palabras. Lleva recuadro 🏛️.
 - Ficha: propuesta de fases, §5, F13.
 
@@ -528,7 +554,8 @@ Esta es la sesión de la **Fase 13 — 📐 Del ER/EER al modelo relacional**. E
 - **El mapeo de `school` y `supply` tiene que llegar al esquema de `a04`.** Si llega a otro, dilo en
   el paso 3 y no lo corrijas: la discrepancia la resuelve Oskar.
 - **Las cuatro opciones para una jerarquía EER** van con su costo en `NULL`, joins y restricciones,
-  en una tabla, y una consulta por opción verificada en `radb`.
+  en una tabla, y una consulta por opción verificada en `radb`. Cada opción, con su esquema en pata
+  de gallo (`erDiagram` con `PK` y `FK`) al lado del EER del que sale.
 - **Jerarquías en el modelo relacional** (lista de adyacencia, conjuntos anidados, camino
   materializado, tabla de clausura): costo de lectura y escritura de cada una como modelo, y una
   consulta de cada una ejecutada en SQLite sobre los prerrequisitos de `subject`.
@@ -649,7 +676,8 @@ Esta es la sesión de la **Fase 17 — 🧮 Propiedades de las descomposiciones*
 
 ## Puntos de cuidado
 
-- **El *chase* con traza completa** en ASCII de 75 columnas (la tabla de símbolos a y b), en el
+- **El *chase* con traza completa** en un bloque `text` de 75 columnas (es una tabla de símbolos a
+  y b, no un diagrama: guía §3.2), en el
   texto y en la salida del verificador, que deben coincidir.
 - **La preservación de dependencias** se comprueba con el algoritmo que no calcula F⁺, y se dice por
   qué importa.
@@ -796,8 +824,9 @@ Esta es la sesión de la **Fase 22 — 💾 Hashing**. Entregables: `22-hashing.
 
 - **Decide en el paso 1 si se escribe el verificador de hashing.** Si sí, entra en `a05` en esta
   sesión; si no, cada traza se contrasta con una segunda resolución independiente y se dice.
-- **Hashing extensible y lineal paso a paso**, con trazas ASCII de 75 columnas: directorio,
-  profundidades global y local, puntero de división, nivel.
+- **Hashing extensible y lineal paso a paso**, con trazas en `text` de 75 columnas (directorio,
+  profundidades global y local, puntero de división, nivel); si un paso se entiende mejor como
+  dibujo del directorio apuntando a sus cubetas, ese dibujo va en Mermaid.
 - La convención de qué bits se usan (los de menor o mayor orden) se fija y va a `a07`.
 - Carga hacia 🟢 y 🟡: el músculo se hace con trazas.
 
@@ -850,8 +879,9 @@ solucionario y el verificador `bplus` (con su sección en `a05`).
 - **La definición de "orden" es la mayor fuente de confusión del tema**: Navathe, Knuth y otros la
   definen distinto (máximo de punteros, mínimo de claves…). Fija en el paso 1 la del curso, con su
   equivalencia con las otras en la sección 📖 y en `a07`. Todas las trazas y ejercicios la usan.
-- **Inserción con división y borrado con fusión y redistribución, con trazas completas** en ASCII de
-  75 columnas, que deben coincidir con la salida de `bplus`.
+- **Inserción con división y borrado con fusión y redistribución, con trazas completas**: el árbol
+  antes y después de cada paso en Mermaid (`flowchart TD`, guía §3.2) y la salida de `bplus` en
+  `text`, literal; los dos tienen que coincidir.
 - **El 🪞 del UUID**: la ocupación de las hojas con claves crecientes contra aleatorias, calculada o
   simulada con `bplus`, y dicho como modelo.
 - **`dbstat` y `sqlite3_analyzer`** están disponibles en `mdm-lab` (P8, H8; el segundo viene en el
@@ -951,8 +981,8 @@ Esta es la sesión de la **Fase 27 — ⚙️ Optimización heurística**. Entre
 
 - **Las reglas de transformación citan por número las Propiedades de F06–F08**; las que no se
   demostraron allí, se demuestran aquí o se dice que se toman del libro.
-- **Árboles de consulta en ASCII de 75 columnas**, antes y después de cada paso del algoritmo
-  heurístico.
+- **Árboles de consulta en Mermaid** (`flowchart BT`, guía §3.2), antes y después de cada paso del
+  algoritmo heurístico; doce nodos como máximo por árbol, o se parte.
 - **El costo del árbol inicial contra el optimizado**, calculado y ejecutado en el mini motor.
 
 {{protocolo}}
@@ -1010,8 +1040,8 @@ sección en `a05`).
 
 - **Abre el bloque VI y fija la notación de planes** (`r1(X); w2(X); c1; a2`) en `a07`; el verificador
   la acepta tal cual.
-- **Grafo de precedencia con traza** y orden serial equivalente, en el texto y en la salida del
-  verificador.
+- **Grafo de precedencia con traza** y orden serial equivalente: el grafo en Mermaid
+  (`flowchart LR`) y la salida del verificador en `text`, literal.
 - **La jerarquía de planes** (estrictos ⊂ sin cascada ⊂ recuperables) con un plan en cada franja y
   uno fuera de todas.
 - La serializabilidad por vistas: el ejemplo con escritura ciega que es serializable por vistas y no
@@ -1094,7 +1124,7 @@ solucionario.
 ## Puntos de cuidado
 
 - **ARIES paso a paso** sobre una bitácora con LSN, tabla de transacciones y tabla de páginas sucias:
-  análisis, redo y undo, con traza completa en ASCII de 75 columnas. Contrasta cada traza con una
+  análisis, redo y undo, con traza completa en `text` de 75 columnas (es tabla, no diagrama). Contrasta cada traza con una
   segunda resolución independiente y dilo en el solucionario.
 - **La matriz *steal/no-steal* × *force/no-force*** con qué exige cada combinación (UNDO, REDO).
 - **El WAL de SQLite como ventana**: que existe el archivo `-wal`, qué contiene en términos generales
@@ -1153,8 +1183,8 @@ Esta es la sesión de la **Fase 34 — 🛡️ Seguridad y autorización**. Entr
 
 - **SQLite no tiene usuarios**: la fase se verifica en papel, con el grafo de autorización, y lo dice
   en el encabezado.
-- **La revocación en cascada** se traza sobre un grafo de autorización con al menos un ciclo de
-  concesiones, con la semántica del estándar SQL verificada en la sesión (o declarada).
+- **La revocación en cascada** se traza sobre un grafo de autorización en Mermaid, con al menos un
+  ciclo de concesiones, con la semántica del estándar SQL verificada en la sesión (o declarada).
 - **Los ejercicios 🔥** repiten los de `GRANT`/`REVOKE` en el PostgreSQL de `a09`, con su salida
   literal; si `a09` todavía no existe, se marcan 🚧 con destino.
 - **La inyección SQL** se muestra con una consulta concatenada y su versión parametrizada, en Python
@@ -1242,8 +1272,9 @@ Esta es la sesión de la **Fase 37 — 🌐 Más allá del núcleo**. Entregable
   respuesta y hacia dónde ir, con el mismo tono honesto de todo el curso.
 - **2PC paso a paso**, incluido el bloqueo del coordinador caído.
 - **CAP sin misticismo**: qué dice y qué no dice el teorema.
-- **NoSQL con referencias de concepto a la Ruta NoSQL Lite**, en prosa: la documental es jerárquica en
-  el fondo y la de grafos es una red. Ese curso no se modifica.
+- **NoSQL con referencias de concepto a la Ruta NoSQL Lite**, en prosa y sin enlace (D-03): la
+  documental es jerárquica en el fondo y la de grafos es una red. Ese curso no se modifica.
+- **2PC como `sequenceDiagram`** (guía §3.2).
 - El recuadro 🏛️ invita al bloque A.C. como continuación opcional.
 
 {{protocolo}}

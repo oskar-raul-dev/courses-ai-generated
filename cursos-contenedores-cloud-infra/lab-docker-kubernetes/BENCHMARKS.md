@@ -15,7 +15,7 @@ tanda en que se escribe, y la fase la cita por su identificador.
 > [a01](a01-el-laboratorio.md#-la-memoria-que-ocupa-cada-perfil), porque son requisito de instalación
 > y no resultado de una fase.
 
-**Salto rápido:** [Qué hace creíble un número](#-qué-hace-creíble-un-número) · [El formato de una entrada](#-el-formato-de-una-entrada) · [Las mediciones del curso](#-las-mediciones-del-curso) · [Las entradas](#-las-entradas)
+**Salto rápido:** [Qué hace creíble un número](#️-qué-hace-creíble-un-número) · [El formato de una entrada](#-el-formato-de-una-entrada) · [Las mediciones del curso](#️-las-mediciones-del-curso) · [Las entradas](#-las-entradas)
 
 ---
 

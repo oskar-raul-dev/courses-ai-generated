@@ -156,7 +156,7 @@ primera; la [Fase 25](25-la-coreografia.md), la segunda, y las compara.
 
 > 🧠 **El modelo mental.** Una transacción dice *"esto nunca pasó"*. Una compensación dice *"esto pasó, y ahora pasa lo
 > contrario"*. La diferencia se ve en los datos: después de una compensación hay **dos** movimientos, el que reservó y
-> el que liberó, y una orden cancelada con su código de razón. Es la regla de [D33](a03-contratos-y-prompts-de-generacion.md#-los-cuatro-contratos-de-un-vistazo) llevada a la saga: el estado se cambia
+> el que liberó, y una orden cancelada con su código de razón. Es la regla de [D33](a03-contratos-y-prompts-de-generacion.md#️-los-cuatro-contratos-de-un-vistazo) llevada a la saga: el estado se cambia
 > con hechos, también para deshacer.
 
 ### 5.2 El préstamo, en tres pasos y en este orden
@@ -506,7 +506,7 @@ también tenía, solo que nadie lo veía.
 | un error del procedimiento | `failure` y `steps` del préstamo | el estado intermedio (`COMPENSATING`) es visible y dura |
 
 Y al revés: una saga sin vecinos, en una sola base, es una transacción que alguien partió sin necesidad. Las filas de la
-nube —los motores de flujos de trabajo gestionados— están en [a05](a05-diccionarios.md#-local--nube).
+nube —los motores de flujos de trabajo gestionados— están en [a05](a05-diccionarios.md#️-local--nube).
 
 🌩️ En la nube, un servicio de flujos de trabajo guarda el estado de la saga y la reintenta por ti: el orquestador deja de
 morir con tu pod. 🚧 Lo que no te da: las compensaciones, el orden de los pasos y qué hacer con un "no sé". Esas siguen

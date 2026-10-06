@@ -9,7 +9,7 @@ y el del curso, que es la referencia contra la que te comparas y de donde salen 
 > 📝 **Fecha de verificación:** 03/10/2026, en macOS arm64, sobre un repositorio de prueba. Los
 > comandos son de git y no cambian entre plataformas.
 
-**Salto rápido:** [Dos repositorios](#-dos-repositorios-dos-papeles) · [Commits](#-commits) · [Tags de fase](#-tags-de-fase) · [Incidentes](#-los-incidentes-en-git) · [Apéndices](#-los-apéndices-que-dejan-archivos) · [Qué no entra](#-qué-no-entra-al-repositorio)
+**Salto rápido:** [Dos repositorios](#️-dos-repositorios-dos-papeles) · [Commits](#️-commits) · [Tags de fase](#-tags-de-fase) · [Incidentes](#-los-incidentes-en-git) · [Apéndices](#-los-apéndices-que-dejan-archivos) · [Qué no entra](#-qué-no-entra-al-repositorio)
 
 ---
 

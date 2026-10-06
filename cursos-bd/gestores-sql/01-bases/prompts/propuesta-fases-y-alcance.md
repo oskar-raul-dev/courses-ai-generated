@@ -8,6 +8,8 @@
 > [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md). Por debajo, las plantillas
 > y los prompts, que se actualizan después y nunca al revés.
 > **Fecha:** 2 de octubre de 2026, con las decisiones D1–D18 y A–E del alcance (§13) cerradas.
+> **Revisada el 5 de octubre de 2026:** diagramas en Mermaid (D-12), bocetos con óvalos hasta F02 y
+> pata de gallo desde F03 (D20), el apéndice `a10` (D19) y el registro de decisiones de §16.
 
 ---
 
@@ -151,6 +153,7 @@ El lector modela `school` de punta a punta. Lo que sale de aquí se mapea al rel
 ### 🧩 F02 — Modelo entidad-relación (10 h · 34 ejercicios)
 
 **Lectura base:** Navathe, cap. 3. **Depende de:** F01 · **Habilita:** F03, F13.
+**Apéndices de apoyo:** a04, a10.
 
 **Qué entra:** entidades y conjuntos de entidades; atributos simples y compuestos, monovaluados y
 multivaluados, almacenados y derivados, y `NULL` en el modelo conceptual; claves; tipos de relación,
@@ -160,7 +163,9 @@ atributos de relación y dónde se pueden mover; el diseño de `school` paso a p
 discutibles a la vista (¿la calificación es atributo de la matrícula o una entidad?); el total del
 pedido de `supply` como atributo derivado.
 
-**Verificación:** ✍️ papel. Los diagramas van en ASCII de 75 columnas.
+**Verificación:** ✍️ papel. Los diagramas son **bocetos con óvalos** en Mermaid (`flowchart`, guía
+§3.2): entidades en cajas, relaciones en rombos, atributos en óvalos y la cardinalidad o el min-max en
+las aristas. La pata de gallo todavía no: llega en F03 (D20).
 
 **🪞 candidato:** *"Tu instinto dice que cada sustantivo del enunciado es una entidad… y esta vez se
 equivoca"*: varios son atributos, otros son relaciones.
@@ -173,15 +178,20 @@ anotan y se resuelven en el esquema relacional o en la aplicación.
 ### 🧩 F03 — ER extendido y notaciones (10 h · 32 ejercicios) · 🏛️
 
 **Lectura base:** Navathe, cap. 4 y apéndice A (notaciones alternativas). **Depende de:** F02 ·
-**Habilita:** F13.
+**Habilita:** F13. **Apéndices de apoyo:** a10.
 
 **Qué entra:** subclases, superclases y herencia; especialización y generalización; restricciones
 de disyunción y de completitud, y sus cuatro combinaciones; jerarquías y retículos; categorías
-(tipos unión) y en qué se distinguen de una generalización; las notaciones —Chen, pata de gallo, UML
-y min-max— y la traducción entre ellas; `school` con docentes y personal administrativo como
-especialización, y apoderados como categoría.
+(tipos unión) y en qué se distinguen de una generalización; **el paso a la pata de gallo**, que
+desde aquí es la notación de todo diagrama ER, EER y de esquema del curso (D20), y la traducción
+entre las notaciones —el boceto de F02 (al estilo de Chen), la pata de gallo, el diagrama de clases
+de dominio en UML y min-max—, con lo que cada una no puede dibujar (la pata de gallo no tiene
+especialización: se escribe como subtipo con su etiqueta de disyunción y completitud); `school` con
+docentes y personal administrativo como especialización, y apoderados como categoría. El detalle de
+cada notación y su código Mermaid vive en `a10`; la fase lo usa y remite allí.
 
-**Verificación:** ✍️ papel.
+**Verificación:** ✍️ papel; cada diagrama en Mermaid (`erDiagram` y `classDiagram`), dibujado con
+`mmdc`.
 
 **⚖️ candidato:** cuándo una jerarquía EER complica más de lo que modela, y conviene un atributo de
 tipo.
@@ -407,6 +417,7 @@ en SQLite: se enseña como la define el estándar, y se ejecuta en el PostgreSQL
 ### 📐 F13 — Del ER/EER al modelo relacional (10 h · 38 ejercicios) · 🏛️
 
 **Lectura base:** Navathe, cap. 9. **Depende de:** F02, F03, F05, F12 · **Habilita:** F14.
+**Apéndices de apoyo:** a04, a10.
 
 **Qué entra:** el algoritmo de mapeo en siete pasos (entidades fuertes, débiles, relaciones 1:1,
 1:N y M:N, atributos multivaluados, relaciones n-arias) y los pasos de EER (**las cuatro opciones
@@ -416,7 +427,8 @@ existente. **Jerarquías dentro del modelo relacional**: lista de adyacencia, co
 camino materializado y tabla de clausura, con su costo en lectura y escritura.
 
 **Verificación:** SQLite (el DDL resultante, cargado con los datos chicos de `a04`) y `radb` (una
-consulta por opción de jerarquía).
+consulta por opción de jerarquía). Cada esquema resultante se dibuja en pata de gallo, con sus `PK` y
+`FK` (`erDiagram`), al lado del ER del que sale.
 
 **⚖️ candidato:** el mapeo es mecánico pero no único; dos esquemas correctos pueden diferir en
 costo, y el Bloque III dice cuál está mejor diseñado.
@@ -642,7 +654,8 @@ búsqueda; **inserción con división** y **borrado con fusión y redistribució
 completa; altura mínima y máxima, y el número de accesos; carga masiva (*bulk loading*) y su
 ocupación; **por qué una clave aleatoria fragmenta** y una creciente no.
 
-**Verificación:** verificador `bplus` (inserción y borrado con traza ASCII de 75 columnas), y SQLite
+**Verificación:** verificador `bplus` (inserción y borrado con traza en texto de 75 columnas, que es
+salida literal; los árboles del cuerpo de la fase van en Mermaid), y SQLite
 como ventana (`sqlite3_analyzer` o `dbstat`: los dos disponibles en `mdm-lab`, P8 H8; en las
 plataformas del lector, sin verificar).
 
@@ -1233,3 +1246,23 @@ SQLite implementa, MySQL y `EXCEPT`, y el bloque A.C.; lo resuelto ya está en c
   fase que lo necesite, en su paso 1.
 - **Las horas** de cada fase se recalibran en el paso 1 de su prompt; si cambian, cambian aquí
   primero.
+
+---
+
+## 📌 16. Registro de decisiones
+
+Agregado el 05/10/2026 para que cada decisión diga **dónde manda**. Las decisiones viven en el
+alcance §13; aquí solo se indica qué documento se corrige primero si una cambia. ✅ cerrada · 🟡 por
+defecto, a revisar · 🔄 reabierta.
+
+| ID | Decisión | Estado | Manda en |
+|---|---|---|---|
+| D1–D18 | Nombre, estructura, ejercicios, soluciones, bases, notación, laboratorio, bibliografía, herramientas | ✅ 02/10/2026 | alcance §13.1 |
+| D8 → D-12 | Diagramas en Mermaid; ASCII solo para trazas y salidas | ✅ 05/10/2026 (🔄 desde D8) | alcance §13.4 · guía §3.2 |
+| A–E | Mini motor, F34 en papel, sin examen, temas fuera, bloque A.C. | ✅ 02/10/2026 | alcance §13.2 |
+| D-01–D-13 | Las trece de la plantilla general | ✅ 05/10/2026 | alcance §13.4 |
+| D19 | Apéndice `a10` de notaciones de diagramas | ✅ 05/10/2026 | alcance §13.4 · propuesta de apéndices §15 |
+| D20 | Bocetos con óvalos en F00–F02; pata de gallo desde F03 | ✅ 05/10/2026 | alcance §13.4 · guía §3.2 · esta propuesta, F02 y F03 |
+| Términos ⚖️ | multiconjunto, relación (ER), mapeo | 🟡 por defecto, a revisar | diccionario §6 |
+| Nombres ⏳ | atributos, volúmenes, `.venv`, mini motor, puertos de `a09` | ⏳ con su tanda | contrato §8 |
+

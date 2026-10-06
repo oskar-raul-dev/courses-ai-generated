@@ -260,14 +260,13 @@ $ curl -sS -m 5 -X PUT -H 'Content-Type: application/json' -d '{"store":"DRO-007
 
 Desde tu máquina, por primera vez, **con un nombre y no con una dirección de pod**. El camino entero:
 
-```text
-EL CAMINO DE UNA PETICIÓN, FASE 10
-
-curl ──► 127.0.0.1:8080 ──► nodo de kind :30080 (NodePort) ──► proxy Envoy del Gateway
-                                                                  │ HTTPRoute pricing:
-                                                                  │ api.localhost + /pricing → reescribe a /
-                                                                  ▼
-                                               Service pricing (ClusterIP) ──► pod pricing
+```mermaid
+flowchart LR
+    CURL["curl"] --> H["127.0.0.1:8080"]
+    H --> N["nodo de kind :30080<br/>NodePort"]
+    N --> E["proxy Envoy<br/>del Gateway"]
+    E -- "HTTPRoute pricing:<br/>api.localhost + /pricing<br/>reescribe a /" --> S["Service pricing<br/>ClusterIP"]
+    S --> P["pod pricing"]
 ```
 
 ### 5.4 El reparto de papeles
@@ -524,7 +523,7 @@ documentación de cada proyecto y no de una medición: solo Envoy Gateway se ins
 | **Istio, Cilium** | la entrada como parte del mesh o del CNI | traen todo lo demás de ese mesh o de ese CNI ([a10](a10-service-mesh.md)) |
 
 🌩️ En la nube, la `Gateway` pide un balanceador del proveedor con IP pública, y ese es su costo
-mensual. Las filas están en [a05](a05-diccionarios.md#-local--nube).
+mensual. Las filas están en [a05](a05-diccionarios.md#️-local--nube).
 
 ---
 

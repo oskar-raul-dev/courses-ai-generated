@@ -282,7 +282,7 @@ HTTP 404
 
 El último caso es el más importante de la suite: **`/metrics` tiene que dar 404**. Si el código
 generado trae métricas, el paso está mal, aunque todo lo demás funcione: una capacidad no llega
-antes que su fase. Y si un servicio no pasa, el método de [a03](a03-contratos-y-prompts-de-generacion.md#-cuando-el-código-generado-no-pasa)
+antes que su fase. Y si un servicio no pasa, el método de [a03](a03-contratos-y-prompts-de-generacion.md#️-cuando-el-código-generado-no-pasa)
 dice qué hacer: corregir el prompt y regenerar, no arreglar el código a mano.
 
 **Cuando no pasa.** La primera vez que corrí la suite de G0, falló un archivo de cinco:

@@ -29,7 +29,7 @@ la fase: tiene sus mañas, y esta fase no las arregla. La empaqueta.
 Lo que vas a hacer es lo mismo que hizo Valentina: escribir el Dockerfile de la Braqui línea por
 línea, correrla, verla caerse, darle su base de datos, entrar, detenerla, y entender qué pasó en
 cada paso. El código está en `src/lab/legacy/braqui/`, y cómo está hecho, en
-[a16](a16-el-patrimonio.md#-la-braqui). `pricing`, el primer servicio nuevo, todavía no existe:
+[a16](a16-el-patrimonio.md#️-la-braqui). `pricing`, el primer servicio nuevo, todavía no existe:
 nace en la [Fase 02](02-compose-el-sistema-en-un-archivo.md).
 
 ---

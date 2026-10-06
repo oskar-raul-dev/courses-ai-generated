@@ -18,7 +18,7 @@ está desarrollado.
 > 📝 **Este archivo crece con el curso**, con una entrada por fase como mínimo. La primera es de la
 > [Fase 03](03-el-contenedor-por-dentro.md).
 
-**Salto rápido:** [La forma de una entrada](#-la-forma-de-una-entrada) · [De compose](#-de-compose) · [De la máquina virtual](#-de-la-máquina-virtual) · [De la operación](#-de-la-operación) · [Del código distribuido](#-del-código-distribuido)
+**Salto rápido:** [La forma de una entrada](#-la-forma-de-una-entrada) · [De compose](#-de-compose) · [De la máquina virtual](#️-de-la-máquina-virtual) · [De la operación](#-de-la-operación) · [Del código distribuido](#-del-código-distribuido)
 
 ---
 

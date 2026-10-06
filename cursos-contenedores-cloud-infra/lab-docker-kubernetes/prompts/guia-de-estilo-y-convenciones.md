@@ -539,7 +539,9 @@ Crecen durante todo el curso y son producto, no apuntes.
 [ ] Código en inglés, comentarios en español con tildes; bloques con lenguaje declarado
 [ ] Ninguna versión escrita fuera de a01; imágenes por digest
 [ ] Ningún otro curso del repositorio nombrado; ningún _desechable-* citado
-[ ] Ningún README.md modificado ni 0-ESTRUCTURA-CURSO.md creado
+[ ] Si cambió el temario o el estado, 0-ESTRUCTURA-CURSO.md y el README lo dicen
+[ ] Todo diagrama en mermaid, dibujado con mmdc; fichas, árboles y salidas en text (§19.1)
+[ ] python3 prompts/verificar-corpus.py sale en 0 errores y 0 avisos (§19.3)
 ```
 
 ---
@@ -568,6 +570,12 @@ estuvieran escritas aquí, cada sesión futura las "arreglaría" de vuelta.
    proporción (§6) y la declaración de la máquina.
 7. **El curso no enlaza a otros cursos del repositorio**, aunque traten temas vecinos: es
    autocontenido por decisión.
+8. **Emoji en `###` donde son marcadores, no adorno**: el 🩺 de cada incidente del cuaderno, los
+   marcadores de §8.2 (🦭, 🌊, 🚧, 🌩️, 💸) y el 🏚️ del patrimonio. La historia de la empresa, que es
+   narrativa y no una fase, lleva un emoji por capítulo de su cronología y no tiene fecha de
+   verificación. El verificador lo sabe (§19.3).
+9. **Diagramas en Mermaid** (D44, §19.1), pedido explícito del autor en la revisión del 05/10/2026;
+   el `CLAUDE.md` no fija formato.
 
 Todo lo demás del `CLAUDE.md` aplica tal cual, incluidos `BENCHMARKS.md` e `INSTINTOS.md`.
 
@@ -575,7 +583,86 @@ Todo lo demás del `CLAUDE.md` aplica tal cual, incluidos `BENCHMARKS.md` e `INS
 
 ## 18. 📌 Pendientes que afectan a esta guía
 
-- ✅ **Versiones y digests** verificados en P11 (03/10/2026). Viven en `a01`, que los publica en T1, y
-  esta guía solo apunta allí.
+- ✅ **Versiones y digests** verificados en P11 (03/10/2026). Viven en `a01`, y esta guía solo apunta
+  allí.
 - ✅ **Ediciones de los libros base** comprobadas (§11).
 - ✅ **La empresa** está cerrada: Droguerías La Vecina (D18).
+- ✅ **El curso está cerrado** (05/10/2026), con las 44 decisiones en ✅. La pasada de verificación al
+  tomar el curso está en [`pendientes-a-futuro.md`](pendientes-a-futuro.md), no aquí.
+
+---
+
+## 19. 🧾 Alineación con los lineamientos de producción del repositorio
+
+> 📝 **Sección agregada el 05/10/2026**, en la revisión del curso cerrado contra los lineamientos de
+> producción del repositorio. Va al final para no renumerar: el resto de `prompts/` cita esta guía por
+> número de sección. El curso es anterior a esos lineamientos; casi todo lo que aquí se declara ya era
+> su práctica, y desde ahora está escrito como decisión.
+
+### 19.1 D44 · Diagramas en Mermaid
+
+Todo diagrama —arquitectura, flujo, ciclo, árbol de decisión— va en un bloque `mermaid`. Se quedan en
+`text`, porque no son diagramas y alineados en monoespaciado se leen mejor:
+
+- las **fichas de cierre de fase** (`EL SISTEMA AL CERRAR LA FASE NN`), aunque lleven alguna flecha:
+  son un inventario, y las veintiocho tienen la misma forma;
+- los **árboles de archivos**, las **salidas de terminal** y las **capturas de pantalla** (k9s en `a04`);
+- las correspondencias `a → b` y las tablas alineadas a mano.
+
+La revisión convirtió **siete diagramas en seis documentos** (`00-el-ambiente`, F06, F10, F27 ×2,
+`a03`, `a16`), y cada uno se dibujó con `mmdc` antes de publicarlo. Criterios para los que vengan:
+
+- **`flowchart TD`** para jerarquías y árboles de decisión; **`LR`** para un camino de punta a punta
+  (la petición de F10, el método de `a03`, el patrimonio de `a16`).
+- **`subgraph`** para los namespaces (F27) y para un controlador con sus pasos (F06). Un `subgraph`
+  sin flechas queda donde Mermaid quiera: se ancla con un enlace invisible (`A ~~~ B`).
+- **Formas con sentido:** cilindro `[(…)]` para una base, `[[…]]` para el bus, `{…}` para una
+  pregunta, `[/…/]` para un volumen de archivos.
+- **Caracteres que Mermaid interpreta:** `<…>` se escribe `#lt;…#gt;` y las comillas dentro de una
+  etiqueta van como «…».
+
+### 19.2 Documentos de `prompts/` y lo que hace su papel
+
+El curso es anterior a las plantillas de producción y está cerrado, así que no se crean a posteriori.
+Esto es lo que cumple cada función:
+
+- **Alcance:** [`alcance-del-proyecto.md`](alcance-del-proyecto.md).
+- **Propuesta y registro de decisiones:** [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md)
+  (§12, D1–D44) y [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md).
+- **Plan de producción:** no queda. Fue un desechable y se borró al cerrar (T16); el estado vive en
+  `0-ESTRUCTURA-CURSO.md`, el registro de decisiones y los
+  [hallazgos](verificacion-de-laboratorio/hallazgos.md).
+- **Contrato de nombres:** [`contrato-del-cluster.md`](contrato-del-cluster.md).
+- **Diccionario de términos:** §3 de esta guía, y para el lector, `a05` (diccionarios).
+- **Historia de la empresa:** `00-historia-de-la-vecina.md`, publicada como parte del curso.
+- **Plantillas de capítulo, prompts y formato del cuaderno:** [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md),
+  [`prompts-de-fase.md`](prompts-de-fase.md), [`prompts-de-apendice.md`](prompts-de-apendice.md) y
+  [`formato-cuaderno-incidentes.md`](formato-cuaderno-incidentes.md).
+- **Verificación previa (E6):** [`verificacion-de-laboratorio/`](verificacion-de-laboratorio/hallazgos.md),
+  con los hallazgos H1–H270, sus `logs/` y el `borrador/`.
+
+El mapa completo, para quien abre `prompts/` por primera vez, está en [`README.md`](README.md).
+
+### 19.3 Verificación
+
+Desde la raíz del curso, sin tocar Docker ni el cluster:
+
+```bash
+python3 prompts/verificar-corpus.py                 # validaciones base + aviso DIAGRAMA
+python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el repositorio público
+```
+
+- `verificar-corpus.py` es la subclase del perfil `courses-ia` de `verificador_base.py`, copiado de los
+  lineamientos. Agrega los callouts y marcadores de §8 y los emoji en `###` de §17 (excepción 8), saca
+  la historia de la regla de capítulo y avisa con `DIAGRAMA` de un bloque `text` con esquinas de caja o
+  flechas verticales que no sea una ficha de cierre ni una captura.
+- Lo que el verificador no ve y se revisa a mano: que la suite del paso pase (`task conformance`), que
+  las cifras citadas coincidan con `BENCHMARKS.md` y que un diagrama dibujado solo con `├─` y `│` no se
+  haya quedado en `text`.
+- Al cerrar el curso, el 05/10/2026, los dos modos salen en **0 errores y 0 avisos**.
+
+### 19.4 Lo que queda abierto
+
+Nada de redacción. Lo que falta es la pasada del autor como lector: tomar el curso desde cero, en
+macOS, Windows 11 y Linux, montar todos los contenedores y rehacer todas las pruebas. Sus reglas y
+lo que pide atención en cada tramo están en [`pendientes-a-futuro.md`](pendientes-a-futuro.md).

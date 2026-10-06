@@ -432,7 +432,7 @@ corridas y 1 venta sin aviso en otras 3; con la clave del hecho y el outbox (G13
 | reintentar "por si acaso" | reintentar con la misma clave | solo es seguro si el otro lado recuerda la clave |
 
 Y al revés: un outbox con un solo consumidor que lee la tabla directamente es una cola en la base; el bus agrega a los
-demás interesados. Las filas de la nube, en [a05](a05-diccionarios.md#-local--nube).
+demás interesados. Las filas de la nube, en [a05](a05-diccionarios.md#️-local--nube).
 
 🌩️ En la nube, varios buses gestionados deduplican por un id del mensaje dentro de una ventana, como JetStream. 🚧 Lo que
 ninguno te da: la clave de idempotencia de tu API, el consumidor que recuerda más allá de la ventana, y el outbox.

@@ -4,13 +4,18 @@
 > **Qué es este documento:** la fuente de verdad de **qué** enseña el curso, a quién y con qué
 > límites. Lo que no esté aquí, no está en el curso.
 > **Fecha de cierre de esta versión:** 2 de octubre de 2026, con las decisiones D1–D18 y A–E
-> cerradas por Oskar ese día (§13).
+> cerradas por Oskar ese día (§13). **Revisada el 5 de octubre de 2026** contra los lineamientos de
+> producción del repositorio: D8 reabierta y cerrada como diagramas en Mermaid, el apéndice `a10`
+> nuevo, y las trece decisiones de la plantilla general declaradas en §13.4.
 > **Precedencia:** manda este documento; después
 > [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md), que decide **cómo** se
-> escribe; después [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) y
+> escribe; después [`contrato-de-nombres.md`](contrato-de-nombres.md) y
+> [`diccionario-de-terminos.md`](diccionario-de-terminos.md); después
+> [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) y
 > [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md); y las plantillas y los
 > prompts se actualizan siempre al final. Por encima de todos, el `CLAUDE.md` del repositorio en lo
 > que este curso no haya declarado como excepción (§13.3).
+> **Estado de las decisiones:** todas cerradas (§13); ninguna abierta.
 
 ---
 
@@ -285,6 +290,9 @@ Las versiones se fijaron en la tanda de verificación (P8, 03/10/2026,
   tres valores, el orden y los duplicados.
 - **Lo core de la administración**: el DBA y el catálogo, la seguridad y la autorización, el respaldo
   y la continuidad, y los triggers.
+- **Las notaciones de diagramas** que el lector va a encontrar en el oficio —los bocetos con
+  óvalos, la pata de gallo y el diagrama de clases de dominio en UML—, con su escritura en Mermaid
+  en el apéndice `a10` (D-12).
 - El bloque opcional A.C. (§14).
 
 ## 12. 🚫 Lo que está fuera del alcance
@@ -317,7 +325,9 @@ después en todo lo demás, nunca al revés.
 5. **D5 · Sin autodiagnóstico por bloque.** Cada estudiante avanza a su ritmo.
 6. **D6 · Bases de ejemplo:** `school` y `supply` con pedidos (§8).
 7. **D7 · Notación:** Unicode (σ, π, ⋈, ρ, γ, ÷, ⟕, ⋉, ▷, →, ↠), nunca LaTeX.
-8. **D8 · Diagramas:** ASCII en bloques `text`, 75 columnas como máximo siempre que se pueda.
+8. **D8 · Diagramas:** 🔄 reabierta y cerrada el 05/10/2026 como **D-12** (§13.4): todo diagrama
+   estructural o conceptual va en **Mermaid**. El valor original (ASCII en bloques `text`, 75
+   columnas) queda solo para lo que no es diagrama: trazas tabulares y salidas de herramientas.
 9. **D9 · Verificadores en Python**, en `src/`.
 10. **D10 · Bibliografía:** cinco textos, Navathe como guía (§9).
 11. **D11 · Cursos:** Udemy, Coursera y cursos completos en YouTube.
@@ -361,9 +371,46 @@ La guía de estilo (§16) las repite para que ninguna sesión futura las "arregl
    navegar contra declarar.
 7. **Comentarios de código en español con tildes**, como en los cursos hermanos de `cursos-bd/`,
    en lugar del inglés del default. Los identificadores sí van en inglés.
+8. **`0-ESTRUCTURA-CURSO.md` al final, no antes de la primera lección.** Se escribe en la tanda de
+   los README (T16), con el estado real. Durante la producción, la propuesta de fases §13 y el plan
+   de producción §3 hacen su papel; un temario publicado antes de escribir describiría un curso que
+   todavía no existe.
 
 Todo lo demás del `CLAUDE.md` aplica tal cual: idioma, tono, convenciones de markdown, nombres de
 archivo (incluido el prefijo de track del bloque A.C.), escala de ejercicios y flujo de git.
+
+### 13.4 Las decisiones de la plantilla general, D-01–D-13 (05/10/2026)
+
+Los lineamientos de producción del repositorio piden que todo curso cierre trece decisiones con
+nombre fijo. Este curso ya había cerrado casi todas con su propia numeración; esta tabla dice cuál es
+cuál, y las tres que faltaban (D-03, D-12 y D-13) las cerró Oskar el 05/10/2026. **La numeración
+D1–D18 y A–E se conserva**, porque la citan la guía, las propuestas, los prompts y los hallazgos.
+
+| ID | Decisión | Valor en este curso | Equivale a | Estado |
+|---|---|---|---|---|
+| D-01 | Idioma | Español latinoamericano neutro con tuteo; código, identificadores y salida en inglés, también en el álgebra; **comentarios de código en español con tildes** | D17, §13.3.7 | ✅ |
+| D-02 | Tipo de curso | Curso completo, con forma de libro de texto | D2, §13.3.2 | ✅ |
+| D-03 | Autocontención | **Editorial, sin enlaces**: otros cursos solo se nombran en prosa, como destino o sugerencia, nunca como requisito; ningún enlace sale de la carpeta del curso | — | ✅ 05/10/2026 |
+| D-04 | Promesa de esfuerzo | Horas por fase (3 a 16 h), sin peso ligera/media/densa | D13 | ✅ |
+| D-05 | Aparato de evaluación | 30–45 ejercicios por fase (18–20 en panorama), con solucionario aparte | D3, D4, C | ✅ |
+| D-06 | Plataformas | Windows, macOS y Linux, en ese orden; la producción verifica en contenedores Linux y Oskar verifica a pedido macOS y Windows; lo demás se declara no verificado | D12 | ✅ |
+| D-07 | Política de versiones | Fijadas en la verificación previa (P8, 03/10/2026), con la mínima que el curso exige; viven en `a01`–`a03` y ninguna fase escribe un número | — | ✅ |
+| D-08 | Ejecución | Nada se publica sin haberse ejecutado o verificado (§6) | §6 | ✅ |
+| D-09 | Código | `src/` con una carpeta por apéndice o fase que deja código, con el nombre exacto del documento | D9 | ✅ |
+| D-10 | README y temario | Al final, en una tanda propia (T16), incluido `0-ESTRUCTURA-CURSO.md` | §13.3.8 | ✅ |
+| D-11 | Historia | Sin historia narrativa | §13.3.5 | ✅ |
+| D-12 | Diagramas | **Mermaid obligatorio**, pedido por Oskar el 05/10/2026: todo diagrama estructural o conceptual; bocetos con óvalos (`flowchart`) en F00–F02 y **pata de gallo** (`erDiagram`) desde F03; el apéndice `a10` reúne las notaciones | D8 🔄 | ✅ 05/10/2026 |
+| D-13 | Publicación | Repositorio público propio, con la carpeta del curso sin `prompts/` | — | ✅ 05/10/2026 |
+
+Dos decisiones nuevas del curso, del mismo día:
+
+- **D19 · Apéndice `a10` de notaciones de diagramas**, de consulta: pata de gallo, diagrama de clases
+  de dominio en UML, Chen y min-max como traducción, y los bocetos con óvalos, cada uno con su código
+  Mermaid, de forma que sirva de minitutorial **sin ser un tutorial de Mermaid**. Se escribe antes de
+  F02.
+- **D20 · El paso a la pata de gallo es al empezar F03.** F00–F02 dibujan las ideas como bocetos con
+  óvalos; F03 introduce la pata de gallo, remite a `a10`, y desde ahí todo diagrama ER, EER o de
+  esquema la usa.
 
 ---
 
@@ -429,13 +476,15 @@ El curso está bien si:
 
 - **Los seis cursos de motor de `gestores-sql/`** (`02-postgresql` a `07-oracle`) son independientes
   pero se apoyan en este: su bloque VI retoma los bloques IV a VI de aquí y los mide. Este curso
-  remite a ellos **en prosa y sin enlace mientras no existan**.
+  remite a ellos **en prosa y sin enlace**, también cuando ya existan (D-03).
 - **`ruta-sql/`** enseña a elegir y medir entre motores con narrativa propia, y aplica la
   normalización y el aislamiento a casos de empresa. Este curso es su base teórica; no se repiten,
   se complementan.
 - **`ruta-no-sql-lite/`** es el destino de F37 y de AC05 para quien quiera seguir hacia otras
   familias. Solo se citan sus conceptos.
-- **`docker-container-legacy/`** se enlaza cuando un apéndice de contenedores necesite explicar el
-  mecanismo.
+- **`docker-container-legacy/`** se puede nombrar en prosa, sin enlace, cuando un apéndice de
+  contenedores necesite remitir al mecanismo (D-03 editorial).
+- **Todas las remisiones a otros cursos son en prosa y sin enlace** (D-03): el curso se publica en
+  su propio repositorio (D-13), donde esos enlaces se romperían.
 - **`ruta-no-sql-lite/prompts/`** y **`ruta-sql/prompts/`** aportan el andamiaje editorial que este
   curso imita.

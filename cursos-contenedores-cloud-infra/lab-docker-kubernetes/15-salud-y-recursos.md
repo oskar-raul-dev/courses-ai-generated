@@ -253,7 +253,7 @@ legacy   contingencia-db-579d7bd5df-rzqdp BestEffort
 ```
 
 `BestEffort` —sin `requests` ni `limits`— es el primero que mata el kernel. Es lo que le pasó a
-Contingencia tres veces en la [Fase 12](12-estado-y-almacenamiento.md#-13-errores-comunes-y-diagnóstico). Contingencia ocupa 601 MiB, porque GlassFish arranca con su
+Contingencia tres veces en la [Fase 12](12-estado-y-almacenamiento.md#️-13-errores-comunes-y-diagnóstico). Contingencia ocupa 601 MiB, porque GlassFish arranca con su
 `-Xmx512m` de fábrica; Postgres, 54. Los dos llevan ahora sus números (`deploy/legacy/contingencia.yaml`,
 `platform/data/postgres/statefulset.yaml`) y pasan a `Burstable`. Y Postgres importa más que ninguno: con
 G4, si Postgres muere, los cuatro servicios salen del tráfico.

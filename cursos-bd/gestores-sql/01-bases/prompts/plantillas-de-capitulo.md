@@ -14,7 +14,10 @@ cuarenta y ocho fases escritas en cuarenta y ocho sesiones se lean como un solo 
 > **Nota de coherencia:** las horas, los conteos de ejercicios, las lecturas base y las dependencias
 > de cada fase viven en [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md). Si alguna
 > vez cambian, se cambian **allí primero** y aquí después. Lo normativo de la forma está en la guía
-> §7, §8, §9 y §10; si esta plantilla y la guía discrepan, gana la guía.
+> §7, §8, §9 y §10; si esta plantilla y la guía discrepan, gana la guía. Los nombres son los del
+> [contrato de nombres](contrato-de-nombres.md) y las palabras, las del
+> [diccionario](diccionario-de-terminos.md).
+> **Vigencia:** 2026-10-05 (revisada con los diagramas en Mermaid, D-12).
 
 ---
 
@@ -109,7 +112,9 @@ verificación.}}
 >
 > costo = {{fórmula}} = **{{número}} accesos a bloque**
 
-{{Diagramas ASCII en bloques `text`, 75 columnas como máximo.}}
+{{Diagramas en un bloque `mermaid`, con la sintaxis de la guía §3.2 (bocetos con óvalos hasta F02,
+pata de gallo desde F03), precedidos de una frase que dice qué mirar. Trazas tabulares y salidas, en
+`text` de 75 columnas como máximo.}}
 
 **El patrón a memorizar.** {{Una o dos frases con la lección transferible.}}
 
@@ -261,7 +266,9 @@ Se borra si no hay nada.}}
 - **El solucionario se escribe en la misma sesión** que la fase, con la Plantilla 5. Una fase sin
   solucionario completo y contrastado no está terminada.
 - **Unicode, nunca LaTeX.** Condiciones y atributos después del operador, separados por un espacio.
-- **ASCII de 75 columnas como máximo** en diagramas; si no cabe, primero se simplifica.
+- **Diagramas en Mermaid** (guía §3.2): boceto con óvalos hasta F02, pata de gallo desde F03, doce
+  nodos como máximo, dibujados con `python3 prompts/verificar-diagramas.py`. Los bloques `text`
+  (trazas y salidas), de 75 columnas como máximo.
 - **Identificadores en inglés**, también en el álgebra. Nunca `grade` solo, nunca `foo`, `bar` ni
   `tabla1`.
 - **Nada sin verificar**: toda salida, real; todo costo, con supuestos y fórmula; lo no verificado,
@@ -444,7 +451,8 @@ nunca la receta completa aquí.}}
 ### 4.2 Su modelo, con el vocabulario del bloque
 
 {{Qué es en términos de AC01–AC03: gestor de registros, jerárquico, red. Qué es un "registro", un
-"puntero", un "set" o un "segmento" en este producto. Diagrama ASCII de 75 columnas como máximo.}}
+"puntero", un "set" o un "segmento" en este producto. Diagrama en Mermaid (guía §3.2): árbol o
+grafo en `flowchart`.}}
 
 ### 4.3 La pregunta navegacional, con saltos contados
 
@@ -567,8 +575,8 @@ Y queda invalidada si:
 - **Ninguna solución sin contrastar**: verificador, herramienta o una segunda resolución
   independiente. Si se contrastó a mano, se dice.
 - **Rúbrica en todos los abiertos**, con una solución de referencia.
-- **Salida literal** de toda herramienta; mismas reglas de Unicode, ASCII e identificadores que la
-  fase.
+- **Salida literal** de toda herramienta; mismas reglas de Unicode, diagramas e identificadores que
+  la fase.
 - El solucionario **no añade teoría nueva**: si una solución necesita un concepto que la fase no
   dio, el problema está en la fase.
 
@@ -636,7 +644,10 @@ y reconocerlo por su mensaje literal.}}
 - **Todo comando, ejecutado en las plataformas que el apéndice declara**; la que no se verificó, se
   declara con esas palabras.
 - **Los de contenedores (`a09`, `aca-02`) no explican Docker**: comandos, su equivalente Podman y
-  nada más; el mecanismo, en `docker-container-legacy/`.
+  nada más; el mecanismo, en la documentación oficial (otros cursos, solo en prosa y sin enlace:
+  D-03).
+- **`a10` enseña notaciones, no Mermaid**: cada sección empieza por la notación y lo que significa, y
+  el código viene después como la forma de escribirla.
 - **`a07` y `a08` son documentos vivos**: crecen con cada fase y su encabezado lleva la fecha de la
   última entrada.
 - **Los del bloque A.C. llevan el prefijo `aca-`** y no se mezclan con los del camino base.

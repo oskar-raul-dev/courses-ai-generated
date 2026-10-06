@@ -17,7 +17,8 @@ se revisa después y **nunca al revés**.
 
 ## 🧱 El marco del bloque
 
-Es el marco común de [`prompts-de-fase.md`](prompts-de-fase.md) con cuatro cambios. **No lo repitas
+Es el marco común de [`prompts-de-fase.md`](prompts-de-fase.md) —incluidas sus reglas de diagramas
+en Mermaid, Docker, `zz-code/` y verificación, revisadas el 05/10/2026— con estos cambios. **No lo repitas
 en el documento: aplícalo.**
 
 ```markdown
@@ -39,7 +40,11 @@ El marco común de `prompts/prompts-de-fase.md`, completo, con estos cambios:
   años, y ese cambio es parte del contenido.
 - **Sin IMS ni IDMS reales:** DL/I y el DML de CODASYL se enseñan en papel y con los mini DML de los
   laboratorios, y el texto lo dice.
-- **Con la Ruta NoSQL Lite, solo referencias de concepto**, en prosa. Ese curso no se toca.
+- **Con la Ruta NoSQL Lite, solo referencias de concepto**, en prosa y sin enlace (D-03). Ese curso
+  no se toca.
+- **Diagramas:** los árboles jerárquicos, las redes de *sets* y los diagramas de Bachman van en
+  Mermaid (`flowchart`, guía §3.2); los esquemas relacionales con los que se comparan, en pata de
+  gallo. El bloque A.C. se lee después de F03, así que la pata de gallo ya es conocida.
 ```
 
 Y el mismo **protocolo de tres pasos** de `prompts-de-fase.md`.
@@ -72,7 +77,8 @@ motores. Entregables: `ac00-navegar-contra-declarar.md` y su solucionario.
 - **El 🪞 del bloque**: *"Tu instinto de ingeniero moderno dice que esto es historia… y esta vez se
   equivoca"*, con los ejemplos verificados (iniciar sesión en un dominio Windows, `git log`, un
   expediente clínico).
-- La línea de tiempo de los modelos en ASCII de 75 columnas.
+- La línea de tiempo de los modelos en un bloque `text` de 75 columnas (es una línea de tiempo, no un
+  diagrama: guía §3.2); el mapa de los modelos y sus herederos, en Mermaid.
 
 {{protocolo}}
 ```
@@ -127,7 +133,8 @@ Esta es la sesión de la **Fase AC02 — 🌲 El modelo jerárquico**. Entregabl
 
 ## Puntos de cuidado
 
-- **L3: `school` como árbol** (curso → sección → matrícula → calificación) recorrido en preorden con
+- **L3: `school` como árbol** (curso → sección → matrícula → calificación), dibujado en Mermaid
+  (`flowchart TD`) y recorrido en preorden con
   un mini DL/I (`gu`, `gn`, `gnp`), con el contador de bloques de L1.
 - **La pregunta inversa** (*"¿en qué secciones está este alumno?"*) se ejecuta en L3 y se cuenta: es
   el dolor del modelo, y AC08 vuelve a ella.
@@ -158,7 +165,8 @@ su solucionario y el laboratorio L2 en `src/ac03-modelo-de-red/`.
 - **L2: `supply` con pedidos en red**: `customer`, `sales_order`, `order_line` y `part` como tipos de
   registro, *sets* como listas circulares (NEXT, PRIOR, OWNER) y un mini DML con currency explícita.
   El diseño de los *sets* lo reutilizan AC07 (sobre LMDB) y AC09 (en C): fíjalo en el paso 1.
-- **El diagrama de Bachman** de `supply` en ASCII de 75 columnas.
+- **El diagrama de Bachman** de `supply` en Mermaid (`flowchart TD`: el dueño apunta al miembro con
+  el nombre del *set* en la flecha), al lado de su esquema en pata de gallo.
 - **Inserción y retención contra `ON DELETE`** (F05): la tabla de traducción en las dos direcciones,
   con la que no tiene equivalente.
 - El DML de CODASYL se escribe en papel con su sintaxis como pseudocódigo declarado, y su equivalente

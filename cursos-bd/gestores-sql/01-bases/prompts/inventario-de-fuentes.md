@@ -12,10 +12,10 @@
 > autorizada de un libro**, ni siquiera para leer un índice: lo que solo estaba en una copia así
 > queda marcado como no verificado.
 
-**Salto rápido:** [1](#1--los-cinco-textos-del-camino-base) · [2](#2--navathe-7ª-contra-las-38-fases) ·
-[3](#3--los-otros-cuatro-textos-por-capítulo) · [4](#4--terminología-de-las-ediciones-en-español) ·
+**Salto rápido:** [1](#1--los-cinco-textos-del-camino-base) · [2](#2-️-navathe-7ª-contra-las-38-fases) ·
+[3](#3--los-otros-cuatro-textos-por-capítulo) · [4](#4-️-terminología-de-las-ediciones-en-español) ·
 [5](#5--cursos-y-videos) · [6](#6--papers-fundacionales-por-fase) · [7](#7--mysql-y-except) ·
-[8](#8--bloque-ac) · [9](#9--lo-que-no-se-pudo-verificar)
+[8](#8-️-bloque-ac) · [9](#9--lo-que-no-se-pudo-verificar)
 
 ---
 

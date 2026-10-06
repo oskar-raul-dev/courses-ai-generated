@@ -12,17 +12,41 @@
 
 Esto es lo que construiste, y lo que corre en tu portátil:
 
-```text
-                    api.localhost:8080 · storefront.localhost:8080          (la puerta: Envoy Gateway, Gateway API)
-                                         │
-   apps ─────────────────────────────────┼────────────────────────────────────────────────────────────────
-     storefront (React, nginx)    pricing (Go)  ◀── gRPC + mTLS ──  inventory (Java)  ── saga ──▶  replenish (Node)
-                                  catalog (PHP-FPM + nginx)  ◀──────────┘    │  outbox-relay (sidecar, Go)
-   data ─────────────────────────────────────────────────────────────────────┼──── NATS JetStream ◀──┘
-     Postgres (una base por servicio)                                        └────────▶
-   legacy ── Contingencia (GlassFish), el portal, la Braqui ── el patrimonio, detrás de la misma puerta
-   observability ── Prometheus, Grafana, Loki, Fluent Bit, Tempo, cada uno con su interruptor
-   apps-b ── la segunda cadena: el mismo chart, otro release
+```mermaid
+flowchart TD
+    GW["api.localhost:8080 · storefront.localhost:8080<br/>la puerta: Envoy Gateway, Gateway API"]
+    subgraph APPS["apps"]
+        SF["storefront<br/>React, nginx"]
+        INV["inventory<br/>Java"]
+        PRI["pricing<br/>Go"]
+        CAT["catalog<br/>PHP-FPM + nginx"]
+        REP["replenish<br/>Node"]
+        OR["outbox-relay<br/>sidecar de inventory, Go"]
+    end
+    subgraph DATA["data"]
+        PG[("Postgres<br/>una base por servicio")]
+        NATS[["NATS JetStream"]]
+    end
+    subgraph LEGACY["legacy"]
+        LEG["Contingencia (GlassFish), el portal, la Braqui<br/>el patrimonio, detrás de la misma puerta"]
+    end
+    subgraph OBS["observability"]
+        O["Prometheus, Grafana, Loki, Fluent Bit, Tempo<br/>cada uno con su interruptor"]
+    end
+    subgraph APPSB["apps-b"]
+        B["la segunda cadena<br/>el mismo chart, otro release"]
+    end
+    GW --> APPS
+    GW --> LEGACY
+    INV -- "gRPC + mTLS" --> PRI
+    INV --> CAT
+    INV -- "saga" --> REP
+    INV --> OR
+    OR -- "publica" --> NATS
+    NATS -- "consume" --> REP
+    APPS --> PG
+    DATA ~~~ OBS
+    DATA ~~~ APPSB
 ```
 
 Cinco servicios en cuatro runtimes, un chart, dos cadenas, un bus, una saga, y un cuaderno de 27 incidentes. Valentina
@@ -81,14 +105,15 @@ operar un cluster durante un año. Esa última es la que más pesa, y es la que 
 El árbol se recorre de abajo hacia arriba: se sube un piso solo si el de abajo no alcanza, y cada piso dice **qué número**
 lo hace insuficiente.
 
-```text
-¿Lo resolvía un contenedor y un servicio del sistema operativo?
-  ├── sí → listo. Un contenedor con restart, en una máquina.
-  └── no, porque… ─▶ ¿Lo resolvía compose en una máquina?
-                        ├── sí → listo. Un archivo, una máquina, un respaldo.
-                        └── no, porque… ─▶ ¿Dos servidores, un balanceador y una lista de comprobación?
-                                              ├── sí → listo. Lo que ya hacía Contingencia.
-                                              └── no, porque… ─▶ ¿De verdad un orquestador? ¿Propio o gestionado?
+```mermaid
+flowchart TD
+    Q1{"¿Lo resolvía un contenedor y un servicio<br/>del sistema operativo?"}
+    Q1 -- "sí" --> R1["listo. Un contenedor con restart, en una máquina."]
+    Q1 -- "no, porque…" --> Q2{"¿Lo resolvía compose en una máquina?"}
+    Q2 -- "sí" --> R2["listo. Un archivo, una máquina, un respaldo."]
+    Q2 -- "no, porque…" --> Q3{"¿Dos servidores, un balanceador<br/>y una lista de comprobación?"}
+    Q3 -- "sí" --> R3["listo. Lo que ya hacía Contingencia."]
+    Q3 -- "no, porque…" --> Q4{"¿De verdad un orquestador?<br/>¿Propio o gestionado?"}
 ```
 
 ### 4.1 ¿Lo resolvía un contenedor y un servicio del sistema?
@@ -202,7 +227,7 @@ recomendación que no muestra sus apuestas perdidas no es un veredicto: es una p
 
 ## 🌩️ 5. El diccionario local ⇄ nube, consolidado
 
-El diccionario completo, en las dos direcciones y con una fila por fase, está en [a05](a05-diccionarios.md#-local--nube).
+El diccionario completo, en las dos direcciones y con una fila por fase, está en [a05](a05-diccionarios.md#️-local--nube).
 Aquí van las filas que deciden una oferta:
 
 | En el laboratorio | En OCI | En Azure | 🚧 Lo que el laboratorio nunca te dio |

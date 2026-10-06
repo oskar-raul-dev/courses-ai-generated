@@ -979,3 +979,9 @@ bash prompts/check-course.sh                        # las trece comprobaciones d
   complemento de `propuestas-cursos/`, y ningún documento publicado lo enlaza.
 - **Los comandos `podman` de F24, F25 y F26** están contrastados con la
   documentación oficial, no ejecutados, y sus cabeceras lo declaran.
+
+Los dos se cierran en la pasada del autor como lector: tomar el curso desde
+cero, montar todos los contenedores y rehacer todas las pruebas. Sus reglas,
+lo que pide atención en cada tramo y dos decisiones que esperan al autor (el
+solucionario y la matriz de F11) están en
+[`pendientes-a-futuro.md`](pendientes-a-futuro.md).

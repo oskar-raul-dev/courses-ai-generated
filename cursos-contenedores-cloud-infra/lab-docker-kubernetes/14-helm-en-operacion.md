@@ -120,7 +120,7 @@ helm upgrade --install lab charts/platform -n apps … --wait --timeout 10m \
 ```
 
 `--rollback-on-failure` (el `--atomic` de Helm 3) hace que un despliegue que falla vuelva solo a la
-última revisión buena, en lugar de quedar a medias como en la sección 9 de la [Fase 13](13-helm-el-paquete.md#-9-autopsia-adoptar-los-objetos-para-no-cortar-el-servicio). `--history-max
+última revisión buena, en lugar de quedar a medias como en la sección 9 de la [Fase 13](13-helm-el-paquete.md#️-9-autopsia-adoptar-los-objetos-para-no-cortar-el-servicio). `--history-max
 10` guarda diez revisiones, un `Secret` cada una, y borra las más viejas.
 
 Con un valor inválido —`--set pricing.replicaCount=dos`—, el despliegue falla y se deshace solo:
@@ -503,7 +503,7 @@ separa.
 
 **La decisión, con su mejor argumento.** Desplegar sin diff previo, con `--rollback-on-failure`: *"si
 algo falla, vuelve solo; para qué revisar lo que se deshace en veinte segundos."* Es la conclusión
-natural después de la [Fase 13](13-helm-el-paquete.md#-9-autopsia-adoptar-los-objetos-para-no-cortar-el-servicio), donde el despliegue a medias fue el problema.
+natural después de la [Fase 13](13-helm-el-paquete.md#️-9-autopsia-adoptar-los-objetos-para-no-cortar-el-servicio), donde el despliegue a medias fue el problema.
 
 **Por qué era razonable.** La bandera hace lo que promete: el `replicas: dos` volvió solo en veinte
 segundos.

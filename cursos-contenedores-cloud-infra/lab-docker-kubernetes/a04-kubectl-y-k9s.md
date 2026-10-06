@@ -33,7 +33,7 @@ este curso no cubre.
 - [Lo mismo, en k9s](#-lo-mismo-en-k9s)
 - [Las salidas que conviene leer](#-las-salidas-que-conviene-leer)
 - [Cuándo usar qué](#-cuándo-usar-qué)
-- [Advertencias](#-advertencias)
+- [Advertencias](#️-advertencias)
 - [Referencias](#-referencias)
 - [Ejercicios](#-ejercicios-10)
 

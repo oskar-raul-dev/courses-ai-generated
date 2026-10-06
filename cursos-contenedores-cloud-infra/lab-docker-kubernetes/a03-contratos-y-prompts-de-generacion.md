@@ -27,7 +27,7 @@ servicio a mano, puedes: la suite lo juzga igual.
 
 - [El método, en una página](#-el-método-en-una-página)
 - [Cómo se lee un contrato](#-cómo-se-lee-un-contrato)
-- [Los cuatro contratos, de un vistazo](#-los-cuatro-contratos-de-un-vistazo)
+- [Los cuatro contratos, de un vistazo](#️-los-cuatro-contratos-de-un-vistazo)
 - [Swagger UI](#-swagger-ui)
 - [La suite de conformidad](#-la-suite-de-conformidad)
 - [La matriz de generación](#-la-matriz-de-generación)
@@ -36,9 +36,9 @@ servicio a mano, puedes: la suite lo juzga igual.
   [G7](#-los-prompts-de-g7) · [G8](#-el-prompt-de-g8) · [G9](#-el-prompt-de-g9-y-el-del-generador-de-caos) ·
   [G10](#-los-prompts-de-g10) · [G11](#-los-prompts-de-g11) · [G12](#-los-prompts-de-g12) · [G13](#-los-prompts-de-g13)
 - [Los `CLAUDE.md` de cada servicio](#-los-claudemd-de-cada-servicio)
-- [Cuando el código generado no pasa](#-cuando-el-código-generado-no-pasa)
+- [Cuando el código generado no pasa](#️-cuando-el-código-generado-no-pasa)
 - [Cuándo usar qué](#-cuándo-usar-qué)
-- [Advertencias](#-advertencias)
+- [Advertencias](#️-advertencias)
 - [Referencias](#-referencias)
 - [Ejercicios](#-ejercicios-8)
 
@@ -46,11 +46,12 @@ servicio a mano, puedes: la suite lo juzga igual.
 
 ## 🧭 El método, en una página
 
-```text
-  el contrato (OpenAPI)  ──►  la suite del paso (Hurl)  ──►  el prompt del paso  ──►  el código
-  contracts/openapi/          contracts/conformance/         este apéndice           services/<svc>/
-          ▲                                                                             │
-          └──────────────── si no pasa, se corrige el prompt, no el código ◄────────────┘
+```mermaid
+flowchart LR
+    C["el contrato (OpenAPI)<br/><code>contracts/openapi/</code>"] --> S["la suite del paso (Hurl)<br/><code>contracts/conformance/</code>"]
+    S --> P["el prompt del paso<br/>este apéndice"]
+    P --> K["el código<br/><code>services/#lt;svc#gt;/</code>"]
+    K -- "si no pasa, se corrige el prompt, no el código" --> P
 ```
 
 Cuatro reglas lo sostienen, y ninguna tiene excepciones:

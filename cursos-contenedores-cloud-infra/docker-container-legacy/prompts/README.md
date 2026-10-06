@@ -20,6 +20,7 @@ propio repositorio. Quien vaya a editar una fase lo lee entero antes de teclear 
 | [`verificar-corpus.py`](verificar-corpus.py) y [`verificador_base.py`](verificador_base.py) | las validaciones base de los lineamientos y el aviso de diagramas | al cerrar cualquier edición |
 | [`check-course.sh`](check-course.sh) | las trece comprobaciones de integridad propias del curso | al cerrar cualquier edición |
 | [`explicacion_script_integridad.md`](explicacion_script_integridad.md) | por qué existe cada comprobación de `check-course.sh` | cuando una falla y no sabes por qué |
+| [`pendientes-a-futuro.md`](pendientes-a-futuro.md) | la hoja de verificación para cuando el autor tome el curso desde cero, y dos decisiones suyas | al tomar el curso, y al volver a él |
 
 Lo que en otros cursos son documentos aparte —diccionario de términos, contrato de nombres,
 plantillas de capítulo, plan de producción— aquí son secciones de la guía o no existen porque el

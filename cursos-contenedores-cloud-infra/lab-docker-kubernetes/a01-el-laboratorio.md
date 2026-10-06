@@ -18,14 +18,14 @@ es la fase que la estrena; y enseñar Python o `venv`.
 ## Índice
 
 - [Versiones fijadas](#-versiones-fijadas)
-- [El Taskfile, tarea por tarea](#-el-taskfile-tarea-por-tarea)
+- [El Taskfile, tarea por tarea](#️-el-taskfile-tarea-por-tarea)
 - [El motor activo](#-el-motor-activo)
 - [Los perfiles y sus interruptores](#-los-perfiles-y-sus-interruptores)
 - [La memoria que ocupa cada perfil](#-la-memoria-que-ocupa-cada-perfil)
 - [Los scripts](#-los-scripts)
 - [La CA del laboratorio en el llavero](#-la-ca-del-laboratorio-en-el-llavero)
 - [Cuándo usar qué](#-cuándo-usar-qué)
-- [Advertencias](#-advertencias)
+- [Advertencias](#️-advertencias)
 - [Referencias](#-referencias)
 - [Ejercicios](#-ejercicios-8)
 

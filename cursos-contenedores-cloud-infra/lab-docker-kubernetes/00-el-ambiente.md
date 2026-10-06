@@ -63,17 +63,15 @@ la historia, con sus personajes y sus cifras, está en
 
 ### El sistema que vas a construir
 
-```text
-EL SISTEMA AL FINAL DEL CURSO (simplificado)
-
-  navegador ──► Gateway ──► storefront (React)
-                   │
-                   ├──► catalog (PHP · Laravel)      el maestro de productos
-                   ├──► inventory (Java · Spring)    las existencias, la venta y el préstamo
-                   ├──► pricing (Go)                 el precio vigente en cada droguería
-                   └──► replenish (Node · NestJS)    la reposición entre droguerías
-                                 │
-                  Postgres · Valkey · NATS · y la observabilidad, encendida por piezas
+```mermaid
+flowchart TD
+    NAV["navegador"] --> GW["Gateway"]
+    GW --> SF["storefront<br/>React"]
+    GW --> CAT["catalog<br/>PHP · Laravel<br/><i>el maestro de productos</i>"]
+    GW --> INV["inventory<br/>Java · Spring<br/><i>las existencias, la venta y el préstamo</i>"]
+    GW --> PRI["pricing<br/>Go<br/><i>el precio vigente en cada droguería</i>"]
+    GW --> REP["replenish<br/>Node · NestJS<br/><i>la reposición entre droguerías</i>"]
+    CAT & INV & PRI & REP --> BASE[("Postgres · Valkey · NATS<br/>y la observabilidad, encendida por piezas")]
 ```
 
 Cuatro servicios en cuatro lenguajes, uno por cada equipo de la cooperativa, y un frontend. No

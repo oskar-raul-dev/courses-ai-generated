@@ -454,7 +454,7 @@ driver de SQLite carga código nativo. El servicio arranca igual.
 
 **La suite G1 falla la segunda vez.** Si un servicio regenerado no es idempotente (por ejemplo, un
 `POST` que no acepta un 409), la segunda corrida lo delata. Salida: corregir el prompt, no la suite
-([a03](a03-contratos-y-prompts-de-generacion.md#-cuando-el-código-generado-no-pasa)).
+([a03](a03-contratos-y-prompts-de-generacion.md#️-cuando-el-código-generado-no-pasa)).
 
 **`Error from server (NotFound): namespaces "apps" not found`.** Se aplicó un manifiesto antes que el
 namespace. Salida: `task deploy`, que aplica el namespace primero.

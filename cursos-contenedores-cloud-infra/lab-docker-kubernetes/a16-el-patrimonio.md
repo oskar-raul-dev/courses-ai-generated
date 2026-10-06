@@ -23,16 +23,16 @@ que se construyó en GlassFish y Postgres en 2016 ([historia §1.7](00-historia-
 
 ## Índice
 
-- [Las tres piezas, de un vistazo](#-las-tres-piezas-de-un-vistazo)
+- [Las tres piezas, de un vistazo](#️-las-tres-piezas-de-un-vistazo)
 - [Cómo se levanta](#-cómo-se-levanta)
 - [Contingencia](#-contingencia)
 - [El portal](#-el-portal)
-- [La Braqui](#-la-braqui)
+- [La Braqui](#️-la-braqui)
 - [Las mañas, a propósito](#-las-mañas-a-propósito)
 - [Los prompts](#-los-prompts)
 - [🔥 Los dialectos](#-los-dialectos)
 - [Cuándo usar qué](#-cuándo-usar-qué)
-- [Advertencias](#-advertencias)
+- [Advertencias](#️-advertencias)
 - [Referencias](#-referencias)
 - [Ejercicios](#-ejercicios-6)
 
@@ -40,17 +40,14 @@ que se construyó en GlassFish y Postgres en 2016 ([historia §1.7](00-historia-
 
 ## 🗺️ Las tres piezas, de un vistazo
 
-```text
-EL PATRIMONIO, EN COMPOSE (perfil legacy)
-
-  portal (Laravel) ──SOAP, cada noche──► contingencia (GlassFish) ──JPA──► contingencia-db (Postgres)
-  127.0.0.1:8081                          /PriceService · /StockService       ▲            ▲
-                                          lote cada 2 min                     │ lee y      │ inserta
-                                               │ escribe                       │ escribe    │
-                                               ▼                               │            │
-                                     volumen "traslados" ──► braqui-traslados (Python + cron, 5 min)
-                                     traslados_*.txt + .ok                      │
-                                                                   braqui (Node, sondea cada 30 s)
+```mermaid
+flowchart LR
+    PORTAL["portal (Laravel)<br/>127.0.0.1:8081"] -- "SOAP, cada noche" --> CONT["contingencia (GlassFish)<br/>/PriceService · /StockService<br/>lote cada 2 min"]
+    CONT -- "JPA" --> DB[("contingencia-db<br/>Postgres")]
+    CONT -- "escribe" --> VOL[/"volumen «traslados»<br/>traslados_*.txt + .ok"/]
+    VOL --> TR["braqui-traslados<br/>Python + cron, 5 min"]
+    TR -- "inserta" --> DB
+    BRAQUI["braqui<br/>Node, sondea cada 30 s"] -- "lee y escribe" --> DB
 ```
 
 | Pieza | En la historia | En el laboratorio | Carpeta |

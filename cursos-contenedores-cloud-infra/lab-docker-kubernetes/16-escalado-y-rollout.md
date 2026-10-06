@@ -246,7 +246,7 @@ pricing   Deployment/pricing   cpu: 2%/70%   1         4         1          2m48
 El HPA es otro valor del chart (`autoscaling.enabled`), y trae una regla que no es opcional: **mientras
 el HPA existe, el `Deployment` no declara `replicas`**. El HPA las cambia, y quien las cambia es su dueño;
 si el chart también las declarara, cada `task deploy` chocaría con el HPA, como chocó con `kubectl scale`
-en la [Fase 14](14-helm-en-operacion.md#-13-errores-comunes-y-diagnóstico). Y un efecto lateral: al encenderlo, el `Deployment` de `lab` pasó de dos réplicas a una,
+en la [Fase 14](14-helm-en-operacion.md#️-13-errores-comunes-y-diagnóstico). Y un efecto lateral: al encenderlo, el `Deployment` de `lab` pasó de dos réplicas a una,
 porque Helm dejó de declarar el campo.
 
 El 70 % es **de los `requests`**, no de la máquina: `pricing` pide 50m, así que el HPA escala cuando pasa

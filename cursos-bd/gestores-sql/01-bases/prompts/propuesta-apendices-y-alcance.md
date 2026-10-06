@@ -1,5 +1,5 @@
 # 📎 Propuesta de apéndices y alcance
-## El motor de motores — nueve apéndices del camino base y dos del bloque A.C.
+## El motor de motores — diez apéndices del camino base y dos del bloque A.C.
 
 > **Qué es este documento:** qué apéndices tiene el curso, qué entra en cada uno, cuántas horas de
 > consulta representan, cuándo se escriben y —sobre todo— **qué queda explícitamente fuera**.
@@ -8,6 +8,9 @@
 > [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md). Por debajo, las plantillas y
 > [`prompts-de-apendice.md`](prompts-de-apendice.md), que se actualizan después y nunca al revés.
 > **Fecha:** 2 de octubre de 2026, con las decisiones D1–D18 y A–E del alcance (§13) cerradas.
+> **Revisada el 5 de octubre de 2026:** el apéndice `a10` (D19), agregado como §15 para no
+> renumerar; los diagramas en Mermaid (D-12); las remisiones a otros cursos, en prosa y sin enlace
+> (D-03).
 
 ---
 
@@ -31,8 +34,8 @@ comandos, salidas) no pueden escribirse antes de que la tanda de verificación l
 > 🧭 **La regla de oro de los apéndices de instalación: comandos y nada más.** `a01`, `a02`, `a03`,
 > `a09`, `aca-01` y `aca-02` dan la receta y el comando que confirma que funcionó. Si una sección
 > necesita más de dos párrafos para explicar qué hace un gestor de paquetes o un contenedor por
-> dentro, ese contenido no es de este curso: va un enlace a la documentación oficial o a
-> `docker-container-legacy/`.
+> dentro, ese contenido no es de este curso: va un enlace a la documentación oficial, o se nombra en
+> prosa, sin enlace, el curso del repositorio que lo enseña (D-03).
 
 > ⚠️ **Ninguna versión se escribe de memoria.** Las versiones salieron de la tanda de verificación
 > (P8, 03/10/2026, `verificacion-de-laboratorio/hallazgos.md`) y viven en el apéndice
@@ -40,7 +43,7 @@ comandos, salidas) no pueden escribirse antes de que la tanda de verificación l
 
 ---
 
-## 2. 📊 Los once, de un vistazo
+## 2. 📊 Los doce, de un vistazo
 
 | # | Apéndice | Horas | Se escribe | Usado por |
 |---|---|---|---|---|
@@ -53,6 +56,7 @@ comandos, salidas) no pueden escribirse antes de que la tanda de verificación l
 | a07 | Notación y glosario bilingüe | 2 h | esqueleto antes de F04; **vivo** | todo el curso |
 | a08 | Mapa de bibliografía y recursos | 1 h | esqueleto antes de F00; **vivo** | todo el curso |
 | a09 | 🔥 El curso en un contenedor (opcional) | 1 h | después de a01–a03 | quien no quiera instalar nada; F34 |
+| a10 | Notaciones de diagramas | 2 h | antes de F02 | F02, F03, F13 y todo diagrama del curso |
 | aca-01 | 🏛️ Herramientas nativas del bloque A.C. (opcional) | 1 h | con AC01 | bloque A.C. |
 | aca-02 | 🏛️ Contenedores del bloque A.C. (opcional) | 1 h | con AC08 | AC08, y lo que no corra nativo |
 
@@ -63,7 +67,7 @@ a01-sqlite-nativo.md                  a06-la-matematica-minima.md
 a02-python-venv-y-faker.md            a07-notacion-y-glosario.md
 a03-radb.md                           a08-mapa-de-bibliografia.md
 a04-las-bases-de-ejemplo.md           a09-el-curso-en-un-contenedor.md
-a05-verificadores-y-mini-motor.md
+a05-verificadores-y-mini-motor.md     a10-notaciones-de-diagramas.md
 aca-01-herramientas-nativas.md        aca-02-contenedores.md
 ```
 
@@ -78,7 +82,7 @@ llevan el prefijo de track del repositorio, `aca-NN-`, para no mezclarse con los
 - **De material del curso** (a04, a05): documentan código que vive en `src/`. **Son los únicos que
   dejan archivos en el repositorio** junto con a09 y aca-02, que dejan su `Dockerfile` o su
   `compose.yaml`. Crecen a medida que las fases agregan bases, verificadores o piezas del mini motor.
-- **De referencia** (a06, a07, a08): teoría de apoyo y documentos de consulta. **a07 y a08 son
+- **De referencia** (a06, a07, a08, a10): teoría de apoyo y documentos de consulta. **a07 y a08 son
   documentos vivos** (guía §14): cada fase que introduce un símbolo, un término o un recurso los
   alimenta en la misma sesión, y se cierran al final del curso.
 
@@ -86,7 +90,8 @@ llevan el prefijo de track del repositorio, `aca-NN-`, para no mezclarse con los
 
 **a01, a02 y a03 son el suelo del laboratorio** y se escriben antes de F01, en ese orden: Python va
 antes que `radb` porque `radb` se instala con `pip` dentro del `venv`. **a04 va antes de F02**,
-porque F02 ya modela `school`. **a08 abre su esqueleto antes de F00**, porque F00 ya cita libros, y
+porque F02 ya modela `school`, y **a10 también**, porque F02 dibuja los primeros bocetos y F03 pasa
+a la pata de gallo. **a08 abre su esqueleto antes de F00**, porque F00 ya cita libros, y
 **a06 y a07 antes de F04**, la primera fase con notación formal. **a05 nace con F15**, el primer
 verificador, y crece hasta F29.
 
@@ -117,7 +122,7 @@ pero no de cualquier forma.
 
 **Qué NO entra:** la teoría del respaldo (F35), el WAL como teoría de recuperación (F32), los modos
 de journal y la concurrencia de SQLite, las extensiones y todo lo que enseña el curso `05-sqlite`.
-Se nombra en una línea y se remite allí, en prosa mientras ese curso no exista.
+Se nombra en una línea y se remite allí, en prosa y sin enlace (D-03).
 
 **Ejercicios: 8**, de consulta: instalar y verificar la versión, crear una tabla `STRICT` y
 provocar el error de tipo, respaldar con `.backup` y con `VACUUM INTO`, comprobar la copia, y un
@@ -216,8 +221,8 @@ puedan recrear desde cero con un comando.
 
 **Qué entra:**
 
-- **`school`** y **`supply` con pedidos**, cada una con su diagrama ER en ASCII, su esquema
-  relacional y la lista fija de relaciones y atributos del alcance (§8). Este apéndice es **la fuente
+- **`school`** y **`supply` con pedidos**, cada una con su diagrama en pata de gallo (`erDiagram`,
+  con remisión a `a10` para leerlo), su esquema relacional y la lista fija de relaciones y atributos del alcance (§8). Este apéndice es **la fuente
   de los nombres**: si una fase necesita una relación o un atributo nuevo, se agrega aquí.
 - **El DDL `STRICT`** de cada base, con sus restricciones.
 - **Los datos chicos escritos a mano**, los que se siguen en papel en los ejemplos, con su tamaño
@@ -317,8 +322,8 @@ escribe cada libro y cómo se dice cada término en español y en inglés.
 - **La tabla de notaciones** de Navathe, Date y los demás textos cuando difieren: cómo escribe cada
   uno la proyección, el join, las dependencias, los planes.
 - **El glosario español ↔ inglés en las dos direcciones**, con la traducción que usan las ediciones
-  en español de los libros y la que elige el curso cuando difieren. Es la fuente que fija el
-  vocabulario (guía §3).
+  en español de los libros y la que elige el curso cuando difieren. **Publica para el lector** lo que
+  fija `prompts/diccionario-de-terminos.md` (guía §3), y crece con él.
 - **La convención de las relaciones abstractas y de los planes de transacciones.**
 
 **Es un documento vivo:** cada fase que introduce un símbolo o un término lo agrega en la misma
@@ -381,7 +386,8 @@ imagen, y que quien quiera practicar `GRANT` y `REVOKE` de verdad tenga un servi
   alcance), con un usuario administrador y la receta para crear los usuarios del ejercicio.
 - **El `Dockerfile` o el `compose.yaml`** quedan en `src/a09-el-curso-en-un-contenedor/`.
 
-**Qué NO entra:** enseñar Docker (si hace falta el mecanismo, se enlaza `docker-container-legacy/`);
+**Qué NO entra:** enseñar Docker (si hace falta el mecanismo, se remite a la documentación oficial, o
+se nombra en prosa el curso del repositorio que lo enseña, sin enlace);
 las herramientas del bloque A.C., que tienen su propio apéndice (`aca-02`); administrar PostgreSQL,
 que es materia de `02-postgresql`. **El curso cita este apéndice como alternativa y nunca lo exige.**
 
@@ -438,7 +444,8 @@ cualquier otra herramienta del bloque sin versión nativa tenga dónde correr.
   es de `aca-01`.
 - **El `compose.yaml`** queda en `src/aca-02-contenedores/`.
 
-**Qué NO entra:** enseñar Docker, que se enlaza a `docker-container-legacy/`; administrar YottaDB.
+**Qué NO entra:** enseñar Docker (como en a09, documentación oficial o mención en prosa, sin enlace);
+administrar YottaDB.
 **Es independiente de a09**: el contenedor del camino base no carga con las herramientas del bloque
 A.C., y viceversa.
 
@@ -465,3 +472,52 @@ necesita el caso de reserva.
   con el mismo nombre que el apéndice. Para cuando Oskar commitee, se propone que lleven tag propio
   en el espacio `apendice-aNN-<slug>` (y `apendice-aca-NN-<slug>`); los demás no llevan tag.
 - **Las horas** son estimaciones de consulta y se recalibran al escribir cada apéndice.
+
+---
+
+## 15. 🧭 a10 — Notaciones de diagramas (2 h)
+
+Agregado el 05/10/2026 (D19). Va al final del documento para no renumerar §14, que citan el plan y
+los prompts.
+
+**Qué resuelve:** que el lector pueda leer y dibujar los diagramas que va a encontrar en el oficio
+—y los de este curso— sin tener que aprender Mermaid por separado. Cada notación trae su código
+Mermaid listo para copiar, así que el apéndice funciona como minitutorial **sin ser un tutorial de
+Mermaid**: enseña notaciones, y Mermaid es la forma en que se escriben.
+
+**Qué entra:**
+
+- **El boceto con óvalos** de F00–F02: entidad, relación, atributo (clave, compuesto, multivaluado,
+  derivado), entidad débil y relación identificadora, cardinalidad y min-max en las aristas, con la
+  convención de la guía §3.2.
+- **La pata de gallo**, la notación del curso desde F03: los cuatro extremos (cero o uno, uno, cero o
+  muchos, uno o muchos), relación identificadora y no identificadora, atributos con tipo y `PK`, `FK`,
+  `UK`, la entidad débil, y **lo que no dibuja** —especialización, categorías, atributos multivaluados
+  y relaciones n-arias— con la forma en que el curso lo resuelve (subtipo con etiqueta, relación
+  asociativa).
+- **El diagrama de clases de dominio en UML**: clases con atributos, asociaciones con multiplicidad,
+  generalización con `{disjoint, complete}`, y por qué no se dibujan métodos en un modelo de datos.
+- **Chen y min-max como traducción**: cómo leer los diagramas de Navathe y de los demás libros, que
+  no se dibujan en Mermaid tal cual, con la tabla de equivalencias entre las cuatro notaciones.
+- **Los esquemas relacionales** en pata de gallo, como los dibuja F13.
+- **Los otros diagramas del curso**, una sección corta por tipo: árboles (B+, de consulta,
+  jerárquicos), grafos (de precedencia, de autorización, de Bachman), estados y secuencias.
+- **Una tabla de "qué notación para qué"** al final.
+
+**Qué NO entra:** la teoría del modelado (F02, F03, F13), que el apéndice usa y no explica; la
+sintaxis completa de Mermaid, ni su instalación: solo lo que el curso dibuja, y la mención de que
+GitHub y muchos editores lo dibujan solos.
+
+**Ejercicios: 8**, de consulta: traducir un fragmento de `school` del boceto a la pata de gallo y al
+diagrama de clases; leer un diagrama de Chen de un libro y escribirlo en pata de gallo; encontrar el
+error en un `erDiagram` con la cardinalidad al revés; dibujar una especialización con su etiqueta;
+dibujar un árbol de consulta y un grafo de precedencia.
+
+**Verificado (H13, 05/10/2026):** la convención entera dibuja con `mmdc` 12.0.0 (Mermaid 12.1.0); la
+forma `ellipse` no existe y el óvalo se dibuja como estadio. **Sin verificar:** que GitHub dibuje
+igual, y el `<u>` de la clave; se comprueba al publicar F02.
+
+**Lo usan:** F02, F03 y F13, y toda fase con un diagrama. **Depende de:** la guía §3.2.
+**Riesgo:** convertirse en un tutorial de Mermaid. Cada sección empieza por la notación y su
+significado; el código viene después, como la forma de escribirla.
+

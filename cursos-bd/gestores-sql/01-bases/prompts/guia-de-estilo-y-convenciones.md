@@ -12,9 +12,19 @@ domingo, con el libro de Navathe al lado y nadie a quien preguntarle.
 
 > **Precedencia.** Por encima de esta guía solo está
 > [`alcance-del-proyecto.md`](alcance-del-proyecto.md), que decide **qué** enseña el curso; esta
-> decide **cómo** se escribe. Por debajo van las dos propuestas de alcance, las plantillas y los
-> prompts, que se actualizan después y nunca al revés. El `CLAUDE.md` del repositorio aplica en todo
-> lo que este curso no haya declarado como excepción (§16).
+> decide **cómo** se escribe. Por debajo van el
+> [contrato de nombres](contrato-de-nombres.md) y el [diccionario de términos](diccionario-de-terminos.md),
+> después las dos propuestas de alcance, las plantillas y los prompts, que se actualizan después y
+> nunca al revés. El `CLAUDE.md` del repositorio aplica en todo lo que este curso no haya declarado
+> como excepción (§16).
+>
+> **Derivada de** las guías de la Ruta NoSQL Lite y de la Ruta SQL (02/10/2026), y **revisada el
+> 05/10/2026** contra los lineamientos de producción del repositorio. Diverge de las plantillas
+> generales en la numeración (§18.1), en la forma de fase (§8) y en lo que declara §16.
+>
+> **Vigencia:** 2026-10-05.
+
+**Salto rápido:** [1](#1--principio-rector) · [2](#2--tono) · [3](#3-️-idioma-y-forma) · [4](#4--pedagogía-cómo-se-explica) · [5](#5--código-comandos-y-archivos) · [6](#6--cómo-se-presenta-una-verificación) · [7](#7--marcadores-callouts-y-encabezado) · [8](#8--plantilla-obligatoria-de-fase) · [9](#9--ejercicios) · [10](#10--bibliografía-y-recursos) · [11](#11--contenedores) · [12](#12--honestidad-las-reglas-que-no-se-negocian) · [13](#13--coherencia-entre-documentos) · [14](#14--los-documentos-vivos) · [15](#15--checklist-antes-de-dar-por-cerrado-un-md) · [16](#16-️-excepciones-declaradas-al-claudemd-del-repositorio) · [17](#17--lo-que-la-tanda-de-verificación-resolvió-para-esta-guía) · [18](#18--correspondencia-con-los-lineamientos-de-producción)
 
 ---
 
@@ -81,8 +91,11 @@ evidente, no estaría en el curso.
   la documentación y en los mensajes de error se dan una vez en inglés entre paréntesis** y se usan
   en español: *join sin pérdida (lossless join)*, *plan (schedule)*. Algunos se quedan en inglés
   porque así se dicen: *join*, *buffer pool*, *hash*, *pipelining*, *write skew*. Lo importante es
-  **no inventar vocabulario**; el glosario de `a07` fija la elección y manda.
-- **Markdown siempre.** Nada de HTML embebido.
+  **no inventar vocabulario**: la elección la fija el
+  [diccionario de términos](diccionario-de-terminos.md), y `a07` la publica para el lector. Un
+  término nuevo se agrega al diccionario antes de usarlo, y a `a07` en la misma sesión.
+- **Markdown siempre.** Nada de HTML embebido, salvo el `<u>` de la clave en un boceto Mermaid
+  (§3.2).
 - **Prosa antes que listas.** Un párrafo que explica *por qué* vale más que cinco viñetas que
   enumeran *qué*. Las listas son para lo que de verdad es una lista: pasos de un algoritmo, ítems
   paralelos, opciones.
@@ -108,25 +121,79 @@ subíndices tipográficos, que en Unicode son ilegibles. Junto a cada expresión
 equivalente en `radb` en un bloque de código propio. La tabla completa de símbolos y su equivalente
 en `radb` está en `a07`.
 
-### 3.2 Diagramas: ASCII, 75 columnas
+### 3.2 Diagramas: Mermaid (D-12)
 
-**Diagramas ASCII en bloques `text`, de 75 columnas como máximo** siempre que se pueda: diagramas
-ER y EER (en Chen, pata de gallo o min-max, según la fase), árboles de consulta, árboles B+ paso a
-paso, grafos de precedencia, estados del buffer, bitácoras de ARIES. Si un diagrama no cabe en 75
-columnas, primero se simplifica; solo si es imposible se acepta más ancho y se dice por qué.
+**Todo diagrama va en un bloque `mermaid`** (D-12, alcance §13.4): los bocetos conceptuales —las
+cajas y los óvalos que se rayan en una servilleta mientras se concibe la idea—, los diagramas ER y
+EER, los esquemas relacionales, los diagramas de clases, los árboles (B y B+, de consulta,
+jerárquicos), los grafos (de precedencia, de espera, de autorización, de activación), los diagramas
+de Bachman, los estados de una transacción y las secuencias en el tiempo, como el commit en dos
+fases. Cada diagrama lleva antes una frase que dice qué mirar en él.
 
-```text
-INSERCIÓN DE 23 EN UN B+ CON HOJAS DE HASTA 3 CLAVES (hoja llena)
+**Se quedan en bloques `text`, de 75 columnas como máximo**, las cosas que no son diagramas: las
+trazas de un algoritmo en forma de tabla (clausura, *chase*, hashing paso a paso, estados del buffer,
+la bitácora de ARIES), las salidas de `radb`, `sqlite3`, los verificadores y el mini motor (aunque
+dibujen un árbol: son salida literal, §3.3), los planes con la notación de Navathe
+(`r1(X); w2(X); c1`), las reglas y mnemotecnias, las líneas de tiempo y los árboles de archivos.
 
-antes                          después
-─────                          ───────
-      [17]                          [17 | 23]
-     /    \                        /    |    \
-[5|11]   [17|21|29]          [5|11]  [17|21]  [23|29]
+**Qué diagrama va con qué sintaxis.** La convención está probada con `mmdc` 12.0.0 (Mermaid 12.1.0)
+el 05/10/2026 (hallazgo H13), y `a10` la enseña al lector:
+
+| Qué se dibuja | Sintaxis | Cuándo |
+|---|---|---|
+| Boceto conceptual: entidades, relaciones y atributos con óvalos | `flowchart LR` | F00–F02 (D20) y cualquier idea en borrador |
+| ER y EER del dominio, y el esquema relacional | `erDiagram` (pata de gallo) | desde F03 (D20) |
+| Diagrama de clases de dominio (UML) | `classDiagram` | F03 y `a10`, como notación traducida |
+| Árboles: B y B+, de consulta, jerárquicos | `flowchart TD` (o `BT` para los de consulta) | F13, F24, F27, AC02, AC08 |
+| Grafos: precedencia, espera, autorización, activación, Bachman | `flowchart LR` o `TD` | F29–F31, F34, F36, AC03 |
+| Estados y secuencias | `stateDiagram-v2` y `sequenceDiagram` | F29, F37 |
+
+**El boceto con óvalos** (F00–F02):
+
+```mermaid
+flowchart LR
+    student["student"]
+    section["section"]
+    enrolls{"enrolls"}
+    sid(["<u>student_id</u>"])
+    phone((("phone")))
+    age(["age"])
+    student --- sid
+    student --- phone
+    student -.- age
+    student ---|"(0,N)"| enrolls
+    enrolls ---|"(1,40)"| section
 ```
 
-Se usan **caracteres de dibujo de cajas** (`─ │ ┌ ┐ └ ┘ ├ ┤ ┬ ┴ ┼`) y flechas Unicode (`→ ← ↑ ↓`)
-cuando aclaran, y ASCII plano cuando basta.
+- Entidad `["…"]`, relación `{"…"}`, atributo `(["…"])` (el estadio hace de óvalo: la forma
+  `ellipse` no existe, H13), atributo clave con `<u>…</u>`, multivaluado `((("…")))` y derivado con
+  arista punteada `-.-`.
+- Entidad débil `[["…"]]`, relación identificadora `{{"…"}}` y sus aristas dobles `===`.
+- La cardinalidad o el par min-max va en la etiqueta de la arista: `---|"(0,N)"|`.
+
+**La pata de gallo** (desde F03): `erDiagram` con los atributos tipados y marcados `PK`, `FK` o
+`UK`, relaciones con verbo en inglés (`places`, `contains`), línea continua `--` para la relación
+identificadora y punteada `..` para la que no lo es. La especialización, que la pata de gallo no
+dibuja, se escribe como el subtipo unido a su supertipo con `||--o|` y la etiqueta
+`"is a (d, total)"` o `"is a (o, partial)"`, más el atributo discriminador en el supertipo; `a10`
+explica la traducción desde la notación de Navathe.
+
+Cuatro reglas para todos:
+
+- **Identificadores en inglés** dentro del diagrama, como en el álgebra (D17); las frases de las
+  etiquetas, también en inglés si son nombres de relación, y en español solo si son comentario
+  (`"discriminador"`).
+- **Doce nodos como máximo** por diagrama; si no cabe, se parte o se simplifica, y se dice qué quedó
+  fuera.
+- **Caracteres que Mermaid interpreta**: el texto de cada nodo va entre comillas; `<` y `>` se
+  escriben `#lt;` y `#gt;`, `|` dentro de un nodo `#124;` y `#` delante de una palabra `#35;`. Los
+  símbolos del álgebra (σ, π, ⋈) se escriben tal cual.
+- **Todo diagrama se dibuja con `mmdc` antes de publicarse**, con
+  `python3 prompts/verificar-diagramas.py` (§18.3). Un bloque `mermaid` que no dibuja es un error.
+
+> ⚠️ **Lo que no se pudo verificar (H13):** que GitHub dibuje igual que `mmdc` 12.0.0, y en
+> particular que respete el `<u>` de la clave. Se comprueba con la primera fase publicada que lleve
+> un boceto (F02); si GitHub lo quita, la clave se marca con el sufijo `(PK)` dentro del óvalo.
 
 ### 3.3 Salida literal
 
@@ -180,7 +247,7 @@ antes de corregirlo:
 Cada fase tiene una sección que conecta lo que acaba de enseñar con SQL y con los motores reales:
 qué se implementa tal cual, qué se implementa distinto y qué no se implementa. **Se remite en prosa
 al curso de motor que lo mide** (*"el bloque VI del curso de PostgreSQL mide esto"*), sin enlace
-mientras ese curso no exista. Las afirmaciones sobre un motor concreto se verifican en su
+ni siquiera cuando ese curso exista (D-03). Las afirmaciones sobre un motor concreto se verifican en su
 documentación oficial con fecha, o se declaran no verificadas.
 
 ### 4.5 Analogías, con fecha de caducidad
@@ -300,7 +367,7 @@ a01-sqlite-nativo.md                a06-la-matematica-minima.md
 a02-python-venv-y-faker.md          a07-notacion-y-glosario.md
 a03-radb.md                         a08-mapa-de-bibliografia.md
 a04-las-bases-de-ejemplo.md         a09-el-curso-en-un-contenedor.md
-a05-verificadores-y-mini-motor.md
+a05-verificadores-y-mini-motor.md   a10-notaciones-de-diagramas.md
 aca-01-herramientas-nativas.md      aca-02-contenedores.md
 
 soluciones/NN-slug.md       uno por fase, mismo nombre que la fase
@@ -571,19 +638,35 @@ qué volver después.
   como alternativa; ninguna fase los exige, salvo AC08 fuera de Linux.
 - **Docker es el camino principal y cada receta trae su equivalente Podman al lado.** Cuando el
   comando es idéntico, se dice y no se duplica.
-- **Aquí no se enseña Docker.** Si una explicación pasa de dos párrafos, pertenece a
-  `docker-container-legacy/` y se enlaza.
+- **Aquí no se enseña Docker.** Si una explicación pasa de dos párrafos, no es de este curso: se
+  remite a la documentación oficial con su URL, o se nombra en prosa, sin enlace, el curso del
+  repositorio que lo enseña (D-03).
 
 ### 11.1 Dónde se ejecuta lo que se escribe
 
 **El lector ejecuta nativo; la producción del curso ejecuta en contenedores.** Toda prueba que hace
 una sesión de escritura —un motor, un comando, un script, un verificador, una compilación, un
 laboratorio— corre dentro de un contenedor del laboratorio de producción, nunca en la máquina del
-autor. Esos contenedores se nombran `mdm-<algo>`, llevan la etiqueta `curso=01-bases`, **no publican
-puertos** (se trabaja con `docker exec`) y, si hace falta publicar uno, va en `127.0.0.1` dentro del
-rango `56000–56099`, **nunca en el puerto por defecto del producto**. Al terminar la producción del
-curso se detienen todos. Lo que no se puede contenerizar (las recetas de macOS y Windows) se verifica
-en la máquina del autor a pedido suyo, o se declara no verificado.
+autor. Las reglas, actualizadas el 05/10/2026 con los lineamientos de producción del repositorio:
+
+- **Antes de tocar Docker, un inventario inicial a un log** (`docker ps -a`, `docker volume ls`), en
+  el directorio de `zz-code/` de la sesión; al cerrar, se compara contra él.
+- Los contenedores se nombran `mdm-<algo>` y llevan la etiqueta `curso=01-bases`
+  ([contrato de nombres](contrato-de-nombres.md) §2). **No publican puertos**: se trabaja con
+  `docker exec`. Si hace falta uno, **alto y aleatorio** en `127.0.0.1`, elegido por Docker
+  (`-p 127.0.0.1::5432`) y leído con `docker port`; nunca el puerto por defecto del producto ni uno
+  fijo "porque siempre estuvo libre".
+- **El código y las salidas de las pruebas van al directorio de `zz-code/` de la sesión**
+  (`python3 zz-code/nuevo.py gestores-sql-01-bases`), nunca al scratchpad ni dentro del curso. El
+  laboratorio de producción de P8 (`prompts/verificacion-de-laboratorio/`) es anterior a esa regla y
+  se queda donde está, porque lo levantan todas las tandas.
+- **Al cerrar la producción (T17) se borran los contenedores del curso con sus volúmenes**
+  (`docker compose down -v`, `docker rm -v`) y nada más: ni imágenes, ni redes, ni caché ajenas.
+- Lo que no se puede contenerizar (las recetas de macOS y Windows) se verifica en la máquina del autor
+  a pedido suyo, o se declara no verificado.
+- **La revisión estática del Markdown** —`prompts/verificar-corpus.py` y
+  `prompts/verificar-diagramas.py`, que dibuja los bloques `mermaid` con el `mmdc` que Oskar tiene
+  instalado— corre en la máquina del autor: no ejecuta nada del curso (§18.3).
 
 ---
 
@@ -608,8 +691,11 @@ en la máquina del autor a pedido suyo, o se declara no verificado.
 - **Una fase no cita el plan de producción ni las propuestas**: cita a otra fase o a un apéndice.
 - **Ningún enlace interno apunta a un documento que no existe todavía**: la referencia va en prosa y
   se anota en la deuda de enlaces del plan.
+- **Los otros cursos del repositorio se nombran en prosa y sin enlace** (D-03 editorial): como el
+  destino que mide algo (*"el bloque VI del curso de PostgreSQL"*) o como sugerencia, nunca como
+  requisito. Ningún enlace sale de la carpeta del curso.
 - 🗑️ **Los documentos desechables no se citan nunca.** Ningún archivo publicado del curso puede
-  enlazar un `_desechable-*`. La comprobación está en §15.
+  enlazar un `_desechable-*`. La comprobación es el error `PROMPTS` de `verificar-corpus.py` (§18.3).
 - **Git:** lo maneja Oskar. Las convenciones, para cuando él commitee: prefijo de commit
   `01-bases fNN:` (ejercicios `01-bases fNN ejM:`), tags `fase-NN-<slug>`; en el bloque A.C., prefijo
   `01-bases acNN:` y tags `ac-fase-<slug>`, para que `git tag -l 'fase-*'` siga siendo el índice
@@ -624,7 +710,8 @@ Crecen durante todo el curso y son producto, no apuntes.
 - **`INSTINTOS.md`** — los 🪞 acumulados: cada punto donde el instinto de desarrollador falla, con su
   contraejemplo o su cálculo y la fase donde apareció. Al menos uno por bloque.
 - **`a07-notacion-y-glosario.md`** — cada símbolo y cada término nuevo entra aquí en la misma fase
-  que lo introduce, con su traducción en las dos direcciones.
+  que lo introduce, con su traducción en las dos direcciones, después de fijarlo en el
+  [diccionario de términos](diccionario-de-terminos.md).
 - **`a08-mapa-de-bibliografia.md`** — cada recurso verificado, con fecha. Las fases toman de aquí.
 
 ---
@@ -655,17 +742,20 @@ Crecen durante todo el curso y son producto, no apuntes.
 [ ] El solucionario existe, completo, y cada solución está contrastada
 [ ] Identificadores en inglés, también en el álgebra; nunca grade, foo ni
     tabla1
-[ ] Notación en Unicode, cero LaTeX; diagramas ASCII de 75 columnas o menos
+[ ] Notación en Unicode, cero LaTeX; bloques text de 75 columnas o menos
+[ ] Todo diagrama en Mermaid con la sintaxis de §3.2 (bocetos hasta F02,
+    pata de gallo desde F03), con una frase antes, dibujado con
+    verificar-diagramas.py
 [ ] Bibliografía en cuatro grupos, verificada en la sesión, con fecha y 💲
     donde aplica
 [ ] Ningún enlace a un documento que todavía no existe
 [ ] Cuerpo dentro de la banda de §8, sin contar ejercicios
 [ ] Tuteo en todo el documento; cero voseo, cero "usted"
-[ ] Todo lo ejecutado corrió en un contenedor mdm-*, sin puertos por
-    defecto
+[ ] Todo lo ejecutado corrió en un contenedor mdm-*, sin puertos
+    publicados o en uno alto y aleatorio; las pruebas, en zz-code/
+[ ] Ningún enlace sale del curso; otros cursos, solo en prosa (D-03)
 [ ] Código en inglés, comentarios en español con tildes
-[ ] grep -ln "_desechable-" *.md soluciones/*.md en la raíz del curso no
-    devuelve nada
+[ ] python3 prompts/verificar-corpus.py sin errores (§18.3)
 ```
 
 ---
@@ -685,6 +775,8 @@ sesión futura las "arreglaría" de vuelta.
 5. **Sin historia narrativa.**
 6. **"Modelos de acceso, no productos" no aplica en su forma habitual**: aquí no hay productos.
 7. **Comentarios de código en español con tildes**, como en los cursos hermanos de `cursos-bd/`.
+8. **`0-ESTRUCTURA-CURSO.md` al final** (T16), no antes de la primera lección: hasta entonces la
+   propuesta de fases §13 y el plan de producción §3 hacen su papel (D-10).
 
 Todo lo demás del `CLAUDE.md` aplica tal cual: idioma, tono, estructuras recurrentes reinterpretadas
 donde se dijo, convenciones de markdown, nombres de archivo, prefijo de track y flujo de git.
@@ -706,4 +798,69 @@ Cerrado en P8 el 03/10/2026; el detalle, con las salidas literales, está en
   generado se ve con `-d` (H5).
 - **`NULL` en `radb`** se imprime como `None`; σ sigue la lógica de tres valores, y ∪, ∩ y − tratan dos
   `NULL` como iguales (H5). Es material de F11, no una regla de esta guía.
+- **La convención Mermaid de §3.2** se probó con `mmdc` 12.0.0 el 05/10/2026 (H13): dibujan los
+  bocetos con óvalos, la pata de gallo con subtipos, el diagrama de clases y los árboles y grafos;
+  la forma `ellipse` no existe, y que GitHub dibuje igual quedó sin verificar.
 
+
+---
+
+## 18. 🧰 Correspondencia con los lineamientos de producción
+
+Agregada el 05/10/2026, al revisar `prompts/` contra los lineamientos de producción del repositorio
+y las plantillas que de ellos se copian. **Va al final y no renumera nada**, porque las secciones de
+esta guía ya las citan las propuestas, las plantillas, los prompts y los hallazgos.
+
+### 18.1 Numeración
+
+Las plantillas generales citan "guía §12" para el checklist y "guía §13" para las excepciones. En
+este curso son **§15** (checklist) y **§16** (excepciones). Todos los documentos de `prompts/` del
+curso citan los números de esta guía, nunca los de la plantilla.
+
+### 18.2 Qué documento hace cada papel
+
+| Papel en los lineamientos | En este curso |
+|---|---|
+| Alcance | [`alcance-del-proyecto.md`](alcance-del-proyecto.md); D-01–D-13 en su §13.4 |
+| Propuesta de fases y de apéndices | [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) y [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md) |
+| Plan de producción | `_desechable-plan-de-produccion.md`: desechable a propósito, para que nada lo cite |
+| Guía | este documento |
+| Diccionario de términos | [`diccionario-de-terminos.md`](diccionario-de-terminos.md); `a07` lo publica para el lector |
+| Contrato de nombres | [`contrato-de-nombres.md`](contrato-de-nombres.md) |
+| Plantillas de capítulo | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md): seis plantillas propias (fase, panorama, fase A.C., caso de estudio, solucionario, apéndice) |
+| Prompts de fase y de apéndice | [`prompts-de-fase.md`](prompts-de-fase.md), [`prompts-ac-fase.md`](prompts-ac-fase.md) (track A.C.) y [`prompts-de-apendice.md`](prompts-de-apendice.md) |
+| Verificación previa (`verificacion/hallazgos.md`) | [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) (H1–H13) y [`inventario-de-fuentes.md`](inventario-de-fuentes.md) |
+| Manual de `prompts/` | [`README.md`](README.md) |
+| Verificador | `verificar-corpus.py` sobre `verificador_base.py`, más `verificar-diagramas.py` |
+| Historia de la empresa | no hay (D-11) |
+| Banco de preguntas | no hay: el aparato son los ejercicios (D-05) |
+| Documentos vivos | `INSTINTOS.md`, `a07` y `a08` (§14); sin `BENCHMARKS.md` (§16) |
+
+### 18.3 Verificación
+
+Desde la raíz del curso, al cerrar cada tanda:
+
+```bash
+python3 prompts/verificar-corpus.py                 # validaciones base + las propias del curso
+python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el repositorio público
+python3 prompts/verificar-diagramas.py              # dibuja con mmdc cada bloque mermaid
+```
+
+- `verificar-corpus.py` hereda de `verificador_base.py` (copia de la base de los lineamientos, que
+  no se edita aquí) los enlaces y anclas —con el U+FE0F que GitHub conserva—, los enlaces que salen
+  del curso, los restos de plantilla, la codificación rota y el encabezado de fase. Agrega lo propio:
+  ejercicios contra la propuesta §13 y contra su solucionario, la banda de palabras de §8, LaTeX en
+  la prosa, bloques `text` de más de 75 columnas o con forma de diagrama, identificadores prohibidos
+  y comentarios `--` en bloques de `radb`. La lista exacta está en su encabezado.
+- `--publicacion` agrega los errores de la etapa de publicación: enlaces a `prompts/` y menciones a
+  material privado (`zz-code/`, desechables).
+- `verificar-diagramas.py` necesita `mmdc` (Mermaid CLI 12.0.0, instalado por Oskar); sin él, avisa
+  y no falla. Escribe los SVG en un directorio temporal, o en el que se le pase con `--salida`.
+
+### 18.4 Código y `.gitignore`
+
+El curso tiene código en varias carpetas de `src/` (a04, a05, a09, aca-02 y los labs del bloque
+A.C.), así que lleva **un solo `.gitignore`, en la raíz del curso**, que se sostiene sin el de la raíz
+del repositorio: `.venv/`, `__pycache__/`, los `.db` generados por el generador de `a04` y los
+binarios de AC09. Nace en T0, y ninguna carpeta de `src/` lleva el suyo. Las carpetas vacías que haga
+falta versionar llevan `.gitkeep`.
