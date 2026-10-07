@@ -29,7 +29,7 @@ INVENTARIO: dict[str, list[str]] = {
     "au": ["httpx", "httpx2", "requests", "selectolax", "beautifulsoup4", "scrapy", "playwright",
            "paramiko", "fabric", "authlib", "PyGithub", "jira", "slack-sdk",
            "google-api-python-client", "tenacity", "stamina"],
-    "co": ["yagmail", "aiosmtpd", "paramiko", "imap-tools", "premailer", "python-telegram-bot",
+    "co": ["yagmail", "aiosmtpd", "paramiko", "imap-tools", "premailer", "python-telegram-bot", "pyftpdlib", "pyOpenSSL",
            "twilio", "slack-sdk", "dnspython", "dkimpy", "checkdmarc"],
     "wf": ["celery", "rq", "dramatiq", "arq", "huey", "APScheduler", "schedule", "pytz", "apache-airflow",
            "prefect", "dagster", "kedro", "luigi", "temporalio", "taskiq", "procrastinate",
@@ -93,10 +93,14 @@ INVENTARIO: dict[str, list[str]] = {
            "opencv-python-headless", "docxtpl", "audioop-lts", "markdown-it-py"],
     "gi": ["shapely", "geopandas", "pyproj", "fiona", "pyogrio", "rasterio", "xarray",
            "rioxarray", "osmnx", "geopy", "folium", "h3", "s2sphere", "pydeck", "contextily",
-           "GeoAlchemy2", "keplergl"],
+           "GeoAlchemy2", "keplergl", "psycopg", "duckdb", "numpy", "networkx", "pandas",
+           "matplotlib", "geodatasets"],
     "cv": ["opencv-python", "mediapipe", "insightface", "rembg", "scikit-image", "dlib",
-           "deepface", "ultralytics", "face-alignment", "onnxruntime", "face_recognition"],
-    "ed": ["pygame", "arcade", "ipywidgets", "jupyterlab", "marimo", "manim", "matplotlib"],
+           "deepface", "ultralytics", "face-alignment", "onnxruntime", "face_recognition",
+           "opencv-python-headless", "opencv-contrib-python-headless", "numpy", "scipy", "Pillow"],
+    "ed": ["pygame", "pygame-ce", "arcade", "pyglet", "ipywidgets", "jupyterlab", "marimo", "manim",
+           "matplotlib", "nbformat", "nbclient", "ipykernel", "jupytext", "numpy", "networkx", "pytest",
+           "Pillow", "pycairo", "ManimPango"],
 }
 
 QUIETO = dt.timedelta(days=730)

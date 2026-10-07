@@ -56,7 +56,8 @@ hasta donde llega.
    contrario. La sesión de preparación no escribe el curso; **por defecto se para al cerrar cada
    tanda**.
 8. **Git lo hace el autor.** Se borra con `rm`, archivo por archivo, nunca con `git rm` ni borrando
-   directorios. Los tags los crea el autor con los mensajes que la tanda deja en la bitácora.
+   directorios. Los tags los crea el autor con los mensajes que la tanda deja en la bitácora, con los
+   nombres y la forma de `prompts/convencion-de-git-y-tags.md`.
 9. **La máquina del autor no se toca sin permiso**: nada se instala ni genera cargos. Los contenedores
    de las pruebas llevan la etiqueta `curso={{slug}}`, usan **puertos altos y aleatorios** (nunca los
    de por defecto, que otro contenedor puede tener ocupados; el curso sí puede publicarlos) y se borran **con sus volúmenes** al
@@ -95,7 +96,8 @@ enlaces pasan §4 y los documentos que la citan están al día.
 ### 2.1 Una tanda de escritura
 
 Un grupo de {{fases | capítulos}} que se enlazan entre sí, con su parte del solucionario {{y su
-laboratorio corrido}}. La rutina, igual en todas:
+laboratorio corrido}}. {{Si el curso va en bloques, una tanda no cruza bloques y el troncal se escribe
+primero; si los bloques se publican uno a uno, la última tanda de cada bloque cierra su README.}} La rutina, igual en todas:
 
 1. Pegar el prompt de cada documento y seguir su protocolo de tres pasos.
 2. Tener delante el checklist de la guía §12, que se recorre **al cerrar cada archivo**.
@@ -134,11 +136,12 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ terminada y verificada.
 | **P4** | Guía de estilo y convenciones{{, derivada de …}} | 1 | — | ⬜ |
 | **P5** | Diccionario de términos | 1 | — | ⬜ |
 | **P6** | Contrato de nombres | 1 | — | ⬜ |
-| **P7** | Plantillas de capítulo {{y formatos propios}} | {{1–n}} | — | ⬜ |
-| **P8** | Prompts de fase {{y de apéndice}} | {{1–2}} | — | ⬜ |
-| **P9** | Decisiones abiertas cerradas por el autor | — | — | ⬜ |
-| **P10** | Verificación previa: versiones, libros, URL{{, laboratorio}} | {{1}} | {{densa}} | ⬜ |
-| **P11** | Traslado de lo decidido y lo verificado | — | — | ⬜ |
+| **P7** | Convención de git y tags | 1 | — | ⬜ |
+| **P8** | Plantillas de capítulo {{y formatos propios}} | {{1–n}} | — | ⬜ |
+| **P9** | Prompts de fase {{y de apéndice}} | {{1–2}} | — | ⬜ |
+| **P10** | Decisiones abiertas cerradas por el autor | — | — | ⬜ |
+| **P11** | Verificación previa: versiones, libros, URL{{, laboratorio}} | {{1}} | {{densa}} | ⬜ |
+| **P12** | Traslado de lo decidido y lo verificado | — | — | ⬜ |
 | **T0** | Arranque: esqueletos de {{solucionarios, documentos vivos, apéndices que crecen}} | {{n}} | ligera | ⬜ |
 | **T1** | {{…}} | {{n}} | {{…}} | ⬜ |
 | **T{{n-1}}** | Los README {{y la estructura}} | {{n}} | ligera | ⬜ |
@@ -265,7 +268,8 @@ comprobó y cómo, **las trampas que la próxima sesión debe conocer**, los tag
 quedan levantados:** {{contenedores, cluster, configuración cambiada | ninguno}}. **`zz-code/`:**
 {{`zz-code/{{slug}}-AAAAMMDD-hash/` creado o cambiado de estado, README al día | nada}}. **Efímero para borrar:**
 {{`zz-code/…/salidas/` | nada}}. **Tags para el
-autor:** `{{fase-NN-slug}}`. **Siguiente:** {{T-n+1}}.
+autor:** `{{fase-NN-slug}}`, anotado, con el checklist de la fase como mensaje (convención de git §3).
+**Siguiente:** {{T-n+1}}.
 
 ---
 
@@ -282,14 +286,15 @@ están. **En cursos con laboratorio, cada documento ejecutable lleva dos casilla
 - [ ] P4 · `prompts/guia-de-estilo-y-convenciones.md`
 - [ ] P5 · `prompts/diccionario-de-terminos.md`
 - [ ] P6 · `prompts/contrato-de-nombres.md`
-- [ ] P7 · `prompts/plantillas-de-capitulo.md` {{y formatos propios}}
-- [ ] P8 · `prompts/prompts-de-fase.md` {{y `prompts-de-apendice.md`}}
-- [ ] P9 · D-{{xx}}–D-{{yy}} cerradas por el autor
-- [ ] P10 · Versiones según la política de la guía, con fecha y fuente (H-{{n}})
-- [ ] P10 · Edición y año de los libros base (H-{{n}})
-- [ ] P10 · URL de documentación oficial por concepto, por código de estado (H-{{n}})
-- [ ] P10 · {{Laboratorio levantado y prototipo del método pasando de punta a punta}} (H-{{n}})
-- [ ] P11 · Lo decidido y lo verificado trasladado; ningún ⏳ resuelto sin cerrar; §4 limpia sobre `prompts/`
+- [ ] P7 · `prompts/convencion-de-git-y-tags.md`
+- [ ] P8 · `prompts/plantillas-de-capitulo.md` {{y formatos propios}}
+- [ ] P9 · `prompts/prompts-de-fase.md` {{y `prompts-de-apendice.md`}}
+- [ ] P10 · D-{{xx}}–D-{{yy}} cerradas por el autor
+- [ ] P11 · Versiones según la política de la guía, con fecha y fuente (H-{{n}})
+- [ ] P11 · Edición y año de los libros base (H-{{n}})
+- [ ] P11 · URL de documentación oficial por concepto, por código de estado (H-{{n}})
+- [ ] P11 · {{Laboratorio levantado y prototipo del método pasando de punta a punta}} (H-{{n}})
+- [ ] P12 · Lo decidido y lo verificado trasladado; ningún ⏳ resuelto sin cerrar; §4 limpia sobre `prompts/`
 
 ### T0 — Arranque
 

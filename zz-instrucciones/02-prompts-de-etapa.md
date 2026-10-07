@@ -179,6 +179,11 @@ cantidades por defecto del tipo **{{tipo}}**.
 ## Cómo quiero que trabajes — en dos vueltas
 
 **Vuelta 1 — El arco, sin fichas.** Devuélveme:
+(0) **la división**: si el tema cabe en una sola secuencia (con partes) o conviene dividirlo en
+bloques con directorio propio o en pistas paralelas (`zz-instrucciones/01-tipos-de-curso.md` §10),
+con el criterio que lo decide; si hay bloques, cuál es el troncal, de cuál depende cada uno y cuáles
+son opcionales; si hay pistas, en qué tramo corre la paralela y dónde converge. Si la ficha de
+arranque (pregunta 14) o el alcance (`D-02`) ya lo decidieron, confírmalo o di por qué no;
 (a) las partes o bloques, con la pregunta que responde cada uno;
 (b) la lista numerada de fases o capítulos con título provisional y una línea de qué hace cada uno;
 (c) los apéndices, clasificados en de laboratorio, de consulta que crece y ampliaciones 🔥;
@@ -190,11 +195,12 @@ No escribas fichas hasta que apruebe el arco.
 
 **Vuelta 2 — Las fichas**, con el arco aprobado: cada fase con su ficha completa según la plantilla
 ({{Construye · Trae · Mide · Rompe · Difiere}} para curso completo, {{Objetivo · Cubre · Desmonta ·
-Se toca con}} para repaso), nombres de archivo canónicos, la tabla resumen y el registro de
-decisiones con la columna "Manda en".
+Se toca con}} para repaso), nombres de archivo canónicos —con el directorio del bloque, si hay
+bloques—, la tabla resumen y el registro de decisiones con la columna "Manda en".
 
 **Cierre:** lista de lo que el plan de producción (E3) necesita: grupos de fases que comparten
-laboratorio o se enlazan entre sí, y qué tiene que estar verificado antes de cada grupo.
+laboratorio o se enlazan entre sí, y qué tiene que estar verificado antes de cada grupo; si hay
+bloques, el orden en que se producen (el troncal primero).
 
 {{bloque común}}
 ````

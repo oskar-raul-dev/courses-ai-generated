@@ -439,9 +439,9 @@ convenciones del curso, y esta tabla es su definición.
 
 | | Camino base | Complementos `ia` y `ds` | Carta opcional |
 |---|---|---|---|
-| Archivo | `NN-tema.md` — `07-cuando-deja-de-ser-un-script.md` | `<tt>NN-<slug>.md` — `ia01-el-modelo-de-acceso-de-un-llm.md` | `opNNN-<tt>NN-<slug>.md` — `op014-ui02-gradio.md` |
+| Archivo | `NN-tema.md` — `07-cuando-deja-de-ser-un-script.md` | `<tt>NN-<slug>.md` — `ia01-el-modelo-de-acceso-de-un-llm.md` | `opNNN-<tt>NN-<slug>.md` — `op065-ui02-gradio.md` |
 | Apéndices | **No aplica**: el curso no tiene apéndices | **No aplica** | **No aplica** |
-| Código | `src/<nombre del documento>/` | Igual: `src/ia01-el-modelo-de-acceso-de-un-llm/` | Igual: `src/op014-ui02-gradio/` |
+| Código | `src/<nombre del documento>/` | Igual: `src/ia01-el-modelo-de-acceso-de-un-llm/` | Igual: `src/op065-ui02-gradio/` |
 | Tags | `fase-NN` y `mini-NN` | `ia-fase-NN` y `ia-mini-NN` · `ds-fase-NN` y `ds-mini-NN` | `op-<tt>-fase-NN` y `op-<tt>-mini-NN` |
 | Commits | `fase NN: …`, `fase NN ejMM: …`, `fase NN mini: …` | `ia 01: …`, `ia 01 ejMM: …`, `ia 01 mini: …` | `op ui02: …`, `op ui02 ejMM: …` |
 | Plantilla, 📏 y 🧱 | Obligatorios | **Obligatorios, igual que una fase base** | Guía, no molde; no se exigen |
@@ -698,6 +698,12 @@ nombra.
   (op002, op013, op019, op029, op036 y op120, marcadas 🟡 en el plan, con lo que falta dicho en su
   encabezado). «Por inspección» queda como el piso, no como la norma: una sección nueva se prueba
   salvo que no se pueda, y entonces lo declara.
+- **Cómo terminó (07/10/2026, al cerrar T24).** Las 176 secciones están escritas y **173 probadas
+  enteras**; quedan 3 en parte, cada una con su razón en el encabezado: op013 (systemd no monta
+  credenciales dentro del contenedor de prueba) y op029 y op036, cuyas celdas `⏳` son un ejercicio de
+  la propia sección. T20–T22 se escribieron ya con la corrida delante —el código y la salida que
+  publica cada sección se ensamblan desde la corrida—, y T24 creó `src/opNNN-…/` extrayendo los
+  archivos del Markdown publicado.
 
 ### 14.2 Excepciones a las reglas de la carta y del repositorio
 
@@ -705,7 +711,7 @@ nombra.
 |---|---|---|
 | 20–30 ejercicios por sección (valor por defecto del repositorio; 20–25 en este curso, §9) | **8 a 12 ejercicios**, con el mismo reparto 🟢🟡🟠🔴 y la misma escala de §9 | Decisión del autor: una sección suelta de 400 líneas no sostiene veinte ejercicios sin relleno |
 | Cada ejercicio con solución de referencia o rúbrica | **Cada ejercicio cierra con `**Criterio:**` verificable**; los 🔴 llevan además una rúbrica de tres o cuatro puntos. No se publican soluciones | *Por defecto, a revisar*: el criterio verificable es lo que el lector necesita para saber si terminó, y una solución escrita por inspección sería código sin correr presentado como respuesta |
-| El código de cada documento vive en `src/<nombre del documento>/` (§8.2) | **El código va en la sección**, completo y en un solo bloque por archivo; `src/opNNN-…/` se crea en la tanda de verificación, al ejecutarlo | *Por defecto, a revisar*: escribir cada archivo dos veces sin poder correrlo duplica el riesgo de que diverjan, que es justo lo que la regla de `src/` quiere evitar |
+| El código de cada documento vive en `src/<nombre del documento>/` (§8.2) | **El código va en la sección**, completo y en un solo bloque por archivo; `src/opNNN-…/` se genera desde la sección (T24, 07/10/2026) y **la sección manda** si difieren | *Por defecto, a revisar*: escribir cada archivo dos veces sin poder correrlo duplica el riesgo de que diverjan, que es justo lo que la regla de `src/` quiere evitar |
 | Ninguna salida inventada | Las salidas van **rotuladas como esperadas y sin correr**; ningún número de rendimiento se presenta como medido | Mismo método que las mediciones `⏳` del curso: la especificación se publica, el número espera |
 | Diagramas a criterio de quien escribe | **Mermaid**, salvo árboles de archivos, salidas y correspondencias en columnas, que van en `text` | *Por defecto, a revisar*: es la elección que el autor pidió el 05/10/2026 para los cursos de esta familia; el camino base no se convierte aquí |
 | Una sección por plataforma | **Linux y macOS**; lo que solo corre en Windows se dice y no se escribe | El curso no fija Windows, y la carta no lo agrega |

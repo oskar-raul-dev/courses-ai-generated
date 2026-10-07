@@ -56,16 +56,18 @@ Verificado el 2026-10-05.
 
 ## `co`
 
-Verificado el 2026-10-05.
+Verificado el 2026-10-07.
 
 | Paquete | Versión | Publicada | |
 |---|---|---|---|
 | `yagmail` | 0.16.0 | 2026-05-26 |  |
 | `aiosmtpd` | 1.4.6 | 2024-05-18 | 💤 |
 | `paramiko` | 5.0.0 | 2026-05-09 |  |
-| `imap-tools` | 1.15.0 | 2026-08-06 |  |
+| `imap-tools` | 1.15.1 | 2026-10-06 |  |
 | `premailer` | 3.10.0 | 2021-08-02 | 💤 |
 | `python-telegram-bot` | 22.8 | 2026-06-12 |  |
+| `pyftpdlib` | 2.2.0 | 2026-02-07 |  |
+| `pyOpenSSL` | 26.4.0 | 2026-08-01 |  |
 | `twilio` | 9.11.2 | 2026-09-28 |  |
 | `slack-sdk` | 3.45.0 | 2026-10-01 |  |
 | `dnspython` | 2.8.0 | 2025-09-07 |  |
@@ -547,7 +549,7 @@ Verificado el 2026-10-05.
 
 ## `gi`
 
-Verificado el 2026-10-05.
+Verificado el 2026-10-07.
 
 | Paquete | Versión | Publicada | |
 |---|---|---|---|
@@ -568,35 +570,59 @@ Verificado el 2026-10-05.
 | `contextily` | 1.7.1 | 2026-07-10 |  |
 | `GeoAlchemy2` | 0.20.0 | 2026-05-12 |  |
 | `keplergl` | 0.3.7 | 2025-02-01 |  |
+| `psycopg` | 3.3.6 | 2026-09-18 |  |
+| `duckdb` | 1.5.6 | 2026-09-28 |  |
+| `numpy` | 2.5.3 | 2026-09-06 |  |
+| `networkx` | 3.7 | 2026-09-21 |  |
+| `pandas` | 3.0.6 | 2026-09-17 |  |
+| `matplotlib` | 3.11.2 | 2026-09-11 |  |
+| `geodatasets` | 2026.5.1 | 2026-05-18 |  |
 
 ## `cv`
 
-Verificado el 2026-10-05.
+Verificado el 2026-10-07.
 
 | Paquete | Versión | Publicada | |
 |---|---|---|---|
 | `opencv-python` | 5.0.0.93 | 2026-07-02 |  |
-| `mediapipe` | 1.0.1 | 2026-08-14 |  |
+| `mediapipe` | 1.1.0 | 2026-10-06 |  |
 | `insightface` | 2.1 | 2026-10-03 |  |
 | `rembg` | 2.0.85 | 2026-09-20 |  |
 | `scikit-image` | 0.26.0 | 2025-12-20 |  |
 | `dlib` | 20.0.1 | 2026-03-29 |  |
 | `deepface` | 0.0.101 | 2026-09-16 |  |
-| `ultralytics` | 8.4.173 | 2026-10-04 |  |
+| `ultralytics` | 8.4.174 | 2026-10-06 |  |
 | `face-alignment` | 1.5.0 | 2026-04-06 |  |
 | `onnxruntime` | 1.30.0 | 2026-09-10 |  |
 | `face_recognition` | 1.3.0 | 2020-02-20 | 💤 |
+| `opencv-python-headless` | 5.0.0.93 | 2026-07-02 |  |
+| `opencv-contrib-python-headless` | 5.0.0.93 | 2026-07-02 |  |
+| `numpy` | 2.5.3 | 2026-09-06 |  |
+| `scipy` | 1.18.1 | 2026-08-21 |  |
+| `Pillow` | 12.3.0 | 2026-07-01 |  |
 
 ## `ed`
 
-Verificado el 2026-10-05.
+Verificado el 2026-10-07.
 
 | Paquete | Versión | Publicada | |
 |---|---|---|---|
 | `pygame` | 2.6.1 | 2024-09-29 | 💤 |
+| `pygame-ce` | 2.5.8 | 2026-08-09 |  |
 | `arcade` | 3.3.3 | 2025-10-09 |  |
+| `pyglet` | 2.1.16 | 2026-08-01 |  |
 | `ipywidgets` | 8.1.9 | 2026-08-18 |  |
 | `jupyterlab` | 4.6.4 | 2026-09-21 |  |
 | `marimo` | 0.25.1 | 2026-10-01 |  |
 | `manim` | 0.21.0 | 2026-08-10 |  |
 | `matplotlib` | 3.11.2 | 2026-09-11 |  |
+| `nbformat` | 5.11.1 | 2026-08-17 |  |
+| `nbclient` | 0.11.0 | 2026-06-05 |  |
+| `ipykernel` | 7.4.0 | 2026-09-29 |  |
+| `jupytext` | 1.19.6 | 2026-10-04 |  |
+| `numpy` | 2.5.3 | 2026-09-06 |  |
+| `networkx` | 3.7 | 2026-09-21 |  |
+| `pytest` | 9.1.1 | 2026-06-19 |  |
+| `Pillow` | 12.3.0 | 2026-07-01 |  |
+| `pycairo` | 1.29.2 | 2026-10-04 |  |
+| `ManimPango` | 0.7.0 | 2026-10-01 |  |

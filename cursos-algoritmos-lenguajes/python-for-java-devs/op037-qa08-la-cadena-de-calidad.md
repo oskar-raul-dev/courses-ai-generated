@@ -6,8 +6,8 @@
 > [Fase 08](08-el-contrato-del-codigo.md), que enciende `mypy`, y la
 > [Fase 00](00-instalacion-ambiente-editores-y-ecosistema.md), que deja `ruff` configurado.
 > Versiones verificadas contra PyPI el 05/10/2026 · Código probado el 05/10/2026 con Python 3.14.7,
-> en contenedor: las cinco herramientas sobre el módulo de ejemplo; el `pre-commit` y el `noxfile.py`
-> quedan sin ejecutar.
+> en contenedor: las cinco herramientas sobre el módulo de ejemplo; el `pre-commit` y el `noxfile.py`,
+> el 07/10/2026 (`nox` 2026.8.17, `pre-commit` 4.6.2), en la verificación final de la carta.
 
 ---
 
@@ -194,13 +194,62 @@ def lint(session: nox.Session) -> None:
     session.run("ruff", "check", ".")
     session.run("mypy", "cartera/")
     session.run("deptry", ".")
-    session.run("pip-audit")                     # consulta la base de vulnerabilidades: necesita red
+    session.run("pip-audit")                     # consulta una base externa: necesita red
 ```
 
 ```bash
 pre-commit install            # una vez por clon
 nox                           # todo, como en el CI
 ```
+
+Salida (Python 3.14.7, 07/10/2026), sobre el módulo de ejemplo y en un repositorio recién creado (`git init`):
+
+```text
+$ nox -l
+* tests-3.13
+* tests-3.14
+* lint
+$ nox -s lint
+I001 [*] Import block is un-sorted or un-formatted
+F401 [*] `os` imported but unused
+S602 `subprocess` call with `shell=True` identified, security issue
+Found 3 errors.
+nox > Command ruff check . failed with exit code 1
+nox > Session lint failed.
+$ nox -s tests-3.14
+no tests ran in 0.01s
+nox > Command pytest -q failed with exit code 5
+nox > Session tests-3.14 failed.
+$ pre-commit run --all-files
+ruff check...............................................................Failed
+Found 3 errors (2 fixed, 1 remaining).
+ruff format..............................................................Failed
+mypy.....................................................................Failed
+noxfile.py:3: error: Cannot find implementation or library stub for module named "nox"  [import-not-found]
+noxfile.py:8: error: Untyped decorator makes function "tests" untyped  [untyped-decorator]
+noxfile.py:14: error: Untyped decorator makes function "lint" untyped  [untyped-decorator]
+cartera/reporte.py:7: error: Library stubs not installed for "requests"  [import-untyped]
+cartera/reporte.py:11: error: Incompatible return value type (got "Decimal | Literal[0]", expected "Decimal")  [return-value]
+cartera/reporte.py:14: error: Missing type arguments for generic type "dict"  [type-arg]
+Found 6 errors in 2 files (checked 3 source files)
+```
+
+Lo que contesta la corrida:
+
+- **`nox -s lint` se detiene en la primera herramienta que falla**: `ruff` encuentra tres defectos y `mypy`, `deptry` y
+  `pip-audit` no llegan a correr: dentro de una sesión, el primer comando que falla la termina. Es lo que se quiere en
+  el CI —el primer rojo basta para no publicar—; para el informe completo, cada herramienta va en su propia sesión,
+  porque `nox` sí corre todas las sesiones aunque una falle.
+- **`nox -s tests` falla con el código 5 de pytest**, *no tests ran*: el ejemplo no trae pruebas, y pytest considera
+  que una suite vacía es un error. En un proyecto real es una virtud: si alguien rompe el descubrimiento de pruebas, el
+  CI no pasa en verde con cero pruebas.
+- **El *hook* de `mypy` no ve `nox` ni los *stubs* de `requests`**: corre en su entorno aislado, exactamente lo que
+  advierte §4. Con `additional_dependencies: [nox, types-requests]` esos tres errores desaparecen y quedan los dos del
+  módulo.
+- **`ruff --fix` en el *hook* corrige dos defectos solo** (el `import` sobrante y el orden) y deja el de seguridad: el
+  commit igual se rechaza, y el archivo queda modificado para revisar.
+- **Un defecto propio que la corrida encontró**: el comentario de `pip-audit` en el `noxfile.py` pasaba de las 100
+  columnas que el propio `pyproject.toml` fija, y `ruff` lo marcaba (`E501`). Se acortó.
 
 **Detalles con intención**
 

@@ -5,7 +5,8 @@
 > Se lee suelta: no hace falta ninguna otra sección de la carta.
 > Versiones verificadas contra PyPI el 05/10/2026 · Código probado el 05/10/2026 con Python 3.14.7,
 > en contenedor, contra un servidor SFTP de OpenSSH: la descarga, la segunda corrida, la retoma desde
-> un `.part` cortado y el archivo reemplazado. El fragmento de FTPS queda sin ejecutar.
+> un `.part` cortado y el archivo reemplazado. El fragmento de FTPS, el 07/10/2026, contra un servidor
+> FTPS de prueba con una CA propia.
 
 ---
 
@@ -161,6 +162,20 @@ with ftplib.FTP_TLS(context=ssl.create_default_context(), timeout=30) as ftp:
 
 `mlsd` devuelve el listado en un formato definido (RFC 3659), con tamaño y fecha de modificación por
 archivo, en vez del texto de `LIST`, que cada servidor formatea a su manera.
+
+Salida (Python 3.14.7, 07/10/2026), contra un servidor FTPS de prueba (`pyftpdlib` con TLS obligatorio en los dos
+canales) que responde al nombre `ftps.aseguradora.example` en una red de Docker, con un certificado firmado por una CA
+de prueba que el cliente recibe en `SSL_CERT_FILE`; el fragmento corrió sin cambiar una línea:
+
+```text
+glosas-2026-09.zip 10240 20261007081847
+pagos-20261006.csv 2048 20261007081847
+pagos-20261007.csv 4096 20261007081847
+```
+
+Y la misma corrida **sin** `ftp.prot_p()`, contra ese servidor que exige TLS en el canal de datos:
+`ftplib.error_perm: 550 SSL/TLS required on the data channel.` Un servidor que no lo exige habría contestado igual
+que arriba, con el listado viajando en claro: por eso la línea va siempre, aunque "funcione sin ella".
 
 ### Probarlo
 

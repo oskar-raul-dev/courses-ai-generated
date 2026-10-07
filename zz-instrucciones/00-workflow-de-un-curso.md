@@ -164,6 +164,13 @@ Se discute en dos vueltas como mínimo: la primera propone el arco y la lista de
 con el arco aprobado, escribe las fichas. Escribir fichas sobre un arco no aprobado es trabajo que se
 tira.
 
+**Si el tema es bastante extenso**, la primera vuelta empieza un paso antes: propone si el curso cabe
+en una sola secuencia (con partes) o conviene dividirlo en **bloques** con directorio propio, cada uno
+con sus capítulos, o en **pistas paralelas**, con el criterio que lo justifica y el grafo entre
+bloques ([`01-tipos-de-curso.md` §10](01-tipos-de-curso.md#10--cursos-extensos-bloques-y-pistas)). La
+división se aprueba antes que la lista de títulos, porque cambia la numeración, los directorios y el
+git.
+
 ### E3 — Plan de producción
 
 **Prompt:** [E3](02-prompts-de-etapa.md#e3--plan-de-producción).

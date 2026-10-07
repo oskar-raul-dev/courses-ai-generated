@@ -104,11 +104,21 @@ causa histórica, escritas **tal cual** —no se corrigen, no se traducen, no se
 
 ## 7. 🏷️ Git
 
+> ✏️ **Plantilla:** aquí se congelan **los nombres**; las reglas y el uso (cuándo se crea cada tag, qué
+> lleva su mensaje, el bloque 🏷️ de las fases) viven en
+> [`convencion-de-git-y-tags.md`](convencion-de-git-y-tags.md), que se escribe justo después (P7) y
+> copia estos patrones sin cambiarlos.
+
+- **Repositorios del lector:** `{{nombre-del-proyecto}}`{{, y `{{nombre-del-otro}}` para el track}}.
 - **Tags de fase:** `{{fase-NN-slug}}`, al cerrar cada fase; los crea el autor.
 - **Tags de incidente o de taller:** `{{inc/NN/slug-roto}}` y `{{-fix}}` | `{{taller-NN}}`.
 - **Tracks opcionales:** su propio espacio de nombres (`{{be-fase-NN}}`), para que
   `git tag -l 'fase-*'` siga siendo el índice limpio del camino base.
-- **Commits:** prefijo `{{fNN:}}`; los de ejercicio `{{fNN ejMM:}}`.
+- **Bloques** *(si el curso se divide)*: el bloque va en el tag (`{{fase-BB-NN-slug}}`), para que
+  `git tag -l 'fase-BB-*'` sea el índice de un bloque; los commits, `{{BB/fNN:}}`.
+- **Commits:** prefijo `{{fNN:}}`; los de ejercicio `{{fNN ejMM:}}`; los de apéndice `{{aNN:}}`.
+- **Otros espacios de nombres** *(los que use el curso)*: `{{ej/fNN/MM}}`, `{{deuda/<slug>-declarada}}` y
+  `{{-pagada}}`, `{{pre-<algo>}}`. Ninguna fase inventa uno que no esté aquí.
 
 ---
 

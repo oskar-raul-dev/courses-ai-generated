@@ -210,6 +210,7 @@ class Verificador:
     EXCLUIR_DIRS = {"node_modules", "vendor", ".git", "target", "__pycache__", ".venv", "build", "dist"}
     DIR_PROMPTS = "prompts"                 # maquinaria: se revisan sus enlaces, no su contenido
     BLOQUE_RE = re.compile(r"^\d{2}-")      # carpeta de bloque (repasos); si no hay, el curso es plano
+    PISTA_RE = re.compile(r"^pista-")        # carpeta de pista: sus bloques van un nivel más abajo
     CAPITULO_RE = re.compile(r"^(\d{2})-.*\.md$")
     NO_CAPITULO = ("respuestas", "simulacion", "readme")   # partes del nombre que no son capítulo
     SOLUCIONARIO_RE = re.compile(r"respuestas\.md$")
@@ -278,8 +279,12 @@ class Verificador:
         return not any(p in nombre.lower() for p in self.NO_CAPITULO)
 
     def bloques(self):
-        dirs = [os.path.join(self.raiz, d) for d in sorted(os.listdir(self.raiz))
-                if self.BLOQUE_RE.match(d) and os.path.isdir(os.path.join(self.raiz, d))]
+        def hijos(base, regex):
+            return [os.path.join(base, d) for d in sorted(os.listdir(base))
+                    if regex.match(d) and os.path.isdir(os.path.join(base, d))]
+        dirs = hijos(self.raiz, self.BLOQUE_RE)
+        for pista in hijos(self.raiz, self.PISTA_RE):    # curso en pistas paralelas
+            dirs += hijos(pista, self.BLOQUE_RE)
         return dirs or [self.raiz]           # curso plano: la raíz es el único bloque
 
     # --- anclas

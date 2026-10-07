@@ -11,7 +11,7 @@
 > - Las versiones: [`inventario-verificado.md`](inventario-verificado.md), que genera `check-inventario.py`.
 > - **El orden y la numeración los manda este documento.**
 >
-> **Vigencia:** 2026-10-05.
+> **Vigencia:** 2026-10-07 (la carta, cerrada).
 
 **Salto rápido:** [1](#1--las-reglas-de-orden) · [2](#2--qué-es-una-tanda) · [3](#3--estado) · [4](#4--las-verificaciones) · [5](#5--la-numeración-completa) · [6](#6--deuda-de-enlaces-abierta) · [7](#7--bitácora) · [8](#8--checklist-final) · [9](#9--directorios-de-zz-code)
 
@@ -95,13 +95,13 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ terminada y verificada.
 | **T17** | `pk` — El panorama de gestores y empaquetado | 8 | op131–op138 | ✅ |
 | **T18** | `ff` — La frontera nativa | 8 | op139–op146 | ✅ |
 | **T19** | `ar` — Archivos y multimedia | 10 | op147–op156 | ✅ |
-| **T20** | `gi` — Geoespacial | 7 | op157–op163 | ⬜ |
-| **T21** | `cv` — Visión por computador | 8 | op164–op171 | ⬜ |
-| **T22** | `ed` — Didáctica, divulgación y juguetes | 5 | op172–op176 | ⬜ |
-| **T23** | La carta en el `README.md` y en `0-ESTRUCTURA-CURSO.md` | — | — | ⬜ |
-| **T24** | Verificación: ejecutar el código de la carta, crear `src/opNNN-…/` y quitar los rótulos | — | — | ⬜ |
+| **T20** | `gi` — Geoespacial | 7 | op157–op163 | ✅ |
+| **T21** | `cv` — Visión por computador | 8 | op164–op171 | ✅ |
+| **T22** | `ed` — Didáctica, divulgación y juguetes | 5 | op172–op176 | ✅ |
+| **T23** | La carta en el `README.md` y en `0-ESTRUCTURA-CURSO.md` | — | — | ✅ |
+| **T24** | Verificación: ejecutar el código de la carta, crear `src/opNNN-…/` y quitar los rótulos | — | — | ✅ |
 
-> 🚦 **Dónde está la producción (05/10/2026):** T1–T19 cerradas (156 de 176). Sigue T20 gi (op157).
+> 🚦 **Dónde está la producción (07/10/2026):** la carta está cerrada (T1–T24): 176 secciones escritas, 173 probadas enteras y 3 en parte (op013 por las credenciales de systemd en contenedor; op029 y op036, con sus `⏳` como ejercicio), y `src/opNNN-…/` creado.
 
 ---
 
@@ -128,7 +128,7 @@ El nombre de archivo es exacto; el título puede ajustarse al escribir sin cambi
 | Número | Archivo | Título | Escrita | Corrida |
 |---|---|---|---|---|
 | op001 | `op001-lg01-ancho-fijo-y-mainframe.md` | Ancho fijo y mainframe | ✅ | ✅ |
-| op002 | `op002-lg02-xml-en-serio.md` | XML en serio | ✅ | 🟡 |
+| op002 | `op002-lg02-xml-en-serio.md` | XML en serio | ✅ | ✅ |
 | op003 | `op003-lg03-documentos-firmados.md` | Documentos firmados | ✅ | ✅ |
 | op004 | `op004-lg04-edi.md` | EDI: X12 y EDIFACT | ✅ | ✅ |
 | op005 | `op005-lg05-hl7-y-fhir.md` | Salud: HL7 v2 y FHIR | ✅ | ✅ |
@@ -145,7 +145,7 @@ El nombre de archivo es exacto; el título puede ajustarse al escribir sin cambi
 | op016 | `op016-co02-que-el-correo-llegue.md` | Que el correo llegue | ✅ | ✅ |
 | op017 | `op017-co03-correo-entrante.md` | Correo entrante | ✅ | ✅ |
 | op018 | `op018-co04-probar-correo.md` | Probar correo sin mandarlo | ✅ | ✅ |
-| op019 | `op019-co05-transferencia-de-archivos.md` | Transferencia de archivos | ✅ | 🟡 |
+| op019 | `op019-co05-transferencia-de-archivos.md` | Transferencia de archivos | ✅ | ✅ |
 | op020 | `op020-co06-mensajeria.md` | Mensajería y notificaciones | ✅ | ✅ |
 | op021 | `op021-co07-veredicto.md` | Veredicto: qué protocolo para qué | ✅ | ✅ |
 | op022 | `op022-wf01-el-eje.md` | El eje: de cron al flujo durable | ✅ | ✅ |
@@ -246,7 +246,7 @@ El nombre de archivo es exacto; el título puede ajustarse al escribir sin cambi
 | op117 | `op117-sy03-inspeccion-del-sistema.md` | Inspección del sistema | ✅ | ✅ |
 | op118 | `op118-sy04-el-sistema-de-archivos.md` | El sistema de archivos en serio | ✅ | ✅ |
 | op119 | `op119-sy05-reaccionar-a-cambios.md` | Reaccionar a cambios | ✅ | ✅ |
-| op120 | `op120-sy06-convivir-con-el-sistema.md` | Convivir con systemd | ✅ | 🟡 |
+| op120 | `op120-sy06-convivir-con-el-sistema.md` | Convivir con systemd | ✅ | ✅ |
 | op121 | `op121-sy07-sincronizacion-y-respaldo.md` | Sincronización y respaldo | ✅ | ✅ |
 | op122 | `op122-sy08-veredicto.md` | Veredicto: dónde deja de servir el script de shell | ✅ | ✅ |
 | op123 | `op123-pr01-el-eje.md` | El eje: contrato implícito, esquema, IDL | ✅ | ✅ |
@@ -283,26 +283,26 @@ El nombre de archivo es exacto; el título puede ajustarse al escribir sin cambi
 | op154 | `op154-ar08-video.md` | Vídeo | ✅ | ✅ |
 | op155 | `op155-ar09-audio.md` | Audio | ✅ | ✅ |
 | op156 | `op156-ar10-veredicto.md` | Veredicto: el pegamento contra el binario | ✅ | ✅ |
-| op157 | `op157-gi01-el-modelo.md` | El modelo: geometría, proyección, topología | ⬜ | ⬜ |
-| op158 | `op158-gi02-vectorial.md` | Vectorial: shapely, geopandas, pyproj | ⬜ | ⬜ |
-| op159 | `op159-gi03-postgis.md` | PostGIS desde Python | ⬜ | ⬜ |
-| op160 | `op160-gi04-raster.md` | Ráster y teledetección | ⬜ | ⬜ |
-| op161 | `op161-gi05-rutas-y-direcciones.md` | Rutas y direcciones | ⬜ | ⬜ |
-| op162 | `op162-gi06-mapas-como-entregable.md` | Mapas como entregable | ⬜ | ⬜ |
-| op163 | `op163-gi07-veredicto.md` | Veredicto: cuándo basta con lat y lon | ⬜ | ⬜ |
-| op164 | `op164-cv01-el-modelo.md` | El modelo: píxeles, características, red | ⬜ | ⬜ |
-| op165 | `op165-cv02-deteccion.md` | Detección | ⬜ | ⬜ |
-| op166 | `op166-cv03-puntos-faciales.md` | Puntos de referencia faciales | ⬜ | ⬜ |
-| op167 | `op167-cv04-morphing.md` | Morphing desde cero | ⬜ | ⬜ |
-| op168 | `op168-cv05-reconocimiento.md` | Reconocimiento e identidad | ⬜ | ⬜ |
-| op169 | `op169-cv06-segmentacion-y-edicion.md` | Segmentación y edición | ⬜ | ⬜ |
-| op170 | `op170-cv07-video-con-modelos.md` | Vídeo con modelos | ⬜ | ⬜ |
-| op171 | `op171-cv08-veredicto.md` | Veredicto ético y legal | ⬜ | ⬜ |
-| op172 | `op172-ed01-turtle.md` | turtle | ⬜ | ⬜ |
-| op173 | `op173-ed02-juegos.md` | Juegos como vehículo | ⬜ | ⬜ |
-| op174 | `op174-ed03-notebooks-para-explicar.md` | Notebooks para explicar | ⬜ | ⬜ |
-| op175 | `op175-ed04-visualizar-algoritmos.md` | Visualizar algoritmos | ⬜ | ⬜ |
-| op176 | `op176-ed05-veredicto.md` | Veredicto: cuándo simplificar ayuda y cuándo miente | ⬜ | ⬜ |
+| op157 | `op157-gi01-el-modelo.md` | El modelo: geometría, proyección, topología | ✅ | ✅ |
+| op158 | `op158-gi02-vectorial.md` | Vectorial: shapely, geopandas, pyproj | ✅ | ✅ |
+| op159 | `op159-gi03-postgis.md` | PostGIS desde Python | ✅ | ✅ |
+| op160 | `op160-gi04-raster.md` | Ráster y teledetección | ✅ | ✅ |
+| op161 | `op161-gi05-rutas-y-direcciones.md` | Rutas y direcciones | ✅ | ✅ |
+| op162 | `op162-gi06-mapas-como-entregable.md` | Mapas como entregable | ✅ | ✅ |
+| op163 | `op163-gi07-veredicto.md` | Veredicto: cuándo basta con lat y lon | ✅ | ✅ |
+| op164 | `op164-cv01-el-modelo.md` | El modelo: píxeles, características, red | ✅ | ✅ |
+| op165 | `op165-cv02-deteccion.md` | Detección | ✅ | ✅ |
+| op166 | `op166-cv03-puntos-faciales.md` | Puntos de referencia faciales | ✅ | ✅ |
+| op167 | `op167-cv04-morphing.md` | Morphing desde cero | ✅ | ✅ |
+| op168 | `op168-cv05-reconocimiento.md` | Reconocimiento e identidad | ✅ | ✅ |
+| op169 | `op169-cv06-segmentacion-y-edicion.md` | Segmentación y edición | ✅ | ✅ |
+| op170 | `op170-cv07-video-con-modelos.md` | Vídeo con modelos | ✅ | ✅ |
+| op171 | `op171-cv08-veredicto.md` | Veredicto ético y legal | ✅ | ✅ |
+| op172 | `op172-ed01-turtle.md` | turtle | ✅ | ✅ |
+| op173 | `op173-ed02-juegos.md` | Juegos como vehículo | ✅ | ✅ |
+| op174 | `op174-ed03-notebooks-para-explicar.md` | Notebooks para explicar | ✅ | ✅ |
+| op175 | `op175-ed04-visualizar-algoritmos.md` | Visualizar algoritmos | ✅ | ✅ |
+| op176 | `op176-ed05-veredicto.md` | Veredicto: cuándo simplificar ayuda y cuándo miente | ✅ | ✅ |
 
 ---
 
@@ -315,6 +315,14 @@ El nombre de archivo es exacto; el título puede ajustarse al escribir sin cambi
 ---
 
 ## 7. 📓 Bitácora
+
+**2026-10-07 · T23 y T24 cerradas — la carta está terminada.** **T23:** la carta entra en `0-ESTRUCTURA-CURSO.md` con su propia sección (*La carta*: los 22 tracks en una tabla con su rango `opNNN`, sus tres turnos, cómo se lee una sección, el espacio de tags `op-<tt>-fase-NN`, qué se garantiza del código y qué no es) y en *Cuánto toma* (262.000 palabras de prosa, unas 22 horas de lectura, 1.722 ejercicios); se corrigió el ejemplo de nombre, que decía `op014-ui02-gradio.md` (el real es `op065`). El `README.md` gana *Y aparte, la carta*. **T24:** `src/opNNN-…/` creado para las 176 secciones (449 archivos con un README por sección) con `src_desde_secciones.py`, que extrae del Markdown publicado; antes se comparó cada archivo con la copia que corrió: 253 iguales y 14 distintos, todos explicados (nombres de host de la red de prueba, comentarios traducidos al español después de correr —ff02, ff05, ar07—, el renombre `zipaquira` → `sede-calendar` de T3, la variante del error sembrado de qa05 y la migración editada de or07). **La deuda que se pagó corriendo:** `firmar_pdf.py` de lg03 (firma íntegra y válida, no confiable por ser autofirmada); la cadena de qa08 con `nox` 2026.8.17 y `pre-commit` 4.6.2, que encontró un **defecto propio** (el comentario de `pip-audit` pasaba de las 100 columnas que fija el propio `pyproject.toml`: `E501`) y mostró que pytest sin pruebas sale con el código 5; los tres `compose.yaml` de la carta, válidos con `docker compose config`; las unidades de au06 y sy06 bajo **systemd 257 como PID 1** en contenedor (timer con su retraso aleatorio, `OnFailure=`, `Type=notify`, `reload`, reinicio, y el *watchdog* que mata con SIGABRT a los 30 s al proceso congelado); el fragmento de FTPS de co05 sin cambiar una línea, contra un servidor FTPS de prueba con CA propia (y sin `prot_p()`: `550 SSL/TLS required on the data channel`); y la validación XSD de lg02 con los esquemas del ejercicio 4 escritos aparte (no se publican). **Hallazgo de ambiente:** systemd 257 no monta `/run/credentials/` dentro de Docker Desktop (ni `LoadCredential=` ni `SetCredential=`), y con `--tmpfs /run` tampoco; au06 lo dice y queda 🟡 solo por eso. **Estado final:** 176 de 176 escritas; **173 probadas enteras y 3 en parte**: op013 (las credenciales, por el contenedor) y op029 y op036, cuyas mediciones `⏳` son por diseño un ejercicio de la propia sección. **Docker:** borradas `postgis/postgis:18-3.6` y `pfjd-systemd:t24`; ningún contenedor, red ni imagen con la etiqueta del curso; `python:3.14.7` no está en la lista de imágenes que bajó la carta y no se toca. **zz-code:** `f516` pasa a *extraído*; `limpiar.py` en vista previa: 855 MB regenerables en `salidas/`.
+
+**2026-10-07 · T22 (`ed`) cerrada — las 176 secciones escritas.** Escritas op172–op176 (5 secciones, 50 ejercicios), **las cinco probadas en contenedor**, con su propio ejemplo y sin pasar por Áurea (propuesta §14). **Hallazgos y defectos propios:** la espiral tarda 20 s animada, 3,6 con `speed(0)` y cero con `tracer(0)`; la tortuga del árbol «vuelve al inicio» a 10⁻¹² y `==` da `False` (la primera versión imprimía `False` sin explicarlo: defecto propio convertido en lección); `turtle` se probó con Xvfb (ed01); **`pygame` 2.6.1 no instala en 3.14** (sin rueda y la compilación falla): la sección usa `pygame-ce` 2.5.8; mover por cuadro da 300, 600 o 1.440 px según la tasa, la caída con `dt` variable cambia con la tasa y con paso fijo no; **el mismo juego con la misma semilla dio 15 y 21 puntos** en dos corridas (el `dt` del reloj real) (ed02); el notebook fabricado da 116.000 guardado y 119.000 de arriba abajo, falla con una variable huérfana, y marimo lo rechaza con `multiple-definitions`; `ipykernel` 7.4.0 avisa por TCP sin cifrar; las cifras del estudio de Pimentel (24,11 % y 4,03 %) se comprobaron en el PDF y se corrigió un «863.878» escrito de memoria que no aparece (ed03); `manim` 0.21.0 instala compilando `pycairo` (sin ruedas para Linux) en 38 s y renderiza la escena en 1 s; burbuja 690 cuadros contra 300 de merge sort (ed04); con 30 elementos inserción le gana a merge sort con el doble de pasos, merge sort en Python tarda 16 veces lo de `sorted()`, y con la lista casi ordenada burbuja e inserción ganan 7 y 13 veces (ed05). **URL:** IEEE (202) por la copia de los autores; la documentación de `arcade` respondió 429: se enlaza el repositorio. **Inventario:** `pygame-ce`, `pyglet`, `nbformat`, `nbclient`, `ipykernel`, `jupytext`, `numpy`, `networkx`, `pytest`, `Pillow`, `pycairo` y `ManimPango` agregados a `ed`. **Estado de la carta:** 176 de 176 escritas; 170 probadas enteras y 6 en parte (las mismas de T19). **Siguiente:** T23.
+
+**2026-10-07 · T21 (`cv`) cerrada.** Escritas op164–op171 (8 secciones, 80 ejercicios), **las ocho probadas en contenedor**, por el camino (a) de la guía §14.3: ninguna imagen de paciente; la técnica se enseña con `skimage.data.astronaut()` (retrato de dominio público de la NASA que trae scikit-image, declarado en cv01), rostros dibujados con código (cv04) y el rostro del propio lector en los ejercicios; ningún ejemplo sube imágenes a un servicio (los modelos se bajan una vez de opencv_zoo, de Google y de las *releases* de `rembg`). **Hallazgos y defectos propios:** **OpenCV 5 sacó `CascadeClassifier` del paquete principal** (vive en `opencv-contrib`) y **ya no trae las cascadas XML** (`cv2.data` vacío; se bajan de `opencv_contrib`/`xobjdetect`); el motor nuevo de `dnn` avisa `setPreferableTarget … not supported`; la regla de color «encuentra» los cinco rostros y 23 cosas más, Haar 3 de 5 y YuNet 5 de 5 sin sobrantes con un modelo más chico que la cascada (cv01); **`mediapipe` 1.1.0 depende de `opencv-contrib-python` y pisa el `cv2` headless** (se resolvió con `override-dependencies` de uv, probado con uv 0.12.23) y **su biblioteca nativa carga `libEGL.so.1`** aunque corra en CPU (`libegl1`, `libgles2`); BlazeFace *short range* solo encuentra la cara que llena el lienzo (es un modelo de selfie) (cv02); **`dlib` 20.0.1 no tiene ruedas para 3.14 en ninguna plataforma**; con la boca tapada la malla devuelve las comisuras a 2 px de las reales, sin marca de inventadas (cv03); los puntos intermedios en `float64` hacen fallar `boundingRect` en OpenCV 5 (defecto propio); el fundido cruzado deja 4 pupilas y el morphing 2; con triangulaciones separadas solo coinciden 57 de 66 triángulos (cv04); las oclusiones puestas a ojo caían sobre el mentón y daban 0,944 (defecto propio: ahora se ubican con los puntos de YuNet); **la franja negra sobre los ojos no anonimiza** (coseno 0,429 sobre el umbral 0,363); los modelos de InsightFace son solo para investigación no comercial (cv05); MediaPipe segmenta en 25 ms y `rembg` en más de 600 con IoU 0,98; Telea y Navier-Stokes llevan las rayas de 13 a 30 dB; FSRCNN gana 1 dB a la bicúbica (cv06); **MIL es más lento que detectar en cada cuadro** (13 contra 54 cuadros/s), KCF se despega (IoU mínima 0,58), y **el estabilizador ingenuo sigue a la cara y no a la cámara** (124 px de error en la trayectoria; 0,55 excluyendo el rostro detectado) (cv07); el pixelado con bloques de 4 todavía se reconoce (0,667) y con menos de diez bloques a lo ancho deja de reconocerse para SFace (cv08). **URL:** docs.opencv.org y dl.acm.org rechazan clientes automáticos también con curl (403): reemplazados por el código fuente de OpenCV en GitHub y la copia del artículo de Beier y Neely en Princeton; la tarjeta de BlazeFace por la página del detector; las tres de Función Pública fallan solo en Python, como en T3 y T7, y se conservan.
+
+**2026-10-07 · T20 (`gi`) cerrada.** Escritas op157–op163 (7 secciones, 70 ejercicios), **las siete probadas en contenedor** (gi03 contra `postgis/postgis:18-3.6`, bajada y anotada: solo existe para amd64 y corrió emulada; gi05 sale a internet para cuatro consultas a Nominatim). Dominio: las diez sedes de Áurea como centros aproximados de barrio y domicilios **sintéticos** (ningún dato de paciente), con el encargo real de la historia: la variable «distancia a la sede» del modelo de ausentismo. **Hallazgos y defectos propios:** el atajo `* 111,32` se equivoca 0,66 % a 47 km en Bogotá y 31 % en Madrid; EPSG:9377 declara sus ejes (norte, este) y sin `always_xy` el resultado sale invertido; el Centro en 3116 leído como 9377 cae en el Pacífico, a 3.777 km (gi01); el join en grados asigna las mismas sedes que en metros (la casualidad del ecuador) y el CRS mezclado da cero filas con un aviso (gi02); **PostGIS 3.6.4 no trae EPSG:9377** en `spatial_ref_sys` (falló al crear el índice; se registra desde `pyproj`), `ST_Distance < x` 2,9 s contra 0,31 s de `ST_DWithin` con índice sobre la expresión (gi03); **`rioxarray.open_rasterio` sin `with` deja `Error in sys.excepthook:` al salir en 3.14** con código 0, y el NDVI en `uint16` da 29 % de píxeles imposibles; los cerros sintéticos pasaban por Zipaquirá (defecto propio, corregido) (gi04); la calle de un solo sentido no cambiaba nada con una sola carretera de un sentido (defecto propio del ejemplo: ahora son dos) y Nominatim devuelve una vía a 6 km para la dirección con calle y carrera trocadas (gi05); **folium 0.20.0 avisa que las teselas de CartoDB ya piden clave** (se pasó a OSM), y con K = 10 la resolución 7 de H3 esconde el 24 % (gi06); **`ST_Distance_Sphere` de DuckDB espera (lat, lon)**: con (lon, lat) asigna mal el 43 % y se equivoca hasta 19 km (gi07). **URL:** el blog de Uber sobre H3 responde 406 también a curl; reemplazado por la página *Indexing* de h3geo.org. **Inventario:** `psycopg`, `duckdb`, `numpy`, `networkx`, `pandas`, `matplotlib` y `geodatasets` agregados a `gi`; `cv` y `ed` regenerados el mismo día (mediapipe pasó a 1.1.0, ultralytics a 8.4.174). **Arnés:** `probado.py` toma la fecha del encabezado; nuevos `comparar.py` (salida publicada contra corrida) y `ensamblar.py` (sección desde plantilla con el código y la salida reales).
 
 **2026-10-05 · Corte después de T19: pruebas de conjunto y revisión de `prompts/` contra `zz-instrucciones/`.** **Pruebas (op001–op156):** plan contra archivos, encabezados y marcas; enlaces internos (0 rotos); 522 URL externas (las 4 que fallan con Python responden 200 a `curl`: se quedan); verificador del curso en 0 errores; ningún contenedor, red ni volumen del curso quedó en Docker. Se corrigió el plan: los nombres de archivo de op050 y op052 (los archivos y los enlaces de `se08` ya usaban `oauth2-y-oidc` y `tls-y-certificados`), y op036 pasa a ✅🟡 porque sus cifras de carga van en `⏳`. Quedan 6 secciones probadas en parte (op002, op013, op019, op029, op036, op120) para T24. **Defecto propio corregido:** cinco comentarios en inglés en el código C, Rust, C++ y Typst de ff02, ff05 y ar07, contra la guía §5. **Revisión de `prompts/`:** la copia de `verificador_base.py` es idéntica a la de los lineamientos; con `--perfil=courses-ia`, 0 errores; con `--perfil=publicacion`, los emoji en `###` (permitidos en el repositorio) y dos enlaces de `ia01` a `prompts/` (para la etapa de publicación). Se agregó la guía §15 (excepciones del curso a los lineamientos y documentos que no tiene, con qué hace su papel), se actualizaron §14.1 y §14.4 a la práctica real (probado en contenedor), D-12 en el alcance §13, y el `README.md` de `prompts/` ahora describe la carta, su plan, el inventario y los scripts.
 
@@ -373,11 +381,11 @@ inventario ya avanzó respecto del camino base —SQLAlchemy está en 2.1.3 y el
 - [x] Guía §14 y plantilla de sección escritas
 - [x] `inventario-verificado.md` generado
 - [x] Verificador del curso copiado y ajustado a la carta
-- [ ] Las 176 secciones escritas (§5, casilla *escrita*)
-- [ ] URL de todas las secciones verificadas
-- [ ] La carta en el `README.md` y en `0-ESTRUCTURA-CURSO.md` (T23)
-- [ ] El código ejecutado y `src/opNNN-…/` creado (T24, casilla *corrida*)
-- [ ] `zz-code/` sin directorios *vigentes* y `limpiar.py` en vista previa
+- [x] Las 176 secciones escritas (§5, casilla *escrita*)
+- [x] URL de todas las secciones verificadas (las de funcionpublica.gov.co fallan solo con el cliente de Python y responden 200 a curl)
+- [x] La carta en el `README.md` y en `0-ESTRUCTURA-CURSO.md` (T23)
+- [x] El código ejecutado y `src/opNNN-…/` creado (T24, casilla *corrida*): 173 enteras y 3 en parte, con su razón en la sección
+- [x] `zz-code/` sin directorios *vigentes* y `limpiar.py` en vista previa (855 MB regenerables en `f516/salidas/`, sin borrar)
 
 ---
 
@@ -385,4 +393,5 @@ inventario ya avanzó respecto del camino base —SQLAlchemy está en 2.1.3 y el
 
 | Directorio | Tanda | Propósito | Estado |
 |---|---|---|---|
-| `python-for-java-devs-20261005-f516` | P1– | La lista de la carta (`carta.py`), el conductor de URL y las salidas de los verificadores | vigente |
+| `python-for-java-devs-20261005-f516` | P1–T24 | La lista de la carta (`carta.py`), el arnés de humo, el conductor de URL, `src_desde_secciones.py` (que creó `src/opNNN-…/`) y las salidas de las pruebas | extraído (07/10/2026) |
+| `python-for-java-devs-20261006-772f` | rescate (06/10) | Lo rescatado de las transcripciones: el comando de humo de cada sección (`04-carta-5c52573d/humo-por-seccion.sh`) y la copia versionada del código de `f516/salidas/` (`05-carta-codigo/`); también el camino base y los tracks `ia`/`ds` | archivado · al cerrar cada tanda, su `rescatar.sh` |

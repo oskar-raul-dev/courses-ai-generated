@@ -5,9 +5,9 @@
 > Se lee suelta: no hace falta ninguna otra sección de la carta. Conviene haber leído la
 > [Fase 06](06-formatos-en-la-caja.md), que usa `xml.etree.ElementTree` y deja fuera el XML de la
 > DIAN con su razón escrita.
-> Versiones verificadas contra PyPI el 05/10/2026 · Código probado en parte el 05/10/2026 con
-> Python 3.14.7, en contenedor —el resumen y la bomba—; la validación con XSD queda sin ejecutar,
-> porque sus dos esquemas importados son el ejercicio 4.
+> Versiones verificadas contra PyPI el 05/10/2026 · Código probado el 05/10/2026 con Python 3.14.7,
+> en contenedor —el resumen y la bomba—; la validación con XSD, el 07/10/2026, con los dos esquemas
+> importados escritos aparte (son el ejercicio 4 y no se publican).
 
 ---
 
@@ -218,11 +218,19 @@ mejor forma de entender cómo UBL reparte un documento en tres espacios de nombr
 python3 factura_xml.py
 ```
 
-Salida (Python 3.14.7, 05/10/2026) del resumen; la línea `válida` es la esperada, sin correr:
+Salida (Python 3.14.7, 05/10/2026) del resumen; la línea `válida`, del 07/10/2026, con los dos esquemas del
+ejercicio 4 escritos aparte:
 
 ```text
 {'invoice': 'FE-000123', 'nit': '900123456', 'nit_ok': True, 'lines': 2, 'total': Decimal('280000.00'), 'line_2': ['95000.00']}
 válida
+```
+
+Con la fecha escrita a la colombiana (`28/09/2026`), la misma validación devuelve el error con línea y ruta, que es lo
+que Patricia necesita para corregir:
+
+```text
+línea 6: /*/cbc:IssueDate: Element '{urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2}IssueDate': '28/09/2026' is not a valid value of the atomic type 'xs:date'.
 ```
 
 **Detalles con intención**

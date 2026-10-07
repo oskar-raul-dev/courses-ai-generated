@@ -7,7 +7,9 @@
 > explica por qué.
 > Versiones verificadas contra PyPI el 05/10/2026 · Código probado en parte el 05/10/2026 con
 > Python 3.14.7, en contenedor: el script con `uv run --script` y las dos unidades con
-> `systemd-analyze verify`; el timer no se corrió en una máquina con `systemd` activo.
+> `systemd-analyze verify`; el 07/10/2026, el servicio, el timer y `OnFailure=` bajo systemd 257 como
+> PID 1, en contenedor. `LoadCredential=` no se pudo comprobar: systemd no monta credenciales en ese
+> contenedor (se dice abajo).
 
 ---
 
@@ -189,6 +191,34 @@ journalctl -u aurea-circulares.service -n 50     # la salida, con fecha, en el d
 `systemd-analyze verify` revisa la sintaxis de las dos unidades antes de habilitarlas (en la prueba
 de esta sección, sobre Debian trixie, no dio ningún aviso). Es el
 equivalente a compilar, y atrapa las directivas mal escritas que `systemd` ignoraría en silencio.
+
+**Bajo systemd de verdad (07/10/2026).** En un contenedor con systemd 257 como PID 1, las dos unidades
+pasaron `systemd-analyze verify` sin avisos y el timer quedó programado con su retraso aleatorio:
+
+```text
+NEXT                        LEFT LAST PASSED UNIT                   ACTIVATES
+Thu 2026-10-08 06:34:59 UTC  22h -         - aurea-circulares.timer aurea-circulares.service
+```
+
+Las 06:30 más 4 minutos 59 segundos de `RandomizedDelaySec`. Al correr el servicio, `uv run --script`
+bajó e instaló las dependencias dentro de `ProtectSystem=strict` (solo escribió en
+`UV_CACHE_DIR=/var/cache/aurea/uv`, que `ReadWritePaths` deja abierto), el latido falló sin tumbar la
+tarea (`no se pudo enviar el latido: [Errno -2] Name or service not known`, porque el monitor de
+ejemplo no existe) y, cuando el servicio falló, systemd disparó el aviso:
+
+```text
+aurea-circulares.service: Triggering OnFailure= dependencies.
+aurea-circulares.service: Failed to enqueue OnFailure=aurea-aviso@aurea-circulares.service.service job, ignoring: Unit aurea-aviso@aurea-circulares.service.service not found.
+```
+
+La unidad `aurea-aviso@.service` es el ejercicio 4; el nombre con `.service.service` es el correcto
+(`%n` es el nombre completo de la unidad que falló, y pasa a ser la instancia de la plantilla). Lo que
+**no** se pudo comprobar fue la credencial: en ese contenedor (kernel `linuxkit` de Docker Desktop),
+systemd 257 no monta `/run/credentials/` para ningún servicio, ni con `LoadCredential=` ni con
+`SetCredential=`, y el script falló con `FileNotFoundError` al leerla. Es una limitación del
+contenedor, no de la unidad; en una máquina con systemd, `$CREDENTIALS_DIRECTORY/portal-token` existe.
+Si tu despliegue es un contenedor, la credencial llega como secreto montado (el `secrets:` de
+Compose; el track `se` trata los secretos a fondo), no por systemd.
 
 ### La vigilancia: el latido
 

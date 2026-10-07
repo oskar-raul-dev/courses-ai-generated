@@ -163,7 +163,8 @@ todo lo demás. Las preguntas y a qué decisión del alcance llevan:
 | 11 · Tipo de prueba | inspección · contenedor · máquina local | `D-08` y `D-06` |
 | 12 · `zz-code/` documentado | sí · no | las reglas 7–10 de `zz-code/README.md`; "no" se declara como excepción |
 | 13 · Historia | no · sí con idea · sí, que proponga la IA | `D-11` y la plantilla de historia |
-| 14 · Lo demás | lo que no se quiere, tamaño, notas | fuera de alcance y `D-04` |
+| 14 · Organización | una sola secuencia · en bloques · en pistas paralelas | `D-02` (tipo y organización), alcance §9 y propuesta §3.0 ([`01-tipos-de-curso.md` §10](01-tipos-de-curso.md#10--cursos-extensos-bloques-y-pistas)) |
+| 15 · Lo demás | lo que no se quiere, tamaño, notas | fuera de alcance y `D-04` |
 
 ### Un ejemplo lleno: Python desde cero para el taller
 
@@ -234,7 +235,10 @@ mientras estudiaba, organizó como pudo y después aprendió Excel y macros (la 
 impresa en dos copias). Un amigo que busca emprender usa el taller como piloto de un futuro software
 para talleres: la primera versión, local, en la laptop de la oficina.
 
-## 14. 📝 Lo demás
+## 14. 🧱 Organización
+- [x] **Una sola secuencia**
+
+## 15. 📝 Lo demás
 - **Lo que NO quiero:** frameworks web, programación orientada a objetos avanzada, nada en la nube.
 - **Tamaño o tiempo disponible:** unas 15 fases.
 ```
@@ -260,7 +264,7 @@ Lo que la sesión debería devolver en el paso 2, entre otras cosas:
 - **Lo que el reparto de dificultad pide**: "hasta medio" en los ejercicios no deja sin reto al
   lector, porque el reto vive en los bosses del taller. La sesión lo señala y propone repartir los 12
   en 5 🟢, 4 🟡 y 3 🟠, distinto en fases vecinas.
-- **Las decisiones** que ya puede escribir: `D-02` curso completo · `D-04` peso ligero en casi todas
+- **Las decisiones** que ya puede escribir: `D-02` curso completo en una sola secuencia · `D-04` peso ligero en casi todas
   las fases · `D-05` 12 ejercicios hasta 🟠 con solución plegada · `D-09` un proyecto que crece con tags por
   boss · `D-11` con historia · `D-12` y `D-14` abiertas hasta que el autor elija.
 - **La historia, en dos o tres versiones de un párrafo** para elegir el énfasis (Lorena como

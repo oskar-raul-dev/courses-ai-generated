@@ -132,10 +132,22 @@ Cómo se verifica lo que el curso afirma antes de publicarlo:
 - [ ] **Sí, que la IA proponga** — dame dos o tres ideas para elegir
 - [ ] **Me lo sugieres tú en la sesión** — no lo tengo claro: propónmelo y lo discutimos
 
-## 14. 📝 Lo demás
+## 14. 🧱 Organización
+
+Si el tema es bastante extenso, el curso se puede dividir en bloques o pistas
+(`zz-instrucciones/01-tipos-de-curso.md` §10):
+
+- [ ] **Una sola secuencia** — fases o capítulos numerados de punta a punta, agrupados en partes si hace falta
+- [ ] **En bloques** — cada bloque en su propio directorio, con sus capítulos, su README y su cierre; uno es el troncal
+- [ ] **En pistas paralelas** — un eje secuencial y una pista de práctica que corre a la par durante un tramo y se cierra
+- [ ] **Me lo sugieres tú en la sesión** — no lo tengo claro: propónmelo y lo discutimos
+
+**Explica** (los bloques o pistas que ya ves, cuál es el troncal, cuáles serían opcionales): {{…}}
+
+## 15. 📝 Lo demás
 
 - **Lo que NO quiero:** {{…}}
-- **Tamaño o tiempo disponible:** {{horas, número de fases, "lo que pida el tema"}}
+- **Tamaño o tiempo disponible:** {{horas, número de fases o de bloques, "lo que pida el tema"}}
 - **Notas libres:** {{…}}
 
 ---
@@ -151,7 +163,8 @@ de inspiración, léelas lo suficiente para saber qué ofrecen (README, guía y 
 (a) el curso contado en un párrafo, como lo entendiste, y la pregunta que lo ordena, en una línea;
 (b) si el tipo que marqué es el correcto, y si no, cuál y por qué;
 (c) **las combinaciones que chocan** o piden una excepción (una audiencia dummie con profundidad
-súper saiyajin, un curso legacy sin código, una audiencia que contradice el `CLAUDE.md`) y cómo las
+súper saiyajin, un curso legacy sin código, una audiencia que contradice el `CLAUDE.md`, un tamaño
+que no cabe en una sola secuencia o unos bloques tan distintos que serían cursos hermanos) y cómo las
 resolverías;
 (d) cada respuesta traducida a su decisión `D-xx` del alcance, con el valor propuesto, y las que yo
 dejé en blanco con tu valor por defecto marcado como tal;
@@ -168,10 +181,12 @@ preguntas que marqué con "Me lo sugieres tú" siguen abiertas hasta que yo elij
 vuelve a listar las que falten, con nuevas ideas si las anteriores no me convencieron y con lo que
 mis respuestas a las otras cambiaron de ellas. No cierres ninguna por mí.
 
-**Paso 4 — Cierre:** guarda en `cursos-<familia>/<slug>/prompts/ficha-de-arranque.md` esta ficha con
-las respuestas confirmadas y, debajo, la tabla de decisiones `D-xx` del paso 2. Si yo ya dejé ahí el
-borrador, la versión confirmada lo reemplaza; si la carpeta no existe, créala en la familia que
-corresponda. Dime qué prompt de etapa
+**Paso 4 — Cierre:** guarda en `<carpeta del curso>/prompts/ficha-de-arranque.md` esta ficha con
+las respuestas confirmadas y, debajo, la tabla de decisiones `D-xx` del paso 2. La carpeta del curso
+es la que fija `04-usar-en-cada-repositorio.md` §1 para este repositorio (`cursos-<familia>/<slug>/`
+o `repaso-entrevistas/<área>/<NN-curso>/`); si el curso va en bloques o pistas, la ficha va en el
+`prompts/` de la raíz del curso, no en un bloque. Si yo ya dejé ahí el borrador, la versión
+confirmada lo reemplaza; si la carpeta no existe, créala donde corresponda. Dime qué prompt de etapa
 sigue (E1, o E1b si el curso se basa en otro) y qué parte de la ficha alimenta cada una de sus
 secciones.
 

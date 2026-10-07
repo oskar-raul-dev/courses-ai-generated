@@ -6,9 +6,9 @@
 > **Los tipos no son rígidos** (§8): son puntos de partida que se combinan según la idea, y todas las
 > cantidades de este documento son **valores por defecto** que la guía de cada curso puede cambiar,
 > declarándolo.
-> **Vigencia:** 2026-10-06.
+> **Vigencia:** 2026-10-07.
 
-**Salto rápido:** [1](#1--cómo-se-elige) · [2](#2-️-curso-completo) · [3](#3-️-curso-legacy) · [4](#4--curso-repaso) · [5](#5--banco-de-preguntas-de-entrevista) · [6](#6--banco-de-preguntas-de-examen) · [7](#7-️-la-matriz-de-documentos) · [8](#8--los-tipos-no-son-rígidos) · [9](#9--con-historia-o-sin-historia)
+**Salto rápido:** [1](#1--cómo-se-elige) · [2](#2-️-curso-completo) · [3](#3-️-curso-legacy) · [4](#4--curso-repaso) · [5](#5--banco-de-preguntas-de-entrevista) · [6](#6--banco-de-preguntas-de-examen) · [7](#7-️-la-matriz-de-documentos) · [8](#8--los-tipos-no-son-rígidos) · [9](#9--con-historia-o-sin-historia) · [10](#10--cursos-extensos-bloques-y-pistas)
 
 ---
 
@@ -51,6 +51,8 @@ crece fase a fase (un solo `src/` con tags de git) o una carpeta de `src/` por f
 curso, el código global va en `src/` o en una carpeta con nombre propio (`laboratorio/`, `taller/`) que
 el README del curso nombra (opcional; ver `03-lecciones-de-produccion` §2). Cada fase declara
 su **peso** (ligera, media, densa) o sus horas, y ahí termina la promesa de esfuerzo.
+Si el tema es bastante extenso, las partes pasan a ser **bloques** con directorio propio, o el curso
+se abre en pistas paralelas (§10).
 
 **Aparato de evaluación.** Ejercicios graduados al final de cada fase:
 
@@ -169,6 +171,8 @@ partida para un curso legacy nuevo (etapa E1b).
 **Forma.** Bloques temáticos (`01-fundamentos/`, `02-…/`), cada uno con capítulos `NN-tema.md`, una
 **simulación de entrevista** y un **solucionario** (`NN-respuestas.md`). Opcionalmente, un bloque de
 **labs o talleres** con su propio solucionario. El README de cada bloque se escribe al final.
+Las reglas de los bloques —troncal, grafo, numeración, apéndices, git— son las de §10, que valen
+para cualquier tipo.
 
 **Aparato de evaluación.**
 
@@ -341,3 +345,121 @@ decisión del alcance (`D-11`), independiente del tipo:
 Si el curso lleva historia, la plantilla es
 [`plantillas/historia-de-la-empresa.md`](plantillas/historia-de-la-empresa.md), y la historia pasa a
 ser la fuente de verdad de todo lo narrativo: ninguna fase inventa un dato.
+
+---
+
+## 10. 🧱 Cursos extensos: bloques y pistas
+
+Cuando el tema es bastante extenso, la propuesta de E2 puede **dividir el curso en bloques**, cada uno
+con sus propios capítulos o fases, en vez de estirar una sola secuencia numerada. La división es
+independiente del tipo: el repaso la trae de fábrica (§4), pero un curso completo o un legacy también
+pueden pedirla.
+
+Dos palabras que este documento y las plantillas distinguen desde ahora:
+
+- **Parte**: una agrupación **dentro de una sola secuencia**. No tiene directorio, la numeración no
+  se reinicia (`00`–`05` son la Parte 0, `06`–`11` la Parte I) y vive en el arco de la propuesta y en
+  el encabezado de cada fase.
+- **Bloque**: un **directorio propio** (`NN-slug/`) con sus capítulos numerados desde el principio,
+  su `README.md` y su propio cierre (veredicto, simulación o boss). Un bloque puede tener partes por
+  dentro.
+
+### 10.1 Cuándo se propone dividir
+
+La sesión de E2 lo propone —no lo impone— cuando se cumple **al menos uno** de estos criterios, y
+dice cuál:
+
+- **El tamaño no cabe en una secuencia legible**: más de unas 25 fases o capítulos, o más de unas
+  100 horas, o un índice que ya no se recorre de un vistazo.
+- **El tema se parte en preguntas que se pueden estudiar por separado**: cada bloque responde una
+  sub-pregunta de la pregunta que ordena el curso, y un lector puede entrar por el bloque que necesita.
+- **Hay un troncal y ramas**: un bloque que todos leen primero y otros que lo dan por leído y bajan de
+  altitud cada uno en su dirección.
+- **Hay ritmos distintos**: una práctica que corre en paralelo a la teoría durante un tramo y luego se
+  cierra (eso es una pista, §10.3).
+- **La producción pide cortes**: cada bloque se puede cerrar, revisar y publicar sin esperar al resto.
+
+Si ninguno se cumple, el curso sigue en una sola secuencia, con partes si hacen falta. Y si los
+bloques necesitan **guías distintas** (otra audiencia, otro tipo, otro stack que cambia las reglas),
+no son bloques: son cursos hermanos dentro de la familia, cada uno con su `prompts/`.
+
+### 10.2 Bloques
+
+El modelo es `repaso-entrevistas/arquitectura/01-bases` (en `job-interview-sept-2026`): cinco
+bloques (`01-bases/`, `02-eventos/`, `03-datos/`, `04-seguridad/`, `05-banca/`) de 8 a 12 documentos
+cada uno, una guía **compartida por los cinco**, un troncal declarado y la regla de que los demás lo
+asumen leído.
+
+```text
+<curso>/
+├── README.md              el índice de bloques: qué cubre cada uno, estado, por dónde empezar
+├── prompts/               UNO para todo el curso: guía, diccionario, contrato, propuesta, plan
+├── 01-<slug>/             bloque troncal
+│   ├── README.md          índice, orden de lectura y mapa mental del bloque
+│   ├── 01-<tema>.md       capítulos o fases, numerados desde el principio en cada bloque
+│   ├── …
+│   └── NN-<cierre>.md     simulación y solucionario, veredicto o boss del bloque
+├── 02-<slug>/
+└── …
+```
+
+**Lo que los bloques comparten**: el `prompts/` entero (alcance, guía, diccionario, contrato de
+nombres, propuesta, plan, verificador), la historia si la hay, el código intermedio en `zz-code/` y la
+pregunta que ordena el curso. **Lo que cada bloque tiene propio**: su sub-pregunta, su numeración, su
+`README.md`, su cierre y, si la propuesta lo decide, sus apéndices.
+
+Las reglas que fija la propuesta, en su §3 y su §7:
+
+- **El grafo entre bloques**: cuál es el troncal, de cuál depende cada uno y cuáles son opcionales.
+  Sin troncal declarado, cada bloque es autocontenido.
+- **Numeración**: los bloques `NN-slug/` con dos dígitos; los documentos dentro de cada bloque
+  arrancan donde arranca el tipo (`00-` en curso completo, `01-` en repaso). Una referencia cruzada
+  se escribe `bloque/NN` (`03-datos/06`).
+- **Apéndices**: los que usa un solo bloque viven en ese bloque (`aNN-` desde `a01`); los
+  transversales, en la raíz del curso. Se decide por apéndice, en la propuesta de apéndices.
+- **Git**: los tags llevan el bloque (`fase-BB-NN-slug`), para que `git tag -l 'fase-02-*'` sea el
+  índice de un bloque; los commits, el prefijo `BB/fNN:`.
+- **Evaluación**: cada bloque cierra su propio aparato (sus ejercicios, su simulación, su
+  solucionario). Un banco o boss transversal a varios bloques va en el último bloque o en un bloque de
+  cierre propio.
+- **Producción**: el plan agrupa las tandas por bloque, ninguna tanda cruza bloques y el troncal se
+  escribe primero. Los `README.md` siguen `D-10` (al final); si los bloques se publican uno a uno, el
+  de cada bloque cierra ese bloque y solo el del curso queda para la tanda final.
+
+### 10.3 Pistas paralelas
+
+Una **pista** es un camino de bloques con su propio ritmo. El germen está en
+`cursos-ia/maestria-ia` (en `courses-ia-generated`): una pista A, el eje secuencial de once
+fases donde cada fase es un bloque con directorio propio, y una pista B, práctica, de seis bloques que
+corren **en paralelo solo durante la fase 0** y se cierran antes de la fase 1, con una regla de
+convergencia (la fase 9 retoma la pista B con rigor).
+
+```text
+<curso>/
+├── README.md              las pistas, cuándo corre cada una y cómo convergen
+├── prompts/
+├── pista-a-<slug>/        el eje: bloques NN-slug/ en secuencia
+│   └── 00-<slug>/ …
+└── pista-b-<slug>/        la práctica: bloques NN-slug/ que corren junto a un tramo del eje
+    └── 00-<slug>/ …
+```
+
+La propuesta declara, además de lo de §10.2, **en qué tramo del eje corre cada bloque de la pista
+paralela**, el reparto de horas mientras conviven (por ejemplo, 4 h de eje y 2 h de práctica), dónde
+se cierra la pista y **dónde converge** con el eje. Una pista paralela no es un track opcional: el
+track opcional (`beNN-`, §3) es otro lado del mismo sistema, vive en el mismo directorio y se puede
+saltar; la pista es parte del camino y tiene sus propios bloques.
+
+> 📝 `maestria-ia` es un germen escrito antes de este método: sus nombres (`track_a/`, directorios con
+> tilde) no siguen esta convención. Cuando se lleve al método, la propuesta decide si se renombra.
+
+### 10.4 Dónde queda escrita la decisión
+
+| Documento | Qué recoge |
+|---|---|
+| Ficha de arranque, pregunta 14 | la intuición del autor: una secuencia, bloques o pistas, o "me lo sugieres tú" |
+| Alcance §9 y `D-02` | la forma: tipo **y** organización (una secuencia · N bloques · pistas) |
+| Propuesta de fases §3 y §7 | el arco por bloques, el grafo, la numeración, los apéndices y el git |
+| Propuesta de fases §5 y §8 | las fichas agrupadas por bloque y la tabla resumen con la columna Bloque |
+| Plan de producción | las tandas agrupadas por bloque, el troncal primero |
+| Plantillas de capítulo, A y G | el bloque en el encabezado de cada fase y un README por bloque |

@@ -1,7 +1,7 @@
 # 🗺️ Prompts por fase
 ## {{Nombre del curso}} — {{N}} sesiones, {{N}} entregables
 
-> ✏️ **Plantilla:** se escribe en la etapa E5 (tanda P8), cuando la propuesta, la guía, el diccionario,
+> ✏️ **Plantilla:** se escribe en la etapa E5 (tanda P9), cuando la propuesta, la guía, el diccionario,
 > el contrato y las plantillas existen. Si el plan agrupa varias fases por tanda, el bloque puede ser
 > por tanda (con una subsección "Capítulo por capítulo") en vez de por fase.
 
@@ -35,8 +35,8 @@ aplícalo.**
 ## Marco (no lo repitas, aplícalo)
 
 Fuentes de verdad, en este orden: (1) `prompts/alcance-del-proyecto.md`,
-(2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/contrato-de-nombres.md` y
-`prompts/diccionario-de-terminos.md`, (4) `prompts/propuesta-fases-y-alcance.md`, con la ficha de
+(2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/contrato-de-nombres.md`,
+`prompts/convencion-de-git-y-tags.md` y `prompts/diccionario-de-terminos.md`, (4) `prompts/propuesta-fases-y-alcance.md`, con la ficha de
 esta fase y su fila de §8, (5) `prompts/plantillas-de-capitulo.md`, (6) {{los formatos propios y la
 historia, con la escena de esta fase en la tabla de escenas}}, (7) las fases ya escritas {{y el código
 de `src/` en el tag de la fase anterior}}, (8) las decisiones de esta sesión. Los `_desechable-*` no

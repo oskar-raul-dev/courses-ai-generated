@@ -79,6 +79,21 @@ obligatoria y el mismo miniproyecto que una fase:
 No son material a la carta: son la continuación del curso sobre el código que tú dejaste escrito.
 Se toman después de la Fase 17 porque necesitan el CLI, la API y la base de datos funcionando.
 
+### Y aparte, la carta
+
+**176 secciones sueltas en 22 tracks**, para cuando necesitas una herramienta concreta y no un
+curso: los portales sin API con Playwright, el correo que tiene que llegar, Airflow contra
+Temporal, pruebas e2e, OpenTelemetry, criptografía aplicada, una docena de motores de datos desde
+Python, JPype y GraalPy, optimización con OR-Tools, PostGIS, visión por computador… Cada una se lee
+sin haber leído ninguna otra, trae un ejemplo completo que se corrió en contenedor con Python
+3.14.7 —173 de las 176 enteras; las otras tres dicen qué quedó sin correr— y cierra con **cuándo no
+usar** lo que enseñó. Su código está también en `src/`, un directorio por sección.
+
+A diferencia del camino base, la carta cubre Linux y macOS, y algunas secciones necesitan Docker
+para sus servicios o bajan un modelo la primera vez; cada una lo dice en su ejemplo. Sus archivos
+empiezan por `op`; la lista de los 22 tracks y cómo se lee una sección están en
+[`0-ESTRUCTURA-CURSO.md`](0-ESTRUCTURA-CURSO.md), en *La carta*.
+
 ---
 
 ## 🎯 Qué lo hace distinto

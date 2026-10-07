@@ -1,7 +1,7 @@
 # 🧩 Plantillas de capítulo
 ## {{Nombre del curso}}
 
-> ✏️ **Plantilla:** se escribe en la etapa E4 (tanda P7). Trae siete esqueletos; **se conservan solo
+> ✏️ **Plantilla:** se escribe en la etapa E4 (tanda P8). Trae siete esqueletos; **se conservan solo
 > los del tipo de curso** y se borran los demás. Las de fase, capítulo y taller son **rígidas**: se
 > siguen literales, sin secciones extra ni reordenadas. La de apéndice es **laxa** a propósito.
 
@@ -36,7 +36,7 @@ flowchart TD
 ````markdown
 # {{emoji}} Fase {{NN}} — {{Tema}}: {{la promesa concreta del documento}}
 
-> **Curso:** {{nombre}} · Fase {{NN}} de {{total}} · Parte {{romano}} — {{nombre de la parte}} · **{{ligera | media | densa}}** {{⭐}}
+> **Curso:** {{nombre}} · {{Bloque BB — nombre del bloque ·}} Fase {{NN}} de {{total}} · Parte {{romano}} — {{nombre de la parte}} · **{{ligera | media | densa}}** {{⭐}}
 > **Depende de:** Fase {{NN-1}} · **Habilita:** Fase {{NN+1}}
 > **{{Línea propia del curso: perfil, motor, servicios que toca, paso de generación}}**
 > **Reserva:** {{incidentes, mediciones | nada}} · **Apéndices de apoyo:** {{a01, …}}
@@ -128,7 +128,14 @@ síntoma literal y lo que costó salir. Se dice si la apuesta se ganó o se perd
 
 {{Qué quedó funcionando, y la señal de que quedó bien.}}
 
-> 🏷️ **Tag:** `{{fase-NN-slug}}` — "{{el checklist en una línea por ítem}}".
+> 🏷️ **No cierres la fase sin el tag.** Con el checklist de arriba en verde y `git status` limpio:
+>
+> ```bash
+> git tag -a {{fase-NN-slug}} -m "{{FNN}} cerrada: <el checklist, en una línea por ítem>"
+> ```
+>
+> Los commits de la fase llevan su prefijo (`{{fNN}}: …`) y los de ejercicio su número
+> (`{{fNN}} ej17: …`).
 
 ---
 
@@ -146,6 +153,9 @@ síntoma literal y lo que costó salir. Se dice si la apuesta se ganó o se perd
   marcador de pendiente.
 - El problema va antes que el mecanismo, y se reproduce, no se cuenta.
 - Lo que crece se alimenta al cerrar: documentos vivos, apéndices de consulta, solucionario.
+- El bloque 🏷️ es el de la convención de git §9, literal: el tag es `fase-` + el slug del archivo, y
+  no enlaza la convención (vive en `prompts/`). La Fase 0 lleva además la sección de git que la
+  convención §0 pide.
 - Ningún `README.md` se toca. 🗑️ No se cita un `_desechable-*` ni un documento de `prompts/`.
 
 ---
@@ -364,7 +374,11 @@ mediador) cambia la respuesta**.
 
 ## G · README del curso o del bloque
 
-Se escribe en la tanda de README, **al final**, cuando todo el contenido existe.
+Se escribe en la tanda de README, **al final**, cuando todo el contenido existe. Si el curso va en
+bloques (`zz-instrucciones/01-tipos-de-curso.md` §10), hay dos: el de cada bloque, con su orden de
+lectura y su mapa mental (al cerrar el bloque, si los bloques se publican uno a uno); y el del curso,
+con la tabla de bloques (qué cubre cada uno, estado, cuál es el troncal) en lugar de la tabla de
+documentos.
 
 ````markdown
 # {{emoji}} {{Nombre del curso}}

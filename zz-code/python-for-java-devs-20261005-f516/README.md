@@ -1,10 +1,10 @@
 # 🧪 python-for-java-devs-20261005-f516 · cómo correr estas pruebas
 
-> **Curso:** python-for-java-devs · **Tanda:** carta opcional, T1–T19 (sigue T20) · **Creado:** 2026-10-05
+> **Curso:** python-for-java-devs · **Tanda:** carta opcional, T1–T24 (cerrada) · **Creado:** 2026-10-05
 > **Propósito:** preparar, escribir y probar en contenedor la carta opcional (`op001`–`op176`).
 > **Vigencia:** el README se escribió el 2026-10-06 a partir de la transcripción de la sesión `5c52573d`
-> (05/10, 14:59–21:57 UTC); cubre hasta T19, 156 de 176 secciones. **El directorio sigue vigente**: la
-> sesión que abra T20 actualiza este README mientras prueba.
+> (05/10, 14:59–21:57 UTC) y se completó el 2026-10-07 al cerrar T20–T24 (las 176 secciones). **Estado: extraído**:
+> el código de cada sección está en el curso, en `src/opNNN-…/`.
 
 Este directorio guarda el **arnés** con el que se probó cada sección de la carta. El código de cada
 sección vive en `salidas/<id>/` (por ejemplo `salidas/qa06/`), que git **no** versiona; su copia
@@ -141,3 +141,18 @@ cerrar la carta. Lo regenerable dentro de `salidas/` (`.venv`, `dist`, `build`, 
   que se bajan de nuevo con los comandos de `jv03`.
 - **Los comandos sueltos de la sesión:** los 864 comandos, en orden, están en
   `../python-for-java-devs-20261006-772f/04-carta-5c52573d/comandos.sh`.
+
+## 11. ➕ Lo que agregó la sesión del 07/10/2026 (T20–T24)
+
+- **`comparar.py <sección.md> <salida.txt> [N]`**: compara la salida rotulada número N de la sección con una corrida; `IGUAL` o el diff.
+- **`ensamblar.py salidas/<id>/seccion.md <opNNN-….md> [código salida]`**: arma la sección desde una plantilla con `__CODIGO:archivo__` y
+  `__SALIDA:archivo__`, para que el código y la salida publicados sean exactamente los que corrieron.
+- **`probado.py`** toma la fecha del encabezado de la propia sección (T20–T22 dicen 07/10/2026).
+- **`src_desde_secciones.py --informe | --escribir`** (T24): reconoce los archivos de cada sección (el párrafo que los nombra, o el comando que los
+  corre) y escribe `src/opNNN-…/` con un README por sección. Lo regenera todo desde el Markdown: si se edita una sección, se vuelve a correr.
+- Las corridas de T20–T22 usaron `humo.py`/`humo_servicio.py` con el mismo patrón de §4; las que necesitaban paquetes del sistema
+  (`libegl1 libgles2` para MediaPipe, `xvfb` para turtle, Cairo, Pango y FFmpeg para manim) los instalan con `apt-get` dentro del
+  `--cmd`, y las de MediaPipe corren con `uv` 0.12.23 y el `pyproject.toml` de la sección (`override-dependencies`).
+- **`salidas/t24/`**: los andamios de la verificación final. `systemd/Dockerfile` (imagen `pfjd-systemd:t24`, ya borrada) corre con
+  `--privileged --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw` **sin** `--tmpfs /run`; aun así, systemd 257 no monta credenciales
+  en el kernel de Docker Desktop. `co05/servidor.py` es el FTPS de prueba; `lg02/c*-minimo.xsd`, la solución del ejercicio 4 (no se publica).

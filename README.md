@@ -11,8 +11,8 @@ Colección de cursos educativos sobre paradigmas modernos de software engineerin
 ### 🎨 vue2-legacy-for-backend-devs
 **Vue 2 para ingenieros de backend** — Curso de Vue 2 orientado a quiénes vienen del backend. Estructura: tronco (12 lecciones fundamentales F0–F11), después rutas opcionales (Quasar, Vuetify, Nuxt). Incluye complemento de integración con MongoDB. Objetivo: backend engineers productivos en frontend.
 
-### ⚛️ react-16-legacy
-**React 16 Legacy** — Curso práctico de React 16 para ingenieros de otros paradigmas. Cubre fundamentos hasta patrones avanzados: componentes, ciclo de vida, estado, props, hooks. Proyecto integrador: aplicación real con manejo de estado y efectos sin recargar.
+### ⚛️ react-16-legacy-for-backend-devs
+**React 16 Legacy para devs de backend** — Curso práctico de 96 horas para mantener una aplicación React 16 heredada (Rifas y Chances S.A.S., una empresa ficticia): clases y hooks conviviendo, Redux Toolkit con Redux clásico, redux-observable, race conditions, hora dura y dinero en enteros. 12 fases, 13 apéndices y un cuaderno de 20 incidentes. Track opcional de 84 horas que reemplaza el mock por un backend en Go 1.19 contra PostgreSQL 13 sin tocar el frontend, con su propio cuaderno de 16 incidentes. Vive en `cursos-legacy/`.
 
 ### ☁️ repaso-gcp-entrevistas
 **GCP Core Refresh** — Repaso de Google Cloud para entrevistas de arquitectura backend, más una serie práctica que se ejecuta contra un proyecto real. Dos bloques: 13 capítulos teóricos con solucionario centralizado, y 8 labs acumulativos con 4 apéndices de consulta. Autocontenido: no asume conocimiento de ninguna otra nube y no traduce desde AWS.

@@ -46,6 +46,36 @@ borra esta sección.}}
 
 ## 3. 🪜 El arco
 
+> ✏️ **Plantilla:** primero se decide la **división** (§3.0): una sola secuencia con partes, bloques
+> con directorio propio o pistas paralelas. Una **parte** agrupa fases sin directorio y sin reiniciar
+> la numeración; un **bloque** es un directorio con sus propios capítulos, su README y su cierre.
+> Las reglas están en `zz-instrucciones/01-tipos-de-curso.md` §10.
+
+### 3.0 La división
+
+**{{Una sola secuencia | N bloques | pistas paralelas}}**, porque {{el criterio de 01-tipos §10.1
+que se cumple —tamaño, sub-preguntas que se estudian por separado, troncal y ramas, ritmos distintos,
+cortes de producción— o "ninguno se cumple"}}.
+
+{{Si hay bloques o pistas, la tabla y el grafo; si es una sola secuencia, borra el resto de §3.0.}}
+
+| Bloque | Directorio | Sub-pregunta que responde | {{Fases / Capítulos}} | Depende de | {{Troncal / Obligatorio / Opcional}} |
+|---|---|---|---|---|---|
+| **{{01 · Nombre}}** | `{{01-slug/}}` | {{…}} | {{01 – 10}} | — | troncal |
+| **{{02 · Nombre}}** | `{{02-slug/}}` | {{…}} | {{01 – 08}} | {{01}} | {{obligatorio}} |
+
+```mermaid
+flowchart LR
+    B1["{{01 · troncal}}"] --> B2["{{02 · …}}"]
+    B1 --> B3["{{03 · …}}"]
+    B1 -.-> B4["{{04 · opcional}}"]
+```
+
+{{Solo con pistas: en qué tramo del eje corre cada bloque de la pista paralela, el reparto de horas
+mientras conviven, dónde se cierra y dónde converge con el eje.}}
+
+### 3.1 El arco por {{partes | bloques}}
+
 {{Partes | Bloques}} y la pregunta que responde cada una:
 
 | {{Parte / Bloque}} | Pregunta que responde | {{Fases / Capítulos}} | {{Peso total / Horas}} |
@@ -61,7 +91,7 @@ flowchart LR
 {{Las reglas de método que atraviesan el arco: infra antes que dominio, el piloto primero, qué se
 difiere y por qué.}}
 
-### 3.1 Orden de aprendizaje contra orden de urgencia *(opcional)*
+### 3.2 Orden de aprendizaje contra orden de urgencia *(opcional)*
 
 {{Si el lector puede tener prisa (una entrevista esta semana, un examen el mes que viene), la ruta
 corta: los cinco capítulos que responden las preguntas más frecuentes, con la pregunta al lado.}}
@@ -80,7 +110,8 @@ corta: los cinco capítulos que responden las preguntas más frecuentes, con la 
 longitud y los ejercicios por peso están en la guía §9.
 
 **Por horas:** {{total}} h ÷ {{h semanales}} h ≈ {{N}} semanas; tope {{N}} h. **Cómo salen las
-horas:** {{lectura por capítulo + preguntas en voz alta + simulación}}. Se recalibran con lo que tarde
+horas:** {{lectura por capítulo + preguntas en voz alta + simulación}}. {{Con bloques, el subtotal de
+cada uno, para que quien hace solo el troncal sepa cuánto le toca.}} Se recalibran con lo que tarde
 de verdad la primera {{fase}}.
 
 ---
@@ -89,10 +120,13 @@ de verdad la primera {{fase}}.
 
 > ✏️ **Plantilla:** una ficha por unidad. La ficha es **el piso, no el índice**: lo que dice no se
 > puede omitir sin declararlo en el propio documento; lo que no dice puede entrar si se justifica.
+> Con bloques, las fichas se agrupan por bloque (``### {{01 · Nombre}} — `{{01-slug/}}` ``) y su número
+> se reinicia en cada uno; la referencia cruzada es `{{bloque/NN}}`.
 
-### {{Parte 0 · Nombre}}
+### {{Parte 0 · Nombre | Bloque 01 · Nombre — `01-slug/`}}
 
-{{Una línea con la regla propia de la parte, si la tiene.}}
+{{Una línea con la regla propia de la parte o del bloque, si la tiene; en un bloque, también su
+cierre: veredicto, simulación y solucionario, o boss.}}
 
 #### Variante A · ficha de curso completo
 
@@ -134,8 +168,15 @@ se dice aquí y por qué —"todo lo que sería consulta es una fase"—.}}
 - **{{Fases}}:** `NN-slug.md`, dos dígitos, en minúsculas y con guiones. **Apéndices:** `aNN-slug.md`.
   **Tracks opcionales:** `<tt>NN-slug.md`, con sus propios prompts en archivos nuevos.
 - **Repasos:** `NN-bloque/NN-tema.md`, `NN-simulacion-de-entrevista.md`, `NN-respuestas.md`.
-- **Los slugs son canónicos**: una {{fase}} no se renombra una vez escrita.
-- **Git:** {{tags `fase-NN-slug` al cerrar cada fase; commits con prefijo `fNN:`; los crea el autor}}.
+- **Bloques** *(si §3.0 los decide)*: `NN-slug/` con su `README.md`; dentro, la numeración arranca de
+  nuevo donde arranca el tipo (`00-` o `01-`). **Pistas:** `pista-<letra>-<slug>/`, con sus bloques
+  dentro. **Apéndices:** {{los de un solo bloque, dentro del bloque desde `a01`; los transversales, en
+  la raíz del curso}}.
+- **Los slugs son canónicos**: una {{fase}} no se renombra una vez escrita, ni un bloque.
+- **Git:** {{tags `fase-NN-slug` al cerrar cada fase —con bloques, `fase-BB-NN-slug`—; commits con
+  prefijo `fNN:` —con bloques, `BB/fNN:`—}}. Aquí se decide solo la forma; los nombres se congelan en
+  el contrato de nombres §7 y las reglas de uso, en `convencion-de-git-y-tags.md` (etapa E4).
+  {{Si el lector trabaja en más de un repositorio (un track, un curso hermano), cuántos y por qué.}}
 
 ---
 
@@ -143,10 +184,12 @@ se dice aquí y por qué —"todo lo que sería consulta es una fase"—.}}
 
 > ✏️ **Plantilla:** la tabla que copian las plantillas y los prompts. Si cambia, cambia aquí primero.
 
-| # | Archivo | {{Parte}} | {{Peso / Horas}} | {{Ejercicios / Preguntas}} | {{Incidentes · 📏 · Taller}} |
+| # | Archivo | {{Parte | Bloque}} | {{Peso / Horas}} | {{Ejercicios / Preguntas}} | {{Incidentes · 📏 · Taller}} |
 |---|---|---|---|---|---|
-| {{00}} | `{{00-slug.md}}` | {{0}} | {{media}} | {{20}} | {{…}} |
+| {{00}} | `{{00-slug.md | 01-slug/01-tema.md}}` | {{0 | 01}} | {{media}} | {{20}} | {{…}} |
 | | **Total** | | | **{{N}}** | |
+
+{{Con bloques, un subtotal por bloque antes del total.}}
 
 ---
 

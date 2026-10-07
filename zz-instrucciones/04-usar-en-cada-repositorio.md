@@ -35,6 +35,7 @@ flowchart TD
 | Documentos vivos | no por defecto | `BENCHMARKS.md` e `INSTINTOS.md` |
 | Forma de una lección | problema → mecanismo → precio → veredicto | setup → conceptos → antipatrones → traducción → ejercicios → veredicto honesto |
 | Tracks opcionales | bloque `06-talleres/` | prefijo de track: `beNN-…`, `bea-NN-…`, con sus propios prompts |
+| Cursos extensos | bloques `NN-slug/` con troncal (`arquitectura/01-bases`) | una secuencia con partes; bloques o pistas paralelas cuando el tema lo pide (`01-tipos-de-curso.md` §10) |
 | Autocontención | editorial: los otros corpus como sugerencia de estudio | total, declarada curso por curso |
 | Material personal | `Entrevistas/`, `REPASO-*`: nunca se cita | `_oskar/`: nunca se edita ni se cita |
 | Código intermedio | `zz-code/` en la raíz del repositorio | su propio `zz-code/` en la raíz, cuando se cree (se copia `README.md`, `.gitignore`, `nuevo.py` y `limpiar.py`) |

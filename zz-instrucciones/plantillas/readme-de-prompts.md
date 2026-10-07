@@ -20,19 +20,21 @@ abre. Quien escribe una fase lo lee entero antes de teclear la primera línea.
 | [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md) | cómo se escribe; checklist de §12 | en cada sesión, siempre |
 | [`diccionario-de-terminos.md`](diccionario-de-terminos.md) | qué palabra para cada concepto; el código del dominio | cada vez que dudes de un término |
 | [`contrato-de-nombres.md`](contrato-de-nombres.md) | los identificadores congelados | antes de cada fase, y cada vez que haga falta un nombre |
+| [`convencion-de-git-y-tags.md`](convencion-de-git-y-tags.md) | commits, tags de fase, ejercicio e incidente; el bloque 🏷️ de cierre | al escribir la Fase 0, el cierre de cada fase y cada incidente |
 | [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) | la secuencia y la ficha de cada fase; decisiones | en cada sesión de fase |
 | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md) | los esqueletos | al empezar y al cerrar cada documento |
 | [`prompts-de-fase.md`](prompts-de-fase.md) | el marco común y un bloque por fase | al abrir cada sesión |
 | [`plan-de-produccion.md`](plan-de-produccion.md) | tandas, estado, bitácora, checklist | al empezar y al cerrar cada sesión |
 | `verificar-corpus.py` y `verificador_base.py` | las validaciones base y las propias del curso | al cerrar cada tanda |
 
-**Orden de autoridad**, cuando dos se contradicen: (1) el alcance, (2) la guía, (3) el contrato y el
-diccionario, (4) la propuesta, (5) las plantillas y los formatos, (6) los prompts, (7) el plan, solo
-sobre el orden, (8) los documentos ya publicados, (9) las decisiones del chat actual.
+**Orden de autoridad**, cuando dos se contradicen: (1) el alcance, (2) la guía, (3) el contrato, la
+convención de git y el diccionario, (4) la propuesta, (5) las plantillas y los formatos, (6) los
+prompts, (7) el plan, solo sobre el orden, (8) los documentos ya publicados, (9) las decisiones del
+chat actual.
 
 ```mermaid
 flowchart TD
-    AL["alcance"] --> GU["guía"] --> NO["contrato y diccionario"] --> PR["propuesta"]
+    AL["alcance"] --> GU["guía"] --> NO["contrato, convención de git<br/>y diccionario"] --> PR["propuesta"]
     PR --> PL["plantillas y formatos"] --> PF["prompts"] --> PP["plan: solo el orden"]
     PP --> PU["documentos publicados"] --> CH["decisiones del chat"]
 ```

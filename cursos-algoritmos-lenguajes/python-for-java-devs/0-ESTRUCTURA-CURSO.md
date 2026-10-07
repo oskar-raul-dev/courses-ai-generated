@@ -228,11 +228,73 @@ base. Traen la misma plantilla de diez secciones, la misma medición obligatoria
 miniproyecto, y sus archivos son `ia01-…` y `ds01-…`. Se toman después de la Fase 17 porque
 necesitan la API, el CLI y la base de datos funcionando.
 
-Los **tracks a la carta** son otra cosa: secciones sueltas y opcionales —interfaces de usuario,
-automatización, otros motores de datos, el panorama de gestores de paquetes, la interoperación
-con la JVM— que se leen cuando necesitas un tutorial concreto de una herramienta, sin orden y sin
-compromiso. Sus archivos empiezan por `op` (`op014-ui02-gradio.md`), de modo que todo lo opcional
-queda en un solo bloque al final y el camino base se lista limpio.
+Los **tracks a la carta** son otra cosa: secciones sueltas y opcionales que se leen cuando
+necesitas una herramienta concreta, sin orden y sin compromiso. Tienen su propia sección, la
+siguiente.
+
+---
+
+## 🍽️ La carta
+
+La carta son **176 secciones en 22 tracks**, de unas 260 líneas cada una, sobre lo que el
+camino base no alcanza a cubrir: legado e intercambio sectorial, automatización contra sistemas
+ajenos, correo y transferencia de archivos, orquestación, pruebas, observabilidad, seguridad,
+plantillas, interfaces sin frontend, una docena de motores de datos, la convivencia con la JVM, y así
+hasta la visión por computador y los juguetes para enseñar. Sus archivos empiezan por `op`
+(`op065-ui02-gradio.md`), de modo que todo lo opcional queda en un solo bloque al final y el camino
+base se lista limpio.
+
+El número `opNNN` es el orden en que se escribieron, no un orden de lectura. **Primer turno:** los
+once tracks que tienen un encargo directo en Áurea, desde los portales de las aseguradoras que no
+tienen API hasta el MySQL de Odontovía. **Segundo turno:** los seis cuyo encargo es real pero no
+urgente. **Tercer turno:** los cinco que no tienen encargo en Áurea y usan su propio ejemplo, el que
+la herramienta pide.
+
+| Track | Tema | Secciones | Empieza en | Turno |
+|---|---|---|---|---|
+| `lg` | Legado e intercambio sectorial | 7 (op001–op007) | [`lg01`](op001-lg01-ancho-fijo-y-mainframe.md) | 1.º |
+| `au` | Automatización externa | 7 (op008–op014) | [`au01`](op008-au01-http-contra-sistemas-ajenos.md) | 1.º |
+| `co` | Comunicaciones y transferencia | 7 (op015–op021) | [`co01`](op015-co01-correo-saliente.md) | 1.º |
+| `wf` | Orquestación de trabajos y flujos | 8 (op022–op029) | [`wf01`](op022-wf01-el-eje.md) | 1.º |
+| `qa` | Calidad, pruebas y mantenimiento | 10 (op030–op039) | [`qa01`](op030-qa01-la-piramide-para-uno.md) | 1.º |
+| `ob` | Observar el sistema propio | 7 (op040–op046) | [`ob01`](op040-ob01-las-senales.md) | 1.º |
+| `se` | Seguridad aplicada y criptografía | 8 (op047–op054) | [`se01`](op047-se01-el-modelo.md) | 1.º |
+| `tx` | Texto, plantillas y documentación | 9 (op055–op063) | [`tx01`](op055-tx01-el-eje.md) | 1.º |
+| `ui` | Interfaces y entregables sin frontend | 13 (op064–op076) | [`ui01`](op064-ui01-el-modelo-y-su-costo.md) | 1.º |
+| `db` | Hablarle a cada sistema de datos | 15 (op077–op091) | [`db01`](op077-db01-el-db-api.md) | 1.º |
+| `jv` | Convivir con tu stack Java | 4 (op092–op095) | [`jv01`](op092-jv01-los-formatos-de-la-jvm.md) | 1.º |
+| `so` | Optimización, simulación y decisiones | 7 (op096–op102) | [`so01`](op096-so01-describir-en-vez-de-programar.md) | 2.º |
+| `or` | ORMs y acceso a datos | 8 (op103–op110) | [`or01`](op103-or01-el-eje.md) | 2.º |
+| `vz` | Visualización y gráficos | 4 (op111–op114) | [`vz01`](op111-vz01-el-modelo-y-matplotlib.md) | 2.º |
+| `sy` | El sistema operativo y los procesos | 8 (op115–op122) | [`sy01`](op115-sy01-subprocess-a-fondo.md) | 2.º |
+| `pr` | Protocolos y contratos más allá de REST | 8 (op123–op130) | [`pr01`](op123-pr01-el-eje.md) | 2.º |
+| `pk` | El panorama de gestores y empaquetado | 8 (op131–op138) | [`pk01`](op131-pk01-el-modelo-real.md) | 2.º |
+| `ff` | La frontera nativa | 8 (op139–op146) | [`ff01`](op139-ff01-el-modelo.md) | 3.º |
+| `ar` | Archivos y multimedia | 10 (op147–op156) | [`ar01`](op147-ar01-binario-de-verdad.md) | 3.º |
+| `gi` | Geoespacial | 7 (op157–op163) | [`gi01`](op157-gi01-el-modelo.md) | 3.º |
+| `cv` | Visión por computador | 8 (op164–op171) | [`cv01`](op164-cv01-el-modelo.md) | 3.º |
+| `ed` | Didáctica, divulgación y juguetes | 5 (op172–op176) | [`ed01`](op172-ed01-turtle.md) | 3.º |
+
+**Cómo se lee una sección.** Suelta: ninguna necesita otra sección de la carta, y las que se apoyan
+en una fase del camino base lo dicen en su encabezado. Todas tienen la misma forma —qué problema
+resuelve, el modelo, un ejemplo completo que corre, lo que se rompe, cuándo **no** usar la
+herramienta, entre ocho y doce ejercicios con su criterio verificable, referencias y cierre— y
+todas cierran con su tag, en su propio espacio de nombres: `op-<track>-fase-NN`
+(`git tag -l 'op-*'` lista solo la carta, y `git tag -l 'fase-*'` sigue siendo el camino base).
+
+**Qué se garantiza del código.** Cada ejemplo se corrió en un contenedor con Python 3.14.7, contra
+los servicios reales cuando los hay (bases de datos, colas, correo, un PostGIS), y las salidas que
+publica la sección son las de esa corrida, con su fecha. De las 176, **173 se probaron enteras** y
+3 en parte; esas tres dicen en su encabezado qué quedó sin correr y por qué. El código de cada una
+está además en `src/opNNN-…/`, extraído de la sección tal como se publica. Las versiones de cada
+paquete se verificaron contra PyPI el día en que se escribió el track, y van en el texto. La carta cubre
+Linux y macOS: lo que solo corre en Windows se dice y no se escribe. Los servicios corren en
+contenedores con un `compose.yaml` dentro de la sección, y los modelos que hagan falta se bajan una
+vez, de una URL fija que la sección nombra.
+
+**Qué no es la carta.** No es la continuación del curso —eso son los complementos `ia` y `ds`— ni
+una lista de lectura obligatoria. Sus secciones no tienen miniproyecto ni medición `⏳`: tienen
+ejercicios con criterio, y las cifras que citan son de una corrida, dichas como tales.
 
 ---
 
@@ -281,6 +343,11 @@ La lectura es un número medido: **137.000 palabras** a 200 por minuto. Los mini
 su calibración —entre dos y cinco horas cada uno—, y la columna de ejercicios supone que haces
 **uno de cada tres** de los 450, a unos veinte minutos. Si los haces todos, suma otras cien horas;
 si no haces ninguno, resta cuarenta y nueve y el curso sigue funcionando, aunque bastante peor.
+
+La carta no entra en estas bandas, porque no se recorre entera: son unas **262.000 palabras** de
+prosa (sin contar el código), unas **22 horas** de lectura a ese mismo ritmo, y **1.722 ejercicios**.
+Una sección son unas 1.500 palabras, ocho minutos de lectura; el resto es correr el ejemplo y los
+ejercicios que elijas.
 
 > 📝 **Lo que estas bandas no capturan** es el tiempo que vas a pasar peleando con algo que no
 > entiendes, que es donde de verdad se aprende y que no se puede estimar. Tómalas como el piso, no

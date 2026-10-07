@@ -3,9 +3,9 @@
 > Python para desarrolladores Java senior · **Carta** · Track `sy` — El sistema operativo, los
 > procesos y los archivos en movimiento · sección 6 de 8
 > Se lee suelta: no hace falta ninguna otra sección de la carta.
-> Versiones verificadas contra PyPI el 05/10/2026 · Código probado en parte el 05/10/2026 con Python 3.14.7,
-> en contenedor: el protocolo `sd_notify`, las señales y supervisord, sí; la unidad de systemd, no (necesita systemd
-> como PID 1; es el ejercicio 7).
+> Versiones verificadas contra PyPI el 05/10/2026 · Código probado el 05/10/2026 con Python 3.14.7, en contenedor: el
+> protocolo `sd_notify`, las señales y supervisord; y el 07/10/2026 la unidad de systemd, en un contenedor con systemd
+> 257 como PID 1.
 
 ---
 
@@ -205,6 +205,27 @@ El servicio avisó que estaba listo, mandó cinco latidos de *watchdog*, recarg�
 alcanzó cinco ciclos) y terminó en orden con `SIGTERM`, con código 0, avisando `STOPPING=1`. Su salida son tres líneas con nivel, que es todo lo que el
 journal necesita. Y con `AUREA_FALLAR`, supervisord lo vio salir con 1 —"not expected"— y lo volvió a lanzar: tres salidas con error en los seis segundos
 de la prueba, cada una seguida de un proceso nuevo.
+
+**Y bajo systemd de verdad (07/10/2026).** Con la unidad instalada en un contenedor con systemd 257 como PID 1:
+`systemctl start` volvió recién cuando llegó el `READY=1` (`ActiveState=active`, `WatchdogUSec=30s`), `systemctl
+reload` llegó como `SIGHUP`, y con `AUREA_FALLAR=1` el servicio salió con 1 y `Restart=on-failure` lo relanzó a los
+cinco segundos. Después se congeló el proceso con `kill -STOP` —vivo, pero sin mandar latidos— y pasó esto (extracto del journal, sin las líneas `Starting` y `Started`):
+
+```text
+python[353]: vigilante arrancando
+systemd[1]: aurea-vigilante.service: Watchdog timeout (limit 30s)!
+systemd[1]: aurea-vigilante.service: Killing process 353 (python) with signal SIGABRT.
+systemd[1]: aurea-vigilante.service: Main process exited, code=killed, status=6/ABRT
+systemd[1]: aurea-vigilante.service: Failed with result 'watchdog'.
+systemd[1]: aurea-vigilante.service: Scheduled restart job, restart counter is at 1.
+python[361]: vigilante arrancando
+systemd[1]: Stopping aurea-vigilante.service - Vigilante de la carpeta de la aseguradora...
+python[361]: terminando en orden después de 19 ciclos
+```
+
+El proceso colgado no murió solo: lo mató el *watchdog* a los 30 segundos y la unidad lo reinició, que es exactamente
+lo que ningún monitor de "¿está vivo el proceso?" habría detectado. Y las líneas con `<3>` llegaron al journal con
+`PRIORITY=3`, así que `journalctl -u aurea-vigilante -p err` las encuentra sin mirar el texto.
 
 **Detalles con intención**
 

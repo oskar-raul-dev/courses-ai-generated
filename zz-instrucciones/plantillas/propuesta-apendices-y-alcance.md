@@ -48,9 +48,12 @@ Cuatro reglas lo mantienen en su sitio:
 
 | # | Archivo | Qué es | Clase | Ej. | Cuándo se escribe | Tag |
 |---|---|---|---|---|---|---|
-| a01 | `a01-{{slug}}.md` | {{…}} | laboratorio | {{8}} | antes de {{F00}} | {{✅ / —}} |
+| a01 | `a01-{{slug}}.md` | {{…}} | laboratorio | {{8}} | antes de {{F00}} | {{— / `apendice-a01`, opcional}} |
 
-Los nombres de archivo son canónicos y no se renumeran.
+Los nombres de archivo son canónicos y no se renumeran. **Los apéndices no cierran con tag**: un tag
+marca un cambio en el repositorio y un apéndice explica lo que ya está ahí. La columna dice solo si el
+apéndice deja archivos versionados a los que el lector puede querer volver con un `apendice-aNN`
+opcional ([convención de git](convencion-de-git-y-tags.md) §2).
 
 ---
 
