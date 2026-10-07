@@ -1,0 +1,139 @@
+■ forense-fase-00.md | 🧭 La ruta | ÚLTIMO
+  Paso 5 — Cuando la consola está limpia y aun así algo falló
+  … Con `sourceMap.hidden: true` puesto y el `.map` al lado, DevTools traduce esa línea al archivo y la línea reales. Sin él, `main.8a1f2c.js:1:48213` es todo lo que vas a tener nunca. Es la diferencia en
+
+■ forense-fase-01.md | 🧭 La ruta | INTERMEDIO
+  Paso 4 — Dentro del módulo: el `RouterModule.forChild` y su `<router-o
+  … // {…} → existe y no se pinta: falta el <router-outlet> o el CSS lo oculta ```
+
+■ forense-fase-02.md | 🧭 La ruta | INTERMEDIO
+  Paso 4 — Dónde va el breakpoint en un interceptor funcional
+  … ``` Ese `isLogin` es la mitad del bug clásico de esta fase: si el interceptor no distingue el `401` del **login** —que significa "te equivocaste de contraseña"— del `401` de **cualquier otra ruta** —q
+
+■ forense-fase-05.md | 🧭 La ruta | INTERMEDIO
+  Paso 2 — Si dice `Standalone[…]`: la pregunta no es "qué falta" sino "
+  … | `inject(CLIENT_LIST_PAGE_SIZE, { optional: true }) ?? 25` | si de verdad puede no estar. Con `strict`, el tipo pasa a `number \| null` y te obliga a decidir el valor por defecto en el sitio | > 🧭 **
+
+■ forense-fase-05.md | 🧭 La ruta | INTERMEDIO
+  Paso 3 — Si dice `…Module`: la búsqueda de siempre
+  … ``` El caso típico de este proyecto: alguien quitó `provideHttpClient(...)` de los `providers` de `CoreModule` —donde lo dejó la Fase 2— y todo lo que pide `HttpClient` deja de resolverse. Como `CoreM
+
+■ forense-fase-05.md | 🧭 La ruta | ÚLTIMO
+  Paso 4 — Y ahora en producción, que es donde de verdad los vas a leer
+  … Y para los servicios, cuyo nombre sí se minifica, la herramienta es la de siempre: los source maps con `sourceMap.hidden: true` de la **Fase 13**. Sin ellos, `t` es todo lo que vas a tener. ---
+
+■ forense-fase-06.md | 🧭 La ruta | INTERMEDIO
+  Paso 3 — Si es `PENDING`: qué pasó con la petición
+  … ``` Quita cualquiera de las tres y tienes un ticket distinto: sin `timer`, una petición por tecla; sin `catchError`, el formulario se bloquea cuando el servidor tose; sin `first()`, el control se qued
+
+■ forense-fase-06.md | 🧭 La ruta | ÚLTIMO
+  Paso 4 — Si es `VALID` y aun así no guarda
+  … Si `submitting` se quedó en `true` para siempre, el guardado anterior falló sin reponer la bandera — un `error` que no la baja. Es el mismo error de forma que el `PENDING` colgado: **un estado que sól
+
+■ forense-fase-07.md | 🧭 La ruta | INTERMEDIO
+  Paso 2 — ⭐ La URL de la petición contesta antes que el código
+  … | No hay ninguna petición a `/templates` | la plantilla salió de un estado ya cargado | y ese estado puede tener la vigente: mira el `*StateService` | > 🧭 **La regla que hace posible este paso, y que 
+
+■ forense-fase-07.md | 🧭 La ruta | INTERMEDIO
+  Paso 4 (ticket 1) — Cómo se demuestra que no hay bug
+  … Y la frase que cierra el ticket, que es la parte difícil porque contradice a quien lo reportó: > *"No está desactualizada: está congelada, y es lo que tiene que pasar. Una inspección firmada en 2023 d
+
+■ forense-fase-07.md | 🧭 La ruta | INTERMEDIO
+  Paso 5 (ticket 2) — Dónde está la línea
+  … ``` **Cada aparición de `resolveTemplateVersion` hay que justificarla.** Es correcta cuando se está **empezando** una inspección nueva —ahí sí se pregunta qué versión rige hoy— y es un bug en cualquie
+
+■ forense-fase-07.md | 🧭 La ruta | ÚLTIMO
+  Paso 6 — El otro incidente: "el sistema dice que hay dos plantillas vi
+  … > ⚠️ **Publicar una versión nueva es una operación de dos escrituras**: nace la v3 con su `validFrom` **y** se cierra la v2 poniéndole `validUntil`. Si sólo se hace la primera, no falla nada hoy y el 
+
+■ forense-fase-08.md | 🧭 Ruta A — el bucle de `valueChanges` | ÚLTIMO
+  Paso 3 — El ciclo, dibujado, y las dos formas de romperlo
+  … > ⚠️ **Y una causa del mismo bucle que no es un `patchValue`:** `disable()` y `enable()` **también disparan `valueChanges`** salvo que les pases `{ emitEvent: false }`. Un ítem que se deshabilita segú
+
+■ forense-fase-08.md | 🧭 Ruta B — el control huérfano | INTERMEDIO
+  Paso 2 — Y la comprobación gemela: la versión
+  … ``` **Un formulario dinámico construido con la plantilla equivocada no falla: funciona.** Ése es el peligro entero.
+
+■ forense-fase-08.md | 🧭 Ruta B — el control huérfano | ÚLTIMO
+  Paso 3 — Por qué el `FormRecord` se rehace y no se parchea
+  … > 🧭 **La regla del proyecto que evita esta familia entera: la clave es el `itemId`, nunca la posición.** Con `FormArray` indexado por posición, reordenar los ítems en una v3 desplazaría las respuestas
+
+■ forense-fase-08.md | 🧭 Ruta C — `NG0100`, y su desaparició | ÚLTIMO
+  Paso 2 — El experimento que enseña la lección de verdad
+  … > 🧠 **Guarda esa sensación.** En la Fase 13 vas a ver la versión general del mismo fenómeno: el build de producción no arregla nada, sólo deja de contártelo. Un `NG0100` que "se arregló solo" al despl
+
+■ forense-fase-09.md | 🧭 Ruta A — la regla que no bloqueó | INTERMEDIO
+  Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+  … ``` > ⚠️ **`strict: true` no te salva de esto, y conviene entender por qué.** El compilador comprueba lo que **declaraste**, y tú declaraste `string | null`. Si el dato real trae `undefined`, el compi
+
+■ forense-fase-09.md | 🧭 Ruta A — la regla que no bloqueó | ÚLTIMO
+  Paso 3 — Dónde va el arreglo, que es la decisión de verdad
+  … > 🧭 **La regla del proyecto: lo que entra por la red se normaliza una vez, en el borde, y a partir de ahí el dominio confía.** Un `?? null` repartido por cinco componentes es cinco sitios donde alguie
+
+■ forense-fase-09.md | 🧭 Ruta B — el cambio que se deshizo s | INTERMEDIO
+  Paso 1 — ¿El dato está guardado o está derivado?
+  … ``` **Guardado dice `major`. Pintado dice `minor`.** El dato existe, se guardó bien, y algo lo está recalculando por encima.
+
+■ forense-fase-09.md | 🧭 Ruta B — el cambio que se deshizo s | ÚLTIMO
+  Paso 3 — La forma del arreglo, y por qué `undefined` vuelve a ser el c
+  … Y la mitad que este ticket deja sin resolver, que hay que decir en el post-mortem: **no aparece en ningún registro**. Aunque la anulación se guarde bien, nadie sabe quién la puso ni cuándo. En un sist
+
+■ forense-fase-10.md | 🧭 Ruta A — la vigencia | ÚLTIMO
+  Paso 4 — Por qué el arreglo es una función y no un ajuste
+  … > 🧭 **La regla del proyecto: la zona horaria de una decisión de negocio es un dato del negocio, no del entorno.** Un certificado vence al final del día **en el huso donde opera la empresa**, y eso no 
+
+■ forense-fase-10.md | 🧭 Ruta B — el PDF que no coincide | ÚLTIMO
+  Paso 2 — La comprobación en el código, que es una firma
+  … > ⚠️ **Lo que hace peligrosa a esta deuda no es que el dato esté viejo: es que el PDF es el único artefacto del sistema que sobrevive al sistema.** Una pantalla desactualizada se arregla con F5. Un PD
+
+■ forense-fase-12.md | 🧭 Ruta A — el test de regresión, y po | ÚLTIMO
+  Paso 3 — El fix, y el segundo tag
+  … > 💡 **Y el atajo para releer el cuaderno entero sin abrir un archivo:** `git tag -n99 -l 'inc/*'` lista todos los incidentes con el mensaje completo de cada tag. ---
+
+■ forense-fase-12.md | 🧭 Ruta B — el intermitente, en cuatro | INTERMEDIO
+  Sospechoso 1 — El reloj
+  … issue(inspectionId: number, now: string): void { … } ```
+
+■ forense-fase-12.md | 🧭 Ruta B — el intermitente, en cuatro | INTERMEDIO
+  Sospechoso 2 — El azar
+  … expect(headers.get('X-Correlation-Id')).toMatch(/^[0-9a-f-]{36}$/); ```
+
+■ forense-fase-12.md | 🧭 Ruta B — el intermitente, en cuatro | INTERMEDIO
+  Sospechoso 3 — El orden, y la bisección
+  … | `localStorage` | el token del test de login sobrevive | `afterEach(() => localStorage.clear())` | > 🧭 **Un test que sólo pasa si otro corrió antes no es un test: es media prueba.** Y su fallo aparec
+
+■ forense-fase-12.md | 🧭 Ruta B — el intermitente, en cuatro | INTERMEDIO
+  Sospechoso 4 — La asincronía
+  … ``` `done` también funciona y es peor: un `done` que no se llama **tarda cinco segundos en fallar**, y con veinte tests así el pipeline pasa de dos minutos a diez sin que nadie sepa por qué.
+
+■ forense-fase-12.md | 🧭 Ruta B — el intermitente, en cuatro | ÚLTIMO
+  Paso final — Si nada de lo anterior: `git bisect`
+  … Es el último recurso porque cuesta N ejecuciones completas de la suite, y es infalible cuando el resto no dio nada. ---
+
+■ forense-fase-13.md | 🧭 La ruta | INTERMEDIO
+  Paso 4 — ¿Y la ruta profunda?
+  … ``` nginx busca un **archivo** llamado `inspections/500`. No existe: esa ruta sólo vive dentro del router de Angular, en el navegador. `try_files $uri $uri/ /index.html;` es la línea que lo arregla, y
+
+■ forense-fase-14.md | 🧭 Ruta A — `ImagePullBackOff` con la  | INTERMEDIO
+  Paso 2 — El almacén del nodo no es el tuyo
+  … # docker.io/library/certcore fase-13 9f2c4b1e7a8d 48.3MB ```
+
+■ forense-fase-14.md | 🧭 Ruta A — `ImagePullBackOff` con la  | INTERMEDIO
+  Paso 3 — El `:latest` que empeora el mismo problema
+  … **Nadie escribió esa línea.** Kubernetes usa `IfNotPresent` para tags normales y **`Always` para `:latest`**. Con `certcore:latest`, el nodo intenta descargar la imagen aunque ya la tenga cargada — y 
+
+■ forense-fase-14.md | 🧭 Ruta A — `ImagePullBackOff` con la  | ÚLTIMO
+  Paso 4 — Lo mismo, en el cluster de tu empresa
+  … Con esas tres preguntas ya puedes abrir el ticket bien, y eso es lo que esta ruta entrena. **A09** §1 lo desarrolla. ---
+
+■ forense-fase-14.md | 🧭 Ruta B — `CrashLoopBackOff` | INTERMEDIO
+  Paso 1 — El estado ya te dijo por dónde empezar
+  … ``` `RESTARTS 4` significa que **arrancó cuatro veces y se murió cuatro veces**. Arrancó: hay logs. Y el cluster está esperando cada vez más entre intentos, que es lo que significa el `BackOff`.
+
+■ forense-fase-14.md | 🧭 Ruta B — `CrashLoopBackOff` | INTERMEDIO
+  Paso 3 — El caso sin logs, que en un Mac con chip M es casi siempre el
+  … ``` El proceso no llega a ejecutarse, así que no escribe nada. Es un segundo de comprobación y descarta la causa más desconcertante del capítulo. El diagnóstico completo está en **A12** §6.
+
+■ forense-fase-14.md | 🧭 Ruta B — `CrashLoopBackOff` | ÚLTIMO
+  Paso 4 — Cuando el pod ya se recicló y no queda nada
+  … > ⚠️ **Los logs de un pod borrado no existen.** Si el Deployment lo recrea, el anterior se fue y sus logs con él. En un cluster real eso lo resuelve un agregador —Loki, ELK, CloudWatch, el que tenga t

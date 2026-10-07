@@ -1,0 +1,9 @@
+═══ DOCUMENTOS RECTORES vs ENTREGA ═══
+  _deprecado-tutorial-angular16.md         {'12 fases': 2, 'catorce fases': 1, '20 incidentes': 2, '3 incidentes': 1}
+  alcance-del-proyecto.md                  {'12 fases': 1, 'Catorce fases': 1, 'once apéndices': 1}
+  formato-cuaderno-incidentes.md           {'catorce fases': 1, '20 incidentes': 2, '5 incidentes': 2, '6 incidentes': 2}
+  formato-piezas-forenses.md               {'quince piezas': 2}
+  prompts-backend-apendice.md              {'once apéndices': 1}
+  prompts-backend-fase.md                  {'once apéndices': 1}
+  propuesta-fases-backend.md               {'8 fases': 1, 'once apéndices': 1, '12 incidentes': 2}
+  propuesta-fases-y-alcance.md             {'12 fases': 1, 'catorce fases': 1, 'once apéndices': 1, '20 incidentes': 2}

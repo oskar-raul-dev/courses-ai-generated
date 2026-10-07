@@ -1,0 +1,12 @@
+=== A2 ===
+445:## 11. 🧪 Ejercicios (9)
+34:11. [Ejercicios](#11-ejercicios)
+=== A4 ===
+386:## 8. 🗺️ Tabla: cuándo hacer qué
+35:8. [🗺️ Tabla: cuándo hacer qué](#8-️-tabla-cuándo-hacer-qué)
+=== A6 ===
+430:## 9. Conectar el componente: `connect()` vs `useSelector`/`useDispatch`
+33:9. [Conectar el componente: `connect()` vs `useSelector`/`useDispatch`](#9-conectar-el-componente-connect-vs-useselectoruse dispatch)
+=== A7 ===
+635:## 🔬 Marble testing → **A11**
+55:- [🔬 Marble testing con rxjs-marbles: sintaxis mínima](#-marble-testing-con-rxjs-marbles-sintaxis-mínima)

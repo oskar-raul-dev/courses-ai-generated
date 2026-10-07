@@ -1,0 +1,50 @@
+=== A8 piezas: menciones a incidentes ===
+angular-8-legacy-for-backend-devs/forense-fase-02.md:1
+angular-8-legacy-for-backend-devs/forense-fase-01.md:2
+angular-8-legacy-for-backend-devs/forense-fase-03.md:2
+angular-8-legacy-for-backend-devs/forense-fase-00.md:1
+angular-8-legacy-for-backend-devs/forense-fase-06.md:1
+angular-8-legacy-for-backend-devs/forense-fase-05.md:1
+angular-8-legacy-for-backend-devs/forense-fase-07.md:5
+angular-8-legacy-for-backend-devs/forense-fase-04.md:1
+angular-8-legacy-for-backend-devs/forense-fase-10.md:1
+angular-8-legacy-for-backend-devs/forense-fase-09.md:1
+angular-8-legacy-for-backend-devs/forense-fase-11.md:5
+angular-8-legacy-for-backend-devs/forense-fase-08.md:1
+angular-8-legacy-for-backend-devs/forense-fase-14.md:1
+angular-8-legacy-for-backend-devs/forense-fase-12.md:1
+angular-8-legacy-for-backend-devs/forense-fase-13.md:2
+
+=== A16 piezas: menciones a incidentes ===
+angular-16-legacy-for-backend-devs/forense-fase-00.md:1
+angular-16-legacy-for-backend-devs/forense-fase-02.md:1
+angular-16-legacy-for-backend-devs/forense-fase-01.md:1
+angular-16-legacy-for-backend-devs/forense-fase-03.md:3
+angular-16-legacy-for-backend-devs/forense-fase-04.md:1
+angular-16-legacy-for-backend-devs/forense-fase-07.md:6
+angular-16-legacy-for-backend-devs/forense-fase-05.md:2
+angular-16-legacy-for-backend-devs/forense-fase-06.md:1
+angular-16-legacy-for-backend-devs/forense-fase-11.md:1
+angular-16-legacy-for-backend-devs/forense-fase-09.md:4
+angular-16-legacy-for-backend-devs/forense-fase-10.md:4
+angular-16-legacy-for-backend-devs/forense-fase-08.md:4
+angular-16-legacy-for-backend-devs/forense-fase-14.md:1
+angular-16-legacy-for-backend-devs/forense-fase-13.md:6
+angular-16-legacy-for-backend-devs/forense-fase-12.md:9
+
+=== A8 formato-piezas §8 (checklist) sobre incidentes ===
+93:   real, más los enlaces: incidentes del cuaderno que usan esta ruta y apéndices
+126:  El fix es de la fase o del incidente; la pieza forense localiza.
+169:   estilo, que es el formato con el que se cierran los veintiún incidentes. El
+213:de estilo, que es el molde de los veintiún incidentes y el cierre de la
+222:corresponde a un incidente del cuaderno, el par de tags `inc/<ID>/<slug>-roto` e
+224:otro**, y el `<ID>` sale del índice de `cuaderno-incidentes.md`, que es la fuente
+225:de verdad de qué incidente pertenece a qué fase. El detalle está en
+255:- [ ] Enlaza los incidentes del cuaderno que usan esta ruta, por el ID que ya les
+256:      reserva el índice de `cuaderno-incidentes.md`.
+
+=== A16 formato-piezas: menciones incidente ===
+76:   trabajo real, más los enlaces: incidentes del cuaderno que usan esta ruta, y
+129:  El fix es de la fase o del incidente; la pieza forense localiza.
+177:recorrido corresponde a un incidente del cuaderno, el par de tags
+201:- [ ] Enlaza los incidentes del cuaderno que usan esta ruta, por su ID reservado.

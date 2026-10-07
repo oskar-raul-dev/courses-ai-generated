@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:${POSTGRES_TAG}
+    environment:
+      POSTGRES_PASSWORD: certcore
+      POSTGRES_DB: certcore
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      retries: 15
+  api:
+    build: ./docker/php
+    ports: ["3000:3000"]
+    volumes: [".:/app"]
+    environment:
+      DB_DSN: "pgsql:host=db;dbname=certcore"
+    depends_on:
+      db: {condition: service_healthy}
+    command: php -S 0.0.0.0:3000 -t public
+volumes:
+  pgdata:

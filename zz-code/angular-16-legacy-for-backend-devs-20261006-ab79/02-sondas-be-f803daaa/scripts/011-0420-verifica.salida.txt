@@ -1,0 +1,50 @@
+# 🧪 Ideas — tracks de backend para los cursos de Angular
+
+> **Qué es esto:** notas de una conversación de diseño, no una propuesta aprobada.
+> **Fecha:** 8 de septiembre de 2026.
+> **Estado:** desechable, **sin versionar**. Igual que `nuevas-ideas.md`.
+> **Punto de partida:** el track BE de `react-16-legacy-for-backend-devs`
+> (`prompts/propuesta-fases-backend.md`, fases `be00`–`be07` ya escritas).
+> **Última actualización:** 8 de septiembre de 2026, tras once rondas.
+> **⚠️ = sin verificar.** Lo verificado lleva su medición y su fecha.
+
+> 📖 **Cómo leer este documento.** Es un registro **incremental** de una
+> conversación: las secciones están en el orden en que se pensaron, no en el
+> orden en que se decidieron. **Las decisiones vigentes son las de §0.** Las
+> secciones que quedaron atrás llevan un aviso `⛔ SUPERADO` con el puntero a la
+> que las reemplazó; se conservan porque el razonamiento que las descartó es
+> parte del valor.
+
+---
+
+## 0. 📌 Decisiones vigentes
+
+**Lo que está decidido y medido. Todo lo demás del documento es el rastro de
+cómo se llegó aquí.**
+
+| | Angular 8 · **LabCore** | Angular 16 · **CertCore** |
+|---|---|---|
+| **El pecado** | Moda de **modelo de datos** | **Ausencia de revisión** |
+| **El actor** | El equipo huyendo del DBA de Oracle | El converso a Laravel |
+| **Cómo se decidió** | "Con Mongo el esquema lo movemos nosotros" (2019) | Nadie lo decidió: se eligió para *un servicio* y jamás se revisó |
+| **Lenguaje** | **Java 8** (`eclipse-temurin:8-jdk`) | **PHP 7.4** (`php:7.4-cli`) |
+...
+=== índice completo ===
+  20:## 0. 📌 Decisiones vigentes
+  62:## 1. 🧭 La bisagra: no repetir la forma del track de React
+  96:## 2. 🎭 El reparto: dos pecados ortogonales, no dos sabores del mismo
+  123:## 3. 🍃 Angular 8 · LabCore — "NoSQL porque en 2019 todo era NoSQL"
+  222:## 4. 🎯 Angular 16 · CertCore — "Dart, porque el equipo era de Flutter"
+  312:## 5. 🧱 Lo que se hereda del track de React sin discusión
+  331:## 6. ⚠️ Riesgos, dichos en voz alta
+  355:## 7. ❓ Preguntas abiertas — **estado tras once rondas**
+  377:## 8. 🎰 Alternativas a Dart: las cinco formas de que un boom pase factura
+  507:## 9. 🧱 Por qué Akka pierde: el coste del laboratorio
+  578:## 10. 🎭 Cuarta ronda: el actor, y por qué Ruby/Sinatra gana
+  698:## 11. 🕵️ Quinta ronda: control de realismo sobre Sinatra
+  778:## 12. 🐘 Sexta ronda: Lumen recupera el puesto (y por qué)
+  874:## 13. 🐘 Séptima ronda: PostgreSQL, y la asimetría que lo justifica
+  929:## 14. 📅 Octava ronda: la base se actualizó antes que la app
+  991:## 15. ✅ Novena ronda: verificación ejecutada, el reciclado, y Symfony
+  1120:## 16. 🔒 Décima ronda: decisiones cerradas
+  1234:## 17. 🐳 Undécima ronda: las dos pilas, probadas

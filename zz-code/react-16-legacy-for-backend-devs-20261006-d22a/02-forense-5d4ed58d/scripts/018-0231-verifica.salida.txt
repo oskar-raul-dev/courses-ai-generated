@@ -1,0 +1,13 @@
+  ✓ be00-el-contrato-auditoria-del-mock.md
+  ✓ be01-go-y-la-forma-del-monolito.md
+  ✓ be02-la-costura-de-datos.md
+  ✓ be03-crud-y-el-reemplazo.md
+  ✓ be04-identidad-real-jwt-y-un-cve.md
+  ✓ be05-venta-concurrente.md
+  ✓ be06-hora-dura-y-la-autoridad-del-reloj.md
+  ✓ be07-liquidacion-dinero-entero-y-transaccional.md
+  ✓ be08-pruebas-y-la-regla-del-motor.md
+  ✓ be09-empaquetado-ambientes-y-pipeline.md
+
+=== re-verificación track BE ===
+  las 10 fases BE enlazan sus incidentes desde §6

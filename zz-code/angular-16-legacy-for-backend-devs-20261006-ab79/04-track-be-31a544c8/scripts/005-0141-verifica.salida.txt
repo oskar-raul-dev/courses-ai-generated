@@ -1,0 +1,27 @@
+'Incidente be-01 — "El caché no se limpia' -> #incidente-be-01--el-caché-no-se-limpia-nunca-y-no-encuentro-dónde-se-llena
+'Incidente be-02 — "Copié la solución de ' -> #incidente-be-02--copié-la-solución-de-internet-y-el-servidor-dejó-de-arrancar
+'Incidente be-03 — "El mismo dato sale di' -> #incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres
+'Incidente be-04 — "Desde el despliegue, ' -> #incidente-be-04--desde-el-despliegue-las-plantillas-salen-en-otro-orden
+'Incidente be-05 — "No puedo crear inspec' -> #incidente-be-05--no-puedo-crear-inspecciones-nuevas-dice-que-el-id-ya-existe
+'Incidente be-06 — "El informe falla y no' -> #incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada-
+'Incidente be-07 — "El respaldo de anoche' -> #incidente-be-07--el-respaldo-de-anoche-no-se-puede-restaurar
+'Incidente be-08 — "El certificado dice q' -> #incidente-be-08--el-certificado-dice-que-vence-hoy-y-en-el-pdf-dice-ayer
+'Incidente be-09 — "Una inspección de 202' -> #incidente-be-09--una-inspección-de-2023-no-se-puede-reimprimir
+'Incidente be-10 — "Después del despliegu' -> #incidente-be-10--después-del-despliegue-no-puedo-actualizar-unas-inspecciones-viejas
+'Incidente be-11 — "A veces devuelve 500 ' -> #incidente-be-11--a-veces-devuelve-500-y-a-veces-422-con-el-mismo-dato
+'Incidente be-12 — "Tenemos un *assessmen' -> #incidente-be-12--tenemos-un-assessment-que-recomienda-reescribir-en-seis-meses
+
+--- links ---
+#incidente-be-01--el-caché-no-se-limpia-nunca-y-no-encuentro-dónde-se-llena OK
+#incidente-be-02--copié-la-solución-de-internet-y-el-servidor-dejó-de-arrancar OK
+#incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres OK
+#incidente-be-04--desde-el-despliegue-las-plantillas-salen-en-otro-orden OK
+#incidente-be-05--no-puedo-crear-inspecciones-nuevas-dice-que-el-id-ya-existe OK
+#incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada ❌
+#incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada- OK
+#incidente-be-07--el-respaldo-de-anoche-no-se-puede-restaurar OK
+#incidente-be-08--el-certificado-dice-que-vence-hoy-y-en-el-pdf-dice-ayer OK
+#incidente-be-09--una-inspección-de-2023-no-se-puede-reimprimir OK
+#incidente-be-10--después-del-despliegue-no-puedo-actualizar-unas-inspecciones-viejas OK
+#incidente-be-11--a-veces-devuelve-500-y-a-veces-422-con-el-mismo-dato OK
+#incidente-be-12--tenemos-un-assessment-que-recomienda-reescribir-en-seis-meses OK

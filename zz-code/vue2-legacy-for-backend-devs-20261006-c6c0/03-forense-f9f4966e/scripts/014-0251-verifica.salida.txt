@@ -1,0 +1,11 @@
+=== eventos citados en piezas/cuadernos ===
+  20 "ticket:created"
+   1 "ticket:updated"
+=== status/priority usados ===
+   2 priority: "high"
+   9 status: "in_progress"
+  21 status: "open"
+   3 status: "resolved"
+=== enums del contrato ===
+165:| `GET /stats` (agregaciones server-side) | 9 | Endpoint nuevo, ya previsto por el contrato heredado como pendiente. ⚠️ **Su forma NO es libre:** `byStatus`, `activeByAgent` y `resolvedPercent` replican exactamente las tres funciones puras de `utils/ticketStats.js` (Curso 01 · F7), porque el ejercicio 25 de esa fase exige poder hacer fallback al cálculo local. Ver la tabla de abajo. |
+180:| `resolvedPercent` | entero, `Math.round` | `resolvedPercent()` |

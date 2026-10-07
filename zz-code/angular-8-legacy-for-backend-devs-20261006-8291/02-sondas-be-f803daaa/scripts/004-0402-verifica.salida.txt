@@ -1,0 +1,18 @@
+=== MongoDB ===
+  mongo:3.6              arm64 SI   [amd64,arm64]  push 2021-05-12
+  mongo:4.0              arm64 SI   [amd64,arm64]  push 2022-11-09
+  mongo:4.2              arm64 SI   [amd64,arm64]  push 2023-06-14
+  mongo:4.4              arm64 SI   [amd64,arm64,unknown]  push 2025-12-29
+  mongo:5.0              arm64 SI   [amd64,arm64,unknown]  push 2026-05-15
+  mongo:6.0              arm64 SI   [amd64,arm64,unknown]  push 2026-05-15
+  mongo:7.0              arm64 SI   [amd64,arm64,unknown]  push 2026-09-09
+  mongo:8.0              arm64 SI   [amd64,arm64,unknown]  push 2026-09-09
+=== JDK 8 ===
+  eclipse-temurin:8-jdk  arm64 SI   [amd64,arm64,ppc64le,unknown]  push 2026-08-21
+  eclipse-temurin:8-jdk-focal arm64 SI   [amd64,arm,arm64,ppc64le,unknown]  push 2025-04-28
+  eclipse-temurin:8-jdk-jammy arm64 SI   [amd64,arm64,ppc64le,unknown]  push 2026-09-09
+=== PostgreSQL ===
+  postgres:15            arm64 SI   [386,amd64,arm,arm64,ppc64le,riscv64,s390x,unknown]  push 2026-08-28
+  postgres:16            arm64 SI   [386,amd64,arm,arm64,ppc64le,riscv64,s390x,unknown]  push 2026-08-26
+  postgres:17            arm64 SI   [386,amd64,arm,arm64,ppc64le,riscv64,s390x,unknown]  push 2026-08-26
+  postgres:18            arm64 SI   [386,amd64,arm,arm64,ppc64le,riscv64,s390x,unknown]  push 2026-08-26

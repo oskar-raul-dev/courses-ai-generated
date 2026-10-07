@@ -1,0 +1,106 @@
+======================================================================
+forense-fase-14.md / Paso 2 — El almacén del nodo no es el tuyo
+
+Paso 2 — El almacén del nodo no es el tuyo
+
+```bash
+# Tu almacén:
+docker images | grep certcore
+# certcore   fase-13   9f2c4b1e7a8d   2 hours ago   48.3MB
+
+# El del nodo, que es otro contenedor con su propio almacén:
+docker exec certcore-control-plane crictl images | grep certcore
+# (nada)
+```
+
+**Ésa es la explicación entera.** kind corre el cluster **dentro de un contenedor**, con su propio almacén de imágenes, y ese almacén no es el de tu demonio de Docker.
+
+```bash
+# La solución, si tienes un demonio de Docker escuchando:
+kind load docker-image --name certcore certcore:fase-13
+
+# La universal, que funciona con Podman o con Colima en cualquier configuración,
+# porque no depende de quién guarde la imagen sino de un archivo:
+docker save certcore:fase-13 -o /tmp/certcore.tar
+kind load image-archive --name certcore /tmp/certcore.tar
+
+# Y la comprobación, que es lo que convierte esto en conocimiento:
+docker exec certcore-control-plane crictl images | grep certcore
+# docker.io/library/certcore   fase-13   9f2c4b1e7a8d   48.3MB
+```
+
+======================================================================
+forense-fase-14.md / Paso 3 — El `:latest` que empeora el mismo problema
+
+Paso 3 — El `:latest` que empeora el mismo problema
+
+```bash
+kubectl get pod certcore-… -o yaml | grep imagePullPolicy
+# imagePullPolicy: Always
+```
+
+**Nadie escribió esa línea.** Kubernetes usa `IfNotPresent` para tags normales y **`Always` para `:latest`**. Con `certcore:latest`, el nodo intenta descargar la imagen aunque ya la tenga cargada — y en kind, donde no hay registro, eso es `ErrImagePull` **con la imagen delante y cargada**.
+
+Es la causa raíz más desconcertante de esta ruta, y desaparece sola en cuanto la imagen tiene un tag de verdad.
+
+======================================================================
+forense-fase-02.md / Paso 4 — Dónde va el breakpoint en un interceptor funcional
+
+Paso 4 — Dónde va el breakpoint en un interceptor funcional
+
+Un interceptor funcional tiene **dos momentos**, y poner un solo breakpoint esperando ver los dos es la media hora que se pierde la primera vez.
+
+```ts
+export const authInterceptor: HttpInterceptorFn = (request, next) => {
+  const authService = inject(AuthService);   // ← MOMENTO 1: al lanzar la petición.
+  const router = inject(Router);             //   Aquí ves la URL, el token, la request.
+
+  const authorizedRequest = /* … */;
+
+  return next(authorizedRequest).pipe(
+    catchError((error: unknown) => {
+      // ← MOMENTO 2: al volver la respuesta, milisegundos o segundos después.
+      //   Aquí ves el error. `authService` funciona porque quedó capturado en el
+      //   closure, NO porque sigamos en contexto de inyección: un inject() aquí
+      //   sería NG0203.
+      return throwError(() => error);
+    }),
+  );
+};
+```
+
+- **Para inspeccionar lo que sale** —URL, token, cabeceras— el breakpoint va **antes del `return`**.
+- **Para inspeccionar lo que vuelve** —status, cuerpo del error— va **dentro del `catchError`**.
+
+Y u
+
+======================================================================
+forense-fase-09.md / Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+
+Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+
+Con la pantalla de hallazgos abierta: inspector → selecciona el `<li>` del hallazgo → consola.
+
+```js
+const finding = ng.getComponent($0).finding;
+
+finding.resolvedAt === null;    // false  ← y aquí nace el bug
+finding.resolvedAt == null;     // true   ← cubre null Y undefined
+'resolvedAt' in finding;        // false  ← el campo NO EXISTE
+finding.resolvedAt;             // undefined
+```
+
+**Estas tres líneas son la fase entera en tres respuestas.** La primera es la que escribiste; la segunda es el fix del viernes; la tercera es la que te dice de dónde vino.
+
+Y la regla que las une, con la comprobación culpable delante:
+
+```ts
+// ❌ La regla, escrita como se escribe siempre:
+const blocking = findings.filter(
+  (finding) => finding.severity === 'critical' && finding.resolvedAt === null,
+);
+// El hallazgo 904 tiene `undefined`, no `null`. `undefined === null` es false.
+// El hallazgo no entra en la lista, no bloquea nada, y la emisión sigue.
+```
+
+> ⚠️ **`strict: true` no te salva de esto, y conviene entender por qué.** El compi

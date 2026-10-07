@@ -1,0 +1,22 @@
+0-plan-del-curso.md -> prompts/_deprecado-tutorial-angular8.md:548 
+ALCANCE-DEL-PROYECTO.md -> prompts/_deprecado-tutorial-angular8.md:21, prompts/_deprecado-tutorial-angular8.md:24, prompts/_deprecado-tutorial-angular8.md:53 
+AUDIT-DIVERGENCE.md -> be04-el-audit-log-que-escribia-el-navegador.md:452, be04-el-audit-log-que-escribia-el-navegador.md:539, be04-el-audit-log-que-escribia-el-navegador.md:546 
+CLAUDE.md -> prompts/guia-de-estilo-y-convenciones.md:737, prompts/prompts-backend-fase.md:761, prompts/propuesta-fases-backend.md:745, prompts/propuesta-fases-backend.md:826 
+CONTRACT.md -> be00-el-contrato-auditoria-del-mock.md:18, be00-el-contrato-auditoria-del-mock.md:25, be00-el-contrato-auditoria-del-mock.md:26, be00-el-contrato-auditoria-del-mock.md:27, be00-el-contrato-auditoria-del-mock.md:77, be00-el-contrato-auditoria-del-mock.md:95 (+50)
+HOTFIX.md -> prompts/formato-piezas-forenses.md:208 
+IRRECOVERABLE.md -> be08-la-contencion-y-lo-irrecuperable.md:33, be08-la-contencion-y-lo-irrecuperable.md:322, be08-la-contencion-y-lo-irrecuperable.md:391, be08-la-contencion-y-lo-irrecuperable.md:467, be08-la-contencion-y-lo-irrecuperable.md:473, be08-la-contencion-y-lo-irrecuperable.md:481 (+10)
+MEASUREMENTS.md -> be02-medir-la-deriva-de-esquema.md:34, be02-medir-la-deriva-de-esquema.md:81, be02-medir-la-deriva-de-esquema.md:270, be02-medir-la-deriva-de-esquema.md:297, be02-medir-la-deriva-de-esquema.md:362, be02-medir-la-deriva-de-esquema.md:364 (+32)
+RANGES-LOSS.md -> be06-los-rangos-y-la-historia-perdida.md:36, be06-los-rangos-y-la-historia-perdida.md:221, be06-los-rangos-y-la-historia-perdida.md:293, be06-los-rangos-y-la-historia-perdida.md:392, be06-los-rangos-y-la-historia-perdida.md:466, be06-los-rangos-y-la-historia-perdida.md:484 (+3)
+a05-rxjs-supervivencia.md -> prompts/prompts-extendidos-apendices.md:279 
+a12-mapa-de-deuda-tecnica.md -> prompts/prompts-backend-apendice.md:515 
+apendice-slug.md -> prompts/_deprecado-tutorial-angular8.md:525 
+be00-tema.md -> prompts/propuesta-fases-backend.md:735 
+be08-tema.md -> prompts/propuesta-fases-backend.md:735 
+bea-01-tema.md -> prompts/propuesta-fases-backend.md:735 
+bea-12-tema.md -> prompts/propuesta-fases-backend.md:736 
+catalogo-futuros-proyectos.md -> prompts/_deprecado-tutorial-angular8.md:549 
+fase-12-build-despliegue.md -> prompts/_deprecado-tutorial-angular8.md:50 
+plan-del-curso.md -> prompts/_deprecado-tutorial-angular8.md:10, prompts/_deprecado-tutorial-angular8.md:55, prompts/_deprecado-tutorial-angular8.md:498, prompts/_deprecado-tutorial-angular8.md:523, prompts/_deprecado-tutorial-angular8.md:621, prompts/alcance-del-proyecto.md:136 (+4)
+prompts/plantilla-de-incidente-be.md -> prompts/formato-cuaderno-incidentes.md:498, prompts/propuesta-fases-backend.md:760 
+smoke-tests.md -> prompts/_deprecado-tutorial-angular8.md:528 
+tutorial-angular8.md -> prompts/_deprecado-tutorial-angular8.md:546

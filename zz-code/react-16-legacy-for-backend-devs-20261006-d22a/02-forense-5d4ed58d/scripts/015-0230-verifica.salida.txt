@@ -1,0 +1,30 @@
+=========== 01-estructura-base-router-5.md — últimas líneas de §6
+
+> ⚠️ Rompe a propósito para aprender: en `RaffleDetailPage`, guarda la rifa en un `useState` inicializado con `findRaffle(id)` **sin** un `useEffect` que lo actualice cuando cambia `id`. Ahora navega de `/raffles/1` a `/raffles/2`: la URL cambia, pero el detalle sigue mostrando la rifa 1. El componente **sí** re-renderiza, pero el estado se inicializó una vez y nadie lo refresca. Con DevTools vas a ver el `id` de params en 2 y el estado de la rifa en 1 — la foto exacta del bug. Es el germen del clásico "los datos viejos se quedan pegados" que vas a ver en serio con el store más adelante.
+
+---
+=========== 04-rifas-crud.md — últimas líneas de §6
+
+**Rompe a propósito y observa:** comenta la línea del `addCase(fetchRaffles.rejected, ...)` en el slice, pon `CHAOS_LEVEL=high`, y fuerza un fallo de carga. Mira en DevTools cómo `loadingList` queda en `true` y no baja nunca. Después descomenta y comprueba que vuelve a bajar. Esa es la firma visual del bug más común de la fase.
+
+---
+=========== 05-venta-de-numeros.md — últimas líneas de §6
+
+Los ejercicios de "rompe a propósito y observa" (25 y 26) te hacen reproducir exactamente esta secuencia con `CHAOS_LEVEL` alto y dos clicks rápidos, leerla en DevTools, y proponer el blindaje: el rollback no debe revertir a ciegas si entre medio hubo una venta confirmada de otro actor. La solución robusta —cancelar la operación perdedora en el origen— es, de nuevo, territorio de epics (Fase 6). Acá el objetivo es **verla y nombrarla**, que es el 80% de resolver un incidente de concurrencia. Un bug que sabes describir es un bug medio muerto.
+
+---
+=========== 06-redux-observable-a-fondo.md — últimas líneas de §6
+
+Este es uno de los ≥4 incidentes de RxJS/epics del curso. Su post-mortem (sin culpabilización) es material del ejercicio 30.
+
+---
+=========== 07-cierre-polling-resultado.md — últimas líneas de §6
+
+**Ejercicio "rompe a propósito y observa":** quita `resultReceived.type` del `takeUntil` del `pollingEpic` y deja el resto igual. Corre el mock con la rifa ya cerrada (para que `/results` devuelva `200` con ganador). Observa en Network que, tras recibir el resultado, el polling **sigue** pidiendo `/results` cada 3s aunque ya no hay nada nuevo que traer: es un leak silencioso que drena servidor y batería. Vuelve a poner el notifier y confirma que ahora para en el primer `200`. Escribe el post-mortem (plantilla Guía de Estilo §12) de por qué un `takeUntil` incompleto es indistinguible de uno correcto hasta que miras la red.
+
+---
+=========== 10-testing-minimo.md — últimas líneas de §6
+
+**🔧 Rompe a propósito y observa.** Toma `validateNumberEpic` y bórrale el `takeUntil(logout$)`. Corre el tercer test de 5.7 (el de logout). Debe **fallar**: el `expected` dice "completa en el frame del logout sin emitir", pero el epic sin `takeUntil` sigue vivo y emite la validación después. Mira el diff que imprime `rxjs-marbles`: te muestra el frame exacto donde el stream real diverge del esperado. Restaura el `takeUntil`: verde. Ese diff es la forma más limpia de *ver* un memory leak de suscripción.
+
+---

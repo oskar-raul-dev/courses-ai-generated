@@ -1,0 +1,14 @@
+ap   | declara            | citan (cualquier sitio) | lo listan en 'Apéndices de apoyo'
+A01  | [1, 6, 7, 8, 10]   | [0, 1, 5, 6]            | [1, 5, 6]  ⚠ declara [7, 8, 10] y NO están en su cabecera  ⚠ cabecera de [5] lo lista y el apéndice no lo declara
+A02  | []                 | []                      | []
+A03  | [0, 3, 12, 13]     | [0, 3, 5, 13]           | [0, 3, 13]  ⚠ declara [12] y NO están en su cabecera
+A04  | [0, 1, 2, 5]       | [0, 1, 2, 5]            | [0, 1, 2, 5]
+A05  | [0, 2, 6, 8, 9]    | [0, 6, 7, 8, 9, 12]     | [6, 7, 8, 9, 12]  ⚠ declara [0, 2] y NO están en su cabecera  ⚠ cabecera de [7, 12] lo lista y el apéndice no lo declara
+A06  | [2, 3, 4, 8, 11]   | [0, 2, 3, 4, 6, 7, 8, 11, 12] | [2, 3, 4, 7, 8, 11, 12]  ⚠ cabecera de [7, 12] lo lista y el apéndice no lo declara
+A07  | [4, 6, 7, 9, 11]   | [0, 4, 7, 9, 11]        | [4, 7, 9, 11]  ⚠ declara [6] y NO están en su cabecera
+A08  | [10]               | [10]                    | [10]
+A09  | [13, 14]           | [0, 2, 13, 14]          | [13, 14]
+A10  | []                 | [0]                     | []
+A11  | [12]               | [4, 5, 6, 7, 8, 11, 12, 13] | [12]
+A12  | [0, 12, 13, 14]    | [0, 13, 14]             | [0, 13, 14]  ⚠ declara [12] y NO están en su cabecera
+A13  | []                 | []                      | []

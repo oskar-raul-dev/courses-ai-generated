@@ -1,0 +1,7 @@
+25:| `cuaderno-incidentes-be.md` | Los 12 incidentes del track BE, con sus IDs propios. **Separado del `cuaderno-incidentes.md` base a propósito** |
+26:| `prompts/plantilla-de-incidente-be.md` | La plantilla de incidente del track, si el formato diverge del base |
+=== busca la sección del cuaderno BE ===
+203:| ¿Cuaderno de incidentes? | **`cuaderno-incidentes-be.md`**, propio del track | Un alumno que solo hace el track base no debe recibir incidentes de PHP mezclados con los suyos |
+463:| 📓 Cuaderno de incidentes BE | `cuaderno-incidentes-be.md` | **8h** · 12 incidentes |
+786:| `cuaderno-incidentes-be.md` | Los 12 incidentes del track BE, con sus IDs propios. **Separado del `cuaderno-incidentes.md` base a propósito** |
+787:| `prompts/plantilla-de-incidente-be.md` | La plantilla de incidente del track, si el formato diverge del base |

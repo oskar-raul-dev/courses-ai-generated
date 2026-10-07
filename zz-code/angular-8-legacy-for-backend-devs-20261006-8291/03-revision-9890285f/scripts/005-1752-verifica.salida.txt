@@ -1,0 +1,31 @@
+=== placeholders/TODO ===
+a13-docker-colima.md:252:docker image inspect lab-frontend:1.0.0 --format '{{.Architecture}}'
+a13-docker-colima.md:293:docker info --format '{{.Name}} / {{.Architecture}} / {{.OperatingSystem}}'
+01-estructura-base-ngrx.md:831:      <mat-card-title>{{ patient.fullName }}</mat-card-title>
+01-estructura-base-ngrx.md:832:      <mat-card-subtitle>{{ patient.documentId }}</mat-card-subtitle>
+06-ordenes.md:308:      {{ statusLabelKey(option) | translate }}
+11-trazabilidad-audit-log.md:548:    <td mat-cell *matCellDef="let entry">{{ entry.timestamp }}</td>
+11-trazabilidad-audit-log.md:558:    <td mat-cell *matCellDef="let entry">{{ entry.actor }}</td>
+11-trazabilidad-audit-log.md:564:    <td mat-cell *matCellDef="let entry">{{ entry.action }}</td>
+11-trazabilidad-audit-log.md:569:    <td mat-cell *matCellDef="let entry">{{ entry.entityType }} #{{ entry.entityId }}</td>
+04-mock-api-caos.md:598:  <p>{{ loadError.messageKey | translate }}</p>
+04-mock-api-caos.md:603:  <small class="text-muted">{{ loadError.code }}</small>
+a01-material.md:158:    {{ errorKeyFor('documentId') | translate }}
+a01-material.md:217:      {{ statusLabelKey(option) | translate }}
+a01-material.md:311:    <td mat-cell *matCellDef="let patient">{{ patient.documentId }}</td>
+a01-material.md:318:    <td mat-cell *matCellDef="let patient">{{ patient.fullName }}</td>
+
+=== ejercicios: título vs conteo real ===
+  ok a01-material.md (8)
+  ok a02-bootstrap-sass.md (8)
+  ok a03-node-npm.md (7)
+  ok a04-webpack-oculto.md (6)
+  ok a05-rxjs.md (8)
+  ok a06-ngrx.md (10)
+  ok a07-i18n.md (10)
+  ok a08-pdf-cliente.md (8)
+  ok a09-kubernetes.md (8)
+  ok a10-migracion-8-9.md (7)
+  ok a11-migracion-9-16.md (6)
+  ok a12-arm64-m1.md (6)
+  ok a13-docker-colima.md (6)

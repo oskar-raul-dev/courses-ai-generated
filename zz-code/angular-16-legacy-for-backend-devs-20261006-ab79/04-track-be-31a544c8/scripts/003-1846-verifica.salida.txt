@@ -1,0 +1,12 @@
+=== IDs reservados ===
+be-01 be-02 be-03 be-04 be-05 be-06 be-07 be-08 be-09 be-10 be-11 be-12 
+=== secciones por fase ===
+be00   11
+be01   10
+be02   10
+be03   10
+be04   10
+be05   10
+be06   10
+be07   10
+=== faltantes de plantilla ===

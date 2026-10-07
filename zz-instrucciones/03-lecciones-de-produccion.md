@@ -8,7 +8,7 @@
 > y el marco común de [`plantillas/prompts-de-fase.md`](plantillas/prompts-de-fase.md) citan este
 > documento. Al copiar las plantillas a un curso, las reglas que apliquen se copian al marco común del
 > curso (el curso no enlaza aquí: es autocontenido).
-> **Vigencia:** 2026-10-04.
+> **Vigencia:** 2026-10-06.
 
 **Salto rápido:** [1](#1--forma-de-trabajo) · [2](#2-️-git-y-sistema-de-archivos) · [3](#3--ejecutar-sin-romper-la-máquina-del-autor) · [4](#4--lo-que-no-se-puede-ejecutar) · [5](#5--verificar-lo-que-se-nombra) · [6](#6--narrativa-y-datos) · [7](#7--el-estado-entre-sesiones) · [8](#8--trampas-de-herramientas) · [9](#9--cierre-de-un-curso)
 
@@ -83,6 +83,28 @@ flowchart LR
   salidas, SVG de prueba y copias para comparar van a `zz-code/<id>/salidas/`, que el `.gitignore` de
   `zz-code/` excluye y `limpiar.py` libera como regenerable. El scratchpad de la sesión ya no se usa
   para pruebas: lo que quedaba allí se perdía o se olvidaba al cerrar.
+- **Todo el código de la sesión se guarda en `zz-code/`, no solo las pruebas** (decisión del
+  2026-10-06). Scripts, Dockerfile, manifiestos, compose, cargas de k6, consultas, configuraciones de
+  prueba y conductores: todo vive en `zz-code/<id>/` desde que se escribe, aunque se use una vez. Ni el
+  scratchpad ni `/tmp`. **Origen:** al cerrar `lab-docker-kubernetes`, las pruebas de cuatro sesiones
+  seguían en sus scratchpads de `/private/tmp`, a un reinicio de perderse; hubo que rescatarlas a mano
+  y corregir las rutas escritas dentro de los scripts.
+- **Un comando suelto que produce algo citable se copia a un archivo.** Si una cifra, una salida o una
+  tabla del curso, de `hallazgos.md` o de `BENCHMARKS.md` salió de un comando escrito directo en la
+  terminal, ese comando va, tal como corrió y en orden, a un `comandos-<tema>.sh` del directorio o a su
+  `README.md`. En el rescate de `lab-docker-kubernetes`, esas pruebas solo quedaron en las
+  transcripciones.
+- **Cada directorio de `zz-code/` lleva un `README.md` de corrida y medición**, que `nuevo.py` crea con
+  diez secciones: qué se prueba y para qué (fases, `H-n`, `B-n`), prerrequisitos y estado previo,
+  reglas antes de correr (con el comando que revierte cada cambio en la máquina), cómo se corre
+  (comandos bash en orden y copiables), cómo se mide (arnés, condiciones, corridas, estadístico), **los
+  intermedios que amasan la salida** (cada filtro `jq`/`awk`/`sed`, script de agregación, consulta y
+  cruce, de la salida cruda a la cifra publicada), qué se espera ver, salidas, limpieza y qué se dejó
+  fuera. Se escribe mientras se prueba, no al final. La prueba de que está completo: con el README y la
+  salida cruda, otra persona reconstruye la cifra publicada sin leer la transcripción. El detalle, en
+  `zz-code/README.md`.
+- **Los scripts no llevan rutas absolutas a su propio directorio** ni a un scratchpad: `$(dirname "$0")`
+  o `__file__` para lo suyo, y una variable declarada arriba (`LAB=…`) para el curso.
 - **Lo regenerable de `zz-code/` se borra con `zz-code/limpiar.py`**, que solo toca `salidas`,
   `node_modules`, `target`, `.venv` y demás nombres de su lista blanca, dentro de `zz-code/`, y sin `--borrar` solo
   muestra la lista con tamaños. Es la **única excepción** a la regla de no borrar directorios; el
@@ -241,8 +263,8 @@ flowchart LR
 - **La memoria del asistente guarda punteros, no contenido**: dónde está el plan, qué sigue, qué
   decidió el autor que no se deduce de los documentos, y las trampas transversales a varios cursos.
 - **Los scripts auxiliares de una sesión** (conductores de terminal, sincronizadores, reparadores)
-  viven en `zz-code/<id>/`, no en el scratchpad: antes se perdían al cerrar la sesión y había que
-  reescribirlos. Los que el curso necesita de forma permanente pasan a `prompts/` con nombre
+  viven en `zz-code/<id>/`, no en el scratchpad, y entran a su `README.md` en la misma sesión: antes se
+  perdían al cerrar la sesión y había que reescribirlos. Los que el curso necesita de forma permanente pasan a `prompts/` con nombre
   `verificar-*`, y los que sirven a cualquier curso, a `zz-instrucciones/herramientas/`.
 
 ## 8. 🪤 Trampas de herramientas
@@ -283,8 +305,9 @@ flowchart LR
   contrato, propuestas, prompts, plan y verificadores. No viaja al repositorio público del curso —el
   autor no lo copia—, así que no hace falta podarlo. Los `_desechable-*` y lo que el autor pida se
   borran archivo por archivo, con su permiso.
-- **`zz-code/` del curso se cierra**: ningún directorio suyo queda *vigente* en el plan §9, y
-  `limpiar.py` libera lo regenerable.
+- **`zz-code/` del curso se cierra**: ningún directorio suyo queda *vigente* en el plan §9, cada uno
+  tiene su `README.md` completo (se puede repetir cada prueba sin la transcripción), y `limpiar.py`
+  libera lo regenerable.
 - **Un curso cerrado no se recrea**: no se rehacen planes borrados ni se renombra nada (bloqueo de
   contenido). Los errores de diseño que se descubren tarde se **documentan** donde mandan, no se
   corrigen en silencio.

@@ -1,0 +1,4 @@
+10-testing-minimo.md 579 **Orden de lectura sugerido:** empieza por la guía de Redux (reducers/selectores) → después RTL para componentes → después la doc 
+be02-la-costura-de-datos.md 995 - https://go.dev/doc/database/ — la guía oficial de acceso a datos, corta y con las trampas clásicas.
+be02-la-costura-de-datos.md 996 - https://jmoiron.github.io/sqlx/ — la guía de `sqlx`. `Rebind`, `Get`, `Select` y `StructScan` son el 90 % de lo que vas a usar.
+be02-la-costura-de-datos.md 1011 Divergencia 1 antes de que la veas → la guía de `sqlx`, que es corta → la

@@ -1,0 +1,10 @@
+76:// dump/generate-dump.js
+81://   node dump/generate-dump.js
+133:function buildPatients() {
+173:        base.contact = { email: 'paciente' + base.legacyId + '@example.com', phone: null };
+188:        base.email = 'paciente' + base.legacyId + '@example.com';
+311:node dump/generate-dump.js                      # genera los cinco .json
+332:  node dump/generate-dump.js --offset $((i * 10000)) --out "dump/x$i"
+385:1. Corre `generate-dump.js`, impórtalo a `labcore_prod_sample` y pásale `verify-dump.sh`. Todo en verde antes de hacer nada más.
+396:> 🏷️ **Este apéndice no lleva tag propio.** Es consulta rápida y lo que describe —`generate-dump.js` y `verify-dump.sh`— lo pone en marcha **be02**, así que lo que salga de leerlo se commitea con el prefijo de la fase desde la que llegaste (`be02: …`, `be05: …`). Los dos guiones **sí se versionan**, y esa es la única forma de que el volcado siga siendo reproducible dentro de seis meses: un dato determinista cuyo generador no está en el repositorio no es determinista, es una coincidencia. La convención completa está en [`00-convencion-de-git-y-tags.md`](./00-convencion-de-git-y-tags.md) §10.
+=== resto: comprobar que no quedan identificadores es ===

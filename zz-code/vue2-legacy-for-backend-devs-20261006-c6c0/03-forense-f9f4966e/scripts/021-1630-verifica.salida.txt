@@ -1,0 +1,11 @@
+enlaces rotos: 0 []
+02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:178:    req.user = verify(token);   // { sub, role, name } — la fuente de verdad del backend
+02-complement-mongodb-backend/prompts/diccionario-codigo.md:120:Estos mapeos ya existen en Track A y son la fuente de verdad de cómo se ve el
+02-complement-mongodb-backend/prompts/instrucciones-proyecto-track-b.md:29:## 📌 La realidad actual en disco (fuente de verdad de estructura)
+01-vue2-legacy/09-panel-soporte.md:235:// La máquina de estados del ticket. UNA fuente de verdad para
+01-vue2-legacy/09-panel-soporte.md:697:  detalle podrían divergir en silencio: la fuente de verdad es una y vive
+01-vue2-legacy/vu4-timeline-vuetify.md:214:   la fuente de verdad del color es un objeto JavaScript, no una hoja de estilos.
+01-vue2-legacy/02-autenticacion-minima.md:215:> pulcro, la única fuente de verdad sería el store (o helpers del
+01-vue2-legacy/0-ESTRUCTURA-CURSO.md:6:> 📌 Este documento es la fuente de verdad de la **estructura**. El contenido de
+01-vue2-legacy/nx3-asyncdata-vs-vuex.md:13:vistas, el store como fuente de verdad.**
+01-vue2-legacy/06-wizard-minimo.md:604:      // ÚNICA fuente de verdad del borrador

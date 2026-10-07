@@ -1,0 +1,8 @@
+  enlaces y anclas rotos: 0
+  incidentes en el cuaderno base: 20
+  orden por ID correcto: True
+  <details> balanceados: True
+  hermanos marcados: 6
+  índice de síntomas 🩺: True
+  voseo: 0
+  fases que incumplen la plantilla de 9 secciones: 0

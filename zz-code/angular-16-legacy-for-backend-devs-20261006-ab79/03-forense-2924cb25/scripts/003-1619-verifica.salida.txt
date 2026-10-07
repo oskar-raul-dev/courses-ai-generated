@@ -1,0 +1,49 @@
+=== A8 formato HEAD had Ruta forense? ===
+290:> **Tiempo sugerido:** {{20-40 min}} · **Ruta forense:** {{forense-fase-NN.md §N, o —}}
+
+=== A8 formato section list ===
+1:# 📓 Formato del cuaderno de incidentes
+2:## Tutorial Angular 8 — Laboratorio clínico
+33:## 1. Qué hace distinto a este cuaderno
+75:## 2. Estructura del archivo
+94:## 3. El índice y la reserva de IDs
+113:### El reparto de los 21
+144:### Categorías
+153:### Dificultad
+161:## 4. El puente con el track forense
+184:## 5. Cómo llega el sistema roto a la máquina del estudiante
+235:## 6. Convención de commits
+273:## 7. Estados
+285:## 8. Plantilla de un incidente
+293:## Incidente {{NN}} — {{Título en palabras del usuario}}
+299:### 🎫 El ticket
+309:### 🎯 Qué se te pide
+315:### 🔧 Preparación
+350:### 📝 Tu investigación
+439:## 9. Retrospectiva del mes
+459:## 10. Pendientes que salieron de los incidentes
+469:## 11. Checklist antes de dar por cerrado el cuaderno
+508:## 🔥 El cuaderno del track de backend
+
+=== A16 formato section list ===
+1:# 📓 Formato del cuaderno de incidentes
+2:## Tutorial Angular 16 — Inspecciones y certificaciones
+18:## 1. Qué hace distinto a este cuaderno
+45:## 2. Estructura del archivo
+62:## 3. El índice y la reserva de IDs
+81:### Distribución objetivo de los 20
+99:### Categorías
+105:### Dificultad
+113:## 4. Cómo llega el sistema roto a la máquina del estudiante
+146:## 5. Convención de commits
+184:## 6. Estados
+196:## 7. Plantilla de un incidente
+202:## Incidente {{NN}} — {{Título en palabras del usuario}}
+208:### 🎫 El ticket
+218:### 🎯 Qué se te pide
+224:### 🔧 Preparación
+259:### 📝 Tu investigación
+340:## 8. Retrospectiva del mes
+360:## 9. Pendientes que salieron de los incidentes
+370:## 10. Checklist antes de dar por cerrado el cuaderno
+387:## 🔥 El cuaderno del track de backend

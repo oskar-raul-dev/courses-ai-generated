@@ -1,0 +1,72 @@
+== 05-pacientes.md
+   154: email: random() > 0.17 ? 'paciente' + i + '@example.com' : null,
+== 12-testing-coverage.md
+   138: var accionAjena = { type: '[Otro] Algo' } as any;
+   139: var resultado = patientsReducer(initialState, accionAjena);
+   144: var estadoPrevio: PatientsState = { ...initialState, error: 'algo viejo' };
+   145: var accion = PatientsActions.loadPatients();
+   146: var resultado = patientsReducer(estadoPrevio, accion);
+   152: var estadoPrevio: PatientsState = { ...initialState, loading: true };
+   155: var accion = PatientsActions.loadPatientsSuccess({ patients: lista });
+   156: var resultado = patientsReducer(estadoPrevio, accion);
+   172: var resultado = patientsReducer(initialState, accion as any);
+   184: var estadoPrevio: PatientsState = {
+   190: var accion = PatientsActions.createPatientSuccess({ patient: creado });
+   191: var resultado = patientsReducer(estadoPrevio, accion);
+   198: var estadoPrevio: PatientsState = { ...initialState, saving: true };
+   199: var accion = PatientsActions.createPatientFailure({ error: 'boom' });
+   200: var resultado = patientsReducer(estadoPrevio, accion);
+   227: var estado: PatientsState = {
+   247: var resultado = PatientsSelectors.selectAllPatients.projector(estado.items);
+   256: var activos = PatientsSelectors.selectActivePatients.projector(todos);
+   265: var activos = PatientsSelectors.selectActivePatients.projector(todos);
+   268: var resultado = PatientsSelectors.selectFilteredPatients.projector(activos, 'ana');
+== a01-material.md
+   322: definir mas columnas de las que muestras: las que no estan en la lista
+== a06-ngrx.md
+   448: console.log('accion:', action);
+== a08-pdf-cliente.md
+   46: │                                           │   el "lapiz" tiene estado:
+== be02-medir-la-deriva-de-esquema.md
+   286: as: 'paciente'
+   288: { $match: { paciente: { $size: 0 } } },
+   289: { $count: 'ordenesHuerfanas' }
+   294: { "ordenesHuerfanas": 37 }
+== be05-la-cadena-de-custodia-y-la-transaccion.md
+   275: { $group: { _id: '$status', muestras: { $sum: 1 } } }
+   288: foreignField: 'orderId', as: 'muestras' } },
+== bea-03-modelar-documentos-embeber-o-referenciar.md
+   194: as: 'paciente'             // <- el resultado es un ARREGLO
+== bea-04-agregaciones-como-instrumento-de-medida.md
+   226: foreignField: 'legacyId', as: 'paciente' } },
+   227: { $match: { paciente: { $size: 0 } } }      // <- los rotos
+== bea-08-tiempo-zonas-y-fechas-en-mongo.md
+   162: java.util.Date fecha = new java.util.Date();
+== bea-12-datos-de-prueba-y-volumen.md
+   54: var pacientes = generarPacientes(100);   // nombres, correos y fechas al azar
+   125: function nombreCompleto() { return pick(NOMBRES) + ' ' + pick(APELLIDOS); }
+   127: function fechaNacimiento() {
+   134: var pacientes = [];
+   158: base.name = nombreCompleto();
+   159: base.birthDate = fechaNacimiento();
+   165: base.fullName = nombreCompleto();
+   172: base.birthDate = { '$date': fechaNacimiento() + 'T00:00:00Z' };
+   173: base.contact = { email: 'paciente' + base.legacyId + '@example.com', phone: null };
+   179: base.birthDate = fechaNacimiento();
+   188: base.email = 'paciente' + base.legacyId + '@example.com';
+   288: check "pacientes"          4820 'db.patients.countDocuments()'
+   299: check "ordenes"            4180 'db.orders.countDocuments()'
+== cuaderno-incidentes-be.md
+   466: foreignField: 'legacyId', as: 'paciente' } },
+   467: { $match: { paciente: { $size: 0 } } },
+   468: { $count: 'ordenesHuerfanas' }
+   487: var huerfanas = db.orders.aggregate([...]).toArray()[0].ordenesHuerfanas;
+   1495: evidence: { orden: { status: "in_process" },
+   1496: muestras: ["8801:processed", "8802:processed"],
+   1526: sampleRepository.save(muestra(8801, 4021, "processed"));
+   1527: sampleRepository.save(muestra(8802, 4021, "processed"));
+   1528: orderRepository.save(orden(4021, "in_process"));
+== forense-fase-10.md
+   58: KPI ordenes: 5          ← una por entrada… y sigue subiendo con la app cerrada
+   59: KPI ordenes: 6
+   60: KPI ordenes: 7

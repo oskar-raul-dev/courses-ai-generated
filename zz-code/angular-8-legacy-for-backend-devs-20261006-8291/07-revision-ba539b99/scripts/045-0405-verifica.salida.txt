@@ -1,0 +1,12 @@
+=== 00-setup-hola-mundo.md
+  01: 2 menciones -> ['> Apéndices de apoyo: [A02 (Bootstrap 4 + Sass)](./a02-bootstrap-sass.md), [A03 (Node y npm)](./a03-node-npm.md), [A12 (', 'Este ejercicio es también la puerta de entrada a los **incidentes 01 y 02** del']
+  02: 2 menciones -> ['> Apéndices de apoyo: [A02 (Bootstrap 4 + Sass)](./a02-bootstrap-sass.md), [A03 (Node y npm)](./a03-node-npm.md), [A12 (', 'Este ejercicio es también la puerta de entrada a los **incidentes 01 y 02** del']
+=== 01-estructura-base-ngrx.md
+  03: 2 menciones -> ['> Apéndices de apoyo: [A06 (NgRx 8)](./a06-ngrx.md) · [A05 (RxJS de supervivencia)](./a05-rxjs.md) · [A02 (Bootstrap 4 +', 'Este ejercicio es la puerta de entrada al **incidente 03** del cuaderno, de la']
+=== 02-i18n.md
+  04: 4 menciones -> ['> Apéndices de apoyo: [A07 (i18n en Angular 8)](./a07-i18n.md) · [A05 (RxJS de supervivencia)](./a05-rxjs.md) · [Inciden', 'sepas qué vas a encontrar y el incidente **04** del cuaderno lo recoge como caso']
+=== 03-autenticacion.md
+  05: 3 menciones -> ['> Apéndices de apoyo: [A05 (RxJS de supervivencia)](./a05-rxjs.md) · [A01 (Angular Material)](./a01-material.md) · [A07 ', 'Ese mismo experimento es la puerta de entrada al **incidente 05** del cuaderno —*"cerré sesión en una pestaña y en la ot']
+=== 04-mock-api-caos.md
+  06: 4 menciones -> ['> Apéndices de apoyo: [A03 (Node y npm)](./a03-node-npm.md) · [A05 (RxJS de supervivencia)](./a05-rxjs.md) · [A02 (Boots', 'Los **incidentes 06 y 08** del cuaderno viven de esta fase: uno es un endpoint que responde bien pero con la forma equiv']
+  08: 3 menciones -> ['> Apéndices de apoyo: [A03 (Node y npm)](./a03-node-npm.md) · [A05 (RxJS de supervivencia)](./a05-rxjs.md) · [A02 (Boots', 'Los **incidentes 06 y 08** del cuaderno viven de esta fase: uno es un endpoint que responde bien pero con la forma equiv']

@@ -1,0 +1,27 @@
+=== BASE ===
+00  dep=ninguna                                              hab=Fase 1 — Estructura base + NgRx
+01  dep=Fase 0 — Setup + hola mundo                          hab=Fases 2-14
+02  dep=Fase 1 — Estructura base + NgRx                      hab=Fases 3-14
+03  dep=Fase 1 — Estructura base + NgRx                      hab=Fase 4 — Mock API + caos · Fases 5-12
+04  dep=Fase 1 — Estructura base + NgRx                      hab=Fases 5-12
+05  dep=Fase 1 — Estructura base + NgRx                      hab=Fase 6 — Órdenes · Fases 7-12
+06  dep=Fase 5 — Pacientes                                   hab=Fase 7 — Muestras y cadena de custodia · Fases 10-12
+07  dep=Fase 5 — Pacientes                                   hab=Fase 8 — Resultados y rangos versionados · Fases 10-12
+08  dep=Fase 7 — Muestras y cadena de custodia               hab=Fase 9 — Entrega y PDF en cliente · Fases 10-12
+09  dep=Fase 8 — Resultados y rangos versionados             hab=Fase 11 — Trazabilidad y audit log · Fase 12 — Testing 
+10  dep=Fase 5 (pacientes)                                   hab=Fase 11 (trazabilidad) · Fase 12 (testing y coverage)
+11  dep=Fase 5 — Pacientes                                   hab=Fase 12 — Testing desde cero + coverage
+12  dep=Fases 1-11                                           hab=Fase 13 — Build, despliegue y cierre
+13  dep=Fase 12                                              hab=Fase 14
+14  dep=Fase 13                                              hab=cierre del curso
+
+=== BE ===
+be00 dep=**Fase 11 del track base terminada** (`fase-11-trazabili hab=be01
+be01 dep=be00 — el contrato ya está auditado y escrito            hab=be02
+be02 dep=be01 — el monolito responde en el 3000 con datos en memo hab=be03
+be03 dep=be02 — ya sabes qué hay guardado de verdad               hab=be04
+be04 dep=be03 — el backend sirve el contrato desde Mongo y el moc hab=be05
+be05 dep=be04 — la mutación y su asiento ya se escriben los dos e hab=be06
+be06 dep=be05 — ya sabes qué garantías te da tu topología y cuále hab=be07
+be07 dep=be06 — el corte de los rangos está hecho y la pérdida de hab=be08
+be08 dep=be00 a be07 cerradas — esta fase consume los números que hab=nada. Es el final.

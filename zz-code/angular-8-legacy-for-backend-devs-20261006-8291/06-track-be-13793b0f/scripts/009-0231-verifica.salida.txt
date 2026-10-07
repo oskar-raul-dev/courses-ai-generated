@@ -1,0 +1,60 @@
+forense-fase-00.md  pasos=5 descarta=4
+   SIN 'Qué descarta' → Paso 5 — Cuando la consola está limpia y aun así algo falló
+
+forense-fase-01.md  pasos=5 descarta=4
+   SIN 'Qué descarta' → Paso 4 — Dentro del módulo: el `RouterModule.forChild` y su 
+
+forense-fase-02.md  pasos=5 descarta=4
+   SIN 'Qué descarta' → Paso 4 — Dónde va el breakpoint en un interceptor funcional
+
+forense-fase-03.md  pasos=3 descarta=4
+
+forense-fase-05.md  pasos=4 descarta=1
+   SIN 'Qué descarta' → Paso 2 — Si dice `Standalone[…]`: la pregunta no es "qué fal
+   SIN 'Qué descarta' → Paso 3 — Si dice `…Module`: la búsqueda de siempre
+   SIN 'Qué descarta' → Paso 4 — Y ahora en producción, que es donde de verdad los v
+
+forense-fase-06.md  pasos=4 descarta=2
+   SIN 'Qué descarta' → Paso 3 — Si es `PENDING`: qué pasó con la petición
+   SIN 'Qué descarta' → Paso 4 — Si es `VALID` y aun así no guarda
+
+forense-fase-07.md  pasos=6 descarta=2
+   SIN 'Qué descarta' → Paso 2 — ⭐ La URL de la petición contesta antes que el códig
+   SIN 'Qué descarta' → Paso 4 (ticket 1) — Cómo se demuestra que no hay bug
+   SIN 'Qué descarta' → Paso 5 (ticket 2) — Dónde está la línea
+   SIN 'Qué descarta' → Paso 6 — El otro incidente: "el sistema dice que hay dos pla
+
+forense-fase-08.md  pasos=8 descarta=4
+   SIN 'Qué descarta' → Paso 3 — El ciclo, dibujado, y las dos formas de romperlo
+   SIN 'Qué descarta' → Paso 2 — Y la comprobación gemela: la versión
+   SIN 'Qué descarta' → Paso 3 — Por qué el `FormRecord` se rehace y no se parchea
+   SIN 'Qué descarta' → Paso 2 — El experimento que enseña la lección de verdad
+
+forense-fase-09.md  pasos=6 descarta=2
+   SIN 'Qué descarta' → Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+   SIN 'Qué descarta' → Paso 3 — Dónde va el arreglo, que es la decisión de verdad
+   SIN 'Qué descarta' → Paso 1 — ¿El dato está guardado o está derivado?
+   SIN 'Qué descarta' → Paso 3 — La forma del arreglo, y por qué `undefined` vuelve 
+
+forense-fase-10.md  pasos=6 descarta=4
+   SIN 'Qué descarta' → Paso 4 — Por qué el arreglo es una función y no un ajuste
+   SIN 'Qué descarta' → Paso 2 — La comprobación en el código, que es una firma
+
+forense-fase-12.md  pasos=9 descarta=3
+   SIN 'Qué descarta' → Paso 3 — El fix, y el segundo tag
+   SIN 'Qué descarta' → Sospechoso 1 — El reloj
+   SIN 'Qué descarta' → Sospechoso 2 — El azar
+   SIN 'Qué descarta' → Sospechoso 3 — El orden, y la bisección
+   SIN 'Qué descarta' → Sospechoso 4 — La asincronía
+   SIN 'Qué descarta' → Paso final — Si nada de lo anterior: `git bisect`
+
+forense-fase-13.md  pasos=5 descarta=4
+   SIN 'Qué descarta' → Paso 4 — ¿Y la ruta profunda?
+
+forense-fase-14.md  pasos=8 descarta=2
+   SIN 'Qué descarta' → Paso 2 — El almacén del nodo no es el tuyo
+   SIN 'Qué descarta' → Paso 3 — El `:latest` que empeora el mismo problema
+   SIN 'Qué descarta' → Paso 4 — Lo mismo, en el cluster de tu empresa
+   SIN 'Qué descarta' → Paso 1 — El estado ya te dijo por dónde empezar
+   SIN 'Qué descarta' → Paso 3 — El caso sin logs, que en un Mac con chip M es casi 
+   SIN 'Qué descarta' → Paso 4 — Cuando el pod ya se recicló y no queda nada

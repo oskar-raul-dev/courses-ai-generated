@@ -1,0 +1,8 @@
+--- apéndice dice "usado por fase X" pero la fase no lo lista:
+   A10 dice Fase 03; la fase 03 no lo lista
+   A10 dice Fase 04; la fase 04 no lo lista
+   A10 dice Fase 12; la fase 12 no lo lista
+   A10 dice Fase 13; la fase 13 no lo lista
+   A11 dice Fase 04; la fase 04 no lo lista
+   A11 dice Fase 13; la fase 13 no lo lista
+--- fase lista apéndice que no la declara:

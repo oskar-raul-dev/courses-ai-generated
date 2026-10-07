@@ -153,7 +153,7 @@ Las plataformas soportadas, siempre en el mismo orden, y cuál verifica el autor
 
 ## 9. 🪜 La forma del curso
 
-**Tipo:** {{curso completo | curso repaso | banco de entrevista | banco de examen}}.
+**Tipo:** {{curso completo | curso legacy | curso repaso | banco de entrevista | banco de examen}}.
 {{Número de fases o capítulos, cómo se agrupan, y la promesa de esfuerzo: peso o horas.}} El detalle,
 fase por fase, está en [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md).
 
@@ -188,7 +188,7 @@ revés. ✅ cerrada · ⏳ abierta · 🔄 reabierta.
 | ID | Decisión | Valor | Estado |
 |---|---|---|---|
 | D-01 | Idioma | Español latinoamericano neutro con tuteo; código, comandos, identificadores y salida de terminal en inglés; comentarios de código en español | ⏳ |
-| D-02 | Tipo de curso | {{curso completo / repaso / banco de entrevista / banco de examen}} | ⏳ |
+| D-02 | Tipo de curso | {{curso completo / legacy / repaso / banco de entrevista / banco de examen}} | ⏳ |
 | D-03 | Autocontención | {{total: la carpeta se copia a otro proyecto y funciona; no cita otros cursos ni el `CLAUDE.md` raíz / editorial: `prompts/` puede citar la guía madre; lo publicado no cita otros cursos salvo como sugerencia de estudio}} | ⏳ |
 | D-04 | Promesa de esfuerzo | {{peso ligera/media/densa sin horas / horas por fase con tope de N h}} | ⏳ |
 | D-05 | Aparato de evaluación | {{ejercicios 12/20/24 por peso / 20–30 preguntas por capítulo + solucionario en tres capas / …}} | ⏳ |

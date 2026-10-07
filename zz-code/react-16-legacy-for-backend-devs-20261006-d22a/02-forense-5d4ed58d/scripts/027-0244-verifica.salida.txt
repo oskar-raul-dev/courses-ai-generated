@@ -1,0 +1,26 @@
+=== ¿alguna fase declara sus propias horas? ===
+01-estructura-base-router-5.md:3:**8 horas**
+00-setup-hola-mundo-cra.md:3:**6 horas**
+03-mock-api-express-caos.md:3:**6 horas**
+02-autenticacion-minima.md:3:**8 horas**
+02-autenticacion-minima.md:12:8 horas
+04-rifas-crud.md:3:**8 horas**
+05-venta-de-numeros.md:3:**12 horas**
+07-cierre-polling-resultado.md:3:**10 horas**
+07-cierre-polling-resultado.md:592:3 horas
+06-redux-observable-a-fondo.md:3:**12 horas**
+10-testing-minimo.md:3:**6 horas**
+09-dashboard.md:3:**6 horas**
+08-liquidacion-calculo-premio.md:3:**8 horas**
+11-cierre-puente-react-moderno.md:3:**6 horas**
+be02-la-costura-de-datos.md:3:**10 horas**
+be01-go-y-la-forma-del-monolito.md:3:**8 horas**
+be00-el-contrato-auditoria-del-mock.md:3:**6 horas**
+be03-crud-y-el-reemplazo.md:3:**10 horas**
+be06-hora-dura-y-la-autoridad-del-reloj.md:3:**8 horas**
+be05-venta-concurrente.md:3:**10 horas**
+
+=== ¿existe un reparto por fase en algún documento? ===
+prompts/propuesta-fases-backend.md:92:reparto que no cuadra reviente en el servidor en vez de mostrarse mal en una
+prompts/propuesta-fases-backend.md:380:una transacción; el reparto que cuadra al centavo y la política explícita para
+prompts/propuesta-fases-backend.md:465:   su tabla de apéndices, su presupuesto de horas declarado aparte de las 96, y

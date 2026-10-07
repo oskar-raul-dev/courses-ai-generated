@@ -1,0 +1,3 @@
+destinos de pendientes inválidos: 0
+=== pendientes abiertos vs cerrados ===
+marcas 🪦 (pendientes cerrados): 34

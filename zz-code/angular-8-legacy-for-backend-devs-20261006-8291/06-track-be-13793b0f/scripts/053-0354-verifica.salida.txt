@@ -1,0 +1,3 @@
+ok be02: bea-02 añadido a la cabecera
+ok bea-12: matizado
+apéndices BE con desajuste real: 0

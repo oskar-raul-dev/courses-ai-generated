@@ -1,0 +1,14 @@
+═══ 6. ESTADO DECLARADO vs REAL, curso por curso ═══
+
+  angular-8-legacy-for-backend-devs
+    en disco: 17 fases · 13 apéndices · 9 fases BE · 12 apéndices BE · 16 forenses · 2 cuadernos
+    ⚠ el README dice «pendiente»
+
+  angular-16-legacy-for-backend-devs
+    en disco: 17 fases · 13 apéndices · 0 fases BE · 0 apéndices BE · 16 forenses · 1 cuadernos
+    ⚠ el README dice «aún sin escribir»
+    ⚠ el README dice «Ninguna fase está escrita»
+    ⚠ el README dice «propuesto»
+
+  react-16-legacy-for-backend-devs
+    en disco: 15 fases · 0 apéndices · 10 fases BE · 10 apéndices BE · 0 forenses · 2 cuadernos

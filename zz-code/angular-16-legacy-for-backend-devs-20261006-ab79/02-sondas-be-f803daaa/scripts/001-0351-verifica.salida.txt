@@ -1,0 +1,30 @@
+=== php:7.4-cli ===
+  linux    amd64           active
+  linux    ppc64le         active
+  linux    386             active
+  linux    s390x           active
+  linux    arm      v7     active
+  linux    arm64    v8     active
+  linux    arm      v5     active
+  linux    mips64le        active
+  last_pushed: 2022-11-15T13:48:54.034747Z
+=== php:7.4-apache ===
+  linux    amd64           active
+  linux    ppc64le         active
+  linux    386             active
+  linux    s390x           active
+  linux    arm      v7     active
+  linux    arm64    v8     active
+  linux    arm      v5     active
+  linux    mips64le        active
+  last_pushed: 2022-11-15T13:48:37.809282Z
+=== php:7.4-fpm ===
+  linux    amd64           active
+  linux    ppc64le         active
+  linux    386             active
+  linux    s390x           active
+  linux    arm      v7     active
+  linux    arm64    v8     active
+  linux    arm      v5     active
+  linux    mips64le        active
+  last_pushed: 2022-11-15T13:49:08.05987Z

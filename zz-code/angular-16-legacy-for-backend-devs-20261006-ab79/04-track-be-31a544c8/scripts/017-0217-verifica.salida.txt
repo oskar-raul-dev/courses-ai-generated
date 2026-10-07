@@ -1,0 +1,14 @@
+1) Reciprocidad forense ↔ cuaderno: ✅ 0 problemas
+
+2) 💸 sin destino de cobro (fases base + BE):
+(eval):[:23: integer expression expected: 0\n0
+(eval):[:23: integer expression expected: 0\n0
+(eval):[:23: integer expression expected: 0\n0
+(eval):[:23: integer expression expected: 0\n0
+  (sin salida = todas declaran dónde se pagan)
+
+3) Enlaces a angular.dev sin advertencia (la guía exige v16.angular.io):
+  (sin salida = ok)
+
+4) Menciones a LabCore fuera de a10 y README:
+  (sin salida = ok)

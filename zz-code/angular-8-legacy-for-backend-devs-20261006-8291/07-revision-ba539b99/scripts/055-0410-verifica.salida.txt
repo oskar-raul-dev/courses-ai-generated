@@ -1,0 +1,3 @@
+ok
+=== validación final completa ===
+780 enlaces | rotos 0 | anclas rotas 0 | fences desbalanceados 0

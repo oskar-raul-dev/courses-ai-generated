@@ -1,0 +1,188 @@
+menciones con link: 31  sin link: 434
+
+00-convencion-de-git-y-tags.md: 7 sin link, 0 con link
+    54 a03 | estás mirando— y el **Apéndice A03 §9** insiste en que es lo único que se
+    136 a13 | > cambio no marca nada. La excepción es el **A13 §6**, que sí escribe archivos
+    149 a10 | **Apéndice A10**:
+    152 a10 | git tag pre-spike-9     # antes del ejercicio 4 de A10
+
+00-historia-del-sistema.md: 5 sin link, 0 con link
+    107 a06 | > apéndice **A06** es el traductor de NgRx de la época, y **A05** el de RxJS de
+    107 a05 | > apéndice **A06** es el traductor de NgRx de la época, y **A05** el de RxJS de
+    233 a06 | (**A06 §9.4**): el día que persigas un "la pantalla no se actualiza", encenderlo
+    290 a10 | flow nuevo—; todo eso aparece solo como comparación, en **A10** y **A11**.
+
+00-setup-hola-mundo.md: 19 sin link, 0 con link
+    5 a02 | > Apéndices de apoyo: A02 (Bootstrap 4 + Sass), A03 (Node y npm), A12 (dependencias problemáticas en
+    5 a03 | > Apéndices de apoyo: A02 (Bootstrap 4 + Sass), A03 (Node y npm), A12 (dependencias problemáticas en
+    5 a12 | > Apéndices de apoyo: A02 (Bootstrap 4 + Sass), A03 (Node y npm), A12 (dependencias problemáticas en
+    5 a13 | > Apéndices de apoyo: A02 (Bootstrap 4 + Sass), A03 (Node y npm), A12 (dependencias problemáticas en
+
+01-estructura-base-ngrx.md: 11 sin link, 2 con link
+    5 a06 | > Apéndices de apoyo: A06 (NgRx 8) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · Incide
+    5 a05 | > Apéndices de apoyo: A06 (NgRx 8) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · Incide
+    5 a02 | > Apéndices de apoyo: A06 (NgRx 8) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · Incide
+    44 a06 | - `@ngrx/entity`, `MetaReducer`, y el `ActionReducerMap` tipado del estado raíz. LabCore no los usa;
+
+02-i18n.md: 11 sin link, 0 con link
+    5 a07 | > Apéndices de apoyo: A07 (i18n en Angular 8) · A05 (RxJS de supervivencia) · Incidentes asociados: 
+    5 a05 | > Apéndices de apoyo: A07 (i18n en Angular 8) · A05 (RxJS de supervivencia) · Incidentes asociados: 
+    43 a07 | - El bundle por idioma en el build, `ng xi18n`, y los tres despliegues detrás de nginx → los comando
+    44 a07 | - ICU real con `messageformat` y el `TranslateCompiler`. Acá la pluralización se resuelve con claves
+
+03-autenticacion.md: 6 sin link, 0 con link
+    5 a05 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A01 (Angular Material) · A07 (i18n en Angular 8)
+    5 a01 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A01 (Angular Material) · A07 (i18n en Angular 8)
+    5 a07 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A01 (Angular Material) · A07 (i18n en Angular 8)
+    305 a07 | // curso aplica con las claves de i18n (A07 §7).
+
+04-mock-api-caos.md: 9 sin link, 0 con link
+    6 a03 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · A0
+    6 a05 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · A0
+    6 a02 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · A0
+    6 a07 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A02 (Bootstrap 4 + Sass) · A0
+
+05-pacientes.md: 4 sin link, 0 con link
+    6 a01 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · Incidentes 
+    6 a02 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · Incidentes 
+    6 a06 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · Incidentes 
+    1438 a06 | - **[B]** `@ngrx/entity` como reemplazo del arreglo plano en el estado. Toca las Fases 5 a 11 comple
+
+06-ordenes.md: 12 sin link, 0 con link
+    5 a01 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · A07 (i18n e
+    5 a02 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · A07 (i18n e
+    5 a06 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · A07 (i18n e
+    5 a07 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A06 (NgRx 8) · A07 (i18n e
+
+07-muestras-custodia.md: 5 sin link, 0 con link
+    6 a01 | > Apéndices de apoyo: A01 (Angular Material) · A06 (NgRx 8) · A07 (i18n en Angular 8) · Incidentes a
+    6 a06 | > Apéndices de apoyo: A01 (Angular Material) · A06 (NgRx 8) · A07 (i18n en Angular 8) · Incidentes a
+    6 a07 | > Apéndices de apoyo: A01 (Angular Material) · A06 (NgRx 8) · A07 (i18n en Angular 8) · Incidentes a
+    515 a06 | // es el primero de los tres errores silenciosos de A06 §10.
+
+08-resultados-rangos.md: 12 sin link, 0 con link
+    6 a01 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A05 (RxJS de supervivencia
+    6 a02 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A05 (RxJS de supervivencia
+    6 a05 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A05 (RxJS de supervivencia
+    6 a06 | > Apéndices de apoyo: A01 (Angular Material) · A02 (Bootstrap 4 + Sass) · A05 (RxJS de supervivencia
+
+09-entrega-pdf.md: 23 sin link, 0 con link
+    6 a08 | > Apéndices de apoyo: A08 (PDF en cliente) · A07 (i18n en Angular 8) · A06 (NgRx 8) · A05 (RxJS de s
+    6 a07 | > Apéndices de apoyo: A08 (PDF en cliente) · A07 (i18n en Angular 8) · A06 (NgRx 8) · A05 (RxJS de s
+    6 a06 | > Apéndices de apoyo: A08 (PDF en cliente) · A07 (i18n en Angular 8) · A06 (NgRx 8) · A05 (RxJS de s
+    6 a05 | > Apéndices de apoyo: A08 (PDF en cliente) · A07 (i18n en Angular 8) · A06 (NgRx 8) · A05 (RxJS de s
+
+10-dashboard.md: 11 sin link, 0 con link
+    6 a05 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A06 (NgRx 8) · A07 (i18n en Angular 8) · A02 (Bo
+    6 a06 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A06 (NgRx 8) · A07 (i18n en Angular 8) · A02 (Bo
+    6 a07 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A06 (NgRx 8) · A07 (i18n en Angular 8) · A02 (Bo
+    6 a02 | > Apéndices de apoyo: A05 (RxJS de supervivencia) · A06 (NgRx 8) · A07 (i18n en Angular 8) · A02 (Bo
+
+11-trazabilidad-audit-log.md: 4 sin link, 0 con link
+    6 a06 | > Apéndices de apoyo: A06 (NgRx 8) · A05 (RxJS de supervivencia) · Incidentes asociados: 17
+    6 a05 | > Apéndices de apoyo: A06 (NgRx 8) · A05 (RxJS de supervivencia) · Incidentes asociados: 17
+    665 a06 | **Por qué el acoplamiento duele, en términos de store.** El effect vive en el slice de resultados, p
+    665 a06 | **Por qué el acoplamiento duele, en términos de store.** El effect vive en el slice de resultados, p
+
+12-testing-coverage.md: 7 sin link, 0 con link
+    5 a03 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A06 (NgRx 8) · Incidentes aso
+    5 a05 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A06 (NgRx 8) · Incidentes aso
+    5 a06 | > Apéndices de apoyo: A03 (Node y npm) · A05 (RxJS de supervivencia) · A06 (NgRx 8) · Incidentes aso
+    353 a10 | > ⚠️ En Angular 8 la API de inyección en tests es `TestBed.get(Token)`. El `TestBed.inject(Token)` c
+
+13-build-despliegue.md: 24 sin link, 0 con link
+    5 a04 | > Apéndices de apoyo: A04 (Webpack oculto) · A09 (Kubernetes para el dev de front) · A03 (Node y npm
+    5 a09 | > Apéndices de apoyo: A04 (Webpack oculto) · A09 (Kubernetes para el dev de front) · A03 (Node y npm
+    5 a03 | > Apéndices de apoyo: A04 (Webpack oculto) · A09 (Kubernetes para el dev de front) · A03 (Node y npm
+    5 a07 | > Apéndices de apoyo: A04 (Webpack oculto) · A09 (Kubernetes para el dev de front) · A03 (Node y npm
+
+14-casi-prod-kind.md: 16 sin link, 0 con link
+    5 a09 | > Apéndices de apoyo: A09 (Kubernetes para el dev de front) · A03 (Node y npm) · A12 (dependencias e
+    5 a03 | > Apéndices de apoyo: A09 (Kubernetes para el dev de front) · A03 (Node y npm) · A12 (dependencias e
+    5 a12 | > Apéndices de apoyo: A09 (Kubernetes para el dev de front) · A03 (Node y npm) · A12 (dependencias e
+    5 a13 | > Apéndices de apoyo: A09 (Kubernetes para el dev de front) · A03 (Node y npm) · A12 (dependencias e
+
+README.md: 18 sin link, 0 con link
+    189 a01 | Las catorce fases obligatorias están escritas, y de los apéndices están **A01
+    190 a02 | (Material)**, **A02 (Bootstrap 4 + Sass)**, **A03 (Node y npm)**, **A04 (Webpack
+    190 a03 | (Material)**, **A02 (Bootstrap 4 + Sass)**, **A03 (Node y npm)**, **A04 (Webpack
+    190 a04 | (Material)**, **A02 (Bootstrap 4 + Sass)**, **A03 (Node y npm)**, **A04 (Webpack
+
+a01-material.md: 13 sin link, 0 con link
+    1 a01 | # 📎 Apéndice A01 — Angular Material
+    11 a02 | **Qué queda fuera:** los componentes de Material que este proyecto **no usa** —`MatStepper`, `MatTab
+    83 a02 | > ⚠️ El orden de esa lista fija la cascada de todo el proyecto: Material primero, `styles.scss` —con
+    95 a02 | **Reboot de Bootstrap también quiere decidir la fuente del `body`.** Los dos ponen `font-family`, `f
+
+a02-bootstrap-sass.md: 14 sin link, 0 con link
+    1 a02 | # 📎 Apéndice A02 — Bootstrap 4 + Sass
+    9 a01 | **Qué queda fuera:** la teoría de la cascada —especificidad, origen, orden— que ya explica la **Fase
+    65 a12 | > 📝 **Nota de época.** En 2019 `node-sass` era el default y `dart-sass` la alternativa nueva. Hoy es
+    92 a01 | No es un olvido, es la decisión correcta: los diálogos de este sistema son `MatDialog` (**A01 §7**) 
+
+a03-node-npm.md: 21 sin link, 0 con link
+    1 a03 | # 📎 Apéndice A03 — Node y npm
+    12 a12 | **Qué queda fuera:** publicar paquetes. Nadie en mantenimiento publica al registro, y `npm publish`,
+    76 a13 | De ahí la regla: **si estás en una Mac con Apple Silicon, tu número es 14.21.3 y no hay conversación
+    76 a12 | De ahí la regla: **si estás en una Mac con Apple Silicon, tu número es 14.21.3 y no hay conversación
+
+a04-webpack-oculto.md: 9 sin link, 0 con link
+    1 a04 | # 📎 Apéndice A04 — Webpack oculto
+    11 a03 | **Qué queda fuera:** **escribir configuración de Webpack a mano.** No hay un `webpack.config.js` de 
+    105 a02 | | `styles` | El CSS global: el arreglo `styles` del `angular.json` más `styles.scss` (**Fase 0**, **
+    142 a10 | > 📝 **Nota de época.** Que AOT sea opcional y esté apagado en desarrollo es propio de la era pre-Ivy
+
+a05-rxjs.md: 9 sin link, 0 con link
+    1 a05 | # 📎 Apéndice A05 — RxJS de supervivencia
+    11 a06 | **Qué queda fuera:** los operadores que el proyecto no usa —`combineLatest`, `forkJoin`, `shareRepla
+    110 a10 | > ⚠️ **`rxjs-compat` no existe para RxJS 7.** Su última línea es la 6.x, así que hay que quitarlo **
+    110 a11 | > ⚠️ **`rxjs-compat` no existe para RxJS 7.** Su última línea es la 6.x, así que hay que quitarlo **
+
+a06-ngrx.md: 8 sin link, 0 con link
+    1 a06 | # 📎 Apéndice A06 — NgRx 8
+    12 a11 | **Qué queda fuera:** `createFeature`, `createActionGroup`, los *functional effects*, `provideStore` 
+    12 a05 | **Qué queda fuera:** `createFeature`, `createActionGroup`, los *functional effects*, `provideStore` 
+    324 a05 | **Un effect que deja morir su stream deja de escuchar para siempre.** Es el error más caro del curso
+
+a07-i18n.md: 8 sin link, 0 con link
+    1 a07 | # 📎 Apéndice A07 — i18n en Angular 8
+    11 a08 | **Qué queda fuera:** el porqué de haber elegido runtime en vez del i18n nativo (**Fase 2 §4**, que e
+    124 a05 | // Ojo: NO completa. Hay que desuscribirse (ver A05).
+    150 a05 | - **Los objetos `onLangChange`, `onTranslationChange` y `onDefaultLangChange` son `EventEmitter`,** 
+
+a08-pdf-cliente.md: 10 sin link, 0 con link
+    1 a08 | # 📎 Apéndice A08 — PDF en cliente
+    12 a07 | **Qué queda fuera:** el dato viejo del informe —el `reportSnapshot` congelado en `ngOnInit`, la deud
+    12 a04 | **Qué queda fuera:** el dato viejo del informe —el `reportSnapshot` congelado en `ngOnInit`, la deud
+    275 a04 | Este apéndice **no te da cifras**: medirlas sobre el proyecto ya montado es el ejercicio 7, y la her
+
+a09-kubernetes.md: 2 sin link, 0 con link
+    1 a09 | # 📎 Apéndice A09 — Kubernetes para el dev de front
+    485 a09 | - 🪦 **Cerrados al escribir este apéndice.** El **registry local con kind**, que la **Fase 14** ofrec
+
+a10-migracion-8-9.md: 28 sin link, 0 con link
+    1 a10 | # 📎 Apéndice A10 — 🔥 Migración 8 → 9
+    11 a11 | **Qué queda fuera:** la migración real, obviamente; todo lo posterior a la 9 —standalone, `inject()`
+    11 a04 | **Qué queda fuera:** la migración real, obviamente; todo lo posterior a la 9 —standalone, `inject()`
+    46 a11 | Y una cosa más, para bajar la ansiedad: el salto **8 → 9 es de los amables**. Es el que trae Ivy, sí
+
+a11-migracion-9-16.md: 33 sin link, 0 con link
+    1 a11 | # 📎 Apéndice A11 — 🔥 Migración 9 → 16
+    13 a10 | **Qué queda fuera:** la migración real, que no se propone ni se planifica acá; **todo el método de m
+    13 a10 | **Qué queda fuera:** la migración real, que no se propone ni se planifica acá; **todo el método de m
+    13 a12 | **Qué queda fuera:** la migración real, que no se propone ni se planifica acá; **todo el método de m
+
+a12-arm64-m1.md: 39 sin link, 0 con link
+    1 a12 | # 📎 Apéndice A12 — 🔥 Dependencias problemáticas en arm64 / M1
+    11 a02 | **Qué queda fuera:** soporte a plataformas fuera del equipo —si alguien llega con FreeBSD o con una 
+    11 a03 | **Qué queda fuera:** soporte a plataformas fuera del equipo —si alguien llega con FreeBSD o con una 
+    11 a03 | **Qué queda fuera:** soporte a plataformas fuera del equipo —si alguien llega con FreeBSD o con una 
+
+a13-docker-colima.md: 35 sin link, 0 con link
+    1 a13 | # 📎 Apéndice A13 — 🔥 Docker + Colima en Apple Silicon
+    9 a12 | Es la continuación natural del **Apéndice A12**: allá, la opción B de su §3 dice *"deja de pelear co
+    28 a12 | **Qué queda fuera:** la **comparativa exhaustiva de runtimes** —Podman, OrbStack, Lima y compañía se
+    28 a03 | **Qué queda fuera:** la **comparativa exhaustiva de runtimes** —Podman, OrbStack, Lima y compañía se
+
+bea-12-datos-de-prueba-y-volumen.md: 1 sin link, 0 con link
+    80 a03 | // Se corre con el Node del track base (12 o 14, ver A03):

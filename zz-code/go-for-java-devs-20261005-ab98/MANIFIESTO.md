@@ -11,6 +11,8 @@
 
 ## Qué hay
 
+- `README.md` — cómo se corre cada prueba y qué se espera ver (escrito el 06/10/2026 desde la transcripción).
+- `comandos-revision.sh` — los comandos de la sesión `5c52573d` que tocaron este directorio, en orden y tal como corrieron.
 - `buscar_diagramas.py` — copia del de la sesión de C#: lista bloques `text` con forma de diagrama.
 - `migrar_diagramas.py` — los siete reemplazos `text` → Mermaid, ya aplicados (falla si un bloque
   no aparece exactamente una vez).

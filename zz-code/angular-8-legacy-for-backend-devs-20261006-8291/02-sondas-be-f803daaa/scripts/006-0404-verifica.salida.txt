@@ -1,0 +1,4 @@
+    RESULTADO: RECHAZADA
+    codigo:  20 (undefined)
+    mensaje: Transaction numbers are only allowed on a replica set member or mongos
+  (limpieza hecha)

@@ -1,0 +1,12 @@
+═══ RESTOS DE PLANTILLA Y MARCADORES ABIERTOS ═══
+  {{placeholder}}              115
+      forense-fase-11.md: {{ calculateExpiringCount(certificates) 
+      forense-fase-11.md: {{ (metrics$ | async)?.expiringCount }}
+      08-formulario-dinamico.md: {{ view.inspection.id }}
+      08-formulario-dinamico.md: {{ view.inspection.assetId }}
+      08-formulario-dinamico.md: {{ view.template.templateId }}
+  TODO/FIXME/TBD               3
+      02-autenticacion.md: TODO
+      README.md: TODO
+      01-estructura-base-ngmodules.md: TODO
+  lorem/pendiente de escribir  0

@@ -1,0 +1,24 @@
+651: * Cada cuánto se refresca el panel. Constante exportada por la misma razón que
+660:export const DASHBOARD_REFRESH_MS = 60_000;
+691:      // las encadena; sólo dice "es hora de refrescar".
+773:- **`switchMap` en el latido.** Si un refresco tarda más de un minuto, el siguiente cancela al anterior. Es una **lectura**, así que cancelar es lo correcto — regla de la Fase 6.
+774:- **El `map` que calcula todo corre en cada emisión de cualquiera de las cinco fuentes.** Con cinco fuentes emitiendo al refrescar, eso son hasta cinco recálculos por minuto en vez de uno. Es visible con doscientas inspecciones y molesto con dos mil, y es exactamente el ejercicio 18. La solución no es memorizar a ciegas: es medir primero.
+855:  <!-- ⭐ trackBy. Sin él, cada refresco de un minuto crea objetos nuevos y
+885:   * entre refrescos. Devolver el índice sería equivalente a no poner nada en
+896:Abre Angular DevTools, pestaña Profiler, y graba un minuto entero con el panel quieto. Cuando salte el refresco, mira el árbol: las tarjetas `OnPush` cuyo número no cambió **no** aparecen en el ciclo. Ahora quita el `trackBy` de la lista de cobertura y repite: cuarenta filas destruidas y recreadas para mostrar lo mismo. Ésa es la diferencia entre "el panel se refresca" y "el panel parpadea".
+1041:     * Con el refresco de un minuto, cada emisión trae un array NUEVO aunque
+1044:     * que está leyendo un número. Con la animación apagada, un refresco que no
+1047:     * Apagarla es el fix correcto y no un parche: en un panel que se refresca
+1094:**Causa:** cada refresco produce un array nuevo y Chart.js anima cualquier dato nuevo.
+1158:10. Monta `DashboardMetricsService` completo con `combineLatest` y el `timer`. Comprueba que el panel se refresca solo y que `generatedAt` cambia cada minuto.
+1162:14. Implementa la lista de cobertura con `trackBy` y grábala con el Profiler de Angular DevTools durante un refresco. Anota cuántos componentes se recrean.
+1254:- **`document.visibilityState` es el arreglo obvio del refresco y no está en el cuerpo.** Un panel que sigue pidiendo con la pestaña oculta es dinero de otro. Está como 🔥 porque no enseña nada nuevo sobre Angular, pero es lo primero que haría en un proyecto real. → **Ejercicio 🔥 ya escrito.**
+=== fase 12 coverage/ karma ===
+201:        random: true,
+483:    // contamina los siguientes — que con `random: true` no son siempre los
+734:    // siguiente — y con `random: true`, "el siguiente" cambia cada vez.
+867:    // `crypto.randomUUID()` y el valor es distinto en cada ejecución. Un
+1053:**Lo que importa:** es el **incidente 17**, y `random: true` de Jasmine es lo que lo saca a la luz en vez de esconderlo. La reacción instintiva —poner `random: false` para que "deje de fallar"— convierte un test que avisa en un test que miente. El orden aleatorio no causa el problema: lo revela.
+1102:**El azar.** `crypto.randomUUID()`, `Math.random()`. Se comprueba la forma, no el valor. El `CorrelationIdInterceptor` de 5.7 es el ejemplo.
+1104:**El orden.** Corre la suite tres veces y anota la semilla que Jasmine imprime al principio. Si falla con una semilla y pasa con otra, **reproduce con esa semilla** —`ng test --seed=<n>`— y bisecciona: quita la mitad de los `describe` y vuelve a correr. Lo que queda cuando el fallo desaparece es la pareja de tests que se contaminan.
+1116:2. **Pon `random: false` en el `karma.conf.js`** y añade a propósito una dependencia de orden: un spec que deja un `jasmine.clock()` instalado sin desinstalarlo. Todo verde. Ahora vuelve a poner `random: true` y corre cinco veces. Anota cuántas fallan y con qué semilla. La lección es que el test intermitente **ya existía**; lo único que cambió fue si te enterabas.

@@ -1,0 +1,83 @@
+### F4 errores
+## ⚠️ Errores comunes
+
+- duplicar estado: guardar `filteredTickets` en `data` y sincronizarlo con
+  watchers — es la fuente #1 de "la tabla no refleja lo que hay";
+- mutar props en los componentes hijos (Vue lo grita en consola: hazle caso);
+- meter la navegación o el HTTP **dentro** de `TicketsTable` — muere la
+  reutilización;
+- computed con efectos secundarios (mutar estado, disparar requests): los
+  computed derivan, no actúan;
+- olvidar el `:key` en `v-for` o usar el índice como key en listas que cambian;
+- olvidar el estado vacío: una tabla sin filas y sin mensaje parece un bug;
+- abusar de filters de Vue 2 para lógica compleja: son para formateo cosmético.
+
+---
+
+## 🧪 Ejercicios (26)
+
+**🟢 Fácil (1–8)**
+
+1. Agrega el estado `closed` a un par de tickets en `db.json` y verifica que
+   el badge sale gris y la tarjeta resumen cuenta bien.
+2. Agrega una columna "Reportado por" (`reporter`) a la tabla.
+3. Cambia el placeholder de búsqueda y haz que también busque en `description`.
+4. Agrega un filtro `| uppercase` global y úsalo en la columna de asignado.
+5. Haz que la tarjeta de "Abiertos" tenga borde rojo (`border-danger`).
+6. Muestra "1 ticket" vs "N tickets" (singular/plural) en el contador de
+   resultados.
+7. Agrega un botón "Recargar" junto a los filtros que llame a `loadTickets`.
+8. Haz clic en una tarjeta resumen y… no pasa nada. Anota qué esperarías que
+   pasara (lo implementas en el ejercicio 13).
+
+**🟡 Intermedio (9–17)**
+
+9. Agrega un tercer filtro: `<select>` de prioridad, combinado con los otros
+   dos en el mismo computed.
+10. Agrega un filtro por asignado cuyo `<select>` se llene **dinámicamente**
+    con un computed `assignees` (valores únicos de `tickets`, pista: `lodash
+    uniq` o un objeto como set).
+11. Haz que las tarjetas resumen muestren el conteo de los tickets
+    **filtrados** además del total, formato "3 / 8".
+12. Haz clicable cada tarjeta resumen: al hacer clic, setea `statusFilter` a
+    ese estado (y clic de nuevo lo limpia — toggle).
+13. Persiste los filtros en la URL como query params
+    (`/tickets?status=open&q=impresora`) usando `router.replace`, y
+    restáuralos en `mounted` desde `$route.query`.
+14. Resalta las filas de prioridad `high` con la clase `table-danger` usando
+    `:class` en el `<tr>`.
+15. Agrega un filtro global `truncate` que corte títulos a 40 caracteres con
+    "…". Úsalo en la tabla.
+16. Crea el computed `oldestOpenTicket` que devuelva el ticket abierto más
+    antiguo y muéstralo en una alerta amarilla arriba del dashboard:
+### F4 estructura
+3:## 🎯 Propósito
+23:## ✅ Qué queda listo al terminar
+33:## 🚫 Qué NO entra todavía
+43:## 🧠 Concepto 1: computed properties a fondo
+73:## 🧠 Concepto 2: props abajo, eventos arriba
+93:## 🧠 Concepto 3: filtros de Vue 2 (sabor de época puro)
+119:## 🧩 Mini repaso: los `.vue` de esta fase (lo nuevo respecto a la Fase 3)
+123:### ¿Cómo sabe un computed cuándo recalcularse? (reactividad en 1 minuto)
+153:### `:class` — las tres sintaxis
+171:### `$emit` — el hijo avisa, el padre decide (versión corta)
+192:### `:key` en `v-for` — no es decorativo
+206:### Registro local y carpetas por dominio
+222:## 💻 Código de la fase
+224:### Estructura que se agrega
+239:### `components/tickets/TicketStatusBadge.vue`
+281:### `components/tickets/TicketPriorityBadge.vue`
+309:### `components/tickets/TicketsTable.vue`
+365:### `components/tickets/TicketsSummary.vue`
+415:### `views/TicketsView.vue` — la vista orquestadora
+539:### `main.js` — registrar el filtro global
+583:## 🔄 Los flujos del dashboard, paso a paso
+589:### 🚀 Carga inicial
+620:### 🔍 Escribir en la búsqueda (la cadena reactiva pura)
+647:### 🖱️ Clic en una fila (el viaje del evento)
+671:### 🎚️ Cambiar el `<select>` de estado
+687:## ⚖️ Filtrar en cliente vs filtrar en servidor
+710:## ⚠️ Errores comunes
+725:## 🧪 Ejercicios (26)
+805:## 📚 Referencias
+835:## 🚀 Cierre

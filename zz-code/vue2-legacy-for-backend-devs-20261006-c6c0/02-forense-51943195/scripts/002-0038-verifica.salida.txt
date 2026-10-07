@@ -1,0 +1,200 @@
+=== GUIA DIFF ===
+diff --git a/vue2-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md b/vue2-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md
+index a2c2828..58ff790 100644
+--- a/vue2-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md
++++ b/vue2-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md
+@@ -627,7 +627,8 @@ esqueleto rellenable está en `plantilla-de-fase.md`.
+    caben Detalles con intención, El patrón a memorizar, Prueba de fuego y
+    💸 Pago de deuda.
+ 6. **⚠️ Errores comunes y pieza forense** — qué se rompe típicamente y cómo se
+-   depura.
++   depura. El **resumen** va en la fase; el **recorrido completo** vive en su
++   propio archivo (§9.2).
+ 7. **🧪 Ejercicios** — ver §10.
+ 8. **📚 Referencias** — ver §11.
+ 9. **🚀 Cierre** — qué sigue, por qué, La señal de que quedó bien, y el
+@@ -674,6 +675,40 @@ Los apéndices **no** siguen esta plantilla: usan índice de salto rápido,
+ secciones cortas, una guía final de "cuándo usar qué" y 5–10 ejercicios
+ cortos.
+ 
++### 9.2 La pieza forense va en su archivo
++
++La sección 6 se reparte entre dos documentos, y conviene decir por qué, porque
++esta guía antes la daba por entera dentro de la fase.
++
++**En la fase** queda lo que se lee de corrido: los errores comunes con su
++síntoma → causa → fix mínimo, el resumen de qué depurar y con qué, y el bloque
++🧨 **Rompe a propósito** que el estudiante ejecuta. **En el archivo** queda el
++recorrido paso a paso, con las salidas literales, los callejones que hay que
++descartar y el diagnóstico por síntoma completo.
++
++La fase cierra su sección 6 con una línea de forma fija, que es el contrato
++entre las dos:
++
++```markdown
++> 📄 El recorrido completo, con las salidas literales, en `forense-fase-08.md`.
++```
++
++**Por qué se separan.** La fase se lee una vez, en orden y de principio a fin.
++La pieza forense se consulta **fuera de orden y meses después**, cuando llega
++un ticket vago y no sabes ni de qué fase es tu problema: un archivo se abre por
++su nombre, y una sección enterrada en una fase de novecientas líneas no se
++encuentra. Además, una pieza bien hecha son doscientas líneas más sobre fases
++que ya pesan entre quinientas y mil novecientas.
++
++**La regla anti-solapamiento:** si un párrafo cabe igual de bien en los dos
++sitios, va en la fase y la pieza lo enlaza. La fase se lee siempre; la pieza,
++solo cuando hace falta. La especificación completa —estructura de la pieza,
++cómo se escribe un paso, y la tabla de frontera— está en
++`prompts/formato-piezas-forenses.md`, y no se reexplica en ninguna fase.
++
++Los apéndices tampoco llevan pieza forense, por lo mismo que no llevan bloque
++🏷️: no producen código de fase.
++
+ ---
+ 
+ ## 10. Ejercicios
+@@ -838,8 +873,10 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" 
+    Curso 01.
+ 4. `02-complement-mongodb-backend/prompts/instrucciones-proyecto-track-b.md` —
+    alcance del Curso 02.
+-5. Esta guía y `prompts/convencion-de-git-y-tags.md`, que es su anexo para
+-   todo lo que toque git, repos y tags.
++5. Esta guía y sus tres anexos: `prompts/convencion-de-git-y-tags.md` para
++   todo lo que toque git, repos y tags; `prompts/formato-piezas-forenses.md` y
++   `prompts/formato-cuaderno-incidentes.md` para el track forense y el
++   cuaderno de incidentes.
+ 6. Entregables ya aprobados de fases anteriores.
+ 7. Decisiones explícitas del chat actual.
+ 
+@@ -860,6 +897,11 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" 
+ - **Fases del Curso 02:** `00-preliminares.md` … `15-el-veredicto-honesto.md`.
+ - **Apéndices del Curso 02:** `a01-docker.md` … `a05-mongo-vs-sql.md`
+   (minúscula, dos dígitos).
++- **Track forense (uno de cada por curso):** `forense-master.md`,
++  `forense-fase-00.md` … `forense-fase-NN.md`, y —solo en el Curso 01—
++  `forense-ruta-q.md`, `forense-ruta-vu.md` y `forense-ruta-nx.md`, una por
++  ruta y no una por fase de ruta.
++- **Cuaderno de incidentes:** `cuaderno-incidentes.md`, uno por curso.
+ - **Documentos maestros:** `0-plan-del-curso.md`, `0-ESTRUCTURA-CURSO.md`,
+   `README.md` (que hace de índice de cada curso).
+ 
+@@ -932,3 +974,43 @@ reexplicarlo.
+ - [ ] Lleva el bloque 🏷️ del tag de la fase, con el nombre correcto
+       (`fase-` + slug del archivo) y el prefijo de commit correcto (§9.1). Los
+       apéndices no lo llevan.
++- [ ] La sección 6 lleva su pieza forense —resumen, 🧨 «Rompe a propósito» y la
++      línea 📄 hacia el archivo del recorrido (§9.2)—, o dice por qué no.
++- [ ] Lleva el bloque «📌 Reservas para el cuaderno de incidentes», o declara
++      que esta fase no reserva ninguno. Los apéndices no lo llevan.
++- [ ] Cada ID reservado existe en el índice del `cuaderno-incidentes.md` de su
++      curso, y ninguno se reasignó.
++
++---
++
++## 16. El track forense y el cuaderno de incidentes
++
++Dos entregables por curso, además de las fases. No son material extra: son el
++desarrollo de una sección que la plantilla ya cuenta (§9.2) y de una estructura
++que esta guía ya define (§14).
++
++**El track forense** son las piezas de recorrido, más su puerta de entrada. Cada
++`forense-fase-NN.md` lleva una investigación completa —el ticket como llegó,
++cada paso con su salida literal, y qué descarta cada paso—, y `forense-master.md`
++trae el método de cuatro preguntas y el 🩺 índice de síntomas transversal, que es
++lo que de verdad se consulta: nadie llega sabiendo de qué fase es su problema,
++llega con *"la pantalla se quedó en blanco"*. En el Curso 01 son doce piezas de
++tronco más tres de ruta —una por ruta, porque son excluyentes y quien elige
++Quasar no leerá nunca las de Vuetify—; en el Curso 02, doce como piso.
++
++**El cuaderno de incidentes** es un archivo por curso con doce tickets vagos, de
++los que llegan de verdad, cada uno con su preparación, tres pistas plegadas,
++espacio para tu investigación y una solución de referencia con parche mínimo,
++prueba de regresión en código y post-mortem. Es donde la estructura de ocho
++puntos de §14 deja de ser una especificación y se instancia.
++
++> ⚠️ **Los dos cursos son independientes, y el material forense lo respeta.** Hay
++> quien hará solo el Curso 01 y no tocará Mongo nunca. Ninguna pieza ni incidente
++> del Curso 01 puede depender del Curso 02 —puede nombrar una deuda 💸 y decir
++> dónde se paga, pero el recorrido cierra solo—, y los incidentes de costura del
++> Curso 02 se resuelven partiendo de un frontend que se entrega ya construido.
++
++La especificación completa vive en `prompts/formato-piezas-forenses.md` y
++`prompts/formato-cuaderno-incidentes.md`, que son anexos de esta guía (§13.1) y
++mandan sobre todo lo que se escriba en esos archivos. Esta sección no los
++duplica: dice que existen y para qué.
+=== PLANTILLA DIFF ===
+diff --git a/vue2-legacy-for-backend-devs/prompts/plantilla-de-fase.md b/vue2-legacy-for-backend-devs/prompts/plantilla-de-fase.md
+index c83b602..b8f6c35 100644
+--- a/vue2-legacy-for-backend-devs/prompts/plantilla-de-fase.md
++++ b/vue2-legacy-for-backend-devs/prompts/plantilla-de-fase.md
+@@ -106,9 +106,23 @@ pruebas).}}
+ 
+ ### Pieza forense de esta fase
+ 
+-{{Qué depurar, específico de esta fase: consola, Network, Vue DevTools, o
+-—en el Curso 02— logs, profiler y `explain()`. Incluir al menos un ejercicio
+-de "rompe a propósito y observa".}}
++{{El RESUMEN que se lee de corrido: qué se rompe en esta fase, con qué se
++depura —consola, Network, Vue DevTools, o en el Curso 02 logs, profiler y
++`explain()`— y cuál es la señal que lo delata. El recorrido paso a paso NO va
++acá: va en su archivo (guía §9.2).}}
++
++**🧨 Rompe a propósito**
++
++{{Una rotura concreta que el estudiante ejecuta y observa. Qué tocar, qué
++esperar, y —si hace falta— cómo deshacerlo. Es lo que convierte la teoría de
++esta sección en un reflejo.}}
++
++> 📄 El recorrido completo, con las salidas literales, en
++> `forense-fase-{{NN}}.md`.
++
++{{Si un párrafo cabe igual de bien en la fase y en la pieza, va en la fase y la
++pieza lo enlaza. La especificación está en
++`prompts/formato-piezas-forenses.md`.}}
+ 
+ ---
+ 
+@@ -179,8 +193,29 @@ allí y por qué es el paso natural.}}
+ > [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+ 
+ **Siguiente parada:** {{emoji}} Fase {{N+1}} — {{una o dos líneas de puente}}
++
++---
++
++### 📌 Reservas para el cuaderno de incidentes
++
++{{Los IDs que esta fase reserva para el `cuaderno-incidentes.md` de su curso.
++Título en palabras del usuario, no en lenguaje técnico. Si la fase no reserva
++ninguno, se escribe "Esta fase no reserva incidentes" y se dice por qué.}}
++
++| ID | Título propuesto | Categoría | Dif. |
++|---|---|---|---|
++| {{NN}} | {{"tomé el ticket y a mi compañero le sigue apareciendo libre"}} | {{categoría}} | {{🟡}} |
+ ```
+ 
++> 📐 **Sobre el bloque de reservas y "Siguiente parada".** El bloque 📌 va
++> físicamente al final, después de "Siguiente parada", y eso no contradice
++> §9.1 de la guía: aquel dice que "Siguiente parada" es lo último **de la
++> fase**, y el 📌 no es narrativa de la fase — es un bloque de servicio,
++> dirigido a quien escribe el cuaderno y a quien audita que los IDs cuadren.
++> Los IDs son correlativos **por curso** y no se reasignan nunca, ni siquiera
++> cuando un incidente se retira. La especificación está en
++> `prompts/formato-cuaderno-incidentes.md`.
++
+ ---
+ 
+ ## Recordatorios al rellenar
+@@ -211,5 +246,11 @@ allí y por qué es el paso natural.}}
+   ruta en las de ruta (`q2`, `vu3`, `nx0`). Va después de "La señal de que
+   quedó bien" y antes de "Siguiente parada". No reexpliques la convención en la
+   fase: enlázala.
++- **La sección 6 se reparte** (guía §9.2): el resumen y el 🧨 en la fase, el
++  recorrido en `forense-fase-NN.md`. La línea 📄 que las une es de forma fija y
++  tiene que apuntar a un archivo que exista. En las fases de ruta apunta a la
++  pieza de **su** ruta (`forense-ruta-q.md`, `-vu.md`, `-nx.md`), que es una
++  por ruta y no una por fase.
+ - **Los apéndices no usan esta plantilla:** índice de salto rápido, secciones
+-  cortas, guía final de "cuándo usar qué" y 5–10 ejercicios cortos.
++  cortas, guía final de "cuándo usar qué" y 5–10 ejercicios cortos. Tampoco
++  llevan pieza forense, ni bloque 📌 de reservas, ni bloque 🏷️ de tag.

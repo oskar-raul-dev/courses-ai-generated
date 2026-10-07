@@ -1,0 +1,8 @@
+=== angular-8 forense:
+      16
+angular-8-legacy-for-backend-devs/prompts/formato-piezas-forenses.md
+=== react-16:
+--- prompts:
+=== react-16 alcance §6/§7 sobre track forense:
+129:El track forense **no tiene archivos propios**: vive dentro de la §6 de cada
+140:- Track forense integrado en cada fase.

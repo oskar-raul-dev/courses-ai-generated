@@ -1,0 +1,47 @@
+=== nombres de archivo declarados en los prompts BE ===
+prompts/prompts-backend-apendice.md:`bea-01-php-7-4-y-lumen-para-quien-no-escribe-php.md`
+prompts/prompts-backend-apendice.md:`bea-02-receta-de-imagen-y-compose.md`
+prompts/prompts-backend-apendice.md:`bea-03-el-contenedor-los-facades-y-por-que-grep-falla.md`
+prompts/prompts-backend-apendice.md:`bea-04-eloquent-lo-que-absorbe-y-lo-que-no.md`
+prompts/prompts-backend-apendice.md:`bea-05-dialectos-y-saltos-de-version-en-postgresql.md`
+prompts/prompts-backend-apendice.md:`bea-06-restricciones-claves-compuestas-y-datos-sucios.md`
+prompts/prompts-backend-apendice.md:`bea-07-tiempo-zonas-y-timestamptz.md`
+prompts/prompts-backend-apendice.md:`bea-08-seguridad-de-api-sobre-un-runtime-sin-parches.md`
+prompts/prompts-backend-apendice.md:`bea-09-symfony-como-vara-de-medir.md`
+prompts/prompts-backend-apendice.md:`bea-10-mapa-de-deuda-del-track-be.md`
+prompts/prompts-backend-apendice.md:`bea-11-datos-de-prueba-y-volumen.md`
+prompts/prompts-backend-fase.md:`be00-el-contrato-auditoria-del-mock.md`
+prompts/prompts-backend-fase.md:`be01-lumen-y-la-familiaridad-falsa.md`
+prompts/prompts-backend-fase.md:`be02-estratos-por-procedencia.md`
+prompts/prompts-backend-fase.md:`be03-el-reemplazo.md`
+prompts/prompts-backend-fase.md:`be04-el-salto-de-version-que-nadie-corrio.md`
+prompts/prompts-backend-fase.md:`be05-la-invariante-que-no-sostenia-nadie.md`
+prompts/prompts-backend-fase.md:`be06-la-reescritura-a-medias.md`
+prompts/prompts-backend-fase.md:`be07-el-assessment-de-riesgo.md`
+
+=== lo que dice la propuesta sobre la convención ===
+`bea-11-tema.md`**. Minúsculas con guiones, dos dígitos, igual que el track base.
+
+El prefijo `be` mantiene los cuatro bloques ordenados y separados dentro del mismo
+directorio, sin subdirectorios: las fases base (`00-` a `14-`), sus apéndices
+(`a01-` a `a13-`), las piezas forenses (`forense-fase-NN.md`) y el track BE.
+
+> 📝 **Sobre `bea-01-` frente a `bea01-`.** El track base de este curso usa `aNN-`
+> (`a09-docker-kubernetes.md`), así que `bea09-` habría rimado mejor localmente. Se
+> elige `bea-NN-` porque es la convención ya registrada en el `CLAUDE.md` del
+> repositorio. **Un solo nombre para la misma cosa en todo el repositorio vale más
+> que la rima local.**
+>
+> 🪦 **Renombrado el 10/09/2026: la convención era `be-a-NN-`.** Se cambió a
+> `bea-NN-` en todo el repositorio —tres segmentos antes del tema se leían como
+> tres cosas en vez de una— y este curso se alinea antes de escribir su primer
+> apéndice, así que no hay ningún archivo que renombrar aquí.
+
+Archivos nuevos del track, fuera de fases y apéndices:
+
+| Archivo | Qué es |
+|---|---|
+| `cuaderno-incidentes-be.md` | Los 12 incidentes del track BE, con sus IDs propios. **Separado del `cuaderno-incidentes.md` base a propósito** |
+| `prompts/plantilla-de-incidente-be.md` | La plantilla de incidente del track, si el formato diverge del base |
+| `prompts/prompts-backend-fase.md` | Los prompts **A** de redacción de fases BE. Archivo nuevo, no adición a `prompts-extendidos-fases.md` |
+| `prompts/prompts-backend-apendice.md` | Ídem para apéndices |

@@ -1,0 +1,5 @@
+ok cuaderno-incidentes-be.md
+ok bea-05-indices-y-explain-en-mongodb.md
+=== barrido final de identificadores en español ===
+cuaderno-incidentes-be.md:1160: public void muestraProcesadaSiempreTieneAsientoOMarcaDeFallo() {
+restantes: 1

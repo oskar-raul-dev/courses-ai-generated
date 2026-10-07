@@ -1,0 +1,5 @@
+índice: 21 enunciados: 21
+discrepancias: 0
+escala: {'🟢': 2, '🟡': 8, '🟠': 9, '🔴': 2}   esperado 2🟢 8🟡 9🟠 2🔴
+{'1': 7, '2': 7, '3': 4, '4': 3}  esperado 7/7/4/3
+22 dado de alta: False

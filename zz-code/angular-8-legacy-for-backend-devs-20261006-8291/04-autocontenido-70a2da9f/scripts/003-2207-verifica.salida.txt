@@ -1,0 +1,5 @@
+=== ¿los 3 enlaces sin ../ son previos? ===
+prompts/plantillas-de-capitulo.md en HEAD: 2
+prompts/guia-de-estilo-y-convenciones.md en HEAD: 1
+
+=== diff resumido ===

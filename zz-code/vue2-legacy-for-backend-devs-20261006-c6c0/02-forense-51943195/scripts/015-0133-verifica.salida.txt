@@ -1,0 +1,81 @@
+### F5 errores
+## ⚠️ Errores comunes
+
+- duplicar el formulario para crear y editar (el pecado capital de la fase);
+- mostrar errores con `$invalid` en vez de `$error` → formulario en rojo
+  antes de que el usuario escriba una letra;
+- olvidar `this.$v.$touch()` en el submit → el form inválido "no hace nada"
+  y nadie sabe por qué;
+- mutar `initialTicket` directamente en vez de clonarlo a `form`;
+- dejar que el formulario ponga `status`, `reporter` o `createdAt` (reglas de
+  negocio en el lugar equivocado);
+- botón de guardar sin `disabled` durante el request → doble submit → tickets
+  duplicados (pruébalo: es aleccionador);
+- eliminar sin confirmación, o confirmar con un mensaje genérico que no dice
+  **qué** se va a borrar;
+- olvidar `novalidate` y pelear contra los tooltips nativos del navegador.
+
+---
+
+## 🧪 Ejercicios (26)
+
+**🟢 Fácil (1–8)**
+
+1. Agrega un contador "N/80" bajo el campo título que muestre los caracteres
+   usados (rojo si se pasa).
+2. Haz obligatorio el campo `assignee` y agrega su mensaje de error.
+3. Cambia el mínimo de la descripción a 20 caracteres y verifica que el
+   mensaje se actualiza solo (gracias a `$params`).
+4. Agrega un botón "Limpiar" al formulario que resetee `form` **y**
+   `this.$v.$reset()`. ¿Qué pasa si olvidas el `$reset()`?
+5. Después de crear un ticket, muestra `?created=1` en la URL del detalle y
+   una alerta verde "Ticket creado ✅" si ese query param existe.
+6. Deshabilita el botón de submit cuando `$v.$invalid` sea true. Luego
+   revierte y deja solo el patrón `$touch` al enviar. ¿Cuál UX prefieres y
+### F6 errores
+## ⚠️ Errores comunes
+
+- botones de navegación **dentro** de cada paso → tres copias del mismo layout
+  y lógica de avance regada por todas partes;
+- olvidar `keep-alive` → "Atrás" muestra el paso vacío (created corre de nuevo
+  y el clon parte del draft… que sí tiene los datos mergeados, pero se pierden
+  los no validados y el estado de $v — pruébalo quitándolo);
+- usar `$refs` para **leer estado** del paso continuamente en vez de invocar
+  `validate()/getData()` puntuales — de puerta trasera a puerta principal;
+- validar todo el borrador solo al final → el usuario descubre en el paso 3
+  que el paso 1 estaba mal;
+- bloquear "Atrás" si el paso actual es inválido;
+- meter el borrador en Vuex "por si acaso" — el caso no lo pide y ahora tienes
+  estado global que limpiar a mano al salir;
+- olvidar el caso "creé el ticket" en `beforeRouteLeave` → confirm molesto
+  después del éxito.
+
+---
+
+## 🧪 Ejercicios (26)
+
+**🟢 Fácil (1–8)**
+
+1. Agrega un contador "Paso X de Y" bajo el indicador de progreso.
+2. Cambia el texto del botón final según prioridad: "Crear ticket urgente 🚨"
+   si es `high`.
+3. Haz que el título de la página (`page-title`) muestre el label del paso
+   actual como subtitle.
+4. En el paso de confirmación, muestra también la fecha de creación estimada
+   (hoy) con el filtro `formatDate` de la Fase 4.
+5. Agrega el hook `activated` al paso 1 con un `console.log` y verifica en
+   consola que al volver NO se ejecutan `created`/`mounted`.
+6. Quita el `keep-alive`, ve al paso 2, vuelve, y documenta en un comentario
+   exactamente qué se perdió. Restáuralo.
+### F6 outline
+3:## 🎯 Propósito
+30:## ✅ Qué queda listo al terminar
+42:## 🚫 Qué NO entra todavía
+52:## 🧠 Concepto: ¿dónde vive el estado de un wizard?
+76:## 🧩 Mini repaso: los `.vue` de esta fase (lo nuevo respecto a la Fase 5)
+179:## 💻 Código de la fase
+742:## 🔄 Los flujos del wizard, paso a paso
+817:## ⚠️ Errores comunes
+836:## 🧪 Ejercicios (26)
+932:## 📚 Referencias
+959:## 🚀 Cierre

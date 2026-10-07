@@ -1,0 +1,76 @@
+  A1-bootstrap-4-y-sass.md: ancla rota '#-cuándo-usar-qué' en A1-bootstrap-4-y-sass.md  ¿será '#cuándo-usar-qué'?
+  A1-bootstrap-4-y-sass.md: ancla rota '#-ejercicios-8' en A1-bootstrap-4-y-sass.md  ¿será '#ejercicios-8'?
+  A1-bootstrap-4-y-sass.md: ancla rota '#-referencias' en A1-bootstrap-4-y-sass.md  ¿será '#referencias'?
+  A10-aritmetica-de-dinero.md: ancla rota '#-cuándo-usar-qué' en A10-aritmetica-de-dinero.md  ¿será '#cuándo-usar-qué'?
+  A10-aritmetica-de-dinero.md: ancla rota '#-ejercicios-9' en A10-aritmetica-de-dinero.md  ¿será '#ejercicios-9'?
+  A11-marble-testing.md: ancla rota '#-cuándo-usar-qué' en A11-marble-testing.md  ¿será '#cuándo-usar-qué'?
+  A11-marble-testing.md: ancla rota '#-ejercicios-8' en A11-marble-testing.md  ¿será '#ejercicios-8'?
+  A13-depurar-el-build-de-produccion.md: ancla rota '#-cuándo-usar-qué' en A13-depurar-el-build-de-produccion.md  ¿será '#cuándo-usar-qué'?
+  A13-depurar-el-build-de-produccion.md: ancla rota '#-ejercicios-9' en A13-depurar-el-build-de-produccion.md  ¿será '#ejercicios-9'?
+  A2-mini-design-system.md: ancla rota '#11-ejercicios' en A2-mini-design-system.md  ¿será '#11-ejercicios-9'?
+  A3-node-y-npm.md: ancla rota '#2-semver-y-los-rangos--' en A3-node-y-npm.md  ¿será '#2-semver-y-los-rangos'?
+  A3-node-y-npm.md: ancla rota '#6-npm-6-vs-npm-7-por-qué-aparece---legacy-peer-deps' en A3-node-y-npm.md  ¿será '#6-npm-6-vs-npm-7-por-qué-aparece-legacy-peer-deps'?
+  A3-node-y-npm.md: ancla rota '#-ejercicios-8' en A3-node-y-npm.md  ¿será '#ejercicios-8'?
+  A3-node-y-npm.md: ancla rota '#-referencias' en A3-node-y-npm.md  ¿será '#referencias'?
+  A4-cra-por-dentro.md: ancla rota '#8-️-tabla-cuándo-hacer-qué' en A4-cra-por-dentro.md
+  A4-cra-por-dentro.md: ancla rota '#-ejercicios-cortos-7' en A4-cra-por-dentro.md  ¿será '#ejercicios-cortos-7'?
+  A4-cra-por-dentro.md: ancla rota '#-referencias' en A4-cra-por-dentro.md  ¿será '#referencias'?
+  A5-class-components-vs-hooks.md: ancla rota '#3--tabla-grande-de-equivalencias' en A5-class-components-vs-hooks.md
+  A5-class-components-vs-hooks.md: ancla rota '#4-estado-thisstate--setstate--usestate' en A5-class-components-vs-hooks.md  ¿será '#4-estado-thisstate-setstate-usestate'?
+  A5-class-components-vs-hooks.md: ancla rota '#5-props-thisprops--argumentos-de-la-función' en A5-class-components-vs-hooks.md  ¿será '#5-props-thisprops-argumentos-de-la-función'?
+  A5-class-components-vs-hooks.md: ancla rota '#6-efectos--useeffect' en A5-class-components-vs-hooks.md
+  A5-class-components-vs-hooks.md: ancla rota '#7-estado-complejo--usereducer' en A5-class-components-vs-hooks.md  ¿será '#7-estado-complejo-usereducer'?
+  A5-class-components-vs-hooks.md: ancla rota '#8-contexto--usecontext' en A5-class-components-vs-hooks.md
+  A5-class-components-vs-hooks.md: ancla rota '#9--leer-código-mezclado-sin-marearte' en A5-class-components-vs-hooks.md
+  A5-class-components-vs-hooks.md: ancla rota '#11--trampas-comunes' en A5-class-components-vs-hooks.md
+  A5-class-components-vs-hooks.md: ancla rota '#-ejercicios-8' en A5-class-components-vs-hooks.md  ¿será '#ejercicios-8'?
+  A5-class-components-vs-hooks.md: ancla rota '#-referencias' en A5-class-components-vs-hooks.md  ¿será '#referencias'?
+  A6-redux-clasico-vs-toolkit.md: ancla rota '#6-createslice-actions--reducer-en-un-archivo' en A6-redux-clasico-vs-toolkit.md  ¿será '#6-createslice-actions-reducer-en-un-archivo'?
+  A6-redux-clasico-vs-toolkit.md: ancla rota '#9-conectar-el-componente-connect-vs-useselectoruse dispatch' en A6-redux-clasico-vs-toolkit.md  ¿será '#9-conectar-el-componente-connect-vs-useselectorusedispatch'?
+  A6-redux-clasico-vs-toolkit.md: ancla rota '#12--ejercicios-8' en A6-redux-clasico-vs-toolkit.md
+  A6-redux-clasico-vs-toolkit.md: ancla rota '#13--referencias' en A6-redux-clasico-vs-toolkit.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-tabla-maestra-cuándo-usar-qué-operador' en A7-redux-observable-epica-por-epica.md  ¿será '#tabla-maestra-cuándo-usar-qué-operador'?
+  A7-redux-observable-epica-por-epica.md: ancla rota '#1-debouncetime--esperar-a-que-pare-de-tipear' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#2-switchmap--el-último-gana-cancela-lo-anterior' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#3-mergemap--todo-en-paralelo' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#4-concatmap--encolar-y-respetar-el-orden' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#5-exhaustmap--ignorar-lo-nuevo-mientras-proceso' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#6-takeuntil--apagar-el-stream-ante-un-trigger' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#7-retrywhen--reintentar-transitorios-con-backoff' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#8-catcherror--que-un-error-no-mate-el-epic' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-tabla-maestra-cuándo-usar-qué-operador' en A7-redux-observable-epica-por-epica.md  ¿será '#tabla-maestra-cuándo-usar-qué-operador'?
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-chuleta-de-imports-rxjs-6-ojo-con-rxjs-7' en A7-redux-observable-epica-por-epica.md  ¿será '#chuleta-de-imports-rxjs-6-ojo-con-rxjs-7'?
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-memory-leaks-en-epics-cómo-se-ven-cómo-se-previenen' en A7-redux-observable-epica-por-epica.md  ¿será '#memory-leaks-en-epics-cómo-se-ven-cómo-se-previenen'?
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-marble-testing-con-rxjs-marbles-sintaxis-mínima' en A7-redux-observable-epica-por-epica.md
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-ejercicios-8' en A7-redux-observable-epica-por-epica.md  ¿será '#ejercicios-8'?
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-referencias' en A7-redux-observable-epica-por-epica.md  ¿será '#referencias'?
+  A7-redux-observable-epica-por-epica.md: ancla rota '#-tabla-maestra-cuándo-usar-qué-operador' en A7-redux-observable-epica-por-epica.md  ¿será '#tabla-maestra-cuándo-usar-qué-operador'?
+  A8-puente-a-react-moderno.md: ancla rota '#3-react-16--17-la-release-sin-features' en A8-puente-a-react-moderno.md
+  A8-puente-a-react-moderno.md: ancla rota '#4-react-17--18-concurrent-de-verdad-esta-vez' en A8-puente-a-react-moderno.md
+  A8-puente-a-react-moderno.md: ancla rota '#6-redux-toolkit--rtk-query' en A8-puente-a-react-moderno.md
+  A8-puente-a-react-moderno.md: ancla rota '#7-rxjs-6--7' en A8-puente-a-react-moderno.md
+  A8-puente-a-react-moderno.md: ancla rota '#8-redux-observable--alternativas' en A8-puente-a-react-moderno.md  ¿será '#8-redux-observable-alternativas'?
+  A8-puente-a-react-moderno.md: ancla rota '#-ejercicios-de-lectura-y-reflexión-8' en A8-puente-a-react-moderno.md  ¿será '#ejercicios-de-lectura-y-reflexión-8'?
+  A8-puente-a-react-moderno.md: ancla rota '#-referencias' en A8-puente-a-react-moderno.md  ¿será '#referencias'?
+  A9-entornos-y-contenedores.md: ancla rota '#3-colima-arm64--la-opción-por-defecto-en-apple-silicon' en A9-entornos-y-contenedores.md
+  A9-entornos-y-contenedores.md: ancla rota '#4-colima-amd64-con-vz-rosetta--paridad-exacta-con-producción' en A9-entornos-y-contenedores.md  ¿será '#4-colima-amd64-con-vz-rosetta-paridad-exacta-con-producción'?
+  A9-entornos-y-contenedores.md: ancla rota '#-cuándo-usar-qué' en A9-entornos-y-contenedores.md  ¿será '#cuándo-usar-qué'?
+  A9-entornos-y-contenedores.md: ancla rota '#-ejercicios-8' en A9-entornos-y-contenedores.md  ¿será '#ejercicios-8'?
+  be-a-01-go-para-quien-no-escribe-go.md: ancla rota '#11--lo-moderno-que-no-usamos' en be-a-01-go-para-quien-no-escribe-go.md
+  be-a-01-go-para-quien-no-escribe-go.md: ancla rota '#-cuándo-usar-qué' en be-a-01-go-para-quien-no-escribe-go.md  ¿será '#cuándo-usar-qué'?
+  be-a-02-receta-de-imagen-y-compose.md: ancla rota '#-cuándo-usar-qué' en be-a-02-receta-de-imagen-y-compose.md  ¿será '#cuándo-usar-qué'?
+  be-a-03-sql-portable-y-dialectos.md: ancla rota '#1-placeholders--contra-1' en be-a-03-sql-portable-y-dialectos.md
+  be-a-03-sql-portable-y-dialectos.md: ancla rota '#-cuándo-usar-qué-la-regla-del-motor' en be-a-03-sql-portable-y-dialectos.md  ¿será '#cuándo-usar-qué-la-regla-del-motor'?
+  be-a-04-jwt-por-dentro-y-su-cve.md: ancla rota '#-cuándo-usar-qué-jwt-contra-sesión' en be-a-04-jwt-por-dentro-y-su-cve.md  ¿será '#cuándo-usar-qué-jwt-contra-sesión'?
+  be-a-05-concurrencia-en-postgres.md: ancla rota '#4-insert--on-conflict' en be-a-05-concurrencia-en-postgres.md
+  be-a-05-concurrencia-en-postgres.md: ancla rota '#-cuándo-usar-qué-vender-un-número' en be-a-05-concurrencia-en-postgres.md  ¿será '#cuándo-usar-qué-vender-un-número'?
+  be-a-06-tiempo-zonas-y-relojes.md: ancla rota '#3-timetime-en-go-zona-reloj-monótono-y-' en be-a-06-tiempo-zonas-y-relojes.md  ¿será '#3-timetime-en-go-zona-reloj-monótono-y'?
+  be-a-06-tiempo-zonas-y-relojes.md: ancla rota '#-cuándo-usar-qué-dónde-vive-cada-cosa' en be-a-06-tiempo-zonas-y-relojes.md  ¿será '#cuándo-usar-qué-dónde-vive-cada-cosa'?
+  be-a-07-logs-request-id-y-correlacion.md: ancla rota '#-cuándo-usar-qué-logs-contra-devtools' en be-a-07-logs-request-id-y-correlacion.md  ¿será '#cuándo-usar-qué-logs-contra-devtools'?
+  be-a-08-seguridad-de-api-aplicada.md: ancla rota '#7--lo-que-este-backend-no-cubre' en be-a-08-seguridad-de-api-aplicada.md
+  be-a-08-seguridad-de-api-aplicada.md: ancla rota '#-cuándo-usar-qué' en be-a-08-seguridad-de-api-aplicada.md  ¿será '#cuándo-usar-qué'?
+  be-a-09-mapa-de-deuda-del-track-be.md: ancla rota '#7--las-que-ya-se-pagaron' en be-a-09-mapa-de-deuda-del-track-be.md
+  be-a-09-mapa-de-deuda-del-track-be.md: ancla rota '#-cuándo-usar-qué-el-orden-si-esto-fuera-a-producción' en be-a-09-mapa-de-deuda-del-track-be.md  ¿será '#cuándo-usar-qué-el-orden-si-esto-fuera-a-producción'?
+  be-a-10-datos-de-prueba-y-faker.md: ancla rota '#-cuándo-usar-qué' en be-a-10-datos-de-prueba-y-faker.md  ¿será '#cuándo-usar-qué'?
+
+  anclas rotas: 74

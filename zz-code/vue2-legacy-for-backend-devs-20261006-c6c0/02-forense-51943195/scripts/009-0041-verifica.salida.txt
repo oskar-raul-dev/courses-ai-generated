@@ -1,0 +1,36 @@
+=== links rotos ===
+=== voseo ===
+=== guia §9 encabezado ===
+- **📖 Tabla de traducción SQL ↔ Mongo.** Lado a lado, la consulta relacional
+  y su equivalente en MQL. Es tabla (§3), no prosa.
+- **🪞 "Tu instinto SQL dice… y esta vez se equivoca."** Nombra la trampa
+  **antes** de caer: el `$lookup` que parece un JOIN gratis, la transacción
+  multi-documento como moneda corriente, el `_id` numérico autoincremental.
+- **🩻 "Esto sí funciona igual."** Lo reconfortante: índices, selectividad,
+  `explain()`, el N+1 siguen valiendo lo que valían en SQL.
+- **⚰️ Autopsia del anti-patrón.** `soporte_v1` mal diseñada: se mide, duele,
+  se arregla. Es el hilo que cose las fases 3 a 8, con números de antes y
+  después — nunca con adjetivos.
+
+---
+
+## 9. Plantilla obligatoria de cada fase (9 secciones)
+
+Toda fase produce un `.md` con exactamente estas nueve secciones, en orden. El
+esqueleto rellenable está en `plantilla-de-fase.md`.
+
+1. **🎯 Propósito** — qué resuelve la fase. Puede abrir con la situación
+   heredada de la fase anterior.
+2. **✅ Qué queda listo al terminar** — checklist verificable, no promesas.
+3. **🚫 Qué NO entra todavía** — qué se difiere y a qué fase exacta.
+4. **🧠 Concepto mínimo** — la teoría justa, anclada al dominio. Acá caben el
+   Mini-repaso, las Notas de época y, en el Curso 02, la 📖 tabla de
+   traducción y los recuadros 🪞/🩻.
+5. **💻 Código mínimo con comentarios** — el grueso. Código ejecutable con las
+   versiones fijadas, identificadores en inglés, comentarios en español. Acá
+   caben Detalles con intención, El patrón a memorizar, Prueba de fuego y
+   💸 Pago de deuda.
+6. **⚠️ Errores comunes y pieza forense** — qué se rompe típicamente y cómo se
+   depura. El **resumen** va en la fase; el **recorrido completo** vive en su
+   propio archivo (§9.2).
+7. **🧪 Ejercicios** — ver §10.

@@ -1,0 +1,9 @@
+  ✓ 01-estructura-base-router-5.md
+  ✓ 04-rifas-crud.md
+  ✓ 05-venta-de-numeros.md
+  ✓ 06-redux-observable-a-fondo.md
+  ✓ 07-cierre-polling-resultado.md
+  ✓ 10-testing-minimo.md
+
+=== re-verificación del checklist §14 ===
+  las 11 fases enlazan sus incidentes desde §6

@@ -1,0 +1,10 @@
+=== A8-BE ruta forense samples ===
+194:> **Tiempo sugerido:** 30 min · **Ruta forense:** `be01` §6
+359:> **Tiempo sugerido:** 30 min · **Ruta forense:** `be02` §5.5
+523:> **Tiempo sugerido:** 50 min · **Ruta forense:** `be02` §5.2 y §5.3
+694:> **Tiempo sugerido:** 55 min · **Ruta forense:** `be03` §6
+
+=== A8 formato: template metadata block ===
+297:> **Tiempo sugerido:** {{20-40 min}} · **Ruta forense:** {{forense-fase-NN.md §N, o —}}
+
+=== A16 formato: ===

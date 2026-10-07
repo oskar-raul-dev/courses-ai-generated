@@ -1,0 +1,22 @@
+=== forense-fase-01.md / Paso 4 — Dentro del módulo: el `RouterModule.forChild` y su `<router-o
+ng.getComponent(document.querySelector('cc-asset-list'));
+// undefined  → la ruta no llegó a construirlo: es un problema de rutas
+// {…}        → existe y no se pinta: falta el <router-outlet> o el CSS lo oculta
+```
+
+=== forense-fase-02.md / Paso 4 — Dónde va el breakpoint en un interceptor funcional
+// línea → Add logpoint), sin pausar la ejecución:
+`401 en ${request.url} | isLogin=${request.url.endsWith('/auth/login')}`
+```
+Ese `isLogin` es la mitad del bug clásico de esta fase: si el interceptor no distingue el `401` del **login** —que significa "te equivocaste de contraseña"— del `401` de **cualquier otra ruta** —que significa "tu sesión caducó"—, cada intento fallido de inicio de sesión provoca un `logout()` y una redirección a `/login`, desde `/login`. El bucle no da error; la pantalla parpadea y el usuario dice *"no me deja entrar y no dice nada"*.
+
+=== forense-fase-13.md / Paso 4 — ¿Y la ruta profunda?
+# 200 → try_files está puesto
+# 404 → falta, y recargar cualquier ruta profunda da 404
+```
+nginx busca un **archivo** llamado `inspections/500`. No existe: esa ruta sólo vive dentro del router de Angular, en el navegador. `try_files $uri $uri/ /index.html;` es la línea que lo arregla, y el síntoma que produce su ausencia es desconcertante porque **navegar funciona y recargar no**.
+
+=== forense-fase-00.md / Paso 5 — Cuando la consola está limpia y aun así algo falló
+> **"No pasó nada" no es un síntoma: es la ausencia de uno.** El trabajo es convertirlo en un síntoma concreto, y la conversión cuesta un minuto: ¿salió la petición?, ¿a dónde?, ¿qué contestó?, ¿qué mandaste? Cuatro preguntas, cuatro pestañas, y ninguna requiere leer código.
+Y el corolario que vale para cualquier stack: **una consola limpia sólo es evidencia si sabes que alguien estaba escuchando.** Un `catch` vacío, un `subscribe` sin `error`, un `.catch(() => {})` en un `Promise`: los tres producen exactamente este ticket.
+**Incidentes del cuaderno que usan esta ruta:** 01 (el proyecto que n

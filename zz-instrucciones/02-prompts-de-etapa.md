@@ -5,7 +5,7 @@
 > `{{…}}` y se pega el bloque entero.
 > **Regla de uso:** una etapa, una sesión. Si la etapa produce varios documentos (E4), una sesión por
 > documento, con el mismo prompt y otro entregable.
-> **Vigencia:** 2026-10-04.
+> **Vigencia:** 2026-10-06.
 
 **Salto rápido:** [E1](#e1--idea-y-alcance) · [E1b](#e1b--basarse-en-un-curso-existente) · [E2](#e2--propuesta-de-fases-capítulos-y-apéndices) · [Compuerta](#revisión-de-compuerta) · [E3](#e3--plan-de-producción) · [E4](#e4--lineamientos) · [E5](#e5--prompts-de-sesión) · [E6](#e6--verificación-previa) · [E7](#e7--abrir-una-tanda-de-escritura) · [E8](#e8--revisión-total-y-cierre) · [E9](#e9--publicar)
 
@@ -59,10 +59,12 @@ Lee antes `zz-instrucciones/03-lecciones-de-produccion.md`: son reglas, no suger
   puede publicar los de por defecto: si su Compose los fija, lo levantas con un override propio); al terminar, borra **tus
   contenedores con sus volúmenes** (`docker rm -v`, `compose down -v`) y nada más. Nunca `prune` sin
   filtro ni nada que ya existía.
-- **Código intermedio:** lo que escribas para probar una idea va a tu directorio de `zz-code/`
+- **Código intermedio:** todo el código que escribas va a tu directorio de `zz-code/`
   (`python3 zz-code/nuevo.py <curso>`), con su `MANIFIESTO.md`, y lo registras en el plan §9. Todas
-  las pruebas van ahí, también lo efímero (logs, salidas, copias), en `salidas/`; nada de pruebas en
-  el scratchpad. El curso nunca cita `zz-code/`.
+  las pruebas van ahí, también lo efímero (logs, salidas, copias), en `salidas/`; nada en el
+  scratchpad ni en `/tmp`. Un comando suelto que produce algo citable se copia a un archivo. Llena el
+  `README.md` del directorio **mientras pruebas**: cómo correr y medir cada prueba, los comandos bash
+  en orden y los intermedios que amasan la salida hasta la cifra publicada. El curso nunca cita `zz-code/`.
 - **Git lo manejo yo**: ni commits, ni `git add/rm/mv`. Borra solo archivos nombrados, nunca
   directorios ni `rm -rf`, tampoco en el scratchpad.
 - No toques nada fuera de `{{carpeta-del-curso}}/prompts/` salvo que el entregable lo diga.
@@ -81,8 +83,12 @@ Vamos a diseñar un curso nuevo. Esta sesión **no escribe ninguna fase**: su en
 
 ## La idea
 
+{{Si existe `{{carpeta-del-curso}}/prompts/ficha-de-arranque.md` (la discusión de E0), basta con:
+"La idea está en `prompts/ficha-de-arranque.md`; sus decisiones `D-xx` ya están confirmadas". Si no,
+la lista:}}
+
 - **Tema:** {{de qué va, en una frase}}
-- **Tipo tentativo:** {{curso completo | curso repaso | banco de entrevista | banco de examen}}
+- **Tipo tentativo:** {{curso completo | curso legacy | curso repaso | banco de entrevista | banco de examen}}
   (ver `zz-instrucciones/01-tipos-de-curso.md`)
 - **Lector:** {{quién es, qué sabe ya, qué no se le explica}}
 - **Disparador:** {{por qué ahora}}
@@ -393,7 +399,8 @@ Revisión total del curso **{{nombre}}** antes de cerrarlo. Lee el curso entero 
 7. {{Solo si lo pido: **diagramas en Mermaid**, convirtiendo los que estén en otro formato.}}
 
 8. **`zz-code/`**: cada directorio del curso en el plan §9 con estado *extraído* o *archivado*, ninguno
-   *vigente*; y la vista previa de `python3 zz-code/limpiar.py <ids>` con sus tamaños.
+   *vigente*; cada uno con su `README.md` completo (sin secciones `{{…}}` y con cada cifra publicada
+   rastreable hasta su prueba); y la vista previa de `python3 zz-code/limpiar.py <ids>` con sus tamaños.
 
 Devuélveme el informe en orden de gravedad y **una línea final: "Sí, se puede cerrar" o "No"**.
 Cuando apruebe las correcciones, aplícalas. `prompts/` se conserva entero como referencia: solo borra

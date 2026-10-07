@@ -1,0 +1,32 @@
+01-estructura-base-ngrx.md: import * as PatientsActions from './patients.actions';
+01-estructura-base-ngrx.md: import * as PatientsActions from './patients.actions';
+01-estructura-base-ngrx.md: import * as PatientsActions from '../store/patients.actions';
+01-estructura-base-ngrx.md: import * as PatientsSelectors from '../store/patients.selectors';
+02-i18n.md: import * as PatientsActions from '../store/patients.actions';
+02-i18n.md: import * as PatientsSelectors from '../store/patients.selectors';
+04-mock-api-caos.md: import * as PatientsActions from './patients.actions';
+05-pacientes.md: import * as PatientsActions from './patients.actions';
+05-pacientes.md: import * as PatientsActions from './patients.actions';
+05-pacientes.md: import * as PatientsActions from '../store/patients.actions';
+05-pacientes.md: import * as PatientsSelectors from '../store/patients.selectors';
+07-muestras-custodia.md: import * as SamplesActions from './samples.actions';
+07-muestras-custodia.md: import * as SamplesActions from './samples.actions';
+07-muestras-custodia.md: import * as SamplesActions from '../store/samples.actions';
+07-muestras-custodia.md: import * as SamplesSelectors from '../store/samples.selectors';
+11-trazabilidad-audit-log.md: import * as AuditActions from './audit.actions';
+11-trazabilidad-audit-log.md: import * as AuditActions from './audit.actions';
+11-trazabilidad-audit-log.md: import * as SamplesActions from '../../samples/store/samples.actions';
+11-trazabilidad-audit-log.md: import * as ResultsActions from '../../results/store/results.actions';
+11-trazabilidad-audit-log.md: import * as OrdersActions from '../../orders/store/orders.actions';
+11-trazabilidad-audit-log.md: import * as AuditActions from '../store/audit.actions';
+12-testing-coverage.md: import * as PatientsActions from './patients.actions';
+12-testing-coverage.md: import * as PatientsSelectors from './patients.selectors';
+12-testing-coverage.md: import * as PatientsActions from './patients.actions';
+12-testing-coverage.md: import * as PatientsActions from '../store/patients.actions';
+12-testing-coverage.md: import * as PatientsSelectors from '../store/patients.selectors';
+a06-ngrx.md: import * as PatientsActions from './patients.actions';
+bea-09-cassandra-la-tentacion-y-el-acierto-que-nadie-tuvo.md: SELECT * FROM orders WHERE status = 'pending' ALLOW FILTERING;
+forense-fase-02.md: # src/app/patients/patient-list/patient-list.component.ts:  return 'patients.pendingOrders_zero';
+forense-fase-06.md: # 12:import * as OrdersSelectors from '../../orders/store/orders.selectors';
+forense-fase-09.md: # 220:        if (!resultsState || this.reportSnapshot) {
+forense-fase-09.md: # 295:    if (!this.reportSnapshot) { return; }

@@ -1,0 +1,32 @@
+=== muestra de 'vale' ===
+pipeline usando esa misma versión. Un mensaje de error que dice qué hacer vale
+vale para todo el curso: un **re-render** es que React vuelva a pintar un
+> "¿vale la pena etiquetar esto?", es "¿por qué no?".
+
+=== 'móvil' ===
+   una al lado de la otra en desktop y apiladas en móvil. Redimensiona la
+          # El sha y no "latest": una etiqueta móvil hace que "¿qué hay
+desplegada. Causa: una etiqueta móvil. Fix: etiquetar por `sha`.
+  pantalla, se lee peor en móvil y no deja espacio para explicar el porqué de
+
+=== tablas anchas, cabecera ===
+| Variable | Desarrollo | QA | UAT | Producción |
+|---|---|---|---|---|
+---
+| Variable | Desarrollo | QA | UAT | Producción |
+|---|---|---|---|---|
+---
+| Escenario | Tamaño del binario | Tamaño de la imagen | `go build` en frío | `go test` completo |
+|---|---|---|---|---|
+---
+| ID | Fase | Síntoma reportado | Categoría | Dif. | Estado |
+|---|---|---|---|---|---|
+---
+| Archivo | Identificadores | Endpoints | Enums/status | Comentarios ✅ | UI ✅ | Estado |
+|---|---|---|---|---|---|---|
+
+=== ¿la guía documenta estas excepciones? ===
+104:  subtítulos**, no una tabla ancha. Una tabla de siete columnas se lee mal en
+812:  incumplían —la matriz de entornos de la Fase 0 (seis columnas) y el mapa de
+825:- **El índice del cuaderno de incidentes es una tabla de seis columnas.** Es una
+826:  excepción deliberada a §3: un registro de veinte filas donde ninguna celda

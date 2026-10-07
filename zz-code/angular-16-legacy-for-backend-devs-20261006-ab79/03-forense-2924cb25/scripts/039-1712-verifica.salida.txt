@@ -1,0 +1,39 @@
+=== tamaños del track BE de angular-8 (referencia) ===
+    8637 angular-8-legacy-for-backend-devs/be00-el-contrato-auditoria-del-mock.md
+    9906 angular-8-legacy-for-backend-devs/be01-java-spring-y-la-forma-del-monolito.md
+    7710 angular-8-legacy-for-backend-devs/be02-medir-la-deriva-de-esquema.md
+    7910 angular-8-legacy-for-backend-devs/be03-la-costura-y-el-reemplazo.md
+    7277 angular-8-legacy-for-backend-devs/be04-el-audit-log-que-escribia-el-navegador.md
+    7629 angular-8-legacy-for-backend-devs/be05-la-cadena-de-custodia-y-la-transaccion.md
+    7349 angular-8-legacy-for-backend-devs/be06-los-rangos-y-la-historia-perdida.md
+    6999 angular-8-legacy-for-backend-devs/be07-la-subida-que-nadie-decidio.md
+    8017 angular-8-legacy-for-backend-devs/be08-la-contencion-y-lo-irrecuperable.md
+    4303 angular-8-legacy-for-backend-devs/bea-01-java-8-y-spring-para-quien-no-escribe-java.md
+    2723 angular-8-legacy-for-backend-devs/bea-02-receta-de-imagen-y-compose.md
+    3957 angular-8-legacy-for-backend-devs/bea-03-modelar-documentos-embeber-o-referenciar.md
+   13022 angular-8-legacy-for-backend-devs/cuaderno-incidentes-be.md
+   95439 total
+
+=== plantilla de fase (9 secciones) en angular-16 ===
+2:## Tutorial Angular 16 — Inspecciones y certificaciones
+34:## 🎯 1. Propósito
+42:## ✅ 2. Qué queda listo al terminar
+53:## 🚫 3. Qué NO entra todavía
+60:## 🧠 4. Concepto mínimo
+77:## 💻 5. Código mínimo con comentarios
+116:## ⚠️ 6. Errores comunes y pieza forense
+118:### Errores comunes
+124:### Pieza forense de esta fase
+134:## 🧪 7. Ejercicios ({{total}})
+158:## 📚 8. Referencias
+179:## 🚀 9. Cierre y conexión con la siguiente fase
+207:## 📌 Pendientes sugeridos
+213:### Reservas para el cuaderno de incidentes
+222:## Recordatorios al rellenar una fase
+274:## Índice
+284:## {{Sección}}
+301:## 🧭 Cuándo usar qué
+314:## ⚠️ Advertencias
+321:## 📚 Referencias
+332:## 🧪 Ejercicios (5-10)
+350:## Recordatorios al rellenar un apéndice

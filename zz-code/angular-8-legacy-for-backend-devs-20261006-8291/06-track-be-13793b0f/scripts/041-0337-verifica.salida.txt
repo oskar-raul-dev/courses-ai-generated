@@ -1,0 +1,29 @@
+█ forense-fase-01.md · Paso 4 — Dentro del módulo: el `RouterModule.forChild` y su 
+'// undefined  → la ruta no llegó a construirlo: es un problema de rutas\n// {…}        → existe y no se pinta: falta el <router-outlet> o el CSS lo oculta\n```'
+
+█ forense-fase-06.md · Paso 3 — Si es `PENDING`: qué pasó con la petición
+'```\n\nQuita cualquiera de las tres y tienes un ticket distinto: sin `timer`, una petición por tecla; sin `catchError`, el formulario se bloquea cuando el servidor tose; sin `first()`, el control se queda `PENDING` **para siempre** y el formulario no vuelve a ser válido en toda la sesión.'
+
+█ forense-fase-07.md · Paso 2 — ⭐ La URL de la petición contesta antes que el códig
+'| No hay ninguna petición a `/templates` | la plantilla salió de un estado ya cargado | y ese estado puede tener la vigente: mira el `*StateService` |\n\n> 🧭 **La regla que hace posible este paso, y que vale para cualquier sistema con datos versionados: la petición es la confesión.** Si la consulta no lleva la versión, no hay f
+
+█ forense-fase-08.md · Paso 2 — Y la comprobación gemela: la versión
+'```\n\n**Un formulario dinámico construido con la plantilla equivocada no falla: funciona.** Ése es el peligro entero.'
+
+█ forense-fase-09.md · Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+'```\n\n> ⚠️ **`strict: true` no te salva de esto, y conviene entender por qué.** El compilador comprueba lo que **declaraste**, y tú declaraste `string | null`. Si el dato real trae `undefined`, el compilador no tiene forma de saberlo: nunca vio la respuesta. `strict` protege la frontera entre tus archivos; **la frontera con la
+
+█ forense-fase-09.md · Paso 1 — ¿El dato está guardado o está derivado?
+'```\n\n**Guardado dice `major`. Pintado dice `minor`.** El dato existe, se guardó bien, y algo lo está recalculando por encima.'
+
+█ forense-fase-12.md · Sospechoso 3 — El orden, y la bisección
+'| `localStorage` | el token del test de login sobrevive | `afterEach(() => localStorage.clear())` |\n\n> 🧭 **Un test que sólo pasa si otro corrió antes no es un test: es media prueba.** Y su fallo aparece el día que alguien añada un `it` en otro archivo, que es cuando nadie lo va a relacionar con nada.'
+
+█ forense-fase-13.md · Paso 4 — ¿Y la ruta profunda?
+'```\n\nnginx busca un **archivo** llamado `inspections/500`. No existe: esa ruta sólo vive dentro del router de Angular, en el navegador. `try_files $uri $uri/ /index.html;` es la línea que lo arregla, y el síntoma que produce su ausencia es desconcertante porque **navegar funciona y recargar no**.'
+
+█ forense-fase-14.md · Paso 1 — El estado ya te dijo por dónde empezar
+'```\n\n`RESTARTS 4` significa que **arrancó cuatro veces y se murió cuatro veces**. Arrancó: hay logs. Y el cluster está esperando cada vez más entre intentos, que es lo que significa el `BackOff`.'
+
+█ forense-fase-14.md · Paso 3 — El caso sin logs, que en un Mac con chip M es casi 
+'```\n\nEl proceso no llega a ejecutarse, así que no escribe nada. Es un segundo de comprobación y descarta la causa más desconcertante del capítulo. El diagnóstico completo está en **A12** §6.'

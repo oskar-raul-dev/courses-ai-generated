@@ -1,0 +1,14 @@
+```java
+// Lo correcto, y lo que usa el track a partir de be04:
+Instant now = Instant.now();                         // un instante, UTC, sin zona
+LocalDate birthDate = LocalDate.parse("1984-03-12"); // una fecha de calendario
+ZonedDateTime inBogota = now.atZone(ZoneId.of("America/Bogota"));    // para pintar
+
+// Lo de 2019, que sigue vivo en medio código:
+java.util.Date date = new java.util.Date();
+```
+=== otros identificadores es en java/js del track BE ===
+bea-12-datos-de-prueba-y-volumen.md:54: var pacientes = generarPacientes(100);   // nombres, correos y fechas al azar
+bea-12-datos-de-prueba-y-volumen.md:134: var pacientes = [];
+bea-12-datos-de-prueba-y-volumen.md:54: var pacientes = generarPacientes(100);   // nombres, correos y fechas al azar
+bea-12-datos-de-prueba-y-volumen.md:134: var pacientes = [];

@@ -1,0 +1,132 @@
+== 8. TABLAS DE MÁS DE 4 COLUMNAS (§3 de la guía) ==
+  be-a-02-receta-de-imagen-y-compose.md:281 → 5 columnas
+  be09-empaquetado-ambientes-y-pipeline.md:123 → 5 columnas
+  be09-empaquetado-ambientes-y-pipeline.md:321 → 5 columnas
+  cuaderno-incidentes-be.md:118 → 6 columnas
+  cuaderno-incidentes.md:174 → 6 columnas
+  prompts/diccionario-codigo-ingles.md:319 → 7 columnas
+
+== 9. VOSEO (imperativos, sin \b) ==
+  cuaderno-incidentes.md:269 → Seguí
+  (1)
+
+== 10. ESPAÑA / REGIONALISMOS ==
+  00-convencion-de-git-y-tags.md:13 → vale
+  00-convencion-de-git-y-tags.md:50 → Vale
+  00-convencion-de-git-y-tags.md:179 → vale
+  00-convencion-de-git-y-tags.md:277 → vale
+  00-setup-hola-mundo-cra.md:12 → Vale
+  01-estructura-base-router-5.md:42 → vale
+  01-estructura-base-router-5.md:70 → vale
+  02-autenticacion-minima.md:54 → vale
+  03-mock-api-express-caos.md:709 → vale
+  06-redux-observable-a-fondo.md:371 → vale
+  08-liquidacion-calculo-premio.md:204 → vale
+  08-liquidacion-calculo-premio.md:767 → vale
+  09-dashboard.md:551 → Vale
+  10-testing-minimo.md:252 → vale
+  A1-bootstrap-4-y-sass.md:453 → móvil
+  A10-aritmetica-de-dinero.md:308 → vale
+  A10-aritmetica-de-dinero.md:362 → vale
+  A12-mapa-de-deuda-tecnica.md:179 → vale
+  A13-depurar-el-build-de-produccion.md:136 → vale
+  A4-cra-por-dentro.md:19 → vale
+  A7-redux-observable-epica-por-epica.md:459 → vale
+  A8-puente-a-react-moderno.md:555 → Vale
+  A9-entornos-y-contenedores.md:12 → vale
+  be-a-01-go-para-quien-no-escribe-go.md:212 → Vale
+  be-a-02-receta-de-imagen-y-compose.md:312 → vale
+  be-a-02-receta-de-imagen-y-compose.md:489 → vale
+  be-a-03-sql-portable-y-dialectos.md:59 → vale
+  be-a-03-sql-portable-y-dialectos.md:168 → vale
+  be-a-03-sql-portable-y-dialectos.md:333 → vale
+  be-a-03-sql-portable-y-dialectos.md:335 → vale
+  be-a-03-sql-portable-y-dialectos.md:387 → vale
+  be-a-05-concurrencia-en-postgres.md:179 → vale
+  be-a-05-concurrencia-en-postgres.md:267 → vale
+  be-a-05-concurrencia-en-postgres.md:441 → vale
+  be-a-06-tiempo-zonas-y-relojes.md:264 → vale
+  be-a-06-tiempo-zonas-y-relojes.md:355 → vale
+  be-a-07-logs-request-id-y-correlacion.md:83 → vale
+  be-a-07-logs-request-id-y-correlacion.md:182 → vale
+  be-a-07-logs-request-id-y-correlacion.md:305 → vale
+  be-a-08-seguridad-de-api-aplicada.md:260 → vale
+  be-a-09-mapa-de-deuda-del-track-be.md:93 → vale
+  be-a-09-mapa-de-deuda-del-track-be.md:279 → vale
+  be-a-09-mapa-de-deuda-del-track-be.md:365 → Vale
+  be-a-09-mapa-de-deuda-del-track-be.md:451 → vale
+  be00-el-contrato-auditoria-del-mock.md:69 → vale
+  be00-el-contrato-auditoria-del-mock.md:217 → vale
+  be00-el-contrato-auditoria-del-mock.md:323 → vale
+  be00-el-contrato-auditoria-del-mock.md:694 → vale
+  be01-go-y-la-forma-del-monolito.md:714 → vale
+  be02-la-costura-de-datos.md:162 → vale
+  be02-la-costura-de-datos.md:834 → vale
+  be02-la-costura-de-datos.md:1001 → Vale
+  be03-crud-y-el-reemplazo.md:863 → vale
+  be03-crud-y-el-reemplazo.md:943 → vale
+  be04-identidad-real-jwt-y-un-cve.md:202 → vale
+  be04-identidad-real-jwt-y-un-cve.md:646 → vale
+  be05-venta-concurrente.md:163 → vale
+  be05-venta-concurrente.md:563 → vale
+  be05-venta-concurrente.md:619 → vale
+  be06-hora-dura-y-la-autoridad-del-reloj.md:686 → vale
+  be07-liquidacion-dinero-entero-y-transaccional.md:552 → vale
+  be08-pruebas-y-la-regla-del-motor.md:17 → vale
+  be08-pruebas-y-la-regla-del-motor.md:19 → vale
+  be08-pruebas-y-la-regla-del-motor.md:710 → vale
+  be08-pruebas-y-la-regla-del-motor.md:746 → vale
+  be08-pruebas-y-la-regla-del-motor.md:779 → vale
+  be09-empaquetado-ambientes-y-pipeline.md:18 → vale
+  be09-empaquetado-ambientes-y-pipeline.md:478 → móvil
+  be09-empaquetado-ambientes-y-pipeline.md:512 → vale
+  be09-empaquetado-ambientes-y-pipeline.md:517 → vale
+  be09-empaquetado-ambientes-y-pipeline.md:543 → vale
+  be09-empaquetado-ambientes-y-pipeline.md:570 → móvil
+  be09-empaquetado-ambientes-y-pipeline.md:672 → vale
+  cuaderno-incidentes-be.md:275 → vale
+  cuaderno-incidentes-be.md:1144 → vale
+  cuaderno-incidentes-be.md:1198 → vale
+  cuaderno-incidentes-be.md:1334 → vale
+  cuaderno-incidentes-be.md:1607 → vale
+  cuaderno-incidentes-be.md:2537 → vale
+  cuaderno-incidentes-be.md:3016 → vale
+  cuaderno-incidentes-be.md:3455 → vale
+  cuaderno-incidentes-be.md:3457 → vale
+  cuaderno-incidentes-be.md:3528 → vale
+  cuaderno-incidentes-be.md:3698 → vale
+  cuaderno-incidentes-be.md:3784 → móvil
+  cuaderno-incidentes.md:428 → vale
+  cuaderno-incidentes.md:831 → vale
+  cuaderno-incidentes.md:1009 → vale
+  cuaderno-incidentes.md:1201 → vale
+  cuaderno-incidentes.md:1498 → vale
+  cuaderno-incidentes.md:1726 → vale
+  cuaderno-incidentes.md:1848 → vale
+  cuaderno-incidentes.md:2347 → vale
+  cuaderno-incidentes.md:2393 → vale
+  cuaderno-incidentes.md:2863 → vale
+  cuaderno-incidentes.md:3032 → vale
+  cuaderno-incidentes.md:3538 → vale
+  cuaderno-incidentes.md:4869 → vale
+  cuaderno-incidentes.md:4873 → vale
+  prompts/decisiones-y-versiones.md:369 → vale
+  prompts/decisiones-y-versiones.md:467 → vale
+  prompts/decisiones-y-versiones.md:469 → vale
+  prompts/diccionario-codigo-ingles.md:435 → Vale
+  prompts/diccionario-codigo-ingles.md:445 → vale
+  prompts/guia-de-estilo-y-convenciones.md:52 → vosotros
+  prompts/guia-de-estilo-y-convenciones.md:91 → ordenador
+  prompts/guia-de-estilo-y-convenciones.md:91 → vale
+  prompts/guia-de-estilo-y-convenciones.md:99 → vale
+  prompts/guia-de-estilo-y-convenciones.md:105 → móvil
+  prompts/guia-de-estilo-y-convenciones.md:334 → vale
+  prompts/plantilla-de-incidente-be.md:204 → vale
+  prompts/prompts-backend-fase.md:497 → vale
+  prompts/prompts-backend-fase.md:499 → vale
+  prompts/prompts-backend-fase.md:557 → vale
+  prompts/propuesta-fases-backend.md:201 → vale
+  prompts/propuesta-fases-backend.md:395 → vale
+  prompts/propuesta-fases-backend.md:397 → vale
+  prompts/propuesta-fases-backend.md:415 → vale
+  (118)

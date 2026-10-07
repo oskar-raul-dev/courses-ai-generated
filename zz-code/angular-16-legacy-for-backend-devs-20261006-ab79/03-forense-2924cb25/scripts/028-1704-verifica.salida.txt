@@ -1,0 +1,42 @@
+=== angular-8 apendice: secciones por apéndice ===
+e bea-01 — | ## Identidad
+e bea-01 — | ## Alcance
+e bea-02 — | ## Identidad
+e bea-02 — | ## Alcance
+e bea-03 — | ## Identidad
+e bea-03 — | ## Alcance
+e bea-04 — | ## Identidad
+e bea-04 — | ## Alcance
+e bea-05 — | ## Identidad
+e bea-05 — | ## Alcance
+e bea-06 — | ## Identidad
+e bea-06 — | ## Alcance
+e bea-07 — | ## Identidad
+e bea-07 — | ## Alcance
+e bea-08 — | ## Identidad
+e bea-08 — | ## Alcance
+e bea-09 — | ## Identidad
+e bea-09 — | ## Alcance
+e bea-10 — | ## Identidad
+e bea-10 — | ## Alcance
+e bea-11 — | ## Identidad
+e bea-11 — | ## Alcance
+e bea-12 — | ## Identidad
+e bea-12 — | ## Alcance
+e bea-12 — | ## 🧾 Recordatorio de cierre del track
+
+=== angular-8 fase: secciones ===
+se be00 � | ## Marco (no lo repitas, aplícalo)
+se be00 � | ## Identidad de esta fase
+se be00 � | ## Alcance
+se be00 � | ## Pendientes que pueden bloquear esta fase
+se be00 � | ## Audiencia
+se be00 � | ## Cómo quiero que trabajes
+se be01 � | ## Marco (no lo repitas, aplícalo)
+se be01 � | ## Identidad de esta fase
+se be01 � | ## Alcance
+se be01 � | ## Pendientes que pueden bloquear esta fase
+se be01 � | ## Audiencia
+se be01 � | ## Cómo quiero que trabajes
+se be02 � | ## Marco (no lo repitas, aplícalo)
+se be02 � | ## Identidad de esta fase

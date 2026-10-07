@@ -1,0 +1,42 @@
+--F0 EADDRINUSE/version mismatch--
+355:**idénticos, siempre**. Si algún día ves `Vue packages version mismatch`, ya
+462:| **Vetur** (octref.vetur) | soporte de `.vue` para **Vue 2** — ⚠️ NO instalar Volar (es para Vue 3; juntos se pelean) |
+495:*(Vetur valida, Prettier formatea: cada uno a lo suyo — tenerlos a ambos
+501:guardar, el ESLint que no valida `.vue`, Vetur formateando por su cuenta y
+1012:  compilar (`Vue packages version mismatch`): iguálalos y reinstala;
+1017:- instalar Volar en VS Code "porque es el de Vue" → es el de Vue **3**; con
+1018:  Vetur se sabotean mutuamente;
+1019:- Prettier y el formateador del editor/Vetur compitiendo → el archivo "baila"
+1024:- puerto 8888 ocupado (`EADDRINUSE`) → un Stubby zombie de otra terminal.
+1136:- Vetur: https://vuejs.github.io/vetur/
+--F5 error/invalid--
+83:| `$v.form.title.$invalid` | ¿el campo viola alguna regla **ahora**? |
+84:| `$v.form.title.$dirty` | ¿el usuario ya lo tocó (o forzamos `$touch()`)? |
+85:| `$v.form.title.$error` | `$invalid && $dirty` → **esto es lo que se muestra en UI** |
+88:| `$v.$invalid` | ¿el formulario completo es inválido? |
+89:| `$v.$touch()` | marca todo como dirty (se usa al intentar enviar) |
+--F7 canvas--
+77:chart.destroy();                               // muérete
+88:| Muerte | `beforeDestroy` | `chart.destroy()` |
+135:   ↓               Aquí se limpia: destroy() de librerías, clearInterval,
+147:`"Canvas is already in use"` al volver a montar sobre un canvas reciclado.
+--F10 strict prod--
+16:que faltaban: **mapHelpers**, **strict mode**, **plugins** y el clásico dolor
+36:- **strict mode** activo en desarrollo, cazando mutaciones furtivas;
+79:**¿Y strict mode?** En desarrollo, hace que Vuex **lance error** si alguien
+85:  strict: process.env.NODE_ENV !== "production", // caro: solo en dev
+164:directas. Un `v-model="$store.state.ui.search"` funciona… hasta que strict
+207:Con el módulo bien hecho y strict mode activo, abre Vue Devtools → pestaña
+374:  strict: process.env.NODE_ENV !== "production",
+523:4. strict mode, mudo: la escritura pasó por donde debía
+--strict en rutas Q--
+q3-migrar-dashboard-qtable.md:507:> ⚠️ **Sin el `set`, `strict: true` te mata.** Si `pagination` es un computed
+q3-migrar-dashboard-qtable.md:511:> **En dev.** En producción `strict` está apagado (F10) → **muta el store en
+q3-migrar-dashboard-qtable.md:1437:| 12 | Lo mismo que el 11 pero **en producción no da error** — y el time travel de las devtools no muestra nada. | `strict` está apagado en prod (F10). Vuex muta en silencio. | El mismo arreglo. Y **nunca** confíes en que "en prod va bien". |
+q3-migrar-dashboard-qtable.md:1547:**23.** Con el 22 implementado y **`strict: true`**: quita el `set` del computed.
+q3-migrar-dashboard-qtable.md:1548:¿Qué error sale? Ahora pon `strict: false` (simula producción). ¿Qué error sale
+--X-Total-Count--
+q3-migrar-dashboard-qtable.md
+forense-master.md
+vu3-migrar-dashboard-vdatatable.md
+vu0-red-de-seguridad.md

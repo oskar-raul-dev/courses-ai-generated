@@ -1,0 +1,15 @@
+flowchart LR
+    technician --> hangar
+    workOrder --> aircraft
+    workOrder -- "technicianIds, releasedBy" --> technician
+    workOrder -- "pirepId" --> pirep
+    workOrder --> lines["removed[] · installed[]"]
+    lines --> part
+    lines -- "removed[].supplierId" --> supplier
+    part -- "supplierId" --> supplier
+    part --> partCatalog
+    partCatalog -- "supplierIds" --> supplier
+    assembly -- "partSerials" --> part
+    assembly --> aircraft
+    pirep --> aircraft
+    reading --> aircraft

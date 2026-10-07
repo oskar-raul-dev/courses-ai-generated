@@ -11,6 +11,8 @@
 
 ## Qué hay
 
+- `README.md` — cómo se corre cada prueba y qué se espera ver (escrito el 06/10/2026 desde la transcripción).
+- `comandos-revision.sh` — los comandos de la sesión `5c52573d` que tocaron este directorio, en orden y tal como corrieron.
 - `buscar_diagramas.py` — lista los bloques `text` o sin lenguaje con forma de diagrama.
 - `salidas/antes.log`, `publicacion.log` — el verificador base antes de tocar nada.
 - `salidas/despues*.log` — el verificador del curso y los perfiles base al cerrar.

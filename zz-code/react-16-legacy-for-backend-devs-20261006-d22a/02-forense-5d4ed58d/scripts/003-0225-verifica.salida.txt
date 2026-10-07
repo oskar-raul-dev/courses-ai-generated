@@ -1,0 +1,38 @@
+=== historia-del-sistema.md (archivo real: 00-historia-del-sistema.md) ===
+04-rifas-crud.md:16:> 📝 **Nota de convención (2026-07-15).** A partir de esta versión, todo el código del curso usa **identificadores en inglés** (`raffle`, `sellNumber`, `/raffles`), mientras que la narrativa, los comentarios y los textos que ve el usuario siguen en **español**. Así el vocabulario del código coincide con el que dejó el contratista que arrancó el sistema en 2019 (ver `historia-del-sistema.md` §3). Si venías de una versión anterior de esta fase con nombres en español (`rifasSlice`, `crearRifa`), la tabla de equivalencias está en la nota de traspaso a Fase 5.
+00-alcance-del-proyecto.md:29:`historia-del-sistema.md`. Que sea ficticio es una ventaja, no una
+00-alcance-del-proyecto.md:113:  `historia-del-sistema.md` y `00-convencion-de-git-y-tags.md` (cómo el
+README.md:30:está— vive en `historia-del-sistema.md`. Léela antes de la Fase 0: entender por
+README.md:185:Lee `historia-del-sistema.md` primero, para saber qué estás heredando. Después
+08-liquidacion-calculo-premio.md:166:Está contado en `historia-del-sistema.md` §4.
+A12-mapa-de-deuda-tecnica.md:337:- `historia-del-sistema.md` §4 — por qué cada cosa quedó como quedó.
+00-setup-hola-mundo-cra.md:12:Antes de arrancar, si no lo hiciste: `historia-del-sistema.md` te cuenta en veinte minutos qué estás heredando y por qué está como está. Vale la pena — casi todas las rarezas que vas a encontrar en las próximas 96 horas tienen ahí su explicación.
+prompts/plantilla-de-fase.md:159:  histórico del sistema sale de `historia-del-sistema.md`. No se reinventan
+prompts/plantilla-de-fase.md:175:  `prompts/decisiones-y-versiones.md` o `historia-del-sistema.md` **antes** de escribir el
+05-venta-de-numeros.md:44:📝 **De dónde viene este problema en este sistema.** La venta optimista con rollback es de 2021, cuando el negocio pasó de un kiosco a tres y aparecieron los primeros números vendidos dos veces (`historia-del-sistema.md` §3, era 2). La solución de entonces resolvió el 99% de los casos; el 1% restante es el incidente ⭐ 11 del cuaderno, y es lo que la Fase 6 termina de cerrar con epics.
+prompts/instrucciones-del-proyecto.md:161:   `historia-del-sistema.md`, `prompts/decisiones-y-versiones.md`,
+prompts/diccionario-codigo-ingles.md:177:  herencia, no desorden: ver `historia-del-sistema.md` §3.
+prompts/guia-de-estilo-y-convenciones.md:158:fuera en 2019 y la convención quedó (ver `historia-del-sistema.md` §3). Es
+prompts/guia-de-estilo-y-convenciones.md:660:  `historia-del-sistema.md` (por qué el sistema es como es), y se cita desde ahí.
+prompts/guia-de-estilo-y-convenciones.md:662:  componente está feo, el porqué vive en `historia-del-sistema.md` y la fase lo
+prompts/guia-de-estilo-y-convenciones.md:715:  versión o decisión técnica y `historia-del-sistema.md` para cualquier porqué
+
+=== alcance-del-proyecto.md (archivo real: 00-alcance-del-proyecto.md) ===
+A13-depurar-el-build-de-produccion.md:18:> declara `alcance-del-proyecto.md` §3 —«depurar código productivo, incluso
+00-alcance-del-proyecto.md:112:- **Encuadre:** `README.md`, este `alcance-del-proyecto.md`,
+10-testing-minimo.md:614:  contradice §9 del `alcance-del-proyecto.md` ("versiones no negociables sin
+00-setup-hola-mundo-cra.md:377:  //    (ver `alcance-del-proyecto.md` §5) para no tener que reescribir
+00-setup-hola-mundo-cra.md:558:  `alcance-del-proyecto.md`; las versiones y decisiones técnicas mandan desde
+cuaderno-incidentes.md:6:> (`alcance-del-proyecto.md` §7); no es un bloque aparte que se suma al final.
+cuaderno-incidentes.md:243:> `alcance-del-proyecto.md` §7 marca como mínimo obligatorio. No es capricho:
+prompts/plantilla-de-fase.md:156:- Las horas deben coincidir con el presupuesto de `alcance-del-proyecto.md`
+prompts/instrucciones-del-proyecto.md:160:   existen en el repositorio: `alcance-del-proyecto.md`,
+prompts/guia-de-estilo-y-convenciones.md:687:  y editoriales igual (`alcance-del-proyecto.md`,
+prompts/guia-de-estilo-y-convenciones.md:706:  nombres de archivo y Linux sí. Un archivo llamado `ALCANCE-DEL-PROYECTO.md` y
+prompts/guia-de-estilo-y-convenciones.md:707:  citado como `Alcance-del-proyecto.md` funciona en tu máquina y rompe las 64
+prompts/guia-de-estilo-y-convenciones.md:714:  (2) `alcance-del-proyecto.md`, (3) `prompts/decisiones-y-versiones.md` para cualquier
+prompts/guia-de-estilo-y-convenciones.md:808:  `alcance-del-proyecto.md` (§1 y §7); falta que el resto la cite en vez de
+
+=== DECISIONES-CONFIRMADAS ===
+prompts/decisiones-y-versiones.md:11:repartidos por diez archivos y una cita a un `DECISIONES-CONFIRMADAS.md` que
+prompts/guia-de-estilo-y-convenciones.md:834:`CATALOGO-FASES-Y-APENDICES`, `DECISIONES-CONFIRMADAS`, `FORENSE-CHECKLIST-RXJS`,

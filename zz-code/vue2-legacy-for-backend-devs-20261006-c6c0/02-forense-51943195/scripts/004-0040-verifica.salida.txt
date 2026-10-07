@@ -1,0 +1,84 @@
+### F01
+**🟢 Fácil (1–8)**
+1. Crea `AboutView.vue` con un título y una descripción del proyecto.
+2. Agrega la ruta `/about` al router.
+3. Agrega el enlace a `/about` en el sidebar.
+4. Cambia `HomeView.vue` para que hable del Mini Jira y no del Hello World.
+5. Cambia el título del header por "Mini Jira — Soporte" y agrega un emoji.
+6. Crea el componente `common/PageTitle.vue` que reciba un prop `title` y lo pinte en un `<h1>`.
+7. Usa `PageTitle` en dos vistas distintas.
+8. Navega a `/tickets/999` y verifica qué muestra el detalle. ¿Por qué no da 404?
+**🟡 Intermedio (9–16)**
+9. Haz que `TicketsView.vue` pinte la lista de `ticketService.getTickets()` con un `v-for` en una lista `<ul>`.
+10. Convierte esa lista en una tabla Bootstrap (`table table-striped`) con columnas id, título y estado.
+11. Haz que cada fila tenga un `router-link` al detalle del ticket.
+12. En `TicketDetailView.vue`, usa `ticketService.getTicketById($route.params.id)` para mostrar los datos reales del ticket.
+13. Si el id no existe, muestra un mensaje "Ticket no encontrado" en vez de romper.
+14. Agrega un prop opcional `subtitle` a `PageTitle` que solo se muestre si viene.
+15. Agrega un tercer ticket mock con estado `resolved` y verifica que aparece en la tabla.
+16. Marca el enlace activo del sidebar con la clase de Vue Router (`router-link-active`) y dale un estilo visible.
+**🟠 Difícil (17–22)**
+17. Crea un componente `TicketStatusBadge.vue` que reciba el estado y pinte un badge Bootstrap con color según estado (`open` rojo, `in_progress` amarillo, `resolved` verde). Úsalo en la tabla.
+### F02
+**🟢 Fácil (1–8)**
+1. Bloquea el submit si usuario o contraseña están vacíos (ya está; agrega ahora mensajes de error *por campo*).
+2. Muestra el `username` en el header en lugar del nombre completo.
+3. Cambia el texto del botón a "Ingresando..." mientras se procesa el login.
+4. Agrega un segundo usuario mock (`soporte` / `abcd`) y verifica que ambos entran.
+5. Agrega una ruta pública `/about` que no requiera autenticación.
+6. Muestra un `alert-success` de "Sesión iniciada" en Home tras un login correcto.
+7. Prueba manualmente: borra el token desde DevTools → Application → localStorage y navega a `/tickets`. ¿Qué pasa y por qué?
+8. Haz que el link "Mini Jira" del header navegue a `/`.
+**🟡 Intermedio (9–16)**
+9. Mueve toda la gestión de `localStorage` a helpers internos del `authService` (que login/logout no sepan que existe localStorage).
+10. Si el usuario ya tiene token, redirige desde `/login` a `/tickets` en lugar de `/`.
+11. Agrega un checkbox "Recordarme": sin él, guarda la sesión en `sessionStorage` en vez de `localStorage`.
+12. Muestra en el header las iniciales del usuario dentro de un círculo (avatar CSS simple).
+13. Convierte el usuario mock en un **arreglo** de usuarios y haz que `login()` busque con `Array.find`.
+14. Agrega el campo `role` al usuario mock y muéstralo en el header como badge.
+15. Extrae el formulario de login a un componente `LoginForm.vue` que emita un evento `submit` con las credenciales.
+16. Agrega un contador de intentos fallidos; al tercer fallo, deshabilita el botón 10 segundos.
+**🟠 Difícil (17–22)**
+17. Simula expiración: guarda `expiresAt` (ahora + 1 min) junto al token; el guard debe tratar un token vencido como ausencia de sesión y limpiar localStorage.
+### F04
+**🟢 Fácil (1–8)**
+1. Agrega el estado `closed` a un par de tickets en `db.json` y verifica que
+2. Agrega una columna "Reportado por" (`reporter`) a la tabla.
+3. Cambia el placeholder de búsqueda y haz que también busque en `description`.
+4. Agrega un filtro `| uppercase` global y úsalo en la columna de asignado.
+5. Haz que la tarjeta de "Abiertos" tenga borde rojo (`border-danger`).
+6. Muestra "1 ticket" vs "N tickets" (singular/plural) en el contador de
+7. Agrega un botón "Recargar" junto a los filtros que llame a `loadTickets`.
+8. Haz clic en una tarjeta resumen y… no pasa nada. Anota qué esperarías que
+**🟡 Intermedio (9–17)**
+9. Agrega un tercer filtro: `<select>` de prioridad, combinado con los otros
+10. Agrega un filtro por asignado cuyo `<select>` se llene **dinámicamente**
+11. Haz que las tarjetas resumen muestren el conteo de los tickets
+12. Haz clicable cada tarjeta resumen: al hacer clic, setea `statusFilter` a
+13. Persiste los filtros en la URL como query params
+14. Resalta las filas de prioridad `high` con la clase `table-danger` usando
+15. Agrega un filtro global `truncate` que corte títulos a 40 caracteres con
+16. Crea el computed `oldestOpenTicket` que devuelva el ticket abierto más
+17. Agrega un `watch` sobre `search` que loguee cada cambio en consola.
+**🟠 Difícil (18–23)**
+### F07
+**🟢 Fácil (1–8)**
+1. Cambia la posición de la leyenda de la dona a la derecha y evalúa cuál se
+2. Agrega una `MetricCard` de "Prioridad alta activa" (open/in_progress con
+3. Ajusta `cutoutPercentage` a 0 y conviértela en pie. Vuelve a dona y
+4. Agrega `title` de chart.js dentro del gráfico y elimina el `<h6>` del
+5. Cambia el color de las barras según el valor: rojo si count ≥ 5, azul si
+6. Provoca el leak: comenta el `beforeDestroy` de la dona, entra y sal de
+7. Crea 10 tickets más en `db.json` variando agentes y estados para que los
+8. Agrega tooltips con formato: "5 tickets (33%)" usando
+**🟡 Intermedio (9–17)**
+9. Refactor de coherencia: haz que `TicketStatusBadge` (Fase 4) consuma
+10. Agrega un tercer gráfico: línea de "tickets creados por día" (últimos 14
+11. Filtro de rango simple: botones "7 días / 30 días / Todo" que filtren
+12. Extrae el trío mounted/watch/beforeDestroy a un mixin `chartLifecycle`
+13. `MetricCard` con tendencia: prop opcional `delta` que muestre "▲ 3" verde
+14. Estado vacío con datos: si `tickets.length === 0`, en vez de gráficos
+15. Haz el gráfico de agentes clicable: `options.onClick` +
+16. Agrega un botón "Descargar PNG" por gráfico usando
+17. Auto-refresh de métricas cada 60s con `setInterval` — creado en `mounted`,
+**🟠 Difícil (18–23)**

@@ -1,0 +1,44 @@
+█ forense-fase-00.md · Paso 5 — Cuando la consola está limpia y aun así algo fall
+'---'
+
+█ forense-fase-05.md · Paso 4 — Y ahora en producción, que es donde de verdad los
+'---'
+
+█ forense-fase-06.md · Paso 4 — Si es `VALID` y aun así no guarda
+'---'
+
+█ forense-fase-07.md · Paso 6 — El otro incidente: "el sistema dice que hay dos p
+'---'
+
+█ forense-fase-08.md · Paso 3 — El ciclo, dibujado, y las dos formas de romperlo
+'---'
+
+█ forense-fase-08.md · Paso 3 — Por qué el `FormRecord` se rehace y no se parchea
+'---'
+
+█ forense-fase-08.md · Paso 2 — El experimento que enseña la lección de verdad
+'---'
+
+█ forense-fase-09.md · Paso 3 — Dónde va el arreglo, que es la decisión de verdad
+'---'
+
+█ forense-fase-09.md · Paso 3 — La forma del arreglo, y por qué `undefined` vuelv
+'---'
+
+█ forense-fase-10.md · Paso 4 — Por qué el arreglo es una función y no un ajuste
+'---'
+
+█ forense-fase-10.md · Paso 2 — La comprobación en el código, que es una firma
+'---'
+
+█ forense-fase-12.md · Paso 3 — El fix, y el segundo tag
+'---'
+
+█ forense-fase-12.md · Paso final — Si nada de lo anterior: `git bisect`
+'---'
+
+█ forense-fase-14.md · Paso 4 — Lo mismo, en el cluster de tu empresa
+'---'
+
+█ forense-fase-14.md · Paso 4 — Cuando el pod ya se recicló y no queda nada
+'---'

@@ -1,0 +1,7 @@
+═══ 2. RENOMBRADO bea- ═══
+  ocurrencias de 'be-a-': 10 → 7 en notas 🪦 documentadas, 3 sin documentar
+     ⚠ ./CLAUDE.md be-a-NN-`
+     ⚠ ./angular-16-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md be-a-NN-`
+     ⚠ ./angular-8-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md be-a-NN-`
+  archivos bea-*.md: 22
+  enlaces a apéndices bea- rotos: 0

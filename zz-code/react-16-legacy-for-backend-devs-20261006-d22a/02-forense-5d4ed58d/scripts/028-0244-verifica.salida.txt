@@ -1,0 +1,4 @@
+BASE: 00-s=SIN 01-e=SIN 02-a=SIN 03-m=SIN 04-r=SIN 05-v=SIN 06-r=SIN 07-c=SIN 08-l=SIN 09-d=SIN 10-t=SIN 11-c=SIN
+  suma = 0 h   (declarado: 96)  ❌ NO CUADRA
+BE  : be00=SIN be01=SIN be02=SIN be03=SIN be04=SIN be05=SIN be06=SIN be07=SIN be08=SIN be09=SIN
+  suma = 0 h   (declarado: 84)  ❌ NO CUADRA

@@ -1,0 +1,36 @@
+be00-el-contrato-auditoria-del-mock.md                       link:  0 sinlink:  1
+be01-java-spring-y-la-forma-del-monolito.md                  link:  2 sinlink:  8
+be02-medir-la-deriva-de-esquema.md                           link:  8 sinlink: 12
+be03-la-costura-y-el-reemplazo.md                            link:  2 sinlink:  6
+be04-el-audit-log-que-escribia-el-navegador.md               link:  0 sinlink:  5
+be05-la-cadena-de-custodia-y-la-transaccion.md               link:  2 sinlink:  3
+be06-los-rangos-y-la-historia-perdida.md                     link:  2 sinlink:  2
+be07-la-subida-que-nadie-decidio.md                          link:  2 sinlink:  7
+be08-la-contencion-y-lo-irrecuperable.md                     link:  0 sinlink:  7
+bea-01-java-8-y-spring-para-quien-no-escribe-java.md         link:  8 sinlink:  2
+bea-02-receta-de-imagen-y-compose.md                         link:  0 sinlink:  2
+bea-03-modelar-documentos-embeber-o-referenciar.md           link:  9 sinlink:  2
+bea-04-agregaciones-como-instrumento-de-medida.md            link:  8 sinlink:  3
+bea-05-indices-y-explain-en-mongodb.md                       link:  2 sinlink:  1
+bea-06-jsonschema-sobre-datos-sucios.md                      link:  0 sinlink:  1
+bea-07-transacciones-replica-sets-y-el-standalone.md         link:  4 sinlink:  1
+bea-08-tiempo-zonas-y-fechas-en-mongo.md                     link:  2 sinlink:  1
+bea-09-cassandra-la-tentacion-y-el-acierto-que-nadie-tuvo.md link:  6 sinlink:  1
+bea-10-riesgo-de-licencia-sspl.md                            link:  0 sinlink:  1
+bea-11-mapa-de-deuda-del-track-be.md                         link:  0 sinlink:  2
+bea-12-datos-de-prueba-y-volumen.md                          link:  0 sinlink:  1
+cuaderno-incidentes-be.md                                    link:  4 sinlink:  5
+TOTAL [61, 74]
+=== ejemplo cabecera be03 ===
+# 🗄️ Fase be03 — La costura: de `db.json` a Mongo, y el reemplazo
+
+> Tutorial Angular 8 — Laboratorio clínico · 🔥 Track BE · Fase be03 de be08 · **10 horas**
+> Depende de: be02 — ya sabes qué hay guardado de verdad
+> Habilita: be04
+> Apéndices de apoyo: bea-03 (embeber o referenciar) · bea-05 (índices y `explain`) · bea-02 (imagen y compose) · Incidentes asociados: be-04, be-05
+
+---
+
+## 🎯 1. Propósito
+
+Apagar el mock y que la aplicación no se entere.

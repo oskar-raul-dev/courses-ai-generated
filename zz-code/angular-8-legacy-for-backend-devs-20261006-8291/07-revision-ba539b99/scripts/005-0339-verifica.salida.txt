@@ -1,0 +1,39 @@
+=== fase -> su pieza ===
+ugrep: warning: 00-convencion-de-git-y-tags.md
+00-historia-del-sistema.md
+00-setup-hola-mundo.md: No such file or directory
+00-convencion-de-git-y-tags.md
+00-historia-del-sistema.md
+00-setup-hola-mundo.md -> forense-fase-00: 
+01-estructura-base-ngrx.md -> forense-fase-01: 2
+02-i18n.md -> forense-fase-02: 1
+03-autenticacion.md -> forense-fase-03: 1
+04-mock-api-caos.md -> forense-fase-04: 1
+05-pacientes.md -> forense-fase-05: 1
+06-ordenes.md -> forense-fase-06: 1
+07-muestras-custodia.md -> forense-fase-07: 1
+08-resultados-rangos.md -> forense-fase-08: 3
+09-entrega-pdf.md -> forense-fase-09: 2
+10-dashboard.md -> forense-fase-10: 2
+11-trazabilidad-audit-log.md -> forense-fase-11: 2
+12-testing-coverage.md -> forense-fase-12: 1
+13-build-despliegue.md -> forense-fase-13: 2
+14-casi-prod-kind.md -> forense-fase-14: 2
+=== master indexa piezas ===
+00:2 01:1 02:1 03:2 04:1 05:1 06:1 07:1 08:1 09:1 10:1 11:1 12:1 13:2 14:2 
+=== pieza -> su fase y master ===
+forense-fase-00: fase=1 master=1
+forense-fase-01: fase=1 master=1
+forense-fase-02: fase=1 master=1
+forense-fase-03: fase=1 master=1
+forense-fase-04: fase=1 master=1
+forense-fase-05: fase=1 master=1
+forense-fase-06: fase=1 master=1
+forense-fase-07: fase=1 master=1
+forense-fase-08: fase=1 master=1
+forense-fase-09: fase=1 master=1
+forense-fase-10: fase=1 master=1
+forense-fase-11: fase=1 master=1
+forense-fase-12: fase=1 master=1
+forense-fase-13: fase=1 master=1
+forense-fase-14: fase=1 master=1

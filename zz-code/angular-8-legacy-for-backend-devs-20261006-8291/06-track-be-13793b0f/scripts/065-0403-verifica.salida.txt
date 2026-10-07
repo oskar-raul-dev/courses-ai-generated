@@ -1,0 +1,13 @@
+═══ §10.1 — las siete adiciones de encuadre del track BE ═══
+  ✅ README.md                                        sección del track BE
+  ✅ prompts/guia-de-estilo-y-convenciones.md         convención + anexo PHP
+  ✅ prompts/alcance-del-proyecto.md                  alcance con opcionalidad
+  ✅ 00-convencion-de-git-y-tags.md                   namespace de tags
+  ✅ prompts/propuesta-fases-y-alcance.md             línea que apunta a la propuesta
+  ✅ cuaderno-incidentes.md                           nota del cuaderno hermano
+  ✅ prompts/formato-cuaderno-incidentes.md           formato extendido al BE
+  ✅ ../CLAUDE.md                                     convención registrada en la raíz
+
+═══ §10.2 — la que toca la ficción publicada ═══
+  README.md                          menciona 2021: True · menciona 2016/Era 0: True
+  00-historia-del-sistema.md         menciona 2021: True · menciona 2016/Era 0: True

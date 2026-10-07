@@ -1,0 +1,34 @@
+# 🎲 Fase 04 — Rifas CRUD
+
+> Tutorial React 16 — Rifas y chances · Fase 4 de 11 · **8 horas**
+> Depende de: Fase 3 — Mock API + Express caos · Habilita: Fase 5 — Venta de números
+
+---
+
+## 🎯 1. Propósito
+
+Hasta acá la app sabía navegar (Fase 1), autenticarse (Fase 2) y hablar con un backend que falla a propósito (Fase 3). Lo que no sabía era **hacer algo útil con datos**. Esta fase construye el primer CRUD real del sistema: administrar rifas contra `json-server`, con Redux Toolkit como store.
+
+El objetivo no es que aprendas a escribir un slice —eso lo hace cualquiera con la doc abierta— sino que aprendas a escribir uno que **sobreviva a un backend áspero**. El mock de Fase 3 mete latencia, 500, timeouts y respuestas malformadas. Un CRUD que solo maneja el camino feliz es un bug esperando el ticket. Acá cada operación nace sabiendo que puede fallar, y el store refleja esa realidad en vez de fingir que todo sale bien.
+----
+# 🪦 Fase be03 — CRUD de rifas y el momento del reemplazo
+
+> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Fase be03 de be09 · **10 horas**
+> Depende de: be02 — la capa de datos ya existe · Habilita: be04 — Identidad real
+
+---
+
+## 🎯 1. Propósito
+
+Esta es **la bisagra del track**. Todo lo anterior fue preparación: se auditó un
+----
+# 💰 Apéndice A10 — Aritmética de dinero en JavaScript
+
+> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **~2 horas**
+> Lo usan: Fase 8 (liquidación) y Fase 9 (dashboard) · Prioridad: 🔴 Alta
+> No es lectura secuencial: salta al bloque que necesites.
+
+Esto no se lee de corrido. Es la página que abres cuando tienes que tocar
+cualquier línea que sume, multiplique, divida o muestre plata, y quieres estar
+[('💸', 43), ('🎫', 36), ('🎯', 36), ('🔧', 36), ('📝', 36), ('🩻', 11), ('🪦', 3), ('🔥', 2), ('💻', 1), ('🚨', 1), ('🪟', 1), ('🐧', 1), ('🍎', 1), ('🏷', 1), ('✅', 1), ('🪨', 1), ('🧱', 1), ('🌀', 1)]
+[('⚠️', 84), ('🧭', 82), ('🧠', 49), ('🏷️', 45), ('📝', 42), ('💡', 18), ('💸', 12), ('🔥', 7), ('🩻', 3), ('⭐', 2), ('una', 2), ('producción', 1), ('desarrollo', 1), ('cotidiana', 1), ('decimales":', 1), ('reloj', 1), ('(Bootstrap', 1), ('feriado.', 1), ('y', 1), ('1.', 1), ('2.', 1), ('habitual:', 1), ('apéndice', 1), ('pero', 1), ('🚀', 1), ('`TimeZone=America/Bogota`', 1), ('ahora', 1), ('significa', 1), ('aserciones.', 1), ('curso', 1), ('header.', 1), ('compruebes.', 1), ('capas', 1), ('🔑', 1), ('🧪', 1), ('conserva', 1), ('es', 1), ('📓🔥', 1), ('error:', 1), ('datos', 1), ('RxJS', 1), ('verificar', 1)]

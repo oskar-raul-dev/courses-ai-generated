@@ -1,0 +1,9 @@
+<tool_use_error>InputValidationError: [
+  {
+    "code": "custom",
+    "path": [
+      "command"
+    ],
+    "message": "command contains control characters that would be hidden in the approval dialog"
+  }
+]</tool_use_error>

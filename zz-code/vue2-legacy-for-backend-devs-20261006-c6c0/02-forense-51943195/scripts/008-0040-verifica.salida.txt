@@ -1,0 +1,53 @@
+126:- **Markdown siempre.** Nada de HTML embebido salvo que no haya alternativa.
+=== §9 excepcion details ===
+## 9. La plantilla de un incidente
+
+Se copia entera para cada entrada.
+
+> ⚖️ **Divergencia declarada respecto de la guía §3.** La guía dice *"Markdown siempre.
+> Nada de HTML embebido salvo que no haya alternativa"*, y acá no la hay: las pistas y la
+> solución tienen que **poder ocultarse**, o el ejercicio se arruina con solo bajar la
+> vista. Los `<details>` son la única excepción del paquete, y se limitan a este uso.
+
+````markdown
+## Incidente {{NN}} — {{Título en palabras del usuario}}
+
+> **Fase:** {{N}} · **Categoría:** {{categoría}} · **Dificultad:** {{🟢🟡🟠🔴}}
+> **Estado:** ⬜ Sin empezar · **Abierto:** {{—}} · **Cerrado:** {{—}}
+> **Tiempo sugerido:** {{20-40 min}}
+
+### 🎫 El ticket
+
+{{El reporte tal como llegó, con su vaguedad incluida. Dos o tres frases en lenguaje de
+negocio, escritas por alguien que no sabe qué es una mutation ni un índice compuesto. "A
+veces pasa" es un dato legítimo, no un defecto del reporte.}}
+
+**Reportado por:** {{rol — agente de soporte, coordinador, reportador, alguien de sistemas}}
+**Ambiente:** {{desarrollo / UAT / ambos}}
+
+### 🎯 Qué se te pide
+
+=== §12 checklist ===
+## 12. Checklist antes de dar por cerrado un cuaderno
+
+- [ ] 12 incidentes, con el reparto por tramos y dificultad de §4.
+- [ ] Las cuotas mínimas de categoría se cumplen (§4).
+- [ ] **Independencia:** ningún incidente del Curso 01 cita el Curso 02, y los de costura
+      del Curso 02 se resuelven sin haber hecho el Curso 01 (§1).
+- [ ] Todos los IDs del índice tienen entrada abajo, y ninguno se reasignó. Los retirados
+      están en 📌 Pendientes con su motivo.
+- [ ] Cada incidente dice cuál de las tres formas de preparación usa, y usa la más barata
+      que sirve (§6).
+- [ ] Cada solución trae parche mínimo, refactorización correcta, prueba de regresión **en
+      código**, prevención y post-mortem sin culpabilización.
+- [ ] Los títulos están en palabras del usuario, no en lenguaje técnico.
+- [ ] Nada contradice el contrato de
+      [`00-audit-contrato.md`](../02-complement-mongodb-backend/00-audit-contrato.md):
+      forma de las respuestas, enums `status` y `priority`, nombres de evento de socket,
+      mapeo `id` ↔ `_id`.
+- [ ] Todo el código en inglés, comentarios en español, y el parche escrito en el estilo del
+      archivo que toca.
+- [ ] Español latinoamericano con tuteo, cero voseo — y ojo con los tickets, que están
+      escritos en voz de usuario y son donde más se cuela (guía §4.7).
+- [ ] Cada `.md` citado existe con ese nombre exacto (guía §13.2).
+- [ ] La retrospectiva y los pendientes están al final, en ese orden.

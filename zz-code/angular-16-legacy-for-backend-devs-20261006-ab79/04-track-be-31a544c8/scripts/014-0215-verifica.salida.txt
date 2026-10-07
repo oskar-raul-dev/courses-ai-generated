@@ -1,0 +1,21 @@
+Incidentes en el cuaderno base: 20
+Incidentes sin ruta forense declarada: ninguno
+
+Problemas de reciprocidad: 17
+  ❌ forense-fase-00.md reclama el incidente 03 pero el incidente no la enlaza
+  ❌ forense-fase-01.md reclama el incidente 05 pero el incidente no la enlaza
+  ❌ forense-fase-03.md reclama el incidente 13 pero el incidente no la enlaza
+  ❌ forense-fase-05.md reclama el incidente 13 pero el incidente no la enlaza
+  ❌ forense-fase-05.md reclama el incidente 01 pero el incidente no la enlaza
+  ❌ forense-fase-06.md reclama el incidente 09 pero el incidente no la enlaza
+  ❌ forense-fase-06.md reclama el incidente 08 pero el incidente no la enlaza
+  ❌ forense-fase-07.md reclama el incidente 12 pero el incidente no la enlaza
+  ❌ forense-fase-08.md reclama el incidente 07 pero el incidente no la enlaza
+  ❌ forense-fase-09.md reclama el incidente 10 pero el incidente no la enlaza
+  ❌ forense-fase-10.md reclama el incidente 09 pero el incidente no la enlaza
+  ❌ forense-fase-11.md reclama el incidente 04 pero el incidente no la enlaza
+  ❌ forense-fase-13.md reclama el incidente 13 pero el incidente no la enlaza
+  ❌ forense-fase-13.md reclama el incidente 14 pero el incidente no la enlaza
+  ❌ forense-fase-14.md reclama el incidente 19 pero el incidente no la enlaza
+  ❌ forense-fase-14.md reclama el incidente 13 pero el incidente no la enlaza
+  ❌ forense-fase-14.md reclama el incidente 14 pero el incidente no la enlaza

@@ -1,0 +1,51 @@
+=== tags de fase (convención) ===
+28:`fase-00` es el único sitio donde ese código sigue existiendo. El ejercicio 30 de
+121:El tag se llama **`fase-` + el número de dos dígitos**, no el slug del archivo:
+122:`fase-00`, `fase-07`, `fase-14`. Es la forma que fijó la Fase 0 y que la Fase 1
+132:git tag -a fase-04 -m "F4 cerrada: InspectionStateService con BehaviorSubject
+141:Los tags van de `fase-00` a `fase-13`, más `fase-14` si haces la fase 🔥
+147:> `fase-01` y el tag también, `git checkout fase-01` se vuelve ambiguo y git te
+148:> lo dice con un *"refname 'fase-01' is ambiguous"* que no explica gran cosa.
+150:> limpio y las ramas llevan prefijo** — `wip/fase-01` para tu trabajo en curso,
+163:Los tags de fase ya son tus puntos de retorno: `git checkout fase-04` te devuelve
+165:`git checkout fase-00 -- src/` te trae de vuelta un archivo concreto sin mover
+168:De todos, **`fase-00` es el que más importa**, y no por sentimentalismo: la Fase
+188:> `git checkout fase-04` te pone a mirar ese estado sin estar en ninguna rama. Si
+258:deja de ser opcional. El namespace es **`inc/<ID>/<slug-corto>`**, con el ID que
+289:> git switch -c incidente/01 fase-00
+310:git diff fase-01 fase-05 -- src/app/shared
+311:git diff fase-00 fase-13 -- src/environments src/assets
+393:git diff fase-03 fase-04 --stat
+396:git checkout fase-04
+400:git checkout fase-00 -- src/
+403:git switch -c incidente/01 fase-00
+437:be00-el-contrato-auditoria-del-mock.md   →   be-fase-00-el-contrato-auditoria-del-mock
+438:be03-...                                 →   be-fase-03-...
+
+=== CHAOS flags en fase 3 ===
+26:- [ ] Los seis flags funcionan y se combinan: `CHAOS=latency,error npm run mock` retrasa **y** falla.
+28:- [ ] Con `CHAOS=cors` esa pantalla muestra un mensaje que menciona la red, y con `CHAOS=malformed` uno que menciona la forma de la respuesta. Dos mensajes distintos para dos fallos distintos.
+400:  const raw = (env.CHAOS ?? '').trim();
+406:    // Falla al arrancar, no en silencio. Un CHAOS=latencia mal escrito que
+416:    delayMs: Number(env.CHAOS_DELAY_MS ?? DEFAULT_DELAY_MS),
+417:    rate: Number(env.CHAOS_RATE ?? DEFAULT_RATE),
+580:    CHAOS=<fallos separados por coma> npm run mock
+582:- `latency`    — retrasa toda respuesta CHAOS_DELAY_MS (por defecto 2500)
+583:- `error`      — devuelve 500 con probabilidad CHAOS_RATE (por defecto 0.3)
+587:- `timeout`    — no responde nunca, con probabilidad CHAOS_RATE
+589:Ejemplo: `CHAOS=latency,error CHAOS_RATE=0.5 npm run mock`
+796:      // CHAOS=malformed explota dentro de un *ngFor, tres capas más allá.
+939:    // CHAOS=latency y navegas fuera antes de que responda. Ahí es cuando
+974:Con el mock limpio, entra a Plantillas: tres filas, y la de `elevator-annual v1` con "hasta 2023-12-31" mientras la v2 dice "sin fecha de fin". Ahora reinicia el mock con `CHAOS=cors npm run mock` y recarga: la pantalla dice que no se pudo contactar con el servidor. Reinícialo con `CHAOS=malformed` y recarga unas cuantas veces: en algunas te dirá que el servidor devolvió algo que no es una lista.
+999:**Síntoma:** pones `CHAOS=latencia` y el mock arranca tan campante sin retrasar nada.
+1024:Borra la comprobación `Array.isArray` de `TemplateApiService.getAll()`, corre con `CHAOS=malformed CHAOS_RATE=1 npm run mock` y entra a Plantillas. Responde:
+1039:3. **Diagnóstico.** Levanta con `CHAOS=latency` y mide en Network cuánto tarda la petición de plantillas. Di en qué fila exacta del panel Timing se ve el retraso, y en cuál **no** se ve.
+1041:5. **Diagnóstico.** Levanta con `CHAOS=cors` y entra a Plantillas. Anota tres cosas: el mensaje literal de la consola, el status que muestra Network, y el `status` que recibe tu código. Explica por qué no es un `403`.
+1043:7. Arranca con `CHAOS=latencia` (en español, mal escrito) y explica qué pasa y por qué preferimos que pase eso.
+1047:8. **Diagnóstico.** Con `CHAOS=error`, recarga la pantalla de Plantillas veinte veces y cuenta los fallos. Compara con `CHAOS_RATE`. Después ponlo en `1` y en `0.1` y comprueba que la cuenta acompaña.
+1049:10. **Diagnóstico.** Con `CHAOS=malformed CHAOS_RATE=1`, describe qué ve el usuario, qué mensaje se pinta, y en qué línea del código se detuvo el flujo. Compáralo con lo que pasa cuando el guard no está (ejercicio 11).
+1051:12. **Diagnóstico.** Con `CHAOS=timeout CHAOS_RATE=1`, describe el estado de la petición en Network y explica por qué el navegador no la corta él solo. ¿Cuánto tiempo estaría así?
+1052:13. Con `CHAOS=latency CHAOS_DELAY_MS=8000`, entra a Plantillas y **navega a otra ruta antes de que responda**. Añade un `console.log` en el `ngOnDestroy` y otro en el `next` del `subscribe`, y demuestra cuál de los dos se ejecuta. Explica qué habría pasado sin el `unsubscribe`.
+1058:16. **Diagnóstico.** Corre con `CHAOS=latency,error CHAOS_RATE=1` y determina experimentalmente en qué orden actúan los dos fallos: ¿el `500` llega retrasado o inmediato? Explica el resultado leyendo `createChaosMiddleware`, y di si el orden que elegimos es el correcto.
+1060:18. Añade `timeout(10_000)` de RxJS a `TemplateApiService.getAll()` y comprueba con `CHAOS=timeout CHAOS_RATE=1` que ahora el usuario ve un error en lugar de un spinner eterno. Después argumenta en cinco líneas dónde debería vivir ese timeout —en cada servicio, en un interceptor, o en ningún sitio— y qué le pasa a una subida de evidencia de 20 MB si lo pones en el interceptor.
+1075:- 🔥 Añade `retry({ count: 2, delay: 500 })` a un `ApiService` y corre con `CHAOS=error`. Después responde lo difícil: ¿qué pasa si la petición que reintentas es un `POST` que crea una inspección?

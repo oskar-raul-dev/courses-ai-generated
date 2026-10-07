@@ -1,0 +1,10 @@
+obligatorias (14): 410 · README dice 410
+fase 14: 15 · README dice 15
+apéndices base (13): 93 · README dice 93
+fases BE (8): 239
+apéndices BE (11): 84
+
+horas fases base: 108.0 · README dice 108
+horas apéndices base: 33.0 · README dice 33
+horas fases BE: 72.0 · propuesta dice 72
+horas apéndices BE: 36.0

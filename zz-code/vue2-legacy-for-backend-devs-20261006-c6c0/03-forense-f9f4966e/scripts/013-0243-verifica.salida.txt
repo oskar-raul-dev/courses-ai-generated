@@ -1,0 +1,12 @@
+fin
+=== apéndices C02 ===
+  limpios ✅
+=== namespaces de tags inventados ===
+incidente/01
+incidente/04
+incidente/06
+incidente/07
+incidente/08
+incidente/10
+incidente/11
+incidente/12

@@ -1,14 +1,14 @@
 # 🧩 Los tipos de curso
 
-> **Qué es este documento:** las cuatro formas de partida que puede tener un curso, qué documentos
+> **Qué es este documento:** las cinco formas de partida que puede tener un curso, qué documentos
 > lleva cada una, qué aparato de evaluación usa y con qué cantidades por defecto. Se lee en la etapa
 > E0 para elegir, y en E2 y E4 para saber qué plantillas copiar.
-> **Los tipos no son rígidos** (§7): son puntos de partida que se combinan según la idea, y todas las
+> **Los tipos no son rígidos** (§8): son puntos de partida que se combinan según la idea, y todas las
 > cantidades de este documento son **valores por defecto** que la guía de cada curso puede cambiar,
 > declarándolo.
-> **Vigencia:** 2026-10-04.
+> **Vigencia:** 2026-10-06.
 
-**Salto rápido:** [1](#1--cómo-se-elige) · [2](#2-️-curso-completo) · [3](#3--curso-repaso) · [4](#4--banco-de-preguntas-de-entrevista) · [5](#5--banco-de-preguntas-de-examen) · [6](#6-️-la-matriz-de-documentos) · [7](#7--los-tipos-no-son-rígidos) · [8](#8--con-historia-o-sin-historia)
+**Salto rápido:** [1](#1--cómo-se-elige) · [2](#2-️-curso-completo) · [3](#3-️-curso-legacy) · [4](#4--curso-repaso) · [5](#5--banco-de-preguntas-de-entrevista) · [6](#6--banco-de-preguntas-de-examen) · [7](#7-️-la-matriz-de-documentos) · [8](#8--los-tipos-no-son-rígidos) · [9](#9--con-historia-o-sin-historia)
 
 ---
 
@@ -20,25 +20,27 @@ La pregunta que decide es **qué tiene que poder hacer el lector al terminar**:
 flowchart TD
     Q{"¿Qué tiene que poder hacer<br/>el lector al terminar?"}
     Q -- "construir y operar algo<br/>que antes no sabía" --> C["Curso completo"]
+    Q -- "mantener un sistema heredado<br/>sin romperlo, aprendiendo sobre la marcha" --> LG["Curso legacy"]
     Q -- "explicar y defender en voz alta<br/>algo que ya usó" --> R["Curso repaso"]
     Q -- "responder bien una pregunta<br/>concreta en una entrevista" --> E["Banco de entrevista"]
     Q -- "aprobar un examen<br/>con temario oficial" --> X["Banco de examen"]
     R --> RP{"¿Necesita práctica?"}
     RP -- "sí" --> RL["Repaso con práctica:<br/>labs, talleres o problemas"]
     RP -- "no" --> RT["Repaso solo teoría<br/>+ simulación + solucionario"]
-    C --> H{"¿Lleva historia?<br/>(D-11, §8)"}
+    C --> H{"¿Lleva historia?<br/>(D-11, §9)"}
+    LG --> H
     RL --> H
     RT --> H
 ```
 
-| | Curso completo | Curso repaso | Banco de entrevista | Banco de examen |
-|---|---|---|---|---|
-| **Lector** | sabe programar, no conoce el tema | ya usó el tema, necesita ordenarlo | prepara un proceso concreto | prepara una certificación |
-| **Unidad** | fase (o lección) | capítulo dentro de un bloque | pregunta con respuesta | pregunta de opción múltiple |
-| **Evaluación** | ejercicios graduados 🟢🟡🟠🔴 | preguntas sin respuesta visible + solucionario | la respuesta va pegada a la pregunta | clave separada + simulacros cronometrados |
-| **Laboratorio** | casi siempre, y es el camino base | opcional (labs o talleres) | no | no, salvo prácticas guiadas |
-| **Tamaño típico** | 15–30 fases + apéndices | 4–6 bloques de 4–7 capítulos | 100 preguntas por archivo | 200–400 preguntas + 2–4 simulacros |
-| **Ejemplo en el repositorio** | `lab-docker-kubernetes`, `ruta-sql`, los de lenguajes para devs Java | `repaso-entrevistas/*` | `preguntas-entrevista/*` | ninguno todavía |
+| | Curso completo | Curso legacy | Curso repaso | Banco de entrevista | Banco de examen |
+|---|---|---|---|---|---|
+| **Lector** | sabe programar, no conoce el tema | dev con oficio que entra a un proyecto heredado en una tecnología o versión que no domina | ya usó el tema, necesita ordenarlo | prepara un proceso concreto | prepara una certificación |
+| **Unidad** | fase (o lección) | fase que levanta una pieza del sistema heredado | capítulo dentro de un bloque | pregunta con respuesta | pregunta de opción múltiple |
+| **Evaluación** | ejercicios graduados 🟢🟡🟠🔴 | ejercicios por fase + cuaderno de incidentes (tickets vagos) | preguntas sin respuesta visible + solucionario | la respuesta va pegada a la pregunta | clave separada + simulacros cronometrados |
+| **Laboratorio** | casi siempre, y es el camino base | siempre: el sistema heredado, que el lector construye | opcional (labs o talleres) | no | no, salvo prácticas guiadas |
+| **Tamaño típico** | 15–30 fases + apéndices | 12–15 fases en horas (≈100 h) + apéndices + 15–25 incidentes | 4–6 bloques de 4–7 capítulos | 100 preguntas por archivo | 200–400 preguntas + 2–4 simulacros |
+| **Ejemplo en el repositorio** | `lab-docker-kubernetes`, `ruta-sql`, los de lenguajes para devs Java | `cursos-legacy/*` (React 16, Angular 8, Angular 16, Vue 2) | `repaso-entrevistas/*` | `preguntas-entrevista/*` | ninguno todavía |
 
 ---
 
@@ -77,7 +79,92 @@ hipótesis, condiciones, resultado y veredicto.
 
 ---
 
-## 3. 📚 Curso repaso
+## 3. 🏚️ Curso legacy
+
+**Para quién.** Un dev con oficio —casi siempre senior, de otra capa o de otro stack— que tiene que
+**entrar a un proyecto heredado** escrito en una tecnología o una versión que no domina (React 16 con
+class components, Angular 8 con NgRx de 2019, Vue 2) y que va a aprender **sobre la marcha**, con
+tickets entrando. No quiere un curso de la tecnología: quiere sobrevivir al lunes.
+
+**La promesa** es distinta de la del curso completo, y conviene escribirla igual de explícita en el
+README: al terminar, el lector **lee código ajeno y viejo, reproduce un bug desde un ticket vago, lo
+localiza en su capa, escribe la prueba de regresión antes del fix y aplica la corrección mínima** sin
+romper otras tres cosas. Lo que **no** promete: formar arquitectos, promover patrones modernos
+idealizados ni migrar el sistema. Lo moderno aparece solo como comparación, en apéndices o en
+secciones 🔥.
+
+**Forma.** La de un curso completo, con piezas propias que los cursos de `cursos-legacy/` ya fijaron:
+
+- **Un sistema con nombre propio, ficticio, que el lector construye** fase a fase con la deuda puesta
+  adrede (*LabCore*, el laboratorio clínico del curso de Angular 8; *Rifas y Chances S.A.S.* en el de
+  React 16). Al terminar la última fase el lector tiene un legacy completo en su disco y conoce cada
+  atajo porque lo escribió. El dominio se elige porque concentra lo difícil del stack (concurrencia,
+  tiempo, dinero, reactividad) y porque cualquiera lo entiende sin explicación.
+- **La historia del sistema** (`00-historia-del-sistema.md`): sus eras, quién escribió cada parte, en
+  qué año, con qué prisa y con qué mala idea. Se lee antes de la Fase 0 y es lo que evita que el
+  lector juzgue el código en vez de entenderlo. Por eso en este tipo `D-11` es **con historia** por
+  defecto (§9).
+- **Versiones congeladas de la época**, en un documento de decisiones y versiones que es la fuente de
+  verdad (`00-decisiones-y-versiones.md` o `a01`), verificadas a la fecha: que todavía instalen, y en
+  qué plataforma no (los apéndices de arm64 y Colima existen por eso).
+- **Un mock del backend que falla a propósito** (latencia, `401`, errores intermitentes), con un
+  inyector de caos que los incidentes encienden.
+- **Fases en horas** (el de React 16 suma 96 h; el de Angular 8, 122 h) con una plantilla de nueve
+  secciones: propósito · qué queda listo · qué no entra todavía · concepto mínimo · código mínimo
+  comentado · **errores comunes y pieza forense** · ejercicios · referencias · cierre.
+- **El cuaderno de incidentes** (`cuaderno-incidentes.md`), el otro eje del curso y donde se entrena el
+  músculo central: 15–25 **tickets vagos, como llegan en la vida real**, cada uno con su preparación
+  (un flag del caos, un archivo de datos o una rama `incidente/NN`, siempre la más barata que sirva),
+  tres pistas escalonadas, la solución colapsada y un post-mortem sin culpables. Los IDs los reserva la
+  fase que los produce y nunca se reasignan. **Alrededor de un cuarto no termina en un commit**:
+  termina en un diagnóstico, un "no se reproduce, y aquí está la evidencia", una declaración por
+  escrito o una decisión de equipo, porque así terminan muchos tickets reales.
+- **Piezas forenses** por fase (`forense-fase-NN.md`, o la sección 6 de cada fase): un recorrido guiado
+  por las herramientas de depuración, desde un síntoma hasta la causa (Network, breakpoints
+  condicionales, el log del servidor, el bundle minificado con sus source maps).
+- **"Entrar por el síntoma"**: una tabla que va de la frase del ticket (*"a veces no carga"*, *"verde
+  en mi máquina, rojo en la de al lado"*) a la primera herramienta que hay que abrir. Se usa más que el
+  índice, porque nadie llega a un incidente sabiendo de qué fase es.
+- **La convención de git** (`00-convencion-de-git-y-tags.md`): un tag anotado por fase cerrada y los
+  pares `-roto`/`-fix` que convierten cada incidente resuelto en un `git diff` legible.
+- **Apéndices de consulta** para lo que ya nadie explica (la librería vieja, el build oculto, el
+  operador de RxJS que toca), un **mapa de deuda** (qué está feo a propósito y qué lo vuelve
+  exigible) y, como 🔥, el puente a las versiones modernas.
+- *(Opcional)* **Un track del otro lado del cable** (el backend, con prefijos `beNN-`/`bea-NN-` y su
+  propio cuaderno de incidentes; ver los nombres en el `CLAUDE.md`), con una regla que lo ordena: **se
+  apaga el mock, se levanta el sistema real en el mismo puerto, y la aplicación no cambia ni un
+  archivo**. No viene a redimir nada: es la escena del crimen.
+
+**Aparato de evaluación.** Ejercicios graduados por fase, como el curso completo, más el cuaderno de
+incidentes con su propia escala 🟢🟡🟠🔴 (el de Angular 8 quedó en 2/8/9/2 sobre 21) y sus propias
+horas, declaradas aparte de las de las fases. Cada incidente cierra con criterio verificable: el fix con su
+prueba de regresión, o el documento que lo reemplaza.
+
+**Lo que no se negocia:**
+
+- **El código viejo se escribe como lo habría escrito el equipo de entonces**, con la deuda que tenía,
+  y el mapa de deuda dice qué es deuda a propósito. Un error del curso no se esconde detrás de "es
+  legacy".
+- **Reproducir antes de corregir, y la prueba de regresión antes del fix.** Ningún incidente se
+  resuelve con un fix que no se vio fallar.
+- **El curso no migra el sistema.** Si una fase o un incidente termina en "habría que migrar", lo dice
+  como decisión de equipo con su costo, no como ejercicio.
+- **Todo se ejecutó**: las versiones viejas tienen trampas de instalación que solo aparecen corriendo.
+
+**Documentos que lleva.** Los del curso completo, más: `00-historia-del-sistema.md` (raíz del curso),
+el documento de decisiones y versiones, `formato-cuaderno-incidentes.md`, `formato-piezas-forenses.md`,
+`preparaciones-de-incidentes.md` (cómo llega roto el sistema a la máquina del lector), la convención de
+git y tags, y, si hay track opcional, sus propios prompts de fase y de apéndice con el sufijo del track.
+
+**Ejemplos en el repositorio.** `cursos-legacy/angular-8-legacy-for-backend-devs` (el más completo:
+fases, piezas forenses, cuaderno de 21 incidentes y track BE en Java 8 sobre MongoDB) y
+`cursos-legacy/react-16-legacy-for-backend-devs` (fases, trece apéndices, veinte incidentes, la tabla
+de entrada por el síntoma y track BE en Go contra PostgreSQL). Sus `prompts/` son el mejor punto de
+partida para un curso legacy nuevo (etapa E1b).
+
+---
+
+## 4. 📚 Curso repaso
 
 **Forma.** Bloques temáticos (`01-fundamentos/`, `02-…/`), cada uno con capítulos `NN-tema.md`, una
 **simulación de entrevista** y un **solucionario** (`NN-respuestas.md`). Opcionalmente, un bloque de
@@ -111,7 +198,7 @@ cuándo sí → cuándo no → veredicto*; `## ⚠️ Errores frecuentes` con ta
 
 ---
 
-## 4. 🎤 Banco de preguntas de entrevista
+## 5. 🎤 Banco de preguntas de entrevista
 
 **Forma.** Un archivo por tema (`01-poo-solid-patrones.md`), unas 100 preguntas en partes de 20–25,
 numeración continua en todo el archivo. Sin capítulos, sin laboratorio, sin plan de producción largo.
@@ -141,7 +228,7 @@ Si son varios bancos de una misma familia, un plan de producción mínimo con un
 
 ---
 
-## 5. 📝 Banco de preguntas de examen
+## 6. 📝 Banco de preguntas de examen
 
 **Forma.** Preparación para un examen con **temario oficial publicado** (una certificación de nube, de
 Java, de Kubernetes). Se organiza por los **dominios del examen oficial**, con el peso que la guía del
@@ -174,33 +261,33 @@ de banco en su variante de examen, plan de producción con una tanda por dominio
 
 ---
 
-## 6. 🗂️ La matriz de documentos
+## 7. 🗂️ La matriz de documentos
 
 ✅ obligatorio · ⚪ según el curso · — no aplica
 
-| Documento de `prompts/` | Completo | Repaso | Entrevista | Examen |
-|---|---|---|---|---|
-| `alcance-del-proyecto.md` | ✅ | ⚪ (puede vivir en la guía §1) | — | ✅ |
-| `propuesta-fases-y-alcance.md` | ✅ | ✅ (horas y decisiones) | — | ⚪ |
-| `propuesta-apendices-y-alcance.md` | ✅ | ⚪ | — | — |
-| `prompt-base.md` (fichas de capítulo) | ⚪ (las fichas viven en la propuesta) | ✅ | — | ⚪ |
-| `plan-de-produccion.md` | ✅ | ✅ | ⚪ | ✅ |
-| `guia-de-estilo-y-convenciones.md` | ✅ | ✅ | ✅ (corta) | ✅ |
-| `diccionario-de-terminos.md` | ✅ | ✅ | ✅ | ✅ |
-| `contrato-de-nombres.md` | ✅ si hay código | ⚪ si hay laboratorio | — | — |
-| `plantillas-de-capitulo.md` | ✅ | ✅ | — | — |
-| `banco-de-preguntas.md` | — | ⚪ (simulación y solucionario) | ✅ | ✅ |
-| `prompts-de-fase.md` | ✅ | ✅ | ⚪ | ✅ |
-| `prompts-de-apendice.md` | ✅ | ⚪ | — | — |
-| `00-historia-de-….md` (raíz del curso) | ⚪ (`D-11`) | ⚪ (`D-11`) | — | — |
-| formatos propios (incidentes, mediciones, miniproyectos) | ⚪ | ⚪ | — | — |
-| `readme-de-prompts.md` | ✅ | ⚪ | — | ⚪ |
+| Documento de `prompts/` | Completo | Legacy | Repaso | Entrevista | Examen |
+|---|---|---|---|---|---|
+| `alcance-del-proyecto.md` | ✅ | ✅ | ⚪ (puede vivir en la guía §1) | — | ✅ |
+| `propuesta-fases-y-alcance.md` | ✅ | ✅ | ✅ (horas y decisiones) | — | ⚪ |
+| `propuesta-apendices-y-alcance.md` | ✅ | ✅ | ⚪ | — | — |
+| `prompt-base.md` (fichas de capítulo) | ⚪ (las fichas viven en la propuesta) | ⚪ | ✅ | — | ⚪ |
+| `plan-de-produccion.md` | ✅ | ✅ | ✅ | ⚪ | ✅ |
+| `guia-de-estilo-y-convenciones.md` | ✅ | ✅ | ✅ | ✅ (corta) | ✅ |
+| `diccionario-de-terminos.md` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `contrato-de-nombres.md` | ✅ si hay código | ✅ | ⚪ si hay laboratorio | — | — |
+| `plantillas-de-capitulo.md` | ✅ | ✅ | ✅ | — | — |
+| `banco-de-preguntas.md` | — | — | ⚪ (simulación y solucionario) | ✅ | ✅ |
+| `prompts-de-fase.md` | ✅ | ✅ (y los del track opcional) | ✅ | ⚪ | ✅ |
+| `prompts-de-apendice.md` | ✅ | ✅ | ⚪ | — | — |
+| `00-historia-de-….md` (raíz del curso) | ⚪ (`D-11`) | ✅ (`00-historia-del-sistema.md`; `D-11` con historia por defecto) | ⚪ (`D-11`) | — | — |
+| formatos propios (incidentes, mediciones, miniproyectos) | ⚪ | ✅ (cuaderno de incidentes, piezas forenses, preparaciones) | ⚪ | — | — |
+| `readme-de-prompts.md` | ✅ | ✅ | ⚪ | — | ⚪ |
 
 ---
 
-## 7. 🔀 Los tipos no son rígidos
+## 8. 🔀 Los tipos no son rígidos
 
-Los cuatro tipos son **puntos de partida**, no casillas. El autor puede pedir cualquier mezcla, y la
+Los cinco tipos son **puntos de partida**, no casillas. El autor puede pedir cualquier mezcla, y la
 sesión no corrige el pedido hacia el tipo "puro": toma de cada tipo el aparato que sirve y la guía
 declara dónde termina una mitad y empieza la otra. Las mezclas que el repositorio ya tiene:
 
@@ -215,6 +302,9 @@ declara dónde termina una mitad y empieza la otra. Las mezclas que el repositor
   local. El corpus teórico **se sostiene sin los talleres**.
 - **Curso completo con banco de entrevista al final**: el banco se escribe en la tanda de cierre y
   cada pregunta enlaza la fase que la responde.
+- **Curso legacy con track opcional**: el camino base contra el mock y un track del otro lado del
+  cable (`beNN-`) con su propio cuaderno de incidentes, sus horas aparte y sus prompts propios, como los
+  de `cursos-legacy/`.
 
 ```mermaid
 flowchart LR
@@ -235,7 +325,7 @@ Dos reglas para cualquier mezcla:
 
 ---
 
-## 8. 🎭 Con historia o sin historia
+## 9. 🎭 Con historia o sin historia
 
 La historia —una empresa ficticia que ancla cada fase en un dolor concreto— es **opcional** y es una
 decisión del alcance (`D-11`), independiente del tipo:

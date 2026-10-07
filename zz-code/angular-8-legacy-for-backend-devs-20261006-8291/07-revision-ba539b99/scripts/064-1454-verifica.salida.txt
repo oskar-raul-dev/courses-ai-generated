@@ -1,0 +1,7 @@
+505 referencias §N | rotas 0
+=== tamaño final ===
+    5073 cuaderno-incidentes.md
+    2338 cuaderno-incidentes-be.md
+    7411 total
+
+      74

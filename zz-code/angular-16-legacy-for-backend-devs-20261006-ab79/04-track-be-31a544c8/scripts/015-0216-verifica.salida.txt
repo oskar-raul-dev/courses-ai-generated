@@ -1,0 +1,20 @@
+Reciprocidad — problemas: 2
+  ❌ forense-fase-00.md reclama 03: el incidente NO la enlaza
+  ❌ forense-fase-14.md reclama 19: el incidente NO la enlaza
+
+Reclamos por pieza:
+  forense-fase-00.md: ['01', '03']
+  forense-fase-01.md: ['02', '07']
+  forense-fase-02.md: ['03']
+  forense-fase-03.md: ['04']
+  forense-fase-04.md: ['05', '16']
+  forense-fase-05.md: ['06', '07']
+  forense-fase-06.md: —
+  forense-fase-07.md: ['08', '09', '10']
+  forense-fase-08.md: ['10', '11']
+  forense-fase-09.md: ['12', '13']
+  forense-fase-10.md: ['14', '15']
+  forense-fase-11.md: ['16']
+  forense-fase-12.md: ['08', '17', '20']
+  forense-fase-13.md: ['18', '19']
+  forense-fase-14.md: ['19']

@@ -1,0 +1,73 @@
+### F01 405+
+## ⚠️ Errores comunes
+
+- meter demasiada lógica en `App.vue`;
+- una sola carpeta `components/` para todo (vistas incluidas);
+- consumir datos desde cualquier parte sin capa de servicios;
+- meter Vuex antes de saber qué estado será compartido de verdad;
+- sobrediseñar el layout antes de tener funcionalidad;
+- desalinear `vue` y `vue-template-compiler` (error críptico de compilación garantizado).
+
+---
+
+## 🧪 Ejercicios (25)
+
+**🟢 Fácil (1–8)**
+
+1. Crea `AboutView.vue` con un título y una descripción del proyecto.
+2. Agrega la ruta `/about` al router.
+3. Agrega el enlace a `/about` en el sidebar.
+4. Cambia `HomeView.vue` para que hable del Mini Jira y no del Hello World.
+5. Cambia el título del header por "Mini Jira — Soporte" y agrega un emoji.
+6. Crea el componente `common/PageTitle.vue` que reciba un prop `title` y lo pinte en un `<h1>`.
+7. Usa `PageTitle` en dos vistas distintas.
+8. Navega a `/tickets/999` y verifica qué muestra el detalle. ¿Por qué no da 404?
+
+**🟡 Intermedio (9–16)**
+
+9. Haz que `TicketsView.vue` pinte la lista de `ticketService.getTickets()` con un `v-for` en una lista `<ul>`.
+10. Convierte esa lista en una tabla Bootstrap (`table table-striped`) con columnas id, título y estado.
+11. Haz que cada fila tenga un `router-link` al detalle del ticket.
+12. En `TicketDetailView.vue`, usa `ticketService.getTicketById($route.params.id)` para mostrar los datos reales del ticket.
+13. Si el id no existe, muestra un mensaje "Ticket no encontrado" en vez de romper.
+14. Agrega un prop opcional `subtitle` a `PageTitle` que solo se muestre si viene.
+15. Agrega un tercer ticket mock con estado `resolved` y verifica que aparece en la tabla.
+16. Marca el enlace activo del sidebar con la clase de Vue Router (`router-link-active`) y dale un estilo visible.
+
+**🟠 Difícil (17–22)**
+### F02 511+
+## ⚠️ Errores comunes
+
+- meter toda la lógica de auth dentro de `LoginView.vue`;
+- duplicar lecturas de `localStorage` por todo el proyecto (aquí lo hicimos
+  **dos veces y con nota explícita**; sin la nota, es un olor a código);
+- agregar el token a mano en cada request;
+- convertir esta fase en una implementación de seguridad real;
+- crear demasiadas capas para un caso todavía simple;
+- olvidar que el guard solo verifica *existencia* de token, no validez.
+
+---
+
+## 🧪 Ejercicios (26)
+
+**🟢 Fácil (1–8)**
+
+1. Bloquea el submit si usuario o contraseña están vacíos (ya está; agrega ahora mensajes de error *por campo*).
+2. Muestra el `username` en el header en lugar del nombre completo.
+3. Cambia el texto del botón a "Ingresando..." mientras se procesa el login.
+4. Agrega un segundo usuario mock (`soporte` / `abcd`) y verifica que ambos entran.
+5. Agrega una ruta pública `/about` que no requiera autenticación.
+6. Muestra un `alert-success` de "Sesión iniciada" en Home tras un login correcto.
+7. Prueba manualmente: borra el token desde DevTools → Application → localStorage y navega a `/tickets`. ¿Qué pasa y por qué?
+8. Haz que el link "Mini Jira" del header navegue a `/`.
+
+**🟡 Intermedio (9–16)**
+
+9. Mueve toda la gestión de `localStorage` a helpers internos del `authService` (que login/logout no sepan que existe localStorage).
+10. Si el usuario ya tiene token, redirige desde `/login` a `/tickets` en lugar de `/`.
+11. Agrega un checkbox "Recordarme": sin él, guarda la sesión en `sessionStorage` en vez de `localStorage`.
+12. Muestra en el header las iniciales del usuario dentro de un círculo (avatar CSS simple).
+13. Convierte el usuario mock en un **arreglo** de usuarios y haz que `login()` busque con `Array.find`.
+14. Agrega el campo `role` al usuario mock y muéstralo en el header como badge.
+15. Extrae el formulario de login a un componente `LoginForm.vue` que emita un evento `submit` con las credenciales.
+16. Agrega un contador de intentos fallidos; al tercer fallo, deshabilita el botón 10 segundos.

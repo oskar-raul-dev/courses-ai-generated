@@ -3,7 +3,8 @@
 > ✏️ **Plantilla:** formato propio opcional (etapa E4) para cursos que anclan cada fase en una empresa
 > ficticia. A diferencia del resto de `prompts/`, **este documento lo lee el lector**: vive en la raíz
 > del curso como `00-historia-de-{{slug}}.md`. Se escribe en varias rondas con el autor; las primeras
-> son propuestas candidatas (dos o tres empresas distintas) y el autor elige.
+> son propuestas candidatas (dos o tres empresas distintas) y el autor elige. Un ejemplo lleno, en
+> versión breve: [`ejemplo-historia.md`](ejemplo-historia.md) (Escapes Houdini).
 
 > **Qué es este documento:** la fuente de verdad de todo lo narrativo del curso —la empresa, su gente,
 > sus sistemas, sus cifras y sus reglas de negocio—. **Ninguna fase inventa un dato**: si lo necesita y

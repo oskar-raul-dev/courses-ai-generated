@@ -1,0 +1,6 @@
+✓ excepciones de tablas documentadas
+
+=== barrido final: .md citados que no existen (solo los reales) ===
+  prompts/decisiones-y-versiones.md: `DECISIONES-CONFIRMADAS.md` (1x)
+  prompts/guia-de-estilo-y-convenciones.md: `Alcance-del-proyecto.md` (1x)
+  (2)

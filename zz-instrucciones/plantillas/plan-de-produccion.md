@@ -61,9 +61,12 @@ hasta donde llega.
    de las pruebas llevan la etiqueta `curso={{slug}}`, usan **puertos altos y aleatorios** (nunca los
    de por defecto, que otro contenedor puede tener ocupados; el curso sí puede publicarlos) y se borran **con sus volúmenes** al
    terminar; nada que ya existía se borra.
-10. **El código intermedio de las pruebas va a `zz-code/`**: un directorio por sesión
+10. **Todo el código de las sesiones va a `zz-code/`**: un directorio por sesión
     (`python3 zz-code/nuevo.py {{slug}}`), registrado en §9 con su estado. Lo efímero (logs, salidas,
-    copias) va a su `salidas/`; ninguna prueba en el scratchpad. Ningún documento del curso cita `zz-code/`.
+    copias) va a su `salidas/`; nada en el scratchpad ni en `/tmp`. Los comandos sueltos que producen
+    algo citable se copian a un archivo, y el `README.md` de cada directorio dice cómo correr y medir
+    cada prueba, con los comandos y los intermedios que amasan la salida. Ningún documento del curso
+    cita `zz-code/`.
 
 Las dependencias, en un vistazo:
 
@@ -260,7 +263,7 @@ comprobó y cómo, **las trampas que la próxima sesión debe conocer**, los tag
 **{{…}}** ({{palabras}}, {{ejercicios o preguntas}}). **Decisiones por defecto, a revisar:** {{D-xx}}.
 **Comprobado:** {{versiones, URL, corridas}}. **Trampas para la próxima sesión:** {{…}}. **Recursos que
 quedan levantados:** {{contenedores, cluster, configuración cambiada | ninguno}}. **`zz-code/`:**
-{{`zz-code/{{slug}}-AAAAMMDD-hash/` creado o cambiado de estado | nada}}. **Efímero para borrar:**
+{{`zz-code/{{slug}}-AAAAMMDD-hash/` creado o cambiado de estado, README al día | nada}}. **Efímero para borrar:**
 {{`zz-code/…/salidas/` | nada}}. **Tags para el
 autor:** `{{fase-NN-slug}}`. **Siguiente:** {{T-n+1}}.
 
@@ -297,6 +300,7 @@ están. **En cursos con laboratorio, cada documento ejecutable lleva dos casilla
 - [ ] {{FNN}} · {{título}} — escrita
 - [ ] {{FNN}} · {{título}} — corrida
 - [ ] Solucionario {{o documentos vivos}} al día · §4 limpia
+- [ ] `README.md` del directorio de `zz-code/` de la tanda al día: cada prueba con sus comandos, su medición y sus intermedios
 
 ### T{{n-1}} — Los README
 
@@ -310,7 +314,7 @@ están. **En cursos con laboratorio, cada documento ejecutable lleva dos casilla
 - [ ] Revisión total (continuidad, referencias, omisiones, autocontención) sin pendientes
 - [ ] Contenedores del curso borrados con sus volúmenes, comparados contra el inventario inicial; configuración de la máquina restaurada
 - [ ] `zz-code/`: ningún directorio del curso *vigente* en §9; vista previa de `zz-code/limpiar.py` mostrada al autor y lo regenerable liberado
-- [ ] Ninguna prueba quedó fuera de `zz-code/`; las `salidas/` liberadas con `limpiar.py` o listadas para el autor
+- [ ] Ninguna prueba ni script quedó fuera de `zz-code/`; cada directorio con su `README.md` completo; las `salidas/` liberadas con `limpiar.py` o listadas para el autor
 - [ ] `_desechable-*` borrados con permiso del autor, menciones limpias; `prompts/` conservado como referencia
 
 ### E9 — Publicación
@@ -325,11 +329,12 @@ están. **En cursos con laboratorio, cada documento ejecutable lleva dos casilla
 ## 9. 🧪 Directorios de `zz-code/`
 
 Cada directorio de código intermedio que crearon las sesiones de este curso, con su estado. El detalle
-de cada uno está en su `MANIFIESTO.md`; las reglas, en `zz-code/README.md`.
+de cada uno está en su `MANIFIESTO.md`, y cómo se corren sus pruebas, en su `README.md`; las reglas, en
+`zz-code/README.md`.
 
 Estados: *vigente* (se sigue usando) · *extraído* (lo útil ya pasó al curso, a `prompts/` o a
 `zz-instrucciones/herramientas/`) · *archivado* (se conserva como referencia).
 
-| Directorio | Tanda | Qué se probó | Estado | Regenerable liberado |
-|---|---|---|---|---|
-| `zz-code/{{slug}}-{{AAAAMMDD}}-{{hash}}/` | {{T-n}} | {{…}} | {{vigente / extraído / archivado}} | {{sí / no}} |
+| Directorio | Tanda | Qué se probó | Estado | README completo | Regenerable liberado |
+|---|---|---|---|---|---|
+| `zz-code/{{slug}}-{{AAAAMMDD}}-{{hash}}/` | {{T-n}} | {{…}} | {{vigente / extraído / archivado}} | {{sí / no}} | {{sí / no}} |

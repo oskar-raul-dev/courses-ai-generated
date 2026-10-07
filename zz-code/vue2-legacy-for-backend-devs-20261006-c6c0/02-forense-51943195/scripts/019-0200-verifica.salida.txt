@@ -1,0 +1,11 @@
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-13.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-12.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-10.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-09.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-08.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-07.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-06.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-05.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-02.md -> cuaderno-incidentes.md
+   1 ROTO: 02-complement-mongodb-backend/forense-fase-01.md -> cuaderno-incidentes.md
+=== no ascii raros ===

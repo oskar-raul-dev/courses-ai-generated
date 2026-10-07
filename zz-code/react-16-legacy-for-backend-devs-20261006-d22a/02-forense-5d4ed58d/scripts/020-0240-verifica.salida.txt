@@ -1,0 +1,20 @@
+== incidentes redactados ==
+20
+== placeholders {{Título / {{... ==
+  ninguno
+== líneas del cuaderno ==
+    4906
+== índice 🩺 ==
+cuaderno-incidentes.md:1
+cuaderno-incidentes-be.md:1
+== README: ¿sigue el callout del hueco? ==
+0
+  0
+== guía §15 ==
+817:- ~~**El cuaderno de incidentes está vacío.**~~ **Resuelto.** Los veinte
+== plantilla ==
+     238
+== git: ¿alguien más tocó el plan? ==
+== mtime de los archivos clave ==
+Sep 9 21:32:22 2026 completado_cuaderno_incidentes.md
+Sep 9 21:29:10 2026 cuaderno-incidentes.md

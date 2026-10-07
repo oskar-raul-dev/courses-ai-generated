@@ -1,0 +1,60 @@
+=== ¿queda algo que diga que el cuaderno está vacío? ===
+prompts/guia-de-estilo-y-convenciones.md:817:- ~~**El cuaderno de incidentes está vacío.**~~ **Resuelto.** Los veinte
+
+=== estructura final del cuaderno ===
+1:# 📓 Cuaderno de incidentes
+23:## 🧭 Cómo se trabaja un incidente
+94:## 🩺 Entrar por el síntoma
+164:## 📋 Índice
+250:# 🧪 Incidentes
+379:# El viernes a las seis, para desbloquear a alguien que necesita trabajar hoy.
+878:# Navega: /raffles → detalle de la 1 → atrás → detalle de la 2
+1327:# Logueate, mira la barra superior, y recién ahí cierra sesión.
+1547:# Abre /raffles y recarga varias veces hasta que te toque.
+1771:# Abre el formulario de rifa nueva, escribe, y sigue navegando hasta que te saque.
+1979:# /raffles → "Nueva rifa" → llena todo → Guardar
+2422:# Dos pestañas en /raffles/1/numbers. Vender el 0347 en las dos, casi a la vez.
+
+=== archivos tocados en esta tanda ===
+ M react-16-legacy-for-backend-devs/00-convencion-de-git-y-tags.md
+ M react-16-legacy-for-backend-devs/00-setup-hola-mundo-cra.md
+ M react-16-legacy-for-backend-devs/01-estructura-base-router-5.md
+ M react-16-legacy-for-backend-devs/02-autenticacion-minima.md
+ M react-16-legacy-for-backend-devs/03-mock-api-express-caos.md
+ M react-16-legacy-for-backend-devs/04-rifas-crud.md
+ M react-16-legacy-for-backend-devs/05-venta-de-numeros.md
+ M react-16-legacy-for-backend-devs/06-redux-observable-a-fondo.md
+ M react-16-legacy-for-backend-devs/07-cierre-polling-resultado.md
+ M react-16-legacy-for-backend-devs/08-liquidacion-calculo-premio.md
+ M react-16-legacy-for-backend-devs/09-dashboard.md
+ M react-16-legacy-for-backend-devs/10-testing-minimo.md
+ M react-16-legacy-for-backend-devs/11-cierre-puente-react-moderno.md
+ M react-16-legacy-for-backend-devs/README.md
+ M react-16-legacy-for-backend-devs/cuaderno-incidentes.md
+ M react-16-legacy-for-backend-devs/prompts/decisiones-y-versiones.md
+ M react-16-legacy-for-backend-devs/prompts/diccionario-codigo-ingles.md
+ M react-16-legacy-for-backend-devs/prompts/guia-de-estilo-y-convenciones.md
+?? react-16-legacy-for-backend-devs/be-a-01-go-para-quien-no-escribe-go.md
+?? react-16-legacy-for-backend-devs/be-a-02-receta-de-imagen-y-compose.md
+?? react-16-legacy-for-backend-devs/be-a-03-sql-portable-y-dialectos.md
+?? react-16-legacy-for-backend-devs/be-a-04-jwt-por-dentro-y-su-cve.md
+?? react-16-legacy-for-backend-devs/be-a-05-concurrencia-en-postgres.md
+?? react-16-legacy-for-backend-devs/be-a-06-tiempo-zonas-y-relojes.md
+?? react-16-legacy-for-backend-devs/be-a-07-logs-request-id-y-correlacion.md
+?? react-16-legacy-for-backend-devs/be-a-08-seguridad-de-api-aplicada.md
+?? react-16-legacy-for-backend-devs/be-a-09-mapa-de-deuda-del-track-be.md
+?? react-16-legacy-for-backend-devs/be-a-10-datos-de-prueba-y-faker.md
+?? react-16-legacy-for-backend-devs/be00-el-contrato-auditoria-del-mock.md
+?? react-16-legacy-for-backend-devs/be01-go-y-la-forma-del-monolito.md
+?? react-16-legacy-for-backend-devs/be02-la-costura-de-datos.md
+?? react-16-legacy-for-backend-devs/be03-crud-y-el-reemplazo.md
+?? react-16-legacy-for-backend-devs/be04-identidad-real-jwt-y-un-cve.md
+?? react-16-legacy-for-backend-devs/be05-venta-concurrente.md
+?? react-16-legacy-for-backend-devs/be06-hora-dura-y-la-autoridad-del-reloj.md
+?? react-16-legacy-for-backend-devs/be07-liquidacion-dinero-entero-y-transaccional.md
+?? react-16-legacy-for-backend-devs/be08-pruebas-y-la-regla-del-motor.md
+?? react-16-legacy-for-backend-devs/be09-empaquetado-ambientes-y-pipeline.md
+?? react-16-legacy-for-backend-devs/completado_cuaderno_incidentes.md
+?? react-16-legacy-for-backend-devs/cuaderno-incidentes-be.md
+?? react-16-legacy-for-backend-devs/prompts/plantilla-de-incidente-be.md
+?? react-16-legacy-for-backend-devs/prompts/plantilla-de-incidente.md

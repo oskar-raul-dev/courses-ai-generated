@@ -1,0 +1,38 @@
+=== F1 reducer loadPatientsSuccess ===
+  switch (action.type) {
+
+    case PatientsActions.loadPatients.type:
+      // Se devuelve un objeto NUEVO. El spread copia lo anterior y pisa lo que
+      // cambia. Mutar "state" acá rompería la detección de cambios y la
+      // memoización de los selectores, y el bug sería intermitente.
+      return { ...state, loading: true, error: null };
+
+    case PatientsActions.loadPatientsSuccess.type:
+      return { ...state, loading: false, items: action.patients };
+
+    case PatientsActions.loadPatientsFailure.type:
+      return { ...state, loading: false, error: action.error };
+
+    case PatientsActions.selectPatient.type:
+      return { ...state, selectedId: action.patientId };
+
+    // Cualquier acción que no reconozca devuelve el estado intacto. No es
+    // opcional: el reducer recibe TODAS las acciones de la aplicación.
+    default:
+      return state;
+
+=== F5 patient-list subscribe ===
+    private translate: TranslateService
+  ) { }
+
+  ngOnInit() {
+    this.store.select(PatientsSelectors.selectFilteredPatients).subscribe(function (this: PatientListComponent, patients) {
+      this.dataSource = patients;
+      // Cada vez que llega lista nueva hay que recalcular la página. Si esto
+      // falta, borras un paciente estando en la página 3 y la página 3 se
+      // queda con el registro viejo. Ejercicio 12.
+      this.applyPage();
+    }.bind(this));
+
+
+=== F5 createPatient$ ===

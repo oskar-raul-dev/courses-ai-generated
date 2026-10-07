@@ -1,0 +1,21 @@
+== refs viejas ==
+== links ==
+== voseo ==
+prompts/guia-de-estilo-y-convenciones.md:71:  **Nada de voseo** (*"agregá"*, *"fijate"*, *"tenés"*, *"sabés"*, *"vos"*),
+prompts/guia-de-estilo-y-convenciones.md:238:- **Imperativos acentuados en la última sílaba:** *agregá, mirá, abrí, buscá,
+prompts/guia-de-estilo-y-convenciones.md:240:  verificá, reiniciá, cloná, copiá, marcá, elegí, poné, hacé, decí, vení*.
+prompts/guia-de-estilo-y-convenciones.md:241:- **Presentes de segunda persona con tilde final:** *tenés, podés, sabés,
+prompts/guia-de-estilo-y-convenciones.md:242:  querés, hacés, decís, usás, mirás, escribís, pasás, armás, agregás, notás,
+prompts/guia-de-estilo-y-convenciones.md:246:- **Pronombre `vos`** y sus combinaciones (*para vos*, *vos venís*).
+prompts/guia-de-estilo-y-convenciones.md:248:  fijate, acordate, ponele*.
+prompts/guia-de-estilo-y-convenciones.md:267:| `mirá` / `mirás` | `mira` / `miras` |
+prompts/guia-de-estilo-y-convenciones.md:271:| `tenés` / `podés` / `sabés` / `querés` | `tienes` / `puedes` / `sabes` / `quieres` |
+prompts/guia-de-estilo-y-convenciones.md:272:| `hacé` / `hacés` | `haz` / `haces` |
+prompts/guia-de-estilo-y-convenciones.md:273:| `poné` / `ponés` | `pon` / `pones` |
+prompts/guia-de-estilo-y-convenciones.md:282:| `fijate` / `acordate` | `fíjate` / `acuérdate` |
+prompts/guia-de-estilo-y-convenciones.md:284:| `vos` | `tú` (o se reformula) |
+== columnas tablas §2 ==
+  51 2 01-vue2-legacy/forense-master.md
+  46 2 02-complement-mongodb-backend/forense-master.md
+  19 4 01-vue2-legacy/forense-master.md
+  14 4 02-complement-mongodb-backend/forense-master.md

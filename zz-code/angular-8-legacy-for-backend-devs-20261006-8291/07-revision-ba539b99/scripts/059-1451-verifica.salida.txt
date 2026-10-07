@@ -1,0 +1,34 @@
+=== flags de caos usados ===
+CHAOS=fail=500@30
+CHAOS=latency=3000
+CHAOS=malformed
+
+=== tags de fase usados en preparación ===
+git checkout -b incidente/03 fase-01-estructura-base-ngrx
+git checkout -b incidente/01 fase-00-setup-hola-mundo
+git checkout -b incidente/02 fase-00-setup-hola-mundo
+git checkout -b incidente/03 fase-01-estructura-base-ngrx
+git checkout -b incidente/09 fase-05-pacientes
+git checkout -b incidente/10 fase-05-pacientes
+git checkout -b incidente/15 fase-09-entrega-pdf
+git checkout -b incidente/18 fase-12-testing-coverage
+git checkout -b incidente/19 fase-13-build-despliegue
+git checkout -b incidente/20 fase-13-build-despliegue
+git checkout -b incidente/21 fase-07-muestras-custodia
+
+=== tags que existen de verdad ===
+fase-00-setup-hola-mundo
+fase-01-estructura-base-ngrx
+fase-02-i18n
+fase-03-autenticacion
+fase-04-mock-api-caos
+fase-05-pacientes
+fase-06-ordenes
+fase-07-muestras-custodia
+fase-08-resultados-rangos
+fase-09-entrega-pdf
+fase-10-dashboard
+fase-11-trazabilidad-audit-log
+fase-12-testing-coverage
+fase-13-build-despliegue
+fase-14-casi-prod-kind

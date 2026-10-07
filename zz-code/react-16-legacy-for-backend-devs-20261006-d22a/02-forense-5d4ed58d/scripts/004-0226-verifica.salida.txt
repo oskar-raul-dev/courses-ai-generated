@@ -1,0 +1,10 @@
+filas del índice: 20
+encabezados parseados: 20
+
+== 3. ÍNDICE vs ENCABEZADO ==
+  sin discrepancias
+
+== 4. HERMANOS ==
+  declarados en la tabla del índice: ['08', '11', '16', '18', '19', '20'] -> {'11': 'be-09', '16': 'be-12', '18': 'be-13', '19': 'be-05', '20': 'be-15', '08': 'be-08'}
+  marcados en encabezado:            {'08': 'be-08', '16': 'be-12', '18': 'be-13', '19': 'be-05', '20': 'be-15'}
+  ⚠️ en la tabla y NO en el encabezado: ['11']

@@ -1,0 +1,14 @@
+ap   declara Usado por                                    | citan de verdad
+a01  Fase 1, Fase 6, Fase 7, Fase 8, Fase 10              | 
+a02  ninguna fase lo asume                                | 
+a03  Fase 0, Fase 3, Fase 12, Fase 13                     | 00,00,13
+a04  Fase 0, Fase 1, Fase 2, Fase 5 — y de consulta en to | 00,01
+a05  Fase 0, Fase 2, Fase 6, Fase 8, Fase 9               | 
+a06  Fase 2, Fase 3, Fase 4, Fase 8, Fase 11              | 00
+a07  Fase 4, Fase 6, Fase 7, Fase 9, Fase 11              | 
+a08  Fase 10                                              | 
+a09  Fase 13, Fase 14                                     | 00
+a10  lectores que vienen del Track A (LabCore)            | 00
+a11  Fase 12 (la pincelada de signals sale de aquí)       | 
+a12  Fase 0, Fase 12, Fase 13, Fase 14                    | 
+a13  ninguna fase; es lectura                             |

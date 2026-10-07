@@ -1,0 +1,20 @@
+--- forense-fase-02.md  [La ruta]
+    
+
+--- forense-fase-03.md  [El árbol de decisión]
+    Una sola pregunta al principio, y de ahí salen tres ramas. **Empieza siempre por el status**, porque cuesta un vistazo y parte el problema en tres. ``` ¿Qué dice la columna Status de Network? ├─ (failed), sin número ......................... rama A — nadie con
+
+--- forense-fase-05.md  [La ruta]
+    
+
+--- forense-fase-07.md  [La ruta]
+    Los dos tickets comparten los tres primeros pasos. Es lo que los hace eficientes: **una sola investigación contesta las dos preguntas.**
+
+--- forense-fase-08.md  [Ruta A — el bucle de `valueChanges`]
+    
+
+--- forense-fase-09.md  [Ruta A — la regla que no bloqueó]
+    
+
+--- forense-fase-14.md  [La regla que ordena la pieza]
+    **`kubectl describe pod` cuenta lo que le pasó al pod desde fuera** — si se pudo planificar, si la imagen se pudo obtener, si el contenedor arrancó, cuántas veces se reinició. Sus **eventos**, al final de la salida, son lo primero que hay que leer. **`kubectl

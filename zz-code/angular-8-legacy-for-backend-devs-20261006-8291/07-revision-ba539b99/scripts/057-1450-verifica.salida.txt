@@ -1,0 +1,5 @@
+fences ``` : 284 pares ok
+fences ````: 0 pares ok
+<details>: 84  </details>: 84
+incidentes: 21
+OK: todos los bloques completos

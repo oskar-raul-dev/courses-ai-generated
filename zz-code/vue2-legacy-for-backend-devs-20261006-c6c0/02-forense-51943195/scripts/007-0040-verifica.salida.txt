@@ -1,0 +1,29 @@
+--F4 NumberInt--
+296:  `double` por defecto; si exiges `int`, usa `NumberInt()` en mongosh /
+328:20. `bsonType` en carne propia: exige `schemaVersion: { bsonType: "int" }` e inserta desde mongosh con `schemaVersion: 3` a secas. ¿Pasa? Repite con `NumberInt(3)`. Investiga qué tipo numérico manda mongosh por defecto y decide: ¿`"int"` o `"number"` para este curso? Justifica.
+--F5 unwind preserve--
+247:  { $unwind: { path: "$status", preserveNullAndEmptyArrays: true } },
+248:  { $unwind: { path: "$priority", preserveNullAndEmptyArrays: true } },
+249:  { $unwind: { path: "$assignee", preserveNullAndEmptyArrays: true } },
+--F6 matchedCount--
+394:- Interpretar `matchedCount: 0` como "no existe" cuando tu filtro llevaba
+416:9. `updateOne` con precondición que no matchea: inspecciona `matchedCount` y `modifiedCount`. Fabrica también el caso `matchedCount: 1, modifiedCount: 0` (¿cómo?) y explica qué significa.
+--F10 envelope/curl--
+15:`_id → id` en la frontera, las fechas de vuelta a ISO, el 404 real, el array
+16:plano sin envelope.
+31:- la **frontera de traducción**: `_id → id` string, `Date → ISO`, `:id →
+92:      serializers.js        ← LA FRONTERA: _id→id, Date→ISO
+145:// La base habla Mongo (_id: ObjectId, Date). La API habla el contrato
+--F13 binario CI--
+27:  tests contra el motor de verdad, sin tocar tu base, sin Docker en CI;
+32:  convertidos en tests con aserciones — la concurrencia bajo CI;
+43:- CI/CD, pipelines (la Fase 14 deja el compose; el pipeline es tuyo)
+353:  correrá en 4.4 — verde en CI, rojo en producción.
+--F12 rele--
+9:   evento `ticket:created` al relé tonto de 30 líneas, que lo rebota a todos.
+26:  (el que el cliente ya escucha), con el relé tonto jubilado;
+38:- 🔀 **solo si hiciste una ruta del Curso 01:** `GET /activity` y
+55:Esta sección es **opcional y condicional**. Si terminaste el Curso 01 en F11,
+146:navegador A ──emit──▶ relé :4000                                  │ persiste
+--fecha zona horaria--
+01-mongo-en-30-min.md:531:25. El `db.json` heredado trae fechas en ISO con `Z`. Modifica una a `"2020-03-10T10:00:00"` (sin zona) y observa qué `Date` produce `new Date(...)` en tu máquina. Documenta el peligro y haz que el seed rechace fechas sin zona horaria.

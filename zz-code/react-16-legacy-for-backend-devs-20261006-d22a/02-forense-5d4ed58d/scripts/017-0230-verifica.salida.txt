@@ -1,0 +1,11 @@
+=== ¿las fases BE enlazan sus incidentes? ===
+  be00-el-contrato-auditoria-del-mock.md: produce ['be-01', 'be-02']  ⚠️ §6 no menciona ['be-01', 'be-02']
+  be01-go-y-la-forma-del-monolito.md: produce ['be-03']  ⚠️ §6 no menciona ['be-03']
+  be02-la-costura-de-datos.md: produce ['be-04', 'be-05']  ⚠️ §6 no menciona ['be-04', 'be-05']
+  be03-crud-y-el-reemplazo.md: produce ['be-06', 'be-07']  ⚠️ §6 no menciona ['be-06', 'be-07']
+  be04-identidad-real-jwt-y-un-cve.md: produce ['be-08']  ⚠️ §6 no menciona ['be-08']
+  be05-venta-concurrente.md: produce ['be-10']  ⚠️ §6 no menciona ['be-10']
+  be06-hora-dura-y-la-autoridad-del-reloj.md: produce ['be-11', 'be-12']  ⚠️ §6 no menciona ['be-11', 'be-12']
+  be07-liquidacion-dinero-entero-y-transaccional.md: produce ['be-13', 'be-14']  ⚠️ §6 no menciona ['be-13', 'be-14']
+  be08-pruebas-y-la-regla-del-motor.md: produce —  ✓
+  be09-empaquetado-ambientes-y-pipeline.md: produce ['be-16']  ⚠️ §6 no menciona ['be-16']

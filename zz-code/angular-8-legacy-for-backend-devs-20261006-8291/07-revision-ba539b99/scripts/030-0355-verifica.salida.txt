@@ -1,0 +1,3 @@
+fences impares (```): 08-resultados-rangos.md 21
+chequeo de fences hecho
+links rotos: 0 anclas rotas: 0

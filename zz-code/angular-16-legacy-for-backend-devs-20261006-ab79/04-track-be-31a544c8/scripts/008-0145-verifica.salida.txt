@@ -1,0 +1,27 @@
+(sin salida = ok)
+
+ M angular-16-legacy-for-backend-devs/prompts/propuesta-fases-backend.md
+ M angular-16-legacy-for-backend-devs/prompts/propuesta-fases-y-alcance.md
+?? angular-16-legacy-for-backend-devs/be00-el-contrato-auditoria-del-mock.md
+?? angular-16-legacy-for-backend-devs/be01-lumen-y-la-familiaridad-falsa.md
+?? angular-16-legacy-for-backend-devs/be02-estratos-por-procedencia.md
+?? angular-16-legacy-for-backend-devs/be03-el-reemplazo.md
+?? angular-16-legacy-for-backend-devs/be04-el-salto-de-version-que-nadie-corrio.md
+?? angular-16-legacy-for-backend-devs/be05-la-invariante-que-no-sostenia-nadie.md
+?? angular-16-legacy-for-backend-devs/be06-la-reescritura-a-medias.md
+?? angular-16-legacy-for-backend-devs/be07-el-assessment-de-riesgo.md
+?? angular-16-legacy-for-backend-devs/bea-01-php-7-4-y-lumen-para-quien-no-escribe-php.md
+?? angular-16-legacy-for-backend-devs/bea-02-receta-de-imagen-y-compose.md
+?? angular-16-legacy-for-backend-devs/bea-03-el-contenedor-los-facades-y-por-que-grep-falla.md
+?? angular-16-legacy-for-backend-devs/bea-04-eloquent-lo-que-absorbe-y-lo-que-no.md
+?? angular-16-legacy-for-backend-devs/bea-05-dialectos-y-saltos-de-version-en-postgresql.md
+?? angular-16-legacy-for-backend-devs/bea-06-restricciones-claves-compuestas-y-datos-sucios.md
+?? angular-16-legacy-for-backend-devs/bea-07-tiempo-zonas-y-timestamptz.md
+?? angular-16-legacy-for-backend-devs/bea-08-seguridad-de-api-sobre-un-runtime-sin-parches.md
+?? angular-16-legacy-for-backend-devs/bea-09-symfony-como-vara-de-medir.md
+?? angular-16-legacy-for-backend-devs/bea-10-mapa-de-deuda-del-track-be.md
+?? angular-16-legacy-for-backend-devs/bea-11-datos-de-prueba-y-volumen.md
+?? angular-16-legacy-for-backend-devs/cuaderno-incidentes-be.md
+?? angular-16-legacy-for-backend-devs/prompts/preparaciones-de-incidentes-be.md
+?? angular-16-legacy-for-backend-devs/prompts/preparaciones-de-incidentes.md
+?? angular-16-legacy-for-backend-devs/prompts/verificar-forenses.py

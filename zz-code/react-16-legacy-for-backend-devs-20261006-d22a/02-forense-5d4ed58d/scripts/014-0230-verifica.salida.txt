@@ -1,0 +1,40 @@
+=== ¿cada §6 menciona sus incidentes? (checklist §14 de la guía) ===
+  00-setup-hola-mundo-cra.md: ✓ menciona 01, 02
+  01-estructura-base-router-5.md: ⚠️ §6 NO menciona 03, 04
+  02-autenticacion-minima.md: ✓ menciona 05, 06
+  03-mock-api-express-caos.md: ✓ menciona 07, 08
+  04-rifas-crud.md: ⚠️ §6 NO menciona 09, 10
+  05-venta-de-numeros.md: ⚠️ §6 NO menciona 12
+  06-redux-observable-a-fondo.md: ⚠️ §6 NO menciona 13, 14, 15
+  07-cierre-polling-resultado.md: ⚠️ §6 NO menciona 16, 17
+  08-liquidacion-calculo-premio.md: ✓ menciona 18
+  09-dashboard.md: ✓ menciona 19
+  10-testing-minimo.md: ⚠️ §6 NO menciona 20
+
+=== cierre del cuaderno: retrospectiva y pendientes ===
+# 🪞 Retrospectiva del mes
+
+Se llena al terminar, de una sola vez, releyendo tu propio `git log`.
+
+- **Cuántos abriste, cuántos cerraste, cuántos quedaron ⚪.**
+- **Cuántas veces tu causa raíz coincidió con la de referencia**, y en cuáles no.
+  El patrón importa más que el número.
+- **En qué capa te costó más**: componente, store, epic, interceptor, mock,
+  build. Si la respuesta es "epic", estás en buena compañía.
+- **Qué pista abriste antes de tiempo y por qué.** Sin culpa; es un dato sobre
+  dónde te falta confianza, no sobre tu disciplina.
+- **Tu checklist de hotfix**, la de una página, reescrita con lo que aprendiste
+  acá. Es lo único de este archivo que te llevas al trabajo real.
+
+> **La señal de que quedó bien:** cuando te llegue un ticket que dice "a veces no
+> anda" y tu primera reacción no sea abrir el código, sino preguntar *"¿en qué
+> ambiente, a qué hora y qué viste en la pantalla?"*.
+
+---
+
+# 📌 Pendientes que salieron de los incidentes
+
+Lo que apareció investigando y no cabía en el fix, con el ID que lo originó y su
+destino sugerido.
+
+- **[NN]** {{pendiente}} → sugerido para {{apéndice / fase / ejercicio 🔥}}.

@@ -1,0 +1,16 @@
+=== síntoma del master vs título de la pieza ===
+  Fase  0  ok   master: "Le di guardar y no pasó nada"               | pieza: # 🕵️ Forense Fase 00 — "Le di guardar y no pasó nada
+  Fase  1  ok   master: "La ruta funciona pero la pantalla sale en b | pieza: # 🕵️ Forense Fase 01 — "La ruta funciona pero la pan
+  Fase  2  ok   master: "Me saca al login sin decir nada"            | pieza: # 🕵️ Forense Fase 02 — "Entro con mi usuario y me sa
+  Fase  3  DIFIERE  master: "A veces carga y a veces no"                 | pieza: # 🕵️ Forense Fase 03 — "A veces carga y a veces se q
+  Fase  4  ok   master: "La lista se actualizó dos veces"            | pieza: # 🕵️ Forense Fase 04 — "La lista se actualizó dos ve
+  Fase  5  ok   master: "No hay proveedor para…" 🧬                   | pieza: # 🕵️ Forense Fase 05 — "No hay proveedor para… ¿y ah
+  Fase  6  DIFIERE  master: "No me deja guardar y no dice por qué"       | pieza: # 🕵️ Forense Fase 06 — "No me deja guardar el client
+  Fase  7  ok   master: "Esta inspección se ve con otra plantilla" ⭐ | pieza: # 🕵️ Forense Fase 07 — "Esta inspección se ve con ot
+  Fase  8  DIFIERE  master: "Escribo y la aplicación se queda pegada" ⭐  | pieza: # 🕵️ Forense Fase 08 — "Escribo una letra y la aplic
+  Fase  9  DIFIERE  master: "Aprobó y no debía"                          | pieza: # 🕵️ Forense Fase 09 — "El sistema me dejó aprobar y
+  Fase 10  DIFIERE  master: "Venció ayer para uno y hoy para otro"       | pieza: # 🕵️ Forense Fase 10 — "Venció ayer para el sistema 
+  Fase 11  ok   master: "Desde ayer el panel va lentísimo"           | pieza: # 🕵️ Forense Fase 11 — "Desde ayer el panel va lentí
+  Fase 12  ok   master: "Pasa en mi máquina y falla en el pipeline"  | pieza: # 🕵️ Forense Fase 12 — "Pasa en mi máquina y falla e
+  Fase 13  DIFIERE  master: "En UAT entra y en PROD no"                  | pieza: # 🕵️ Forense Fase 13 — "En UAT funciona y en PROD no
+  Fase 14  ok   master: "El pod no arranca" 🔥                        | pieza: # 🕵️ Forense Fase 14 — 🔥 "El pod no arranca"

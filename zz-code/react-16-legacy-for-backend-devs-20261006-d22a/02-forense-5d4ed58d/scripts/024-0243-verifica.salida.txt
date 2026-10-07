@@ -1,0 +1,34 @@
+=== 1. deuda declarada abierta en la guía §15 ===
+5:- **Presupuesto horario.** Las 96 h y el reparto por fase circulan en varios
+24:- **Seis tablas superan las cuatro columnas, y las seis son excepciones
+
+=== 2. secciones de Referencias por archivo ===
+  sin sección de Referencias: ninguno
+
+=== 3. URLs externas: cuántas y nunca verificadas ===
+     248
+
+=== 4. ejercicios en apéndices (la guía pide 5-10 cortos) ===
+  A1-bootstrap-4-y-sass.md: 8
+  A10-aritmetica-de-dinero.md: 9
+  A11-marble-testing.md: 8
+  A12-mapa-de-deuda-tecnica.md: 6
+  A13-depurar-el-build-de-produccion.md: 9
+  A2-mini-design-system.md: 9
+  A3-node-y-npm.md: 8
+  A4-cra-por-dentro.md: 7
+  A5-class-components-vs-hooks.md: 8
+  A6-redux-clasico-vs-toolkit.md: 8
+  A7-redux-observable-epica-por-epica.md: 8
+  A8-puente-a-react-moderno.md: 8
+  A9-entornos-y-contenedores.md: 8
+  be-a-01-go-para-quien-no-escribe-go.md: 8
+  be-a-02-receta-de-imagen-y-compose.md: 8
+  be-a-03-sql-portable-y-dialectos.md: 8
+  be-a-04-jwt-por-dentro-y-su-cve.md: 8
+  be-a-05-concurrencia-en-postgres.md: 9
+  be-a-06-tiempo-zonas-y-relojes.md: 8
+  be-a-07-logs-request-id-y-correlacion.md: 7
+  be-a-08-seguridad-de-api-aplicada.md: 9
+  be-a-09-mapa-de-deuda-del-track-be.md: 6
+  be-a-10-datos-de-prueba-y-faker.md: 7

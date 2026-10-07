@@ -1,0 +1,47 @@
+== F09 errores ==
+## ⚠️ Errores comunes
+
+- que el workspace **mute la prop** `ticket` tras el PATCH en vez de emitir:
+  funciona hoy, divergen cola y detalle mañana (Vue además lo gritará en
+  consola en cuanto el padre repinte);
+- guardar el **objeto** ticket seleccionado en `data` en vez del id: al
+  actualizarse la lista, tu copia queda vieja — el clásico "cambié el estado
+  y el detalle no se enteró";
+- olvidar el `:key` en el workspace: los comentarios del ticket anterior
+  visibles medio segundo, textarea con texto ajeno — la firma inconfundible
+  de instancia reutilizada sin reset;
+- asignar por índice (`tickets[i] = updated`) en `onTicketUpdated`: silencio
+  reactivo total (Fase 8 lo advirtió; aquí es donde de verdad muerde);
+- dos PATCH encadenados para "tomar" (uno de assignee, otro de status):
+  carrera innecesaria — si el negocio dice que van juntos, viajan juntos;
+- construir el guard de roles pero olvidar esconder el link (o al revés):
+  las dos capas o la UX cojea;
+- meter la cola, la selección y los comentarios en Vuex "porque es la vista
+  grande": nada de esto se comparte fuera de `/support` — resiste, que la
+  Fase 10 es el lugar de esa decisión con criterio.
+
+---
+
+## 🧪 Ejercicios (26)
+
+**🟢 Fácil (1–8)**
+
+1. Agrega a la cola un contador total en el título de la página:
+   "Panel de soporte (7 pendientes)".
+2. Muestra en cada fila de "Míos" cuántos días lleva abierto el ticket
+   (reusa el cálculo del ejercicio 22 de la Fase 4 si lo hiciste).
+3. Ordena "Sin asignar" con los `high` primero (computed con `lodash.orderBy`).
+4. Agrega un botón "↻" junto al título de la cola que recargue `loadData`.
+== this undefined / arrow ==
+0-ESTRUCTURA-CURSO.md:275:3. **Options API siempre.** `function () {}`, nada de arrow. Sin TS/Composition/Pinia/Vite.
+0-plan-del-curso.md:291:- **`function () {}` en vez de arrow functions** dentro de componentes, para
+0-plan-del-curso.md:322:12. ¿Qué es `this` en una función normal vs una arrow function?
+00-setup-hola-mundo.md:564:  arrow functions en las opciones de un componente Vue son una trampa de
+00-setup-hola-mundo.md:580:  "arrowParens": "always"
+03-mock-api-minima.md:374:> el sabor legacy. En bases reales verás también arrow functions o `.bind(this)`;
+07-metricas-minimas.md:722:- crear el chart en `created` → `this.$refs.canvas` es `undefined` (no hay
+== comments endpoint ==
+03-mock-api-minima.md:176:  "comments": [
+03-mock-api-minima.md:700:11. Agrega en `db.json` la colección `comments` (si no la tienes) y crea
+03-mock-api-minima.md:702:    `GET /comments?ticketId=X`.
+03-mock-api-minima.md:705:    con `POST /comments` y recarga la lista al guardar.

@@ -1,0 +1,15 @@
+apéndice  README  cabecera  ejercicios
+  a01      3h      3h        8  
+  a02      2h      2h        6  
+  a03      2h      2h        7  
+  a04      2h      2h        8  
+  a05      3h      3h        9  
+  a06      3h      3h        9  
+  a07      3h      3h        8  
+  a08      3h      3h        7  
+  a09      3h      3h        8  
+  a10      3h      3h        7  
+  a11      2h      2h        5  
+  a12      2h      2h        6  
+  a13      2h      2h        5  
+  TOTALES  33h                 93   (README dice 33h y 93 ejercicios)

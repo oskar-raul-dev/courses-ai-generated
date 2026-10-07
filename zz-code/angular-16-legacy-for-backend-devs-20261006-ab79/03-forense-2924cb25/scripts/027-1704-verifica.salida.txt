@@ -1,0 +1,63 @@
+=== marcadores de pendiente ===
+prompts/prompts-backend-apendice.md:73:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:117:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:177:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:223:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:264:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:311:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:352:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:393:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:439:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:487:[Pega aquí el Marco común del track BE]
+prompts/prompts-backend-apendice.md:525:[Pega aquí el Marco común del track BE]
+
+=== secciones por prompt en el archivo de fases ===
+se be00 — El contrat | ## Marco (no lo repitas, aplícalo)
+se be00 — El contrat | ## Identidad de esta fase
+se be00 — El contrat | ## Alcance
+se be00 — El contrat | ## Pendientes que pueden bloquear esta fase
+se be00 — El contrat | ## Audiencia
+se be00 — El contrat | ## Cómo quiero que trabajes
+se be01 — Lumen sobr | ## Marco (no lo repitas, aplícalo)
+se be01 — Lumen sobr | ## Identidad de esta fase
+se be01 — Lumen sobr | ## Alcance
+se be01 — Lumen sobr | ## Pendientes que pueden bloquear esta fase
+se be01 — Lumen sobr | ## Audiencia
+se be01 — Lumen sobr | ## Cómo quiero que trabajes
+se be02 — Estratos p | ## Marco (no lo repitas, aplícalo)
+se be02 — Estratos p | ## Identidad de esta fase
+se be02 — Estratos p | ## Alcance
+se be02 — Estratos p | ## Pendientes que pueden bloquear esta fase
+se be02 — Estratos p | ## Audiencia
+se be02 — Estratos p | ## Cómo quiero que trabajes
+se be03 — El reempla | ## Marco (no lo repitas, aplícalo)
+se be03 — El reempla | ## Identidad de esta fase
+se be03 — El reempla | ## Alcance
+se be03 — El reempla | ## Pendientes que pueden bloquear esta fase
+se be03 — El reempla | ## Audiencia
+se be03 — El reempla | ## Cómo quiero que trabajes
+se be04 — El salto d | ## Marco (no lo repitas, aplícalo)
+se be04 — El salto d | ## Identidad de esta fase
+se be04 — El salto d | ## Alcance
+se be04 — El salto d | ## Pendientes que pueden bloquear esta fase
+se be04 — El salto d | ## Audiencia
+se be04 — El salto d | ## Cómo quiero que trabajes
+se be05 — La invaria | ## Marco (no lo repitas, aplícalo)
+se be05 — La invaria | ## Identidad de esta fase
+se be05 — La invaria | ## Alcance
+se be05 — La invaria | ## Pendientes que pueden bloquear esta fase
+se be05 — La invaria | ## Audiencia
+se be05 — La invaria | ## Cómo quiero que trabajes
+se be06 — La reescri | ## Marco (no lo repitas, aplícalo)
+se be06 — La reescri | ## Identidad de esta fase
+se be06 — La reescri | ## Alcance
+se be06 — La reescri | ## Pendientes que pueden bloquear esta fase
+se be06 — La reescri | ## Audiencia
+se be06 — La reescri | ## Cómo quiero que trabajes
+se be07 — El *assess | ## Marco (no lo repitas, aplícalo)
+se be07 — El *assess | ## Identidad de esta fase
+se be07 — El *assess | ## Alcance
+se be07 — El *assess | ## Pendientes que pueden bloquear esta fase
+se be07 — El *assess | ## Audiencia
+se be07 — El *assess | ## Cómo quiero que trabajes
+se be07 — El *assess | ## 🧾 Recordatorio de cierre del track

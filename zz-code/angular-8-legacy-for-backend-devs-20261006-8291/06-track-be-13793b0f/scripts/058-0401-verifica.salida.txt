@@ -1,0 +1,8 @@
+═══ INVENTARIO ═══
+  fases numeradas: 15 → ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14']
+  documentos 00-* de encuadre: ['00-convencion-de-git-y-tags.md', '00-historia-del-sistema.md']
+  apéndices: 13
+  piezas forenses: 15 + master
+  cuadernos: ['cuaderno-incidentes.md']
+  prompts: 13 archivos
+  archivos del track BE en disco: [] (debe estar vacío: es propuesto)

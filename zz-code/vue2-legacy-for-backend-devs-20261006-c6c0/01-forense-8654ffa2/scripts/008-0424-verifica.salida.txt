@@ -1,0 +1,33 @@
+=== voseo en los 5 archivos ===
+prompts/guia-de-estilo-y-convenciones.md:71:  **Nada de voseo** (*"agregá"*, *"fijate"*, *"tenés"*, *"sabés"*, *"vos"*),
+prompts/guia-de-estilo-y-convenciones.md:238:- **Imperativos acentuados en la última sílaba:** *agregá, mirá, abrí, buscá,
+prompts/guia-de-estilo-y-convenciones.md:240:  verificá, reiniciá, cloná, copiá, marcá, elegí, poné, hacé, decí, vení*.
+prompts/guia-de-estilo-y-convenciones.md:241:- **Presentes de segunda persona con tilde final:** *tenés, podés, sabés,
+prompts/guia-de-estilo-y-convenciones.md:242:  querés, hacés, decís, usás, mirás, escribís, pasás, armás, agregás, notás,
+prompts/guia-de-estilo-y-convenciones.md:246:- **Pronombre `vos`** y sus combinaciones (*para vos*, *vos venís*).
+prompts/guia-de-estilo-y-convenciones.md:248:  fijate, acordate, ponele*.
+prompts/guia-de-estilo-y-convenciones.md:266:| `agregá` / `agregás` | `agrega` / `agregas` |
+prompts/guia-de-estilo-y-convenciones.md:267:| `mirá` / `mirás` | `mira` / `miras` |
+prompts/guia-de-estilo-y-convenciones.md:271:| `tenés` / `podés` / `sabés` / `querés` | `tienes` / `puedes` / `sabes` / `quieres` |
+=== archivos citados en lo nuevo de la guía ===
+OK  prompts/formato-piezas-forenses.md
+OK  prompts/formato-cuaderno-incidentes.md
+OK  prompts/convencion-de-git-y-tags.md
+=== §16 y §9.2 presentes ===
+678:### 9.2 La pieza forense va en su archivo
+986:## 16. El track forense y el cuaderno de incidentes
+=== checklist §15: items nuevos ===
+- [ ] Lleva el bloque 🏷️ del tag de la fase, con el nombre correcto
+      (`fase-` + slug del archivo) y el prefijo de commit correcto (§9.1). Los
+      apéndices no lo llevan.
+- [ ] La sección 6 lleva su pieza forense —resumen, 🧨 «Rompe a propósito» y la
+      línea 📄 hacia el archivo del recorrido (§9.2)—, o dice por qué no.
+- [ ] Lleva el bloque «📌 Reservas para el cuaderno de incidentes», o declara
+      que esta fase no reserva ninguno. Los apéndices no lo llevan.
+- [ ] Cada ID reservado existe en el índice del `cuaderno-incidentes.md` de su
+      curso, y ninguno se reasignó.
+=== diff resumido ===
+ .../prompts/convencion-de-git-y-tags.md            | 191 ++++++++++++++++++++-
+ .../prompts/guia-de-estilo-y-convenciones.md       |  88 +++++++++-
+ .../prompts/plantilla-de-fase.md                   |  49 +++++-
+ 3 files changed, 314 insertions(+), 14 deletions(-)

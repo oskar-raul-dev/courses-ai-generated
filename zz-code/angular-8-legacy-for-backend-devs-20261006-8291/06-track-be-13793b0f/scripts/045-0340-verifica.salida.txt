@@ -1,0 +1,4 @@
+bloques obligatorios y opcionales: intactos en las 15
+marcas: 61 «Qué descarta» · 22 «Aquí termina» · 83 pasos cerrados
+separadores: sin duplicados
+enlaces .md rotos: 0

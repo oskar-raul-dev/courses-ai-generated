@@ -1,0 +1,3 @@
+enlaces rotos: 0 []
+# ✍️ Guía de estilo, tono y convenciones
+## Curso Vue 2 Legacy (Track A) + MongoDB para cerebros SQL (Track B)

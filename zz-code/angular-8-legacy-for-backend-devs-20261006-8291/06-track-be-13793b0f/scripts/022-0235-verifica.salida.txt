@@ -1,0 +1,19 @@
+===== forense-fase-12.md / Sospechoso 1 — El reloj
+// ✅ El arreglo, y es de diseño: el instante entra como parámetro.
+issue(inspectionId: number, now: string): void { … }
+```
+
+===== forense-fase-14.md / Paso 2 — El almacén del nodo no es el tuyo
+docker exec certcore-control-plane crictl images | grep certcore
+# docker.io/library/certcore   fase-13   9f2c4b1e7a8d   48.3MB
+```
+
+===== forense-fase-07.md / Paso 2 — ⭐ La URL de la petición contesta antes que el códig
+| `&version=` con otro número | leyó el campo equivocado | típicamente `family.latest.version` en vez de `inspection.templateVersion` |
+| No hay ninguna petición a `/templates` | la plantilla salió de un estado ya cargado | y ese estado puede tener la vigente: mira el `*StateService` |
+> 🧭 **La regla que hace posible este paso, y que vale para cualquier sistema con datos versionados: la petición es la confesión.** Si la consulta no lleva la versi
+
+===== forense-fase-09.md / Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+// El hallazgo no entra en la lista, no bloquea nada, y la emisión sigue.
+```
+> ⚠️ **`strict: true` no te salva de esto, y conviene entender por qué.** El compilador comprueba lo que **declaraste**, y tú declaraste `string | null`. Si el dato real trae `undefined`, el compilador no tiene forma de saberlo: nunca vio la respuesta. `strict` protege la frontera entre tus archivos; **la frontera con la red la tienes que defender tú.**

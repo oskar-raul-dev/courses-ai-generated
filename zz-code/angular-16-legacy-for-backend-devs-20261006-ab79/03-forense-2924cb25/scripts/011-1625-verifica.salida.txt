@@ -1,0 +1,63 @@
+=== PDF service en Fase 10 ===
+840:// src/app/features/certificates/certificate-pdf.service.ts — LA VERSIÓN QUE FALLA
+841-@Injectable({ providedIn: 'root' })
+842-export class CertificatePdfService {
+843-  /**
+844-   * 💸 DEUDA TÉCNICA INTENCIONAL — el documento se arma desde la vista.
+845-   *
+846-   * `view` es el objeto que el componente ya tiene pintado, y `findings` es la
+847-   * lista que la pantalla cargó cuando se abrió. Todo está aquí, no hace falta
+848-   * pedir nada, y el PDF sale en cincuenta milisegundos.
+849-   *
+850-   * SE PAGA EN ESTA MISMA FASE, en 5.8, en cuanto veas el incidente 14. Un
+851-   * certificado con datos viejos no es una deuda tolerable: es un documento
+852-   * que sale de la empresa afirmando algo falso, y no hay ninguna fase
+853-   * posterior a la que valga la pena diferir eso.
+854-   */
+855-  async download(view: CertificateView, findings: readonly InspectionFinding[]): Promise<void> {
+856-    const { jsPDF } = await import('jspdf');
+857-    const document = new jsPDF();
+858-
+859-    document.text(`Certificado ${view.certificate.id}`, 20, 20);
+860-    document.text(`Vigente hasta ${view.validity.until}`, 20, 30);
+861-    // …y la tabla de hallazgos, con lo que la pantalla tenga cargado.
+862-
+--
+984:// src/app/features/certificates/certificate-pdf.service.ts — LA VERSIÓN QUE PAGA
+985-@Injectable({ providedIn: 'root' })
+986-export class CertificatePdfService {
+987-  private readonly certificateApi = inject(CertificateApiService);
+988-  private readonly inspectionApi = inject(InspectionApiService);
+989-  private readonly inspectionState = inject(InspectionStateService);
+990-  private readonly templateApi = inject(TemplateApiService);
+991-  private readonly assetApi = inject(AssetApiService);
+992-  private readonly clientApi = inject(ClientApiService);
+993-
+994-  /**
+995-   * 🪦 LA DEUDA DE 5.7, PAGADA.
+996-   *
+997-   * Recibe un id y no un objeto de vista. Todo lo demás se vuelve a pedir aquí,
+998-   * en el instante en que alguien pulsa el botón. Cuesta seis peticiones y
+999-   * medio segundo, y ése es exactamente el precio de que el documento diga la
+1000-   * verdad en el momento en que se genera.
+1001-   *
+1002-   * 🧭 La regla del proyecto que sale de aquí: un documento se arma desde la
+1003-   * fuente, nunca desde lo que hay pintado. Se repite en A08 porque es el
+1004-   * error que todo el mundo comete dos veces.
+1005-   */
+1006-  download(certificateId: string): Observable<void> {
+--
+1310:> siguiente)`— y después `git log -p fase-09..fase-10 -- src/app/features/certificates/certificate-pdf.service.ts`
+1311-> te enseña el arreglo entero aislado. Es la única forma de que el incidente 14
+1312-> tenga dónde reproducirse: su rama `inc/14/…-roto` sale del **primero** de esos
+1313-> dos commits, no del tag. Y ojo con `db.json`: esta fase **emite y revoca**, así
+1314-> que ya hay filas en `certificates` que la Fase 3 no sembró. Decide si lo
+1315-> commiteas o lo devuelves con `npm run seed` antes de etiquetar.
+1316-
+1317----
+1318-
+1319-## 📌 Pendientes sugeridos
+1320-
+1321-- **`validFrom` no existe como campo y la vigencia se calcula, y eso conviene que quede escrito donde alguien lo busque.** El alcance de esta fase pedía "`validFrom` y `validUntil` con offset"; el modelo congelado del `alcance-del-proyecto.md` §5.1 sólo tiene `issuedAt` y `validUntil`. La salida fue `CertificateValidity.from = issuedAt`, sin tocar la semilla, coherente con la política de la Fase 9 de no añadir campos. → **Decisión de proyecto tomada en este chat**, y candidata a nota en el §5.1 del alcance para que ninguna fase futura vuelva a buscar el campo.
+
+=== dashboard refresco Fase 11 ===

@@ -1,0 +1,33 @@
+### mongo:4.0 arm64 nativo
+    version:    4.0.28
+    arquitect.: aarch64
+    topologia:  standalone
+    transaccion: permitida
+### temurin 8 arm64 nativo
+  Unable to find image 'eclipse-temurin:8-jdk' locally
+  8-jdk: Pulling from library/eclipse-temurin
+  a6f8f5026378: Pulling fs layer
+  ed8299a102e9: Pulling fs layer
+  50914c2b24a1: Pulling fs layer
+  009644c3e9cd: Pulling fs layer
+  e5796edd4902: Pulling fs layer
+  c97249648758: Pulling fs layer
+  50914c2b24a1: Download complete
+  a6f8f5026378: Download complete
+  e5796edd4902: Download complete
+  ed8299a102e9: Download complete
+  c97249648758: Download complete
+  6510c9dac476: Download complete
+  50914c2b24a1: Pull complete
+  ed8299a102e9: Pull complete
+  c97249648758: Pull complete
+  7b486131dd67: Download complete
+  009644c3e9cd: Download complete
+  a6f8f5026378: Pull complete
+  e5796edd4902: Pull complete
+  009644c3e9cd: Pull complete
+  Digest: sha256:3525194d19338fd143e2038bd5e848e335f50d04e89ba8734c0458df8d494254
+  Status: Downloaded newer image for eclipse-temurin:8-jdk
+  openjdk version "1.8.0_502"
+  OpenJDK Runtime Environment (Temurin)(build 1.8.0_502-b07)
+    uname: aarch64

@@ -1,0 +1,4 @@
+--- verificación final ---
+enlaces .md rotos: 0
+apéndices con 'Usado por' desajustado: 0
+promesas 📄 revisadas

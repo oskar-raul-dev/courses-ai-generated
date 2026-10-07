@@ -1,0 +1,4 @@
+1.21.4 class major 52 -> Java 8
+1.19.8 class major 52 -> Java 8
+1.17.6 class major 52 -> Java 8
+Shell cwd was reset to /Users/oskar/Developer/Learning/courses-ia-generated

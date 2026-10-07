@@ -1,0 +1,43 @@
+=== a3-npm: eslint/config? ===
+200:11. Agrega un `"prelint"` que imprima un mensaje y comprueba el hook en
+201:    acción antes de `lint`.
+274:32. Registry privado: levanta `verdaccio` local, configura el proyecto para
+290:- npm — docs de package.json: https://docs.npmjs.com/cli/v6/configuring-npm/package-json
+291:- npm — package-lock.json: https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json
+
+=== git status ===
+ M ../README.md
+ M ../react-16-legacy-for-backend-devs/cuaderno-incidentes.md
+ M ../react-16-legacy-for-backend-devs/prompts/decisiones-y-versiones.md
+ M ../react-16-legacy-for-backend-devs/prompts/diccionario-codigo-ingles.md
+ M prompts/convencion-de-git-y-tags.md
+?? ../ideas_backend_cursos_angular.md
+?? ../nuevas-ideas.md
+?? ../propuesta-complemento-docker/
+?? ../propuesta_lab_docker/
+?? ../react-16-legacy-for-backend-devs/be-a-01-go-para-quien-no-escribe-go.md
+?? ../react-16-legacy-for-backend-devs/be-a-02-receta-de-imagen-y-compose.md
+?? ../react-16-legacy-for-backend-devs/be-a-03-sql-portable-y-dialectos.md
+?? ../react-16-legacy-for-backend-devs/be-a-04-jwt-por-dentro-y-su-cve.md
+?? ../react-16-legacy-for-backend-devs/be-a-05-concurrencia-en-postgres.md
+?? ../react-16-legacy-for-backend-devs/be-a-06-tiempo-zonas-y-relojes.md
+?? ../react-16-legacy-for-backend-devs/be00-el-contrato-auditoria-del-mock.md
+?? ../react-16-legacy-for-backend-devs/be01-go-y-la-forma-del-monolito.md
+?? ../react-16-legacy-for-backend-devs/be02-la-costura-de-datos.md
+?? ../react-16-legacy-for-backend-devs/be03-crud-y-el-reemplazo.md
+?? ../react-16-legacy-for-backend-devs/be04-identidad-real-jwt-y-un-cve.md
+?? ../react-16-legacy-for-backend-devs/be05-venta-concurrente.md
+?? ../react-16-legacy-for-backend-devs/be06-hora-dura-y-la-autoridad-del-reloj.md
+?? ../react-16-legacy-for-backend-devs/be07-liquidacion-dinero-entero-y-transaccional.md
+?? ../react-16-legacy-for-backend-devs/be08-pruebas-y-la-regla-del-motor.md
+?? ../react-16-legacy-for-backend-devs/be09-empaquetado-ambientes-y-pipeline.md
+?? contenido_forense.md
+
+=== voseo check ===
+
+=== enlaces relativos ===
+](../01-vue2-legacy/03-mock-api-minima.md)
+](../02-complement-mongodb-backend/00-audit-contrato.md)
+](../02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md)
+](../02-complement-mongodb-backend/a01-docker.md)
+](guia-de-estilo-y-convenciones.md)

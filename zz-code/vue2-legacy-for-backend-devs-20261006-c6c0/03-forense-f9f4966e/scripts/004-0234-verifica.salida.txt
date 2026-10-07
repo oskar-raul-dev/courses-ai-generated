@@ -1,0 +1,4 @@
+ok: 08-websockets-minimos.md
+ok: 09-panel-soporte.md
+ok: 10-vuex-a-fondo.md
+ok: 11-testing-minimo.md

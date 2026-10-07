@@ -1,0 +1,19 @@
+═══ 1. ENLACES .md EN TODO EL REPO ═══
+  (raíz): 1
+     ./analisis-forense-tutoriales.md -> ./forense-fase-NN.md
+  docker-container-legacy: 1
+     ./docker-container-legacy/prompts/explicacion_script_integridad.md -> 14-abi-libc-y-prebuilds.md
+  propuestas-cursos: 17
+     ./propuestas-cursos/propuesta-complemento-docker/complemento-docker-legacy.md -> ../nuevas-ideas.md
+     ./propuestas-cursos/propuesta-complemento-docker/complemento-docker-legacy.md -> ../docker-container-legacy/01-decisiones-debian-zonas-node.md
+     ./propuestas-cursos/propuesta-complemento-docker/complemento-docker-legacy.md -> ../docker-container-legacy/14-abi-libc-y-prebuilds.md
+     … y 14 más
+  repaso-aws-entrevistas: 1
+     ./repaso-aws-entrevistas/prompts/guia-de-estilo-y-convenciones.md -> 05-seguridad-iam-kms-secretos.md
+  repaso-gcp-entrevistas: 1
+     ./repaso-gcp-entrevistas/prompts/guia-de-estilo-y-convenciones.md -> 05-seguridad-iam-jerarquia-kms-secretos.md
+  ruta-no-sql-lite: 5
+     ./ruta-no-sql-lite/nuevas-ideas.md -> docker-container-legacy/14-abi-libc-y-prebuilds.md
+     ./ruta-no-sql-lite/nuevas-ideas.md -> docker-container-legacy/35-referencias.md
+     ./ruta-no-sql-lite/nuevas-ideas.md -> docker-container-legacy/a03-binutils-y-elf.md
+     … y 2 más

@@ -1,0 +1,9 @@
+── verificador de piezas ──
+
+15 piezas revisadas · 0 fallos
+
+── auditoría completa ──
+apéndices con 'Usado por' desajustado: 0
+apéndices sin estructura completa: 0
+enlaces .md rotos: 0
+piezas sin indexar en el master: 0

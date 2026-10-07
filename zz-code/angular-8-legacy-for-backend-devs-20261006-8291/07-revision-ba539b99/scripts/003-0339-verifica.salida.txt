@@ -1,0 +1,15 @@
+forense-fase-00.md   lin:     156 pasos:5 descarta:5 🎫1 🩺1 ⚰️1 🧨2 🧠1
+forense-fase-01.md   lin:     167 pasos:6 descarta:5 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-02.md   lin:     192 pasos:8 descarta:7 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-03.md   lin:     220 pasos:6 descarta:6 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-04.md   lin:     188 pasos:5 descarta:5 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-05.md   lin:     199 pasos:6 descarta:6 🎫1 🩺1 ⚰️1 🧨2 🧠1
+forense-fase-06.md   lin:     158 pasos:4 descarta:4 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-07.md   lin:     203 pasos:6 descarta:5 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-08.md   lin:     216 pasos:7 descarta:7 🎫1 🩺1 ⚰️1 🧨2 🧠1
+forense-fase-09.md   lin:     167 pasos:5 descarta:5 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-10.md   lin:     181 pasos:5 descarta:5 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-11.md   lin:     194 pasos:5 descarta:5 🎫1 🩺1 ⚰️1 🧨3 🧠1
+forense-fase-12.md   lin:     210 pasos:5 descarta:5 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-13.md   lin:     243 pasos:7 descarta:6 🎫1 🩺1 ⚰️1 🧨1 🧠1
+forense-fase-14.md   lin:     251 pasos:6 descarta:8 🎫1 🩺1 ⚰️1 🧨1 🧠1

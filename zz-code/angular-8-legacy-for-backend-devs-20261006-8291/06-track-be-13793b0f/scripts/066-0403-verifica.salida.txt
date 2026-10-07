@@ -1,0 +1,14 @@
+═══ PENDIENTES 📌 DE LAS FASES: ¿apuntan a algo que existe? ═══
+  archivos citados en 📌 que no existen: 16
+    00-setup-hola-mundo.md → alcance-del-proyecto.md
+    01-estructura-base-ngmodules.md → guia-de-estilo-y-convenciones.md
+    03-mock-api-caos.md → alcance-del-proyecto.md
+    05-standalone-convivencia.md → main.js
+    06-clientes-activos.md → alcance-del-proyecto.md
+    08-formulario-dinamico.md → alcance-del-proyecto.md
+    09-hallazgos-severidad.md → alcance-del-proyecto.md
+    10-certificados-vigencia.md → alcance-del-proyecto.md
+    12-testing-coverage.md → angular.json
+    12-testing-coverage.md → karma.conf.js
+    13-build-despliegue.md → alcance-del-proyecto.md
+    13-build-despliegue.md → config.json

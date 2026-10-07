@@ -1,0 +1,15 @@
+00  ids=['01', '02']  reservas=NO  pendientes=sí
+01  ids=['03']  reservas=NO  pendientes=sí
+02  ids=['04']  reservas=NO  pendientes=sí
+03  ids=['05']  reservas=NO  pendientes=sí
+04  ids=['06', '08']  reservas=NO  pendientes=sí
+05  ids=['09', '10']  reservas=sí  pendientes=sí
+06  ids=—  reservas=sí  pendientes=sí
+07  ids=['11', '21']  reservas=sí  pendientes=sí
+08  ids=['07', '12', '13']  reservas=sí  pendientes=sí
+09  ids=['14', '15']  reservas=sí  pendientes=sí
+10  ids=['16']  reservas=sí  pendientes=sí
+11  ids=['17']  reservas=NO  pendientes=sí
+12  ids=['18']  reservas=NO  pendientes=sí
+13  ids=['19', '20']  reservas=sí  pendientes=sí
+14  ids=—  reservas=sí  pendientes=sí

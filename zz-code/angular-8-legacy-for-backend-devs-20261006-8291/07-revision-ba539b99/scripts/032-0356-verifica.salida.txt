@@ -1,0 +1,5 @@
+ok fences
+ .../prompts/propuesta-fases-backend.md             | 150 ++++++++++++++-------
+ .../prompts/propuesta-fases-y-alcance.md           |   2 +-
+ 51 files changed, 632 insertions(+), 425 deletions(-)
+      73

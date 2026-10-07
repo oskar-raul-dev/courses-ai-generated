@@ -1,0 +1,5 @@
+Deudas 💸 y su destino declarado
+  bloques 💸 encontrados: 25
+  sin destino: [('08-formulario-dinamico.md', '💸 DEUDA TÉCNICA INTENCIONAL')]
+
+  menciones 💸 en prosa (referencias cruzadas, no bloques): 115

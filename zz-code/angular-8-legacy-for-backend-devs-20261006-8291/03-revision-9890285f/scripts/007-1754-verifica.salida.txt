@@ -1,0 +1,13 @@
+A01  decl=[3, 5, 6, 7, 8]  real=[0, 3, 5, 6, 7, 8, 12]    ⚠ la cita y no está declarada: [0, 12]
+A02  decl=[0, 1, 4, 5, 6, 8, 10, 13]  real=[0, 1, 4, 5, 6, 8, 10, 13]  ✓
+A03  decl=[0, 4, 12, 13, 14]  real=[0, 1, 2, 4, 12, 13, 14]    ⚠ la cita y no está declarada: [1, 2]
+A04  decl=[10, 13]  real=[0, 9, 10, 13]    ⚠ la cita y no está declarada: [0, 9]
+A05  decl=[1, 2, 3, 4, 8, 9, 10, 11, 12]  real=[1, 2, 3, 4, 6, 8, 9, 10, 11, 12]    ⚠ la cita y no está declarada: [6]
+A06  decl=[1, 5, 6, 7, 8, 9, 10, 11, 12]  real=[1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12]    ⚠ la cita y no está declarada: [2, 4]
+A07  decl=[2, 3, 4, 6, 7, 8, 9, 10, 13]  real=[2, 3, 4, 6, 7, 8, 9, 10, 13]  ✓
+A08  decl=[9]  real=[9]  ✓
+A09  decl=[13, 14]  real=[13, 14]  ✓
+A10  decl=[3, 4, 12, 13]  real=[3, 4, 12, 13]  ✓
+A11  decl=[4, 13]  real=[4, 13]  ✓
+A12  decl=[0, 14]  real=[0, 14]  ✓
+A13  decl=[0, 13, 14]  real=[0, 13, 14]  ✓

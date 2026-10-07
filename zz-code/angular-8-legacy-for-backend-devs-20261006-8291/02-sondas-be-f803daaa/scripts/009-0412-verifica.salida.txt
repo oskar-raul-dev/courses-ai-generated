@@ -1,0 +1,10 @@
+### driver Java 3.8.2 (el de 2019) contra cada version de servidor
+mongo:4.0    OK  driver 3.8.2 -> servidor 4.0.28
+mongo:4.2    OK  driver 3.8.2 -> servidor 4.2.24
+mongo:4.4    OK  driver 3.8.2 -> servidor 4.4.30
+mongo:5.0    OK  driver 3.8.2 -> servidor 5.0.33
+mongo:6.0    OK  driver 3.8.2 -> servidor 6.0.28
+mongo:7.0    OK  driver 3.8.2 -> servidor 7.0.41
+mongo:8.0    OK  driver 3.8.2 -> servidor 8.0.30
+(limpieza hecha)
+Shell cwd was reset to /Users/oskar/Developer/Learning/courses-ia-generated

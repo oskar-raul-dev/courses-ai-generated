@@ -1,0 +1,15 @@
+  ROTA a01-material.md: #️-advertencias
+  ROTA a02-bootstrap-sass.md: #5-️-qué-recompilar-tras-tocar-qué
+  ROTA a03-node-npm.md: #️-advertencias
+  ROTA a04-inject-vs-constructor.md: #️-advertencias
+  ROTA a05-formularios-tipados.md: #7-️-value-frente-a-getrawvalue
+  ROTA a05-formularios-tipados.md: #️-advertencias
+  ROTA a06-rxjs.md: #️-advertencias
+  ROTA a07-estado-servicios.md: #8-️-dónde-este-patrón-se-queda-corto
+  ROTA a08-pdf-cliente.md: #7-️-el-documento-se-arma-desde-el-dato
+  ROTA a09-docker-kubernetes.md: #5-️-️-la-caja-de-herramientas
+  ROTA a09-docker-kubernetes.md: #8-️-tu-cluster-no-es-el-del-libro
+  ROTA a11-puente-16-17.md: #8-️-qué-costaría-llevar-certcore-hasta-aquí
+  ROTA a13-i18n.md: #5-️-fechas-y-números-por-locale-donde-vive-el-bug-de-verdad
+  ROTA a13-i18n.md: #7-️-la-estimación-honesta
+anclas internas revisadas: 163  rotas: 14

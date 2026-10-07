@@ -1,0 +1,85 @@
+00-convencion-de-git-y-tags.md: # .env — La version de la base vive AQUI, fuera del codigo fuente.   -> {'aqui', 'version', 'codigo'}
+01-estructura-base-ngrx.md: props<{ patients: any[] }>()   // any: TS-0. El dia que el mock cambie de forma, nadie avisa.   -> {'dia'}
+06-ordenes.md: //    hay una razon escrita para ello.   -> {'razon'}
+06-ordenes.md: //    "state &&", el error revienta lejos de aca y no menciona a este archivo.   -> {'aca'}
+06-ordenes.md: // removeAt cambia los indices de todo lo que viene despues. Si guardas el   -> {'despues'}
+06-ordenes.md: // Lo correcto seria un selector de dos entradas que cruzara orders y patients   -> {'seria'}
+07-muestras-custodia.md: // no tiene processedBy. Escribir 3 aca siembra exactamente el dato   -> {'aca'}
+08-resultados-rangos.md: //    resultado sobre una "scheduled" seria justo lo que la doble guarda de 5.4   -> {'seria'}
+08-resultados-rangos.md: //    forma que caiga dentro o fuera segun que version de rango aplique. Es la   -> {'version'}
+08-resultados-rangos.md: //    unica razon por la que estos numeros no son arbitrarios.   -> {'razon'}
+08-resultados-rangos.md: // ALGUNA version; uno que no la tiene es un dato imposible que el sistema   -> {'version'}
+11-trazabilidad-audit-log.md: // NO FUNCIONA, y falla en silencio: el estado que llega aquí ya es el DESPUES.   -> {'despues'}
+12-testing-coverage.md: branches: 70,   // branches siempre va mas bajo: es lo mas duro de cubrir   -> {'mas'}
+13-build-despliegue.md: // donde vivia en environment.ts, y se muda aca por la misma razón que apiUrl:   -> {'aca'}
+13-build-despliegue.md: # Aca si usamos alpine, y no es una contradiccion con la etapa 1: el problema de   -> {'aca'}
+13-build-despliegue.md: # cambia el nombre. Esto es gratis y hace la segunda visita mucho mas rapida.   -> {'mas'}
+13-build-despliegue.md: # Los diccionarios NO llevan hash, asi que no se pueden cachear a ciegas.   -> {'asi'}
+14-casi-prod-kind.md: # kind load de mas abajo no sirve de nada. Ver §5.5.   -> {'mas'}
+14-casi-prod-kind.md: # Ni una mas, ni con otro nombre: el contrato lo fijo la imagen y aqui solo   -> {'aqui', 'mas'}
+14-casi-prod-kind.md: # aqui y no se recompila nada.   -> {'aqui'}
+14-casi-prod-kind.md: # el manifiesto (y menos mal, porque el sintoma en caliente seria peor).   -> {'seria'}
+14-casi-prod-kind.md: # default seria Always y el pod moriria en ImagePullBackOff con la   -> {'seria'}
+14-casi-prod-kind.md: # Aqui pasa lo importante de toda la fase: las claves del ConfigMap   -> {'aqui'}
+14-casi-prod-kind.md: # typo aqui da un Service con cero endpoints y una pagina que no carga sin   -> {'aqui'}
+14-casi-prod-kind.md: # El manifiesto oficial de ingress-nginx para kind. Verifica la version actual   -> {'version'}
+14-casi-prod-kind.md: # en la documentacion: esta URL apunta a un tag fijo a proposito, para que la   -> {'documentacion'}
+14-casi-prod-kind.md: # el mismo sintoma del incidente 20, pero un nginx mas arriba.   -> {'mas'}
+a02-bootstrap-sass.md: # existen en la version que tienes instalada.   -> {'version'}
+a02-bootstrap-sass.md: // sobre si mismo, así que lo que declares aca se AGREGA a las claves por   -> {'aca'}
+a02-bootstrap-sass.md: // Rojo del tema de Material: un valor critico es lo mismo que un error.   -> {'critico'}
+a02-bootstrap-sass.md: // Ambar 700: fuera de rango pero no critico. No hay equivalente en la   -> {'critico'}
+a02-bootstrap-sass.md: // el bundle. Importar "~bootstrap/scss/bootstrap" aca sería el error grave:   -> {'aca'}
+a03-node-npm.md: # Que version quedo REALMENTE instalada de un paquete, que no es lo mismo   -> {'version'}
+a03-node-npm.md: # Todas las versiones publicadas de un paquete. La ultima que cabe en tu   -> {'ultima'}
+a03-node-npm.md: # columnas. En un stack de 2019 la ultima columna es puro ruido: no vas a   -> {'ultima'}
+a03-node-npm.md: # Solo los cambios de version. Es la señal; todo lo demas es consecuencia.   -> {'version'}
+a03-node-npm.md: # Bajar npm dentro de la version de Node que ya tienes.   -> {'version'}
+a03-node-npm.md: // rxjs-compat NO se importa desde ningún sitio y aun así está: parchea el   -> {'aun'}
+a03-node-npm.md: # 2. Su version de Angular, que es la que ordena todo lo demas.   -> {'version'}
+a03-node-npm.md: # 3. Y la pregunta que decide si puedes leer la documentacion del curso:   -> {'documentacion'}
+a04-webpack-oculto.md: # Compila y ademas escribe dist/clinical-lab/stats.json con el detalle   -> {'ademas'}
+a04-webpack-oculto.md: # y darle un script. Asi todos miden con la misma version.   -> {'version', 'asi'}
+a05-rxjs.md: catchError(function (error: any) { ... })   // aqui aterriza el TimeoutError   -> {'aqui'}
+a06-ngrx.md: error: any;            // el ultimo fallo, o null   -> {'ultimo'}
+a07-i18n.md: // primera pantalla, no como texto en blanco tres pantallas mas alla.   -> {'mas'}
+a07-i18n.md: // pantalla, no undefined. Un undefined aca produce el texto 'undefined' o una   -> {'aca'}
+a07-i18n.md: // celda vacía, que es mucho mas difícil de rastrear.   -> {'mas'}
+a07-i18n.md: // Un snackbar, que es el caso mas frecuente (Fase 5).   -> {'mas'}
+a07-i18n.md: // texto mas- la devuelve marcada, y deja rastro en consola. En desarrollo salta   -> {'mas'}
+a07-i18n.md: #    cambian por la configuracion "i18n" del angular.json y @angular/localize.   -> {'configuracion'}
+a08-pdf-cliente.md: // coordenadas son milimetros reales, que es lo mas fácil de razonar: el ancho   -> {'mas'}
+a08-pdf-cliente.md: y = y + 8;         // el avance de linea tambien es tuyo   -> {'tambien'}
+a08-pdf-cliente.md: // la truncan; el blob es mas seguro.   -> {'mas'}
+a09-kubernetes.md: image: lab-frontend:1.0.0 # ④ QUE version corre. Ojo con :latest (§3)   -> {'version'}
+a09-kubernetes.md: name: lab-frontend-config   # ⑥ DE DONDE sale la configuracion   -> {'configuracion'}
+a09-kubernetes.md: # siempre. Un kubectl apuntando al contexto equivocado es la forma mas rapida   -> {'mas'}
+a09-kubernetes.md: # de tener un mal dia. Ver §8.   -> {'dia'}
+a10-migracion-8-9.md: #    cambios sin confirmar, y hace bien: lo que vas a leer despues es el diff   -> {'despues'}
+a10-migracion-8-9.md: # 4. Y las librerias de Angular que tienen su propia schematic, despues.   -> {'despues'}
+a10-migracion-8-9.md: #    buscando la primera que salio despues de Angular 9.   -> {'despues'}
+a10-migracion-8-9.md: # 2. LA PREGUNTA. Que version de Angular exige esa version del paquete.   -> {'version'}
+a10-migracion-8-9.md: # posible despues, y "me parecio que tardaba mas" no es un dato.   -> {'mas', 'despues'}
+a11-migracion-9-16.md: # Que Node, que TypeScript y que RxJS exige una version concreta de Angular.   -> {'version'}
+a11-migracion-9-16.md: // contiene exactamente lo que SU plantilla usa: ni mas ni menos.   -> {'mas'}
+a12-arm64-m1.md: # 2. El NODE. Y aca esta la sorpresa: en una maquina arm64 esto puede decir   -> {'aca'}
+a12-arm64-m1.md: # Que paquetes de tu arbol traen codigo nativo. Si la lista es corta, tu   -> {'codigo'}
+a12-arm64-m1.md: # problema tambien lo es.   -> {'tambien'}
+a12-arm64-m1.md: # 1. Cambiar de version.   -> {'version'}
+a12-arm64-m1.md: # 2. Borrar los binarios de la version anterior. SIN esto, el paso 3 no sirve.   -> {'version'}
+a13-docker-colima.md: # lentos: es la parte que mas se nota en el dia a dia (§5).   -> {'dia', 'mas'}
+a13-docker-colima.md: // el npm install va mucho mas rápido, y los binarios nativos de Linux dejan   -> {'mas'}
+a13-docker-colima.md: # la lista del Apendice A12 §4, en su version de Linux.   -> {'version'}
+a13-docker-colima.md: # arregla despues con chown y malhumor.   -> {'despues'}
+be01-java-spring-y-la-forma-del-monolito.md: # por defecto de esta propiedad es "never", y aun así se escribe: en un   -> {'aun'}
+forense-fase-03.md: // Lo que hace el codigo correcto:   -> {'codigo'}
+forense-fase-03.md: Date.now() >= decoded.exp * 1000     // false, la sesion vive   -> {'sesion'}
+forense-fase-03.md: // Lo que hace el codigo con el bug:   -> {'codigo'}
+forense-fase-04.md: # 1. El caos global. Es lo que mas veces se olvida puesto.   -> {'mas'}
+forense-fase-05.md: # 3. ¿Estaba ya en el dato? El duplicado puede ser mas viejo que el ticket.   -> {'mas'}
+forense-fase-08.md: // 2      ← deberia ser 1   -> {'deberia'}
+forense-fase-08.md: // 1      ← la misma fecha, de dia, elige bien   -> {'dia'}
+forense-fase-08.md: # 2. A que map dice apuntar, en su ultima linea.   -> {'ultima'}
+forense-fase-08.md: # {"version":3,"file":"main.8a1f2c.js","sources":["webpack:///./src/app/…   -> {'version'}
+forense-fase-09.md: return;                    // ya hay foto: no se refresca nunca mas   -> {'mas'}
+forense-fase-13.md: # 2. El config.json local, que es artefacto de arranque y no codigo fuente.   -> {'codigo'}

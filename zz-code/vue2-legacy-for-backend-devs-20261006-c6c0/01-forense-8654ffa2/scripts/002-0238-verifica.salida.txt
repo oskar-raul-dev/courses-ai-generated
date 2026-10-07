@@ -1,0 +1,78 @@
+=== §14 git convention incidentes ===
+## 🚑 Incidentes: acá el tag sí es contenido
+
+Los cursos plantean **incidentes de juguete** —el mock caído que parece un bug
+del frontend, el test que descarga medio internet la primera vez, la query
+fugitiva de la guardia simulada de F14— y piden resolverlos con la estructura
+de post-mortem de ocho puntos de la guía de estilo (§14): síntoma, repro,
+evidencia, causa raíz, corrección, prueba de regresión, prevención, y el
+análisis sin culpabilización.
+
+Esa estructura tiene una traducción exacta a git, y por eso acá el par de tags
+deja de ser opcional:
+
+```bash
+# Puntos 1–3: el síntoma reproducido y la prueba de regresión EN ROJO
+git tag -a inc/f13/descarga-silenciosa-roto -m "Síntoma: la suite tarda 90s la
+primera vez y falla por timeout. Repro: borrar ~/.cache/mongodb-binaries y
+correr npm test. Evidencia: el log de mongodb-memory-server descargando 4.4."
+
+# Puntos 4–6: la causa raíz, el fix, y la misma prueba EN VERDE
+git tag -a inc/f13/descarga-silenciosa-fix -m "Causa raíz: el default del
+paquete descarga el binario en el primer arranque, dentro del timeout de Jest.
+Fix: binario precargado en el postinstall + testTimeout explícito.
+Regresión: la suite corre en 6s en una caché limpia."
+```
+
+El namespace es `inc/<fase>/<slug-corto>` y los dos sufijos son siempre los
+mismos: `-roto` y `-fix`. Con eso, `git diff inc/f13/descarga-silenciosa-roto
+inc/f13/descarga-silenciosa-fix` **es** el punto 5 del post-mortem —la
+corrección, aislada del ruido— y los dos mensajes de tag son los puntos 1 a 6
+escritos donde no se pierden.
+
+`git tag -n99 -l 'inc/*'` te devuelve el cuaderno de incidentes entero. Y esa
+es la parte transferible: es exactamente lo que vas a querer tener el día que
+el incidente no sea de juguete.
+
+---
+
+## 📈 Los comandos que hacen que esto sirva
+
+
+=== plantilla-de-fase seccion 6 ===
+## ⚠️ Errores comunes y pieza forense
+
+### Errores comunes
+
+{{2-4 errores típicos: síntoma → causa → fix mínimo. Distinguir la corrección
+mínima (lo que va en un hotfix) de la refactorización (lo que iría con calma y
+pruebas).}}
+
+### Pieza forense de esta fase
+
+{{Qué depurar, específico de esta fase: consola, Network, Vue DevTools, o
+—en el Curso 02— logs, profiler y `explain()`. Incluir al menos un ejercicio
+de "rompe a propósito y observa".}}
+
+---
+
+## 🧪 Ejercicios ({{total}})
+
+**🟢 Fácil (1–{{a}})**
+1. {{...}}
+
+=== 03-mock-api-minima: caos? ===
+386:el mock lo permitía. Ahora la volvemos asíncrona **simulando latencia**, para
+402:    setTimeout(function () {
+712:16. Simula latencia real en la Mock API arrancándola con
+
+=== angular-16 prompts ===
+_deprecado-tutorial-angular16.md
+alcance-del-proyecto.md
+formato-cuaderno-incidentes.md
+formato-piezas-forenses.md
+guia-de-estilo-y-convenciones.md
+plantillas-de-capitulo.md
+prompts-extendidos-apendices.md
+prompts-extendidos-fases.md
+propuesta-fases-y-alcance.md

@@ -1,0 +1,2 @@
+encabezados: 20  enlaces: 20  rotos: 0
+todos los enlaces del índice resuelven

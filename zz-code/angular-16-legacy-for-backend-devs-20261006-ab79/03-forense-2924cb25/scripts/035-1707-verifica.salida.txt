@@ -1,0 +1,9 @@
+=== otras referencias a apéndices del track base desde los prompts BE ===
+prompts/prompts-backend-apendice.md:9:demanda, igual que `a01`-`a13` del track base.
+prompts/prompts-backend-apendice.md:497:  sus 💸 en su cuerpo y sus 📌 al cierre, y ahí se quedan. `a12` de este curso es
+prompts/prompts-backend-apendice.md:498:  `a12-arm64-m1.md` —Apple Silicon—, no un mapa de deuda. Así que este apéndice
+prompts/propuesta-fases-backend.md:466:Los apéndices no cuentan: son consulta bajo demanda, igual que `a01`–`a13`.
+prompts/propuesta-fases-backend.md:752:| `bea-10-mapa-de-deuda-del-track-be.md` | Qué quedó feo a propósito en el backend, qué lo vuelve exigible y en qué orden se pagaría. Hermano de `a12` del track base |
+prompts/propuesta-fases-backend.md:769:(`a01-` a `a13-`), las piezas forenses (`forense-fase-NN.md`) y el track BE.
+prompts/propuesta-fases-backend.md:771:> 📝 **Sobre `bea-01-` frente a `bea01-`.** El track base de este curso usa `aNN-`
+prompts/propuesta-fases-backend.md:772:> (`a09-docker-kubernetes.md`), así que `bea09-` habría rimado mejor localmente. Se

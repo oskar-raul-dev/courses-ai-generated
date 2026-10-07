@@ -1,0 +1,31 @@
+== F07 errores ==
+## ⚠️ Errores comunes
+
+- guardar la instancia del chart en `data` → reactividad recursiva sobre un
+  objeto gigante: lentitud y bugs raros (el error de la fase);
+- olvidar `chart.destroy()` en `beforeDestroy` → leaks y "Canvas is already
+  in use" al volver;
+- recrear el chart en cada cambio en vez de `update()`;
+- crear el chart en `created` → `this.$refs.canvas` es `undefined` (no hay
+  DOM aún);
+- mezclar sintaxis de chart.js v2 y v3 copiando de Stack Overflow sin mirar
+  la versión (escalas `xAxes` vs `x`, `horizontalBar` vs `indexAxis`...);
+- agregar datos en el componente de gráfico en vez de recibirlos listos →
+  el componente frontera debe ser tonto: recibe, pinta;
+- canvas dentro de un contenedor sin dimensiones → gráfico invisible o de
+  30.000px de alto con `responsive: true` (clásico absoluto);
+- poner las agregaciones como métodos privados de la vista → duplicación
+  asegurada cuando la Fase 9 las necesite.
+
+---
+
+## 🧪 Ejercicios (26)
+
+**🟢 Fácil (1–8)**
+
+1. Cambia la posición de la leyenda de la dona a la derecha y evalúa cuál se
+   ve mejor con pocos datos.
+== 404 comments ==
+03-mock-api-minima.md:636:          if (error.response && error.response.status === 404) {
+03-mock-api-minima.md:652:404 real cuando el id no existe, y axios lo expone en `error.response.status`.
+03-mock-api-minima.md:792:- una Mock API que se comporta como un backend real (persiste, filtra, da 404),

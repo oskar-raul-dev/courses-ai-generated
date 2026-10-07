@@ -1,0 +1,126 @@
+00-convencion-de-git-y-tags.md:406
+   - .env — La version de la base vive AQUI, fuera del codigo fuente.
+   + .env — La versión de la base vive AQUI, fuera del código fuente.
+00-setup-hola-mundo.md:219
+   - IE 9-11 support: descomentar la linea de abajo enciende differential loading
+   + IE 9-11 support: descomentar la línea de abajo enciende differential loading
+01-estructura-base-ngrx.md:442
+   - caza un Date o una funcion dentro del estado
+   + caza un Date o una función dentro del estado
+01-estructura-base-ngrx.md:492
+   - any: TS-0. El dia que el mock cambie de forma, nadie avisa.
+   + any: TS-0. El día que el mock cambie de forma, nadie avisa.
+01-estructura-base-ngrx.md:909
+   - mutacion deliberada
+   + mutación deliberada
+05-pacientes.md:175
+   - Simplificacion deliberada; la Fase 8 la corrige.
+   + Simplificación deliberada; la Fase 8 la corrige.
+06-ordenes.md:180
+   - hay una razon escrita para ello.
+   + hay una razón escrita para ello.
+06-ordenes.md:194
+   - "state &&", el error revienta lejos de aca y no menciona a este archivo.
+   + "state &&", el error revienta lejos de acá y no menciona a este archivo.
+06-ordenes.md:239
+   - removeAt cambia los indices de todo lo que viene despues. Si guardas el
+   + removeAt cambia los índices de todo lo que viene después. Si guardas el
+06-ordenes.md:277
+   - plantilla, o sea que corre una vez por fila y por ciclo de deteccion de
+   + plantilla, o sea que corre una vez por fila y por ciclo de detección de
+06-ordenes.md:282
+   - Lo correcto seria un selector de dos entradas que cruzara orders y patients
+   + Lo correcto sería un selector de dos entradas que cruzara orders y patients
+07-muestras-custodia.md:138
+   - no tiene processedBy. Escribir 3 aca siembra exactamente el dato
+   + no tiene processedBy. Escribir 3 acá siembra exactamente el dato
+07-muestras-custodia.md:294
+   - -por construccion- que el store llegue a una transición ilegal, venga la
+   + -por construcción- que el store llegue a una transición ilegal, venga la
+07-muestras-custodia.md:761
+   - transicion ilegal metida a mano
+   + transición ilegal metida a mano
+08-resultados-rangos.md:143
+   - Un resultado cuelga de una muestra, no de una orden. La funcion completa sigue
+   + Un resultado cuelga de una muestra, no de una orden. La función completa sigue
+08-resultados-rangos.md:148
+   - resultado sobre una "scheduled" seria justo lo que la doble guarda de 5.4
+   + resultado sobre una "scheduled" sería justo lo que la doble guarda de 5.4
+08-resultados-rangos.md:152
+   - forma que caiga dentro o fuera segun que version de rango aplique. Es la
+   + forma que caiga dentro o fuera segun que versión de rango aplique. Es la
+08-resultados-rangos.md:153
+   - unica razon por la que estos numeros no son arbitrarios.
+   + unica razón por la que estos numeros no son arbitrarios.
+08-resultados-rangos.md:160
+   - Y una inconsistencia a proposito: los resultados sembrados como 'validated'
+   + Y una inconsistencia a propósito: los resultados sembrados como 'validated'
+08-resultados-rangos.md:162
+   - ALGUNA version; uno que no la tiene es un dato imposible que el sistema
+   + ALGUNA versión; uno que no la tiene es un dato imposible que el sistema
+09-entrega-pdf.md:127
+   - cuatro valores. Tienen que ser claves distintas: en un arbol JSON anidado,
+   + cuatro valores. Tienen que ser claves distintas: en un árbol JSON anidado,
+12-testing-coverage.md:321
+   - responde la peticion para que verify() no se queje
+   + responde la petición para que verify() no se queje
+12-testing-coverage.md:525
+   - branches siempre va mas bajo: es lo mas duro de cubrir
+   + branches siempre va más bajo: es lo más duro de cubrir
+13-build-despliegue.md:135
+   - donde vivia en environment.ts, y se muda aca por la misma razón que apiUrl:
+   + donde vivia en environment.ts, y se muda acá por la misma razón que apiUrl:
+13-build-despliegue.md:311
+   - Aca si usamos alpine, y no es una contradiccion con la etapa 1: el problema de
+   + Aca si usamos alpine, y no es una contradicción con la etapa 1: el problema de
+13-build-despliegue.md:455
+   - cambia el nombre. Esto es gratis y hace la segunda visita mucho mas rapida.
+   + cambia el nombre. Esto es gratis y hace la segunda visita mucho más rápida.
+13-build-despliegue.md:461
+   - Los diccionarios NO llevan hash, asi que no se pueden cachear a ciegas.
+   + Los diccionarios NO llevan hash, así que no se pueden cachear a ciegas.
+14-casi-prod-kind.md:107
+   - kind load de mas abajo no sirve de nada. Ver §5.5.
+   + kind load de más abajo no sirve de nada. Ver §5.5.
+14-casi-prod-kind.md:123
+   - sin esta linea, el controller queda Pending para siempre y el sintoma es
+   + sin esta línea, el controller queda Pending para siempre y el síntoma es
+14-casi-prod-kind.md:131
+   - Sin esto, el puerto 80 del nodo no se asoma a tu maquina y lab.local no
+   + Sin esto, el puerto 80 del nodo no se asoma a tu máquina y lab.local no
+14-casi-prod-kind.md:170
+   - 5. Verificacion honesta: preguntarle al nodo que imagenes tiene.
+   + 5. Verificación honesta: preguntarle al nodo que imagenes tiene.
+14-casi-prod-kind.md:187
+   - Ni una mas, ni con otro nombre: el contrato lo fijo la imagen y aqui solo
+   + Ni una más, ni con otro nombre: el contrato lo fijo la imagen y aquí solo
+14-casi-prod-kind.md:189
+   - aqui y no se recompila nada.
+   + aquí y no se recompila nada.
+14-casi-prod-kind.md:214
+   - sola, la actualizacion es un parpadeo y no se ve nada.
+   + sola, la actualización es un parpadeo y no se ve nada.
+14-casi-prod-kind.md:219
+   - el manifiesto (y menos mal, porque el sintoma en caliente seria peor).
+   + el manifiesto (y menos mal, porque el síntoma en caliente sería peor).
+14-casi-prod-kind.md:232
+   - default seria Always y el pod moriria en ImagePullBackOff con la
+   + default sería Always y el pod moriria en ImagePullBackOff con la
+14-casi-prod-kind.md:261
+   - La linea del entrypoint de la Fase 13, ahora en los logs del cluster.
+   + La línea del entrypoint de la Fase 13, ahora en los logs del cluster.
+14-casi-prod-kind.md:281
+   - typo aqui da un Service con cero endpoints y una pagina que no carga sin
+   + typo aquí da un Service con cero endpoints y una página que no carga sin
+14-casi-prod-kind.md:307
+   - El manifiesto oficial de ingress-nginx para kind. Verifica la version actual
+   + El manifiesto oficial de ingress-nginx para kind. Verifica la versión actual
+14-casi-prod-kind.md:308
+   - en la documentacion: esta URL apunta a un tag fijo a proposito, para que la
+   + en la documentación: esta URL apunta a un tag fijo a propósito, para que la
+14-casi-prod-kind.md:313
+   - aplicas a continuacion se queda sin direccion asignada y parece roto cuando
+   + aplicas a continuación se queda sin dirección asignada y parece roto cuando
+14-casi-prod-kind.md:342
+   - el mismo sintoma del incidente 20, pero un nginx mas arriba.
+   + el mismo síntoma del incidente 20, pero un nginx más arriba.

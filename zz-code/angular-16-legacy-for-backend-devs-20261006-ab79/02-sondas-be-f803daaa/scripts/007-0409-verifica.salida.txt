@@ -1,0 +1,10 @@
+=== angular-8-legacy-for-backend-devs/04-mock-api-caos.md ===
+   2 localhost:3000
+   1 puerto 3001
+   1 puerto 3000
+   1 PORT = 3000
+   1 localhost:4200
+=== angular-16-legacy-for-backend-devs/03-mock-api-caos.md ===
+   5 localhost:3000
+   1 puerto 3000
+   1 localhost:4200

@@ -1,0 +1,5 @@
+═══ 5. DOCUMENTOS RAÍZ ═══
+  CLAUDE.md menciona bea-NN: True
+  directorios de curso en disco: 13
+  cursos no mencionados en el README raíz: ['angular-16-legacy-for-backend-devs', 'repaso entrevista', 'propuestas-cursos', 'docker-container-legacy', 'angular-8-legacy-for-backend-devs', 'repaso-aws-entrevistas', 'ruta-no-sql-lite', 'react-16-legacy-for-backend-devs']
+  cursos sin README propio: ['repaso entrevista']

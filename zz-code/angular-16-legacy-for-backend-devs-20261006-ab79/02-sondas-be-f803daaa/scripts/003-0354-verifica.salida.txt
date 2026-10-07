@@ -1,0 +1,19 @@
+--- sources.list ---
+# deb http://snapshot.debian.org/archive/debian/20221114T000000Z bullseye main
+deb http://deb.debian.org/debian bullseye main
+# deb http://snapshot.debian.org/archive/debian-security/20221114T000000Z bullseye-security main
+deb http://deb.debian.org/debian-security bullseye-security main
+# deb http://snapshot.debian.org/archive/debian/20221114T000000Z bullseye-updates main
+deb http://deb.debian.org/debian bullseye-updates main
+--- sources.list.d ---
+total 8
+drwxr-xr-x 2 root root 4096 Jun 10  2021 .
+drwxr-xr-x 1 root root 4096 Nov 14  2022 ..
+--- prueba archive ---
+Get:1 http://archive.debian.org/debian bullseye InRelease [116 kB]
+Ign:2 http://archive.debian.org/debian-security bullseye-security InRelease
+Err:3 http://archive.debian.org/debian-security bullseye-security Release
+  404  Not Found [IP: 151.101.2.132 80]
+Get:4 http://archive.debian.org/debian bullseye/main arm64 Packages [7955 kB]
+Reading package lists...
+E: The repository 'http://archive.debian.org/debian-security bullseye-security Release' does not have a Release file.

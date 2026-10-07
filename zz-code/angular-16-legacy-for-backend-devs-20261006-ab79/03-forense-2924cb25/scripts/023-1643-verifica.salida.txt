@@ -1,0 +1,3 @@
+### 07-plantillas-versionadas.md
+    1035 previous | const previous = this.previousTemplate;
+archivos con sospecha: 1

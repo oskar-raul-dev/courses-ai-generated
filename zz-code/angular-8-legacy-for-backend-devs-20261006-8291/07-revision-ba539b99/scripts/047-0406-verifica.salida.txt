@@ -1,0 +1,4 @@
+índice BE: 12
+reservados en fases: 12
+en índice sin reserva: []
+reservados sin índice: []

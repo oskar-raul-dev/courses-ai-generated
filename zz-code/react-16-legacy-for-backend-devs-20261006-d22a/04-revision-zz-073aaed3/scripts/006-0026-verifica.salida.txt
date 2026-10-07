@@ -1,0 +1,1 @@
+06-redux-observable-a-fondo.md 623 '`LOGOUT` en\n  `SCREAMING_SNAKE_CASE` junto a los thunks de RTK es coherente con §4.4 de la\n  guía, pero se lee como inconsistencia si no '

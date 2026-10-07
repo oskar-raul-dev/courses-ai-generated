@@ -1,0 +1,30 @@
+30:## 🧭 Cómo se trabaja un incidente
+84:## 🩺 Entrar por el síntoma
+115:## 📋 Índice
+167:## Incidente be-01 — La trazabilidad funciona en Network pero no en la consola
+367:## Incidente be-02 — El número ganador no tiene dueño
+560:## Incidente be-03 — El backend se cae solo y vuelve, tres veces al día
+774:## Incidente be-04 — Las rifas se crean con la hora corrida
+989:## Incidente be-05 — Todo funciona hasta que hay gente
+1210:## Incidente be-06 — El comprador aparece en blanco, pero solo a veces
+1398:## Incidente be-07 — Faltan datos en las liquidaciones de agosto
+1615:## Incidente be-08 — A algunos los saca de la sesión al mediodía y a otros nunca
+1820:## Incidente be-09 ⭐ — Vendimos tres números dos veces, y solo los redondos
+2115:## Incidente be-10 — Un número quedó reservado para siempre
+2352:## Incidente be-11 — A los vendedores de la costa se les cierra la rifa una hora antes
+2570:## Incidente be-12 — Vendimos doscientos números después del cierre
+2830:## Incidente be-13 — La liquidación dice 340.000 y las ventas suman 355.000
+3057:## Incidente be-14 — Repartimos el premio dos veces
+3306:## Incidente be-15 ⭐ — La suite lleva tres semanas en verde y ayer se rompió producción
+3555:## Incidente be-16 — La imagen de ayer no arranca y el código no cambió
+--- ejercicios por fase be (conteo aprox) ---
+be00-el-contrato-auditoria-del-mock.md: 5 ejercicios
+be01-go-y-la-forma-del-monolito.md: 7 ejercicios
+be02-la-costura-de-datos.md: 7 ejercicios
+be03-crud-y-el-reemplazo.md: 8 ejercicios
+be04-identidad-real-jwt-y-un-cve.md: 14 ejercicios
+be05-venta-concurrente.md: 8 ejercicios
+be06-hora-dura-y-la-autoridad-del-reloj.md: 10 ejercicios
+be07-liquidacion-dinero-entero-y-transaccional.md: 8 ejercicios
+be08-pruebas-y-la-regla-del-motor.md: 10 ejercicios
+be09-empaquetado-ambientes-y-pipeline.md: 11 ejercicios

@@ -1,0 +1,4 @@
+a07-i18n.md 22 '- [6. Locales y formatos: `LOCALE_ID`, fechas, números y zona horaria](#6-locales-y-formatos-locale_id-fechas-números-y-zona-horaria)'
+a07-i18n.md 275 '## 6. Locales y formatos: `LOCALE_ID`, fechas, números y zona horaria'
+a13-docker-colima.md 38 '- [5. Volúmenes: dónde vive `node_modules`](#5-volúmenes-dónde-vive-node_modules)'
+a13-docker-colima.md 151 '## 5. Volúmenes: dónde vive `node_modules`'

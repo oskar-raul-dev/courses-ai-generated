@@ -1,0 +1,89 @@
+=== bea-08 (seguridad) ===
+## # Apéndice bea-08 — Seguridad de API sobre un runtime sin parches
+
+```markdown
+Este es el chat del **Apéndice bea-08 — Seguridad de API sobre un runtime sin
+parches**, del track BE opcional 🔥 del tutorial Angular 16 + CertCore. Su único
+entregable es `bea-08-seguridad-de-api-sobre-un-runtime-sin-parches.md`.
+
+[Pega aquí el Marco común del track BE]
+
+## Identidad
+
+- Apéndice bea-08 — Seguridad de API sobre un runtime sin parches
+- Horas de referencia: **4h**
+- Versiones cubiertas: PHP 7.4.33 (**EOL desde noviembre de 2022**), Lumen 5.x ⚠️
+- Usado por: **be06**, **be07**
+- Estado: Base
+
+## Alcance
+
+- **Qué problema resuelve (una línea):** defender un sistema cuando ya no hay
+  parches que aplicar.
+- 🧭 **El ángulo, que es lo que lo diferencia de cualquier checklist de OWASP:** el
+  runtime está **EOL y eso no se va a arreglar** — es la premisa del track, no un
+  pendiente. La pregunta no es "cómo lo actualizo", es "qué hago mientras tanto y
+  cómo lo documento".
+- **Secciones esperadas:** OWASP aplicado a este dominio —inyección SQL en el
+  `DB::select()` con SQL a mano, que es exactamente donde be04 dijo que estaban los
+  bugs; autorización a nivel de objeto, que en una certificadora significa que un
+  cliente no vea los activos de otro; asignación masiva y `$fillable` en Eloquent;
+  qué exponen los mensajes de error—; **las capas de compensación** cuando el
+  runtime no se puede parchear: WAF, red, límites de tasa, reducción de superficie;
+  y **cómo se documenta y se escala un riesgo aceptado**, que es la parte que
+  alimenta el *assessment* de be07.
+- **Qué queda explícitamente fuera:** asesoría de seguridad; pruebas de intrusión;
+  y cualquier receta que dependa de infraestructura que el alumno no tiene. El
+  apéndice enseña a detectar, compensar y escalar — dilo en el cierre con esas
+  palabras.
+- **Advertencia obligatoria:** el listado de CVEs de PHP 7.4 posteriores a su EOL
+  hay que citarlo desde el aviso oficial y con fecha, nunca de memoria, y hay que
+  advertir que **la lista crece**: el apéndice envejece por diseño.
+- **Ejercicios:** 6-8, ninguno ofensivo: todos de detección y de documentación de
+  riesgo.
+```
+
+---
+
+## # Apéndice bea-09 — Symfony como vara de medir
+
+=== bea-10 (mapa de deuda) ===
+## # Apéndice bea-10 — Mapa de deuda del track BE
+
+```markdown
+Este es el chat del **Apéndice bea-10 — Mapa de deuda del track BE**, del track BE
+opcional 🔥 del tutorial Angular 16 + CertCore. Su único entregable es
+`bea-10-mapa-de-deuda-del-track-be.md`.
+
+[Pega aquí el Marco común del track BE]
+
+## Identidad
+
+- Apéndice bea-10 — Mapa de deuda del track BE
+- Horas de referencia: **2h**
+- Usado por: **be07**; hermano de `a12` del track base
+- Estado: Base — **se escribe al final, cuando las ocho fases están cerradas**
+
+## Alcance
+
+- **Qué problema resuelve (una línea):** dejar por escrito qué quedó feo a propósito
+  en el backend que el alumno acaba de construir, qué lo vuelve exigible, y en qué
+  orden se pagaría.
+- **Secciones esperadas:** el inventario completo de las 💸 declaradas en las ocho
+  fases, cada una con la fase que la declaró y el motivo por el que no se paga; el
+  criterio que las ordena; y las que **no se pagan nunca**, con su razón.
+- **La deuda insignia del track, que va primera y con su propio apartado:** el
+  runtime EOL. No es una deuda que se pague: es una que se documenta, se compensa y
+  se escala. Enlaza con `bea-08` y con be07.
+- **Regla de coherencia dura:** cada 💸 que aparezca aquí tiene que existir
+  literalmente en alguna fase, y cada 💸 de las fases tiene que aparecer aquí. Si al
+  escribirlo encuentras una que no cuadra, **no la inventes ni la borres**: dímelo,
+  porque significa que una fase está mal.
+- **Qué queda explícitamente fuera:** las deudas del track base, que ya tienen su
+  mapa en `a12`. Enlaza, no repitas.
+- **Ejercicios:** 5-6, de priorización argumentada.
+```
+
+---
+
+## # Apéndice bea-11 — Datos de prueba y volumen 🔥

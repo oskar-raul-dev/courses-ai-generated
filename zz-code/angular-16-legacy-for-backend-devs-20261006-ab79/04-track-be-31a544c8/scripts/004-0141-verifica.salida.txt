@@ -1,0 +1,27 @@
+headings: 12 links: 13
+#incidente-be-01-el-caché-no-se-limpia-nunca-y-no-encuentro-dónde-se-llena
+#incidente-be-02-copié-la-solución-de-internet-y-el-servidor-dejó-de-arrancar
+#incidente-be-03-el-mismo-dato-sale-distinto-según-por-dónde-entres
+#incidente-be-04-desde-el-despliegue-las-plantillas-salen-en-otro-orden
+#incidente-be-05-no-puedo-crear-inspecciones-nuevas-dice-que-el-id-ya-existe
+#incidente-be-06-el-informe-falla-y-no-hemos-desplegado-nada
+#incidente-be-07-el-respaldo-de-anoche-no-se-puede-restaurar
+#incidente-be-08-el-certificado-dice-que-vence-hoy-y-en-el-pdf-dice-ayer
+#incidente-be-09-una-inspección-de-2023-no-se-puede-reimprimir
+#incidente-be-10-después-del-despliegue-no-puedo-actualizar-unas-inspecciones-viejas
+#incidente-be-11-a-veces-devuelve-500-y-a-veces-422-con-el-mismo-dato
+#incidente-be-12-tenemos-un-assessment-que-recomienda-reescribir-en-seis-meses
+---- links en índice ----
+#incidente-be-01--el-caché-no-se-limpia-nunca-y-no-encuentro-dónde-se-llena ❌
+#incidente-be-02--copié-la-solución-de-internet-y-el-servidor-dejó-de-arrancar ❌
+#incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres ❌
+#incidente-be-04--desde-el-despliegue-las-plantillas-salen-en-otro-orden ❌
+#incidente-be-05--no-puedo-crear-inspecciones-nuevas-dice-que-el-id-ya-existe ❌
+#incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada ❌
+#incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada- ❌
+#incidente-be-07--el-respaldo-de-anoche-no-se-puede-restaurar ❌
+#incidente-be-08--el-certificado-dice-que-vence-hoy-y-en-el-pdf-dice-ayer ❌
+#incidente-be-09--una-inspección-de-2023-no-se-puede-reimprimir ❌
+#incidente-be-10--después-del-despliegue-no-puedo-actualizar-unas-inspecciones-viejas ❌
+#incidente-be-11--a-veces-devuelve-500-y-a-veces-422-con-el-mismo-dato ❌
+#incidente-be-12--tenemos-un-assessment-que-recomienda-reescribir-en-seis-meses ❌

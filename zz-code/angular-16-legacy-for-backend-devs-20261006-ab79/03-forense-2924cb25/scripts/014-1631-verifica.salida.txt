@@ -1,0 +1,2 @@
+20 incidentes con Ruta forense
+ ⚠️ (8, 'forense-fase-12.md', '**Incidentes del cuaderno que usan esta ruta:** 17 (el intermitente) y 20 (el co')

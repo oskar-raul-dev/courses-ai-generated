@@ -1,0 +1,8 @@
+enlaces rotos: 0 []
+D  "02-complement-mongodb-backend/prompts/diccionario-codigo copy.md"
+D  "02-complement-mongodb-backend/prompts/guia-de-estilo-y-convenciones copy.md"
+D  "02-complement-mongodb-backend/prompts/plan-formacion-nosql-mongodb copy.md"
+--- resumen ---
+  34 ??
+   3 D
+  51 M

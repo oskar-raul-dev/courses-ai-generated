@@ -1,0 +1,36 @@
+== quién referencia 00-historia-del-sistema.md ==
+be00-el-contrato-auditoria-del-mock.md
+be05-la-cadena-de-custodia-y-la-transaccion.md
+be08-la-contencion-y-lo-irrecuperable.md
+README.md
+prompts/prompts-backend-fase.md
+prompts/prompts-backend-apendice.md
+prompts/guia-de-estilo-y-convenciones.md
+prompts/propuesta-fases-backend.md
+
+== quién referencia el track BE desde el track base ==
+00-convencion-de-git-y-tags.md
+
+== quién referencia cuaderno-incidentes.md ==
+00-setup-hola-mundo.md
+00-historia-del-sistema.md
+00-convencion-de-git-y-tags.md
+01-estructura-base-ngrx.md
+02-i18n.md
+04-mock-api-caos.md
+05-pacientes.md
+03-autenticacion.md
+08-resultados-rangos.md
+06-ordenes.md
+09-entrega-pdf.md
+12-testing-coverage.md
+13-build-despliegue.md
+11-trazabilidad-audit-log.md
+07-muestras-custodia.md
+10-dashboard.md
+14-casi-prod-kind.md
+cuaderno-incidentes.md
+cuaderno-incidentes-be.md
+forense-master.md
+README.md
+forense-fase-13.md

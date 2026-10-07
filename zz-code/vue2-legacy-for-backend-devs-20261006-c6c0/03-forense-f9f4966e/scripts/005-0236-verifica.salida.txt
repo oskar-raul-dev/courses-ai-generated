@@ -1,0 +1,5 @@
+ok: q0-red-de-seguridad.md
+ok: q1-leer-quasar.md
+ok: q2-migrar-crud-qform.md
+ok: q3-migrar-dashboard-qtable.md
+ok: q4-timeline-actividad.md

@@ -4,7 +4,7 @@
 > documento sale de cada etapa y qué compuerta hay que pasar para entrar en la siguiente.
 > **A quién sirve:** a quien abre un curso nuevo y a la sesión de LLM que lo acompaña. La sesión lo
 > recibe pegado o como instrucción de lectura en el prompt de cada etapa.
-> **Vigencia:** 2026-10-04.
+> **Vigencia:** 2026-10-06.
 
 **Salto rápido:** [1](#1-️-el-flujo-en-una-pantalla) · [2](#2--las-reglas-que-atraviesan-todas-las-etapas) · [3](#3--las-etapas-una-por-una) · [4](#4--las-compuertas) · [5](#5--cuando-algo-cambia-a-mitad-de-camino) · [6](#6-️-la-cascada-de-autoridad) · [7](#7--lo-que-se-aprendió-y-por-eso-es-regla)
 
@@ -100,9 +100,11 @@ Cada flecha punteada lleva al documento que produce la etapa: un archivo de `pro
     corren en contenedores etiquetados con el curso y en puertos altos aleatorios (el curso puede
     publicar los de por defecto), y al terminar se borran esos contenedores **con sus volúmenes** y
     nada más.
-12. **El código intermedio de las pruebas va a `zz-code/`**, en un directorio por sesión creado con
+12. **Todo el código de la sesión va a `zz-code/`**, en un directorio por sesión creado con
     `zz-code/nuevo.py`, y el plan lo registra (§9 del plan). El curso nunca lo cita. Lo efímero
-    (logs, salidas, copias) también va ahí, en `salidas/`; el scratchpad no se usa para pruebas.
+    (logs, salidas, copias) también va ahí, en `salidas/`; ni el scratchpad ni `/tmp`. Los comandos
+    sueltos que producen algo citable se copian a un archivo, y el `README.md` del directorio dice cómo
+    correr y medir cada prueba, con los comandos y los intermedios que amasan la salida.
 13. **Preparar y escribir son sesiones distintas.** Una sesión de `prompts/` no empieza el curso.
 
 Las reglas operativas completas, con su origen, están en
@@ -114,11 +116,15 @@ Las reglas operativas completas, con su origen, están en
 
 ### E0 — La idea en una línea
 
-**Entrada:** nada más que la intención. **Salida:** un párrafo en el chat con cuatro datos:
+**Entrada:** nada más que la intención, o mejor, la ficha llena de
+[`plantillas/prompt-de-arranque.md`](plantillas/prompt-de-arranque.md), que se pega en una sesión
+nueva y abre la discusión con todas las decisiones de forma de una vez. **Salida:** un párrafo en el
+chat con cuatro datos (con la ficha, además, `prompts/ficha-de-arranque.md` con las respuestas
+confirmadas y su traducción a `D-xx`):
 
 ```text
 Tema        → de qué va, en una frase
-Tipo        → curso completo | curso repaso | banco de entrevista | banco de examen (01-tipos-de-curso.md)
+Tipo        → curso completo | curso legacy | curso repaso | banco de entrevista | banco de examen (01-tipos-de-curso.md)
 Lector      → quién es, qué sabe ya y qué no se le explica
 Disparador  → por qué ahora: una entrevista, una migración, una certificación, un hueco declarado
 ```
@@ -248,7 +254,8 @@ En este orden: los README (el del curso y los de bloque) y, si el tipo lo usa, `
 con el estado real; la verificación global (enlaces, anclas, sincronía, URL externas); la **revisión
 total** —continuidad y coherencia entre documentos, referencias cruzadas con enlace, que no se haya
 omitido nada de las fichas, que el curso sea autocontenido—; el **cierre de `zz-code/`**: ningún
-directorio del curso queda *vigente* en el plan §9 y `zz-code/limpiar.py` libera lo regenerable; y la
+directorio del curso queda *vigente* en el plan §9, cada uno tiene su `README.md` completo y
+`zz-code/limpiar.py` libera lo regenerable; y la
 **limpieza de `prompts/`**, que es mínima: `prompts/` se conserva entero como referencia (no viaja al
 repositorio público), y solo se borran los `_desechable-*` y lo que el autor pida, con su permiso.
 
@@ -364,5 +371,9 @@ que el curso decidió a propósito. Dentro del curso, del 1 al 9, manda el de ar
   repositorio público.
 - **El código de prueba que vivía en el scratchpad se perdía** al cerrar cada sesión, y había que
   reescribirlo. Por eso existe `zz-code/`.
+- **Una prueba sin instrucciones no se puede repetir**, y los comandos que solo corrieron en la
+  terminal quedan solo en la transcripción. Por eso cada directorio de `zz-code/` lleva un `README.md`
+  de corrida y medición, y lo citable se copia a un archivo (rescate de `lab-docker-kubernetes`,
+  2026-10-06).
 - **Un curso que cita a otro deja de poder copiarse a otra carpeta.** Por eso la autocontención es una
   decisión explícita del alcance (ver la `D-03` de la plantilla).

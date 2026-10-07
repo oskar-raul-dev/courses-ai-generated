@@ -1,0 +1,5 @@
+ok: vu0-red-de-seguridad.md
+ok: vu1-leer-vuetify.md
+ok: vu2-migrar-crud-vuetify.md
+ok: vu3-migrar-dashboard-vdatatable.md
+ok: vu4-timeline-vuetify.md

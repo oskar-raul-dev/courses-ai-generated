@@ -1,0 +1,74 @@
+=== filas tabla sintomas C01 ===
+39
+=== fases citadas en la tabla C01 ===
+Fase 0
+Fase 3
+Fase 4
+Fase 5
+Fase 6
+Fase 7
+Fase 8
+Fase 9
+Fase 10
+Fase 11
+
+# 🕵️ Track forense — índice y método
+## Curso 02 · MongoDB para cerebros SQL — el backend de Mini Jira
+
+> Puerta de entrada del track. Cubre las doce piezas escritas,
+> más las candidatas que §2 nombra.
+
+Ésta es la puerta. Nadie llega a una investigación sabiendo de qué fase es su problema:
+llega con un síntoma, y en este curso además llega con un instinto —el relacional— que a
+veces acierta y a veces lo manda al sitio equivocado. Por eso el índice que de verdad
+importa acá no es el de fases (§2), sino el de **síntomas** (§3).
+
+El track no es material adicional: es el desarrollo de la sección 6 que cada fase ya trae.
+La fase te dice **qué** se rompe; la pieza te enseña **en qué orden mirar**.
+
+---
+
+## 1. El método: cuatro preguntas, siempre en este orden
+
+El orden no es una preferencia. Es que cada pregunta cuesta un orden de magnitud más que
+la anterior, y contestar la barata primero descarta la mitad de las caras.
+
+**Pregunta 1 — ¿se reproduce, y con qué?** ¿Con **otro dato** —un seed alterno, un
+documento sin el campo—, con **más volumen** —porque a 50 documentos todo es rápido—, o
+hace falta **otro código**? En este curso la variante de volumen es propia y decisiva: la
+mitad de los bugs del modelado no existen hasta que hay datos de verdad.
+
+**Pregunta 2 — ¿qué dice la evidencia observable, antes que el código?** El documento
+crudo en mongosh, el `explain()` con su `totalDocsExamined`, la línea de morgan que no
+apareció, el `matchedCount` de un update. Casi todas las rutas se resuelven acá, y ninguna
+requiere abrir un archivo del proyecto. **El código es el paso 4, no el paso 1.**
+
+**Pregunta 3 — ¿en qué capa está?** Ruta, controller, service o el propio Mongo. Y una
+distinción que este curso agrega y que no existe en un backend relacional: ¿el problema
+está en la **consulta** o en el **modelo**? Afinar índices sobre un modelo mal diseñado es
+la forma más cara de no arreglar nada, y la Fase 7 lo dice con todas las letras.
+
+**Pregunta 4 — ¿de qué lado de la frontera está?** La frontera es
+[`00-audit-contrato.md`](00-audit-contrato.md). El `_id` que la base guarda como `ObjectId`
+y la API sirve como `id` string, la fecha que es `Date` adentro e ISO afuera, el evento de
+socket que tiene que llevar la misma forma que la respuesta HTTP. Un síntoma que aparece
+solo cuando mira el frontend casi siempre vive en esa costura, no en Mongo.
+
+> 🔑 **La frase para memorizar:** *"en SQL esto funcionaba"* no es un diagnóstico: es el
+> punto de partida de uno. La pregunta que sigue es **qué** funcionaba — el motor, el
+> modelo, o la costumbre.
+
+---
+
+## 2. 📇 Índice de las piezas
+
+| Fase | El síntoma que cubre | Archivo |
+|---|---|---|
+| 0 | "Levanté todo y no conecta", con errores que no hablan de lo que pasa | `forense-fase-00.md` |
+| 1 | "El dato está en la base y la consulta no lo encuentra" | `forense-fase-01.md` |
+| 2 | "Traduje mi WHERE y devuelve de más" ⭐ | `forense-fase-02.md` |
+| 4 | "El validator rechaza un documento que a mí me parece correcto" | `forense-fase-04.md` |
+| 5 | "Esta pantalla hace seis viajes a la base" ⭐ | `forense-fase-05.md` |
+| 6 | "Dos agentes tomaron el mismo ticket" ⭐ | `forense-fase-06.md` |
+| 7 | "El índice está creado y `explain()` sigue diciendo COLLSCAN" | `forense-fase-07.md` |
+| 8 | "La migración pasó el conteo y los datos son basura" | `forense-fase-08.md` |

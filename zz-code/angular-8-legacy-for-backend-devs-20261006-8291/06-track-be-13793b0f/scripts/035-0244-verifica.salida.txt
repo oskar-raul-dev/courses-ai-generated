@@ -1,0 +1,10 @@
+===== forense-fase-06.md
+## 🧭 La ruta
+===== forense-fase-10.md
+## 🧭 Ruta A — la vigencia
+===== forense-fase-11.md
+## 🧭 La ruta: cuatro sospechosos, en este orden El orden es la lección entera. Cuesta más descartar al cuarto que a los tres primeros juntos.
+===== forense-fase-12.md
+## 🧭 Ruta A — el test de regresión, y por qué va primero
+===== forense-fase-13.md
+## 🧭 La ruta

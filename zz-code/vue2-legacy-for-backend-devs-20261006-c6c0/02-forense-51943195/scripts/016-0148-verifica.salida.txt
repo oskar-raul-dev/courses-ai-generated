@@ -1,0 +1,25 @@
+== incidentes en cuaderno base ==
+2
+== incidentes BE ==
+16
+== indice sintomas ==
+== plantilla ==
+decisiones-y-versiones.md
+diccionario-codigo-ingles.md
+guia-de-estilo-y-convenciones.md
+instrucciones-del-proyecto.md
+plantilla-de-fase.md
+plantilla-de-incidente-be.md
+plantilla-de-incidente.md
+prompts-a-por-apendice.md
+prompts-a-por-fase.md
+prompts-b-por-apendice.md
+prompts-b-por-fase.md
+prompts-backend-apendice.md
+prompts-backend-fase.md
+propuesta-fases-backend.md
+== referencias al doc ==
+completado_cuaderno_incidentes.md
+== hueco en README/guia ==
+README.md:104:> el hueco conocido más grande del curso. Mientras tanto, cada fase trae sus
+prompts/guia-de-estilo-y-convenciones.md:819:  redactado: el archivo tiene índice y plantilla. Es el hueco de autocontención

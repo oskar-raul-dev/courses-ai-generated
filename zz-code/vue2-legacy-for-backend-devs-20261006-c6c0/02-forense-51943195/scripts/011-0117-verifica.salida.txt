@@ -1,0 +1,36 @@
+== F01 conceptos/router ==
+142:|                      | <router-view />           |
+163:          <router-view />
+202:        <router-link class="nav-link" to="/">Inicio</router-link>
+205:        <router-link class="nav-link" to="/tickets">Tickets</router-link>
+297:    <p>ID recibido: {{ $route.params.id }}</p>
+313:fallback, `router-view` y `router-link`. Lazy loading, nested routes y guards
+433:11. Haz que cada fila tenga un `router-link` al detalle del ticket.
+434:12. En `TicketDetailView.vue`, usa `ticketService.getTicketById($route.params.id)` para mostrar los datos reales del ticket.
+438:16. Marca el enlace activo del sidebar con la clase de Vue Router (`router-link-active`) y dale un estilo visible.
+== F02 guard/localStorage/pestaña ==
+11:- token mock
+13:- guard de rutas
+26:- generar y guardar un token mock;
+29:- adjuntar el token automáticamente a los requests HTTP;
+35:- refresh token, expiración real de JWT
+68:Authorization: Bearer <token>
+71:Suele contener claims: id de usuario, rol, expiración. Para esta fase **no**
+74:el frontend **recibe** un token → lo **guarda** → lo **adjunta** a cada
+77:Aquí el token será mock (`"mock-jwt-token-123"`). El flujo queda idéntico al
+84:1. **Esto es didáctico.** En un sistema real, autenticar, firmar tokens,
+85:   validar expiración y permisos es trabajo del **backend**. Que exista un
+86:   token en el navegador no prueba nada.
+88:   cualquier script de la página puede leerlo: un XSS expone el token. Lo
+90:3. **Guarda lo mínimo:** token, username, nombre visible. Nunca la contraseña
+105:4. Si son válidas → token mock + datos mínimos de usuario.
+106:5. Vuex guarda la sesión en memoria; el servicio la persiste en `localStorage`.
+108:7. axios adjunta el token automáticamente (interceptor).
+162:## 🛣️ Router con guard
+164:Se agregan: la ruta `/login`, `meta.requiresAuth` en rutas privadas y un guard
+192:  var token = localStorage.getItem("token");
+197:  if (requiresAuth && !token) {
+202:  if (to.path === "/login" && token) {
+213:> 📝 **Nota legacy honesta:** el guard y el interceptor leen `localStorage`
+214:> directamente, aunque el store también tiene el token. En un diseño más
+236:      token: "mock-jwt-token-123",

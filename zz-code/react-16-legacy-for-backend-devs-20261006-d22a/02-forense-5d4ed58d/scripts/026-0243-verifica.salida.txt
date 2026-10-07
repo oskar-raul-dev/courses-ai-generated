@@ -1,0 +1,28 @@
+=== ¿las cifras de horas coinciden entre documentos? ===
+11-cierre-puente-react-moderno.md:10:Llegaste al final de 96 horas. No para aprender React —eso lo sabías al empezar—, sino para volverte alguien que puede **entrar a un sistema legacy ajeno, entenderlo, tocarlo sin romperlo y dejar registro de lo que hizo**. Esa era la promesa del curso, y esta fase la cierra mirando dos direcciones.
+11-cierre-puente-react-moderno.md:423:30. Meta-reflexión: si tuvieras que reescribir este curso para tu propio equipo entrante, ¿qué fase agregarías, cuál sacarías, y qué mantendrías intacto? Justifica cada decisión desde lo que de verdad necesita un mantenedor de legacy —no desde lo que sería "más completo". El curso tiene 96 horas por una razón; defiende o refuta ese límite.
+11-cierre-puente-react-moderno.md:458:Las 96 horas no fueron sobre features. Fueron sobre una forma de trabajar: **leer antes de tocar**, distinguir la deuda deliberada del descuido, separar el hotfix del refactor, reproducir el bug antes de arreglarlo, cerrar cada corrección con un test que la fija, y modernizar solo lo que la red de tests te deja modernizar sin fe. Si te llevas una sola frase, que sea esta: **no se moderniza lo que no está testeado, y no se toca lo que no se entiende**. Todo lo demás son detalles de implementación.
+00-alcance-del-proyecto.md:12:Un tutorial práctico y **autocontenido** de **96 horas** que prepara a
+00-alcance-del-proyecto.md:104:reactividad en un espacio que cabe holgado en 96 horas.
+00-alcance-del-proyecto.md:139:- 12 fases (0-11) que suman exactamente 96 horas.
+00-alcance-del-proyecto.md:147:- 🔥 **Track BE opcional (be00–be09 y be-a-01…be-a-10): 84 horas aparte.** Un
+00-alcance-del-proyecto.md:150:  fases 2, 5, 7 y 8 declararon y no podían saldar. **No cuenta en las 96 horas
+cuaderno-incidentes-be.md:5:> El tiempo ya está contado dentro de las 84 h del track BE; no es un bloque aparte
+cuaderno-incidentes-be.md:15:> es opcional, y un alumno que solo hace las 96 horas del track base no debería
+README.md:3:Tutorial práctico y **autocontenido** de **96 horas** para desarrolladores senior
+README.md:121:el curso de 96 horas. Pero el mock dejó deudas 💸 que ninguna fase de frontend
+README.md:126:El **track BE** es opcional y las paga. Diez fases más (**84 horas aparte**, que
+cuaderno-incidentes.md:5:> El tiempo de los incidentes ya está contado dentro de las 96 h del track forense
+00-setup-hola-mundo-cra.md:12:Antes de arrancar, si no lo hiciste: `00-historia-del-sistema.md` te cuenta en veinte minutos qué estás heredando y por qué está como está. Vale la pena — casi todas las rarezas que vas a encontrar en las próximas 96 horas tienen ahí su explicación.
+be09-empaquetado-ambientes-y-pipeline.md:501:caos hubo que reimplementarlo. Y el track costó **84 horas** que no estaban en el
+be09-empaquetado-ambientes-y-pipeline.md:676:27. **El veredicto honesto.** Escribe `server/VEREDICTO.md` completo con la estructura de 5.6. No copies las respuestas del track: son las de quien lo escribió. Las tuyas tienen que salir de tus 84 horas, y la sección de "cuándo NO vale la pena" tiene que incluir al menos un caso que acá no esté.
+be09-empaquetado-ambientes-y-pipeline.md:723:Se acabó. Diez fases, 84 horas, y un backend en Go contra PostgreSQL 13 que
+be09-empaquetado-ambientes-y-pipeline.md:761:> `git tag -a track-be-completo -m "🔥 Track BE terminado: 10 fases, 84 horas, frontend intacto"`.
+prompts/instrucciones-del-proyecto.md:80:96 horas en 12 fases (0-11) y 13 apéndices (A1-A13).
+
+=== reparto por fase: ¿dónde vive? ===
+12:Un tutorial práctico y **autocontenido** de **96 horas** que prepara a
+104:reactividad en un espacio que cabe holgado en 96 horas.
+139:- 12 fases (0-11) que suman exactamente 96 horas.
+147:- 🔥 **Track BE opcional (be00–be09 y be-a-01…be-a-10): 84 horas aparte.** Un
+150:  fases 2, 5, 7 y 8 declararon y no podían saldar. **No cuenta en las 96 horas

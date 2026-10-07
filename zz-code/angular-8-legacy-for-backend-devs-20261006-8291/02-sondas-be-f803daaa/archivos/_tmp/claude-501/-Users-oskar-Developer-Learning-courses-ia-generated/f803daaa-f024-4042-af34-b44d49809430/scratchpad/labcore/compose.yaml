@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mongo:${MONGO_TAG}
+    volumes: [mongodata:/data/db]
+  api:
+    image: maven:3.8-eclipse-temurin-8
+    working_dir: /app
+    ports: ["3000:3000"]
+    volumes: [".:/app", "m2:/root/.m2"]
+    environment:
+      MONGO_URI: "mongodb://db:27017"
+    depends_on: [db]
+    command: mvn -q compile exec:java
+volumes:
+  mongodata:
+  m2:

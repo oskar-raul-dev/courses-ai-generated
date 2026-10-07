@@ -1,0 +1,8 @@
+1) README ↔ archivos
+   enlazados que no existen: ['prompts/alcance-del-proyecto.md', 'prompts/guia-de-estilo-y-convenciones.md', 'prompts/propuesta-fases-backend.md']
+   archivos del curso no enlazados en el README: ✅ ninguno
+
+2) Reservas de las fases ↔ cuaderno base
+   reservados sin entrada: ✅ ninguno
+   en el cuaderno sin reserva: ✅ ninguno
+   total incidentes: 20

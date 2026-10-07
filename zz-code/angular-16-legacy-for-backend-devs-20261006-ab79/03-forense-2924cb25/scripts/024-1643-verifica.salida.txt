@@ -1,0 +1,3 @@
+prompts/preparaciones-de-incidentes.md:500 [método] -  descargar(): void { this.pdf.download(this.certificateId).subscribe(); }
+prompts/preparaciones-de-incidentes.md:501 [método] +  descargar(): void { void this.pdf.download(this.view, this.findings); }
+— fin del barrido —

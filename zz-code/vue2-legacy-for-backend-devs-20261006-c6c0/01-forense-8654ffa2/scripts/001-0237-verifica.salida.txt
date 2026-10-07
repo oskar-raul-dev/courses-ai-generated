@@ -1,0 +1,60 @@
+=== Curso 01: seccion 6 real ===
+00-setup-hola-mundo.md                     ## ⚠️ Errores comunes
+01-estructura-base-legacy.md               ## ⚠️ Errores comunes
+02-autenticacion-minima.md                 ## ⚠️ Consideraciones de seguridad (léelas, son 6)
+03-mock-api-minima.md                      ## ⚠️ Errores comunes
+04-dashboard-tickets.md                    ## ⚠️ Errores comunes
+05-crud-tickets.md                         ## ⚠️ Errores comunes
+06-wizard-minimo.md                        ## ⚠️ Errores comunes
+07-metricas-minimas.md                     ## ⚠️ Errores comunes
+08-websockets-minimos.md                   ## ⚠️ Errores comunes
+09-panel-soporte.md                        ## ⚠️ Errores comunes
+10-vuex-a-fondo.md                         ## ⚠️ Errores comunes
+11-testing-minimo.md                       ## ⚠️ Errores comunes
+nx0-red-de-seguridad.md                    ## ⚠️ Errores comunes
+nx1-leer-nuxt.md                           ## ⚠️ Errores y confusiones típicas al leer Nuxt por primera vez
+nx2-hidratacion-window-not-defined.md      ## ⚠️ Errores comunes
+nx3-asyncdata-vs-vuex.md                   ## ⚠️ Errores comunes
+nx4-pagina-ssr-nueva.md                    ## ⚠️ Errores comunes
+q0-red-de-seguridad.md                     ## ⚠️ Errores comunes
+q1-leer-quasar.md                          ## ⚠️ 6. Errores clásicos
+q2-migrar-crud-qform.md                    ## ⚠️ Errores comunes
+q3-migrar-dashboard-qtable.md              q4-timeline-actividad.md                   ## ⚠️ Errores comunes
+
+=== Curso 02: seccion 6 real ===
+00-audit-contrato.md                           00-preliminares.md                             ## ⚠️ Errores comunes
+01-mongo-en-30-min.md                          ## ⚠️ Errores comunes
+02-consultar-tu-sql-traducido.md               ## ⚠️ Errores comunes y pieza forense
+03-embeber-vs-referenciar.md                   ## ⚠️ Errores comunes
+04-el-esquema-que-no-esta-en-la-base.md        ## ⚠️ Errores comunes
+05-lookup-y-por-que-es-una-alarma.md           ## ⚠️ Errores comunes
+06-atomicidad-transacciones-consistencia.md    ## ⚠️ Errores comunes
+07-indices.md                                  ## ⚠️ Errores comunes
+08-la-autopsia.md                              ## ⚠️ Errores comunes
+09-aggregation.md                              ## ⚠️ Errores comunes y pieza forense
+10-express-el-vehiculo.md                      ## ⚠️ Errores comunes y pieza forense
+11-auth-real-y-pago-de-deudas.md               ## ⚠️ Errores comunes
+12-el-backend-habla.md                         ## ⚠️ Errores comunes
+13-testing-de-api.md                           ## ⚠️ Errores comunes y pieza forense
+14-operacion.md                                ## ⚠️ Errores comunes
+15-el-veredicto-honesto.md                     ## ⚠️ Errores comunes
+
+=== forense/incidente en curso 02 ===
+02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:346:## ⚠️ Errores comunes y pieza forense
+02-complement-mongodb-backend/00-preliminares.md:483:> 🔎 **Pieza forense de la fase:** cuando algo no arranca, el primer sitio a
+02-complement-mongodb-backend/09-aggregation.md:444:## ⚠️ Errores comunes y pieza forense
+02-complement-mongodb-backend/09-aggregation.md:460:### 🩻 Pieza forense: "mi GROUP BY devuelve UNA fila"
+02-complement-mongodb-backend/08-la-autopsia.md:59:Antes de tocar nada, el informe forense. Recorre `soporte_v1` con la lista de
+02-complement-mongodb-backend/10-express-el-vehiculo.md:499:## ⚠️ Errores comunes y pieza forense
+02-complement-mongodb-backend/10-express-el-vehiculo.md:517:### 🩻 Pieza forense: el request que no vuelve
+02-complement-mongodb-backend/10-express-el-vehiculo.md:577:24. Paridad forense con json-server: levanta json-server en :3001 (solo para esto) y escribe `scripts/contract-diff.js` que dispare las mismas 20 requests contra ambos y compare respuestas normalizadas (ids aparte). Reporte de diferencias: debe salir vacío o cada diferencia debe estar firmada en el audit. La paridad, demostrada por máquina.
+02-complement-mongodb-backend/13-testing-de-api.md:345:## ⚠️ Errores comunes y pieza forense
+02-complement-mongodb-backend/13-testing-de-api.md:366:### 🩻 Pieza forense — "verde en mi máquina, rojo en CI"
+02-complement-mongodb-backend/15-el-veredicto-honesto.md:29:  ANTES de escribir una línea — y su versión forense para sistemas ya
+02-complement-mongodb-backend/15-el-veredicto-honesto.md:237:Diagnóstico forense: la tabla de olores (5 min + Compass)
+02-complement-mongodb-backend/15-el-veredicto-honesto.md:268:3. Aplica la tabla de olores completa a `soporte_v1` con Compass y capturas: tu primer informe forense formal, 1 página.
+02-complement-mongodb-backend/15-el-veredicto-honesto.md:277:9. El diagnóstico ajeno: elige un repo Node+Mongo real de GitHub (2017–2021, con modelos y queries visibles). Informe forense completo: tabla de olores con evidencia, 5 preguntas, veredicto. (La promesa del curso: cronométrate — ¿cuánto más de 5 minutos te tomó?)
+02-complement-mongodb-backend/15-el-veredicto-honesto.md:288:17. **El informe ejecutivo:** convierte tu forense de `soporte_v1` (ej. 3) + los números de la autopsia de la Fase 8 en 2 páginas para un director no técnico: dolor en horas y riesgo, opciones con costo, recomendación. Sin jerga: "lookup" no aparece; "cada pantalla hace 6 viajes a la base" sí.
+02-complement-mongodb-backend/a02-mongosh-compass.md:198:forense.
+02-complement-mongodb-backend/a02-mongosh-compass.md:315:28. El auditor automático: script que, dado un URI, produzca el informe forense de la Fase 15 completo — aplica la tabla de olores programáticamente (detecta lookup-tables por conteo bajo + referencias, ids numéricos, arrays sin techo, ausencia de validators/schemaVersion, índices sin uso) y emita un veredicto con evidencia. Pruébalo contra `soporte_v1` (debe encender) y `minijira` (debe callarse). Es el curso entero, ejecutable.
+02-complement-mongodb-backend/a01-docker.md:212:# Forense

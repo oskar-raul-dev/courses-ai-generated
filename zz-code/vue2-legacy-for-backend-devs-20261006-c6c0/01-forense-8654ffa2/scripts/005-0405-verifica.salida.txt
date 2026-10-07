@@ -1,0 +1,21 @@
+=== store path curso 01 ===
+   4 src/store/
+   3 src/store/index.js
+   2 src/store
+=== services path ===
+   4 src/services/activityService.js
+   2 src/services/activityEmitter.js
+   1 src/services/
+=== scripts npm curso 02 (seed) ===
+02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:364:`npm run seed`). Para los que piden volumen, usa el generador del ejercicio
+02-complement-mongodb-backend/01-mongo-en-30-min.md:252:### `scripts/seed.js`
+02-complement-mongodb-backend/01-mongo-en-30-min.md:424:node scripts/seed.js
+02-complement-mongodb-backend/01-mongo-en-30-min.md:514:11. Modifica el seed para que reciba la ruta del `db.json` como argumento de línea de comandos (`node scripts/seed.js ./data/db.json`), con mensaje de uso si falta.
+02-complement-mongodb-backend/01-mongo-en-30-min.md:532:26. Empaqueta el seed como comando npm (`npm run seed`) y agrega `npm run seed:verify` que encadene seed + verify. Deja el README con las 4 líneas exactas para que otra persona levante todo desde cero.
+=== 14-operacion: imagen docker ===
+243:    image: mongo:${MONGO_VERSION:-4.4}
+270:    image: mongo:${MONGO_VERSION:-4.4}
+=== a01-docker nombre ===
+# 🐳 Apéndice 1 — Docker mínimo
+
+## 🎯 Para qué sirve este apéndice

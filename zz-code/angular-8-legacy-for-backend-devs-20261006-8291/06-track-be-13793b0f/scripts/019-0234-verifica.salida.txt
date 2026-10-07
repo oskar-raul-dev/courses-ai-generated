@@ -1,0 +1,24 @@
+=== Encabezado de cada pieza: herramientas · tiempo · síntoma ===
+  forense-fase-00.md     FALTA: síntoma
+  forense-fase-01.md     FALTA: síntoma
+  forense-fase-02.md     FALTA: síntoma
+  forense-fase-03.md     FALTA: síntoma
+  forense-fase-04.md     FALTA: síntoma
+  forense-fase-05.md     FALTA: síntoma
+  forense-fase-06.md     FALTA: síntoma
+  forense-fase-07.md     FALTA: síntoma
+  forense-fase-08.md     FALTA: síntoma
+  forense-fase-09.md     FALTA: síntoma
+  forense-fase-10.md     FALTA: síntoma
+  forense-fase-11.md     FALTA: síntoma
+  forense-fase-12.md     FALTA: síntoma
+  forense-fase-13.md     FALTA: síntoma
+  forense-fase-14.md     FALTA: síntoma
+
+=== forense-master: bloques ===
+  1 método                 ok
+  2 índice piezas          FALTA
+  3 síntomas transversal   ok
+  4 herramientas           ok
+  5 cierre→HOTFIX.md       ok
+  filas de tabla en el master: 46

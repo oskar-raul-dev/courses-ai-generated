@@ -1,0 +1,10 @@
+flowchart LR
+    subgraph doc["documental: 1 viaje"]
+        A1[app] -- "1 viaje" --> D1[("aircraft<br/>1 documento")]
+    end
+    subgraph rel["referenciado al estilo relacional: 3 + N viajes"]
+        A2[app] -- "1 viaje" --> R1[(aircraft)]
+        A2 -- "1 viaje" --> R2[(engines)]
+        A2 -- "1 viaje" --> R3[("options (N)")]
+        A2 -- "1 viaje" --> R4[(warranty)]
+    end

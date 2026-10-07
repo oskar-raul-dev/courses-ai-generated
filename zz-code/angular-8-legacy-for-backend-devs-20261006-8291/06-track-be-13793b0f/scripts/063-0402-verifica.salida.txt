@@ -1,0 +1,6 @@
+═══ README vs REALIDAD ═══
+  filas de fase en el README: 0
+  horas de fases: cuadran
+  cifras del README: ['**122 horas**', '**108h**', '**14h**']
+  enlaces del README rotos: ninguno
+  piezas forenses no mencionadas en el README: ninguna

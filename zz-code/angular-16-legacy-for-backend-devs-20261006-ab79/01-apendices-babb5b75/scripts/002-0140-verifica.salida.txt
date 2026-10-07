@@ -1,0 +1,18 @@
+=== INVENTARIO DEL CURSO ===
+GRUPO                              LINEAS
+README + previos (3)                    842
+Fases 00-14 (15)                      15168
+Apendices a01-a13 (13)                 4077
+Track forense (16)                     3238
+Cuaderno de incidentes (1)             3916
+Prompts y especificaciones (8)         5904
+
+TOTAL archivos .md del curso:       48 +        9 en prompts/
+TOTAL lineas (sin prompts):    28253
+
+--- comprobaciones finales ---
+enlaces .md rotos en todo el curso:        0
+incidentes con solucion de referencia: 20
+incidentes con test de regresion: 20
+incidentes con post-mortem: 20
+incidentes con diagnostico alternativo: 20

@@ -1,0 +1,9 @@
+total 4820
+fullName (A+B+D+E) 4102
+active   (A+D+E)   3355
+email    (A+B+E)   3190
+contact  (D)       912
+name/_source (C)   718
+phone    (E)       64
+birthDate string   3908  date 912
+email ausente C+D  1630

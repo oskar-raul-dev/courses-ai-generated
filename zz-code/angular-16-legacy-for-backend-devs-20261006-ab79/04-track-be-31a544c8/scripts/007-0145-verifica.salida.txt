@@ -1,0 +1,14 @@
+=== incidentes declarados por fase vs cuaderno ===
+be00   
+be01   be-01 be-02 
+be02   be-03 
+be03   be-04 be-05 
+be04   be-06 be-07 be-08 
+be05   be-09 be-10 
+be06   be-11 
+be07   be-12 
+cuaderno:
+be-01 be-02 be-03 be-04 be-05 be-06 be-07 be-08 be-09 be-10 be-11 be-12 
+
+=== enlaces a archivos inexistentes ===
+(sin salida = todos existen)

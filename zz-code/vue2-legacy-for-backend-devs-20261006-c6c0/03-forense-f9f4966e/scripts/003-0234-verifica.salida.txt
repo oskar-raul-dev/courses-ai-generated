@@ -1,0 +1,4 @@
+ok: 04-dashboard-tickets.md
+ok: 05-crud-tickets.md
+ok: 06-wizard-minimo.md
+ok: 07-metricas-minimas.md

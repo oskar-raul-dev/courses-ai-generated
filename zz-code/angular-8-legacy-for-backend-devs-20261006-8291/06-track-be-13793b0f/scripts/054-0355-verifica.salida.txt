@@ -1,0 +1,16 @@
+═══ 4. REACT-16 TRAS EL RENOMBRADO ═══
+  apéndices bea-: 10 · fases be0*: 10
+  apéndices no listados en el README: ['bea-01-go-para-quien-no-escribe-go.md', 'bea-02-receta-de-imagen-y-compose.md', 'bea-03-sql-portable-y-dialectos.md', 'bea-04-jwt-por-dentro-y-su-cve.md', 'bea-05-concurrencia-en-postgres.md', 'bea-06-tiempo-zonas-y-relojes.md', 'bea-07-logs-request-id-y-correlacion.md', 'bea-08-seguridad-de-api-aplicada.md', 'bea-09-mapa-de-deuda-del-track-be.md', 'bea-10-datos-de-prueba-y-faker.md']
+  enlaces .md rotos: 0
+  cuadernos: ['cuaderno-incidentes-be.md', 'cuaderno-incidentes.md']
+   ⚠ sin línea 'Usado por': bea-01-go-para-quien-no-escribe-go.md
+   ⚠ sin línea 'Usado por': bea-02-receta-de-imagen-y-compose.md
+   ⚠ sin línea 'Usado por': bea-03-sql-portable-y-dialectos.md
+   ⚠ sin línea 'Usado por': bea-04-jwt-por-dentro-y-su-cve.md
+   ⚠ sin línea 'Usado por': bea-05-concurrencia-en-postgres.md
+   ⚠ sin línea 'Usado por': bea-06-tiempo-zonas-y-relojes.md
+   ⚠ sin línea 'Usado por': bea-07-logs-request-id-y-correlacion.md
+   ⚠ sin línea 'Usado por': bea-08-seguridad-de-api-aplicada.md
+   ⚠ sin línea 'Usado por': bea-09-mapa-de-deuda-del-track-be.md
+   ⚠ sin línea 'Usado por': bea-10-datos-de-prueba-y-faker.md
+  líneas 'Usado por': presentes

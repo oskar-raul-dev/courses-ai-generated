@@ -1,0 +1,19 @@
+=== estructura del plan ===
+21:## 1. 🔍 Veredicto en dos frases
+31:## 2. 🧨 Por qué el cuaderno va: seis bucles abiertos
+65:## 3. 🕵️ Por qué el forense NO va como archivos aparte (y qué sí falta)
+121:## 4. ⚖️ Decisiones a cerrar antes de ejecutar
+185:## 4bis. 🔬 Ficha de condiciones de reproducción (hallazgo H3)
+222:## 5. 📦 Paquetes de trabajo, en orden
+265:## 6. 🤖 Prompts listos para ejecutar
+619:## 7. ⚠️ Verificación obsoleta — RETIRADA
+632:## 8. 🔎 Revisión final de cierre (2026-09-09)
+665:## 9. ✅ Checklist de cierre — estado real verificado
+
+=== los 3 ítems abiertos ===
+705:- [ ] **`scripts/seedHeavyDay.js` no existe.** **Es el único ítem abierto del plan, y es
+790:- [ ] `scripts/seedHeavyDay.js` — abierto a propósito (9.2).
+793:- [ ] `rm completado_cuaderno_incidentes.md` — cuando lo decidas. Es lo último que queda.
+
+=== suma de líneas por lote, contra lo medido ===
+297

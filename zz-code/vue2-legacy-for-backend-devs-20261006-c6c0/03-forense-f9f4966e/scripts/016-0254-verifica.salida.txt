@@ -1,0 +1,15 @@
+- Pánico por el disco que "no baja" tras un gran borrado (el 🪞 de la fase:
+  es reutilizable, no fugado).
+
+> 📄 **Esta fase no tiene pieza forense propia**, y es deliberado: los dos
+> síntomas de operación del curso ya tienen recorrido — el contenedor que no
+> deja entrar a nadie, en [`forense-fase-00.md`](forense-fase-00.md), y el
+> entorno que se comporta distinto al tuyo, en
+> [`forense-fase-13.md`](forense-fase-13.md).
+
+---
+
+## 🧪 Ejercicios (34)
+=== dobles separadores ===
+1710
+archivos con doble separador: 0

@@ -1,0 +1,19 @@
+Versiones fijadas — apariciones y contradicciones evidentes:
+  Angular          30 apariciones
+  TypeScript       12 apariciones
+  RxJS              9 apariciones
+  Material/CDK      4 apariciones
+  zone.js           2 apariciones
+  Node             22 apariciones
+  npm              10 apariciones
+  jsPDF             5 apariciones
+  json-server       8 apariciones
+  PHP               8 apariciones
+  Lumen            17 apariciones
+  Postgres         28 apariciones
+
+  Otras versiones de Angular con patch citadas: {'8.2.14': 2}
+  Otras de TypeScript: {'3.5.3': 1}
+  Otras de RxJS: {'6.5.5': 2}
+  Otras de Node: {'18.19.0': 1}
+  Otras de Lumen: {'5.2.9': 1, '6.0.0': 1}

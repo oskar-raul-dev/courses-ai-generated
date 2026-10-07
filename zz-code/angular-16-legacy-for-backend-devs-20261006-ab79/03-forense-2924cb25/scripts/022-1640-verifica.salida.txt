@@ -1,0 +1,4 @@
+266 enlaces .md · 0 rotos
+ .../prompts/propuesta-fases-backend.md             | 228 +++++++++++----------
+ .../prompts/propuesta-fases-y-alcance.md           |   2 +-
+ 50 files changed, 588 insertions(+), 328 deletions(-)

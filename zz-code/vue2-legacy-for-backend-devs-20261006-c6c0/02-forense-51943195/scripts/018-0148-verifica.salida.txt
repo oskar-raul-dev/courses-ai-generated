@@ -1,0 +1,59 @@
+== convencion inc14 ==
+rifa 3, logout, mirar Network. Evidencia: GET /raffles/3/numbers cada 5 s con
+el tablero desmontado y sin token."
+
+# Puntos 4-6: la causa raíz, el fix, y la misma prueba EN VERDE
+git tag -a inc/14/suscripcion-zombi-fix -m "Causa raíz: boardRefreshEpic sin
+takeUntil: el interval que abre el switchMap no se cancela nunca. Fix:
+takeUntil(STOP_BOARD_REFRESH, LOGOUT) último en el pipe interno. Regresión:
+marble test que verifica que el observable completa al llegar el logout."
+```
+
+Con eso, `git diff inc/14/suscripcion-zombi-roto inc/14/suscripcion-zombi-fix`
+**es** el punto 5 del post-mortem —la corrección, aislada del ruido— y los dos
+mensajes de tag son los puntos 1 a 6 escritos donde no se pierden.
+== guia 15 ==
+
+- **Presupuesto horario.** Las 96 h y el reparto por fase circulan en varios
+  documentos sin una fuente única que mande. La fuente natural es
+  `alcance-del-proyecto.md` (§1 y §7); falta que el resto la cite en vez de
+  repetir el número. Sigue abierto.
+- ~~**Tablas anchas heredadas.**~~ **Resuelto**, en parte reescribiendo y en
+  parte corrigiendo la regla. Las dos tablas narrativas que de verdad
+  incumplían —la matriz de entornos de la Fase 0 (seis columnas) y el mapa de
+  deuda de la Fase 11 (cinco, con párrafos por celda)— se convirtieron en listas
+  con subtítulos al extraer los apéndices A9 y A12. Las siete restantes son
+  tablas de equivalencia de cuatro columnas, y §3 ahora las admite
+  explícitamente.
+- **El cuaderno de incidentes está vacío.** Los veinte IDs están reservados y
+  trazados desde las fases que los producen, pero ningún enunciado está
+  redactado: el archivo tiene índice y plantilla. Es el hueco de autocontención
+  más grande del curso y está marcado como tal en el README. → Redactar los
+  veinte siguiendo la estructura de ocho puntos de §13. Prioridad alta.
+- **El índice del cuaderno de incidentes es una tabla de seis columnas.** Es una
+  excepción deliberada a §3: un registro de veinte filas donde ninguna celda
+  necesita explicación es el caso arquetípico de tabla, y como lista se volvería
+  ilegible. Queda documentado acá para que no se "corrija" por error.
+
+Resueltos desde la última revisión —se dejan anotados para no repetir el
+trabajo—: la normalización de voseo a tuteo en las doce fases, los ocho
+apéndices y los `prompts-*.md`; el reemplazo de las citas a archivos que nunca
+existieron (`PLAN-DEL-CURSO`, `TUTORIAL-REACT16`, `DECISIONES-PENDIENTES`,
+== README 96-112 ==
+**Un cuaderno de incidentes** (`cuaderno-incidentes.md`): veinte tickets vagos
+—como llegan en la vida real— con pistas escalonadas y solución de referencia
+colapsada. Es donde se entrena el músculo central del curso. Cinco de los veinte
+son de RxJS, porque son los que más caro salen.
+
+> ⚠️ **Estado del cuaderno.** Los veinte IDs están reservados y trazados desde
+> las fases que los producen, pero **los enunciados todavía no están
+> redactados**: el archivo tiene la plantilla y el índice, no los incidentes. Es
+> el hueco conocido más grande del curso. Mientras tanto, cada fase trae sus
+> propios ejercicios de diagnóstico y su
+> pieza forense, que cubren el mismo músculo con menos ceremonia.
+>
+> El cuaderno del **track BE opcional** (`cuaderno-incidentes-be.md`) sí está
+> completo: sus dieciséis incidentes están redactados, y seis de ellos son
+> hermanos de los de arriba — mismo síntoma, otra capa, otra causa raíz.
+
+**Y una convención de git** (`00-convencion-de-git-y-tags.md`): cómo versionas

@@ -1,0 +1,48 @@
+=== cabeceras de fases ===
+00-setup-hola-mundo.md: 5:> Apéndices de apoyo: A03 (Node y npm) · A04 (`inject()` vs constructor) · A12 (Apple Silicon 🔥)
+00-setup-hola-mundo.md: 6:> Incidentes asociados: 01
+01-estructura-base-ngmodules.md: 5:> Apéndices de apoyo: A01 (Angular Material 16) · A04 (`inject()` vs constructor)
+01-estructura-base-ngmodules.md: 6:> Incidentes asociados: 02
+02-autenticacion.md: 5:> Apéndices de apoyo: A04 (`inject()` vs constructor) · A06 (RxJS 7 idiomático)
+02-autenticacion.md: 6:> Incidentes asociados: 03
+03-mock-api-caos.md: 5:> Apéndices de apoyo: A03 (Node y npm) · A06 (RxJS 7 idiomático)
+03-mock-api-caos.md: 6:> Incidentes asociados: 04
+04-estado-servicios.md: 5:> Apéndices de apoyo: A06 (RxJS 7 idiomático) · A07 (Estado con servicios)
+04-estado-servicios.md: 6:> Incidentes asociados: 05
+05-standalone-convivencia.md: 5:> Apéndices de apoyo: A01 (Angular Material 16) · A04 (`inject()` vs constructor)
+05-standalone-convivencia.md: 6:> Incidentes asociados: 06, 07
+06-clientes-activos.md: 5:> Apéndices de apoyo: A01 (Angular Material 16) · A05 (Formularios reactivos tipados)
+06-clientes-activos.md: 6:> Incidentes asociados: 07
+07-plantillas-versionadas.md: 5:> Apéndices de apoyo: A05 (Formularios reactivos tipados) · A06 (RxJS 7) · A07 (Estado con servicios)
+07-plantillas-versionadas.md: 6:> Incidentes asociados: 08, 09
+08-formulario-dinamico.md: 5:> Apéndices de apoyo: A05 (Formularios reactivos tipados) · A06 (RxJS 7)
+08-formulario-dinamico.md: 6:> Incidentes asociados: 10, 11
+09-hallazgos-severidad.md: 5:> Apéndices de apoyo: A05 (Formularios reactivos tipados) · A07 (Estado con servicios)
+09-hallazgos-severidad.md: 6:> Incidentes asociados: 12, 13
+10-certificados-vigencia.md: 5:> Apéndices de apoyo: A08 (PDF en cliente con jsPDF 2)
+10-certificados-vigencia.md: 6:> Incidentes asociados: 14, 15
+11-dashboard-alertas.md: 5:> Apéndices de apoyo: A06 (RxJS 7) · A07 (Estado con servicios)
+11-dashboard-alertas.md: 6:> Incidentes asociados: 16
+12-testing-coverage.md: 5:> Apéndices de apoyo: A05 (Formularios tipados) · A06 (RxJS 7) · A11 (Puente 16 → 17+)
+12-testing-coverage.md: 6:> Incidentes asociados: 17, 20
+13-build-despliegue.md: 5:> Apéndices de apoyo: A03 (Node y npm) · A09 (Docker y Kubernetes) · A12 (arm64) 🔥
+13-build-despliegue.md: 6:> Incidentes asociados: 18, 19
+14-casi-prod-kind.md: 5:> Apéndices de apoyo: A09 (Docker y Kubernetes) · A12 (arm64) 🔥
+14-casi-prod-kind.md: 6:> Incidentes asociados: ninguno
+
+=== bloques de reservas ===
+01-estructura-base-ngmodules.md:911:### Reservas para el cuaderno de incidentes
+00-setup-hola-mundo.md:764:### Reservas para el cuaderno de incidentes
+03-mock-api-caos.md:1147:### Reservas para el cuaderno de incidentes
+02-autenticacion.md:976:### Reservas para el cuaderno de incidentes
+05-standalone-convivencia.md:772:### Reservas para el cuaderno de incidentes
+04-estado-servicios.md:763:### Reservas para el cuaderno de incidentes
+06-clientes-activos.md:1416:### Reservas para el cuaderno de incidentes
+07-plantillas-versionadas.md:1375:### Reservas para el cuaderno de incidentes
+09-hallazgos-severidad.md:1322:### Reservas para el cuaderno de incidentes
+08-formulario-dinamico.md:1243:### Reservas para el cuaderno de incidentes
+10-certificados-vigencia.md:1330:### Reservas para el cuaderno de incidentes
+11-dashboard-alertas.md:1257:### Reservas para el cuaderno de incidentes
+12-testing-coverage.md:1243:### Reservas para el cuaderno de incidentes
+14-casi-prod-kind.md:663:### Reservas para el cuaderno de incidentes
+13-build-despliegue.md:931:### Reservas para el cuaderno de incidentes

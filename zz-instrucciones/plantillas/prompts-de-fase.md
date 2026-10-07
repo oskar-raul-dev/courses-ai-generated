@@ -64,9 +64,11 @@ Reglas de sesión que no se negocian:
   puertos altos y aleatorios ligados a `127.0.0.1`, nunca los de por defecto (el curso sí puede
   publicarlos; si su Compose los fija, usa un override propio); al terminar, borra tus contenedores con
   sus volúmenes (`docker rm -v`, `compose down -v`) y nada que ya existía; nunca `prune` sin filtro.
-- El código que escribas para probar una idea va a tu directorio de `zz-code/`
-  (`python3 zz-code/nuevo.py {{slug}}`), registrado en el plan §9; lo efímero (logs, salidas,
-  copias), a su `salidas/`. Ninguna prueba en el scratchpad. Ningún documento del curso cita `zz-code/`.
+- Todo el código que escribas va a tu directorio de `zz-code/` (`python3 zz-code/nuevo.py {{slug}}`),
+  registrado en el plan §9; lo efímero (logs, salidas, copias), a su `salidas/`. Nada en el scratchpad
+  ni en `/tmp`. Los comandos sueltos que producen algo citable se copian a un archivo, y el `README.md`
+  del directorio queda al día al cerrar: cómo correr y medir cada prueba, comandos en orden e
+  intermedios que amasan la salida. Ningún documento del curso cita `zz-code/`.
 - Git lo manejo yo. Borra solo archivos nombrados; nunca directorios ni `rm -rf`.
 - Al cerrar, deja el plan al día (§3, §6, §7, §8) con las trampas, los tags y lo que queda por borrar.
 ```

@@ -1,0 +1,6 @@
+  A2-mini-design-system.md: #11-ejercicios  → sin candidato
+  A4-cra-por-dentro.md: #8-️-tabla-cuándo-hacer-qué  → sin candidato
+  A6-redux-clasico-vs-toolkit.md: #9-conectar-el-componente-connect-vs-useselectoruse dispatch  → ¿'#9-conectar-el-componente-connect-vs-useselectorusedispatch'?
+  A7-redux-observable-epica-por-epica.md: #-marble-testing-con-rxjs-marbles-sintaxis-mínima  → sin candidato
+
+  anclas realmente rotas: 4

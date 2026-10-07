@@ -1,0 +1,12 @@
+A8 'Ruta forense' count:
+21
+A8 incidentes:
+21
+A16 'Ruta forense' count:
+0
+A16 incidentes:
+20
+A8-BE 'Ruta forense':
+12
+A8-BE incidentes:
+12

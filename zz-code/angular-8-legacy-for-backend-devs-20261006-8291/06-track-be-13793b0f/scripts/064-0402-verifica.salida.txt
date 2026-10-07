@@ -1,0 +1,4 @@
+filas de fase leídas: 15
+desajustes: 0
+suma de horas de las 14 obligatorias: 108h (README dice 108h)
+suma de ejercicios: 425 (README dice 410 + 15 = 425)

@@ -1,0 +1,6 @@
+== archivos .md citados que no existen (fuera de prompts/) ==
+  AUDIT-DIVERGENCE.md -> be04-el-audit-log-que-escribia-el-navegador.md:452, be04-el-audit-log-que-escribia-el-navegador.md:539, be04-el-audit-log-que-escribia-el-navegador.md:546
+  CONTRACT.md -> be00-el-contrato-auditoria-del-mock.md:18, be00-el-contrato-auditoria-del-mock.md:25, be00-el-contrato-auditoria-del-mock.md:26, be00-el-contrato-auditoria-del-mock.md:27, be00-el-contrato-auditoria-del-mock.md:77
+  IRRECOVERABLE.md -> be08-la-contencion-y-lo-irrecuperable.md:33, be08-la-contencion-y-lo-irrecuperable.md:324, be08-la-contencion-y-lo-irrecuperable.md:393, be08-la-contencion-y-lo-irrecuperable.md:469, be08-la-contencion-y-lo-irrecuperable.md:475
+  MEASUREMENTS.md -> be02-medir-la-deriva-de-esquema.md:34, be02-medir-la-deriva-de-esquema.md:81, be02-medir-la-deriva-de-esquema.md:270, be02-medir-la-deriva-de-esquema.md:297, be02-medir-la-deriva-de-esquema.md:362
+  RANGES-LOSS.md -> be06-los-rangos-y-la-historia-perdida.md:36, be06-los-rangos-y-la-historia-perdida.md:221, be06-los-rangos-y-la-historia-perdida.md:293, be06-los-rangos-y-la-historia-perdida.md:392, be06-los-rangos-y-la-historia-perdida.md:466

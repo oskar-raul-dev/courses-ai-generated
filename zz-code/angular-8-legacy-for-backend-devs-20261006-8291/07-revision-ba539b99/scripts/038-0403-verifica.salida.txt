@@ -1,0 +1,7 @@
+desajustes de horas README↔fase: 0
+=== cuaderno BE: horas ===
+> Tutorial Angular 8 — Laboratorio clínico · Track BE opcional · Documento vivo · **8 horas** repartidas en el mes del track
+> Se trabaja solo. El changelog es `git log -- cuaderno-incidentes-be.md`.
+=== cuaderno base ===
+> Tutorial Angular 8 — Laboratorio clínico · Documento vivo · **14 horas** repartidas en el mes
+> Se trabaja solo. El changelog es `git log -- cuaderno-incidentes.md`.

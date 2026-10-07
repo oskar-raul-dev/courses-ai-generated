@@ -1,0 +1,7 @@
+índice: 20 reservas: 20
+ ⚠️ 6 (05-standalone-convivencia.md) difiere:
+    reserva: "El botón de Nuevo cliente se ve gris y plano desde el martes, pero todo compila" | Convivencia de estilos 🧬 | 🟡
+    índice : "El botón de Nuevo cliente se ve gris y plano desde el martes, pero todo compila" | Convivencia 🧬 | 🟡
+ ⚠️ 7 (05-standalone-convivencia.md) difiere:
+    reserva: "Metí el listado de clientes en el panel y la pantalla se queda en blanco" | Convivencia de estilos 🧬 | 🟡
+    índice : "Metí el listado de clientes en el panel y la pantalla se queda en blanco" | Convivencia 🧬 | 🟡

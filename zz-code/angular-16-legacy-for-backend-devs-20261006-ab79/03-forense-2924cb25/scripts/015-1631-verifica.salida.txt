@@ -1,0 +1,5 @@
+15 piezas revisadas · 0 fallos
+asimetrías: ninguna
+=== enlaces rotos en los archivos tocados ===
+ROTO: prompts/formato-cuaderno-incidentes.md -> forense-fase-NN.md
+fin

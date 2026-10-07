@@ -1,0 +1,26 @@
+=== APÉNDICES: estructura obligatoria (plantilla de apéndice) ===
+ap   idx cuándo refs ejs 🏷️   versión cubierta
+a01  ok  ok     ok   8   ok   Angular Material y CDK 16.2.14
+a02  ok  ok     ok   6   ok   Bootstrap 5.3.x + dart-sass
+a03  ok  ok     ok   7   ok   Node 18.18.2
+a04  ok  ok     ok   8   ok   Angular 16.2.12
+a05  ok  ok     ok   9   ok   Angular 16.2.12 — el tipado llegó en la 14
+a06  ok  ok     ok   9   ok   RxJS 7.8.1
+a07  ok  ok     ok   8   ok   Angular 16.2.12 + RxJS 7.8.1
+a08  ok  ok     ok   7   ok   `jspdf` 2.5.1 + `jspdf-autotable` 3.8.x
+a09  ok  ok     ok   8   ok   Docker Engine 24+
+a10  ok  ok     ok   7   ok   de Angular 8.2.14 / 9 hasta 16.2.12
+a11  ok  ok     ok   5   ok   de 16.2.12 hacia 17 y posteriores
+a12  ok  ok     ok   6   ok   ninguna fijada; es un apéndice de plataforma
+a13  ok  ok     ok   5   ok   `@angular/localize` 16.2.12
+
+=== enlaces .md rotos dentro del curso ===
+  ROTO prompts/plantillas-de-capitulo.md -> 00-convencion-de-git-y-tags.md
+  ROTO prompts/plantillas-de-capitulo.md -> 00-convencion-de-git-y-tags.md
+  ROTO prompts/guia-de-estilo-y-convenciones.md -> 00-convencion-de-git-y-tags.md
+  rotos: 3
+
+=== incidentes citados en forenses vs índice del cuaderno ===
+  IDs en el índice del cuaderno: 0 [] …
+  citados en forenses: ['08', '09', '10', '11', '12', '13', '14', '15', '17', '18', '19', '20']
+  citados que NO existen: ['08', '09', '10', '11', '12', '13', '14', '15', '17', '18', '19', '20']

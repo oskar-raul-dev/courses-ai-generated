@@ -1,0 +1,121 @@
+=== 1. Enlaces rotos en TODO el curso ===
+ROTO: (../00-convencion-de-git-y-tags.md
+ROTO: (../a12-arm64-m1.md
+ROTO: (../a13-docker-colima.md
+ROTO: (../docker-container-legacy/0-programa-del-curso.md
+ROTO: (../docker-container-legacy/19-dev-containers.md
+ROTO: (../docker-container-legacy/21-arquitecturas-y-emulacion.md
+ROTO: (../docker-container-legacy/22-apple-silicon-y-hosts.md
+ROTO: (../docker-container-legacy/23-estudios-de-caso-multiplataforma.md
+ROTO: (../docker-container-legacy/README.md
+ROTO: (./00-setup-hola-mundo.md
+ROTO: (./01-estructura-base-ngrx.md
+ROTO: (./02-i18n.md
+ROTO: (./03-autenticacion.md
+ROTO: (./04-mock-api-caos.md
+ROTO: (./05-pacientes.md
+ROTO: (./06-ordenes.md
+ROTO: (./07-muestras-custodia.md
+ROTO: (./08-resultados-rangos.md
+ROTO: (./09-entrega-pdf.md
+ROTO: (./10-dashboard.md
+ROTO: (./11-trazabilidad-audit-log.md
+ROTO: (./12-testing-coverage.md
+ROTO: (./13-build-despliegue.md
+ROTO: (./14-casi-prod-kind.md
+ROTO: (./a03-node-npm.md
+ROTO: (./a04-webpack-oculto.md
+ROTO: (./a05-rxjs.md
+ROTO: (./a06-ngrx.md
+ROTO: (./a07-i18n.md
+ROTO: (./a08-pdf-cliente.md
+ROTO: (./a09-kubernetes.md
+ROTO: (./a12-arm64-m1.md
+ROTO: (./a13-docker-colima.md
+ROTO: (./forense-fase-00.md
+ROTO: (./forense-fase-01.md
+ROTO: (./forense-fase-02.md
+ROTO: (./forense-fase-03.md
+ROTO: (./forense-fase-04.md
+ROTO: (./forense-fase-05.md
+ROTO: (./forense-fase-06.md
+ROTO: (./forense-fase-07.md
+ROTO: (./forense-fase-08.md
+ROTO: (./forense-fase-09.md
+ROTO: (./forense-fase-10.md
+ROTO: (./forense-fase-11.md
+ROTO: (./forense-fase-12.md
+ROTO: (./forense-fase-13.md
+ROTO: (./forense-fase-14.md
+ROTO: (./forense-fase-NN.md
+ROTO: (./forense-master.md
+ROTO: (00-convencion-de-git-y-tags.md
+ROTO: (00-setup-hola-mundo.md
+ROTO: (01-estructura-base-ngrx.md
+ROTO: (02-i18n.md
+ROTO: (03-autenticacion.md
+ROTO: (04-mock-api-caos.md
+ROTO: (05-pacientes.md
+ROTO: (06-ordenes.md
+ROTO: (07-muestras-custodia.md
+ROTO: (08-resultados-rangos.md
+ROTO: (09-entrega-pdf.md
+ROTO: (10-dashboard.md
+ROTO: (11-trazabilidad-audit-log.md
+ROTO: (12-testing-coverage.md
+ROTO: (13-build-despliegue.md
+ROTO: (14-casi-prod-kind.md
+ROTO: (cuaderno-incidentes.md
+ROTO: (forense-fase-00.md
+ROTO: (forense-fase-01.md
+ROTO: (forense-fase-02.md
+ROTO: (forense-fase-03.md
+ROTO: (forense-fase-04.md
+ROTO: (forense-fase-05.md
+ROTO: (forense-fase-06.md
+ROTO: (forense-fase-07.md
+ROTO: (forense-fase-08.md
+ROTO: (forense-fase-09.md
+ROTO: (forense-fase-10.md
+ROTO: (forense-fase-11.md
+ROTO: (forense-fase-12.md
+ROTO: (forense-fase-13.md
+ROTO: (forense-fase-14.md
+ROTO: (forense-master.md
+(sin ROTO = todo resuelve)
+
+=== 2. Cada fase enlaza su pieza y cada pieza su fase ===
+fase 00 → pieza:0   pieza → fase:0
+fase 01 → pieza:2   pieza → fase:1
+fase 02 → pieza:1   pieza → fase:1
+fase 03 → pieza:1   pieza → fase:1
+fase 04 → pieza:1   pieza → fase:1
+fase 05 → pieza:1   pieza → fase:1
+fase 06 → pieza:1   pieza → fase:1
+fase 07 → pieza:1   pieza → fase:1
+fase 08 → pieza:3   pieza → fase:1
+fase 09 → pieza:2   pieza → fase:1
+fase 10 → pieza:1   pieza → fase:1
+fase 11 → pieza:2   pieza → fase:1
+fase 12 → pieza:1   pieza → fase:1
+fase 13 → pieza:2   pieza → fase:1
+fase 14 → pieza:2   pieza → fase:1
+
+=== 3. Enlaces por archivo nuevo ===
+forense-fase-00.md                     5 enlaces
+forense-fase-01.md                     8 enlaces
+forense-fase-02.md                     4 enlaces
+forense-fase-03.md                     4 enlaces
+forense-fase-04.md                     5 enlaces
+forense-fase-05.md                     4 enlaces
+forense-fase-06.md                     5 enlaces
+forense-fase-07.md                     5 enlaces
+forense-fase-08.md                     5 enlaces
+forense-fase-09.md                     7 enlaces
+forense-fase-10.md                     5 enlaces
+forense-fase-11.md                     6 enlaces
+forense-fase-12.md                     5 enlaces
+forense-fase-13.md                     7 enlaces
+forense-fase-14.md                     7 enlaces
+forense-master.md                      61 enlaces
+prompts/formato-piezas-forenses.md     3 enlaces

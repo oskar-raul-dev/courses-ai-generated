@@ -1,0 +1,4 @@
+filas de índice: 20
+anclas del índice rotas: 0
+ids duplicados: ninguno
+faltan del 01 al 20: ninguno

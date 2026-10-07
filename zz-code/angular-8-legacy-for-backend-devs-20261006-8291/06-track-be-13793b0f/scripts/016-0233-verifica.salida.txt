@@ -1,0 +1,21 @@
+=== cuaderno → track forense ===
+16:Son las mismas del track forense y van siempre en este orden, porque cada una cuesta un orden de magnitud más que la anterior:
+23:El índice de síntomas que cruza *"esto es lo que veo"* con *"esta es la ruta"* está en [`forense-master.md`](forense-master.md) §3. Empieza ahí cuando no sepas ni de qué fase es tu problema.
+3432:Si concluiste que el despliegue no llegó, se descarta en el paso 1 del recorrido de `forense-fase-13.md`: los digests de la imagen coinciden. Si concluiste que es la CDN, puede serlo **y se comprueba igual**: si `curl` directo al origen ya devuelve la cabecera mala, la CDN está obedeciendo. Y si tu fix fue reconstruir y volver a desplegar, funciona por accidente esta vez —el HTML nuevo llega con otro momento de caché para algunos— y deja la política intacta: el mismo bug vuelve en el siguiente despliegue, y ahora con el equipo convencido de que redesplegar es un procedimiento de diagnóstico.
+
+=== ¿cada pieza declara el orden barato→caro? ===
+forense-fase-00.md     ok
+forense-fase-01.md     ok
+forense-fase-02.md     NO DECLARA el orden
+forense-fase-03.md     NO DECLARA el orden
+forense-fase-04.md     ok
+forense-fase-05.md     NO DECLARA el orden
+forense-fase-06.md     ok
+forense-fase-07.md     NO DECLARA el orden
+forense-fase-08.md     NO DECLARA el orden
+forense-fase-09.md     NO DECLARA el orden
+forense-fase-10.md     ok
+forense-fase-11.md     ok
+forense-fase-12.md     ok
+forense-fase-13.md     ok
+forense-fase-14.md     NO DECLARA el orden

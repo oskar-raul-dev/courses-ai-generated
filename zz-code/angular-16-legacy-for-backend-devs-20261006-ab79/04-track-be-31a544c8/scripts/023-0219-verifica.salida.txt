@@ -1,0 +1,38 @@
+1) Tags de las fases base
+   sin tag correcto: ✅ ninguna
+
+2) Ejercicios de estilo 🧬 (la guía pide ≥2 desde la Fase 5)
+   05-standalone-convivencia.md             3 
+   06-clientes-activos.md                   2 
+   07-plantillas-versionadas.md             2 
+   08-formulario-dinamico.md                2 
+   09-hallazgos-severidad.md                2 
+   10-certificados-vigencia.md              2 
+   11-dashboard-alertas.md                  2 
+   12-testing-coverage.md                   3 
+   13-build-despliegue.md                   2 
+   14-casi-prod-kind.md                     0 ⚠️
+
+3) Fases BE: comprobación 'el frontend no se toca'
+   be00-el-contrato-auditoria-del-mock.md         — (no la menciona)
+   be01-lumen-y-la-familiaridad-falsa.md          OK
+   be02-estratos-por-procedencia.md               — (no la menciona)
+   be03-el-reemplazo.md                           OK
+   be04-el-salto-de-version-que-nadie-corrio.md   — (no la menciona)
+   be05-la-invariante-que-no-sostenia-nadie.md    — (no la menciona)
+   be06-la-reescritura-a-medias.md                — (no la menciona)
+   be07-el-assessment-de-riesgo.md                OK
+
+4) Cuaderno BE: forma de preparación declarada por incidente
+   be-01: rama
+   be-02: rama
+   be-03: ninguna
+   be-04: sql
+   be-05: sql
+   be-06: sql
+   be-07: rama
+   be-08: sql
+   be-09: sql
+   be-10: rama
+   be-11: ninguna
+   be-12: ninguna

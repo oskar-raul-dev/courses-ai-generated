@@ -1,0 +1,9 @@
+ok 13-build-despliegue.md Acá sí usamos alpine
+ok 14-casi-prod-kind.md el contrato lo fijó la imagen
+ok 14-casi-prod-kind.md preguntarle al nodo qué imágenes tiene
+11-trazabilidad-audit-log.md:619: // NO FUNCIONA, y falla en silencio: el estado que llega aquí ya es el DESPUES.
+14-casi-prod-kind.md:237: # Aqui pasa lo importante de toda la fase: las claves del ConfigMap
+a13-docker-colima.md:134: # imagenes, sus volumenes y su cache (§8).
+a13-docker-colima.md:308: # Apagar uno sin destruirlo (conserva imagenes y volumenes).
+forense-fase-08.md:136: # {"version":3,"file":"main.8a1f2c.js","sources":["webpack:///./src/app/…
+restantes: 5

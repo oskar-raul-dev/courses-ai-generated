@@ -1,0 +1,49 @@
+  20  🟢 
+=== A8 formato §3 reparto ===
+### El reparto de los 21
+
+Las fases ya lo fijaron al reservar sus IDs, y **ese reparto manda**: son
+entregables cerrados y reasignar un ID partiría alguno de ellos.
+
+- **Semana 1** — fases 0-4 · **7 incidentes** (01, 02, 03, 04, 05, 06, 08):
+  setup, la máquina de al lado, el store que no se entera, la fecha en el idioma
+  equivocado, la sesión que sobrevive en la otra pestaña, la respuesta malformada
+  con `200` y el intermitente.
+- **Semana 2** — fases 5-8 · **7 incidentes** (07, 09, 10, 11, 12, 13, 21): la
+  baja lógica que sigue en la lista, la escritura cancelada, la custodia
+  imposible, la norma que falta, la doble firma y la alerta del sábado.
+- **Semana 3** — fases 9-11 · **4 incidentes** (14, 15, 16, 17): el informe con
+  datos viejos, los acentos del PDF, el dashboard que se arrastra y el asiento de
+  auditoría que acusa a quien no estaba.
+- **Semana 4** — fases 12-13 · **3 incidentes** (18, 19, 20): el test que falla
+  en la máquina de al lado, PROD hablándole a UAT y el 404 al recargar.
+
+> 📝 **Esto no coincide con `propuesta-fases-y-alcance.md` §6, y el índice gana.**
+> Aquel documento proyectaba 4-5 / 5-6 / 5-6 / 4-5 con una semana por color
+> (🟢 la primera, 🔴 la última). Al cerrar las quince fases, las reservas dieron
+> 7 / 7 / 4 / 3, y la escala real quedó **2 🟢 · 8 🟡 · 9 🟠 · 2 🔴**: el curso
+> carga incidentes en las fases que producen material y se aligera al final,
+> cuando el estudiante ya está desplegando. Forzar el reparto teórico exigiría
+> inventar incidentes en fases que declararon no tener ninguno —la 6 y la 14, por
+> escrito— o mover IDs entre fases cerradas. **Se escribe el reparto real y se
+> dice por qué**, que es más honesto que una curva bonita.
+>
+> Lo que sí se conserva de §6 es la **progresión**: la semana 1 arranca con los
+> dos únicos 🟢 y no tiene ningún 🔴, y los dos 🔴 están los dos en la semana 4.
+
+### Categorías
+
+Máquina de estados · concurrencia · tiempo · normativo · trazabilidad ·
+integración · performance · UI · estado (store) · i18n · despliegue · testing.
+
+Son doce y están cerradas en `propuesta-fases-y-alcance.md` §6. No se inventan
+categorías nuevas al redactar: si un incidente no entra en ninguna, casi siempre
+es que el enunciado mezcla dos incidentes.
+
+### Dificultad
+
+🟢 fácil · 🟡 intermedio · 🟠 difícil · 🔴 muy difícil. Va también un **tiempo
+sugerido** por incidente (20-40 min los 🟢, hasta 2h los 🔴), porque sin él el
+estudiante no sabe cuándo está atascado de verdad.
+
+---

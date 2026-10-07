@@ -1,0 +1,9 @@
+**Causa raíz.** El bug existe en los dos entornos; lo que cambia es **quién
+avisa**. En `store/index.js`:
+
+```js
+strict: process.env.NODE_ENV !== "production",   // caro: solo en dev
+```
+
+=== C02: menciones de concurrencia/carrera fuera del 06 ===
+ inc 06 -> 9 menciones

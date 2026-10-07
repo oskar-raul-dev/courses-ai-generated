@@ -1,0 +1,67 @@
+Exit code 1
+== auditEntries (nombre prohibido) ==
+== estados fuera del flujo canónico ==
+   7 'collected'
+   8 'complete'
+  11 'delivered'
+   5 'discarded'
+  10 'expired'
+  16 'in_process'
+   8 'partial_results'
+   8 'pending'
+  18 'processed'
+   6 'received'
+   1 'scheduled'
+  14 'validated'
+== identificadores en español en código ==
+12-testing-coverage.md | var resultado = patientsReducer(initialState, accionAjena);
+12-testing-coverage.md | var estadoPrevio: PatientsState = { ...initialState, error: 'algo viejo' };
+12-testing-coverage.md | var resultado = patientsReducer(estadoPrevio, accion);
+12-testing-coverage.md | var estadoPrevio: PatientsState = { ...initialState, loading: true };
+12-testing-coverage.md | var resultado = patientsReducer(estadoPrevio, accion);
+12-testing-coverage.md | var resultado = patientsReducer(initialState, accion as any);
+12-testing-coverage.md | var estadoPrevio: PatientsState = {
+12-testing-coverage.md | var resultado = patientsReducer(estadoPrevio, accion);
+12-testing-coverage.md | var estadoPrevio: PatientsState = { ...initialState, saving: true };
+12-testing-coverage.md | var resultado = patientsReducer(estadoPrevio, accion);
+12-testing-coverage.md | var estado: PatientsState = {
+12-testing-coverage.md | var resultado = PatientsSelectors.selectAllPatients.projector(estado.items);
+12-testing-coverage.md | var resultado = PatientsSelectors.selectFilteredPatients.projector(activos, 'ana');
+a01-material.md | definir mas columnas de las que muestras: las que no estan en la lista
+be02-medir-la-deriva-de-esquema.md | { $match: { paciente: { $size: 0 } } },
+bea-04-agregaciones-como-instrumento-de-medida.md | { $match: { paciente: { $size: 0 } } }      // <- los rotos
+bea-08-tiempo-zonas-y-fechas-en-mongo.md | java.util.Date fecha = new java.util.Date();
+bea-12-datos-de-prueba-y-volumen.md | var pacientes = generarPacientes(100);   // nombres, correos y fechas al azar
+bea-12-datos-de-prueba-y-volumen.md | function nombreCompleto() { return pick(NOMBRES) + ' ' + pick(APELLIDOS); }
+bea-12-datos-de-prueba-y-volumen.md | function fechaNacimiento() {
+bea-12-datos-de-prueba-y-volumen.md | var pacientes = [];
+bea-12-datos-de-prueba-y-volumen.md | base.name = nombreCompleto();
+bea-12-datos-de-prueba-y-volumen.md | base.birthDate = fechaNacimiento();
+bea-12-datos-de-prueba-y-volumen.md | base.fullName = nombreCompleto();
+bea-12-datos-de-prueba-y-volumen.md | base.birthDate = fechaNacimiento();
+cuaderno-incidentes-be.md | { $match: { paciente: { $size: 0 } } },
+cuaderno-incidentes-be.md | public void muestraProcesadaSiempreTieneAsientoOMarcaDeFallo() {
+cuaderno-incidentes-be.md | evidence: { orden: { status: "in_process" },
+cuaderno-incidentes-be.md | muestras: ["8801:processed", "8802:processed"],
+cuaderno-incidentes-be.md | sampleRepository.save(muestra(8801, 4021, "processed"));
+cuaderno-incidentes-be.md | sampleRepository.save(muestra(8802, 4021, "processed"));
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+  File "/Users/oskar/.pyenv/versions/3.13.4/lib/python3.13/re/__init__.py", line 177, in search
+    return _compile(pattern, flags).search(string)
+           ~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/oskar/.pyenv/versions/3.13.4/lib/python3.13/re/__init__.py", line 350, in _compile
+    p = _compiler.compile(pattern, flags)
+  File "/Users/oskar/.pyenv/versions/3.13.4/lib/python3.13/re/_compiler.py", line 748, in compile
+    p = _parser.parse(p, flags)
+  File "/Users/oskar/.pyenv/versions/3.13.4/lib/python3.13/re/_parser.py", line 980, in parse
+    p = _parse_sub(source, state, flags & SRE_FLAG_VERBOSE, 0)
+  File "/Users/oskar/.pyenv/versions/3.13.4/lib/python3.13/re/_parser.py", line 459, in _parse_sub
+    itemsappend(_parse(source, state, verbose, nested + 1,
+                ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                       not nested and not items))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/oskar/.pyenv/versions/3.13.4/lib/python3.13/re/_parser.py", line 865, in _parse
+    raise source.error("missing ), unterminated subpattern",
+                       source.tell() - start)
+re.PatternError: missing ), unterminated subpattern at position 12

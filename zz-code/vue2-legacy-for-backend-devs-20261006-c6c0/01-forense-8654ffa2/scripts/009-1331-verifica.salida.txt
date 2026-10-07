@@ -1,0 +1,17 @@
+=== enlaces markdown en los dos masters ===
+OK   ../prompts/convencion-de-git-y-tags.md
+OK   00-audit-contrato.md
+
+=== comprobación explícita ===
+../prompts/convencion-de-git-y-tags.md
+00-audit-contrato.md
+
+=== git status paquete ===
+ M ../prompts/convencion-de-git-y-tags.md
+ M ../prompts/guia-de-estilo-y-convenciones.md
+ M ../prompts/plantilla-de-fase.md
+?? ../01-vue2-legacy/forense-master.md
+?? forense-master.md
+?? ../contenido_forense.md
+?? ../prompts/formato-cuaderno-incidentes.md
+?? ../prompts/formato-piezas-forenses.md

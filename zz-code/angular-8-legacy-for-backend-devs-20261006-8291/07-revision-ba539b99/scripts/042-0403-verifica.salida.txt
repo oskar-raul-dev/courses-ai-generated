@@ -1,0 +1,16 @@
+  ⓘ 01-estructura-base-ngrx.md: menciona Fase 0 (anterior) en §3
+  ⓘ 04-mock-api-caos.md: menciona Fase 0 (anterior) en §3
+  ⓘ 05-pacientes.md: menciona Fase 3 (anterior) en §3
+  ⓘ 05-pacientes.md: menciona Fase 4 (anterior) en §3
+  ⓘ 06-ordenes.md: menciona Fase 4 (anterior) en §3
+  ⓘ 06-ordenes.md: menciona Fase 5 (anterior) en §3
+  ⓘ 07-muestras-custodia.md: menciona Fase 5 (anterior) en §3
+  ⓘ 08-resultados-rangos.md: menciona Fase 4 (anterior) en §3
+  ⓘ 08-resultados-rangos.md: menciona Fase 5 (anterior) en §3
+  ⓘ 09-entrega-pdf.md: menciona Fase 8 (anterior) en §3
+  ⓘ 10-dashboard.md: menciona Fase 4 (anterior) en §3
+  ⓘ 10-dashboard.md: menciona Fase 8 (anterior) en §3
+  ⓘ 11-trazabilidad-audit-log.md: menciona Fase 5 (anterior) en §3
+  ⓘ 11-trazabilidad-audit-log.md: menciona Fase 8 (anterior) en §3
+  ⓘ 13-build-despliegue.md: menciona Fase 10 (anterior) en §3
+referencias de diferimiento revisadas: 42 inválidas: 0

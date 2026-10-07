@@ -1,0 +1,4 @@
+ok: 00-setup-hola-mundo.md
+ok: 01-estructura-base-legacy.md
+ok: 02-autenticacion-minima.md
+ok: 03-mock-api-minima.md

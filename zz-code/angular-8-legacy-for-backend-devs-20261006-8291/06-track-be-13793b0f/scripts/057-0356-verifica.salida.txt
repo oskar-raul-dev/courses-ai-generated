@@ -1,0 +1,5 @@
+15 piezas revisadas · 0 fallos
+═══ 7. ANGULAR-8: verificación final ═══
+  ejercicios de los 12 apéndices BE: 94 · conteos declarados = reales
+  cuaderno BE: 12 filas de índice · 12 entradas · 12 soluciones
+  piezas forenses del track base: 15 + master

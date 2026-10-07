@@ -1,0 +1,60 @@
+────────────────────────────────────────────────────────────────────────
+forense-fase-05.md · Paso 2 — Si dice `Standalone[…]`: la pregunta no es "qué falta" 
+|---|---|
+| Añadir el provider también en la ruta del panel | si el panel necesita **otro** tamaño de página. Es la respuesta correcta cuando el valor es de la pantalla |
+| Darle al token un valor por defecto: `new InjectionToken<number>('CLIENT_LIST_PAGE_SIZE', { providedIn: 'root', factory: () => 25 })` | si el token tiene un valor razonable siempre. **Es el arreglo del ticket**: un componente reutilizable no puede exigir que cada sitio que lo monte sepa configurarlo |
+| `inject(CLIENT_LIST_PAGE_SIZE, { optional:
+
+────────────────────────────────────────────────────────────────────────
+forense-fase-05.md · Paso 3 — Si dice `…Module`: la búsqueda de siempre
+
+# ¿Y el módulo que aparece en el paréntesis lo importa?
+grep -n "imports" src/app/core/core.module.ts
+```
+
+El caso típico de este proyecto: alguien quitó `provideHttpClient(...)` de los `providers` de `CoreModule` —donde lo dejó la Fase 2— y todo lo que pide `HttpClient` deja de resolverse. Como `CoreModule` sólo se importa en `AppModule`, el paréntesis dice `AppModule`.
+
+────────────────────────────────────────────────────────────────────────
+forense-fase-07.md · Paso 4 (ticket 1) — Cómo se demuestra que no hay bug
+2. **Guardó `templateVersion: 1`**, y ese campo no ha cambiado.
+3. **La pantalla pide la v1 y pinta tres ítems**, que es lo que la v1 tiene.
+
+Y la frase que cierra el ticket, que es la parte difícil porque contradice a quien lo reportó:
+
+> *"No está desactualizada: está congelada, y es lo que tiene que pasar. Una inspección firmada en 2023 dice lo que se inspeccionó en 2023. Si se re-renderizara con la norma de hoy, el certificado que salió de ella estaría afirmando algo que nadie comprobó."*
+
+────────────────────────────────────────────────────────────────────────
+forense-fase-07.md · Paso 5 (ticket 2) — Dónde está la línea
+```bash
+# Los dos sitios donde puede estar, y son pocos:
+grep -rn "resolveTemplateVersion" src/app --include="*.ts" | grep -v spec
+```
+
+**Cada aparición de `resolveTemplateVersion` hay que justificarla.** Es correcta cuando se está **empezando** una inspección nueva —ahí sí se pregunta qué versión rige hoy— y es un bug en cualquier sitio donde se esté **leyendo** una inspección existente. La Fase 8 §5.9 tiene el único uso legítimo del curso.
+
+────────────────────────────────────────────────────────────────────────
+forense-fase-12.md · Sospechoso 1 — El reloj
+Un test que corra a las **23:59:59 del 31 de diciembre** genera un `id` con el año siguiente. Falla una vez al año, durante un segundo, en un pipeline que probablemente no esté corriendo. Es la clase de intermitente que nadie caza nunca — y es una crítica legítima al diseño, no al test: **un método que pregunta la hora por su cuenta no se puede probar de forma determinista.**
+
+```ts
+// ✅ El arreglo, y es de diseño: el instante entra como parámetro.
+issue(inspectionId: number, now: string): void { … }
+```
+
+────────────────────────────────────────────────────────────────────────
+forense-fase-12.md · Sospechoso 2 — El azar
+
+```ts
+// ❌ expect(headers.get('X-Correlation-Id')).toBe('3f2a9c1e-…');
+// ✅
+expect(headers.get('X-Correlation-Id')).toMatch(/^[0-9a-f-]{36}$/);
+```
+
+────────────────────────────────────────────────────────────────────────
+forense-fase-12.md · Sospechoso 4 — La asincronía
+
+  expect(received.length).toBe(3);
+}));
+```
+
+`done` también funciona y es peor: un `done` que no se llama **tarda cinco segundos en fallar**, y con veinte tests así el pipeline pasa de dos minutos a diez sin que nadie sepa por qué.

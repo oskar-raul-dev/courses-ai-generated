@@ -1,0 +1,33 @@
+=== ¿D1–D6 quedaron anotadas en la guía §15? ===
+- ~~**Tablas anchas heredadas.**~~ **Resuelto**, en parte reescribiendo y en
+  parte corrigiendo la regla. Las dos tablas narrativas que de verdad
+  incumplían —la matriz de entornos de la Fase 0 (seis columnas) y el mapa de
+  deuda de la Fase 11 (cinco, con párrafos por celda)— se convirtieron en listas
+  con subtítulos al extraer los apéndices A9 y A12. Las siete restantes son
+  tablas de equivalencia de cuatro columnas, y §3 ahora las admite
+  explícitamente.
+- ~~**El cuaderno de incidentes está vacío.**~~ **Resuelto.** Los veinte
+  enunciados están redactados siguiendo la estructura de ocho puntos de §13, con
+  sus tres pistas escalonadas y su solución de referencia colapsada. Se agregó
+  además la sección 🩺 "Entrar por el síntoma" —método de cuatro preguntas y tabla
+  de síntoma a herramienta—, que el cuaderno del track BE replica. La plantilla,
+  que vivía embebida en el archivo como "Incidente 01", se extrajo a
+  `prompts/plantilla-de-incidente.md`; su hermana de backend es
+  `plantilla-de-incidente-be.md`.
+- **Seis tablas superan las cuatro columnas, y las seis son excepciones
+  deliberadas a §3.** La regla de §3 apunta a las tablas *narrativas* —aquellas
+  cuyas celdas necesitan una frase para entenderse—, y ninguna de estas lo es: son
+  **registros**, con celdas de una o dos palabras, donde pasar a lista con
+  subtítulos las volvería ilegibles. Quedan documentadas acá para que no se
+  "corrijan" por error:
+  - los **índices de los dos cuadernos de incidentes** (seis columnas: ID, fase,
+    título, categoría, dificultad, estado). Es el caso arquetípico de tabla;
+  - las dos **matrices de variables por ambiente** (`be-a-02` §7 y `be09` §3), de
+    cinco columnas, una por ambiente. Son las hermanas de la matriz de entornos de
+    la Fase 0 que sí se convirtió a lista, y se conservan porque aquí las celdas
+
+=== ¿existe el script de siembra del incidente 19? ===
+  NO existe (esperado: el incidente instruye a escribirlo)
+
+=== ¿el plan está referenciado desde algún .md? ===
+completado_cuaderno_incidentes.md

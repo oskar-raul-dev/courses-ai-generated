@@ -1,0 +1,4 @@
+forense-fase-01.md | Paso 5 bis — La prueba que lo convierte en excepción
+forense-fase-02.md | Paso 5 — Por qué el fallback no lo tapó
+forense-fase-07.md | Paso 6 — El fix mínimo, que depende de cuál de las cinco fue
+forense-fase-13.md | Paso 7 — Contención: el feature flag, a las siete de la tarde

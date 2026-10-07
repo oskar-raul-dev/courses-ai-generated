@@ -1,0 +1,26 @@
+#1 transferring dockerfile: 204B done
+#3 transferring context: 2B done
+#5 0.162 Get:1 http://deb.debian.org/debian bullseye InRelease [75.1 kB]
+#5 0.205 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+#5 0.229 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+#5 0.258 Get:4 http://deb.debian.org/debian bullseye/main arm64 Packages [7955 kB]
+#5 0.442 Get:5 http://deb.debian.org/debian bullseye-updates/main arm64 Packages [16.3 kB]
+#5 1.373 E: Release file for http://deb.debian.org/debian-security/dists/bullseye-security/InRelease is expired (invalid since 1d 6h 39min 54s). Updates for this repository will not be applied.
+#5 ERROR: process "/bin/sh -c apt-get update && apt-get install -y --no-install-recommends libpq-dev  && docker-php-ext-install pdo_pgsql  && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+0.162 Get:1 http://deb.debian.org/debian bullseye InRelease [75.1 kB]
+0.205 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+0.229 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+0.258 Get:4 http://deb.debian.org/debian bullseye/main arm64 Packages [7955 kB]
+0.442 Get:5 http://deb.debian.org/debian bullseye-updates/main arm64 Packages [16.3 kB]
+1.373 E: Release file for http://deb.debian.org/debian-security/dists/bullseye-security/InRelease is expired (invalid since 1d 6h 39min 54s). Updates for this repository will not be applied.
+ERROR: failed to build: failed to solve: process "/bin/sh -c apt-get update && apt-get install -y --no-install-recommends libpq-dev  && docker-php-ext-install pdo_pgsql  && rm -rf /var/lib/apt/lists/*" did not complete successfully: exit code: 100
+=== base OS de la imagen ===
+Unable to find image 'php:7.4-cli' locally
+7.4-cli: Pulling from library/php
+Digest: sha256:620a6b9f4d4feef2210026172570465e9d0c1de79766418d3affd09190a7fda5
+Status: Downloaded newer image for php:7.4-cli
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+PHP 7.4.33 (cli) (built: Nov 15 2022 03:39:38) ( NTS )
+Shell cwd was reset to /Users/oskar/Developer/Learning/courses-ia-generated

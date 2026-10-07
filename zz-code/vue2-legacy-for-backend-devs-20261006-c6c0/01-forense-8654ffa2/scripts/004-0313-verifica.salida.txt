@@ -1,0 +1,88 @@
+=== A16: apéndices en la convención ===
+65:  **Apéndice A03** es su dueño.
+85:`fase 04:`. Los apéndices usan su código, `a05:`.
+153:> 💡 **Los apéndices normalmente no llevan tag propio.** Son consulta rápida: el
+155:> y los apéndices explican lo que ya está en el repo. Un tag que no apunta a un
+156:> cambio no marca nada. Si algún apéndice llega a dejar archivos versionados
+158:> `apendice-aNN`; todo lo demás que salga de leer uno se commitea con el prefijo
+203:git tag ej/a06/3      # Apéndice A06, ejercicio 3
+373:**Apéndice A09** dedica un apartado a por qué eso te va a morder: con `:latest`
+
+=== A16 §🧪 tags de ejercicios ===
+## 🧪 Tags de ejercicios (opcional, pero baratos)
+
+Los tags de fase son obligatorios; los de ejercicio son tuyos. Van en un
+namespace aparte para que `git tag -l 'fase-*'` siga siendo un índice limpio de
+progreso:
+
+```bash
+git tag ej/f04/17     # Fase 4, ejercicio 17
+git tag ej/a06/3      # Apéndice A06, ejercicio 3
+```
+
+Y entonces `git tag -l 'ej/f04/*'` te lista lo que hiciste de esa fase.
+
+Dos casos donde vale la pena de verdad. El primero, los **ejercicios de
+diagnóstico** —al menos un tercio de cada fase te entrega algo roto y te pide
+reproducir, localizar y explicar—, que piden dos tags en vez de uno:
+
+```bash
+git tag ej/f04/25-roto     # el bug reproducido, antes de tocar nada
+git tag ej/f04/25-fix      # el fix aplicado y verificado
+
+git diff ej/f04/25-roto ej/f04/25-fix
+```
+
+Ese `diff` es la corrección aislada del ruido, y sigue siendo legible dentro de
+seis meses. En este curso además tiene un uso que no es cosmético: buena parte de
+los fixes que enseña son de **una línea** —un `takeUntilDestroyed` que faltaba, un
+`markForCheck()` en el sitio equivocado, una fecha comparada sin offset—, y esa
+línea, vista sola en un diff, es exactamente la lección. Enterrada entre los
+veinte archivos de la fase, no la vuelves a encontrar. Es también, dicho sea de
+paso, el hábito que separa la corrección mínima de la refactorización (guía
+§6.7): si tu diff tiene cuarenta líneas, no hiciste un hotfix.
+
+El segundo caso son los **ejercicios de medición** —los de bundle con
+`--stats-json` de la Fase 1, los del dashboard de la Fase 11, el coverage de la
+Fase 12—, donde el número va en el mensaje del tag y queda pegado al commit que
+lo produjo:
+
+```bash
+git tag -a ej/f12/26 -m "Coverage al cerrar la fase: <tus cifras> de statements
+y de branches. Sin cubrir: el resolver de plantillas y el interceptor de caos."
+```
+
+Después, `git tag -n99 -l 'ej/f12/*'` te devuelve tu cuaderno de mediciones sin
+abrir un archivo.
+
+> ⚠️ **Un cuidado, uno solo.** No crees nunca un tag llamado literalmente
+> `ej/f04`. Git guarda los refs como archivos: si existe el archivo
+> `refs/tags/ej/f04`, no puede existir además el directorio `refs/tags/ej/f04/`,
+> y el `git tag ej/f04/17` falla con un error confuso. Los niveles intermedios
+> del namespace se quedan vacíos, siempre.
+
+---
+
+## 🚑 Incidentes: acá el tag sí es contenido
+
+=== A8 outline ===
+1:# 🏷️ Convención de git: commits y tags de progreso
+2:## Tutorial Angular 8 — Laboratorio clínico
+30:## 📦 Un repo, y el CLI ya lo abrió
+66:## 💬 Los mensajes de commit
+101:## 🏷️ Un tag por fase cerrada
+143:### Los puntos de retorno
+170:## 🧪 Tags de ejercicios (opcional, pero baratos)
+226:## 🚑 Incidentes: acá el tag sí es contenido
+240:# Puntos 1-3: el síntoma reproducido y la prueba de regresión EN ROJO
+246:# Puntos 4-6: la causa raíz, el fix, y la misma prueba EN VERDE
+274:## 🧹 El `db.json` que se ensucia (el truco que más vas a usar)
+307:## 🐳 Un tag de git y una etiqueta de imagen (Fase 13)
+326:## 📈 Los comandos que hacen que esto sirva
+329:# ¿Dónde estoy?
+332:# Cuándo cerré cada fase
+336:# Qué costó una fase, en archivos y líneas
+339:# Volver a un estado sano
+343:# Arrancar un incidente desde la fase que lo produce
+346:# Los ejercicios de una fase, y el cuaderno de incidentes completo
+353:## ✅ Checklist de cierre de fase

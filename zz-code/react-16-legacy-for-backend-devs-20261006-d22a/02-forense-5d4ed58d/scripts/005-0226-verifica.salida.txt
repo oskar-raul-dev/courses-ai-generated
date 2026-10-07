@@ -1,0 +1,15 @@
+1741:> · Hermano del incidente `be-08`, con otra causa raíz
+2385:> ⭐ Uno de los dos incidentes más formativos del curso · Hermano del incidente `be-09`, con otra causa raíz
+3661:> · Hermano del incidente `be-12`, con otra causa raíz
+4115:> · Hermano del incidente `be-13`, con otra causa raíz
+4366:> · Hermano del incidente `be-05`, con otra causa raíz
+4615:> · Hermano del incidente `be-15`, con otra causa raíz
+
+== 5. PLANTILLA DE 9 SECCIONES ==
+  (las fases no listadas cumplen)
+
+== 6. BLOQUE 🏷️ DEL TAG ==
+  (las fases no listadas cumplen)
+
+== 7. APÉNDICES: ¿declaran que no llevan tag? ==
+  (los apéndices no listados lo tienen)

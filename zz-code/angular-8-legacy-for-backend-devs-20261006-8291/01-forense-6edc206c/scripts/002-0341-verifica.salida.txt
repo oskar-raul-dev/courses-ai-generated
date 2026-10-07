@@ -1,0 +1,23 @@
+=== enlaces rotos (bien contados) ===
+ROTO: ../00-convencion-de-git-y-tags.md
+ROTO: ../a12-arm64-m1.md
+ROTO: ../a13-docker-colima.md
+ROTO: ./forense-fase-NN.md
+(sin ROTO = todo resuelve)
+
+=== fase ↔ pieza (mapeo correcto) ===
+00-setup-hola-mundo.md           pieza←fase:1  fase←pieza:1
+01-estructura-base-ngrx.md       pieza←fase:2  fase←pieza:1
+02-i18n.md                       pieza←fase:1  fase←pieza:1
+03-autenticacion.md              pieza←fase:1  fase←pieza:1
+04-mock-api-caos.md              pieza←fase:1  fase←pieza:1
+05-pacientes.md                  pieza←fase:1  fase←pieza:1
+06-ordenes.md                    pieza←fase:1  fase←pieza:1
+07-muestras-custodia.md          pieza←fase:1  fase←pieza:1
+08-resultados-rangos.md          pieza←fase:3  fase←pieza:1
+09-entrega-pdf.md                pieza←fase:2  fase←pieza:1
+10-dashboard.md                  pieza←fase:2  fase←pieza:1
+11-trazabilidad-audit-log.md     pieza←fase:2  fase←pieza:1
+12-testing-coverage.md           pieza←fase:1  fase←pieza:1
+13-build-despliegue.md           pieza←fase:2  fase←pieza:1
+14-casi-prod-kind.md             pieza←fase:2  fase←pieza:1

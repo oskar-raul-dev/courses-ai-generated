@@ -1,0 +1,33 @@
+be00 []
+be01 ['bea-01', 'bea-02']
+be02 ['bea-03', 'bea-04', 'bea-05', 'bea-12']
+be03 ['bea-02', 'bea-03', 'bea-05']
+be04 ['bea-08']
+be05 ['bea-07', 'bea-09']
+be06 ['bea-03', 'bea-08']
+be07 ['bea-02', 'bea-10']
+be08 ['bea-06', 'bea-11']
+
+bea-01 ['be01']
+bea-02 ['be01', 'be02', 'be03', 'be07', 'be08']
+bea-03 ['be02', 'be03', 'be06']
+bea-04 ['be02', 'be05', 'be06']
+bea-05 ['be02', 'be03', 'be05']
+bea-06 ['be08']
+bea-07 ['be05']
+bea-08 ['be04', 'be06']
+bea-09 ['be05', 'be08']
+bea-10 ['be07', 'be08']
+bea-11 ['be08']
+bea-12 ['be02', 'be03', 'be05']
+--- apéndice dice usado por X pero X no lo lista:
+   bea-02 dice be02; be02 no lo lista en su cabecera
+   bea-02 dice be08; be08 no lo lista en su cabecera
+   bea-04 dice be05; be05 no lo lista en su cabecera
+   bea-04 dice be06; be06 no lo lista en su cabecera
+   bea-05 dice be05; be05 no lo lista en su cabecera
+   bea-09 dice be08; be08 no lo lista en su cabecera
+   bea-10 dice be08; be08 no lo lista en su cabecera
+   bea-12 dice be03; be03 no lo lista en su cabecera
+   bea-12 dice be05; be05 no lo lista en su cabecera
+--- fase lista apéndice que no la nombra:

@@ -1,0 +1,29 @@
+## 11. 🚦 Estado y siguiente paso
+
+**Decisiones cerradas:** D0 a D6, recogidas en §5 e incorporadas a los prompts.
+
+**Los apéndices, cerrado:** la regla §9.1 se honra tal como está y el plan entero la
+respeta (§3.5). Ningún `.md` de apéndice lleva bloque 🏷️ ni tag de fase, P0 tuvo prohibido
+tocar §9.1, P2 lo repitió en su punto 5, P7-A y P7-B lo repiten en su última regla y P8 lo
+audita apéndice por apéndice. Lo que P0 añadió es solo lo que faltaba —el prefijo de commit
+(`a4:`, `a02:`) y el `ej/a01/3`—, más una línea que menciona `apendice-aNN` como opción del
+estudiante. El material nunca se lo pide.
+
+**Lo ejecutado, a 2026-09-09:** los ocho pasos completos. En el árbol hay 29
+archivos forenses nuevos, dos cuadernos (12 + 11 incidentes), los dos formatos, y cuatro
+archivos rectores modificados. **Nada de esto está commiteado todavía.**
+
+**Siguiente paso:** los ocho pasos están cerrados y no queda nada por escribir. Las tres
+cosas vivas están en el checklist maestro de §14: **verificar las salidas contra el
+proyecto corriendo** (§13.2), **commitear** el track entero, y **decidir la cuota de
+concurrencia del Curso 02** (§13.1). Los cuatro prompts están cerrados en
+§8: traen las listas de archivos y las tablas de reservas dentro, así que se pegan tal cual.
+
+> 🪦 **Recordatorio, corregido.** El encabezado dice que este archivo se borra cuando P0, P1
+> y P2 estén cerrados. Ya lo están — y borrarlo hoy tiraría P6-bis, P7-A, P7-B y P8, que
+> viven aquí y no en ningún otro sitio. **La condición real de borrado es que P8 pase.** Lo
+> de §3 ya migró a `prompts/convencion-de-git-y-tags.md` y lo de §8/P1 a los dos formatos;
+> lo único que quedará sin hogar el día del borrado son los prompts de costura, y para
+> entonces la costura ya estará hecha.
+
+---

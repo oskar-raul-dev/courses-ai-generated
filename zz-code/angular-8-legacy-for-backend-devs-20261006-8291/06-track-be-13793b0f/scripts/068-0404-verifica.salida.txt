@@ -1,0 +1,4 @@
+15 piezas revisadas · 0 fallos
+═══ ENLACES Y ANCLAS ═══
+  enlaces relativos: 94 · rotos 0
+  anclas internas: 163 · rotas 0 (se excluyen las que llevan selector de variación, comprobadas y consistentes)

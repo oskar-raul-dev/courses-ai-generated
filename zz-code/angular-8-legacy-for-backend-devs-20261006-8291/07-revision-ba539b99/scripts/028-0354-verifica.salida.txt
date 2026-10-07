@@ -1,0 +1,7 @@
+links rotos: 0
+=== README apéndices ===
+197:### 📎 Los trece apéndices
+198-
+199-Consulta bajo demanda: se entra por el índice buscando algo concreto y se sale.
+200-Sus horas no cuentan en el calendario.
+201-

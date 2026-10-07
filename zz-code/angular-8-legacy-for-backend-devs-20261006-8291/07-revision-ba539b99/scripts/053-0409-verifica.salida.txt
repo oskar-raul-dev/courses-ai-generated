@@ -1,0 +1,12 @@
+00-setup-hola-mundo.md:415: console.error('[PatientIntake] fallo el POST', error);
+03-autenticacion.md:471: console.error('[LoginComponent] fallo el login', error);
+a05-rxjs.md:171: tap(function (v) { console.log('1. despues del timeout:', v); }),
+a05-rxjs.md:173: tap(function (v) { console.log('2. despues del map:', v); }),
+a07-i18n.md:386: console.warn('[i18n] clave sin traducción:', params.key);
+be05-la-cadena-de-custodia-y-la-transaccion.md:217: print('RESULTADO: PERMITIDA');
+be05-la-cadena-de-custodia-y-la-transaccion.md:219: print('RESULTADO: RECHAZADA');
+bea-07-transacciones-replica-sets-y-el-standalone.md:68: print('RESULTADO: PERMITIDA');
+bea-07-transacciones-replica-sets-y-el-standalone.md:70: print('RESULTADO: RECHAZADA');
+cuaderno-incidentes-be.md:489: print('ALERTA: las huerfanas subieron de 37 a ' + orphanCount);
+cuaderno-incidentes-be.md:661: if (formas !== 5) { print('ALERTA: ' + formas + ' formas, se esperaban 5'); quit(1); }
+cuaderno-incidentes-be.md:1711: print('ALERTA: ' + corregidosSinAsiento + ' muestras modificadas sin asiento');

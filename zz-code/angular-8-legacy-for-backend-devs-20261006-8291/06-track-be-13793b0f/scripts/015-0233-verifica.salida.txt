@@ -1,0 +1,23 @@
+94:## 📋 Índice
+=== forenses citados desde el cuaderno ===
+1
+=== incidentes citados por forenses (patrón amplio) ===
+forense-fase-00.md     ['01', '03']   Incidentes del cuaderno que usan esta ruta:** 01 (el proyecto que no arranca) y 
+forense-fase-01.md     ['02', '05', '07']   Incidentes del cuaderno que usan esta ruta:** 02 (la pantalla de activos en blan
+forense-fase-02.md     ['03']   Incidentes del cuaderno que usan esta ruta:** 03 (la sesión que se cae sin decir
+forense-fase-03.md     ['04', '13']   Incidentes del cuaderno que usan esta ruta:** 04 (la pantalla que a veces carga)
+forense-fase-04.md     ['05', '16']   Incidentes del cuaderno que usan esta ruta:** 05 (el estado que devuelve siempre
+forense-fase-05.md     ['01', '06', '07', '13']   Incidentes del cuaderno que usan esta ruta:** 06 y 07, los dos de convivencia de
+forense-fase-06.md     ['08', '09']   Incidentes del cuaderno que usan esta ruta:** ninguno directamente, y es a propó
+forense-fase-07.md     ['08', '09', '10', '12']   Incidentes del cuaderno que usan esta ruta:** 08 (el ítem de más), 09 (dos vigen
+forense-fase-08.md     ['07', '10', '11']   Incidentes del cuaderno que usan esta ruta:** 10 (los ítems de otra inspección, 
+forense-fase-09.md     ['10', '12', '13']   Incidentes del cuaderno que usan esta ruta:** 12 y 13, los dos de tipos bajo `st
+forense-fase-10.md     ['09', '14', '15']   Incidentes del cuaderno que usan esta ruta:** 14 (el PDF que no coincide) y 15 (
+forense-fase-11.md     ['04', '16']   Incidentes del cuaderno que usan esta ruta:** 16 (el panel cerrado que sigue pid
+forense-fase-12.md     ['00', '17', '20']   Incidentes del cuaderno que usan esta ruta:** 17 (el intermitente) y 20 (el cove
+forense-fase-13.md     ['13', '14', '18', '19']   Incidentes del cuaderno que usan esta ruta:** 18 (el fix que no llegó) y 19 (bla
+forense-fase-14.md     ['13', '14', '19']   Incidentes del cuaderno que usan esta ruta:** ninguno directamente — la Fase 14 
+forense-master.md      —   
+
+cubiertos: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+sin ruta forense: []

@@ -1,0 +1,3 @@
+ok: 00-preliminares.md
+ok: 01-mongo-en-30-min.md
+ok: 04-el-esquema-que-no-esta-en-la-base.md

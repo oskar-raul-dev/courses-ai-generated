@@ -1,0 +1,10 @@
+bea-02 declara be02 → 2 menciones en be02-medir-la-deriva-de-esquema.md
+    El `compose.yaml` completo, con su `.env` y sus tres errores típicos, vive en [`bea-02`](./bea-02-receta-de-imagen-y-com
+    - **[B] `bea-12` tiene que existir antes que esta fase se pueda hacer**, porque de ahí sale `generate-dump.js`. Es el ap
+
+bea-04 declara be05 → 0 menciones en be05-la-cadena-de-custodia-y-la-transaccion.md
+
+bea-04 declara be06 → 0 menciones en be06-los-rangos-y-la-historia-perdida.md
+
+bea-12 declara be03 → 1 menciones en be03-la-costura-y-el-reemplazo.md
+    - 🔥 Añade `_embed` y `_expand` de json-server con `$lookup`, y mide cuánto tarda `/orders?_expand=patient` sobre el volc

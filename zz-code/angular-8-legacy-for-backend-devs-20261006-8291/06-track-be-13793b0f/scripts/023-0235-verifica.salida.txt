@@ -1,0 +1,17 @@
+=== bloque 🏷️ de cada apéndice: ¿variante negativa y prefijo correcto? ===
+  a01  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a02  negativa ok                  ⚠ sin prefijo de commit  ⚠ sin enlace a la convención
+  a03  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a04  negativa ok                  prefijo ok               enlace ok
+  a05  negativa ok                  prefijo ok               enlace ok
+  a06  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a07  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a08  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a09  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a10  negativa ok                  prefijo ok               enlace ok
+  a11  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a12  negativa ok                  prefijo ok               ⚠ sin enlace a la convención
+  a13  negativa ok                  ⚠ sin prefijo de commit  ⚠ sin enlace a la convención
+
+=== ¿existen las secciones citadas tipo 'A03 §7' ? ===
+  (silencio = todas resuelven)

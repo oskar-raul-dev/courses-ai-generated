@@ -1,0 +1,43 @@
+Pasos SIN '**Qué descarta**' que NO son el último de su bloque (posible hueco real):
+
+  forense-fase-01.md
+    - Paso 4 — Dentro del módulo: el `RouterModule.forChild` y su `<ro
+
+  forense-fase-02.md
+    - Paso 4 — Dónde va el breakpoint en un interceptor funcional
+
+  forense-fase-05.md
+    - Paso 2 — Si dice `Standalone[…]`: la pregunta no es "qué falta" 
+    - Paso 3 — Si dice `…Module`: la búsqueda de siempre
+
+  forense-fase-06.md
+    - Paso 3 — Si es `PENDING`: qué pasó con la petición
+
+  forense-fase-07.md
+    - Paso 2 — ⭐ La URL de la petición contesta antes que el código
+    - Paso 4 (ticket 1) — Cómo se demuestra que no hay bug
+    - Paso 5 (ticket 2) — Dónde está la línea
+
+  forense-fase-08.md
+    - Paso 2 — Y la comprobación gemela: la versión
+
+  forense-fase-09.md
+    - Paso 2 — Las tres preguntas, y sus tres respuestas distintas
+    - Paso 1 — ¿El dato está guardado o está derivado?
+
+  forense-fase-12.md
+    - Sospechoso 1 — El reloj
+    - Sospechoso 2 — El azar
+    - Sospechoso 3 — El orden, y la bisección
+    - Sospechoso 4 — La asincronía
+
+  forense-fase-13.md
+    - Paso 4 — ¿Y la ruta profunda?
+
+  forense-fase-14.md
+    - Paso 2 — El almacén del nodo no es el tuyo
+    - Paso 3 — El `:latest` que empeora el mismo problema
+    - Paso 1 — El estado ya te dijo por dónde empezar
+    - Paso 3 — El caso sin logs, que en un Mac con chip M es casi siem
+
+  TOTAL pasos intermedios sin la marca: 20

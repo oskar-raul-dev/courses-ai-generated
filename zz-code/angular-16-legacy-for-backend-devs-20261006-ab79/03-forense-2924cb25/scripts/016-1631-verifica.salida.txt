@@ -1,0 +1,34 @@
+20
+1:# 📓 Formato del cuaderno de incidentes
+2:## Tutorial Angular 16 — Inspecciones y certificaciones
+18:## 1. Qué hace distinto a este cuaderno
+45:## 2. Estructura del archivo
+62:## 3. El índice y la reserva de IDs
+84:### Distribución objetivo de los 20
+102:### Categorías
+108:### Dificultad
+116:## 🕵️ El puente con el track forense
+151:## 4. Cómo llega el sistema roto a la máquina del estudiante
+193:## 5. Convención de commits
+231:## 6. Estados
+243:## 7. Plantilla de un incidente
+249:## Incidente {{NN}} — {{Título en palabras del usuario}}
+255:### 🎫 El ticket
+265:### 🎯 Qué se te pide
+271:### 🔧 Preparación
+306:### 📝 Tu investigación
+387:## 8. Retrospectiva del mes
+407:## 9. Pendientes que salieron de los incidentes
+417:## 10. Checklist antes de dar por cerrado el cuaderno
+451:## 🔥 El cuaderno del track de backend
+=== diffstat del curso ===
+ .../prompts/formato-piezas-forenses.md             |  28 ++-
+ .../prompts/guia-de-estilo-y-convenciones.md       |  19 +-
+ .../prompts/plantillas-de-capitulo.md              |   4 +-
+ .../prompts/prompts-backend-apendice.md            |  98 ++++-----
+ .../prompts/prompts-backend-fase.md                |  30 +--
+ .../prompts/propuesta-fases-backend.md             | 226 +++++++++++----------
+ .../prompts/propuesta-fases-y-alcance.md           |   2 +-
+ 32 files changed, 465 insertions(+), 233 deletions(-)
+?? angular-16-legacy-for-backend-devs/prompts/preparaciones-de-incidentes.md
+?? angular-16-legacy-for-backend-devs/prompts/verificar-forenses.py

@@ -1,0 +1,49 @@
+=== enlaces rotos, curso completo ===
+ROTO ./forense-fase-NN.md
+(sin ROTO = ok ·       83 destinos distintos)
+
+=== resumen de cambios ===
+   M ../README.md
+   M 01-estructura-base-ngrx.md
+   M 03-autenticacion.md
+   M 05-pacientes.md
+   M 08-resultados-rangos.md
+   M 09-entrega-pdf.md
+   M 10-dashboard.md
+   M 11-trazabilidad-audit-log.md
+   M 12-testing-coverage.md
+   M 13-build-despliegue.md
+   M 14-casi-prod-kind.md
+   M README.md
+   M a03-node-npm.md
+   M a04-webpack-oculto.md
+   M a05-rxjs.md
+   M a06-ngrx.md
+   M a07-i18n.md
+   M a08-pdf-cliente.md
+   M a09-kubernetes.md
+   M a12-arm64-m1.md
+   M a13-docker-colima.md
+   M cuaderno-incidentes.md
+   M prompts/guia-de-estilo-y-convenciones.md
+  ?? analisis-forense-tutoriales.md
+  ?? forense-fase-00.md
+  ?? forense-fase-01.md
+  ?? forense-fase-02.md
+  ?? forense-fase-03.md
+  ?? forense-fase-04.md
+  ?? forense-fase-05.md
+  ?? forense-fase-06.md
+  ?? forense-fase-07.md
+  ?? forense-fase-08.md
+  ?? forense-fase-09.md
+  ?? forense-fase-10.md
+  ?? forense-fase-11.md
+  ?? forense-fase-12.md
+  ?? forense-fase-13.md
+  ?? forense-fase-14.md
+  ?? forense-master.md
+  ?? prompts/formato-piezas-forenses.md
+  ?? ../nuevas-ideas.md
+  ?? ../propuesta-complemento-docker/
+  ?? ../propuesta_lab_docker/

@@ -1,0 +1,19 @@
+=== A16 formato-piezas-forenses: secciones ===
+1:# 🕵️ Formato de las piezas forenses
+2:## Tutorial Angular 16 — Inspecciones y certificaciones
+20:## 1. Qué es y qué no es una pieza forense
+42:## 2. La regla que reemplaza a las capturas
+58:## 3. Estructura de un `forense-fase-NN.md`
+81:## 4. Cómo se escribe un paso de la ruta
+87:### Paso N — {{la pregunta que contesta este paso}}
+100:### Los dos cierres, y por qué hacen falta los dos
+135:## 5. Qué pone la fase y qué pone la pieza
+152:## 6. `forense-master.md`
+173:## 7. Convención de commits y tags
+185:## 8. Checklist antes de dar por cerrada una pieza forense
+
+=== A16 piezas que enlazan incidentes ===
+
+=== A8 piezas que enlazan incidentes ===
+angular-8-legacy-for-backend-devs/forense-fase-13.md
+angular-8-legacy-for-backend-devs/forense-master.md

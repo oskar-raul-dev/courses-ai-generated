@@ -1,0 +1,14 @@
+apéndice                  lin  índice  ejerc  refs  URLs  🏷️  👁️/✍️ links
+a01-material.md           630      sí     sí    sí    11  sí      ·    13
+a02-bootstrap-sass.md     461      sí     sí    sí    13  sí      ·    11
+a03-node-npm.md           642      sí     sí    sí    11  sí      ·    14
+a04-webpack-oculto.md     487      sí     sí    sí    12  sí      ·    14
+a05-rxjs.md               568      sí     sí    sí    11  sí      ·    18
+a06-ngrx.md               611      sí     sí    sí    10  sí      ·    16
+a07-i18n.md               593      sí     sí    sí    15  sí      ·    15
+a08-pdf-cliente.md        492      sí     sí    sí    11  sí      ·    14
+a09-kubernetes.md         485      sí     sí    sí    13  sí     sí    14
+a10-migracion-8-9.md      437      sí     sí    sí     9  sí      ·    15
+a11-migracion-9-16.md     393      sí     sí    sí    12  sí      ·    13
+a12-arm64-m1.md           337      sí     sí    sí     8  sí      ·    13
+a13-docker-colima.md      427      sí     sí    sí    10  sí     sí    22

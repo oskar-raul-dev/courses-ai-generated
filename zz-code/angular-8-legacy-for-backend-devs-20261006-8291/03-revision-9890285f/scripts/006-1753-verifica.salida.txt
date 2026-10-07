@@ -1,0 +1,17 @@
+forense-fase-00.md    (única)                                       anuncia=5   real=5
+forense-fase-01.md    (única)                                       anuncia=5   real=6  ✗ DISCREPANCIA
+forense-fase-02.md    🧭 Ruta 1 — La clave que sale cruda            anuncia=4   real=5  ✗ DISCREPANCIA
+forense-fase-02.md    🧭 Ruta 2 — La fecha que no cambia de idioma   anuncia=3   real=3
+forense-fase-03.md    (única)                                       anuncia=5   real=6  ✗ DISCREPANCIA
+forense-fase-04.md    (única)                                       anuncia=5   real=5
+forense-fase-05.md    (única)                                       anuncia=6   real=6
+forense-fase-06.md    (única)                                       anuncia=4   real=4
+forense-fase-07.md    (única)                                       anuncia=6   real=6
+forense-fase-08.md    🧭 Ruta 1 — El veredicto calculado con la nor  anuncia=4   real=4
+forense-fase-08.md    🧭 Ruta 2 — El source map que te lleva a la l  anuncia=3   real=3
+forense-fase-09.md    (única)                                       anuncia=5   real=5
+forense-fase-10.md    (única)                                       anuncia=5   real=5
+forense-fase-11.md    (única)                                       anuncia=5   real=5
+forense-fase-12.md    (única)                                       anuncia=5   real=5
+forense-fase-13.md    (única)                                       anuncia=6   real=7  ✗ DISCREPANCIA
+forense-fase-14.md    (única)                                       anuncia=6   real=6

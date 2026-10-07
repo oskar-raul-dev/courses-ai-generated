@@ -1,0 +1,8 @@
+═══ 3b. COHERENCIA CRUZADA DEL TRACK BE ═══
+  ap       declara                    lo listan las fases       
+  ⚠ bea-02   ['be01', 'be02', 'be03', 'be07'] ['be01', 'be03', 'be07']  
+  ⚠ bea-04   ['be02', 'be05', 'be06']   ['be02']                  
+  ⚠ bea-12   ['be02', 'be03']           ['be02']                  
+  apéndices BE con 'Usado por' desajustado: 3
+  bloques 🏷️ de fases BE: ok
+  README marca ✅ en: 22 filas

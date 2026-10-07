@@ -1,0 +1,10 @@
+archivos revisados .............. 65
+enlaces + anclas rotos .......... 0
+incidentes base ................. 20   orden por ID: True
+incidentes BE ................... 16
+<details> base .................. 80/80
+hermanos marcados ............... 6
+placeholders {{ }} fuera de investigación  0
+voseo (todo el curso) ........... 0
+fases que incumplen plantilla ... 0 de 22
+líneas cuaderno base / BE ....... 4906 / 3853

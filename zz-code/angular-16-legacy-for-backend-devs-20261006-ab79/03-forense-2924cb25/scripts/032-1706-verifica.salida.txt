@@ -1,0 +1,17 @@
+=== ¿LabCore fuera de README y a10? ===
+a13-i18n.md:141:> ⚖️ **Los dos cursos son honestos y toman decisiones opuestas, y ninguna está mal.** LabCore es un laboratorio con personal que habla tres idiomas y una interfaz que tiene que cambiar en caliente. CertCore opera en un solo país, con una norma en un solo idioma, y sus certificados se emiten en español porque así los exige quien los recibe. **La decisión de i18n no la toma la arquitectura: la toma el dominio.**
+prompts/alcance-del-proyecto.md:60:### 2.1 Cómo se relaciona con el Track A (Angular 8 — LabCore)
+prompts/alcance-del-proyecto.md:74:| | Track A — LabCore | Track B — CertCore |
+prompts/plantillas-de-capitulo.md:360:  y trae los reflejos de LabCore puestos. Se escribe hablándole a esa persona, y
+prompts/plantillas-de-capitulo.md:361:  es el único documento del curso donde nombrar LabCore es correcto.
+prompts/guia-de-estilo-y-convenciones.md:674:LabCore"* deja fuera a quien llegó directo. Este curso **diverge a propósito**, y
+prompts/prompts-extendidos-apendices.md:740:- Usado por: lectores que vienen del Track A (LabCore); de consulta en todas las fases
+prompts/prompts-extendidos-apendices.md:746:- **Secciones esperadas:** las cuatro puertas del camino largo (Ivy, `strict`, standalone, `inject()`), qué desapareció y qué sólo cambió de nombre, RxJS 6 → 7 (imports, operadores retirados, `toPromise`), formularios sin tipar → tipados, guards e interceptors de clase → funcionales, NgRx de 2019 → estado en servicios, y una **tabla de traducción** que convierte un ejemplo de LabCore en su equivalente de CertCore.
+prompts/prompts-extendidos-apendices.md:748:- **Advertencias obligatorias:** este es **el único documento del curso donde nombrar LabCore es correcto**, porque su lector es alguien que viene del Track A. Escríbelo hablándole a esa persona. Para quien llegue directo al Track B, el apéndice es opcional y hay que decírselo.
+prompts/prompts-extendidos-apendices.md:755:(lectores que vienen del Track A (LabCore); de consulta en todas las fases) y propón si las enlazas o las reescribes desde otro ángulo. Si no
+prompts/propuesta-fases-y-alcance.md:250:| **A10 Puente Angular 8/9 → 16** | Para lectores del Track A: las cuatro puertas del camino largo, Ivy, `strict`, standalone, `inject()`, RxJS 6 → 7, tipado de formularios, y la tabla para traducir un ejemplo de LabCore al stack de CertCore | 3h |
+— fin —
+
+=== verificaciones ===
+15 piezas revisadas · 0 fallos
+267 enlaces · 0 rotos

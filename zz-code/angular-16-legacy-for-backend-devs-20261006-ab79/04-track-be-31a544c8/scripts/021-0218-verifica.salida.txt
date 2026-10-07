@@ -1,0 +1,18 @@
+=== Fase 13: imagen base del Dockerfile (la 🪦 de la Fase 0 exigía 18.18.2) ===
+a12-arm64-m1.md:43:docker image inspect node:18.18.2-alpine --format '{{.Architecture}}'
+a12-arm64-m1.md:113:**El caso normal no requiere hacer nada.** `docker build` produce una imagen de la arquite
+a12-arm64-m1.md:222:2. 🟢 Comprueba que las dos imágenes base de la Fase 13 tienen variante arm64: `docker imag
+14-casi-prod-kind.md:172:FROM node:18.18.2-alpine
+13-build-despliegue.md:392:# La versión EXACTA, con los tres números. `node:18-alpine` traería el npm que
+13-build-despliegue.md:395:FROM node:18.18.2-alpine AS build
+13-build-despliegue.md:586:  node:18.18.2-alpine node mock/server.js
+
+=== tags BE: el bloque 🏷️ usa be-fase-NN + slug del archivo ===
+  OK  be00-el-contrato-auditoria-del-mock.md → be-fase-00-el-contrato-auditoria-del-mock
+  OK  be01-lumen-y-la-familiaridad-falsa.md → be-fase-01-lumen-y-la-familiaridad-falsa
+  OK  be02-estratos-por-procedencia.md → be-fase-02-estratos-por-procedencia
+  OK  be03-el-reemplazo.md → be-fase-03-el-reemplazo
+  OK  be04-el-salto-de-version-que-nadie-corrio.md → be-fase-04-el-salto-de-version-que-nadie-corrio
+  OK  be05-la-invariante-que-no-sostenia-nadie.md → be-fase-05-la-invariante-que-no-sostenia-nadie
+  OK  be06-la-reescritura-a-medias.md → be-fase-06-la-reescritura-a-medias
+  OK  be07-el-assessment-de-riesgo.md → be-fase-07-el-assessment-de-riesgo

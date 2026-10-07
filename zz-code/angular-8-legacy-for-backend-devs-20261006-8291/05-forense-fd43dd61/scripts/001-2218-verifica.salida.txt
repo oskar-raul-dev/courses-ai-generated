@@ -1,0 +1,21 @@
+forense-fase-00.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 00 — "No se pudo registrar el paciente" (y el servidor nunca habló)
+forense-fase-01.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 01 — "Cambié el paciente y la lista no se entera"
+forense-fase-02.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 02 — La clave en crudo y la fecha que no cambia de idioma
+forense-fase-03.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 03 — Una petición de punta a punta: breakpoints condicionales y correlación
+forense-fase-04.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 04 — "A veces no carga" y el `200` que miente
+forense-fase-05.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 05 — "A veces guardo un paciente y se guarda dos veces"
+forense-fase-06.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 06 — El estado que todavía no existe
+forense-fase-07.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 07 — "Figura como procesada y el analista jura que nunca la recibió" ⭐
+forense-fase-08.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 08 — El borde de vigencia que se resbala, y el mapa que miente
+forense-fase-09.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 09 — "El informe salió con un dato que ya no es el actual"
+forense-fase-10.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 10 — "El dashboard se arrastra al final del turno"
+forense-fase-11.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 11 — "El sábado la orden salió entregada sin validar el último resultado"
+forense-fase-12.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 12 — El test verde que no puede cazar el bug
+forense-fase-13.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 13 — "En UAT entra y en PROD no"
+forense-fase-14.md     🎫🧭🩺⚰️🧨🧠  # 🕵️ Forense Fase 14 — El pod que no arranca 🔥
+=== master ===
+12:## 1. El método: cuatro preguntas, siempre en este orden
+32:## 2. 📇 Índice de las quince piezas
+54:## 3. 🩺 Índice de síntomas transversal
+102:## 4. 🧰 Las herramientas, y en qué miente cada una
+128:## 5. Cómo se cierra el track

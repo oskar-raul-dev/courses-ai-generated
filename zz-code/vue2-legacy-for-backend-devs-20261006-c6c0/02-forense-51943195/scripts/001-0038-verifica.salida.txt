@@ -1,0 +1,28 @@
+--- ej14 fase3 seed ---
+668:- versionar un `db.json` lleno de basura de pruebas: ten un `db.seed.json`
+706:14. Crea `db.seed.json` con datos limpios y un script npm
+707:    `"mock:reset": "cp db.seed.json db.json"` (en Windows: `copy`). Documenta
+--- MONGO_VERSION ---
+02-complement-mongodb-backend/00-preliminares.md:83:    image: mongo:${MONGO_VERSION:-4.4}
+02-complement-mongodb-backend/00-preliminares.md:97:MONGO_VERSION=4.4
+02-complement-mongodb-backend/14-operacion.md:243:    image: mongo:${MONGO_VERSION:-4.4}
+02-complement-mongodb-backend/14-operacion.md:270:    image: mongo:${MONGO_VERSION:-4.4}
+02-complement-mongodb-backend/a01-docker.md:108:    image: mongo:${MONGO_VERSION:-4.4}          # ① variable con default
+--- npm run seed C02 ---
+02-complement-mongodb-backend/01-mongo-en-30-min.md:532:26. Empaqueta el seed como comando npm (`npm run seed`) y agrega `npm run seed:verify` que encadene seed + verify. Deja el README con las 4 líneas exactas para que otra persona levante todo desde cero.
+02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:364:`npm run seed`). Para los que piden volumen, usa el generador del ejercicio
+02-complement-mongodb-backend/10-express-el-vehiculo.md:454:1. `npm run seed` (base fresca del `db.json` heredado — Fase 1).
+--- cliente mentiroso F8 ---
+231:> 💸 **Deuda declarada: el cliente mentiroso.** El anuncio lo debería emitir
+725:24. El cliente mentiroso: desde la consola del navegador, emite a mano
+--- login sincrono F2/F3 store ---
+301:  // 💸 Deuda declarada: hoy esta action es síncrona porque el login es mock.
+431:      // 💸 Este try/catch funciona SOLO porque la action es síncrona hoy.
+550:18. Refactoriza la action `login` para que devuelva una **Promise** (envuelve el mock en `Promise.resolve/reject`) y migra `LoginView` a `.then/.catch`. Acabas de pagar la deuda 💸 antes de tiempo.
+602:protegidas, axios centralizado y **dos deudas técnicas declaradas** 💸 (action
+--- SECURITY-NOTES ej7 ---
+18:3. **Cobra `SECURITY-NOTES.md`** — el documento vivo que el curso heredado
+42:- `SECURITY-NOTES.md` con cuatro deudas tachadas y las notas de lo que aún
+232:> `SECURITY-NOTES.md` como amenaza nueva del paradigma.
+353:6. Documenta la frontera Mongoose/driver: tabla de qué componente usa cuál y por qué. A `SECURITY-NOTES.md` o `DATA-MODEL.md`.
+354:7. Tacha en `SECURITY-NOTES.md` la primera deuda (token mock) con el commit que la resolvió referenciado. El ritual importa.

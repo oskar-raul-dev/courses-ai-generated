@@ -1,0 +1,4 @@
+ok: 05-lookup-y-por-que-es-una-alarma.md
+ok: 06-atomicidad-transacciones-consistencia.md
+ok: 07-indices.md
+ok: 08-la-autopsia.md

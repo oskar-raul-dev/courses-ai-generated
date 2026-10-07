@@ -1,0 +1,9 @@
+=== 1. refs a cursos hermanos (excluye 'volumen' y a11) ===
+a11-migracion-9-16.md:11:> 🧭 **La 16 es un mirador, no la meta.** Se eligió porque es donde el modelo mental cambia del todo —standalone ya estable, `inject()` asentado, signals asomando—, no porque sea la última. Angular 16 es de 2023 y el ecosistema siguió corriendo: cuando leas esto habrá más versiones por delante, y el control flow (`@if`, `@for`) que mucha gente asocia a "Angular moderno" es de la **17**, una después de tu destino. Trátalo como una foto fechada, no como el final del camino.
+a11-migracion-9-16.md:110:**Angular 16** — el componente **se declara a sí mismo** y trae su propia lista de dependencias. El módulo puede no existir:
+a11-migracion-9-16.md:146:**Angular 16** —la dependencia se pide con una función, en la inicialización de la propiedad:
+--- (a11, solo versión de Angular:)
+       3
+
+=== 2. rutas a otros directorios de curso ===
+(vacío = ok)

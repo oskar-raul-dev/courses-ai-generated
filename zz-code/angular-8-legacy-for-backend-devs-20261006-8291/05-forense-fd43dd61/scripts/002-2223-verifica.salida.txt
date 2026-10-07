@@ -1,0 +1,17 @@
+=== enlaces rotos ===
+=== enlaces relativos de prompts/ ===
+=== fases: forma del enlace ===
+2
+=== diff ===
+ CLAUDE.md                                          |  18 ++-
+ README.md                                          |   5 +
+ .../prompts/propuesta-fases-backend.md             | 147 ++++++++++-----------
+ .../09-entrega-pdf.md                              |   2 +-
+ angular-8-legacy-for-backend-devs/10-dashboard.md  |   2 +-
+ .../13-build-despliegue.md                         |   4 +-
+ .../14-casi-prod-kind.md                           |   4 +-
+ angular-8-legacy-for-backend-devs/README.md        |   2 +-
+ .../prompts/alcance-del-proyecto.md                |   5 +-
+ .../prompts/formato-piezas-forenses.md             |  11 +-
+ .../prompts/propuesta-fases-y-alcance.md           |  17 ++-
+ 11 files changed, 117 insertions(+), 100 deletions(-)

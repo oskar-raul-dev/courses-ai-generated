@@ -1,0 +1,2 @@
+ok 12
+sin criterio de orden en la entrada: ninguna — 15/15 ✅

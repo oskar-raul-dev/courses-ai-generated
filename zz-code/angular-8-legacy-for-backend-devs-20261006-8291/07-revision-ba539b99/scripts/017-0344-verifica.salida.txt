@@ -1,0 +1,22 @@
+be00 ninguno---
+be01 be-01---
+be02 be-02, be-03---
+be03 be-04, be-05---
+be04 be-06, be-07---
+be05 be-08, be-09---
+be06 be-10---
+be07 be-11 ⭐---
+be08 be-12---
+=== índice cuaderno BE ===
+144:| be-01 | be01 | El servidor dice 500 y la pantalla no dice nada | Contrato | 🟠 | 30 min | ⬜ |
+145:| be-02 | be02 | La orden sin paciente | Integridad referencial | 🟠 | 30 min | ⬜ |
+146:| be-03 | be02 | Los pacientes sin nombre que nadie pudo reproducir | Deriva de esquema | 🔴 | 50 min | ⬜ |
+147:| be-04 | be03 | Dos pacientes con el mismo número | Concurrencia | 🔴 | 55 min | ⬜ |
+148:| be-05 | be03 | La pantalla que carga y no navega | Contrato | 🟠 | 25 min | ⬜ |
+149:| be-06 | be04 | La muestra que cambió de estado sin que nadie lo apuntara | Trazabilidad | 🟠 | 35 min | ⬜ |
+150:| be-07 | be04 | El informe firmado a las 14:47 por alguien que salió a las 14:00 | Tiempo | 🔴 | 50 min | ⬜ |
+151:| be-08 | be05 | La orden que contradice a sus muestras | Atomicidad | 🔴 | 55 min | ⬜ |
+152:| be-09 | be05 | Arreglamos las veintitrés y ahora nadie sabe qué pasó | Evidencia | 🔴 | 45 min | ⬜ |
+153:| be-10 | be06 | El informe dice normal y la pantalla dice alto | Normativo | 🔴 | 55 min | ⬜ |
+154:| be-11 ⭐ | be07 | No desplegamos nada y dejó de funcionar | Configuración | 🔴 | 50 min | ⬜ |
+155:| be-12 | be08 | Desde el viernes no podemos guardar algunos pacientes | Procedimiento | 🔴 | 40 min | ⬜ |

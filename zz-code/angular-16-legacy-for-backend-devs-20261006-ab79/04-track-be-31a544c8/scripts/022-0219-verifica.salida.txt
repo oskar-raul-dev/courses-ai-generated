@@ -1,0 +1,26 @@
+Ejercicios de diagnóstico (la guía pide ≥ 1/3)
+  00-setup-hola-mundo.md                          10/28  = 36%
+  01-estructura-base-ngmodules.md                 12/30  = 40%
+  02-autenticacion.md                             11/28  = 39%
+  03-mock-api-caos.md                             11/26  = 42%
+  04-estado-servicios.md                          11/30  = 37%
+  05-standalone-convivencia.md                    12/28  = 43%
+  06-clientes-activos.md                          11/30  = 37%
+  07-plantillas-versionadas.md                    12/35  = 34%
+  08-formulario-dinamico.md                       12/35  = 34%
+  09-hallazgos-severidad.md                        9/26  = 35%
+  10-certificados-vigencia.md                     11/30  = 37%
+  11-dashboard-alertas.md                          9/26  = 35%
+  12-testing-coverage.md                          10/30  = 33%
+  13-build-despliegue.md                          10/28  = 36%
+  14-casi-prod-kind.md                             4/15  = 27%  ⚠️ por debajo de 1/3
+  be00-el-contrato-auditoria-del-mock.md          10/26  = 38%
+  be01-lumen-y-la-familiaridad-falsa.md           14/32  = 44%
+  be02-estratos-por-procedencia.md                15/29  = 52%
+  be03-el-reemplazo.md                            15/31  = 48%
+  be04-el-salto-de-version-que-nadie-corrio.md    15/32  = 47%
+  be05-la-invariante-que-no-sostenia-nadie.md     15/33  = 45%
+  be06-la-reescritura-a-medias.md                 15/29  = 52%
+  be07-el-assessment-de-riesgo.md                 12/27  = 44%
+
+Por debajo del tercio: ['14-casi-prod-kind.md']

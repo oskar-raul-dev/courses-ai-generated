@@ -1,0 +1,50 @@
+diff --git a/angular-8-legacy-for-backend-devs/a01-material.md b/angular-8-legacy-for-backend-devs/a01-material.md
+index ab95aa0..7b7b835 100644
+--- a/angular-8-legacy-for-backend-devs/a01-material.md
++++ b/angular-8-legacy-for-backend-devs/a01-material.md
+@@ -23,7 +23,7 @@
+ - [7. `MatDialog`](#7-matdialog)
+ - [8. `MatSnackBar`](#8-matsnackbar)
+ - [🧭 Cuándo usar qué](#-cuándo-usar-qué)
+-- [⚠️ Advertencias](#-advertencias)
++- [⚠️ Advertencias](#️-advertencias)
+ - [📚 Referencias](#-referencias)
+ - [🧪 Ejercicios](#-ejercicios-8)
+ 
+@@ -174,7 +174,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
+ import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+ 
+ // Muestra el error en cuanto el control es invalido, sin esperar a que lo
+-// toquen. Útil en pantallas de edicion donde los datos llegan ya rotos del
++// toquen. Útil en pantallas de edición donde los datos llegan ya rotos del
+ // backend y el usuario tiene que ver que hay que corregir antes de tocar nada.
+ export class ImmediateErrorStateMatcher implements ErrorStateMatcher {
+   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+@@ -276,7 +276,7 @@ import { TranslateService } from '@ngx-translate/core';
+     this.dateAdapter.setLocale(this.translate.currentLang);
+ 
+     // Cuando el usuario cambia de idioma, el calendario tiene que cambiar con
+-    // el. Sin esta suscripcion, el resto de la app se traduce y el datepicker
++    // el. Sin esta suscripción, el resto de la app se traduce y el datepicker
+     // se queda en el idioma con el que arranco la sesión.
+     this.translate.onLangChange.subscribe(function (this: AppComponent, event: any) {
+=== y una pieza forense ===
+diff --git a/angular-8-legacy-for-backend-devs/forense-fase-04.md b/angular-8-legacy-for-backend-devs/forense-fase-04.md
+index 4e87dd6..d1d04a5 100644
+--- a/angular-8-legacy-for-backend-devs/forense-fase-04.md
++++ b/angular-8-legacy-for-backend-devs/forense-fase-04.md
+@@ -166,12 +166,12 @@ Los seis modos y su firma. Es la tabla que se consulta seis meses después, cuan
+ Nada de este recorrido toca el código del proyecto, y aun así deja dos cosas encendidas:
+ 
+ ```bash
+-# 1. El caos global. Es lo que mas veces se olvida puesto.
++# 1. El caos global. Es lo que más veces se olvida puesto.
+ #    Para el mock (Ctrl+C) y arrancalo sin la variable:
+ npm run mock
+ 
+ # 2. El header X-Chaos, si lo mandaste desde la consola del navegador,
+-#    muere con la peticion. No hay nada que apagar.
++#    muere con la petición. No hay nada que apagar.
+ ```
+ 
+ Comprueba que quedó limpio por donde se comprueba de verdad: la primera línea del arranque. Si dice `caos global activo: …`, todavía lo tienes puesto.

@@ -1,0 +1,6 @@
+prompts/guia-de-estilo-y-convenciones.md
+    00-convencion-de-git-y-tags.md  <--  `00-convencion-de-git-y-tags.md`
+prompts/plantillas-de-capitulo.md
+    00-convencion-de-git-y-tags.md  <--  `00-convencion-de-git-y-tags.md`
+    00-convencion-de-git-y-tags.md  <--  `00-convencion-de-git-y-tags.md`
+TOTAL archivos con links rotos: 2

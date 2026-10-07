@@ -1,0 +1,14 @@
+OK  prompts/guia-de-estilo-y-convenciones.md
+OK  prompts/convencion-de-git-y-tags.md
+OK  prompts/formato-piezas-forenses.md
+OK  02-complement-mongodb-backend/00-audit-contrato.md
+
+=== git status del paquete ===
+ M prompts/convencion-de-git-y-tags.md
+?? contenido_forense.md
+?? prompts/formato-cuaderno-incidentes.md
+?? prompts/formato-piezas-forenses.md
+
+=== secciones ===
+prompts/formato-cuaderno-incidentes.md:14
+prompts/formato-piezas-forenses.md:12

@@ -1,0 +1,10 @@
+A01 declara Fase 7 (07-plantillas-versiona): 0 menciones
+A01 declara Fase 8 (08-formulario-dinamico): 0 menciones
+A01 declara Fase 10 (10-certificados-vigenc): 0 menciones
+A03 declara Fase 12 (12-testing-coverage.md): 0 menciones
+A05 declara Fase 0 (00-setup-hola-mundo.md): 2 menciones
+      > 📚 El detalle completo del tipado de formularios está en **A05**. Hoy alcanza con la distinción de arriba.
+      - https://v16.angular.io/guide/typed-forms — formularios tipados, `nonNullable` y el genérico de `FormGroup`. 
+A05 declara Fase 2 (02-autenticacion.md): 0 menciones
+A07 declara Fase 6 (06-clientes-activos.md): 0 menciones
+A12 declara Fase 12 (12-testing-coverage.md): 0 menciones

@@ -1,0 +1,38 @@
+=== apéndices referenciados desde las fases ===
+   3 bea-01
+   2 bea-02
+   2 bea-03
+   1 bea-04
+   1 bea-05
+   1 bea-06
+   1 bea-07
+   1 bea-08
+   4 bea-09
+   1 bea-10
+   3 bea-11
+
+=== 'Usado por' declarado en cada apéndice ===
+81:- Usado por: **be01** principalmente, y de consulta en todas las demás
+124:- Usado por: **be01**, **be04**
+184:- Usado por: **be01** ⭐, **be02**
+230:- Usado por: **be03**, **be04** ⭐
+271:- Usado por: **be04** ⭐
+318:- Usado por: **be05** ⭐
+359:- Usado por: **be04**
+400:- Usado por: **be06**, **be07**
+446:- Usado por: **be02**, **be06**, **be07** ⭐
+493:- Usado por: **be07**; hermano de `a12` del track base
+531:- Usado por: **be05**
+
+=== títulos de apéndice en cada archivo ===
+## # Apéndice bea-01 — PHP 7.4 y Lumen para quien no escribe PHP
+## # Apéndice bea-02 — Receta de imagen y compose
+## # Apéndice bea-03 — El contenedor, los facades y por qué `grep` falla
+## # Apéndice bea-04 — Eloquent: lo que absorbe y lo que no
+## # Apéndice bea-05 — Dialectos y saltos de versión en PostgreSQL
+## # Apéndice bea-06 — Restricciones, claves compuestas y datos sucios
+## # Apéndice bea-07 — Tiempo, zonas y `TIMESTAMPTZ`
+## # Apéndice bea-08 — Seguridad de API sobre un runtime sin parches
+## # Apéndice bea-09 — Symfony como vara de medir
+## # Apéndice bea-10 — Mapa de deuda del track BE
+## # Apéndice bea-11 — Datos de prueba y volumen 🔥

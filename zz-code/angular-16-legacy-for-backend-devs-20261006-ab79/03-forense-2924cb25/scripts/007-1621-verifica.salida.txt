@@ -1,0 +1,53 @@
+## 3. El índice y la reserva de IDs
+
+El índice se actualiza en el mismo commit que abre o cierra un incidente. Un ⬜
+significa que el enunciado todavía no está redactado abajo — **la fila existe
+desde el momento en que una fase reserva el ID**, en su sección
+📌 *Reservas para el cuaderno de incidentes*.
+
+Formato de la tabla:
+
+```markdown
+| ID | Fase | Título | Categoría | Dif. | Estado |
+|---|---|---|---|---|---|
+| 01 | 0 | Instalé todo y `ng serve` no arranca | Despliegue | 🟢 | ⬜ |
+```
+
+El título va **en palabras del usuario**, no en lenguaje técnico. *"La inspección
+de marzo se ve distinta desde ayer"* es un buen título; *"resolución incorrecta de
+`templateVersion`"* es la respuesta, y va en la solución.
+
+### Distribución objetivo de los 20
+
+Se reparte por semana y por dificultad; las fases exactas las fijan las reservas
+de cada fase, pero el reparto no se negocia:
+
+- **Semana 1** — fases 0-4 · **4-5 incidentes 🟢**: setup, endpoint mal escrito,
+  CORS, el primer `Object is possibly 'null'`, un servicio de estado que devuelve
+  el valor inicial para siempre.
+- **Semana 2** — fases 5-8 · **5-6 incidentes 🟡**: standalone que no importa lo
+  que usa, plantilla renderizada con la versión equivocada, `FormGroup` dinámico
+  con controles huérfanos, autosave que se dispara en bucle.
+- **Semana 3** — fases 9-11 · **5-6 incidentes 🟠**: hallazgo `critical` que no
+  bloquea la emisión, certificado emitido con hallazgos pendientes, PDF con datos
+  de hace dos minutos, dashboard que se arrastra al final del mes.
+- **Semana 4** — fases 12-13 · **4-5 incidentes 🔴**: intermitentes, fuga de
+  suscripción a `valueChanges`, el certificado que venció ayer para uno y hoy para
+  otro, la imagen desplegada a PROD hablándole a UAT.
+
+### Categorías
+
+Máquina de estados · versionado normativo · tiempo · trazabilidad · formularios
+dinámicos · estado (servicios) · convivencia de estilos 🧬 · tipos (strict) ·
+integración · performance · UI · despliegue · testing.
+
+### Dificultad
+
+🟢 fácil · 🟡 intermedio · 🟠 difícil · 🔴 muy difícil. Va también un **tiempo
+sugerido** por incidente (20-40 min los 🟢, hasta 2h los 🔴), porque sin él el
+estudiante no sabe cuándo está atascado de verdad.
+
+---
+
+=== conteo real dificultades en cuaderno ===
+  20 | 🟢 | ⬜

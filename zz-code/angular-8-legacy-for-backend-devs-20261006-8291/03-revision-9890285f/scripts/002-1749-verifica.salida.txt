@@ -1,0 +1,16 @@
+pieza                 lin  pasos   🧨  inc  patrón  apend  fase§6
+forense-fase-00.md    156      5  sí    ·      sí     03      NO
+forense-fase-01.md    167      6  sí    ·      sí  05,06      NO
+forense-fase-02.md    192      8  sí    ·      sí     07      NO
+forense-fase-03.md    220      6  sí   05      sí      ·      NO
+forense-fase-04.md    188      5  sí    ·      sí     05      NO
+forense-fase-05.md    199      6  sí    ·      sí     05      NO
+forense-fase-06.md    158      4  sí    ·      sí     06      sí
+forense-fase-07.md    203      6  sí    ·      sí     06      NO
+forense-fase-08.md    216      7  sí    ·      sí     04      sí
+forense-fase-09.md    167      5  sí    ·      sí     08      NO
+forense-fase-10.md    181      5  sí    ·      sí  05,06      NO
+forense-fase-11.md    194      5  sí   17      sí      ·      sí
+forense-fase-12.md    210      5  sí    ·      sí     05      NO
+forense-fase-13.md    243      7  sí    ·      sí  04,09      NO
+forense-fase-14.md    251      6  sí    ·      sí  09,12      sí

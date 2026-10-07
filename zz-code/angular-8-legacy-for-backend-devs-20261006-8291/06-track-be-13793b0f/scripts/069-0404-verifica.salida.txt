@@ -1,0 +1,4 @@
+═══ COHERENCIA DE VERSIONES CONTRA EL STACK DEL README ═══
+  00-setup-hola-mundo.md             Node=18.19.0 
+  a10-migracion-8-16.md              Angular=8.2.14, RxJS=6.5.5, TypeScript=3.5.3 (esperado: es el apéndice de migración)
+  archivos con versiones fuera del stack: 2

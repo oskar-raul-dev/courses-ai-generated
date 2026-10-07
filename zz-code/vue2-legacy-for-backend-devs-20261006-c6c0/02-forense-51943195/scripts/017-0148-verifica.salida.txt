@@ -1,0 +1,19 @@
+     361 cuaderno-incidentes.md
+    3822 cuaderno-incidentes-be.md
+     231 prompts/plantilla-de-incidente.md
+    4414 total
+== headings base ==
+2:## Tutorial React 16 — Rifas y chances
+23:## 🧭 Cómo se trabaja un incidente
+48:### Convención de commits
+82:### Estados
+94:## 📋 Índice
+126:### 🔥 Reserva del track BE
+191:## Incidente 01 — {{Título en palabras del usuario}}
+197:### 🎫 El ticket
+206:### 🎯 Qué se te pide
+212:### 🔧 Preparación
+249:### 📝 Tu investigación
+328:## Incidente 02 — {{...}}
+== indice base (filas) ==
+34

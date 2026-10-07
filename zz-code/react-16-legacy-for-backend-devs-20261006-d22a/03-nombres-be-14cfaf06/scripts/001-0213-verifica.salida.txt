@@ -1,0 +1,56 @@
+=== ¿existe algún beaNN- (sin guion) en el repo? ===
+NINGUNO
+=== ¿quedan be-a-NN- ? ===
+CLAUDE.md
+angular-8-legacy-for-backend-devs/prompts/propuesta-fases-backend.md
+=== referencias a 'bea' en prompts de react16 (muestra) ===
+  13 bea-02
+  12 bea-10
+   7 bea-01
+   6 bea-09
+   6 bea-08
+   5 bea-04
+   5 bea-03
+   4 bea-07
+   4 bea-06
+   4 bea-05
+=== angular-8 prompts: cómo nombra sus apéndices ===
+  11 bea-02
+  10 bea-12
+  10 bea-01
+   8 bea-05
+   8 bea-03
+=== cabeza de bea-06 (react16) ===
+# 🕰️ Apéndice bea-06 — Tiempo, zonas y relojes
+
+> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
+> Lo referencian: `be06`; `be02` y `be07` lo consultan
+
+---
+
+Ya sufriste zonas horarias. No vamos a explicar qué es UTC ni qué es un offset.
+Lo que sigue son **las trampas concretas de este stack** —Postgres 13, Go 1.19,
+un navegador y SQLite en pruebas— con el caso del curso como hilo: *una rifa que
+cierra a las 22:00 del 30 de agosto en Bogotá*.
+
+La pregunta que ordena el apéndice es una sola:
+
+> 🧭 **¿Esto es un instante o es una fecha de calendario?** Un instante es un
+> punto en la línea del tiempo del universo: el cierre de la rifa. Una fecha de
+> calendario es una etiqueta local sin instante asociado: un cumpleaños, un
+> feriado. **Se guardan distinto, se comparan distinto y se rompen distinto.**
+> Este dominio solo tiene instantes, y eso simplifica más de lo que parece.
+
+=== cola de be07 ===
+  dato para el veredicto honesto y dice mucho sobre dónde vive la complejidad
+  real.
+- **Deudas declaradas:** 💸 `sales` es inmutable por convención y no por permisos
+  (ejercicio 23); 💸 no hay mecanismo de corrección de una liquidación errónea
+  (ejercicio 27 lo diseña, no lo implementa); 💸 no hay comprobación de
+  desbordamiento en el cálculo del recaudo hasta que el alumno la agrega.
+- **Reserva para el cuaderno de incidentes:** `be-13` — *"la liquidación dice
+  340.000 y las ventas suman 355.000"* (categoría 🔥 dinero, dificultad 🟠), el
+  ejercicio 28; y `be-14` — *"repartimos el premio dos veces"* (categoría 🔥
+  transacciones, dificultad 🔴), el ejercicio 29, que es el hermano del incidente
+  18 del track base —*la liquidación da un centavo de diferencia*— resuelto en la
+  otra capa y con consecuencias mucho peores.

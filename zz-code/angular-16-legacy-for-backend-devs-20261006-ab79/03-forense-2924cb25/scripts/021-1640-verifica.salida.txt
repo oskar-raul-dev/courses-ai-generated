@@ -1,0 +1,4 @@
+ROTO: prompts/formato-cuaderno-incidentes.md -> forense-fase-NN.md
+267 enlaces .md · 1 rotos
+
+15 piezas revisadas · 0 fallos

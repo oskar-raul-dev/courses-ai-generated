@@ -1,0 +1,8 @@
+═══ 3. TRACK BE DE ANGULAR-8 ═══
+  fases: 9  apéndices: 12  cuaderno: sí
+  ejercicios de fases: cuadran
+  apéndices: estructura completa
+  incidentes reservados en fases: 12 · escritos en el cuaderno: 12
+  reservados sin entrada: ninguno
+  entradas sin reserva:  ninguno
+  apéndices BE: todos citados

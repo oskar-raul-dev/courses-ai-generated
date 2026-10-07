@@ -1,0 +1,7 @@
+══ VERIFICACIÓN FINAL — angular-16 ══
+
+15 piezas revisadas · 0 fallos
+enlaces .md rotos: 0
+apéndices con 'Usado por' desajustado: 0
+incidentes: 20 · índice: 20
+⚠️ sin cerrar en la propuesta BE: 0

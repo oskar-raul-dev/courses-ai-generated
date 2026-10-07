@@ -1,0 +1,25 @@
+enlaces a apéndices BE: 42 rotos: 0
+=== referencias be-a- fuera de .md ===
+=== archivos bea- ===
+bea-01-java-8-y-spring-para-quien-no-escribe-java.md
+bea-02-receta-de-imagen-y-compose.md
+bea-03-modelar-documentos-embeber-o-referenciar.md
+bea-04-agregaciones-como-instrumento-de-medida.md
+bea-05-indices-y-explain-en-mongodb.md
+bea-06-jsonschema-sobre-datos-sucios.md
+bea-07-transacciones-replica-sets-y-el-standalone.md
+bea-08-tiempo-zonas-y-fechas-en-mongo.md
+bea-09-cassandra-la-tentacion-y-el-acierto-que-nadie-tuvo.md
+bea-10-riesgo-de-licencia-sspl.md
+bea-11-mapa-de-deuda-del-track-be.md
+bea-12-datos-de-prueba-y-volumen.md
+bea-01-go-para-quien-no-escribe-go.md
+bea-02-receta-de-imagen-y-compose.md
+bea-03-sql-portable-y-dialectos.md
+bea-04-jwt-por-dentro-y-su-cve.md
+bea-05-concurrencia-en-postgres.md
+bea-06-tiempo-zonas-y-relojes.md
+bea-07-logs-request-id-y-correlacion.md
+bea-08-seguridad-de-api-aplicada.md
+bea-09-mapa-de-deuda-del-track-be.md
+bea-10-datos-de-prueba-y-faker.md

@@ -1,0 +1,10 @@
+=== ¿se creó algún 00-00- ? ===
+ninguno
+
+=== las líneas ilustrativas de la guía siguen intactas ===
+  nombres de archivo y Linux sí. Un archivo llamado `ALCANCE-DEL-PROYECTO.md` y
+  citado como `Alcance-del-proyecto.md` funciona en tu máquina y rompe las 64
+  referencias en CI. La minúscula uniforme elimina la clase entera de problema.
+
+=== re-verificación de enlaces y anclas ===
+  enlaces/anclas rotos: 0

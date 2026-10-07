@@ -1,0 +1,18 @@
+=== plantilla de 9 secciones (fases base + BE) ===
+(sin salida = todas completas)
+
+=== restos del nombre viejo be-a-NN- ===
+(sin salida = ok)
+
+=== términos de España / voseo ===
+bea-11-datos-de-prueba-y-volumen.md:40:| Para qué | Comprobar que algo vale exactamente X | Ver cómo se comporta el sistema con volumen |
+forense-fase-01.md:183:Y el segundo, que vale para cualquier sistema modular: **el error te da el nombre del síntoma, no el del archivo.** El camino selector → componente → módulo son tres `grep` y siempre los mismos tres. Aprenderlo como un reflejo es lo que separa treinta segundos de veinte minutos.
+a10-migracion-8-16.md:37:> 🧠 **La buena noticia primero, porque es la más grande.** Lo que aprendiste en el Track A no era Angular 8: era **cómo se lee, se depura y se arregla un sistema heredado sin romperlo**. Eso no caduca con las versiones. La máquina de estados, el versionado por fecha, el ticket vago, el diff de ambientes, el post-mortem sin culpabilización — todo eso vale igual aquí. Lo que cambia es la sintaxis, y la sintaxis se traduce en una tarde.
+a10-migracion-8-16.md:251:**Del dominio — y ésta es la fila que más vale**
+forense-fase-10.md:218:Y el segundo, que vale para cualquier artefacto exportado: **lo que hay en la pantalla es una foto de hace un rato.** Está bien para mirar y está mal para imprimir. Cualquier cosa que sobreviva a la sesión —un PDF, un correo, un export— se arma pidiendo el dato otra vez, y la forma de garantizarlo es que la función que lo arma **no acepte** lo que el componente ya tenía.
+forense-fase-14.md:268:Y el segundo, que es el que vale fuera de este curso: **`--previous` no es una bandera avanzada, es la bandera por defecto de cualquier `CrashLoopBackOff`.** El intento que estás mirando todavía no ha fallado; el que te lo va a explicar ya murió. Quien no conoce esa bandera concluye que "los logs no dicen nada" y se pone a adivinar.
+08-formulario-dinamico.md:982:      // elegir un tanque da `none` — y ver ese caso con datos reales vale más
+08-formulario-dinamico.md:1173:- 🔥 Cambia el modelo de `criteria` para que cada criterio traiga su etiqueta (`{ code, label }`) y elimina la 💸 de `criterion-label.ts`. Toca `db.seed.json`, el modelo de la Fase 3 y el editor de la Fase 7: cuenta los archivos y decide si el arreglo vale su precio con ocho fases encima.
+bea-06-restricciones-claves-compuestas-y-datos-sucios.md:225:| No puedes poner nada en la base | Disciplina de aplicación **documentada** | Sólo vale si hay una única puerta de escritura |
+forense-fase-00.md:177:Y el corolario que vale para cualquier stack: **una consola limpia sólo es evidencia si sabes que alguien estaba escuchando.** Un `catch` vacío, un `subscribe` sin `error`, un `.catch(() => {})` en un `Promise`: los tres producen exactamente este ticket.
+(sin salida = ok)

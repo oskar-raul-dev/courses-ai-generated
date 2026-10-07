@@ -1,0 +1,27 @@
+=== f12 tail ===
+---
+
+## 🧨 Deshacer
+
+Quita los `xdescribe` de la bisección: uno olvidado desactiva media suite y el coverage baja sin que nadie sepa por qué. `grep -rn "xdescribe\|xit\|fdescribe\|fit" src/` antes de commitear — y `fdescribe` es peor que `xdescribe`, porque hace pasar la suite entera ejecutando **un solo bloque**.
+
+Si terminaste una bisección: `git bisect reset`. Si dejaste ramas de incidente sin fusionar, los tags `inc/…` ya conservan los dos puntos, así que la rama se puede borrar sin perder nada.
+
+---
+
+## 🧠 El patrón transferible
+
+> **Un test intermitente es un test roto.** No es una molestia del pipeline ni una peculiaridad del runner: es una prueba que a veces no prueba, y eso vale menos que no tenerla, porque además genera confianza.
+
+Y el segundo, que es el que más cambia la forma de trabajar: **el test va antes que el fix, y el motivo no es la disciplina.** Un test escrito después pasa desde el primer momento y no hay ninguna evidencia de que habría fallado antes. Verlo en rojo es lo único que demuestra que prueba lo que dice probar — y el par de tags que lo rodea convierte esa evidencia en algo que sigue ahí dentro de seis meses.
+
+**Incidentes del cuaderno que usan esta ruta:** 17 (el intermitente) y 20 (el coverage que no protegió), más el cierre de todos los demás: cada incidente del cuaderno termina con su test de regresión.
+**Amplía:** **A11** §7 para lo que caduca de esta suite en Angular 17+, y [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) para el par de tags `-roto` / `-fix`.
+=== f07 línea 178 contexto ===
+
+> ⚠️ **Publicar una versión nueva es una operación de dos escrituras**: nace la v3 con su `validFrom` **y** se cierra la v2 poniéndole `validUntil`. Si sólo se hace la primera, no falla nada hoy y el sistema queda ambiguo para siempre. Es la clase de bug que un `strict` no puede atrapar, porque `null` es un valor perfectamente válido en las dos filas.
+
+
+**Aquí termina la ruta.** Las tres versiones del síntoma están localizadas y comparten una raíz: alguien preguntó qué versión rige hoy donde tenía que leer la que quedó guardada. La pieza no va más allá; los fixes son de los incidentes 08, 09, 10 y 12.
+
+---

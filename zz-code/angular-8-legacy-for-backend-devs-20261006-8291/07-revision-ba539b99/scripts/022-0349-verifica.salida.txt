@@ -1,0 +1,77 @@
+a01-material.md:364: // en ngOnInit todavia son undefined. El sintoma de hacerlo antes es una
+a02-bootstrap-sass.md:35: # existen en la version que tienes instalada.
+a02-bootstrap-sass.md:249: // sobre si mismo, así que lo que declares aca se AGREGA a las claves por
+a02-bootstrap-sass.md:252: // Rojo del tema de Material: un valor critico es lo mismo que un error.
+a02-bootstrap-sass.md:254: // Ambar 700: fuera de rango pero no critico. No hay equivalente en la
+a02-bootstrap-sass.md:333: // el bundle. Importar "~bootstrap/scss/bootstrap" aca sería el error grave:
+a03-node-npm.md:90: # Que version quedo REALMENTE instalada de un paquete, que no es lo mismo
+a03-node-npm.md:94: # El arbol de primer nivel, sin las 1200 dependencias transitivas.
+a03-node-npm.md:135: # Todas las versiones publicadas de un paquete. La ultima que cabe en tu
+a03-node-npm.md:140: # columnas. En un stack de 2019 la ultima columna es puro ruido: no vas a
+a03-node-npm.md:141: # actualizar a Angular 17. Miralo solo dentro de tu propia linea.
+a03-node-npm.md:198: # Solo los cambios de version. Es la señal; todo lo demas es consecuencia.
+a03-node-npm.md:292: # Bajar npm dentro de la version de Node que ya tienes.
+a03-node-npm.md:440: // rxjs-compat NO se importa desde ningún sitio y aun así está: parchea el
+a03-node-npm.md:483: # 1. Su arbol de primer nivel. Es la lista que vas a comparar.
+a03-node-npm.md:486: # 2. Su version de Angular, que es la que ordena todo lo demas.
+a03-node-npm.md:489: # 3. Y la pregunta que decide si puedes leer la documentacion del curso:
+a03-node-npm.md:490: #    ¿el CLI es de la misma linea que el core?
+a04-webpack-oculto.md:158: # IE 9-11 support: descomentar la linea de abajo enciende differential loading
+a04-webpack-oculto.md:254: # Compila y ademas escribe dist/clinical-lab/stats.json con el detalle
+a04-webpack-oculto.md:269: # y darle un script. Asi todos miden con la misma version.
+a04-webpack-oculto.md:343: # Confirmalo en tu maquina en vez de creermelo. Ninguna de las dos
+a05-rxjs.md:321: catchError(function (error: any) { ... })   // aqui aterriza el TimeoutError
+a06-ngrx.md:409: error: any;            // el ultimo fallo, o null
+a07-i18n.md:140: this.translate.setDefaultLang('es');   // el arbol de respaldo (ver §8)
+a07-i18n.md:206: // primera pantalla, no como texto en blanco tres pantallas mas alla.
+a07-i18n.md:218: // pantalla, no undefined. Un undefined aca produce el texto 'undefined' o una
+a07-i18n.md:219: // celda vacía, que es mucho mas difícil de rastrear.
+a07-i18n.md:354: // Un snackbar, que es el caso mas frecuente (Fase 5).
+a07-i18n.md:382: // texto mas- la devuelve marcada, y deja rastro en consola. En desarrollo salta
+a07-i18n.md:475: #    cambian por la configuracion "i18n" del angular.json y @angular/localize.
+a08-pdf-cliente.md:75: // coordenadas son milimetros reales, que es lo mas fácil de razonar: el ancho
+a08-pdf-cliente.md:114: y = 20;          // se reinicia arriba de la pagina nueva
+a08-pdf-cliente.md:117: y = y + 8;         // el avance de linea tambien es tuyo
+a08-pdf-cliente.md:321: // la truncan; el blob es mas seguro.
+a09-kubernetes.md:88: image: lab-frontend:1.0.0 # ④ QUE version corre. Ojo con :latest (§3)
+a09-kubernetes.md:94: name: lab-frontend-config   # ⑥ DE DONDE sale la configuracion
+a09-kubernetes.md:252: # 👁️ ¿A QUE CLUSTER le estoy hablando? Es la primera linea que se escribe
+a09-kubernetes.md:253: # siempre. Un kubectl apuntando al contexto equivocado es la forma mas rapida
+a09-kubernetes.md:254: # de tener un mal dia. Ver §8.
+a10-migracion-8-9.md:79: # 1. El arbol de git TIENE que estar limpio. ng update se niega a correr si hay
+a10-migracion-8-9.md:80: #    cambios sin confirmar, y hace bien: lo que vas a leer despues es el diff
+a10-migracion-8-9.md:91: # 4. Y las librerias de Angular que tienen su propia schematic, despues.
+a10-migracion-8-9.md:171: #    buscando la primera que salio despues de Angular 9.
+a10-migracion-8-9.md:174: # 2. LA PREGUNTA. Que version de Angular exige esa version del paquete.
+a10-migracion-8-9.md:236: # La rama lleva "spike" en el nombre a proposito: cualquiera que la vea sabe
+a10-migracion-8-9.md:241: # posible despues, y "me parecio que tardaba mas" no es un dato.
+a10-migracion-8-9.md:314: # Cuantos archivos importan cada libreria del stack (categoria C)
+a11-migracion-9-16.md:71: # Que Node, que TypeScript y que RxJS exige una version concreta de Angular.
+a11-migracion-9-16.md:114: // contiene exactamente lo que SU plantilla usa: ni mas ni menos.
+a12-arm64-m1.md:36: # 1. La MAQUINA. arm64 = chip M (M1, M2, M3...). x86_64 = Intel.
+a12-arm64-m1.md:39: # 2. El NODE. Y aca esta la sorpresa: en una maquina arm64 esto puede decir
+a12-arm64-m1.md:100: # Que paquetes de tu arbol traen codigo nativo. Si la lista es corta, tu
+a12-arm64-m1.md:101: # problema tambien lo es.
+a12-arm64-m1.md:146: # Instala compilador y herramientas. Si ya estan, avisa y no hace nada.
+a12-arm64-m1.md:239: # 1. Cambiar de version.
+a12-arm64-m1.md:242: # 2. Borrar los binarios de la version anterior. SIN esto, el paso 3 no sirve.
+a13-docker-colima.md:103: # lentos: es la parte que mas se nota en el dia a dia (§5).
+a13-docker-colima.md:165: // el npm install va mucho mas rápido, y los binarios nativos de Linux dejan
+a13-docker-colima.md:188: # la lista del Apendice A12 §4, en su version de Linux.
+a13-docker-colima.md:198: # arregla despues con chown y malhumor.
+a13-docker-colima.md:267: # cada maquina descarga la suya. Necesita un builder con soporte multiplataforma.
+forense-fase-03.md:72: // Lo que hace el codigo correcto:
+forense-fase-03.md:73: Date.now() >= decoded.exp * 1000     // false, la sesion vive
+forense-fase-03.md:75: // Lo que hace el codigo con el bug:
+forense-fase-04.md:169: # 1. El caos global. Es lo que mas veces se olvida puesto.
+forense-fase-05.md:137: # 2. ¿Que vio Express? El log del mock imprime una linea por peticion.
+forense-fase-05.md:142: # 3. ¿Estaba ya en el dato? El duplicado puede ser mas viejo que el ticket.
+forense-fase-08.md:73: // 2      ← deberia ser 1
+forense-fase-08.md:75: // 1      ← la misma fecha, de dia, elige bien
+forense-fase-08.md:130: # 2. A que map dice apuntar, en su ultima linea.
+forense-fase-08.md:136: # {"version":3,"file":"main.8a1f2c.js","sources":["webpack:///./src/app/…
+forense-fase-09.md:78: return;                    // ya hay foto: no se refresca nunca mas
+forense-fase-10.md:46: // Y en la primera linea del ngOnInit del DashboardComponent:
+forense-fase-13.md:72: # 👁️ El log del contenedor. El entrypoint deja rastro en su primera linea.
+forense-fase-13.md:195: # 2. El config.json local, que es artefacto de arranque y no codigo fuente.
+forense-fase-13.md:196: #    Si aparece en git status, falta la linea en .gitignore.

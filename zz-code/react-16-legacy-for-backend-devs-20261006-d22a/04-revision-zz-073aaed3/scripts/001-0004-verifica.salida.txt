@@ -1,0 +1,13 @@
+00-convencion-de-git-y-tags.md:110 [] box/vert=0 any=4 :: '04-rifas-crud.md              →   fase-04-rifas-crud'
+03-mock-api-express-caos.md:154 [] box/vert=0 any=7 :: 'mock/'
+05-venta-de-numeros.md:52 [] box/vert=1 any=3 :: 'available ──reserve──► reserved ──sell──► sold'
+05-venta-de-numeros.md:570 [] box/vert=0 any=5 :: 'sales/sellNumber/pending'
+10-testing-minimo.md:53 [] box/vert=0 any=9 :: 'src/'
+A4-cra-por-dentro.md:82 [] box/vert=0 any=15 :: 'raffles-app/'
+be01-go-y-la-forma-del-monolito.md:188 [] box/vert=0 any=11 :: 'server/'
+be04-identidad-real-jwt-y-un-cve.md:98 [] box/vert=0 any=3 :: '$2a$10$N9qo8uLOickgx2ZMRZoMye.IjPeCLSjXBSHkVvHXfUqBLNhSHhBFq'
+bea-06-tiempo-zonas-y-relojes.md:179 [] box/vert=0 any=3 :: '2026-08-30T22:00:00-05:00     ← con offset'
+cuaderno-incidentes.md:2511 [] box/vert=0 any=5 :: 'sales/sellNumber/pending'
+prompts/prompts-b-por-apendice.md:480 [] box/vert=0 any=5 :: 'Genera el archivo A8-puente-a-react-moderno.md.'
+prompts/prompts-backend-fase.md:258 [] box/vert=0 any=3 :: 'Este es el chat de redacción de la Fase be04 — Identidad real: bcrypt,'
+12

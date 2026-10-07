@@ -1,0 +1,44 @@
+█ forense-fase-00.md · Paso 5 — Cuando la consola está limpia y aun así algo fa
+``` Con `sourceMap.hidden: true` puesto y el `.map` al lado, DevTools traduce esa línea al archivo y la línea reales. Sin él, `main.8a1f2c.js:1:48213` es todo lo que vas a tener nunca. Es la diferencia entre una investigación de diez minutos y una de dos días, y la fase
+
+█ forense-fase-05.md · Paso 4 — Y ahora en producción, que es donde de verdad l
+> 💡 **La descripción de un `InjectionToken` no es documentación: es la única pista que te va a quedar en producción.** Cuesta escribir la misma palabra dos veces y es la diferencia entre un ticket de diez minutos y uno de dos días. Un token creado como `new InjectionTok
+
+█ forense-fase-06.md · Paso 4 — Si es `VALID` y aun así no guarda
+``` Si `submitting` se quedó en `true` para siempre, el guardado anterior falló sin reponer la bandera — un `error` que no la baja. Es el mismo error de forma que el `PENDING` colgado: **un estado que sólo se limpia por el camino feliz**.
+
+█ forense-fase-07.md · Paso 6 — El otro incidente: "el sistema dice que hay dos
+**Dos filas con `validUntil: null` es el bug entero**, y se ve en tres líneas de salida. `null` significa "vigente indefinidamente"; publicar la v3 sin cerrar la v2 deja dos versiones vigentes el mismo día, y `resolveTemplateVersion` tiene que elegir entre dos respuesta
+
+█ forense-fase-08.md · Paso 3 — El ciclo, dibujado, y las dos formas de romperl
+**El servidor confirma; no dicta.** El único `patchValue` de esta pantalla es el de la carga inicial — y ni siquiera hace falta, porque el formulario se construye ya con los valores dentro. > ⚠️ **Y una causa del mismo bucle que no es un `patchValue`:** `disable()` y `e
+
+█ forense-fase-08.md · Paso 3 — Por qué el `FormRecord` se rehace y no se parch
+``` > 🧭 **La regla del proyecto que evita esta familia entera: la clave es el `itemId`, nunca la posición.** Con `FormArray` indexado por posición, reordenar los ítems en una v3 desplazaría las respuestas de todo el mundo. Con `FormRecord` y el `itemId` como clave no ha
+
+█ forense-fase-08.md · Paso 2 — El experimento que enseña la lección de verdad
+**Y ésta es la parte importante:** lo que no aparece **tampoco** es el valor actualizado. El bug sigue estando —la pantalla muestra un dato viejo— y ahora no hay nada que te avise. En desarrollo tenías un error rojo y ningún problema visible; en producción tienes un pro
+
+█ forense-fase-09.md · Paso 3 — Dónde va el arreglo, que es la decisión de verd
+**Sólo la tercera sigue funcionando cuando la Fase 10 lea el mismo campo para decidir si emite un certificado, y cuando la Fase 11 lo cuente en el panel.** Ponerlo en el borde no es elegancia: es no tener que acordarte dos fases más adelante, en dos archivos que todavía
+
+█ forense-fase-09.md · Paso 3 — La forma del arreglo, y por qué `undefined` vue
+> 🧭 **La regla del proyecto (guía §6.4): los modelos del dominio distinguen ausencia de vacío.** `validUntil: string | null` significa "vigente indefinidamente"; `validUntil?: string` significaría "no me molesté en decidirlo", y eso no entra al curso. Es la misma decisi
+
+█ forense-fase-10.md · Paso 4 — Por qué el arreglo es una función y no un ajust
+``` > 🧭 **La regla del proyecto: la zona horaria de una decisión de negocio es un dato del negocio, no del entorno.** Un certificado vence al final del día **en el huso donde opera la empresa**, y eso no cambia porque el inspector esté de viaje o porque el servidor esté
+
+█ forense-fase-10.md · Paso 2 — La comprobación en el código, que es una firma
+**Que sea un tipo con nombre y no "lo que tenga el componente" es la mitad del arreglo:** se ve de un vistazo que hacen falta seis cosas, y las seis tienen que venir de la fuente. > ⚠️ **Lo que hace peligrosa a esta deuda no es que el dato esté viejo: es que el PDF es e
+
+█ forense-fase-12.md · Paso 3 — El fix, y el segundo tag
+**Dos líneas.** Ése es el punto 5 del post-mortem, aislado del ruido de once fases, y se puede pegar en un ticket. Sin los dos tags, encontrarlo dentro de seis meses cuesta una tarde de arqueología. > 💡 **Y el atajo para releer el cuaderno entero sin abrir un archivo:**
+
+█ forense-fase-12.md · Paso final — Si nada de lo anterior: `git bisect`
+``` Es el último recurso porque cuesta N ejecuciones completas de la suite, y es infalible cuando el resto no dio nada.
+
+█ forense-fase-14.md · Paso 4 — Lo mismo, en el cluster de tu empresa
+3. **¿El namespace tiene el `imagePullSecret`?** — sin él, el kubelet no se puede autenticar y el evento dice `unauthorized`, que es un mensaje distinto del de arriba. Con esas tres preguntas ya puedes abrir el ticket bien, y eso es lo que esta ruta entrena. **A09** §1 
+
+█ forense-fase-14.md · Paso 4 — Cuando el pod ya se recicló y no queda nada
+``` > ⚠️ **Los logs de un pod borrado no existen.** Si el Deployment lo recrea, el anterior se fue y sus logs con él. En un cluster real eso lo resuelve un agregador —Loki, ELK, CloudWatch, el que tenga tu empresa— y **preguntar cuál es** debería ser de las primeras cos
