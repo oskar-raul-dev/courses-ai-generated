@@ -6,7 +6,6 @@
 > **Los tipos no son rígidos** (§8): son puntos de partida que se combinan según la idea, y todas las
 > cantidades de este documento son **valores por defecto** que la guía de cada curso puede cambiar,
 > declarándolo.
-> **Vigencia:** 2026-10-07.
 
 **Salto rápido:** [1](#1--cómo-se-elige) · [2](#2-️-curso-completo) · [3](#3-️-curso-legacy) · [4](#4--curso-repaso) · [5](#5--banco-de-preguntas-de-entrevista) · [6](#6--banco-de-preguntas-de-examen) · [7](#7-️-la-matriz-de-documentos) · [8](#8--los-tipos-no-son-rígidos) · [9](#9--con-historia-o-sin-historia) · [10](#10--cursos-extensos-bloques-y-pistas)
 
@@ -68,11 +67,10 @@ de medición. Cada ejercicio cierra con `**Criterio:**` verificable. Los 🟢 y 
 en `<details>`; los 🟠 y 🔴, una rúbrica.
 
 **Documentos que lleva.** Alcance, propuesta de fases, propuesta de apéndices, guía, diccionario,
-contrato de nombres, plantillas de capítulo, prompts de fase y de apéndice, plan de producción. Según
-el curso, además: **historia de una empresa ficticia** si el alcance la decide (§8; fuente de verdad de todo lo
+contrato de nombres, plantillas de capítulo, prompts de fase y de apéndice, plan de producción, y en la
+raíz del curso **`00-convencion-de-git-y-tags.md`** si el lector escribe código. Según el curso, además: **historia de una empresa ficticia** si el alcance la decide (§8; fuente de verdad de todo lo
 narrativo, vive en la raíz del curso porque el lector la lee), **documentos vivos** (`BENCHMARKS.md`, `INSTINTOS.md`,
-`cuaderno-incidentes.md`), **formato de mediciones**, **formato de miniproyectos**, **convención de git
-y tags**.
+`cuaderno-incidentes.md`), **formato de mediciones** y **formato de miniproyectos**.
 
 **Recursos pedagógicos propios** que los cursos completos del repositorio usan y que la guía puede
 adoptar: 🪞 la apuesta escrita antes de ejecutar, 🧨 la rotura provocada, ⚰️ la autopsia de una
@@ -127,8 +125,10 @@ secciones 🔥.
 - **"Entrar por el síntoma"**: una tabla que va de la frase del ticket (*"a veces no carga"*, *"verde
   en mi máquina, rojo en la de al lado"*) a la primera herramienta que hay que abrir. Se usa más que el
   índice, porque nadie llega a un incidente sabiendo de qué fase es.
-- **La convención de git** (`00-convencion-de-git-y-tags.md`): un tag anotado por fase cerrada y los
-  pares `-roto`/`-fix` que convierten cada incidente resuelto en un `git diff` legible.
+- **La convención de git** (`00-convencion-de-git-y-tags.md`, en la raíz del curso como en todo curso
+  con código, con sus secciones opcionales activas): un tag anotado por fase cerrada, los pares
+  `-roto`/`-fix` que convierten cada incidente resuelto en un `git diff` legible y, si el curso declara
+  deuda 💸, el par `deuda/<slug>-declarada` / `-pagada`.
 - **Apéndices de consulta** para lo que ya nadie explica (la librería vieja, el build oculto, el
   operador de RxJS que toca), un **mapa de deuda** (qué está feo a propósito y qué lo vuelve
   exigible) y, como 🔥, el puente a las versiones modernas.
@@ -155,8 +155,8 @@ prueba de regresión, o el documento que lo reemplaza.
 
 **Documentos que lleva.** Los del curso completo, más: `00-historia-del-sistema.md` (raíz del curso),
 el documento de decisiones y versiones, `formato-cuaderno-incidentes.md`, `formato-piezas-forenses.md`,
-`preparaciones-de-incidentes.md` (cómo llega roto el sistema a la máquina del lector), la convención de
-git y tags, y, si hay track opcional, sus propios prompts de fase y de apéndice con el sufijo del track.
+`preparaciones-de-incidentes.md` (cómo llega roto el sistema a la máquina del lector), y, si hay
+track opcional, sus propios prompts de fase y de apéndice con el sufijo del track.
 
 **Ejemplos en el repositorio.** `cursos-legacy/angular-8-legacy-for-backend-devs` (el más completo:
 fases, piezas forenses, cuaderno de 21 incidentes y track BE en Java 8 sobre MongoDB) y
@@ -269,7 +269,7 @@ de banco en su variante de examen, plan de producción con una tanda por dominio
 
 ✅ obligatorio · ⚪ según el curso · — no aplica
 
-| Documento de `prompts/` | Completo | Legacy | Repaso | Entrevista | Examen |
+| Documento de `prompts/` (o de la raíz, si lo dice) | Completo | Legacy | Repaso | Entrevista | Examen |
 |---|---|---|---|---|---|
 | `alcance-del-proyecto.md` | ✅ | ✅ | ⚪ (puede vivir en la guía §1) | — | ✅ |
 | `propuesta-fases-y-alcance.md` | ✅ | ✅ | ✅ (horas y decisiones) | — | ⚪ |
@@ -284,6 +284,7 @@ de banco en su variante de examen, plan de producción con una tanda por dominio
 | `prompts-de-fase.md` | ✅ | ✅ (y los del track opcional) | ✅ | ⚪ | ✅ |
 | `prompts-de-apendice.md` | ✅ | ✅ | ⚪ | — | — |
 | `00-historia-de-….md` (raíz del curso) | ⚪ (`D-11`) | ✅ (`00-historia-del-sistema.md`; `D-11` con historia por defecto) | ⚪ (`D-11`) | — | — |
+| `00-convencion-de-git-y-tags.md` (raíz del curso) | ✅ si hay código | ✅ (con incidentes y deuda) | ⚪ si hay laboratorio | — | — |
 | formatos propios (incidentes, mediciones, miniproyectos) | ⚪ | ✅ (cuaderno de incidentes, piezas forenses, preparaciones) | ⚪ | — | — |
 | `readme-de-prompts.md` | ✅ | ✅ | ⚪ | — | ⚪ |
 
@@ -418,7 +419,8 @@ Las reglas que fija la propuesta, en su §3 y su §7:
 - **Apéndices**: los que usa un solo bloque viven en ese bloque (`aNN-` desde `a01`); los
   transversales, en la raíz del curso. Se decide por apéndice, en la propuesta de apéndices.
 - **Git**: los tags llevan el bloque (`fase-BB-NN-slug`), para que `git tag -l 'fase-02-*'` sea el
-  índice de un bloque; los commits, el prefijo `BB/fNN:`.
+  índice de un bloque; los commits, el prefijo `BB/fNN:`. Los nombres van al contrato §7 y las reglas
+  a la convención de git, una sola para todo el curso.
 - **Evaluación**: cada bloque cierra su propio aparato (sus ejercicios, su simulación, su
   solucionario). Un banco o boss transversal a varios bloques va en el último bloque o en un bloque de
   cierre propio.

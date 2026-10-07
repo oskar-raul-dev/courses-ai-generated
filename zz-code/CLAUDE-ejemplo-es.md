@@ -43,7 +43,9 @@ nombra el valor que reemplaza y por qué. Si no dice nada, aplica el valor por d
 ## Anatomía de un curso
 
 - El material publicado, en la raíz del curso: lecciones o fases `00-slug.md`, apéndices `a01-slug.md`,
-  una historia opcional `00-historia-de-<slug>.md`, documentos vivos (`cuaderno-incidentes.md`,
+  una historia opcional `00-historia-de-<slug>.md`, la convención de git `00-convencion-de-git-y-tags.md`
+  si el lector escribe código (cada fase la enlaza desde su bloque 🏷️ de cierre; el lector copia el curso a
+  un repositorio propio y trabaja ahí, nunca en este), documentos vivos (`cuaderno-incidentes.md`,
   `BENCHMARKS.md`, `INSTINTOS.md`) solo si el curso los usa, y su `README.md`.
 - `prompts/` — la maquinaria del curso: ficha de arranque, alcance, propuestas, guía, diccionario,
   contrato de nombres, plantillas de capítulo, prompts de fase y de apéndice, plan de producción y

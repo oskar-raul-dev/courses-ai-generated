@@ -4,7 +4,6 @@
 > documento sale de cada etapa y qué compuerta hay que pasar para entrar en la siguiente.
 > **A quién sirve:** a quien abre un curso nuevo y a la sesión de LLM que lo acompaña. La sesión lo
 > recibe pegado o como instrucción de lectura en el prompt de cada etapa.
-> **Vigencia:** 2026-10-06.
 
 **Salto rápido:** [1](#1-️-el-flujo-en-una-pantalla) · [2](#2--las-reglas-que-atraviesan-todas-las-etapas) · [3](#3--las-etapas-una-por-una) · [4](#4--las-compuertas) · [5](#5--cuando-algo-cambia-a-mitad-de-camino) · [6](#6-️-la-cascada-de-autoridad) · [7](#7--lo-que-se-aprendió-y-por-eso-es-regla)
 
@@ -40,7 +39,7 @@ flowchart TD
     E1 -. produce .-> D1[/"alcance-del-proyecto.md"/]
     E2 -. produce .-> D2[/"propuesta-fases-y-alcance.md<br/>propuesta-apendices-y-alcance.md"/]
     E3 -. produce .-> D3[/"plan-de-produccion.md<br/>tandas P y T"/]
-    E4 -. produce .-> D4[/"guía · diccionario · contrato de nombres<br/>plantillas de capítulo · formatos propios"/]
+    E4 -. produce .-> D4[/"guía · diccionario · contrato de nombres<br/>convención de git · plantillas de capítulo<br/>formatos propios"/]
     E5 -. produce .-> D5[/"prompts-de-fase.md · prompts-de-apendice.md"/]
     E6 -. produce .-> D6[/"hallazgos H-xx"/]
     E7 -. produce .-> D7[/"fases, capítulos, apéndices,<br/>solucionarios, código"/]
@@ -95,7 +94,7 @@ Cada flecha punteada lleva al documento que produce la etapa: un archivo de `pro
 9. **Por defecto, todo secuencial y sin agentes**, a menos que el autor pida lo contrario. Una
    sesión, un documento, en orden, en el hilo principal.
 10. **Git lo hace el autor.** La sesión no hace commits ni borra con `git rm`; deja escritos los
-    tags que la tanda necesita.
+    tags que la tanda necesita, con los nombres y la forma de la convención de git del curso.
 11. **La máquina del autor no se toca sin permiso**: nada se instala, nada genera cargos, las pruebas
     corren en contenedores etiquetados con el curso y en puertos altos aleatorios (el curso puede
     publicar los de por defecto), y al terminar se borran esos contenedores **con sus volúmenes** y
@@ -191,6 +190,7 @@ bitácora y checklist) y se borra al cerrar el curso, con permiso del autor.
 **Plantillas:** [`guia-de-estilo-y-convenciones.md`](plantillas/guia-de-estilo-y-convenciones.md),
 [`diccionario-de-terminos.md`](plantillas/diccionario-de-terminos.md),
 [`contrato-de-nombres.md`](plantillas/contrato-de-nombres.md),
+[`convencion-de-git-y-tags.md`](plantillas/convencion-de-git-y-tags.md),
 [`plantillas-de-capitulo.md`](plantillas/plantillas-de-capitulo.md) y, según el tipo,
 [`banco-de-preguntas.md`](plantillas/banco-de-preguntas.md).
 
@@ -202,17 +202,24 @@ En este orden, porque cada uno cita al anterior:
    diccionario español → inglés del código del dominio. La guía lo cita; no lo copia.
 3. **El contrato de nombres** (si hay laboratorio, código o un sistema de ejemplo): nombres de
    recursos, servicios, archivos, tablas, tags de git. Se congela **antes** de la primera fase.
-4. **Las plantillas de capítulo**: los esqueletos rígidos de fase o capítulo y el laxo de apéndice.
-5. **Los formatos propios** que el curso necesite y que ninguna plantilla cubre: el cuaderno de
+4. **La convención de git y tags** (en todo curso donde el lector escribe o versiona algo, `D-09`
+   distinto de "sin código"): cuántos repositorios tiene el lector, el prefijo de los commits, el tag
+   anotado por fase cerrada con el checklist como mensaje y, según el curso, los tags de ejercicio,
+   los pares `-roto`/`-fix` de los incidentes y los de deuda. Toma los nombres del contrato. **No va
+   en `prompts/`**: se escribe para el lector en la raíz del curso, como `00-convencion-de-git-y-tags.md`,
+   se publica con él, y el bloque 🏷️ que cierra cada fase la enlaza. Parte de una regla fija: el curso
+   se escribe en el repositorio de cursos, y el lector lo copia a un repositorio propio para hacerlo.
+5. **Las plantillas de capítulo**: los esqueletos rígidos de fase o capítulo y el laxo de apéndice.
+6. **Los formatos propios** que el curso necesite y que ninguna plantilla cubre: el cuaderno de
    incidentes, el formato de mediciones, el formato de miniproyectos y, **si el curso la lleva**, la
    historia de la empresa ficticia
    ([`plantillas/historia-de-la-empresa.md`](plantillas/historia-de-la-empresa.md)). La historia es
    opcional y la decide el alcance (`D-11`). Se crean como documentos aparte, nunca como
    apéndices de la guía.
-6. **El verificador del curso**: se copian `herramientas/verificador_base.py` y
+7. **El verificador del curso**: se copian `herramientas/verificador_base.py` y
    `herramientas/verificar-corpus.py` al `prompts/` del curso, y la subclase se ajusta a lo que la guía
-   acaba de fijar (callouts, bandas, secciones obligatorias, formato del solucionario) más las
-   validaciones propias. Desde `T0` se corre al cerrar cada tanda.
+   acaba de fijar (callouts, bandas, secciones obligatorias, formato del solucionario, el
+   `TAG_DE_FASE` de la convención de git) más las validaciones propias. Desde `T0` se corre al cerrar cada tanda.
 
 ### E5 — Prompts de sesión
 
@@ -336,7 +343,7 @@ flowchart TD
     CL["CLAUDE.md del repositorio<br/>lineamientos generales: los valores por defecto"]
     AL["1 · alcance-del-proyecto.md<br/>QUÉ se enseña, a quién, con qué límites"]
     GU["2 · guia-de-estilo-y-convenciones.md<br/>CÓMO se escribe: forma, tono, plantilla, cantidades"]
-    NO["3 · contrato-de-nombres.md · diccionario-de-terminos.md<br/>los identificadores y las palabras"]
+    NO["3 · contrato-de-nombres.md · diccionario-de-terminos.md<br/>00-convencion-de-git-y-tags.md (raíz)<br/>los identificadores, las palabras y el git"]
     PR["4 · propuestas de fases y de apéndices<br/>la secuencia y la ficha de cada fase"]
     PL["5 · plantillas de capítulo y formatos propios<br/>copian peso y cantidades de la propuesta"]
     PF["6 · prompts de fase y de apéndice<br/>citan las fichas, no las copian"]
@@ -380,7 +387,11 @@ que el curso decidió a propósito. Dentro del curso, del 1 al 9, manda el de ar
   reescribirlo. Por eso existe `zz-code/`.
 - **Una prueba sin instrucciones no se puede repetir**, y los comandos que solo corrieron en la
   terminal quedan solo en la transcripción. Por eso cada directorio de `zz-code/` lleva un `README.md`
-  de corrida y medición, y lo citable se copia a un archivo (rescate de `lab-docker-kubernetes`,
-  2026-10-06).
+  de corrida y medición, y lo citable se copia a un archivo (rescate de
+  `lab-docker-kubernetes`).
+- **Un enlace a `prompts/` desde una fase se rompe al publicar**, porque `prompts/` no viaja. Por eso
+  la convención de git, que el lector necesita, va en la raíz del curso con un nombre fijo
+  (`00-convencion-de-git-y-tags.md`), y se escribe en E4, antes de las plantillas de capítulo que la
+  enlazan.
 - **Un curso que cita a otro deja de poder copiarse a otra carpeta.** Por eso la autocontención es una
   decisión explícita del alcance (ver la `D-03` de la plantilla).

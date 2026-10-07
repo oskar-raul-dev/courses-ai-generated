@@ -5,7 +5,6 @@
 > `{{…}}` y se pega el bloque entero.
 > **Regla de uso:** una etapa, una sesión. Si la etapa produce varios documentos (E4), una sesión por
 > documento, con el mismo prompt y otro entregable.
-> **Vigencia:** 2026-10-06.
 
 **Salto rápido:** [E1](#e1--idea-y-alcance) · [E1b](#e1b--basarse-en-un-curso-existente) · [E2](#e2--propuesta-de-fases-capítulos-y-apéndices) · [Compuerta](#revisión-de-compuerta) · [E3](#e3--plan-de-producción) · [E4](#e4--lineamientos) · [E5](#e5--prompts-de-sesión) · [E6](#e6--verificación-previa) · [E7](#e7--abrir-una-tanda-de-escritura) · [E8](#e8--revisión-total-y-cierre) · [E9](#e9--publicar)
 
@@ -18,7 +17,7 @@ flowchart LR
     E2["E2 · propuesta"] --> T2[/"propuesta de fases<br/>y de apéndices"/]
     G["compuerta C2 / C3"] -.-> E3
     E3["E3 · plan"] --> T3[/"plan-de-produccion"/]
-    E4["E4 · lineamientos"] --> T4[/"guía · diccionario · contrato<br/>plantillas · verificador"/]
+    E4["E4 · lineamientos"] --> T4[/"guía · diccionario · contrato<br/>convención de git · plantillas<br/>verificador"/]
     E5["E5 · prompts"] --> T5[/"prompts de fase<br/>y de apéndice"/]
     E6["E6 · verificación"] --> T6[/"hallazgos H-xx"/]
     E7["E7 · tanda"] --> T7[/"el curso"/]
@@ -268,11 +267,12 @@ cuando la apruebe. Paso 3: deja la bitácora con su primera entrada (fecha de ho
 
 ## E4 — Lineamientos
 
-Un prompt, cuatro usos. Se cambia el entregable y la sección "Qué vigilar".
+Un prompt, cinco usos. Se cambia el entregable y la sección "Qué vigilar".
 
 ````markdown
 Sesión de lineamientos del curso **{{nombre}}**. Entregable: `prompts/{{guia-de-estilo-y-convenciones.md
-| diccionario-de-terminos.md | contrato-de-nombres.md | plantillas-de-capitulo.md | formato-…}}`,
+| diccionario-de-terminos.md | contrato-de-nombres.md | plantillas-de-capitulo.md | formato-…}}`
+—o, para la convención de git, `00-convencion-de-git-y-tags.md` en la raíz del curso—,
 sobre la plantilla correspondiente de `zz-instrucciones/plantillas/`. Es la tanda **{{P-n}}** del
 plan de producción.
 
@@ -300,9 +300,20 @@ Fuentes, en orden: `prompts/alcance-del-proyecto.md`, `prompts/propuesta-fases-y
 - Todo nombre que más de una fase va a usar: recursos, servicios, archivos, tablas, puertos, tags.
 - Lo que no se puede congelar todavía se marca ⏳ con la fase que lo fija.
 
+**Convención de git y tags:**
+- Los nombres se copian del contrato §7, sin cambiarlos; si falta uno, se agrega allí primero.
+- Cuántos repositorios tiene el lector y por qué (un track o un curso hermano suele pedir dos).
+- Se activan solo las secciones opcionales que el curso usa (ejercicios, incidentes, forense, deuda,
+  estado que se ensucia) y se borran las demás; con cuaderno de incidentes, la de incidentes es
+  obligatoria y cita los puntos del post-mortem de la guía.
+- Va en la raíz del curso como `00-convencion-de-git-y-tags.md`, escrita para el lector (tuteo), y
+  se publica con él; nunca en `prompts/`.
+- El bloque 🏷️ de cierre de las plantillas de capítulo la enlaza con ese nombre.
+
 **Plantillas de capítulo:**
 - Las rígidas se siguen literal; la de apéndice es laxa a propósito.
 - Cada plantilla trae el encabezado completo y la sección final de recordatorios.
+- El bloque 🏷️ de cierre de fase es el de la plantilla A, con el enlace a `00-convencion-de-git-y-tags.md`.
 
 ## Cómo quiero que trabajes
 
@@ -381,7 +392,8 @@ tanda está cerrada.
 
 Para cada documento, pega mentalmente su prompt de `prompts/prompts-de-fase.md` y sigue su protocolo
 de tres pasos. Al cerrar la tanda: verificaciones del plan §4, y el plan al día (§3, §6, §7 y §8),
-con los tags que tengo que crear.
+con los tags que tengo que crear, con los nombres y el mensaje que pide
+`00-convencion-de-git-y-tags.md`.
 ````
 
 ---
@@ -402,9 +414,13 @@ Revisión total del curso **{{nombre}}** antes de cerrarlo. Lee el curso entero 
    copiar a otro proyecto y funciona sola.
 5. **Restos de producción**: ningún documento publicado cita `prompts/`, un `_desechable-*` ni el plan.
 6. **README y estructura**: describen lo que existe, con el estado real.
-7. {{Solo si lo pido: **diagramas en Mermaid**, convirtiendo los que estén en otro formato.}}
+7. **Git**: `00-convencion-de-git-y-tags.md` existe en la raíz del curso y ningún documento enlaza
+   una copia en `prompts/`; cada fase cierra con su bloque 🏷️, que la enlaza, y su tag coincide con
+   el nombre del archivo; ningún apéndice trae bloque 🏷️; ningún tag ni prefijo de commit fuera de los
+   espacios de nombres del contrato §7.
+8. {{Solo si lo pido: **diagramas en Mermaid**, convirtiendo los que estén en otro formato.}}
 
-8. **`zz-code/`**: cada directorio del curso en el plan §9 con estado *extraído* o *archivado*, ninguno
+9. **`zz-code/`**: cada directorio del curso en el plan §9 con estado *extraído* o *archivado*, ninguno
    *vigente*; cada uno con su `README.md` completo (sin secciones `{{…}}` y con cada cifra publicada
    rastreable hasta su prueba); y la vista previa de `python3 zz-code/limpiar.py <ids>` con sus tamaños.
 

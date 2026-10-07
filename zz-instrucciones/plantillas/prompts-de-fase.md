@@ -36,7 +36,7 @@ aplícalo.**
 
 Fuentes de verdad, en este orden: (1) `prompts/alcance-del-proyecto.md`,
 (2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/contrato-de-nombres.md`,
-`prompts/convencion-de-git-y-tags.md` y `prompts/diccionario-de-terminos.md`, (4) `prompts/propuesta-fases-y-alcance.md`, con la ficha de
+`prompts/diccionario-de-terminos.md` y `00-convencion-de-git-y-tags.md` (raíz del curso), (4) `prompts/propuesta-fases-y-alcance.md`, con la ficha de
 esta fase y su fila de §8, (5) `prompts/plantillas-de-capitulo.md`, (6) {{los formatos propios y la
 historia, con la escena de esta fase en la tabla de escenas}}, (7) las fases ya escritas {{y el código
 de `src/` en el tag de la fase anterior}}, (8) las decisiones de esta sesión. Los `_desechable-*` no

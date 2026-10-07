@@ -17,7 +17,7 @@ Si dudas entre dos formas de escribir algo, gana la que le sirva más a alguien 
 > **Precedencia.** {{Por encima de esta guía solo está [`alcance-del-proyecto.md`](alcance-del-proyecto.md),
 > que decide qué enseña el curso; esta decide cómo se escribe.}} Por debajo van el
 > [diccionario](diccionario-de-terminos.md), el [contrato de nombres](contrato-de-nombres.md), la
-> [convención de git](convencion-de-git-y-tags.md), las propuestas, las plantillas y los prompts, que se actualizan después y nunca al revés.
+> convención de git (`00-convencion-de-git-y-tags.md`, en la raíz del curso), las propuestas, las plantillas y los prompts, que se actualizan después y nunca al revés.
 >
 > **Derivada de** {{la guía de … (fecha) | ninguna: escrita desde las plantillas generales}}. Lo que se
 > hereda sin cambios se hereda en silencio; **diverge en {{N}} puntos declarados**: {{§x (qué), §y
@@ -383,8 +383,8 @@ Contenido
 [ ] Ningún concepto reescrito si tiene otro dueño: se enlaza
 [ ] Todo comando, salida y número salió de una ejecución real, o lleva el marcador de pendiente
 [ ] Ningún nombre técnico fuera del contrato; ningún término fuera del diccionario
-[ ] Fase: cierra con el bloque 🏷️ de la convención de git §9 y el tag fase- + el slug del archivo;
-    apéndice: sin bloque 🏷️; ningún tag fuera de los espacios de nombres del contrato §7
+[ ] Fase: cierra con el bloque 🏷️ (tag fase- + el slug del archivo, enlace a
+    00-convencion-de-git-y-tags.md); apéndice: sin bloque 🏷️; ningún tag fuera del contrato §7
 [ ] Ninguna versión escrita fuera de su sitio; nunca latest ni rangos
 [ ] Cuerpo en la banda de §9
 

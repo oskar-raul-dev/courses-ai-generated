@@ -53,7 +53,7 @@ Cuatro reglas lo mantienen en su sitio:
 Los nombres de archivo son canónicos y no se renumeran. **Los apéndices no cierran con tag**: un tag
 marca un cambio en el repositorio y un apéndice explica lo que ya está ahí. La columna dice solo si el
 apéndice deja archivos versionados a los que el lector puede querer volver con un `apendice-aNN`
-opcional ([convención de git](convencion-de-git-y-tags.md) §2).
+opcional (convención de git §2, `00-convencion-de-git-y-tags.md`).
 
 ---
 

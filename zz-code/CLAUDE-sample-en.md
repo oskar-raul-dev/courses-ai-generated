@@ -37,7 +37,9 @@ and why. Silence means the default applies.
 ## Course anatomy
 
 - Published material at the course root: lessons or phases `00-slug.md`, appendices `a01-slug.md`, an
-  optional story `00-historia-de-<slug>.md`, living documents (`cuaderno-incidentes.md`,
+  optional story `00-historia-de-<slug>.md`, the git convention `00-convencion-de-git-y-tags.md` when
+  the reader writes code (each phase links it from its 🏷️ closing block; the reader copies the course to
+  their own repository and works there, never in this one), living documents (`cuaderno-incidentes.md`,
   `BENCHMARKS.md`, `INSTINTOS.md`) only if the course uses them, and its `README.md`.
 - `prompts/` — the course's machinery: kickoff sheet, scope, proposals, guide, dictionary, naming
   contract, chapter templates, phase and appendix prompts, production plan, verifier. It is kept as

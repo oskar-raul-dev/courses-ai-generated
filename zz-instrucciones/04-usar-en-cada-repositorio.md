@@ -3,9 +3,8 @@
 > **Qué es este documento:** lo que cambia al usar estas plantillas en cada uno de los dos
 > repositorios de cursos. Las plantillas son las mismas; lo que difiere son los **valores por
 > defecto** de cada `CLAUDE.md` raíz, la ubicación de los cursos y el perfil del verificador.
-> **Comprobado el 2026-10-04** contra los 15 corpus de `repaso-entrevistas/` y los 11 cursos con
-> `prompts/` de `courses-ia-generated`.
-> **Vigencia:** 2026-10-04.
+> **Comprobado** contra los 15 corpus de `repaso-entrevistas/` y los 11 cursos con `prompts/` de
+> `courses-ia-generated`.
 
 **Salto rápido:** [1](#1-️-los-dos-repositorios-de-un-vistazo) · [2](#2--lo-que-cada-curso-tiene-que-declarar) · [3](#3--el-verificador-en-cada-repositorio) · [4](#4--lo-que-el-barrido-encontró)
 

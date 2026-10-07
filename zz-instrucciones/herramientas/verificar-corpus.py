@@ -34,6 +34,7 @@ class VerificadorDelCurso(Verificador):  # o PerfilRepasoEntrevistas, o PerfilCo
     CAMPOS_ENCABEZADO = ("Vigencia",)
     ANCHO_MAXIMO = None                                           # p. ej. 100
     AUTOCONTENIDO = True                                          # D-03 del alcance
+    TAG_DE_FASE = "fase-{slug}"                                   # convención de git §3; None si no hay código
 
     # --- validaciones propias (ejemplos: borrar o reemplazar)
 

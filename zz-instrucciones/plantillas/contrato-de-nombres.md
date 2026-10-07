@@ -105,9 +105,8 @@ causa histórica, escritas **tal cual** —no se corrigen, no se traducen, no se
 ## 7. 🏷️ Git
 
 > ✏️ **Plantilla:** aquí se congelan **los nombres**; las reglas y el uso (cuándo se crea cada tag, qué
-> lleva su mensaje, el bloque 🏷️ de las fases) viven en
-> [`convencion-de-git-y-tags.md`](convencion-de-git-y-tags.md), que se escribe justo después (P7) y
-> copia estos patrones sin cambiarlos.
+> lleva su mensaje) van en `00-convencion-de-git-y-tags.md`, en la raíz del curso, que se escribe justo
+> después (P7) desde la [plantilla](convencion-de-git-y-tags.md) y copia estos patrones sin cambiarlos.
 
 - **Repositorios del lector:** `{{nombre-del-proyecto}}`{{, y `{{nombre-del-otro}}` para el track}}.
 - **Tags de fase:** `{{fase-NN-slug}}`, al cerrar cada fase; los crea el autor.

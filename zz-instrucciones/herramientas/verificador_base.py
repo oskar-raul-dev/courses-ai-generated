@@ -24,6 +24,7 @@ Errores (salida con código 1):
   MOJIBAKE  codificación rota tras una sustitución (Ã, â€) fuera de código
   EMOJI     emoji en un encabezado ###, salvo la escala de dificultad (EMOJI_PERMITIDOS_H3)
   SECCION   capítulo sin una sección obligatoria (SECCIONES_OBLIGATORIAS)
+  TAG       capítulo que no nombra su tag de cierre (TAG_DE_FASE, de la convención de git)
   SINCRO    capítulo con distinto número de preguntas que su solucionario
   LITERAL   enunciado del solucionario que no es copia literal del capítulo (si LITERAL_ES_ERROR)
   FALTA     pregunta del capítulo sin entrada en el solucionario
@@ -212,7 +213,7 @@ class Verificador:
     BLOQUE_RE = re.compile(r"^\d{2}-")      # carpeta de bloque (repasos); si no hay, el curso es plano
     PISTA_RE = re.compile(r"^pista-")        # carpeta de pista: sus bloques van un nivel más abajo
     CAPITULO_RE = re.compile(r"^(\d{2})-.*\.md$")
-    NO_CAPITULO = ("respuestas", "simulacion", "readme")   # partes del nombre que no son capítulo
+    NO_CAPITULO = ("respuestas", "simulacion", "readme", "convencion-de-git")   # partes del nombre que no son capítulo
     SOLUCIONARIO_RE = re.compile(r"respuestas\.md$")
 
     # --- reglas de forma
@@ -233,6 +234,8 @@ class Verificador:
     SECCIONES_OBLIGATORIAS = ()             # p. ej. ("🎯 El problema", "🧠 Preguntas")
     ANCHO_MAXIMO = None                     # p. ej. 100 caracteres de prosa
     BANDA_LINEAS = None                     # p. ej. (200, 450)
+    TAG_DE_FASE = None                      # p. ej. "fase-{slug}" o, con bloques, "fase-{bloque}-{slug}":
+                                            # el tag que cada capítulo nombra en su bloque 🏷️ de cierre
 
     # --- preguntas y solucionario
     SECCION_PREGUNTAS = "🧠 Preguntas"
@@ -405,6 +408,11 @@ class Verificador:
         for obligatoria in self.SECCIONES_OBLIGATORIAS:
             if not any(obligatoria in s for s in self.secciones(lineas)):
                 self.error("SECCION", f"{nombre}: falta «{obligatoria}»")
+        if self.TAG_DE_FASE:
+            tag = self.TAG_DE_FASE.format(slug=os.path.basename(ruta)[:-3],
+                                          bloque=os.path.basename(os.path.dirname(ruta))[:2])
+            if not re.search(re.escape(tag) + r"(?![\w-])", texto):
+                self.error("TAG", f"{nombre}: no nombra su tag «{tag}» (convención de git)")
         encabezado = "\n".join(l for _, l in lineas[:25] if l.startswith(">"))
         for campo in self.CAMPOS_ENCABEZADO:
             alternativas = (campo,) if isinstance(campo, str) else campo

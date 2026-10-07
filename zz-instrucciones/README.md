@@ -16,8 +16,11 @@
 > sesiones prueban las ideas de un curso, cada directorio con un `README.md` que dice cómo correr y
 > medir sus pruebas. Las dos carpetas empiezan por `zz-` para quedar al final del
 > listado.
-> **Vigencia:** 2026-10-06. **Estado:** primera versión, en uso; se moverá a `courses-ia-generated`,
-> que pasará a ser la casa de estos lineamientos.
+> **Estado:** primera versión, en uso; se moverá a `courses-ia-generated`, que pasará a ser la casa
+> de estos lineamientos.
+> **Alcance:** todo lo que dice esta carpeta rige sin fecha, desde ya, para cualquier curso. Los cursos
+> producidos antes no lo cumplen entero y se alinean en sesiones propias; mientras tanto, su estado no
+> es un precedente que corrija estas reglas.
 
 **Salto rápido:** [Mapa](#️-mapa) · [Cómo se usa](#-cómo-se-usa) · [Prompt de arranque](#-el-prompt-de-arranque) · [VS Code](#️-configurar-vs-code-para-ver-el-curso) · [CLAUDE.md](#-el-claudemd-del-repositorio) · [Convenciones de las plantillas](#-convenciones-de-las-plantillas) · [Lo que queda por discutir](#-lo-que-queda-por-discutir)
 
@@ -42,6 +45,7 @@ zz-instrucciones/
 │   ├── guia-de-estilo-y-convenciones.md   CÓMO se escribe; termina en el checklist de cierre
 │   ├── diccionario-de-terminos.md     qué se queda en inglés, qué se traduce y cómo se nombra el código
 │   ├── contrato-de-nombres.md         los nombres técnicos congelados antes de escribir
+│   ├── convencion-de-git-y-tags.md    cómo versiona el lector; va publicada en la raíz del curso
 │   ├── plantillas-de-capitulo.md      esqueletos de fase, capítulo, lab, apéndice, simulación y solucionario
 │   ├── prompts-de-fase.md             marco común + protocolo de tres pasos + un bloque por fase
 │   ├── prompts-de-apendice.md
@@ -437,6 +441,11 @@ los ejercicios, el formato de los diagramas y la historia: los decide la ficha.
   es obligatorio: solo cuando se pide de forma explícita al crearlos o al revisarlos (`D-12`).
 - **Las secciones opcionales** dicen *(opcional)* en el título de la plantilla y se borran enteras si
   el curso no las usa. Nunca se dejan vacías.
+- **La convención de git no va en `prompts/`**: se copia a la raíz del curso como
+  `00-convencion-de-git-y-tags.md`, se publica con él y cada fase la enlaza desde su bloque 🏷️ de
+  cierre. Es, junto con la historia, la única plantilla que produce un documento que lee el lector.
+  Parte de una regla fija: **el curso se escribe en este repositorio y el lector lo copia a un
+  repositorio propio para hacerlo**; sus commits y sus tags viven en esa copia, nunca aquí.
 - **La numeración de secciones de las plantillas es la que citan las demás plantillas** (por ejemplo,
   "guía §12" es siempre el checklist de cierre). Si un curso renumera, actualiza las referencias
   cruzadas de sus propios `prompts/` en la misma edición.
@@ -457,7 +466,7 @@ decisiones que más pesan:
   la preparación entera quede registrada en tandas. Los cursos existentes lo escribieron al final de la
   preparación; la diferencia está argumentada en el workflow.
 - **El verificador** tiene una base común (`verificador_base.py`) y una subclase por curso
-  (`verificar-corpus.py`), al estilo del de `bases/03-poo-y-patrones`. Se probó el 2026-10-04 contra
+  (`verificar-corpus.py`), al estilo del de `bases/03-poo-y-patrones`. Se probó contra
   once cursos reales de los dos repositorios y contra un curso de prueba con un error de cada tipo, que
   detectó todos. En los cursos del repositorio sale en cero salvo por lo que es configuración de cada
   uno: los repasos con autocontención editorial enlazan otros corpus y su guía

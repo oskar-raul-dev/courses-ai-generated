@@ -2,7 +2,6 @@
 
 > **Qué es:** la versión corta de esta carpeta, para arrancar sin leerla entera. Cada paso enlaza el
 > documento que lo explica a fondo, para cuando haga falta.
-> **Vigencia:** 2026-10-06.
 
 ```mermaid
 flowchart LR
@@ -71,7 +70,7 @@ Con la ficha cerrada, el bloque "La idea" de E1 se reduce a una línea: *"La ide
 ## 6. 🚀 Pide las tandas del plan, una por sesión
 
 Desde aquí manda `prompts/plan-de-produccion.md`. Primero las tandas de preparación (P: guía,
-diccionario, contrato, plantillas, prompts, verificación previa) y después las de escritura (T: las
+diccionario, contrato, convención de git, plantillas, prompts, verificación previa) y después las de escritura (T: las
 fases). Cada una en una sesión nueva, abierta así:
 
 ```text
@@ -90,7 +89,8 @@ el cierre; y [E9](02-prompts-de-etapa.md#e9--publicar), si el curso se publica.
 
 ## 🧷 Lo que conviene saber desde el primer día
 
-- **Git lo manejas tú.** Las sesiones no hacen commits; te dejan escritos los tags.
+- **Git lo manejas tú.** Las sesiones no hacen commits; te dejan escritos los tags, con los nombres de
+  la convención de git del curso (`00-convencion-de-git-y-tags.md`, en su raíz).
 - **Cada sesión empieza limpia** y lee el plan: no hace falta que recuerde nada de la anterior.
 - **Si una sesión pregunta, responde antes de que escriba.** Todos los prompts tienen un paso 1 de
   preguntas, y ahí es donde se evitan las tandas rehechas.

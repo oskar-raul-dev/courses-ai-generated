@@ -57,7 +57,7 @@ hasta donde llega.
    tanda**.
 8. **Git lo hace el autor.** Se borra con `rm`, archivo por archivo, nunca con `git rm` ni borrando
    directorios. Los tags los crea el autor con los mensajes que la tanda deja en la bitácora, con los
-   nombres y la forma de `prompts/convencion-de-git-y-tags.md`.
+   nombres y la forma de `00-convencion-de-git-y-tags.md`, en la raíz del curso.
 9. **La máquina del autor no se toca sin permiso**: nada se instala ni genera cargos. Los contenedores
    de las pruebas llevan la etiqueta `curso={{slug}}`, usan **puertos altos y aleatorios** (nunca los
    de por defecto, que otro contenedor puede tener ocupados; el curso sí puede publicarlos) y se borran **con sus volúmenes** al
@@ -90,7 +90,7 @@ que falte de las tandas saltadas va en prosa y a §6.
 ### 2.0 Una tanda de preparación
 
 Un documento de `prompts/`, o un paso que lo deja coherente con los demás: una decisión, una
-verificación, un traslado. **No crea nada fuera de `prompts/`** {{salvo …}}. Terminada cuando sus
+verificación, un traslado. **No crea nada fuera de `prompts/`** salvo `00-convencion-de-git-y-tags.md` (P7){{ y …}}. Terminada cuando sus
 enlaces pasan §4 y los documentos que la citan están al día.
 
 ### 2.1 Una tanda de escritura
@@ -136,7 +136,7 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ terminada y verificada.
 | **P4** | Guía de estilo y convenciones{{, derivada de …}} | 1 | — | ⬜ |
 | **P5** | Diccionario de términos | 1 | — | ⬜ |
 | **P6** | Contrato de nombres | 1 | — | ⬜ |
-| **P7** | Convención de git y tags | 1 | — | ⬜ |
+| **P7** | Convención de git y tags (`00-convencion-de-git-y-tags.md`, raíz del curso) | 1 | — | ⬜ |
 | **P8** | Plantillas de capítulo {{y formatos propios}} | {{1–n}} | — | ⬜ |
 | **P9** | Prompts de fase {{y de apéndice}} | {{1–2}} | — | ⬜ |
 | **P10** | Decisiones abiertas cerradas por el autor | — | — | ⬜ |
@@ -286,7 +286,7 @@ están. **En cursos con laboratorio, cada documento ejecutable lleva dos casilla
 - [ ] P4 · `prompts/guia-de-estilo-y-convenciones.md`
 - [ ] P5 · `prompts/diccionario-de-terminos.md`
 - [ ] P6 · `prompts/contrato-de-nombres.md`
-- [ ] P7 · `prompts/convencion-de-git-y-tags.md`
+- [ ] P7 · `00-convencion-de-git-y-tags.md` (raíz del curso: se publica)
 - [ ] P8 · `prompts/plantillas-de-capitulo.md` {{y formatos propios}}
 - [ ] P9 · `prompts/prompts-de-fase.md` {{y `prompts-de-apendice.md`}}
 - [ ] P10 · D-{{xx}}–D-{{yy}} cerradas por el autor

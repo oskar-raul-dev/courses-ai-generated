@@ -135,7 +135,9 @@ síntoma literal y lo que costó salir. Se dice si la apuesta se ganó o se perd
 > ```
 >
 > Los commits de la fase llevan su prefijo (`{{fNN}}: …`) y los de ejercicio su número
-> (`{{fNN}} ej17: …`).
+> (`{{fNN}} ej17: …`).{{ Un ejercicio que merece marcador va en `ej/{{fNN}}/17`, y un incidente
+> resuelto en el par `inc/{{fNN}}/<slug>-roto` / `-fix`.}} Todo eso está en la
+> [convención de git]({{00-convencion-de-git-y-tags.md | ../00-convencion-de-git-y-tags.md}}).
 
 ---
 
@@ -153,9 +155,9 @@ síntoma literal y lo que costó salir. Se dice si la apuesta se ganó o se perd
   marcador de pendiente.
 - El problema va antes que el mecanismo, y se reproduce, no se cuenta.
 - Lo que crece se alimenta al cerrar: documentos vivos, apéndices de consulta, solucionario.
-- El bloque 🏷️ es el de la convención de git §9, literal: el tag es `fase-` + el slug del archivo, y
-  no enlaza la convención (vive en `prompts/`). La Fase 0 lleva además la sección de git que la
-  convención §0 pide.
+- El bloque 🏷️ es de forma fija: cambian solo el tag (`fase-` + el slug del archivo), la etiqueta de
+  la fase y el prefijo de commit. Enlaza `00-convencion-de-git-y-tags.md`, en la raíz del curso
+  (`../` si la fase vive en un bloque); nunca una copia en `prompts/`.
 - Ningún `README.md` se toca. 🗑️ No se cita un `_desechable-*` ni un documento de `prompts/`.
 
 ---

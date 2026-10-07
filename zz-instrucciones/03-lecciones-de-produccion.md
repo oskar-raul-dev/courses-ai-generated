@@ -8,7 +8,6 @@
 > y el marco común de [`plantillas/prompts-de-fase.md`](plantillas/prompts-de-fase.md) citan este
 > documento. Al copiar las plantillas a un curso, las reglas que apliquen se copian al marco común del
 > curso (el curso no enlaza aquí: es autocontenido).
-> **Vigencia:** 2026-10-06.
 
 **Salto rápido:** [1](#1--forma-de-trabajo) · [2](#2-️-git-y-sistema-de-archivos) · [3](#3--ejecutar-sin-romper-la-máquina-del-autor) · [4](#4--lo-que-no-se-puede-ejecutar) · [5](#5--verificar-lo-que-se-nombra) · [6](#6--narrativa-y-datos) · [7](#7--el-estado-entre-sesiones) · [8](#8--trampas-de-herramientas) · [9](#9--cierre-de-un-curso)
 
@@ -65,6 +64,13 @@ flowchart LR
 - **Git lo maneja el autor.** Nada de commits, `git add`, `git rm` ni `git mv`; tampoco se ofrecen
   mensajes de commit salvo los **tags** que el plan pide dejar escritos en la bitácora. Leer con
   `git status`, `git log` y `git diff` está bien.
+- **Hay dos gits, y no hay que mezclarlos.** El curso se escribe y se versiona en este repositorio
+  (el de cursos, y el de referencia del curso si `D-09` es un proyecto con tags); ese git lo maneja el
+  autor con los tags de la bitácora. **El lector no hace el curso aquí**: copia la carpeta del curso a
+  un repositorio propio y trabaja en él, con su `git init`, sus commits y sus tags. Ese segundo git lo
+  describe `00-convencion-de-git-y-tags.md`, en la raíz del curso, y cada fase lo enlaza desde su
+  bloque 🏷️ de cierre. Los dos usan **los mismos nombres de tag**, para que comparar el proyecto
+  del lector con el del curso sea un `git diff` entre tags que se llaman igual.
 - **Mover y borrar con el sistema de archivos** (`mv`, `rm`), y borrar solo **archivos nombrados uno a
   uno** que sean el objetivo explícito del cambio.
 - **Nunca `rm -rf` ni borrar directorios completos, tampoco en el scratchpad.** Un `cd` fallido
@@ -79,12 +85,11 @@ flowchart LR
 - **El plan de producción registra cada directorio de `zz-code/`** (plan §9) con su estado: *vigente*,
   *extraído* (lo útil ya pasó al curso, a su `prompts/` o a `zz-instrucciones/herramientas/`) o
   *archivado* (se conserva como referencia). El curso nunca cita `zz-code/`; el verificador lo marca.
-- **Todas las pruebas se hacen en `zz-code/`, también lo efímero** (decisión del 2026-10-05): logs,
-  salidas, SVG de prueba y copias para comparar van a `zz-code/<id>/salidas/`, que el `.gitignore` de
-  `zz-code/` excluye y `limpiar.py` libera como regenerable. El scratchpad de la sesión ya no se usa
+- **Todas las pruebas se hacen en `zz-code/`, también lo efímero**: logs, salidas, SVG de prueba y
+  copias para comparar van a `zz-code/<id>/salidas/`, que el `.gitignore` de `zz-code/` excluye y
+  `limpiar.py` libera como regenerable. El scratchpad de la sesión ya no se usa
   para pruebas: lo que quedaba allí se perdía o se olvidaba al cerrar.
-- **Todo el código de la sesión se guarda en `zz-code/`, no solo las pruebas** (decisión del
-  2026-10-06). Scripts, Dockerfile, manifiestos, compose, cargas de k6, consultas, configuraciones de
+- **Todo el código de la sesión se guarda en `zz-code/`, no solo las pruebas.** Scripts, Dockerfile, manifiestos, compose, cargas de k6, consultas, configuraciones de
   prueba y conductores: todo vive en `zz-code/<id>/` desde que se escribe, aunque se use una vez. Ni el
   scratchpad ni `/tmp`. **Origen:** al cerrar `lab-docker-kubernetes`, las pruebas de cuatro sesiones
   seguían en sus scratchpads de `/private/tmp`, a un reinicio de perderse; hubo que rescatarlas a mano
@@ -115,7 +120,7 @@ flowchart LR
   (`laboratorio/`, `taller/`), siempre en la raíz del curso. Cuál se usa lo decide el curso; lo que
   no es opcional es que el `README.md` del curso diga dónde está y qué contiene. Un curso sin código
   global no crea la carpeta.
-- **Un solo `.gitignore` por curso, centralizado** (decisión del 2026-10-04). Va en uno de dos
+- **Un solo `.gitignore` por curso, centralizado**. Va en uno de dos
   lugares, y la guía del curso (§14) declara cuál:
   - **la raíz del directorio de talleres o prácticas donde vive el código** (`laboratorio/`,
     `13-laboratorio/`…), cuando todo el código está ahí, que es el caso habitual;
@@ -301,7 +306,7 @@ flowchart LR
 
 ## 9. 🏁 Cierre de un curso
 
-- **`prompts/` se conserva entero como referencia** (decisión del 2026-10-04): guía, diccionario,
+- **`prompts/` se conserva entero como referencia**: guía, diccionario,
   contrato, propuestas, prompts, plan y verificadores. No viaja al repositorio público del curso —el
   autor no lo copia—, así que no hace falta podarlo. Los `_desechable-*` y lo que el autor pida se
   borran archivo por archivo, con su permiso.

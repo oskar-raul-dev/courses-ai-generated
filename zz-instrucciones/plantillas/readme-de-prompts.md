@@ -20,7 +20,7 @@ abre. Quien escribe una fase lo lee entero antes de teclear la primera línea.
 | [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md) | cómo se escribe; checklist de §12 | en cada sesión, siempre |
 | [`diccionario-de-terminos.md`](diccionario-de-terminos.md) | qué palabra para cada concepto; el código del dominio | cada vez que dudes de un término |
 | [`contrato-de-nombres.md`](contrato-de-nombres.md) | los identificadores congelados | antes de cada fase, y cada vez que haga falta un nombre |
-| [`convencion-de-git-y-tags.md`](convencion-de-git-y-tags.md) | commits, tags de fase, ejercicio e incidente; el bloque 🏷️ de cierre | al escribir la Fase 0, el cierre de cada fase y cada incidente |
+| `00-convencion-de-git-y-tags.md` | fuera de `prompts/`: en la raíz del curso, publicada; commits y tags de fase, ejercicio e incidente | al escribir el cierre de cada fase y cada incidente |
 | [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) | la secuencia y la ficha de cada fase; decisiones | en cada sesión de fase |
 | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md) | los esqueletos | al empezar y al cerrar cada documento |
 | [`prompts-de-fase.md`](prompts-de-fase.md) | el marco común y un bloque por fase | al abrir cada sesión |

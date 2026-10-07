@@ -175,7 +175,8 @@ se dice aquí y por qué —"todo lo que sería consulta es una fase"—.}}
 - **Los slugs son canónicos**: una {{fase}} no se renombra una vez escrita, ni un bloque.
 - **Git:** {{tags `fase-NN-slug` al cerrar cada fase —con bloques, `fase-BB-NN-slug`—; commits con
   prefijo `fNN:` —con bloques, `BB/fNN:`—}}. Aquí se decide solo la forma; los nombres se congelan en
-  el contrato de nombres §7 y las reglas de uso, en `convencion-de-git-y-tags.md` (etapa E4).
+  el contrato de nombres §7 y las reglas de uso, en `00-convencion-de-git-y-tags.md`, en la raíz del
+  curso (etapa E4).
   {{Si el lector trabaja en más de un repositorio (un track, un curso hermano), cuántos y por qué.}}
 
 ---
