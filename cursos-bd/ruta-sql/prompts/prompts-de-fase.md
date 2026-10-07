@@ -31,8 +31,9 @@ aplícalo.**
 Fuentes de verdad, en este orden: (1) `prompts/alcance-del-proyecto.md`,
 (2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/propuesta-fases-y-alcance.md`, con la
 ficha de esta fase, (4) `prompts/propuesta-apendices-y-alcance.md`, (5)
-`prompts/plantillas-de-capitulo.md`, (6) `00-historia-de-alameda.md`, que es la empresa del curso y
-la fuente de todo lo narrativo, (7) las fases y apéndices ya escritos, (8) las decisiones de esta
+`prompts/plantillas-de-capitulo.md`, (6) `prompts/contrato-de-nombres.md` y
+`prompts/diccionario-de-terminos.md`, (7) `00-historia-de-alameda.md`, que es la empresa del curso y
+la fuente de todo lo narrativo, (8) las fases y apéndices ya escritos, (9) las decisiones de esta
 sesión. Los documentos `_desechable-*` no cuentan y no se citan.
 
 Reglas que no se negocian:
@@ -46,7 +47,7 @@ Reglas que no se negocian:
 - **Cada motor aparece solo donde cambia la decisión.**
 - **Autopsia, no juicio.** Rubén, Matías, Florencia y Verónica tienen su mejor argumento antes que
   el del curso.
-- **Aquí no se enseña Docker.** Más de dos párrafos de contenedores: enlaza a `a01`/`a02`.
+- **Aquí no se enseña Docker.** Más de dos párrafos de contenedores: remite a `a01`/`a02`.
 - **Código en inglés, comentarios en español con tildes.** Nombres del dominio fijos (alcance §7);
   `legacy` conserva los nombres de la caja.
 - **Los datos de la historia no se inventan.** Si falta uno, se propone agregarlo a la historia.
@@ -54,6 +55,18 @@ Reglas que no se negocian:
   `0-ESTRUCTURA-CURSO.md`**. Se escriben en una tanda final y aparte. Si algo debería constar en
   ellos, déjalo en 📌 Pendientes sugeridos.
 - La plantilla se sigue literal, sin secciones extra ni reordenadas, y el cierre lleva el bloque 🏷️.
+- **El solucionario va en la misma sesión** (D18, guía §10.3): `soluciones/<mismo-nombre>.md`, con
+  la plantilla de solucionario, cada solución ejecutada, rúbrica en 🟠 y 🔴, y cada ejercicio de la
+  fase enlazando la suya. Los boss no publican solución.
+- **Nada publicado cita `prompts/` ni enlaza otro curso** (D-03): la regla se dice en el texto o
+  se remite al apéndice que la publica; la NoSQL Lite y el curso de Docker, solo en prosa. Una fase
+  que todavía no existe se nombra sin enlace y va a la deuda del plan §6.
+- **Diagramas en Mermaid** (D-12, guía §19.1), dibujados con `mmdc`; las sesiones intercaladas, en
+  `text`.
+- **Sesión:** las pruebas van a `zz-code/` (`python3 zz-code/nuevo.py ruta-sql`), con contenedores
+  etiquetados `curso=ruta-sql`, puertos aleatorios y borrado con sus volúmenes al cerrar; nada se
+  instala sin pedirlo; sin commits; secuencial y sin agentes. Al cerrar,
+  `python3 prompts/verificar-corpus.py` en cero.
 ```
 
 Y el **protocolo de tres pasos**, que cierra todos los prompts:
@@ -205,8 +218,8 @@ Esta es la sesión de la **Fase 04 — 🧱 Un valor, un hecho: de la 1FN a la B
 `04-un-valor-un-hecho.md`.
 
 ## Marco
-El de F00, más F03 cerrada. Lee `taller/accdb-museo/` (o `src/a10-el-access-de-museo/` si ya se
-movió): `ModParser.bas`, `parse_patients.py` y los resultados de `run_bas_tests.py`.
+El de F00, más F03 cerrada. Lee `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` (o `src/a10-el-access-de-museo/`
+si ya se extrajo): `ModParser.bas`, `parse_patients.py` y los resultados de `run_bas_tests.py`.
 
 ## Identidad
 - Fase 04 de 26 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
@@ -704,7 +717,7 @@ El de la ficha F21, completo, más:
 
 ## Qué vigilar
 - **Tres mecanismos en una fase** (búsqueda, recursión, vectores): cada uno con su rotura y su
-  enlace a la Lite, sin convertirse en tres minifases.
+  mención en prosa de la Lite (sin enlace, D-03), sin convertirse en tres minifases.
 - **`pgvector` es muestra breve**; si no aporta a Alameda, la fase lo dice y lo deja en una
   sección corta.
 

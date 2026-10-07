@@ -27,7 +27,7 @@ en [`a04`](a04-el-arnes-de-medida.md).
 - [Full-text: `tsvector`, diccionario y ranking](#-full-text)
 - [`pgvector`: HNSW e IVFFlat](#-pgvector)
 - [`WITH RECURSIVE` bien escrito, con corte de ciclos](#-with-recursive-bien-escrito)
-- [Particionado declarativo por rango](#-particionado-declarativo-por-rango)
+- [Particionado declarativo por rango](#️-particionado-declarativo-por-rango)
 - [Tablas `UNLOGGED`](#-tablas-unlogged)
 - [`EXPLAIN ANALYZE` ejecuta la sentencia](#️-explain-analyze-ejecuta-la-sentencia)
 - [Cuándo usar qué](#-cuándo-usar-qué) · [Referencias](#-referencias) · [Ejercicios](#-ejercicios-8)

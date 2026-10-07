@@ -43,7 +43,7 @@ se tomó mal y hay 400 GB en producción.
 
 - **Las respuestas por familia.** Cada minicurso trae las suyas en su fase B, con medición.
 - **La mecánica de la sincronización entre motores** —doble escritura, outbox, CDC—: aquí se
-  nombra, y se desarrolla y se mide en la [Fase 24](24-poliglota-la-costura.md).
+  nombra, y se desarrolla y se mide en la Fase 24.
 - **El caso de Cóndor.** Tiene exactamente el problema del triaje de la sección 4.7, y lo resuelve
   el boss del Bloque V.
 
@@ -175,7 +175,7 @@ sin una transacción que los una** es la forma más rápida de fabricar dos verd
 de las dos escrituras falle. Hay equipos que la usan igual, como Stripe (en las referencias), y la
 sostienen con lo que el paso 3 describe: comparan las dos lecturas todo el tiempo y alertan de cada
 diferencia. Sin esa comparación, no la uses. Las alternativas que no dependen de ella son el patrón
-*outbox* y la captura de cambios (CDC), que se miden en la [Fase 24](24-poliglota-la-costura.md).
+*outbox* y la captura de cambios (CDC), que se miden en la Fase 24.
 
 **3. Primero las lecturas, en sombra.** Antes de mover una sola escritura, el sistema nuevo recibe
 la copia y **se leen los dos a la vez**, comparando respuestas sin mostrárselas a nadie. Las
@@ -256,7 +256,7 @@ donde la respuesta sí cambia, y lo va a medir.
 
 ## 🧪 8. Ejercicios (12)
 
-Todos son de lectura y decisión (exención declarada de la guía §9). Cada uno describe un dominio y
+Todos son de lectura y decisión (fase de criterio, como la 00: doce ejercicios y no veinte). Cada uno describe un dominio y
 pide contestar las cinco preguntas y defender una familia, o planificar una salida.
 
 ### 🟢 Fácil — contestar (1–4)

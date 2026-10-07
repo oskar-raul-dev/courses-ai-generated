@@ -11,7 +11,7 @@
 > Las cinco preguntas de §6 están resueltas: el boss global es **El Hangar**, la historia va
 > fuera de la numeración de fases y los boss de bloque son encargos internos. Cinco de las
 > otras candidatas aportan los miniproyectos de familia
-> ([`propuestas-mini-proyectos.md`](../propuestas-mini-proyectos.md)). El resto del documento
+> ([`miniproyectos.md`](../miniproyectos.md)). El resto del documento
 > queda como registro de la discusión.
 > **Precedencia:** por debajo del alcance y de la
 > [guía de estilo](guia-de-estilo-y-convenciones.md). Lo que este documento propone no entra

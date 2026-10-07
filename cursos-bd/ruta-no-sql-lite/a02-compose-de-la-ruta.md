@@ -14,16 +14,14 @@
 [`a01`](a01-laboratorio-contenerizado.md); cargar datos, que es de
 [`a05`](a05-el-dominio-de-flota.md); y todo lo que sea orquestación, escalado, redes
 personalizadas o secretos. Esto es un laboratorio en una máquina, no un despliegue. Compose por
-dentro está en
-[`a10-docker-compose.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/a10-docker-compose.md)
-del curso de Docker.
+dentro está en el apéndice a10 del curso *Docker Legacy Node*.
 
 ---
 
 ## Índice
 
 - [Arrancar en dos comandos](#-arrancar-en-dos-comandos)
-- [Perfiles y nombres de servicio](#-perfiles-y-nombres-de-servicio)
+- [Perfiles y nombres de servicio](#️-perfiles-y-nombres-de-servicio)
 - [Las imágenes: digests y fecha](#-las-imágenes-digests-y-fecha)
 - [Healthchecks, y los tres que hacen algo más](#-healthchecks-y-los-tres-que-hacen-algo-más)
 - [Puertos](#-puertos)

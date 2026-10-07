@@ -18,8 +18,8 @@ licencia es mejor. Aquí se informa, no se milita.
 
 ## Índice
 
-- [La tabla del curso](#-la-tabla-del-curso)
-- [Cuatro familias de licencias, en lo que importa](#-cuatro-familias-de-licencias-en-lo-que-importa)
+- [La tabla del curso](#️-la-tabla-del-curso)
+- [Cuatro familias de licencias, en lo que importa](#️-cuatro-familias-de-licencias-en-lo-que-importa)
 - [Por qué Valkey y no Redis](#-por-qué-valkey-y-no-redis)
 - [Por qué OpenSearch y no Elasticsearch](#-por-qué-opensearch-y-no-elasticsearch)
 - [Los tres casos de la sesión de laboratorio](#-los-tres-casos-de-la-sesión-de-laboratorio)
@@ -133,7 +133,7 @@ automáticamente a Elasticsearch.
 
 ## 🧪 Los tres casos de la sesión de laboratorio
 
-La verificación del laboratorio (alcance §12, decisiones 16, 19 y 20) tropezó con tres licencias, y
+La verificación del laboratorio tropezó con tres licencias, y
 cada una se resolvió de una forma distinta. Juntas son la mejor ilustración de que **la licencia es un
 criterio de selección como cualquier otro**, con su costo y su beneficio.
 

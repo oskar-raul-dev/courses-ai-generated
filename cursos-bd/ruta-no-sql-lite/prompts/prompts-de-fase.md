@@ -11,8 +11,8 @@ alguna vez cambian allí, se cambian aquí después y **nunca al revés**.
 > `prompts/alcance-del-proyecto.md`, `prompts/guia-de-estilo-y-convenciones.md`,
 > `prompts/propuesta-fases-y-alcance.md`, `prompts/propuesta-apendices-y-alcance.md`,
 > `prompts/plantillas-de-capitulo.md`, `prompts/formato-bitacora-de-medicion.md` y
-> `00-historia-de-condor.md`. Para las fases B, añade `propuestas-mini-proyectos.md` y el
-> `h-mini` de la familia.
+> `00-historia-de-condor.md`. Para las fases B, añade `miniproyectos.md`,
+> `prompts/formato-de-miniproyectos.md` y el `h-mini` de la familia.
 > **No subas** ningún archivo `_desechable-*`: el curso no los cita.
 
 > ⚠️ **Antes de la primera fase que levante un motor (F03 en adelante).** Tienen que estar
@@ -32,9 +32,10 @@ documento: aplícalo.**
 Fuentes de verdad, en este orden: (1) `prompts/alcance-del-proyecto.md`,
 (2) `prompts/guia-de-estilo-y-convenciones.md`, (3) `prompts/propuesta-fases-y-alcance.md`,
 (4) `prompts/propuesta-apendices-y-alcance.md`, (5) `prompts/plantillas-de-capitulo.md`,
-(6) `prompts/formato-bitacora-de-medicion.md`, (7) `00-historia-de-condor.md`, que es la
-empresa del curso y la fuente de todo lo narrativo, (8) las fases ya escritas y aprobadas,
-(9) decisiones de este chat. Los documentos desechables no cuentan y no se citan.
+(6) `prompts/formato-bitacora-de-medicion.md`, (7) `prompts/contrato-de-nombres.md` y
+`prompts/diccionario-de-terminos.md`, (8) `00-historia-de-condor.md`, que es la empresa del
+curso y la fuente de todo lo narrativo, (9) las fases ya escritas y aprobadas, (10) decisiones de
+este chat. Los documentos desechables no cuentan y no se citan.
 
 Reglas que no se negocian:
 - **Nada se publica sin haberse ejecutado.** Ningún número, ninguna versión, ninguna
@@ -43,8 +44,8 @@ Reglas que no se negocian:
   tocadas, fan-out, amplificación. Ningún veredicto se sostiene sobre un milisegundo.
 - **Postgres es la línea base y va bien jugado**, con su índice y su extensión correctos.
 - **Autopsia, no juicio.** En la mesa está la decisión, nunca la persona.
-- **Aquí no se enseña Docker.** Más de dos párrafos de contenedores: enlaza a `a01`/`a02`
-  o a `docker-container-legacy/`.
+- **Aquí no se enseña Docker.** Más de dos párrafos de contenedores: remite a `a01`/`a02`,
+  o nombra en prosa el curso de Docker del repositorio, sin enlace.
 - **Código en inglés, comentarios en español con tildes.** Nombres del dominio de Cóndor
   fijos: aircraft, part, partCatalog, assembly, workOrder, reading, pirep, technician,
   hangar, supplier.
@@ -52,6 +53,14 @@ Reglas que no se negocian:
   anuncian al abrir cada fase B, pero ningún número suyo entra a la bitácora.
 - La plantilla de fase se sigue literal, sin secciones extra ni reordenadas, y el cierre
   lleva el bloque 🏷️ del tag.
+- **Nada publicado cita `prompts/` ni enlaza otro curso** (D-03): la regla se dice en el texto o
+  se remite al apéndice que la publica; los otros cursos, solo en prosa. Una fase que todavía no
+  existe se nombra sin enlace y va a la deuda del plan.
+- **Diagramas en Mermaid** (D-12, guía §18.1), dibujados con `mmdc` antes de publicar.
+- **Sesión:** las pruebas van a `zz-code/` (`python3 zz-code/nuevo.py ruta-no-sql-lite`), con
+  contenedores etiquetados `curso=ruta-no-sql-lite`, puertos aleatorios y borrado con sus volúmenes
+  al cerrar; nada se instala sin pedirlo; sin commits; secuencial y sin agentes. Al cerrar,
+  `python3 prompts/verificar-corpus.py` en cero.
 ```
 
 Y el **protocolo de tres pasos**, que cierra todos los prompts:
@@ -810,5 +819,5 @@ dar por hechas:
 1. **Cerrar `a03`, `a04`, `a08` y `a09`**, que crecieron con el curso.
 2. **Consolidar los tres documentos vivos**: la bitácora con su tabla-resumen de apuestas,
    el catálogo con sus cincuenta entradas y `INSTINTOS.md` con los diez 🪞.
-3. **Escribir `0-programa-del-curso.md`** y actualizar el `README.md` con el orden de
+3. **Escribir `0-ESTRUCTURA-CURSO.md`** y actualizar el `README.md` con el orden de
    publicación real, que para entonces ya no será una hipótesis.

@@ -674,7 +674,7 @@ Más **cinco boss de bloque** 💀, el boss global 🏆 y los **diez miniproyect
 ```
 README.md
 00-historia-de-condor.md
-0-programa-del-curso.md
+0-ESTRUCTURA-CURSO.md
 00-la-decision-que-se-hereda.md
 01-el-dominio-de-flota-y-el-arnes.md
 02-las-cinco-preguntas.md
@@ -702,7 +702,7 @@ README.md
 24-poliglota-la-costura.md
 25-poliglota-la-factura.md
 a01-laboratorio-contenerizado.md … a10-licencias-y-riesgo.md
-propuestas-mini-proyectos.md
+miniproyectos.md
 h-mini-01-documental-barlovento.md … h-mini-10-newsql-barlovento.md
 INSTINTOS.md
 bitacora-de-medicion.md

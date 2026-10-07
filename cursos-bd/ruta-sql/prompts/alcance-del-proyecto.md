@@ -329,7 +329,8 @@ motor, no la aplicación.
 **Contenedores:** Docker Compose como camino principal, **cada receta con su equivalente Podman**, y
 sin Kubernetes en ninguna parte.
 
-**El Access de museo.** El taller `taller/accdb-museo/` comprobó el 29/09/2026 que se puede
+**El Access de museo.** La prueba de concepto de la sesión de diseño
+(`zz-code/ruta-sql-20261006-fc2f/accdb-museo/`, fuera del curso desde el 06/10/2026) comprobó el 29/09/2026 que se puede
 generar un `.accdb` real sin Office (Jackcess), consultarlo con SQL (UCanAccess) y ejecutar el
 `.bas` de Rubén en LibreOffice Basic sin interfaz, y que el parser **depende de la configuración
 regional de la PC** (40 de 40 aserciones en `es-AR`, 31 de 40 en `en-US`). Ese material pasa a
@@ -364,7 +365,7 @@ insumo oficial es la caja en CSV.
   tamaño.
 - **Kubernetes y orquestación**, ni aquí ni en los apéndices.
 - **Pedagogía de Docker.** Los apéndices dan la receta; el mecanismo está en
-  `cursos-contenedores-cloud-infra/docker-container-legacy/` y se enlaza.
+  `cursos-contenedores-cloud-infra/docker-container-legacy/`, que se nombra sin enlace (D-03).
 - **Servicios gestionados de nube** (RDS, Aurora, Atlas, Autonomous). Se mencionan en los
   veredictos y no se levantan.
 - **MariaDB** (§8), y cualquier comparativa de producto que no cambie una decisión.
@@ -397,7 +398,8 @@ al revés. De la 13 en adelante son las que cerró Oskar el 30/09/2026 (registro
    requisito.
 9. **Stack: SQL + Python con `uv`**; Java 21 solo en el boss del puente y en `a10` (§9).
 10. **Carga horaria: 252 h ≈ 21 semanas a 12 h semanales**, la misma de la NoSQL Lite.
-11. **Ejercicios: 20–30 por fase**, con la exención de F00 y F02 (12) por ser fases de criterio.
+11. **Ejercicios: 20–30 por fase**, con la exención de F00 y F02 (12) por ser fases de criterio, y
+    **cada uno con su solución en archivo separado** (D-05, §12.1; guía §10.3).
 12. **Apéndices transversales**, diez, de receta y no de pedagogía.
 13. **D1 · Estructura:** 27 fases (F00–F26) en siete bloques, con un Bloque I de seis fases de
     8 h. Detalle en la propuesta de fases.
@@ -439,6 +441,32 @@ al revés. De la 13 en adelante son las que cerró Oskar el 30/09/2026 (registro
   así en el texto.
 - **Los apéndices son transversales al curso**, no por fase ni por bloque.
 - **`INSTINTOS.md` se mantiene y es central.**
+
+La lista completa, con las que se agregaron al revisar el curso contra los lineamientos, está en
+la guía §17.
+
+### 12.1 Las decisiones de la plantilla general, D-01–D-13 (06/10/2026)
+
+Los lineamientos de producción del repositorio (`zz-instrucciones/`) piden que todo curso cierre
+trece decisiones con nombre fijo. Este curso ya había cerrado casi todas con su propia numeración;
+esta tabla dice cuál es cuál, y las que faltaban las cerró Oskar el 06/10/2026. **La numeración
+1–26 y D1–D16 se conserva**, porque la citan la guía, las propuestas, los prompts y el plan.
+
+| ID | Decisión | Valor en este curso | Equivale a | Estado |
+|---|---|---|---|---|
+| D-01 | Idioma | Español latinoamericano neutro con tuteo; código, comandos e identificadores en inglés (salvo el esquema `legacy`); **comentarios de código en español con tildes** | 1, D10 | ✅ |
+| D-02 | Tipo de curso | Curso completo, con un track opcional (SQL Server, `ss01`–`ss05` y `ssa-01`) y sin miniproyectos de otras empresas | D1, D5, D8 | ✅ |
+| D-03 | Autocontención | **Editorial, sin enlaces**: la NoSQL Lite y los demás cursos del repositorio solo se nombran en prosa, como lectura sugerida y nunca como requisito; ningún enlace sale de la carpeta del curso, y nada publicado cita `prompts/` | §15 🔄 | ✅ 06/10/2026 |
+| D-04 | Promesa de esfuerzo | Horas por fase (252 h en el camino base, unas 40 h el track), sin peso ligera/media/densa | 10, D8 | ✅ |
+| D-05 | Aparato de evaluación | 20–30 ejercicios por fase (12 en F00 y F02), con criterio `**Objetivo:**` o `**Pregunta:**`; **cada uno con su solución en archivo separado**, `soluciones/<documento>.md` (completa en 🟢🟡, de referencia y con rúbrica en 🟠🔴; guía §10.3); los boss, con criterios de aceptación y la solución fuera del repositorio publicado | 11 | ✅ 06/10/2026 |
+| D-06 | Plataformas | macOS, Linux y Windows 11 con WSL2; obligatoria solo la verificación en macOS arm64 (P8); Linux y WSL2 quedan como pendiente transversal, declarados sin verificar | — | ✅ |
+| D-07 | Política de versiones | La última estable de cada motor, o la última LTS donde la haya, a la fecha de la verificación de laboratorio; fijadas por digest en `a02` | D12, 7 | ✅ |
+| D-08 | Ejecución | Nada se publica sin haberse ejecutado; ningún número de Oracle ni de SQL Server se publica (§6.1) | 5, 6 | ✅ |
+| D-09 | Código | `src/` con una carpeta por fase o apéndice que deja código, con el nombre exacto del documento, más `src/lab/` para lo compartido | — | ✅ |
+| D-10 | README y temario | El README, los de `src/` y `0-ESTRUCTURA-CURSO.md` se escriben al final, en una tanda propia (T15) | — | ✅ |
+| D-11 | Historia | Con historia: Laboratorio Alameda, en `00-historia-de-alameda.md` | 2 | ✅ |
+| D-12 | Diagramas | **Mermaid obligatorio** para todo diagrama estructural o conceptual; las sesiones intercaladas en el tiempo, las salidas, los planes y los árboles siguen en `text` (guía §19.1) | — | ✅ 06/10/2026 |
+| D-13 | Publicación | Repositorio público propio, con la carpeta del curso sin `prompts/`; ningún enlace a otro curso que convertir | — | ✅ 06/10/2026 |
 
 ---
 
@@ -488,11 +516,11 @@ El curso está bien si:
 ## 15. 🗺️ Relación con el resto del repositorio
 
 - **`cursos-bd/ruta-no-sql-lite/`** es el contrapeso. Esta ruta hereda su instrumento (las cinco
-  preguntas), su forma de medir y su arnés como idea, y la enlaza desde F02, F20 y F21. **No la
-  modifica.**
+  preguntas), su forma de medir y su arnés como idea, y la **nombra en prosa**, sin enlace, desde
+  F02, F20 y F21 (D-03, §12.1). **No la modifica.**
 - **`cursos-bd/ruta-no-sql/`** es el diseño de los cursos profundos por familia; no se cita.
 - **`cursos-contenedores-cloud-infra/docker-container-legacy/`** es la infraestructura de
-  laboratorio: aquí se dan recetas y el mecanismo se enlaza.
+  laboratorio: aquí se dan recetas y el mecanismo se nombra como lectura sugerida, sin enlace.
 - **El curso de C# y su Cordillera Media** cuentan la historia del *código* heredado (FoxPro y
   SQL Server). Alameda cuenta la del *modelo de datos*, y por eso el curso evita repetir el origen
   xBase.

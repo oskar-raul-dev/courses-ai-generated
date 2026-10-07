@@ -114,7 +114,7 @@ sobre el mismo dato.** Reconocer eso es el objetivo real de este encargo.
 | Pieza | Qué se usa | Nota |
 |---|---|---|
 | Entorno | **Node + TypeScript** | |
-| Motor | **Cassandra** · perfil `columnar` | Con el heap fijado por el `compose.yaml` de la ruta. ScyllaDB habla el mismo CQL y el modelado no cambiaría, pero se descartó por licencia (alcance §12, 16) |
+| Motor | **Cassandra** · perfil `columnar` | Con el heap fijado por el `compose.yaml` de la ruta. ScyllaDB habla el mismo CQL y el modelado no cambiaría, pero se descartó por licencia (`a10`) |
 | CLI | `cqlsh` | Y `nodetool` para mirar tablas, histogramas y compactaciones |
 | Driver | `cassandra-driver` de Node | |
 | Línea base | **PostgreSQL** con particionado declarativo · perfil `base` | Más la tabla con tres índices de hoy, construida como villano |
@@ -131,7 +131,7 @@ entra, y entra para medir lo que cuesta, no para usarlo.
 > sesión de verificación de laboratorio. Este stack nombra piezas, no números.
 >
 > 🧭 **Dos reglas del curso que este miniproyecto no puede saltarse.** El **arnés de medida y el
-> generador de datos son TypeScript siempre** (alcance §9): son el instrumento, y un instrumento
+> generador de datos son TypeScript siempre** (`a06`): son el instrumento, y un instrumento
 > con dos implementaciones deja de ser un instrumento. Y **se habla con los motores
 > directamente**: nada de ORM, ODM ni cliente de alto nivel (`a06`), porque esas capas esconden
 > justo lo que queremos medir.

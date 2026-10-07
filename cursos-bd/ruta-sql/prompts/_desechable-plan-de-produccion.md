@@ -5,10 +5,12 @@ dónde va la producción**. Hay dos fases: la **preparación** (tandas `P1`–`P
 `prompts/` y el laboratorio de verificación y no escribe ni una fase, y la **escritura** (tandas
 `T0`–`T16`), que arranca cuando está cerrada la parte de la preparación que cada tanda necesita
 (regla 7). Es operativo: se actualiza al
-cerrar cada sesión, y cualquier sesión que retome `ruta-sql/` empieza leyendo §3 (estado), §7
-(bitácora) y §8 (checklist).
+cerrar cada sesión, y cualquier sesión que retome `ruta-sql/` empieza leyendo §3 (estado), §6
+(deuda), §7 (bitácora) y §8 (checklist).
 
 - La forma la manda [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md).
+- Los nombres, [`contrato-de-nombres.md`](contrato-de-nombres.md) y
+  [`diccionario-de-terminos.md`](diccionario-de-terminos.md).
 - El qué lo manda [`alcance-del-proyecto.md`](alcance-del-proyecto.md).
 - Horas, ejercicios y fichas: [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) y
   [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md).
@@ -17,13 +19,14 @@ cerrar cada sesión, y cualquier sesión que retome `ruta-sql/` empieza leyendo 
   [`prompts-sqlserver-fase.md`](prompts-sqlserver-fase.md).
 - **El orden lo manda este documento.**
 
-> **Caducidad:** es un documento de producción. Al cerrar T16, con permiso de Oskar, se borra junto
-> con `_desechable-propuesta-ruta.md` y se limpian sus menciones. **No se cita desde ninguna fase,
-> apéndice ni README.**
+> **Caducidad:** es un documento de producción. Al cerrar T16 se conserva en `prompts/` como
+> referencia (que no viaja al repositorio público), salvo que Oskar pida borrarlo;
+> `_desechable-propuesta-ruta.md` se borra con su permiso. **No se cita desde ninguna fase, apéndice
+> ni README.**
 >
-> **Vigencia:** 2026-09-30.
+> **Vigencia:** 2026-10-06.
 
-**Salto rápido:** [1](#1--las-reglas-de-orden) · [2](#2--qué-es-una-tanda) · [3](#3--estado) · [4](#4--las-verificaciones) · [5](#5--las-tandas-una-por-una) · [6](#6--deuda-de-enlaces-abierta) · [7](#7--bitácora) · [8](#8--checklist-final)
+**Salto rápido:** [1](#1--las-reglas-de-orden) · [2](#2--qué-es-una-tanda) · [3](#3--estado) · [4](#4--las-verificaciones) · [5](#5--las-tandas-una-por-una) · [6](#6--deuda-de-enlaces-abierta) · [7](#7--bitácora) · [8](#8--checklist-final) · [9](#9--directorios-de-zz-code)
 
 ---
 
@@ -32,11 +35,12 @@ cerrar cada sesión, y cualquier sesión que retome `ruta-sql/` empieza leyendo 
 Son veintisiete fases, once apéndices, cinco fases de track y tres documentos vivos. Escritos en
 orden de carpeta, el Bloque II mediría sobre un modelo que todavía no existe y la bitácora iría
 siempre atrasada. Las tandas van por **dependencia**, y cada una deja el curso coherente y
-publicable hasta donde llega. Ocho reglas:
+publicable hasta donde llega. Diez reglas:
 
-1. **Ninguna tanda se cierra con un documento vivo atrasado.** Las mediciones de la tanda entran en
-   `bitacora-de-medicion.md`, los errores en `a08-catalogo-de-errores.md` y los instintos en
-   `INSTINTOS.md`, en la misma tanda.
+1. **Ninguna tanda se cierra con un documento vivo ni un solucionario atrasado.** Las mediciones de
+   la tanda entran en `bitacora-de-medicion.md`, los errores en `a08-catalogo-de-errores.md` y los
+   instintos en `INSTINTOS.md`, y cada documento con ejercicios nace con su
+   `soluciones/<mismo-nombre>.md` completo y ejecutado (D18, guía §10.3), en la misma tanda.
 2. **Ningún enlace interno apunta a un documento que no existe.** La referencia va en prosa y se
    anota en la deuda de enlaces (§6); la tanda que escribe el destino la convierte en enlace.
 3. **Los README y `0-ESTRUCTURA-CURSO.md` se escriben en una tanda final y aparte (T15), y ninguna
@@ -59,6 +63,16 @@ publicable hasta donde llega. Ocho reglas:
    - **T2** exige además **P9**: `a09` cita el texto de las licencias, y F00–F02 citan los libros
      base.
 8. **Sin commits**: git lo hace Oskar. Se borra con `rm`, nunca con `git rm`.
+9. **La máquina de Oskar no se toca sin permiso**: nada se instala ni genera cargos. Los contenedores
+   de las pruebas llevan la etiqueta `curso=ruta-sql`, usan **puertos altos y aleatorios** (nunca los
+   de por defecto, que otro contenedor puede tener ocupados; el curso sí puede publicarlos) y se
+   borran **con sus volúmenes** al terminar, comparando contra un inventario inicial; nada que ya
+   existía se borra.
+10. **Todo el código de las sesiones va a `zz-code/`**: un directorio por sesión
+    (`python3 zz-code/nuevo.py ruta-sql`), registrado en §9 con su estado. Lo efímero (logs, salidas,
+    copias) va a su `salidas/`; nada en el scratchpad ni en `/tmp`. Los comandos sueltos que producen
+    algo citable se copian a un archivo, y el `README.md` de cada directorio dice cómo correr y medir
+    cada prueba. Ningún documento del curso cita `zz-code/` (guía §19.5).
 
 **Prioridad si el tiempo aprieta:** T1 → T2 → T3 → T4 (Bloque 0 y Bloque I, con su boss: un curso
 utilizable por sí solo), después **T7** (F15–F16, el folio sin huecos, que es la fase estrella y el
@@ -71,8 +85,8 @@ primer vídeo). Lo que falte de las tandas saltadas va en prosa y a la deuda de 
 ### 2.0 Una tanda de preparación
 
 Un documento de `prompts/`, o un paso que lo deja coherente con los demás: una decisión, una
-verificación, un traslado. **No crea nada fuera de `prompts/`**, salvo P8, que trabaja en
-`prompts/verificacion-de-laboratorio/`. Terminada cuando sus enlaces pasan §4 y los documentos que la
+verificación, un traslado. **No crea nada fuera de `prompts/`**, salvo P8, que prueba en
+`zz-code/` y deja sus hallazgos en `prompts/verificacion-de-laboratorio/hallazgos.md`. Terminada cuando sus enlaces pasan §4 y los documentos que la
 citan están al día.
 
 ### 2.1 Una tanda de escritura
@@ -85,10 +99,10 @@ en todas:
 3. Releer la ficha de la propuesta: el "Entra" es el piso, la apuesta y la rotura son candidatas.
 4. Comprobar versiones, funciones del motor, URLs y libros **antes** de escribirlos.
 5. Ejecutar y anotar (el error antes de arreglarlo), después escribir.
-6. Alimentar los tres documentos vivos.
+6. Escribir el solucionario de cada documento en la misma sesión, y alimentar los tres documentos
+   vivos.
 7. Resolver la deuda de enlaces que la tanda cierra.
-8. Correr las verificaciones de §4, incluida la de que ningún `README.md` cambió y
-   `0-ESTRUCTURA-CURSO.md` no existe todavía.
+8. Correr las verificaciones de §4 (`verificar-corpus.py` en cero, sin el aviso `README`).
 9. Actualizar §3, §6, §7 y §8 de este documento, que es el mapa hasta T15.
 
 ### 2.2 Peso de cada tanda
@@ -121,7 +135,8 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ terminada y verificada.
 | **P9** | Fuentes base: edición y año de los seis libros de la guía §11; texto de las licencias para `a09` | — | — | ⬜ |
 | **P10** | Traslado de las decisiones a alcance, guía, propuestas y prompts | — | — | ✅ |
 | **P11** | Traslado de lo verificado en P8 y P9 (versiones, perfiles, driver, ediciones) | — | — | ⬜ |
-| **T0** | Arranque: esqueletos de los documentos vivos y de a03, a04, a07 | 6 | ligera | ⬜ |
+| **P12** | Alineación con los lineamientos de producción: diccionario, contrato de nombres, `prompts/README.md`, verificador, guía §17 y §19, alcance §12.1 | 5 | — | ✅ |
+| **T0** | Arranque: esqueletos de los documentos vivos y de a03, a04, a07, y `src/.gitignore` | 6 | ligera | ⬜ |
 | **T1** | Laboratorio: a01, a02 (+ compose), a05 (+ generador), a06 | 4 | densa | ⬜ |
 | **T2** | a09 y Bloque 0: F00, F01, F02 | 4 | normal | ⬜ |
 | **T3** | Bloque I, primera mitad: F03, F04, F05 | 3 | normal | ⬜ |
@@ -135,14 +150,16 @@ Leyenda: ⬜ pendiente · 🟡 en curso · ✅ terminada y verificada.
 | **T11** | F23: PostgREST y RLS, 💀 boss V y 💀☕ boss del puente (Java 21 y Artemis) | 1 | densa | ⬜ |
 | **T12** | Bloque VI: F24, F25, F26 y el cierre de 🏆 "Un martes" | 3 | normal | ⬜ |
 | **T13** | Track SQL Server: ss01–ss05 y ssa-01 | 6 | densa | ⬜ |
-| **T14** | a10 (+ mover `taller/`) y cierre de a03, a04, a07, a08 | 1 | normal | ⬜ |
+| **T14** | a10 (+ extraer la prueba del Access de `zz-code/`) y cierre de a03, a04, a07, a08 | 1 | normal | ⬜ |
 | **T15** | Los README y la estructura, aparte: el README del curso, los de `src/` y `0-ESTRUCTURA-CURSO.md` | 2 | ligera | ⬜ |
 | **T16** | Cierre: verificación global, borrar plan y propuesta | — | ligera | ⬜ |
 
-**Total: 58 documentos** (27 fases, 11 apéndices, 5 fases de track, los 2 de raíz que crecen con
-el curso —`INSTINTOS.md` y `bitacora-de-medicion.md`—, los 2 que se escriben en T15
-—`0-ESTRUCTURA-CURSO.md` y el README—, la historia y los 10 de `prompts/` que existen durante la
-producción, 2 de ellos desechables), más el código de `src/`.
+**Total: 91 documentos del curso** (27 fases, 11 apéndices, 5 fases de track, **43 solucionarios**
+—uno por cada uno de esos documentos, todos con ejercicios—, los 2 de raíz que crecen con el curso
+—`INSTINTOS.md` y `bitacora-de-medicion.md`—, los 2 que se escriben en T15
+—`0-ESTRUCTURA-CURSO.md` y el README— y la historia), más los 13 documentos de `prompts/` que
+existen durante la producción (2 de ellos desechables), los dos scripts del verificador y el código
+de `src/`.
 
 **Por qué el track va después del Bloque VI:** es opcional y depende del camino base hasta F18. Se
 puede adelantar a después de T8 si hay un motivo (un vídeo, un lector de un shop .NET), sin tocar
@@ -157,31 +174,18 @@ desde F03, y conviene que el texto de la licencia esté citado antes.
 
 Se corren al cerrar cada tanda, y todas en T16.
 
-**Enlaces y anclas**, desde la raíz de `ruta-sql/`:
+**El verificador del curso**, desde la raíz de `ruta-sql/` (guía §19.4):
 
 ```bash
-python3 - <<'EOF'
-import re, os, glob
-def slug(h): return re.sub(r'[^\w\- ]', '', h.strip().lower()).replace(' ', '-')
-def anchors(path):
-    body = re.sub(r'```.*?```', '', open(path, encoding='utf-8').read(), flags=re.S)
-    return {slug(h) for h in re.findall(r'^#{1,6} (.+)$', body, re.M)}
-for f in glob.glob('**/*.md', recursive=True):
-    if '/node_modules/' in f or f.startswith('taller/'): continue
-    body = re.sub(r'```.*?```', '', open(f, encoding='utf-8').read(), flags=re.S)
-    body = re.sub(r'````.*?````', '', body, flags=re.S)
-    for link in re.findall(r'\]\(([^)]+)\)', body):
-        if link.startswith('http') or link == '#': continue
-        path, _, anc = link.partition('#')
-        target = os.path.normpath(os.path.join(os.path.dirname(f), path)) if path else f
-        if path and not os.path.exists(target): print('ROTO', f, link)
-        elif anc and target.endswith('.md') and anc not in anchors(target): print('ANCLA', f, link)
-EOF
+python3 prompts/verificar-corpus.py                 # enlaces, anclas, restos, ejercicios, palabras, diagramas
+python3 prompts/verificar-corpus.py --publicacion   # además, prompts/ y material privado (E9)
 ```
 
-- Ignora lo que hay dentro de bloques de código, porque las plantillas llevan enlaces de ejemplo.
-- `slug` calcula el ancla como GitHub: minúsculas, fuera todo lo que no sea letra, número, espacio,
-  guion o guion bajo, y cada espacio a guion.
+- Reemplaza el script de enlaces y anclas que estaba aquí hasta el 06/10/2026, que calculaba mal las
+  anclas de los encabezados con ⚠️, ⚖️ o 🗂️ (el U+FE0F que GitHub conserva).
+- Su aviso `README` salta si `README.md` o `0-ESTRUCTURA-CURSO.md` aparecen antes de T15; T15 cambia
+  `ESCRITOS_LOS_README` a `True`.
+- Cada bloque `mermaid` nuevo se dibuja con `mmdc` antes de publicarlo (D-12, guía §19.1).
 
 **Ningún documento del curso cita un desechable**, desde la raíz de `ruta-sql/`:
 
@@ -197,27 +201,8 @@ git status --short -- ':(glob)**/README.md'    # fuera de T15 no debe devolver n
 ls 0-ESTRUCTURA-CURSO.md 2>/dev/null             # antes de T15 no debe existir
 ```
 
-**Ejercicios contra la propuesta**, desde la raíz de `ruta-sql/`:
-
-```bash
-for f in [0-9][0-9]-*.md ss[0-9][0-9]-*.md; do
-  [ -f "$f" ] || continue
-  n=$(grep -cE '^### (🟢|🟡|🟠|🔴) Ejercicio [0-9]+' "$f")
-  printf '%-50s %s\n' "$f" "$n"
-done
-```
-
-- Cuenta los ejercicios numerados de cada fase (sin 🔥 ni 💀), para comparar a mano con la columna
-  de la propuesta §11.
-
-**Longitud del cuerpo**, cortando por el encabezado de 🧪:
-
-```bash
-for f in [0-9][0-9]-*.md; do
-  n=$(sed '/^## 🧪/,$d' "$f" | wc -w)
-  printf '%-50s %6s\n' "$f" "$n"
-done
-```
+**Ejercicios contra la propuesta y longitud del cuerpo:** los dos los cuenta el verificador
+(`EJERCICIOS`, `NUMERACION` y `PALABRAS`), contra la propuesta §11 y §10 y la banda de la guía §9.
 
 **Ningún número de Oracle ni de SQL Server**: no hay forma de automatizarlo bien. Al cerrar cada
 fase se relee cada mención de Oracle y de SQL Server y se confirma que va como 🪞🔒, como estructura
@@ -250,8 +235,9 @@ LTS a la fecha de la verificación) y **D13** (`legacy` donde hace falta).
 
 ### P8 — Verificación de laboratorio
 
-**Entrega:** `prompts/verificacion-de-laboratorio/hallazgos.md` (formato de la Lite: `H1`, `H2`…) y
-los *logs* por plataforma. **Qué se verifica:**
+**Entrega:** `prompts/verificacion-de-laboratorio/hallazgos.md` (formato de la Lite: `H1`, `H2`…).
+Los scripts, el `compose.yaml` de prueba y los *logs* van a un directorio de `zz-code/` (regla 10),
+con su `README.md` de corrida y medición; `hallazgos.md` lo nombra. **Qué se verifica:**
 
 - **las versiones según D12** (la última estable, o la última LTS donde el fabricante tenga esa
   línea: MySQL y Java), con la fecha de la comprobación;
@@ -297,7 +283,8 @@ limpia sobre `prompts/`.
 
 **Entrega:** los esqueletos de `INSTINTOS.md`, `bitacora-de-medicion.md`,
 `a08-catalogo-de-errores.md`, `a03`, `a04` y `a07`, con su encabezado y la nota "crece con el
-curso", **sin enlaces** a fases que todavía no existen. `0-ESTRUCTURA-CURSO.md` **no** se crea aquí:
+curso", **sin enlaces** a fases que todavía no existen; y `src/.gitignore`, el único del curso (guía
+§19.5). `0-ESTRUCTURA-CURSO.md` **no** se crea aquí:
 va en T15 (regla 3).
 
 ### T1 — Laboratorio
@@ -330,8 +317,9 @@ Opcional y movible (§3). Densa por la emulación.
 
 ### T14 — El museo y los apéndices que crecen
 
-`a10` mueve `taller/accdb-museo/` a `src/a10-el-access-de-museo/` y vuelve a ejecutar todo; su
-`README.md` se mueve **sin editarlo**, y se reescribe en T15. `a03`,
+`a10` copia la prueba de concepto de `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` a
+`src/a10-el-access-de-museo/` (sin `lib/` ni `out/`) y vuelve a ejecutar todo; su `README.md` se
+copia **sin editarlo**, y se reescribe en T15. El directorio de `zz-code/` pasa a *extraído* en §9. `a03`,
 `a04`, `a07` y `a08` se cierran: índice completo y ejercicios finales. `a08` llega a cincuenta
 entradas o dice cuántas le faltan.
 
@@ -341,18 +329,20 @@ Una tanda propia, **después de que todo el contenido exista**, porque un README
 a medias describen un curso que no es el que se publica. Escribe:
 
 - `0-ESTRUCTURA-CURSO.md`: el temario en una página, con horas, ejercicios, estado real y enlace a
-  cada fase, apéndice y boss (como el `0-programa-del-curso.md` de la Lite, con el nombre del
-  repositorio). Sale de la propuesta de fases §11 y de §3 de este plan, que dejan de ser el mapa;
+  cada fase, apéndice y boss (como el `0-ESTRUCTURA-CURSO.md` de la Lite). Sale de la propuesta de
+  fases §11 y de §3 de este plan, que dejan de ser el mapa;
 - el `README.md` de la raíz del curso (qué es, para quién, cómo se sigue, el track y los apéndices);
-- los README de `src/`, incluido el que `a10` trajo de `taller/` sin editar.
+- los README de `src/`, incluido el que `a10` trajo de `zz-code/` sin editar.
 
 Salda toda la deuda de §6 dirigida a T15. **Terminada cuando** los tres describen lo que existe y
 sus enlaces pasan §4.
 
 ### T16 — Cierre
 
-**Terminada cuando** §4 sale limpia en todo el curso, las URL externas están verificadas, `taller/` está vacío y borrado, y —con
-permiso de Oskar— este plan y `_desechable-propuesta-ruta.md` están borrados sin menciones.
+**Terminada cuando** §4 sale limpia en todo el curso, las URL externas están verificadas, ningún
+directorio de `zz-code/` queda *vigente* en §9, los contenedores del curso están borrados con sus
+volúmenes, y —con permiso de Oskar— `_desechable-propuesta-ruta.md` está borrado sin menciones. Este
+plan se conserva en `prompts/` como referencia, salvo que Oskar pida borrarlo.
 
 ---
 
@@ -371,6 +361,36 @@ cierra.
 
 Una entrada por sesión, la más reciente arriba: qué se cerró, qué quedó a medias y por qué, qué se
 comprobó y cómo, y las trampas que la próxima sesión debe conocer.
+
+**2026-10-06 · D-05 cerrada: solucionario aparte (D18).** Pedido de Oskar: *"ejercicios con solución
+en archivo separado, deja anotada la solución donde corresponda"*. Todo ejercicio —de fase, apéndice
+y track— lleva solución en `soluciones/<mismo-nombre>.md`, escrita y ejecutada en la misma sesión
+que su documento: completa en 🟢 y 🟡, de referencia con rúbrica en 🟠 y 🔴, sin números de Oracle ni
+de SQL Server. **Confirmado por Oskar el mismo día:** los boss siguen sin publicar su solución (es un
+encargo, no un ejercicio). Trasladado a alcance §12 (11) y §12.1 (D-05), propuesta
+de fases §2 y §12 (D18), propuesta de apéndices, guía §5.2, §10, §10.3 nueva, §16, §17 (excepción 9
+retirada) y §19, plantillas (plantilla de solucionario nueva), contrato §3, los marcos de los prompts,
+el README de `prompts/`, el verificador (`SOLUCIONARIO` y `ENLACE-SOL`) y este plan (regla 1, §2.1,
+§3, §8). **Trampa:** el ancla de vuelta desde la solución al ejercicio es la del encabezado completo
+(`#-ejercicio-1--contar-…`), no `#ejercicio-1`; la de ida, a `soluciones/`, sí es `#ejercicio-1`.
+
+**2026-10-06 · P12. Revisión contra los lineamientos de producción.** Pedido de Oskar: *"revisión
+final de que ruta-no-sql-lite y ruta-sql se pliegan a la estructura de zz-instrucciones, y los
+ajustes en sus directorios prompts, nombres de archivos de historia, contenido…"*. **Decisiones de
+Oskar:** D-03 editorial sin enlaces, D-12 Mermaid obligatorio, mover `taller/accdb-museo/` a
+`zz-code/` (alcance §12.1). **Por defecto, a revisar:** que los ejercicios no traigan solución
+publicada (guía §17, excepción 9). **Hecho:** diccionario, contrato de nombres (con ⏳ para lo que fija
+T1), `prompts/README.md`, verificador (`verificar-corpus.py` sobre `verificador_base.py`), guía §17
+(excepciones 8 y 9) y §19, alcance §12.1 y §15, y este plan (reglas 9 y 10, §4 con el verificador, §9).
+La historia de Alameda dejó de ser borrador: encabezado con `Vigencia`, sin citas a `prompts/` ni a
+otros cursos, un emoji por sección y la §9 ("lo que el borrador no decide", ya decidido) reescrita
+como "cómo usa el curso esta historia". `taller/accdb-museo/` → `zz-code/ruta-sql-20261006-fc2f/`,
+con su README de corrida; `taller/` ya no existe. Las instrucciones de "enlazar" la Lite y el curso de
+Docker pasaron a "nombrar en prosa". **Corregido:** la guía §9 ponía el track en la banda de 10 h; la
+propuesta le da 8 h por fase. **Comprobado:** `verificar-corpus.py` 0/0 en los dos modos. **No se
+ejecutó** nada del laboratorio. **Recursos levantados:** ninguno. **`zz-code/`:**
+`ruta-sql-20261006-fc2f/` (vigente hasta T14). **Tags para el autor:** ninguno. **Siguiente:** T0, y
+P8 y P9 en sus propias sesiones.
 
 **2026-09-30 · La estructura, al final.** Por decisión de Oskar, `0-ESTRUCTURA-CURSO.md` sigue la
 regla de los README: se escribe en T15 y ninguna otra tanda lo crea ni lo toca. Hasta entonces el
@@ -435,12 +455,19 @@ están, y entonces se cambia su estado en §3.
 - [ ] P9 · Edición y año de los seis libros base
 - [ ] P9 · Texto de las licencias de Oracle Free y SQL Server sobre divulgación de resultados
 - [x] P10 · Decisiones trasladadas; ⏳ del alcance cerradas; §4 limpia sobre `prompts/`
-- [ ] P11 · Lo verificado en P8 y P9 trasladado; nada "a verificar" que ya esté verificado
+- [ ] P11 · Lo verificado en P8 y P9 trasladado; nada "a verificar" que ya esté verificado; los ⏳
+      del contrato de nombres que dependen de P8, fijados
+- [x] P12 · `prompts/diccionario-de-terminos.md` y `prompts/contrato-de-nombres.md`
+- [x] P12 · `prompts/README.md`, `prompts/verificar-corpus.py` y `prompts/verificador_base.py`
+- [x] P12 · Guía §17 (excepciones 8 y 9) y §19; alcance §12.1 (D-01–D-13) y §15
+- [x] P12 · La historia sin citas a `prompts/` ni a otros cursos; `taller/` en `zz-code/`
+- [x] P12 · D-05 cerrada por Oskar: solución en archivo separado (D18, guía §10.3); excepción 9 retirada
 
 ### T0 — Arranque
 
 - [ ] Esqueletos de `INSTINTOS.md`, `bitacora-de-medicion.md` y `a08`
 - [ ] Esqueletos de `a03`, `a04` y `a07`
+- [ ] `src/.gitignore`, el único del curso
 
 ### T1 — Laboratorio
 
@@ -456,14 +483,14 @@ están, y entonces se cambia su estado en §3.
 - [ ] F00 · La base que nadie diseñó
 - [ ] F01 · La caja y el arnés, con la prueba de fuego corrida
 - [ ] F02 · Las cinco preguntas, desde el otro lado
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T3 — Bloque I, primera mitad
 
 - [ ] F03 · Lo que SQL le hace al modelo relacional
 - [ ] F04 · Un valor, un hecho (fija el formato de la tabla de rechazos)
 - [ ] F05 · Una persona no es su documento
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T4 — Bloque I, segunda mitad
 
@@ -471,14 +498,14 @@ están, y entonces se cambia su estado en §3.
 - [ ] F07 · El tiempo en el modelo
 - [ ] F08 · Los dos extremos del mismo error
 - [ ] 💀 Boss I · La señora que es tres pacientes
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T5 — Bloque II, primera mitad
 
 - [ ] F09 · El tamaño de las cosas
 - [ ] F10 · Identificadores (deja la deuda del IDOR para F23)
 - [ ] F11 · Índices y lo que cuestan
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T6 — Bloque II, segunda mitad
 
@@ -486,21 +513,21 @@ están, y entonces se cambia su estado en §3.
 - [ ] F13 · El optimizador en tres motores
 - [ ] F14 · La base no estaba lenta
 - [ ] 💀 Boss II · El portal de 2018
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T7 — Bloque III, primera mitad
 
 - [ ] `lab race` descrito en a04 y funcionando
 - [ ] F15 · Aislamiento comparado
 - [ ] F16 · El folio sin huecos
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T8 — Bloque III, segunda mitad
 
 - [ ] F17 · MVCC y su factura
 - [ ] F18 · Bloqueos, deadlocks y DDL
 - [ ] 💀 Boss III · Una tarde de julio
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T9 — Bloque IV
 
@@ -508,12 +535,12 @@ están, y entonces se cambia su estado en §3.
 - [ ] F20 · La propuesta de Florencia, medida
 - [ ] F21 · Hasta dónde llega el motor
 - [ ] 💀 Boss IV · El informe en la app
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T10 — F22
 
 - [ ] F22 · La exportación de las 9:40 (sin Java: la pregunta del broker queda para el boss del puente)
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T11 — F23
 
@@ -521,7 +548,7 @@ están, y entonces se cambia su estado en §3.
 - [ ] F23 · La base como producto (cierra la deuda de F10 y la de F22)
 - [ ] 💀 Boss V · Las 9:40
 - [ ] 💀☕ Boss del puente · El puente, con "¿hacía falta un broker?" medido
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T12 — Bloque VI
 
@@ -529,7 +556,7 @@ están, y entonces se cambia su estado en §3.
 - [ ] F25 · La migración sin parar
 - [ ] F26 · El comité
 - [ ] 🏆 Boss global "Un martes", cerrado
-- [ ] Documentos vivos al día · §4 limpia
+- [ ] Solucionarios y documentos vivos al día · §4 limpia
 
 ### T13 — Track SQL Server
 
@@ -540,12 +567,14 @@ están, y entonces se cambia su estado en §3.
 - [ ] ss04 · Clustered, NEWSEQUENTIALID y tablas temporales
 - [ ] ss05 · Data API builder y el tipo json
 - [ ] ssa-01 · Qué cambia en Windows
+- [ ] Solucionarios de `ss01`–`ss05` y `ssa-01` · §4 limpia
 
 ### T14 — El museo y los apéndices que crecen
 
-- [ ] a10 · El Access de museo, con `taller/accdb-museo/` movido a `src/a10-el-access-de-museo/` y vuelto a ejecutar
+- [ ] a10 · El Access de museo, con la prueba de `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` extraída a `src/a10-el-access-de-museo/` y vuelta a ejecutar
 - [ ] a03, a04 y a07 cerrados
 - [ ] a08 con cincuenta entradas, o con lo que falta dicho
+- [ ] Solucionarios de a03, a04, a07, a08 y a10 completos con sus ejercicios finales
 
 ### T15 — Los README y la estructura
 
@@ -553,9 +582,31 @@ están, y entonces se cambia su estado en §3.
 - [ ] `README.md` del curso
 - [ ] README de `src/`, incluido el de `src/a10-el-access-de-museo/`
 - [ ] Deuda de §6 dirigida a T15, saldada
+- [ ] `ESCRITOS_LOS_README = True` en `prompts/verificar-corpus.py`
 
 ### T16 — Cierre
 
 - [ ] §4 limpia en todo el curso; URL externas verificadas
-- [ ] `taller/` vacío y borrado
-- [ ] Con permiso de Oskar: este plan y `_desechable-propuesta-ruta.md` borrados, menciones limpias
+- [ ] Contenedores del curso borrados con sus volúmenes, comparados contra el inventario inicial
+- [ ] `zz-code/`: ningún directorio del curso *vigente* en §9; cada uno con su `README.md` completo;
+      vista previa de `zz-code/limpiar.py` mostrada a Oskar
+- [ ] Con permiso de Oskar: `_desechable-propuesta-ruta.md` borrado, menciones limpias; este plan se
+      conserva salvo que Oskar pida borrarlo
+
+### E9 — Publicación
+
+- [ ] `python3 prompts/verificar-corpus.py --publicacion` sin errores
+- [ ] README que se sostiene solo; licencia; `.gitignore` del repositorio público
+- [ ] Ningún secreto ni dato personal en el código ni en los ejemplos
+- [ ] Oskar copió la carpeta sin `prompts/` a su repositorio público
+
+---
+
+## 9. 🧪 Directorios de `zz-code/`
+
+Cada directorio de código intermedio de las sesiones de este curso, con su estado (*vigente*,
+*extraído* o *archivado*). El detalle, en su `MANIFIESTO.md`; cómo se corre, en su `README.md`.
+
+| Directorio | Tanda | Qué se probó | Estado | README completo | Regenerable liberado |
+|---|---|---|---|---|---|
+| `zz-code/ruta-sql-20261006-fc2f/` | diseño (29/09/2026), mudado en P12 | la prueba de concepto del Access de museo (`accdb-museo/`), el script que alineó la historia y la prueba del chequeo de solucionarios del verificador | vigente hasta T14 | sí | no (`lib/` y `out/`, 12 MB) |

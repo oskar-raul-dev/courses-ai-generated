@@ -1,10 +1,10 @@
 # 🧩 Plantillas de capítulo
 ## Ruta SQL
 
-Los cinco esqueletos que se copian al abrir una sesión nueva: **fase de tema** (F03–F23), **fase del
-Bloque 0** (F00–F02), **fase del árbitro** (F24–F26), **fase del track** (`ss01`–`ss05`) y
-**apéndice**. Las cuatro de fase son rígidas y se siguen literales; la de apéndice es laxa a
-propósito.
+Los seis esqueletos que se copian al abrir una sesión nueva: **fase de tema** (F03–F23), **fase del
+Bloque 0** (F00–F02), **fase del árbitro** (F24–F26), **fase del track** (`ss01`–`ss05`),
+**apéndice** y **solucionario** (agregado el 06/10/2026, D18). Las cuatro de fase y la de
+solucionario son rígidas y se siguen literales; la de apéndice es laxa a propósito.
 
 > **Nota de coherencia:** las horas y los conteos de ejercicios son los de
 > [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §11. Si cambian, se cambian **allí
@@ -150,8 +150,9 @@ fase enseñó. Lo que se le concede a la propuesta rival, si esta fase la toca.}
 ## 🧪 14. Ejercicios ({{total}})
 
 {{Guía §10. Agrupados por dificultad con rango y conteo, un tercio de diagnóstico o medición, al
-menos uno sobre `legacy`, cada uno con Objetivo o Pregunta. Los de Oracle piden resolver la apuesta
-y explicarla con la documentación.}}
+menos uno sobre `legacy`, cada uno con Objetivo o Pregunta y cerrado con
+`[Solución](soluciones/{{NN-slug}}.md#ejercicio-N)`. Los de Oracle piden resolver la apuesta y
+explicarla con la documentación.}}
 
 ## 🟢 Fácil — {{tema}} (1–{{a}})
 ## 🟡 Intermedio — {{tema}} ({{a+1}}–{{b}})
@@ -173,7 +174,7 @@ y explicarla con la documentación.}}
 
 ## 🏁 16. Resultado de la fase
 
-{{Qué queda construido y medido, en diagrama o bloque text.}}
+{{Qué queda construido y medido, como ficha de cierre en un bloque text (guía §19.1).}}
 
 {{Si la fase cierra un bloque: el 💀 boss del bloque en su propio apartado, en voz de quien lo pide,
 empezando con el sistema roto; y la nota del 🏆 boss global "Un martes", marcada como opcional.}}
@@ -206,6 +207,8 @@ empezando con el sistema roto; y la nota del 🏆 boss global "Un martes", marca
 - **Postgres bien jugado**: si el diseño del curso gana, gana contra la mejor versión razonable del
   rival.
 - **Los tres documentos vivos se alimentan al cerrar**: la bitácora, `a08` e `INSTINTOS.md`.
+- **El solucionario se escribe en la misma sesión**, con la plantilla de solucionario: una fase sin
+  `soluciones/{{NN-slug}}.md` completo y ejecutado no está cerrada.
 - **Los datos de la historia no se inventan de nuevo**: si falta uno, se agrega primero a
   `00-historia-de-alameda.md`.
 - **Ningún `README.md` se toca, ni se crea `0-ESTRUCTURA-CURSO.md`,** al cerrar una fase: se
@@ -258,7 +261,7 @@ por defecto a las cinco preguntas, y dónde deja de serlo.}}
 ## 📋 7. Checklist de validación
 ## 🧪 8. Ejercicios ({{total}})
 {{12 en F00 y F02 (exención declarada), de lectura y decisión. 22 en F01, la mitad de cargar y leer
-planes, con al menos tres de la carga sucia.}}
+planes, con al menos tres de la carga sucia. Cada uno cierra con su enlace a `soluciones/`.}}
 
 ## 📚 9. Referencias
 ## 🏁 10. Resultado de la fase
@@ -309,7 +312,8 @@ vuelta atrás.}}
 
 ## 📋 8. Checklist de validación
 ## 🧪 9. Ejercicios ({{total}})
-{{Preguntas de comité, planes que revisar, reconciliaciones que no cierran.}}
+{{Preguntas de comité, planes que revisar, reconciliaciones que no cierran. Casi todos abiertos:
+su solución es de referencia, con rúbrica. Cada uno cierra con su enlace a `soluciones/`.}}
 
 ## 📚 10. Referencias
 ## 🏁 11. Resultado de la fase
@@ -385,6 +389,7 @@ tabla de decisión o de referencia, referencias y ejercicios.
 ## ⚠️ Advertencias
 ## 📚 Referencias
 ## 🧪 Ejercicios ({{5–10}})
+{{Cada uno cierra con `[Solución](soluciones/{{aNN-slug}}.md#ejercicio-N)`.}}
 
 ---
 
@@ -396,9 +401,86 @@ tabla de decisión o de referencia, referencias y ejercicios.
 
 - **Sus horas no cuentan** dentro de las 252.
 - **Ningún `README.md` se toca**, tampoco los de `src/`: se escriben en su tanda final y aparte.
+- **Sus ejercicios también llevan solucionario**, `soluciones/{{aNN-slug}}.md`, en la misma sesión.
 - **No repite lo que explica una fase: enlaza.**
 - **`a01` y `a02` tienen prohibido explicar Docker.**
 - **La regla de publicación vale también aquí**: se enseña a leer un plan de Oracle, no se publican
   sus lecturas.
 - **Antes de escribir, confirma tres cosas:** qué versiones exactas se cubren, qué convenciones ya
   son conocidas a esa altura del curso y qué queda fuera.
+
+---
+
+# ✅ Plantilla de solucionario
+
+Un archivo por documento con ejercicios —fase, apéndice o fase del track—, `soluciones/<mismo
+nombre>.md`, escrito en la misma sesión que su documento (guía §10.3, D18). Rígida.
+
+````markdown
+# ✅ Soluciones — {{Fase NN | Apéndice aNN | SQL Server NN}}: {{Tema}}
+
+> **Curso:** Ruta SQL · Solucionario de [{{la Fase NN}}](../{{NN-slug}}.md)
+> **Ejercicios:** {{total}} · **Perfil:** {{S | M}} · **Motores:** {{Postgres `postgres@sha256:…`,
+> MySQL…}}
+> **Fecha de verificación ejecutada:** {{DD/MM/AAAA}}
+
+> ⚠️ **Intenta el ejercicio antes de leer su solución.** Leída antes, solo te enseña a reconocerla.
+
+---
+
+## 🟢 Fácil (1–{{a}})
+
+### Ejercicio 1
+
+**Enunciado (resumen):** {{una o dos líneas, suficientes para no volver a la fase.}}
+
+**Solución.** {{el porqué, en prosa corta}}
+
+```sql
+-- postgres
+{{el SQL completo, el que se ejecutó}}
+```
+
+```text
+{{salida literal}}
+```
+
+> ⚠️ **Error típico:** {{opcional: dónde se suele equivocar la gente en este ejercicio.}}
+
+[← Volver al ejercicio](../{{NN-slug}}.md#{{ancla-del-ejercicio}})
+
+## 🟠 Difícil ({{b+1}}–{{c}})
+
+### Ejercicio {{N}}
+
+**Enunciado (resumen):** {{…}}
+
+**Solución de referencia.** {{un diseño correcto, ejecutado, con su medición si la pide}}
+
+**Rúbrica.** Una respuesta correcta tiene que:
+- {{criterio verificable}}
+
+Y queda invalidada si:
+- {{error que la invalida}}
+
+### Ejercicio {{N}} (Oracle, 🪞🔒)
+
+**Solución.** {{el mecanismo según la documentación oficial, la consulta y qué mirar en el
+resultado; sin números, que el lector obtiene en su máquina}}
+
+## 🔥 Opcionales
+
+### Ejercicio 🔥 1
+
+{{Solución si tiene respuesta verificable; rúbrica si es exploratorio.}}
+````
+
+## Recordatorios al rellenar un solucionario
+
+- **Los mismos ejercicios, con la misma numeración y en el mismo orden** que el documento; el
+  verificador los compara.
+- **Nada sin ejecutar**: cada solución corrió sobre el perfil del encabezado, en la fecha del
+  encabezado. Ningún número de Oracle ni de SQL Server.
+- **Los boss no van aquí**: su solución de referencia queda fuera del repositorio publicado.
+- **Si cambia un ejercicio, cambia su solución en la misma edición.**
+

@@ -111,22 +111,22 @@ coach, solemnidad de manual, y esa forma tan cómoda de enseñar que consiste en
 - **Tablas solo para lo tabular y corto.** Mapeos de traducción, matriz familia × pregunta,
   versiones fijadas, tabla de decisión. Tres o cuatro columnas como máximo. Si necesitas
   explicar una celda, ya no era una tabla: era una lista con subtítulos.
-- **Diagramas ASCII en bloques `text`**, sin timidez, cuando hay estructura que mostrar:
+- **Diagramas en Mermaid** (D-12, §18.1), sin timidez, cuando hay estructura que mostrar:
   cómo se reparte una partition key, cuántos viajes hace una consulta, qué se duplica al
-  desnormalizar.
+  desnormalizar. Las salidas, los árboles de claves o de archivos y las fichas de cierre siguen en
+  `text`.
 
-  ```text
-  UNA LECTURA DE LA FICHA DE AERONAVE
-
-  documental          referenciado al estilo relacional
-  ───────────         ─────────────────────────────────
-  app                 app
-   │                   │
-   │ 1 viaje           ├── 1 viaje → aircraft
-   ▼                   ├── 1 viaje → engines
-  aircraft             ├── 1 viaje → options  (N)
-  (1 documento)        └── 1 viaje → warranty
-                              = 3 + N viajes
+  ```mermaid
+  flowchart LR
+      subgraph doc["documental: 1 viaje"]
+          A1[app] -- "1 viaje" --> D1[("aircraft<br/>1 documento")]
+      end
+      subgraph rel["referenciado al estilo relacional: 3 + N viajes"]
+          A2[app] -- "1 viaje" --> R1[(aircraft)]
+          A2 -- "1 viaje" --> R2[(engines)]
+          A2 -- "1 viaje" --> R3[("options (N)")]
+          A2 -- "1 viaje" --> R4[(warranty)]
+      end
   ```
 
 - **Salida de terminal literal.** Tal como sale, en bloque `text`, sin embellecer y sin
@@ -254,7 +254,8 @@ minúsculas y con guiones, salvo los que el repositorio ya fija en mayúsculas.
 Los **miniproyectos de familia** son una familia de archivos propia:
 `h-mini-NN-<familia>-<empresa>.md`, donde `NN` es el orden de la familia en el curso (01
 documental … 10 NewSQL) y **no** el número de la fase que cierran. Viven en la raíz del
-curso, su índice es `propuestas-mini-proyectos.md`, y no se renumeran.
+curso, su índice para el lector es `miniproyectos.md`, su formato es
+[`formato-de-miniproyectos.md`](formato-de-miniproyectos.md), y no se renumeran.
 
 ---
 
@@ -535,7 +536,8 @@ Tres reglas lo mantienen en su sitio:
   que se publica se mide sobre Cóndor. Si una fase cita un número de un miniproyecto como
   evidencia, está mal.
 - **La fase no repite el encargo**: enlaza al `h-mini`, que es autosuficiente. Su índice y
-  su plantilla están en `propuestas-mini-proyectos.md`.
+  su plantilla están en `miniproyectos.md` y en
+  [`formato-de-miniproyectos.md`](formato-de-miniproyectos.md).
 
 ---
 
@@ -568,7 +570,7 @@ ejecutar, qué consultar durante y a qué volver después.
 - **Cuando el comando es idéntico, se dice y no se duplica.** Duplicar bloques idénticos
   para "cubrir los dos" es ruido.
 - **Aquí no se enseña Docker.** Si una explicación de contenedores pasa de dos párrafos,
-  pertenece a `docker-container-legacy/` y se enlaza. Esta regla es la que impide que el
+  pertenece a `docker-container-legacy/`, que se nombra sin enlace (D-03). Esta regla es la que impide que el
   curso se convierta en otro curso.
 - **Sin Kubernetes**, en ninguna forma.
 - Los servicios del `compose.yaml` se nombran por familia y no por producto
@@ -646,7 +648,7 @@ Crecen durante todo el curso y son producto, no apuntes.
 [ ] Ejercicios: 20–30 (12 en F00 y F02), agrupados, con conteo en el título
 [ ] Al menos un tercio de los ejercicios son de diagnóstico o medición
 [ ] Cada ejercicio tiene Objetivo o Pregunta, y usa nombres del dominio de Cóndor
-[ ] Ninguna explicación de Docker pasa de dos párrafos; lo demás enlaza
+[ ] Ninguna explicación de Docker pasa de dos párrafos; lo demás remite a a01/a02
 [ ] Cuerpo entre 4.000 y 5.000 palabras (2.000–3.000 en F00 y F02), sin el aparato de ejercicios
 [ ] Todo pendiente abierto tiene destino explícito
 [ ] Tuteo en todo el documento; cero voseo, cero "usted"
@@ -674,18 +676,120 @@ las "arreglaría" de vuelta.
    declarada de F00 y F02 (12 mínimo) por ser fases de criterio y no de ejecución.
 4. **`INSTINTOS.md` se mantiene y es central**, no accesorio.
 
-Todo lo demás del `CLAUDE.md` aplica tal cual: idioma, tono, estructuras recurrentes,
-convenciones de markdown, nombres de archivo y flujo de git.
+Agregadas el 06/10/2026, al revisar el curso contra los lineamientos de producción (§18). Ya eran la
+práctica del curso; lo que faltaba era escribirlas:
+
+5. **Los comentarios de código van en español con tildes** (§5), no en inglés como pide el
+   `CLAUDE.md`. Motivo: en este curso el comentario es la parte pedagógica del código, y el lector
+   lo lee como prosa. Los identificadores siguen en inglés.
+6. **Los ejercicios no traen solución publicada.** El `CLAUDE.md` pide una solución de referencia o
+   una rúbrica por ejercicio; aquí cada ejercicio cierra con su `**Objetivo:**` o su
+   `**Pregunta:**` verificable (§9), y los boss y los miniproyectos con criterios de aceptación. La
+   solución del boss se guarda fuera del repositorio publicado. **Decisión por defecto, a revisar
+   por Oskar** (alcance §12.1, D-05).
+7. **`0-ESTRUCTURA-CURSO.md` no se escribió antes de la primera fase**, sino al cerrar la Tanda 1, y
+   desde el 30/09/2026 se actualiza una sola vez, en la Tanda 7, junto con el README. Antes de F00
+   ese papel lo cumplieron el [alcance](alcance-del-proyecto.md) y la
+   [propuesta de fases](propuesta-fases-y-alcance.md). Hasta la Tanda 7 describe la Tanda 1, y eso
+   se acepta a sabiendas. (Hasta el 06/10/2026 se llamaba `0-programa-del-curso.md`.)
+
+Todo lo demás del `CLAUDE.md` aplica tal cual: el resto de la regla de idioma, el tono, las
+estructuras recurrentes, las convenciones de markdown, los nombres de archivo y el flujo de git.
 
 ---
 
 ## 17. 📌 Pendientes que afectan a esta guía
 
-- **Las versiones y digests de los diez motores están sin fijar** hasta la sesión de
-  verificación de laboratorio. Mientras tanto, ningún documento publica un número de
-  versión. Cuando se fijen, viven en `a02` y esta guía solo apunta allí.
+- ✅ **Las versiones y digests de los diez motores se fijaron** en la verificación de
+  laboratorio (T10, 29/09/2026). Viven en `a02`, y esta guía solo apunta allí.
 - ✅ **Resueltos el 29/09/2026** (alcance §12, decisiones 16–18): columnar ancha con
   **Cassandra y el heap fijado**, cliente de Valkey **`iovalkey`**, y modelo de embeddings
   **`intfloat/multilingual-e5-small`**. Queda pendiente para la sesión de laboratorio medir
   Cassandra en Linux (WSL2 se valida al trabajar el curso). La paridad del embedding entre
   Python y TypeScript ya está verificada (29/09/2026).
+
+---
+
+## 18. 🧰 Correspondencia con los lineamientos de producción
+
+Agregada el 06/10/2026, al revisar el curso contra los lineamientos de producción del repositorio
+(`zz-instrucciones/`), que son posteriores a su arranque. **Va al final y no renumera nada**, porque
+las secciones de esta guía ya las citan las propuestas, las plantillas, los prompts y el plan. Las
+decisiones de la plantilla general (D-01–D-13) están mapeadas en el
+[alcance](alcance-del-proyecto.md) §12.1.
+
+### 18.1 D-12 · Diagramas en Mermaid
+
+Todo diagrama estructural o conceptual —relaciones entre entidades, viajes de una consulta, flujos,
+árboles de decisión— va en un bloque `mermaid` y se dibuja con `mmdc` antes de publicarlo. Se quedan
+en `text`, porque no son diagramas o se leen mejor alineados:
+
+- las **salidas de terminal** y los **planes** de ejecución, literales;
+- los **árboles de claves o de archivos** (las claves de Valkey en F05);
+- las **fichas de cierre de fase** (la colección de Qdrant en F15), aunque lleven alguna flecha.
+
+La revisión convirtió el único diagrama del curso publicado, las relaciones entre entidades de `a05`,
+y el ejemplo de §3. Criterios para los que vengan: `flowchart LR` para relaciones y caminos,
+`subgraph` para comparar dos modelos lado a lado, cilindro `[(…)]` para un almacén, y la flecha
+siempre de quien guarda la referencia a la entidad referida.
+
+### 18.2 Numeración y excepciones del verificador
+
+Las plantillas generales citan "guía §12" para el checklist y "guía §13" para las excepciones. En este
+curso son **§15** (checklist) y **§16** (excepciones). Todos los documentos de `prompts/` citan los
+números de esta guía, nunca los de la plantilla. La historia de Cóndor, que es narrativa y no una
+fase, lleva un emoji por subsección de su cronología; el verificador lo sabe.
+
+### 18.3 Qué documento hace cada papel
+
+| Papel en los lineamientos | En este curso |
+|---|---|
+| Alcance | [`alcance-del-proyecto.md`](alcance-del-proyecto.md); D-01–D-13 en su §12.1 |
+| Propuesta de fases y de apéndices | [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) (resumen en §9) y [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md); el análisis previo en [`analisis-modelos-no-sql.md`](analisis-modelos-no-sql.md) |
+| Plan de producción | `_desechable-plan-de-produccion.md` (hasta el 06/10/2026, `_desechable-plan-de-tandas.md`): desechable a propósito, para que nada lo cite |
+| Guía | este documento |
+| Diccionario de términos | [`diccionario-de-terminos.md`](diccionario-de-terminos.md); `a08` lo publica para el lector |
+| Contrato de nombres | [`contrato-de-nombres.md`](contrato-de-nombres.md) |
+| Plantillas de capítulo | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md): fase A, fase B, Bloque 0 y apéndice |
+| Formatos propios | [`formato-bitacora-de-medicion.md`](formato-bitacora-de-medicion.md) (medición, apuesta, rotura, catálogo e instintos) y [`formato-de-miniproyectos.md`](formato-de-miniproyectos.md) |
+| Prompts de fase y de apéndice | [`prompts-de-fase.md`](prompts-de-fase.md) y [`prompts-de-apendice.md`](prompts-de-apendice.md) |
+| Historia de la empresa | `00-historia-de-condor.md`, publicada; las candidatas descartadas, en [`propuestas-historias.md`](propuestas-historias.md) |
+| Verificación previa (E6) | [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) (H1–H13), con sus scripts y registros |
+| Manual de `prompts/` | [`README.md`](README.md) |
+| Verificador | `verificar-corpus.py` sobre `verificador_base.py` (§18.4) |
+| Documentos vivos | `INSTINTOS.md`, `bitacora-de-medicion.md` (en lugar de `BENCHMARKS.md`, §16) y `a09` |
+
+### 18.4 Verificación
+
+Desde la raíz del curso, al cerrar cada tanda:
+
+```bash
+python3 prompts/verificar-corpus.py                 # validaciones base + las propias del curso
+python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el repositorio público
+```
+
+- `verificar-corpus.py` hereda de `verificador_base.py` (copia sin cambios de la base de los
+  lineamientos) los enlaces y anclas —con el U+FE0F que GitHub conserva—, los enlaces que salen del
+  curso, los restos de plantilla, la codificación rota, el emoji en `###` y los callouts. Agrega lo
+  propio: ejercicios contra el resumen de la propuesta §9, numeración sin saltos, la banda de palabras
+  de §15 y el aviso `DIAGRAMA` para un bloque `text` con forma de diagrama.
+- `--publicacion` agrega los errores de la etapa de publicación: enlaces a `prompts/` y menciones a
+  material privado (`zz-code/`, desechables).
+- Al 06/10/2026, el modo normal sale en **0 errores y 0 avisos**. `--publicacion` deja un error a
+  propósito: `a02` enlaza `verificacion-de-laboratorio/verificar-lab.sh`, un script que el lector
+  necesita y que tiene que pasar a `src/lab/check/` y volver a correrse (deuda del plan, Tanda 3).
+- Lo que el verificador no ve y se revisa a mano: que las cifras citadas coincidan con la bitácora,
+  que cada error de `a09` tenga su mensaje literal, y que cada bloque `mermaid` dibuje.
+
+### 18.5 Código, `zz-code/` y `.gitignore`
+
+- **El código del curso vive en `src/`** (D-09), y lleva **un solo `.gitignore`, en `src/`**, que se
+  sostiene sin el de la raíz del repositorio: dependencias, entornos, cachés de Python, `lab/data/` y
+  `lab/.env`. El de `src/lab/` se fundió en él el 06/10/2026, comprobando con `git ls-files` que la
+  lista de ignorados no cambiaba.
+- **Las pruebas de las sesiones van a `zz-code/ruta-no-sql-lite-<fecha>-<hash>/`**, nunca al
+  scratchpad ni al curso, y el plan las registra (§9 del plan). El curso no cita `zz-code/`.
+- **Excepción declarada:** los scripts de la verificación de laboratorio de T10
+  (`verificacion-de-laboratorio/*.sh`, `comprobaciones/`, `compose.yaml`) son anteriores a esa regla
+  y se quedan en `prompts/`, porque los hallazgos H1–H13 los citan. Las verificaciones nuevas (Linux,
+  WSL2, Colima) van a `zz-code/`.

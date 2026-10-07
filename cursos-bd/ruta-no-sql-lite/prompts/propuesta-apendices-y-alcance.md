@@ -25,7 +25,7 @@ mínimo ejecutable, tabla de "cuándo usar qué" al final, y de 5 a 10 ejercicio
 
 > 🧭 **La regla de oro de los apéndices de infraestructura: comandos y nada más.** Si una
 > sección necesita más de dos párrafos para explicar qué hace un comando de contenedores,
-> ese contenido pertenece a `docker-container-legacy/` y lo que va aquí es el enlace. Esta
+> ese contenido pertenece a `docker-container-legacy/` y aquí se nombra en prosa, sin enlace (D-03). Esta
 > regla es lo único que impide que la Ruta NoSQL Lite se convierta en otro curso de Docker.
 
 ---
@@ -93,7 +93,7 @@ sea, en menos de media hora y sin haber aprendido nada de contenedores que no ne
 **Qué NO entra, y es la mitad del valor del apéndice:** qué es una imagen, qué es una capa,
 cómo funciona el copy-on-write, redes de contenedores, `Dockerfile`, multi-stage,
 registries, arquitecturas y emulación. **Todo eso está escrito y bien escrito en
-`docker-container-legacy/`**, y aquí solo se enlaza.
+`docker-container-legacy/`**, y aquí solo se nombra, sin enlace (D-03).
 
 **Ejercicios: 8**, de consulta: levantar, verificar, romper un puerto ocupado y salir.
 

@@ -3,7 +3,7 @@
 > **Curso:** Ruta NoSQL Lite · documento vivo
 > **Qué es:** cada punto del curso donde **el instinto relacional falla**, con la medición que lo
 > demuestra. Es el documento que mejor resume la ruta entera, y el que más sentido tiene leer solo.
-> **Formato de cada entrada** (`prompts/formato-bitacora-de-medicion.md` §7): el instinto en tu voz ·
+> **Formato de cada entrada:** el instinto en tu voz ·
 > por qué es razonable · dónde se rompe · la medición que lo prueba, con enlace a la
 > [bitácora](bitacora-de-medicion.md) · y **la pregunta del instrumento** que lo habría anticipado.
 

@@ -104,8 +104,10 @@ lo que tienen de razón.
   telegrama. **Una frase aislada por sección, dos si la sección es larga.**
 - **Tablas solo para lo tabular y corto**: traducción entre motores, matriz de anomalías por nivel
   de aislamiento, versiones fijadas, decisión. Tres o cuatro columnas como máximo.
-- **Diagramas ASCII en bloques `text`** cuando hay estructura que mostrar: dos sesiones
-  intercaladas en el tiempo, una página que se parte, qué filas bloquea un `UPDATE`.
+- **Diagramas en Mermaid** (D-12, §19.1) cuando hay estructura que mostrar: una página que se
+  parte, qué filas bloquea un `UPDATE`, el camino de un mensaje, un árbol de decisión. **Se quedan
+  en `text` las sesiones intercaladas en el tiempo**, porque con las dos columnas alineadas y el SQL
+  literal se leen mejor que en cualquier diagrama:
 
   ```text
   DOS RECEPCIONISTAS, UN FOLIO
@@ -249,9 +251,11 @@ Si abres un paréntesis (*"esto lo medimos en la Fase 16"*, *"por ahora lo dejam
 - **Documentos vivos**, en la raíz del curso: `INSTINTOS.md`, `bitacora-de-medicion.md` y
   `a08-catalogo-de-errores.md`, que es apéndice y documento vivo a la vez.
 - **La historia:** `00-historia-de-alameda.md`.
+- **Solucionarios:** `soluciones/<mismo-nombre-que-el-documento>.md`, uno por fase, apéndice o fase
+  del track que tenga ejercicios (§10.3).
 - **Código:** `src/NN-slug/` o `src/aNN-slug/`, con el mismo nombre que su documento, más
-  `src/lab/` para lo compartido (el arnés, el generador, el compose). `taller/` es de preparación y
-  se vacía cuando su contenido encuentra dueño.
+  `src/lab/` para lo compartido (el arnés, el generador, el compose). Las pruebas de
+  preparación no viven en el curso: van a `zz-code/` (§19.5).
 
 ---
 
@@ -409,8 +413,8 @@ escalada por horas:
 |---|---|---|
 | 3–4 h | F00, F02 | 2.000–3.000 |
 | 5 h | F01 | 3.000–4.000 |
-| 8 h | F03–F08 | 3.500–4.500 |
-| 10 h | F09–F21, F25, F26, `ss01`–`ss05` | 4.000–5.000 |
+| 8 h | F03–F08, `ss01`–`ss05` | 3.500–4.500 |
+| 10 h | F09–F21, F25, F26 | 4.000–5.000 |
 | 12 h | F24 | 4.000–5.000 (el resto es ejercicio de diseño) |
 | 15 h | F22, F23 | 5.000–6.500 |
 
@@ -454,7 +458,23 @@ Pendientes sugeridos**, con destino explícito.
   las filas con fecha de nacimiento futura"*.
 - **Los ejercicios de Oracle** piden resolver la apuesta en la máquina del lector y **explicar** el
   resultado con la documentación; no piden comparar con un número del curso, porque no lo hay.
-- **Agrupados por dificultad, con encabezado de rango y el conteo en el título**, como en la Lite.
+- **Agrupados por dificultad, con encabezado de rango y el conteo en el título**, como en la Lite,
+  y con este formato exacto, que es el que cuenta el verificador (§19.4):
+
+  ```markdown
+  ## 🧪 14. Ejercicios (24)
+
+  ## 🟢 Fácil — la caja tal cual (1–7)
+
+  ### 🟢 Ejercicio 1 — Contar lo que trae la caja
+
+  **Objetivo:** …
+
+  [Solución](soluciones/01-la-caja-y-el-arnes.md#ejercicio-1)
+  ```
+
+  La numeración es continua de 1 al total, sin saltos; los 🔥 y 💀 no entran en la cuenta.
+- **Cada ejercicio enlaza su solución** en la última línea, con el ancla `#ejercicio-N` (§10.3).
 
 ### 10.1 El boss de bloque
 
@@ -469,6 +489,35 @@ voz y con una consecuencia si sale mal. La lista está en el alcance §13.
 Opcional, acumulativo y fuera de las horas del curso. Se referencia **al cierre de cada bloque**,
 marcado como opcional, y termina en F26 con la facturación de un martes corriendo sobre la base
 nueva.
+
+### 10.3 El solucionario
+
+Decidido por Oskar el 06/10/2026 (D-05, alcance §12.1): **todo ejercicio lleva solución, en un
+archivo separado**, para que el lector intente antes de leerla.
+
+- **Un archivo por documento con ejercicios**, con el mismo nombre que el documento, en
+  `soluciones/`: `soluciones/16-el-folio-sin-huecos.md`, `soluciones/a04-el-arnes-de-forma.md`,
+  `soluciones/ss02-pesimista-contra-rcsi.md`. Un encabezado `### Ejercicio N` por ejercicio, en el
+  mismo orden y con la misma numeración que el documento; su ancla es `#ejercicio-n`.
+- **Se escribe en la misma sesión que su documento**, con la plantilla de solucionario. Una fase sin
+  su solucionario completo no está cerrada, y quien cambia un ejercicio cambia su solución en la
+  misma edición.
+- **Solución desarrollada, no resultado**: el SQL o el código completo, la salida literal y por qué
+  esa es la respuesta. **Todo se ejecutó** sobre el perfil que dice el encabezado, con la fecha de
+  verificación; los números salen de la ejecución, no de la fase.
+- **🟢 y 🟡: la solución completa. 🟠 y 🔴: una solución de referencia y una rúbrica** —qué tiene que
+  tener una respuesta correcta y qué la invalida—, porque admiten más de un diseño. Si el ejercicio
+  pedía predecir antes de ejecutar, la solución da el número medido y la predicción razonable.
+- **Oracle y SQL Server sin números** (§6.1): la solución explica el mecanismo con la documentación
+  oficial, da la consulta y dice qué mirar en el resultado; la apuesta queda 🪞🔒 sin resolver.
+- **Los 🔥** llevan solución cuando tienen una respuesta verificable, y una rúbrica cuando son
+  exploratorios, bajo `### Ejercicio 🔥 N`.
+- **Los boss no van en el solucionario**: el sistema roto de partida vive en `src/`, los criterios de
+  aceptación en la fase, y la solución de referencia queda fuera del repositorio publicado (confirmado
+  por Oskar el 06/10/2026). Es un
+  encargo, no un ejercicio, y publicar su solución lo convierte en uno.
+- **No cuenta para la longitud** de §9 ni para las horas: el tiempo de resolver ya está dentro de las
+  horas de la fase.
 
 ---
 
@@ -501,7 +550,7 @@ referencias con un **orden de lectura sugerido**.
 - **Docker Compose es el camino principal**, con el equivalente Podman al lado. Cuando el comando
   es idéntico, se dice y no se duplica.
 - **Aquí no se enseña Docker.** Más de dos párrafos de contenedores pertenecen a
-  `cursos-contenedores-cloud-infra/docker-container-legacy/`, y se enlaza.
+  `cursos-contenedores-cloud-infra/docker-container-legacy/`, que se nombra sin enlace (D-03).
 - **Sin Kubernetes**, en ninguna forma.
 - **Los servicios del `compose.yaml` se nombran por rol**: `postgres`, `mysql` y `oracle` (aquí el
   motor *es* el rol), más `mongo` (F20), `api` (F23), `broker` y `bridge` (boss del puente) y
@@ -575,7 +624,8 @@ Crecen durante todo el curso y son producto, no apuntes.
 [ ] Ninguna autopsia juzga a una persona; las propuestas rivales tienen su mejor argumento
 [ ] Cada motor aparece solo donde cambia la decisión (§4.4)
 [ ] Ejercicios en la cantidad de la propuesta §11, agrupados, un tercio de diagnóstico, uno sobre legacy
-[ ] Cada ejercicio tiene Objetivo o Pregunta y usa nombres del dominio
+[ ] Cada ejercicio tiene Objetivo o Pregunta, usa nombres del dominio y enlaza su solución
+[ ] soluciones/<documento>.md completo: un ### Ejercicio N por ejercicio, ejecutado, rúbrica en 🟠🔴
 [ ] Ninguna explicación de Docker pasa de dos párrafos
 [ ] Cuerpo en la banda de §9 para sus horas
 [ ] Todo pendiente abierto tiene destino explícito
@@ -609,6 +659,17 @@ estuvieran escritas aquí, cada sesión futura las "arreglaría" de vuelta.
    junto con los README cuando todo el contenido existe, para no mantener dos mapas durante la
    escritura.
 
+Agregadas el 06/10/2026, al revisar el curso contra los lineamientos de producción (§19). Ya eran la
+regla del curso, heredada de la NoSQL Lite; lo que faltaba era declararlas:
+
+8. **Los comentarios de código van en español con tildes** (§5), no en inglés como pide el
+   `CLAUDE.md`. Motivo: en este curso el comentario es la parte pedagógica del código y se lee como
+   prosa. Los identificadores siguen en inglés, salvo el esquema `legacy` (excepción 5).
+9. *(Retirada el 06/10/2026.)* Se había declarado, por defecto, que los ejercicios no traían
+   solución. Oskar decidió lo contrario: **solución en archivo separado** (§10.3), que es lo que pide
+   el `CLAUDE.md`, así que ya no es una excepción. Se conserva el número para no renumerar. Lo único
+   que sigue apartándose es que **los boss no publican su solución** (§10.3).
+
 Todo lo demás del `CLAUDE.md` aplica tal cual.
 
 ---
@@ -616,7 +677,90 @@ Todo lo demás del `CLAUDE.md` aplica tal cual.
 ## 18. 📌 Pendientes que afectan a esta guía
 
 - **Versiones y digests sin fijar** hasta la verificación de laboratorio (tanda P8). Cuando se
-  fijen, viven en `a02` y esta guía solo apunta allí.
+  fijen, viven en `a02` y esta guía solo apunta allí. P8 trabaja en `zz-code/` (§19.5).
 - **Ediciones de los libros base** sin comprobar (tanda P9).
 - ✅ **D6 cerrada el 30/09/2026**: el repositorio se trata como público, y de los planes de Oracle
   y SQL Server se publica solo la estructura.
+
+---
+
+## 19. 🧰 Correspondencia con los lineamientos de producción
+
+Agregada el 06/10/2026, al revisar el curso contra los lineamientos de producción del repositorio
+(`zz-instrucciones/`), antes de T0. **Va al final y no renumera nada**, porque las secciones de esta
+guía ya las citan el alcance, las propuestas, las plantillas, los prompts y el plan. Las decisiones de
+la plantilla general (D-01–D-13) están mapeadas en el [alcance](alcance-del-proyecto.md) §12.1.
+
+### 19.1 D-12 · Diagramas en Mermaid
+
+Todo diagrama estructural o conceptual —un esquema y sus relaciones, una página que se parte, el
+camino de un mensaje, un árbol de decisión— va en un bloque `mermaid` y se dibuja con `mmdc` antes de
+publicarlo. Para los esquemas, `erDiagram` con la notación de pata de gallo; para flujos y caminos,
+`flowchart LR`. Se quedan en `text`:
+
+- **las sesiones intercaladas en el tiempo** (§3), porque dos columnas alineadas con el SQL literal se
+  leen mejor que un `sequenceDiagram`, y son el material del Bloque III;
+- las **salidas de terminal** y los **planes de ejecución**, literales;
+- los **árboles de archivos** y las **fichas de cierre de fase**.
+
+### 19.2 Numeración
+
+Las plantillas generales citan "guía §12" para el checklist y "guía §13" para las excepciones. En este
+curso son **§16** (checklist) y **§17** (excepciones). Todos los documentos de `prompts/` citan los
+números de esta guía, nunca los de la plantilla.
+
+### 19.3 Qué documento hace cada papel
+
+| Papel en los lineamientos | En este curso |
+|---|---|
+| Alcance | [`alcance-del-proyecto.md`](alcance-del-proyecto.md); D-01–D-13 en su §12.1 |
+| Propuesta de fases y de apéndices | [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) (resumen en §11, registro de decisiones en §12) y [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md) |
+| Plan de producción | `_desechable-plan-de-produccion.md`: desechable a propósito, para que nada lo cite |
+| Guía | este documento |
+| Diccionario de términos | [`diccionario-de-terminos.md`](diccionario-de-terminos.md); `a07` lo publica para el lector |
+| Contrato de nombres | [`contrato-de-nombres.md`](contrato-de-nombres.md), con ⏳ hasta T1 |
+| Plantillas de capítulo | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md): fase de tema, Bloque 0, árbitro, track y apéndice |
+| Formato de mediciones | §6 y §7 de esta guía |
+| Solucionario | `soluciones/<documento>.md`, con la forma de §10.3 y la plantilla de solucionario |
+| Prompts de fase y de apéndice | [`prompts-de-fase.md`](prompts-de-fase.md), [`prompts-de-apendice.md`](prompts-de-apendice.md) y, para el track, [`prompts-sqlserver-fase.md`](prompts-sqlserver-fase.md) |
+| Historia de la empresa | `00-historia-de-alameda.md`, publicada |
+| Verificación previa (E6) | P8 y P9, pendientes: `verificacion-de-laboratorio/hallazgos.md` (formato `H1`, `H2`…) |
+| Manual de `prompts/` | [`README.md`](README.md) |
+| Verificador | `verificar-corpus.py` sobre `verificador_base.py` (§19.4) |
+| Documentos vivos | `INSTINTOS.md`, `bitacora-de-medicion.md` (en lugar de `BENCHMARKS.md`, §17) y `a08` |
+
+### 19.4 Verificación
+
+Desde la raíz del curso, al cerrar cada tanda:
+
+```bash
+python3 prompts/verificar-corpus.py                 # validaciones base + las propias del curso
+python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el repositorio público
+```
+
+- `verificar-corpus.py` hereda de `verificador_base.py` (copia sin cambios de la base de los
+  lineamientos) los enlaces y anclas —con el U+FE0F que GitHub conserva—, los enlaces que salen del
+  curso, los restos de plantilla, la codificación rota, el emoji en `###` y los callouts. Agrega lo
+  propio: ejercicios contra el resumen de la propuesta §11 (también los del track), numeración sin
+  saltos, **el solucionario de cada documento con ejercicios** (que exista y tenga los mismos
+  ejercicios) y el enlace de cada ejercicio a su solución, la banda de palabras de §9 por horas, el
+  aviso `DIAGRAMA` y el aviso `README`, si un README o `0-ESTRUCTURA-CURSO.md` aparece antes de T15.
+- `--publicacion` agrega los errores de la etapa de publicación: enlaces a `prompts/` y menciones a
+  material privado (`zz-code/`, desechables).
+- Reemplaza el script de enlaces y anclas que traía el plan §4, que calculaba mal las anclas de los
+  encabezados con ⚠️, ⚖️ o 🗂️. Al 06/10/2026, con solo la historia escrita, los dos modos salen en
+  **0 errores y 0 avisos**.
+
+### 19.5 Código, `zz-code/` y `.gitignore`
+
+- **El código del curso vive en `src/`** (D-09), con **un solo `.gitignore`, en `src/`**, que nace en
+  T0 y se sostiene sin el de la raíz del repositorio: `.venv/`, `__pycache__/`, la caja generada por
+  `a05`, el `.env` del laboratorio y, para el boss del puente, `target/`. Ninguna carpeta de `src/`
+  lleva el suyo.
+- **Las pruebas de las sesiones van a `zz-code/ruta-sql-<fecha>-<hash>/`**, nunca al scratchpad, a
+  `/tmp` ni a una carpeta del curso. P8 (la verificación de laboratorio) también: sus scripts y
+  registros en `zz-code/`, y solo `hallazgos.md` en `prompts/verificacion-de-laboratorio/`. El plan
+  registra cada directorio (§9 del plan). El curso no cita `zz-code/`.
+- **La prueba de concepto del Access de museo** estaba en `taller/accdb-museo/`; el 06/10/2026 pasó
+  a `zz-code/ruta-sql-20261006-fc2f/accdb-museo/`, y `a10` la extrae a
+  `src/a10-el-access-de-museo/` en T14. `taller/` ya no existe.

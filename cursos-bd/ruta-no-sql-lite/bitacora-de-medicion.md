@@ -2,9 +2,9 @@
 
 > **Curso:** Ruta NoSQL Lite · documento vivo
 > **Qué es:** todas las mediciones publicadas del curso, en orden de ejecución, con los cinco datos
-> de la guía de estilo §6 y su comando de reproducción. Sustituye al `BENCHMARKS.md` del
-> repositorio, porque este curso **mide la forma y no la velocidad** (guía §16).
-> **Formato de cada entrada:** `prompts/formato-bitacora-de-medicion.md` §2 y §5.
+> de toda medición —qué se midió, volumen con su hash, motor y digest, máquina si hay tiempos, y el
+> comando exacto— (la ficha de [`a04`](a04-el-arnes-de-medida.md)). No hay un archivo de latencias,
+> porque este curso **mide la forma y no la velocidad**.
 
 ---
 

@@ -67,10 +67,10 @@ Esta fase no compara Qdrant con `pgvector`: esa es la apuesta de la
 - **El boss del Bloque III**, *"Freddy ya vio esto"*: cruza grafos y vectores, y va al final de la
   Fase 16.
 - **Entrenar o ajustar un modelo, elegir entre modelos, RAG.** Nada de eso entra: el modelo es una caja
-  cerrada y fijada (alcance §12, decisión 18). El recorrido completo de RAG está en
-  [`tutorial-rag/`](../../cursos-ia/tutorial-rag/README.md).
+  cerrada y fijada (`a06` fija el modelo y su revisión). El recorrido completo de RAG es materia del curso
+  *Tutorial RAG*, del mismo autor.
 - **La búsqueda de texto completo de Postgres** (`tsvector`) y la de OpenSearch: son la familia de
-  búsqueda, [Fases 11 y 12](11-busqueda-levantar-y-modelar.md).
+  búsqueda, Fases 11 y 12.
 
 ---
 
@@ -149,7 +149,7 @@ entre dos listas.
 Lo que **no** es: no es un resumen, no es una clasificación y no sabe nada de aviación. El modelo
 aprendió de mucho texto general que "golpeteo" y "ruido" se usan en contextos parecidos, y por eso los
 acerca. Si mañana Cóndor escribe sus reportes con una jerga que el modelo nunca vio, el modelo no lo
-sabrá, y el curso no lo arregla: **no se entrena nada** (decisión 18 del alcance). Se usa un modelo
+sabrá, y el curso no lo arregla: **no se entrena nada** (es una decisión del curso). Se usa un modelo
 fijado en una revisión concreta, `614241f6…`, porque cambiar de modelo cambia todos los vectores, y la
 Fase 16 mide cuánto cuesta eso.
 
@@ -638,8 +638,8 @@ sin justificar.
   `query:` y `passage:`, en la voz de sus autores.
 - **Yu. A. Malkov y D. A. Yashunin, *Efficient and robust approximate nearest neighbor search using
   Hierarchical Navigable Small World graphs*** — https://arxiv.org/abs/1603.09320 — el paper de HNSW.
-- **`tutorial-rag/`** — [el curso de RAG del repositorio](../../cursos-ia/tutorial-rag/README.md): qué se
-  hace con esto después.
+- ***Tutorial RAG***, del mismo autor: qué se hace con esto después. Lectura sugerida, no
+  requisito.
 
 **Orden sugerido:** los conceptos antes de la sección 6; indexación y optimizador durante la 6.5; el
 paper de HNSW antes de la Fase 16.

@@ -8,6 +8,8 @@
 > [guía](guia-de-estilo-y-convenciones.md), al mismo nivel que la
 > [propuesta de fases](propuesta-fases-y-alcance.md).
 > **Fecha:** 30/09/2026. **Derivado de** la propuesta de apéndices de la Ruta NoSQL Lite.
+> **Solucionario (06/10/2026, D18):** los ejercicios de cada apéndice llevan su solución en
+> `soluciones/<mismo-nombre>.md`, escrita en la misma sesión que el apéndice (guía §10.3).
 
 ---
 
@@ -120,7 +122,7 @@ Los nombres de archivo son canónicos y no se renumeran.
     objeto OLE, `NOCHECK`, `IDENTITY`, `NEWID()`.
   - **Entre los tres motores**: tipos, `LIMIT`/`FETCH FIRST`, secuencias, `ON CONFLICT`/`ON
     DUPLICATE KEY`/`MERGE`, niveles de aislamiento con su nombre y su comportamiento real.
-  - **Relacional ↔ NoSQL Lite**: lo que F19–F21 enlazan.
+  - **Relacional ↔ NoSQL Lite**: lo que F19–F21 mencionan.
   - **El glosario de Alameda**: obra social, prepaga, nomenclador, UB, protocolo, débito,
     determinación, práctica, convenio, con su equivalente en otros países y su entidad en inglés.
   - **MariaDB**, con la nota de por qué queda fuera.
@@ -145,14 +147,14 @@ Los nombres de archivo son canónicos y no se renumeran.
 
 ## 12. 🏛️ a10 — El Access de museo (2 h · 6 ejercicios) · opcional
 
-- **Alcance:** lo que el taller comprobó el 29/09/2026, puesto como receta: generar el `.accdb` con
+- **Alcance:** lo que la prueba de concepto comprobó el 29/09/2026, puesto como receta: generar el `.accdb` con
   Jackcess desde la misma semilla, consultarlo con UCanAccess o con `mdbtools`, abrirlo con DBeaver,
   y **ejecutar el `.bas` de Rubén en LibreOffice Basic** para ver que el parser depende de la
   configuración regional (40 de 40 aserciones en `es-AR`, 31 de 40 en `en-US`, 39 de 40 con la
   ventana de años de LibreOffice). Los límites conocidos: sin campos multivalor, sin adjuntos, sin
   VBA dentro del archivo. El plan B, una base de LibreOffice Base, si Jackcess deja de servir.
 - **Deja en el repositorio:** `src/a10-el-access-de-museo/`, que recibe el contenido de
-  `taller/accdb-museo/` (D15), sin `lib/` ni `out/`. Lleva tag `apendice-a10-access-de-museo`.
+  `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` (D15), sin `lib/` ni `out/`. Lleva tag `apendice-a10-access-de-museo`.
 - **Regla de oro:** nadie lo necesita para hacer el curso. El insumo oficial es la caja en CSV.
 
 ## 13. 🪟 ssa-01 — Qué cambia en Windows (1 h · 6 ejercicios) · track

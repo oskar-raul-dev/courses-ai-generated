@@ -21,7 +21,7 @@ y [`a02`](a02-compose-de-la-ruta.md); los datos, en [`a05`](a05-el-dominio-de-fl
 
 ## Índice
 
-- [La regla de los dos entornos](#-la-regla-de-los-dos-entornos)
+- [La regla de los dos entornos](#️-la-regla-de-los-dos-entornos)
 - [Instalar y preparar](#-instalar-y-preparar)
 - [TypeScript sin compilar](#-typescript-sin-compilar)
 - [Un driver por motor](#-un-driver-por-motor)

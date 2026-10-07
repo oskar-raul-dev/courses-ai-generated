@@ -1,4 +1,0 @@
-# datos generados: se regeneran con el generador de a05, no se versionan
-data/
-# puertos propios de cada máquina (ver .env.example)
-.env

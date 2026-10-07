@@ -249,8 +249,8 @@ En esta fase los errores son de criterio: preguntas que suenan técnicas y no di
 
 ## 🧪 8. Ejercicios (12)
 
-Todos son de lectura y decisión (exención declarada de la guía §9: esta fase es de criterio, no de
-ejecución). Ninguno pide levantar nada.
+Todos son de lectura y decisión (esta fase es de criterio, no de
+ejecución, y por eso lleva doce y no veinte). Ninguno pide levantar nada.
 
 ### 🟢 Fácil — leer una autopsia (1–4)
 

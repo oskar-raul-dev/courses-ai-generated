@@ -106,13 +106,13 @@ respuesta.
 
 ## 🧰 El stack
 
-Es uno de los dos miniproyectos con **Python**, por la regla del alcance §9: el ecosistema de
+Es uno de los dos miniproyectos con **Python**, por la regla de los dos entornos de `a06`: el ecosistema de
 esta familia vive ahí de verdad. El arnés y el generador siguen siendo TypeScript.
 
 | Pieza | Qué se usa | Nota |
 |---|---|---|
 | Entorno del pipeline | **Python** | Es donde vive Arrow y el resto del ecosistema columnar |
-| Entorno del arnés y el generador | **TypeScript** | Regla del alcance §9, sin excepción |
+| Entorno del arnés y el generador | **TypeScript** | Regla de `a06`, sin excepción |
 | Motor | **DuckDB** · perfil `analitico` | CLI `duckdb` para exploración, cliente de Python para el pipeline |
 | Formato de origen | CSV y **Parquet** | Las exportaciones de las plataformas, tal como llegan |
 | Formato del derivado | **Parquet** proyectado, ordenado y comprimido | El antes y el después en tamaño es media medición del miniproyecto |
@@ -130,7 +130,7 @@ dataframes al lado, para medir SQL contra dataframe sobre el mismo archivo.
 > sesión de verificación de laboratorio. Este stack nombra piezas, no números.
 >
 > 🧭 **Dos reglas del curso que este miniproyecto no puede saltarse.** El **arnés de medida y el
-> generador de datos son TypeScript siempre** (alcance §9): son el instrumento, y un instrumento
+> generador de datos son TypeScript siempre** (`a06`): son el instrumento, y un instrumento
 > con dos implementaciones deja de ser un instrumento. Y **se habla con los motores
 > directamente**: nada de ORM, ODM ni cliente de alto nivel (`a06`), porque esas capas esconden
 > justo lo que queremos medir.

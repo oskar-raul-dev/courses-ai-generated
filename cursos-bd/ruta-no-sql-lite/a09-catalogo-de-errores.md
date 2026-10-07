@@ -11,8 +11,7 @@ mensaje literal tal como salió, sin recortar la parte incómoda.
 
 **Qué queda fuera:** errores que nadie vio. Una entrada reconstruida de memoria es un mensaje que
 no existe, y un mensaje que no existe no lo encuentra nadie. Por eso este catálogo **crece con
-el curso**: cada fase añade lo que encontró al ejecutarse (formato en
-`prompts/formato-bitacora-de-medicion.md` §6).
+el curso**: cada fase añade lo que encontró al ejecutarse, con el mismo formato que las entradas de abajo.
 
 ---
 
@@ -557,7 +556,7 @@ IOException: IO Error: Could not set lock on file "…/condor.duckdb": Conflicti
   candado.
 - **Cómo se sale:** que un solo proceso escriba; los demás, en solo lectura o a través de él.
 - **Si la salida correcta es no salir:** si necesitas varios escritores concurrentes, no es tu
-  familia: es el punto de rotura de la [Fase 08](08-analitico-romper-y-medir.md).
+  familia: es el punto de rotura de la Fase 08.
 
 ---
 

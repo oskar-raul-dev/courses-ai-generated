@@ -126,7 +126,7 @@ salen con criterio utilizable, no con medio curso.
 > [F06](06-clave-valor-romper-y-medir.md)—, con el boss *"La orden que entró dos veces"*, los
 > miniproyectos de Barlovento y Nodo Sur, y los diez apéndices en el estado que esas fases necesitan.
 > Qué está publicado y qué viene después, fase por fase, en
-> [`0-programa-del-curso.md`](0-programa-del-curso.md).
+> [`0-ESTRUCTURA-CURSO.md`](0-ESTRUCTURA-CURSO.md).
 
 ---
 
@@ -143,7 +143,7 @@ salen con criterio utilizable, no con medio curso.
   proveedor de internet, una agencia de publicidad, una distribuidora eléctrica y una
   cooperativa cafetera. Existe para demostrar que lo aprendido es un modelo de acceso y no
   un truco del dominio. Opcional, de 4 a 6 h, y se anuncia al abrir cada fase B. El índice
-  está en [`propuestas-mini-proyectos.md`](propuestas-mini-proyectos.md).
+  está en [`miniproyectos.md`](miniproyectos.md).
 
 ---
 
@@ -151,7 +151,7 @@ salen con criterio utilizable, no con medio curso.
 
 - **`00-historia-de-condor.md`** — la empresa del curso. No es una fase: es de donde sale
   todo lo narrativo.
-- **`0-programa-del-curso.md`** — el temario en una página: horas, ejercicios, estado de cada fase y
+- **`0-ESTRUCTURA-CURSO.md`** — el temario en una página: horas, ejercicios, estado de cada fase y
   orden de publicación.
 - **Fases** `00-…md` a `25-…md` — el curso. Dos por familia.
 - **Miniproyectos** `h-mini-01-…md` a `h-mini-10-…md` — uno por familia, de otra empresa.

@@ -22,8 +22,9 @@ cambian aquí después y **nunca al revés**.
 Fuentes de verdad, en orden: `prompts/alcance-del-proyecto.md`,
 `prompts/guia-de-estilo-y-convenciones.md`, `prompts/propuesta-apendices-y-alcance.md`,
 `prompts/plantillas-de-capitulo.md` (plantilla de apéndice, la laxa),
-`prompts/formato-bitacora-de-medicion.md`, `00-historia-de-condor.md` (la empresa del
-curso) y los apéndices ya escritos. Los documentos
+`prompts/formato-bitacora-de-medicion.md`, `prompts/contrato-de-nombres.md`,
+`prompts/diccionario-de-terminos.md`, `00-historia-de-condor.md` (la empresa del curso) y los
+apéndices ya escritos. Los documentos
 desechables no cuentan y no se citan.
 
 Reglas de apéndice:
@@ -32,8 +33,8 @@ Reglas de apéndice:
 - **Un apéndice no repite lo que explica una fase: enlaza.** Si dos documentos explican lo
   mismo, uno de los dos está mal.
 - **Los de infraestructura no enseñan Docker.** Comandos y nada más; el mecanismo está en
-  `docker-container-legacy/` y se enlaza. Si una sección necesita más de dos párrafos de
-  explicación de contenedores, ese contenido no es de aquí.
+  `docker-container-legacy/` y se nombra en prosa, sin enlace (D-03). Si una sección necesita
+  más de dos párrafos de explicación de contenedores, ese contenido no es de aquí.
 - **Nada sin ejecutar.** Ningún comando, ninguna versión, ninguna salida inventada. Lo no
   verificado se declara con esas palabras.
 - **Todo ejemplo usa el dominio de Cóndor** con sus nombres fijos. Nunca `foo` ni `bar`.
@@ -41,6 +42,14 @@ Reglas de apéndice:
 - Cierre con el bloque 🏷️ en su variante negativa, salvo `a02` y `a05`, que dejan archivos
   en el repositorio y llevan tag propio.
 - Ejercicios: **5 a 10**, cortos y de consulta.
+- **Nada publicado cita `prompts/` ni enlaza otro curso** (D-03): la regla se dice en el texto o
+  se remite al apéndice que la publica; los otros cursos, solo en prosa. Una fase que todavía no
+  existe se nombra sin enlace y va a la deuda del plan.
+- **Diagramas en Mermaid** (D-12, guía §18.1), dibujados con `mmdc` antes de publicar.
+- **Sesión:** las pruebas van a `zz-code/` (`python3 zz-code/nuevo.py ruta-no-sql-lite`), con
+  contenedores etiquetados `curso=ruta-no-sql-lite`, puertos aleatorios y borrado con sus volúmenes
+  al cerrar; nada se instala sin pedirlo; sin commits; secuencial y sin agentes. Al cerrar,
+  `python3 prompts/verificar-corpus.py` en cero.
 ```
 
 Y el **protocolo de tres pasos**: (1) preguntas bloqueantes numeradas y lectura del
@@ -78,7 +87,7 @@ Entregable: `a01-laboratorio-contenerizado.md`. **3 h de consulta.**
 
 Qué es una imagen, qué es una capa, copy-on-write, redes de contenedores, `Dockerfile`,
 multi-stage, registries, arquitecturas y emulación. **Todo eso está escrito y bien escrito
-en `docker-container-legacy/`**; aquí solo se enlaza.
+en `docker-container-legacy/`**; aquí solo se nombra, sin enlace (D-03).
 
 ## Audiencia
 
@@ -87,7 +96,7 @@ comando de verificación.
 
 ## Ejercicios: 8, de consulta. Uno de ellos: puerto ocupado, reconocerlo y salir.
 
-{{protocolo}} Si te descubres explicando qué hace `up` por dentro, corta y enlaza.
+{{protocolo}} Si te descubres explicando qué hace `up` por dentro, corta y remite al curso de Docker en prosa.
 ```
 
 ---

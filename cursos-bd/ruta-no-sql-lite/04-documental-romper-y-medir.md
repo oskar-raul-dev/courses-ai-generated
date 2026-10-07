@@ -343,7 +343,7 @@ al más caro:
    Postgres las hace sin replica set y con conflictos por fila, no por documento. Si el polimorfismo
    era la razón, JSONB alcanzó en la sección 4.4.
 4. **Arquitectura.** Mongo al lado de Postgres, para la parte cuya unidad de lectura es de verdad el
-   documento, alimentado desde la fuente de verdad ([Fase 24](24-poliglota-la-costura.md)). Es el
+   documento, alimentado desde la fuente de verdad (Fase 24). Es el
    peldaño más caro, y el triaje de la [Fase 02](02-las-cinco-preguntas.md) dice cómo subirlo sin
    parar el negocio.
 

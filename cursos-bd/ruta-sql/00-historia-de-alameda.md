@@ -1,11 +1,11 @@
 # 🧪 Laboratorio Alameda, la empresa del curso
-## Ruta SQL — borrador narrativo
+## Ruta SQL — la historia del curso
 
-> 📝 **Estado:** desde el 30/09/2026, con el alcance escrito
-> ([`prompts/alcance-del-proyecto.md`](prompts/alcance-del-proyecto.md)), este documento es la
-> **fuente de verdad de todo lo narrativo**, igual que `00-historia-de-condor.md` en la NoSQL
-> Lite o `00-historia-de-cordillera.md` en el curso de C#. Lo marcado con 🔍 en §8 sigue sin
-> usarse como material hasta que se verifique.
+> **Qué es este documento:** la **fuente de verdad de todo lo narrativo** del curso: la empresa, su
+> gente, su sistema, sus cifras y sus dolores. Ninguna fase inventa un dato; si lo necesita y no
+> está aquí, se agrega aquí primero. Lo marcado con 🔍 en §8 no se usa como material hasta que se
+> verifique.
+> **Vigencia:** 2026-10-06.
 
 Laboratorio Alameda es ficticio, igual que la clínica y la red que lo absorbieron, y conviene
 decirlo una vez. Ninguno de sus dolores está inventado para que el curso quede bonito. Todas las
@@ -14,7 +14,7 @@ entre enseñar diseño relacional y burlarse de quien hizo lo que pudo con lo qu
 
 ---
 
-## 1. Cómo llegó a existir
+## 1. 🏗️ Cómo llegó a existir
 
 En 1996, tres bioquímicos de Córdoba (Argentina) que llevaban años trabajando por su cuenta
 decidieron juntarse. **Norma Castellani** hacía hematología y química clínica en el turno tarde
@@ -60,17 +60,13 @@ El curso usa estos términos porque son los del negocio, y el diccionario de tra
 
 ## 2. 🟦 Por qué esta historia
 
-Hay dos cursos en el repositorio que ya cuentan historias de sistemas heredados, y esta tiene que
-contar otra cosa.
-
-**Cóndor MRO** (NoSQL Lite) sirve para ver qué pasa cuando un dominio no es relacional en todas
-sus partes. **Cordillera Media** (C#) sirve para ver qué pasa con el *código* heredado: FoxPro,
-pasantes y una migración de runtime. **Alameda** es la historia del *modelo de datos* heredado:
-qué pasa cuando alguien usa una base de datos relacional sin saber que lo es. Para Rubén, Access
+Hay muchas historias de sistemas heredados, y casi todas son la del *código*: el lenguaje que ya
+nadie sabe, el runtime que no se puede migrar. **Alameda** es la historia del *modelo de datos*
+heredado: qué pasa cuando alguien usa una base de datos relacional sin saber que lo es. Para Rubén, Access
 era "tablas unidas por rayitas con un formulario arriba", y durante años eso alcanzó.
 
-Además, esta historia hace que **los cuatro motores del curso lleguen solos**, igual que
-Cordillera nunca decidió ser una casa Microsoft:
+Además, esta historia hace que **los cuatro motores del curso lleguen solos**, como llegan en
+casi todas las empresas, sin que nadie los elija:
 
 - **Access** porque venía en el CD de Office.
 - **SQL Server** porque la software house de la clínica que compró el laboratorio trabajaba con él.
@@ -551,7 +547,7 @@ Este inventario es el material didáctico del curso. Cada punto tiene una fase q
 
 ---
 
-## 5. Quién es quién
+## 5. 👥 Quién es quién
 
 **Norma Castellani**, 68 años, bioquímica fundadora y **directora técnica** del laboratorio. Es la
 que firma los resultados con su matrícula, y por eso hace la pregunta que el sistema nunca pudo
@@ -675,29 +671,29 @@ verificado** y no se usa como material hasta que lo esté.
 | Crisis y devaluación de 2002 | salida de la convertibilidad en enero de 2002 | ✅ exacta |
 | Controlador fiscal para servicios de salud | no se usa en la historia porque no se pudo confirmar que aplicara | ⛔ fuera |
 
-🧭 Igual que en Cordillera, lo importante de esta sección no es la nostalgia. Lo importante es que
+🧭 Lo importante de esta sección no es la nostalgia. Lo importante es que
 **cada tabla incómoda del esquema actual tiene un origen razonable y fechable**, y que el curso
 puede mirarla a los ojos sin burlarse.
 
 ---
 
-## 9. ❓ Lo que este borrador todavía no decide
+## 9. 🧭 Cómo usa el curso esta historia
 
-1. **País y ciudad.** Córdoba (Argentina) se eligió por tres razones: obras sociales con
-   convenios distintos, precios que la inflación obliga a versionar y una red que absorbe
-   clínicas del interior. Además, el NBU nació en Córdoba. Si el curso prefiere otro país, esos
-   tres dolores se tienen que poder reconstruir allí. En Colombia, por ejemplo, el profesional
-   sería *bacteriólogo* y el pagador, una EPS.
-2. **El tamaño de los datos sintéticos.** Hace falta definir cuánto de los 1,9 M de pacientes y
-   los 140 M de `ResultadoItem` cabe en un laboratorio de 16 GB de RAM. La NoSQL Lite ya resolvió
-   esto con semilla determinista. El generador tiene que reproducir **la suciedad**: nombres con
-   DNI adentro, fechas en el futuro, valores con coma y con punto.
-3. ~~Si el `.accdb` de turnos entra en el curso.~~ **Decidido:** Access solo existe en la
-   historia. El lector recibe "la caja" (§3, 2026) y la carga en Postgres. Ver `prompts/alcance-del-proyecto.md`
-   §9.
-4. **Los proyectos boss**, que deberían salir de aquí como en Cordillera: la exportación nocturna,
-   el maestro de pacientes, los folios fiscales, el portal y la migración de las 71 tablas anchas,
-   cada uno con su sistema roto de partida.
+- **Córdoba, y no otro sitio**, por tres dolores que la ciudad trae solos: obras sociales con
+  convenios distintos, precios que la inflación obliga a versionar y una red que absorbe clínicas
+  del interior. Además, el NBU nació allí.
+- **Access solo existe en la historia.** El lector no recibe el `.mdb`: recibe **la caja**, el
+  volcado en CSV que Matías armó en un fin de semana (§3, 2026), y la carga en Postgres. El
+  Access de Rubén vuelve como pieza de museo en el apéndice `a10`, opcional.
+- **Los 1,9 millones de pacientes y los 140 millones de `ResultadoItem` no entran en un
+  laboratorio de 16 GB.** Los datos son sintéticos, con semilla determinista, en tres perfiles de
+  volumen (S, M y L); se conservan las proporciones de la historia —duplicados, nacidos en el
+  futuro, valores con coma y con punto— y el generador sabe qué registros son la misma persona.
+- **Cada bloque cierra con un encargo de alguien de esta historia**, con un sistema roto de partida:
+  la señora que es tres pacientes (Norma), el portal de 2018 (Verónica), una tarde de julio
+  (Matías), el informe en la app (Florencia), las 9:40 (Verónica) y el puente con el SIH (Matías).
+  El encargo global, **"Un martes"**, sale del `LEEME.txt` de Matías: termina cuando la facturación
+  de un martes corre entera sobre la base nueva.
 
 ---
 

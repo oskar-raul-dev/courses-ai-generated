@@ -381,7 +381,7 @@ Cuando un sistema vectorial ya duele, la escalera se sube en orden de costo:
    reconstruible, porque **cambiar de modelo es reconstruir todo**: con los números de esta fase, 1662 s
    de embeber más 628–715 s de Qdrant, o más 157 s de `COPY` y 299 s de índice en Postgres. Unos cuarenta minutos para un
    millón de reportes en esta máquina, y cualquier vector guardado fuera del índice queda inválido
-   ([Fase 24](24-poliglota-la-costura.md)).
+   (Fase 24).
 
 ---
 

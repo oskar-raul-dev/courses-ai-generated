@@ -10,7 +10,7 @@
 mirar en cada motor, cuál ignorar, y cómo se cuenta lo que ningún motor reporta.
 
 **Qué queda fuera:** benchmarking de rendimiento, generadores de carga sintética y percentiles de
-latencia. Este curso **mide la forma, no la velocidad** (alcance §6).
+latencia. Este curso **mide la forma, no la velocidad**.
 
 ---
 
@@ -36,8 +36,6 @@ latencia. Este curso **mide la forma, no la velocidad** (alcance §6).
 | Cassandra | `TRACING ON` | 🚧 Fase 17 |
 | CouchDB | volumen de replicación y revisiones | 🚧 Fase 19 |
 | CockroachDB | `EXPLAIN ANALYZE`, latencia por localidad | 🚧 Fase 21 |
-
-La tabla de correspondencia de partida está en `prompts/formato-bitacora-de-medicion.md` §2.3.
 
 ---
 
@@ -184,7 +182,7 @@ que lea sus datos a través de la caché del sistema operativo, Postgres incluid
 
 ## 🪞 El protocolo de la apuesta falsable
 
-Las reglas están en `prompts/formato-bitacora-de-medicion.md` §3; aquí va cómo se cumplen en la
+Son seis reglas, y aquí van con cómo se cumplen en la
 práctica, con las cuatro apuestas publicadas hasta ahora como ejemplo.
 
 1. **Se escribe antes de ejecutar, con fecha, en el documento.** Primero la apuesta, después el
@@ -204,16 +202,16 @@ práctica, con las cuatro apuestas publicadas hasta ahora como ejemplo.
 6. **Entra a la tabla de apuestas de la [bitácora](bitacora-de-medicion.md)** con su resultado y el
    enlace a la medición que la decide.
 
-**Una por minicurso**, dice el formato. La Fase 16 lleva dos —la de `pgvector` y la de los prefijos—
-por una decisión del 30/09/2026: la de los prefijos venía de la sesión de laboratorio (hallazgo H8) y
+**Una por minicurso**, es la regla general. La Fase 16 lleva dos —la de `pgvector` y la de los prefijos—
+por una decisión del 30/09/2026: la de los prefijos venía de la verificación del laboratorio y
 no tenía otro sitio donde medirse sobre el millón.
 
 ---
 
 ## 📋 La ficha
 
-`formatFicha` (`src/lab/harness/ficha.ts`) imprime la ficha de medición con los cinco datos de la
-guía §6 —qué se midió, volumen con su hash, motor y digest, máquina si hay tiempos, y el comando
+`formatFicha` (`src/lab/harness/ficha.ts`) imprime la ficha de medición con los cinco datos de toda
+medición del curso —qué se midió, volumen con su hash, motor y digest, máquina si hay tiempos, y el comando
 exacto—, lista para pegar en una fase y en la [bitácora](bitacora-de-medicion.md). La primera es
 la M-01.
 

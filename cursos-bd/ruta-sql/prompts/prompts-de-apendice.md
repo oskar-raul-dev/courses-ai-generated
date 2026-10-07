@@ -23,7 +23,8 @@ esa ficha no dice. El apéndice del track está en
 Fuentes de verdad, en orden: `prompts/alcance-del-proyecto.md`,
 `prompts/guia-de-estilo-y-convenciones.md`, `prompts/propuesta-apendices-y-alcance.md` con la ficha
 de este apéndice, `prompts/plantillas-de-capitulo.md` (plantilla de apéndice, la laxa),
-`00-historia-de-alameda.md` y los apéndices ya escritos. Los `_desechable-*` no cuentan y no se
+`prompts/contrato-de-nombres.md`, `prompts/diccionario-de-terminos.md`, `00-historia-de-alameda.md`
+y los apéndices ya escritos. Los `_desechable-*` no cuentan y no se
 citan.
 
 Reglas de apéndice:
@@ -31,7 +32,7 @@ Reglas de apéndice:
   pregunta, ejemplo mínimo ejecutable, tabla de "cuándo usar qué" al final.
 - **Un apéndice no repite lo que explica una fase: enlaza.**
 - **Los de infraestructura no enseñan Docker.** Comandos y nada más; el mecanismo está en
-  `cursos-contenedores-cloud-infra/docker-container-legacy/`.
+  `cursos-contenedores-cloud-infra/docker-container-legacy/`, que se nombra sin enlace (D-03).
 - **Nada sin ejecutar.** Ningún comando, ninguna versión, ninguna salida inventada.
 - **Ningún número de Oracle ni de SQL Server** (guía §6.1). Los mensajes de error sí se publican.
 - **Todo ejemplo usa el dominio de Alameda** con sus nombres fijos.
@@ -40,7 +41,17 @@ Reglas de apéndice:
   en el repositorio y llevan tag propio.
 - **No toques ningún `README.md`**, tampoco los de `src/`, ni crees `0-ESTRUCTURA-CURSO.md`: se
   escriben en una tanda final y aparte.
-- Ejercicios: los de la ficha, cortos y de consulta.
+- Ejercicios: los de la ficha, cortos y de consulta, con su solucionario en
+  `soluciones/<mismo-nombre>.md`, en la misma sesión (D18, guía §10.3).
+- **Nada publicado cita `prompts/` ni enlaza otro curso** (D-03): la regla se dice en el texto o
+  se remite al apéndice que la publica; la NoSQL Lite y el curso de Docker, solo en prosa. Una fase
+  que todavía no existe se nombra sin enlace y va a la deuda del plan §6.
+- **Diagramas en Mermaid** (D-12, guía §19.1), dibujados con `mmdc`; las sesiones intercaladas, en
+  `text`.
+- **Sesión:** las pruebas van a `zz-code/` (`python3 zz-code/nuevo.py ruta-sql`), con contenedores
+  etiquetados `curso=ruta-sql`, puertos aleatorios y borrado con sus volúmenes al cerrar; nada se
+  instala sin pedirlo; sin commits; secuencial y sin agentes. Al cerrar,
+  `python3 prompts/verificar-corpus.py` en cero.
 ```
 
 Y el **protocolo de tres pasos**: (1) preguntas bloqueantes numeradas y lectura de la ficha, sin
@@ -282,18 +293,20 @@ Esta es la sesión del **Apéndice a10 — 🏛️ El Access de museo** (opciona
 {{marco común}}
 
 ## Alcance
-La ficha a10, completa. El material de partida es `taller/accdb-museo/`, comprobado el 29/09/2026:
+La ficha a10, completa. El material de partida es la prueba de concepto de
+`zz-code/ruta-sql-20261006-fc2f/accdb-museo/`, comprobada el 29/09/2026:
 léelo entero, `README.md` incluido.
 
 ## Qué vigilar
-- **Mover, no reescribir.** El código del taller pasa a `src/a10-el-access-de-museo/` (D15), sin
+- **Mover, no reescribir.** El código de la prueba pasa a `src/a10-el-access-de-museo/` (D15), sin
   `lib/` ni `out/`, que se regeneran. Su `README.md` se mueve **sin editarlo**: se reescribe en la
   tanda de los README. Si hay que cambiar algo para que corra, se dice qué y por qué.
 - **Se vuelve a ejecutar todo** en la fecha del apéndice: generar, exportar, consultar y las tres
-  corridas de `run_bas_tests.py`. Los números del taller (40/40, 31/40, 39/40) se publican solo si
+  corridas de `run_bas_tests.py`. Los números de la prueba (40/40, 31/40, 39/40) se publican solo si
   se reproducen.
 - **Nadie lo necesita para hacer el curso**, y el apéndice lo dice arriba.
-- Al cerrar, `taller/` queda vacío y se propone borrarlo (con permiso de Oskar).
+- Al cerrar, el directorio de `zz-code/` pasa a *extraído* en el plan §9, y su `MANIFIESTO.md` dice
+  qué se llevó `a10`. No se borra.
 - Lleva tag propio: `apendice-a10-access-de-museo`.
 
 {{protocolo}}

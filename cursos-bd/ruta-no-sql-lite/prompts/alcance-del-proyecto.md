@@ -331,7 +331,7 @@ apéndice, ni como ampliación 🔥.
   decisión de modelado, nunca como tema.
 - **Kubernetes y orquestación.** Ni aquí ni en los apéndices.
 - **Pedagogía de Docker.** Los apéndices dan la receta; el curso que explica el mecanismo
-  es `docker-container-legacy/` y se enlaza.
+  es `docker-container-legacy/` y se nombra sin enlace (D-03).
 - **Servicios gestionados de nube** (Atlas, DynamoDB, Bigtable, Pinecone y compañía). Se
   mencionan como alternativa comercial en el veredicto de su familia, y no se levantan.
 - **Comparativas de producto dentro de la misma familia.** El curso enseña modelos de
@@ -437,6 +437,32 @@ el propio `CLAUDE.md`:
 - **`INSTINTOS.md` se mantiene y es central**, no accesorio: es donde se acumulan los 🪞
   de las diez familias.
 
+La lista completa, con las que se agregaron al revisar el curso contra los lineamientos, está en
+la guía §16.
+
+### 12.1 Las decisiones de la plantilla general, D-01–D-13 (06/10/2026)
+
+Los lineamientos de producción del repositorio (`zz-instrucciones/`) piden que todo curso cierre
+trece decisiones con nombre fijo. Este curso ya había cerrado casi todas con su propia numeración;
+esta tabla dice cuál es cuál, y las que faltaban las cerró Oskar el 06/10/2026. **La numeración
+1–20 se conserva**, porque la citan la guía, las propuestas, los prompts y los hallazgos.
+
+| ID | Decisión | Valor en este curso | Equivale a | Estado |
+|---|---|---|---|---|
+| D-01 | Idioma | Español latinoamericano neutro con tuteo; código, comandos, nombres de archivo e identificadores en inglés; **comentarios de código en español con tildes** | 2 | ✅ |
+| D-02 | Tipo de curso | Curso completo, con boss de bloque, boss global y miniproyectos de otras empresas | 8, 11 | ✅ |
+| D-03 | Autocontención | **Editorial, sin enlaces**: otros cursos del repositorio solo se nombran en prosa, como lectura sugerida y nunca como requisito; ningún enlace sale de la carpeta del curso, y nada publicado cita `prompts/` | §15 🔄 | ✅ 06/10/2026 |
+| D-04 | Promesa de esfuerzo | Horas por fase (252 h en total), sin peso ligera/media/densa | 13 | ✅ |
+| D-05 | Aparato de evaluación | 20–30 ejercicios por fase (12 en F00 y F02), con criterio `**Objetivo:**` o `**Pregunta:**` y **sin solución publicada**; los boss y los miniproyectos, con criterios de aceptación | 9 | ✅ (sin solución: por defecto, a revisar por Oskar) |
+| D-06 | Plataformas | macOS, Linux y Windows 11 con WSL2; el autor verificó en macOS arm64 (T10); Linux y WSL2 quedan declarados sin verificar hasta la pasada en los equipos de Oskar | 16, `a01` | ✅ |
+| D-07 | Política de versiones | Imágenes fijadas por digest con fecha de verificación, en `a02`; no se persiguen versiones nuevas salvo por un fallo (Mongo 8.0.20) | 7 | ✅ |
+| D-08 | Ejecución | Nada se publica sin haberse ejecutado; lo no verificado se declara con esas palabras | 6 | ✅ |
+| D-09 | Código | `src/` con una carpeta por fase o apéndice que deja código, con el nombre exacto del documento, más `src/lab/` para lo compartido (compose, generador, arnés) | — | ✅ |
+| D-10 | README y temario | El README y `0-ESTRUCTURA-CURSO.md` se actualizan una sola vez, en la Tanda 7, cuando todo el contenido exista (ajuste del 30/09/2026) | — | ✅ |
+| D-11 | Historia | Con historia: Cóndor MRO, en `00-historia-de-condor.md`; los miniproyectos traen cinco empresas más, sin historia larga | 3 | ✅ |
+| D-12 | Diagramas | **Mermaid obligatorio** para todo diagrama estructural o conceptual; salidas, árboles de claves o de archivos y fichas de cierre siguen en `text` (guía §18.1) | — | ✅ 06/10/2026 |
+| D-13 | Publicación | Repositorio público propio, con la carpeta del curso sin `prompts/`; ningún enlace a otro curso que convertir | — | ✅ 06/10/2026 |
+
 ---
 
 ## 13. 🏆 Los proyectos boss
@@ -456,7 +482,7 @@ el propio `CLAUDE.md`:
   h, de 4 a 6 h cada uno, y se anuncia al abrir la fase B.** Se construye y se razona, pero
   **no entra a la bitácora de medición**: todo lo que se mide se mide sobre Cóndor. El
   índice y el criterio están en
-  [`propuestas-mini-proyectos.md`](../propuestas-mini-proyectos.md).
+  [`miniproyectos.md`](../miniproyectos.md).
 - ⚖️ **El capstone políglota (Bloque V) no es ninguno de los dos.** Es contenido normal del
   curso, con sus fases y sus ejercicios, y es la conclusión que la ruta lleva prometiendo
   cinco meses: añadir un motor al lado **y pagar la factura de tenerlo**.
@@ -493,10 +519,11 @@ El curso está bien si:
   contenido. Este curso **la consume como fuente** —dominio, rivales, anti-patrones,
   veredictos— y **no la modifica**. Cada minicurso de la Lite es el tráiler de su curso
   profundo, y la audiencia de la Lite dirá qué familia merece las 200.000 palabras.
-- **`docker-container-legacy/`** es la infraestructura de laboratorio. Aquí se dan recetas;
-  el mecanismo se explica allí y se enlaza.
-- **`tutorial-rag/`** conecta con el minicurso vectorial, y es parte del argumento para
-  publicarlo tercero.
+- **`docker-container-legacy/`** (*Docker Legacy Node*) es la infraestructura de laboratorio.
+  Aquí se dan recetas; el mecanismo se explica allí, y el curso lo **nombra en prosa** como
+  lectura sugerida, sin enlazarlo (D-03, §12.1).
+- **`tutorial-rag/`** (*Tutorial RAG*) conecta con el minicurso vectorial, y es parte del
+  argumento para publicarlo tercero. También se nombra sin enlace.
 - **Los cursos de Angular, React y Vue legacy** aportan el andamiaje editorial que este
   curso imita: guía de estilo, plantillas de capítulo, propuesta de fases y apéndices, y
   prompts por documento.

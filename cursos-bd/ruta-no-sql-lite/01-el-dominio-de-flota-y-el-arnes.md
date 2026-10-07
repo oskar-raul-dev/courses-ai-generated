@@ -92,7 +92,7 @@ matices: **ganarle a una línea base mal puesta no demuestra nada**, y en la
 **La trazabilidad sale de una tabla, no de una columna.** `work_order_movement` guarda cada pieza
 que una orden retiró o instaló, con su posición y su destino. Qué pieza estuvo en qué aeronave y
 cuándo se reconstruye desde aquí, y es exactamente la pregunta de las
-[Fases 13–14](13-grafos-levantar-y-modelar.md).
+Fases 13–14.
 
 **Los nombres, en `snake_case`.** El dataset canónico viene en `camelCase` y el cargador lo
 traduce: `workOrderId` pasa a `work_order_id`. La incoherencia entre familias es deliberada y

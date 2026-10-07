@@ -63,10 +63,10 @@ base de la [Fase 06](06-clave-valor-romper-y-medir.md).
 - **`maxmemory`, políticas de evicción y el error de memoria llena.** Fase 06.
 - **RDB contra AOF medidos uno contra otro.** Aquí se ve solo la configuración por defecto; la Fase 06
   compara las tres.
-- **Replicación, Sentinel y cluster.** Fuera del alcance del curso (alcance §11). El laboratorio es un
+- **Replicación, Sentinel y cluster.** Fuera del alcance del curso. El laboratorio es un
   nodo, y todo lo que se dice de atomicidad vale para un nodo.
 - **Módulos** (búsqueda, JSON, filtros de Bloom). La imagen del curso no trae ninguno: `MODULE LIST`
-  solo muestra `lua`. La búsqueda de texto es la [Fase 11](11-busqueda-levantar-y-modelar.md).
+  solo muestra `lua`. La búsqueda de texto es la Fase 11.
 - **Pub/Sub.** No entra al curso: no guarda nada, y el stream de la sección 6.8 cubre el caso de
   Cóndor.
 

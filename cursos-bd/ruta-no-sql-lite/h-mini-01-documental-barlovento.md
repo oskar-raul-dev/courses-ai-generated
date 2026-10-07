@@ -3,7 +3,7 @@
 > **Familia:** documental · **Motor:** MongoDB · **Línea base:** PostgreSQL JSONB
 > **Cierra:** el minicurso documental (Fases 03–04) · **Empresa:** 🚢 Barlovento
 > **Estado:** opcional · **No entra a la bitácora de medición** (ver
-> [`propuestas-mini-proyectos.md`](propuestas-mini-proyectos.md) §1)
+> [`miniproyectos.md`](miniproyectos.md) §1)
 
 ---
 
@@ -130,7 +130,7 @@ un esquema, no un módulo.
 > sesión de verificación de laboratorio. Este stack nombra piezas, no números.
 >
 > 🧭 **Dos reglas del curso que este miniproyecto no puede saltarse.** El **arnés de medida y el
-> generador de datos son TypeScript siempre** (alcance §9): son el instrumento, y un instrumento
+> generador de datos son TypeScript siempre** (`a06`): son el instrumento, y un instrumento
 > con dos implementaciones deja de ser un instrumento. Y **se habla con los motores
 > directamente**: nada de ORM, ODM ni cliente de alto nivel (`a06`), porque esas capas esconden
 > justo lo que queremos medir.

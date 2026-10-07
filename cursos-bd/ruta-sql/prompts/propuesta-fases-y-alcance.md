@@ -71,7 +71,8 @@ En las fases de plan (F12, F13 y partes de F11 y F14) **el punto de rotura es un
 plan**: el volumen exacto en que el optimizador cambia de estrategia y las lecturas se disparan.
 Su "mensaje literal" es la línea del plan que cambió, y se publica como tal (D16).
 
-Las plantillas completas están en [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md).
+Las plantillas completas están en [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md). Cada fase
+tiene además su solucionario, `soluciones/<mismo-nombre>.md`, escrito en la misma sesión (D18).
 
 ---
 
@@ -159,10 +160,10 @@ filas de `legacy` rechaza. El número de rechazos es la medición del bloque.
   documentación ejecutable**: tipos, `NOT NULL`, `CHECK`, dominios, `UNIQUE` y claves foráneas.
   Las FK con `NOCHECK` de 2011, y su equivalente honesto en Postgres, `NOT VALID` seguido de
   `VALIDATE CONSTRAINT`.
-- **El parser en tres versiones:** el `.bas` de Rubén, el T-SQL de Matías y el port en Python del
-  taller, con **las dos diferencias no documentadas** (la ventana del año de dos dígitos y el parche
-  de 2019) reproducidas. **Una regla en dos lugares siempre diverge**, y la restricción vive en un
-  solo sitio.
+- **El parser en tres versiones:** el `.bas` de Rubén, el T-SQL de Matías y el port en Python de la
+  prueba de concepto (`a10`), con **las dos diferencias no documentadas** (la ventana del año de
+  dos dígitos y el parche de 2019) reproducidas. **Una regla en dos lugares siempre diverge**, y la
+  restricción vive en un solo sitio.
 - **El laboratorio:** el pipeline `legacy` → área de carga → modelo, con una tabla de rechazos que
   cuenta por regla.
 - **El contraste:** MySQL ignoraba los `CHECK` hasta la 8.0.16, y todavía hay esquemas escritos
@@ -466,7 +467,7 @@ El bloque donde el curso tiene que ser más honesto, porque es donde Florencia t
   EAV no es un modelo relacional.
 - **⚖️ Veredicto:** **lo que se le concede a Florencia, con número**: el modelo de lectura de la
   app. La respuesta es una proyección o un documento derivado, no una segunda fuente de verdad.
-  Enlaza con las fases documentales de la NoSQL Lite.
+  Nombra en prosa, sin enlace (D-03), las fases documentales de la NoSQL Lite.
 
 ### 🔭 F21 — Hasta dónde llega el motor (10 h · 24 ejercicios)
 
@@ -476,7 +477,7 @@ El bloque donde el curso tiene que ser más honesto, porque es donde Florencia t
 - **El mecanismo:** búsqueda de texto completo (`tsvector` con configuración en español y
   `unaccent`) y trigramas para búsqueda interactiva; `WITH RECURSIVE` sobre la jerarquía de
   prácticas y la cadena de derivaciones; `pgvector` como muestra breve. Cada uno con su punto de
-  rotura y **el enlace a su fase de la NoSQL Lite**, que es donde está el motor dedicado.
+  rotura y **la mención de su fase de la NoSQL Lite**, en prosa y sin enlace (D-03), que es donde está el motor dedicado.
 - **🪞 Apuesta candidata:** "el CTE recursivo del nomenclador completo examina menos filas que la
   versión que el informe hace hoy con cuatro `LEFT JOIN` fijos".
 - **💥 Rotura:** la búsqueda de texto completo sobre observaciones con abreviaturas del laboratorio
@@ -644,6 +645,7 @@ en su sitio y después aquí.
 | D12 | Versiones | Última estable, o última LTS donde exista la línea, a la fecha de la verificación de laboratorio | ✅ | `a02` |
 | D13 | Dónde se carga `legacy` | Donde hace falta: Postgres siempre; MySQL y Oracle, las tablas que pide cada fase | ✅ | `a05` |
 | D14 | Arnés de carreras | Intercalado determinista de sesiones en Python (`lab race`) | ✅ | `a04` |
-| D15 | El Access de museo | Apéndice opcional `a10`; el código pasa de `taller/accdb-museo/` a `src/a10-el-access-de-museo/` en su tanda | ✅ | propuesta de apéndices |
+| D15 | El Access de museo | Apéndice opcional `a10`; el código pasa de `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` a `src/a10-el-access-de-museo/` en su tanda | ✅ | propuesta de apéndices |
 | D16 | Punto de rotura en fases de plan | El precipicio del plan, con la línea que cambió (§2) | ✅ | guía §6 |
 | D17 | Reubicación de archivos | La historia en `00-historia-de-alameda.md`, con la nomenclatura de los otros cursos; la propuesta de diseño en `prompts/_desechable-propuesta-ruta.md` | ✅ | — |
+| D18 | Solucionario | Todo ejercicio lleva solución en archivo separado, `soluciones/<documento>.md`, escrito en la misma sesión que su documento; completa en 🟢🟡, de referencia con rúbrica en 🟠🔴; los boss no publican su solución | ✅ 06/10/2026 | guía §10.3 |

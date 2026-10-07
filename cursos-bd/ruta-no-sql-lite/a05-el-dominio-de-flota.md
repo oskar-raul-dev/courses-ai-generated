@@ -20,8 +20,8 @@ Aquí no se descarga ningún dataset que pueda desaparecer: todo se genera.
 ## Índice
 
 - [La decisión que sostiene el curso](#-la-decisión-que-sostiene-el-curso)
-- [Las diez entidades](#-las-diez-entidades)
-- [Generar un dataset](#-generar-un-dataset)
+- [Las diez entidades](#️-las-diez-entidades)
+- [Generar un dataset](#️-generar-un-dataset)
 - [Los volúmenes: qué significa 1 M](#-los-volúmenes-qué-significa-1-m)
 - [Qué sale del generador](#-qué-sale-del-generador)
 - [Determinismo: la prueba del hash](#-determinismo-la-prueba-del-hash)
@@ -69,16 +69,26 @@ dataset:
 
 Cómo se relacionan, en el sentido en que se leen:
 
-```text
-hangar ◄── technician                         supplier ◄── partCatalog.supplierIds
-  ▲            ▲  (technicianIds, releasedBy)    ▲
-  │            │                                 │ (removed[].supplierId, part.supplierId)
-aircraft ◄── workOrder ──► removed[] / installed[] ──► part ──► partCatalog
-  ▲  ▲          │ (pirepId)                              ▲
-  │  │          ▼                                        │ (partSerials)
-  │  └──── pirep                                     assembly ──► aircraft
-  └──── reading
+```mermaid
+flowchart LR
+    technician --> hangar
+    workOrder --> aircraft
+    workOrder -- "technicianIds, releasedBy" --> technician
+    workOrder -- "pirepId" --> pirep
+    workOrder --> lines["removed[] · installed[]"]
+    lines --> part
+    lines -- "removed[].supplierId" --> supplier
+    part -- "supplierId" --> supplier
+    part --> partCatalog
+    partCatalog -- "supplierIds" --> supplier
+    assembly -- "partSerials" --> part
+    assembly --> aircraft
+    pirep --> aircraft
+    reading --> aircraft
 ```
+
+Cada flecha va de la entidad que guarda la referencia a la que referencia, con el campo encima
+cuando no es obvio.
 
 > 🧠 **El grafo de trazabilidad no es una entidad.** Qué pieza estuvo en qué aeronave y cuándo se
 > reconstruye con los `removed[]` e `installed[]` de `workOrder`. Es exactamente el punto de F13.
@@ -118,7 +128,7 @@ datasetSha256 5a107518d72635a0d745353aeb0a8519b204c69bc3b0911bd5aafc850b306909
 | `--seed` | cualquier texto | `condor-mro` |
 | `--out` | un directorio | `src/lab/data` |
 
-El resultado va a `src/lab/data/<focus>-<volume>/`, que **no se versiona** (`src/lab/.gitignore`):
+El resultado va a `src/lab/data/<focus>-<volume>/`, que **no se versiona** (`src/.gitignore`):
 se regenera en segundos. Cambiar la semilla da otro Cóndor igual de coherente; para comparar
 con este curso, no la cambies.
 

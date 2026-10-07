@@ -110,7 +110,7 @@ causa.** Va al lado de la fuente de verdad, nunca en su lugar.
 |---|---|---|
 | Entorno | **Node + TypeScript** | |
 | Motor | **Valkey** · perfil `clave-valor` | CLI `valkey-cli`, más `MONITOR` y `SLOWLOG` para mirar qué pasa |
-| Cliente | **`iovalkey`** | El fork de ioredis que mantiene valkey-io: MIT, JS puro y con la API conocida. Decidido en el alcance §12 (17); la versión vive en `a06` |
+| Cliente | **`iovalkey`** | El fork de ioredis que mantiene valkey-io: MIT, JS puro y con la API conocida. La versión y el porqué viven en `a06` |
 | Atomicidad | **Lua del lado del servidor** (`EVAL`) | El rate limiting deslizante y el candado con expiración se escriben aquí, no en el cliente |
 | Línea base | **PostgreSQL** · perfil `base` | Tabla `UNLOGGED` para sesiones · `SELECT … FOR UPDATE SKIP LOCKED` para la cola, que es lo que hoy está bien hecho |
 | Driver de la base | `pg` | |
@@ -125,7 +125,7 @@ de `maxmemory` y la política de evicción sí entran, porque son el punto de ro
 > sesión de verificación de laboratorio. Este stack nombra piezas, no números.
 >
 > 🧭 **Dos reglas del curso que este miniproyecto no puede saltarse.** El **arnés de medida y el
-> generador de datos son TypeScript siempre** (alcance §9): son el instrumento, y un instrumento
+> generador de datos son TypeScript siempre** (`a06`): son el instrumento, y un instrumento
 > con dos implementaciones deja de ser un instrumento. Y **se habla con los motores
 > directamente**: nada de ORM, ODM ni cliente de alto nivel (`a06`), porque esas capas esconden
 > justo lo que queremos medir.

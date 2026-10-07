@@ -14,7 +14,7 @@ familia y de vuelta. Cada familia añade su sección cuando llega su fase A.
 
 ## Índice
 
-- [Las convenciones de nombrado](#-las-convenciones-de-nombrado)
+- [Las convenciones de nombrado](#️-las-convenciones-de-nombrado)
 - [Documental](#-documental): qué reemplaza al `JOIN`, qué es un índice y qué es una transacción — ✅ Fase 03
 - [Clave-valor](#-clave-valor): sin consultas, qué hace de índice y qué es atómico — ✅ Fase 05
 - [Vectorial](#-vectorial): parecido en vez de igualdad, y el filtro que decide el motor — ✅ Fases 15–16

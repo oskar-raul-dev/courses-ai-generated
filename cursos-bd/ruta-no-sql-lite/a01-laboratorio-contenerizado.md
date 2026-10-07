@@ -13,8 +13,8 @@ hora, sin aprender de contenedores nada que no necesites.
 
 **Qué queda fuera:** qué es una imagen o una capa, el copy-on-write, las redes de contenedores,
 el `Dockerfile`, los registries, las arquitecturas y la emulación. Todo eso está escrito, y bien,
-en [`docker-container-legacy/`](../../cursos-contenedores-cloud-infra/docker-container-legacy/);
-aquí solo se enlaza. El `compose.yaml` de la ruta —perfiles, digests, healthchecks— es de
+en el curso *Docker Legacy Node*;
+aquí no se repite. El `compose.yaml` de la ruta —perfiles, digests, healthchecks— es de
 [`a02`](a02-compose-de-la-ruta.md).
 
 ---
@@ -73,10 +73,8 @@ familias sobre JVM —búsqueda, grafos y columnar— no caben ni de a una con h
 
 **Arquitectura: aquí no hay nada que hacer.** Las diez imágenes del curso tienen build nativo
 `arm64`, comprobado una por una el 29/09/2026. Si algún día una no lo tiene, el síntoma y la
-salida están en
-[`21-arquitecturas-y-emulacion.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/21-arquitecturas-y-emulacion.md)
-y
-[`22-apple-silicon-y-hosts.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/22-apple-silicon-y-hosts.md).
+salida están en las fases 21 (arquitecturas y emulación) y 22 (Apple Silicon) del curso
+*Docker Legacy Node*.
 
 > ⚠️ **El kernel lo pone Docker Desktop, no tu Mac.** Los contenedores corren sobre el kernel
 > de la VM, y ese kernel cambia cuando actualizas Docker Desktop. Con la 29.8.0 es
@@ -101,8 +99,7 @@ la fila de licencias: confírmala antes de decidir por ella en una empresa.
 | Interfaz | aplicación con ajustes gráficos | solo CLI: `colima start --cpu 4 --memory 8` |
 | Kernel de la VM | el de linuxkit, verificado arriba | el de la imagen de Lima: **compruébalo** con `docker info` antes de levantar Mongo |
 
-El detalle de Colima y Lima está en
-[`a07-colima-y-lima.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/a07-colima-y-lima.md).
+El detalle de Colima y Lima está en el apéndice a07 del curso *Docker Legacy Node*.
 
 ---
 
@@ -126,8 +123,7 @@ sudo usermod -aG docker "$USER"
 
 > ⚠️ Pertenecer al grupo `docker` equivale a ser root en esa máquina. En un portátil personal es
 > el trato habitual; en una máquina compartida, usa el modo rootless. Qué cambia y por qué está
-> en
-> [`25-rootless-y-user-namespaces.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/25-rootless-y-user-namespaces.md).
+> en la fase 25 (rootless y user namespaces) del curso *Docker Legacy Node*.
 
 **Memoria:** no hay VM que configurar. El límite es la RAM de tu máquina, y por eso los límites
 por servicio de la sección de memoria importan todavía más aquí.
@@ -165,8 +161,7 @@ y reinicia WSL con `wsl --shutdown`.
 
 **Kernel:** el de WSL2 lo actualiza Windows (`wsl --update`), no Docker Desktop. Comprueba la
 versión antes de levantar MongoDB, igual que en las otras dos plataformas. El detalle de Windows
-y PowerShell está en
-[`a08-windows-y-powershell.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/a08-windows-y-powershell.md).
+y PowerShell está en el apéndice a08 del curso *Docker Legacy Node*.
 
 ---
 
@@ -326,9 +321,8 @@ Podman, lo primero es saber cuál estás usando.
 - **Permisos de volumen.** Los UID de dentro del contenedor se traducen a un rango de UID de tu
   usuario, así que un volumen montado desde tu disco puede aparecer con un dueño que no
   esperas. El mecanismo está en
-  [`17-usuarios-permisos-y-volumenes.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/17-usuarios-permisos-y-volumenes.md)
-  y en
-  [`24-docker-y-podman-arquitectura.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/24-docker-y-podman-arquitectura.md).
+  las fases 17 (usuarios, permisos y volúmenes) y 24 (Docker y Podman) del curso *Docker Legacy
+  Node*.
 
 ---
 
@@ -414,12 +408,8 @@ pero la columna que importa es `RECLAIMABLE`.
 - **Colima** — https://github.com/abiosoft/colima — la alternativa a Docker Desktop en macOS.
 - **SERVER-121912** — https://jira.mongodb.org/browse/SERVER-121912 — el fallo de MongoDB con
   los kernels 6.19 a 7.0.13.
-- **Dentro de este repositorio:**
-  [`docker-container-legacy/`](../../cursos-contenedores-cloud-infra/docker-container-legacy/),
-  en particular
-  [`a10-docker-compose.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/a10-docker-compose.md)
-  y
-  [`30-troubleshooting-metodo-y-herramientas.md`](../../cursos-contenedores-cloud-infra/docker-container-legacy/30-troubleshooting-metodo-y-herramientas.md).
+- **El curso *Docker Legacy Node***, del mismo autor, como lectura sugerida y no como requisito:
+  en particular su apéndice a10 (Docker Compose) y su fase 30 (troubleshooting).
 
 **Orden sugerido:** tu plataforma antes de instalar nada; el ciclo en seis comandos la primera
 vez que levantes un perfil; memoria antes de levantar dos familias a la vez; y limpiar cuando

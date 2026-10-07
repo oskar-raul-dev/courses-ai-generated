@@ -76,8 +76,8 @@ partición de red provocada**, para ver qué hace cada opción cuando se corta e
 
 ## 📐 Lo que se observa
 
-Esta es **la única familia del curso donde el tiempo sí es el argumento**, y está declarado en
-`prompts/formato-bitacora-de-medicion.md` §2.4: la latencia entre regiones es física —la
+Esta es **la única familia del curso donde el tiempo sí es el argumento**, y es la única excepción declarada
+a la regla de no argumentar con tiempos: la latencia entre regiones es física —la
 velocidad de la luz entre dos ciudades— y no hardware. Aquí se mide, y se dice por qué se puede.
 
 - **Latencia de confirmación** de la liberación, según dónde esté la carga y desde dónde se
@@ -134,7 +134,7 @@ que era local. La geografía tiene que estar en el esquema, y eso hay que diseñ
 | CLI | `cockroach sql` | |
 | Driver | **`pg`, el mismo cliente de Postgres** | Habla el protocolo de Postgres, y eso es medio argumento comercial de la familia — **y también la fuente de su trampa** |
 | Línea base | **PostgreSQL de un nodo con réplica de lectura** · perfil `base` | Es lo que la mayoría haría. Hay que medirlo bien, no descartarlo de entrada |
-| Localidad | Particionamiento por región declarado **en el esquema** | `cockroach demo --nodes=9 --global`: tres regiones con latencia inyectada y `REGIONAL BY ROW`, sin licencia (alcance §12, 19). La geografía va en el esquema, no en la infraestructura |
+| Localidad | Particionamiento por región declarado **en el esquema** | `cockroach demo --nodes=9 --global`: tres regiones con latencia inyectada y `REGIONAL BY ROW`, sin licencia (`a10`). La geografía va en el esquema, no en la infraestructura |
 | Laboratorio de fallos | **Toxiproxy** | Latencia entre regiones inyectada y partición de red limpia. Sin esto el miniproyecto es teoría |
 | Medición | `EXPLAIN ANALYZE` (rangos tocados, saltos de red) · abortos y reintentos **contados en el cliente** · latencia de confirmación | **La única familia donde el tiempo es el argumento**, porque es física (`formato-bitacora-de-medicion.md` §2.4) |
 | Datos | Generador del curso | Cargas en trasbordo entre los dos países, con contención provocada sobre las mismas |
@@ -148,7 +148,7 @@ programación**, que es la lección de la familia y no un detalle del cliente.
 > sesión de verificación de laboratorio. Este stack nombra piezas, no números.
 >
 > 🧭 **Dos reglas del curso que este miniproyecto no puede saltarse.** El **arnés de medida y el
-> generador de datos son TypeScript siempre** (alcance §9): son el instrumento, y un instrumento
+> generador de datos son TypeScript siempre** (`a06`): son el instrumento, y un instrumento
 > con dos implementaciones deja de ser un instrumento. Y **se habla con los motores
 > directamente**: nada de ORM, ODM ni cliente de alto nivel (`a06`), porque esas capas esconden
 > justo lo que queremos medir.

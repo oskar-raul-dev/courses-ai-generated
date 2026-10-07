@@ -56,7 +56,7 @@ lo que mide.
 - **Transacciones multi-documento y su costo.** Se miden en la Fase 04.
 - **El punto de rotura** —el documento que no cabe— y actualizar arrays anidados bajo
   concurrencia: Fase 04.
-- **Sharding, replicación y operación.** Fuera del alcance del curso (alcance §11). El replica set
+- **Sharding, replicación y operación.** Fuera del alcance del curso. El replica set
   de un nodo del laboratorio existe solo porque sin él no hay transacciones.
 
 ---

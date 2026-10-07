@@ -7,14 +7,13 @@
 > **Estado:** **la empresa del curso**, decisión cerrada. Durante la discusión se evaluaron
 > seis alternativas —una distribuidora eléctrica, una cooperativa cafetera, una agencia de
 > publicidad, un operador portuario, un proveedor de internet y la flota industrial genérica
-> con la que nació el temario— y están registradas en
-> [`prompts/propuestas-historias.md`](prompts/propuestas-historias.md). Ganó Cóndor por dos
+> con la que nació el temario—. Ganó Cóndor por dos
 > razones: la **trazabilidad de una pieza a través del tiempo** es una búsqueda de patrón de
 > profundidad desconocida y no un árbol —que es lo único que justifica un grafo—, y la
 > **liberación al servicio** es una frontera transaccional con consecuencia legal personal
 > para quien firma. Las otras seis no se perdieron: cada una aporta el miniproyecto de una
 > familia, y eso vive en
-> [`propuestas-mini-proyectos.md`](propuestas-mini-proyectos.md).
+> [`miniproyectos.md`](miniproyectos.md).
 >
 > **Sobre el nombre.** El cóndor es el ave de los Andes, que es donde vuela esta flota, y
 > tiene la propiedad que define al negocio: **planea**. No bate alas: lee el aire y se sostiene
@@ -30,6 +29,8 @@
 > sirven al modelo de datos, y ni un milímetro más. Si una decisión de este documento choca
 > con la realidad del oficio, gana el modelo de datos: es una empresa de mentira construida
 > para enseñar bases de datos de verdad.
+>
+> **Vigencia:** 2026-10-06.
 
 ---
 
@@ -370,7 +371,7 @@ principal de la familia, y el resto de la empresa escala con estas mismas propor
 ## 6. 📖 El vocabulario de la casa
 
 Las **diez entidades** del dominio, que son las mismas en las diez familias y que **ninguna
-fase renombra**. En inglés, como manda la guía de estilo; el glosario es para leer el texto.
+fase renombra**. En inglés, como todo el código del curso; el glosario es para leer el texto.
 
 | Entidad | Qué es en el hangar |
 |---|---|
@@ -418,7 +419,7 @@ está ahí y qué habría pasado si no estuviera**.
 ## 8. 🧭 Cómo usa el curso esta historia
 
 - **La Fase 00** sale de §3: las decisiones heredadas de Cóndor son las autopsias, y se
-  escriben con la estructura de §2.1 de la guía de estilo — la decisión, su mejor argumento,
+  escriben siempre con la misma estructura — la decisión, su mejor argumento,
   la factura a los dos años, el costo de salir. **Autopsia, no juicio:** Camilo no se equivocó,
   y el texto tiene que dejarlo claro o pierde al lector que tomó esa misma decisión.
 - **Las Fases 01 y 02** salen de §5 y §6: el dominio, los volúmenes, el generador con semilla
@@ -429,7 +430,7 @@ está ahí y qué habría pasado si no estuviera**.
   hay una consecuencia si salen mal.
 - **Los diez miniproyectos de familia 🧰** **no** son de Cóndor: cada uno es de otra empresa,
   con otro dolor, y existen para demostrar que el modelo transfiere. Viven en
-  [`propuestas-mini-proyectos.md`](propuestas-mini-proyectos.md) y en los archivos
+  [`miniproyectos.md`](miniproyectos.md) y en los archivos
   `h-mini-NN-*.md`.
 - **El boss global 🏆** es El Hangar, de §7.
 

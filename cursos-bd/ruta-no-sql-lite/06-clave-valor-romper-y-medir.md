@@ -58,7 +58,7 @@ de trabajo que entró dos veces con un candado de Valkey por medio.
 
 Escrita el 29/09/2026, antes de ejecutar `measure.ts`. Es una apuesta **de forma**: viajes y bytes, no
 milisegundos. La latencia no se midió, y no hace falta para decidir: en este curso el tiempo solo es
-argumento en la [Fase 22](22-newsql-romper-y-medir.md). **Resultado, en la sección 4.3: ganada en las
+argumento en la Fase 22. **Resultado, en la sección 4.3: ganada en las
 dos cifras, y por más de lo que esperaba en la memoria.**
 
 ---
@@ -311,7 +311,7 @@ Cuando un Valkey ya duele, la escalera se sube en orden de costo:
    perdible y el problema era operar un componente más, `UNLOGGED` lo hace con el mismo número de
    viajes.
 4. **Arquitectura.** Valkey al lado de la fuente de verdad, como caché o como coordinación, alimentado
-   desde ella y reconstruible desde ella ([Fase 24](24-poliglota-la-costura.md)). Es el peldaño más
+   desde ella y reconstruible desde ella (Fase 24). Es el peldaño más
    caro, y el triaje de la [Fase 02](02-las-cinco-preguntas.md) dice cómo subirlo sin parar el negocio.
 
 ---

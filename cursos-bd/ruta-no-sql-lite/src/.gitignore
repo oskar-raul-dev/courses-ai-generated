@@ -1,2 +1,25 @@
+# El único .gitignore del curso: todo el código vive en src/. Se sostiene sin el de la raíz del
+# repositorio, porque el curso se publica como repositorio propio.
+
+# Dependencias y entornos (cualquier carpeta de src/)
 node_modules/
 .venv/
+
+# Cachés de Python y de las herramientas
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Builds de TypeScript, si alguien compila (el curso corre .ts sin compilar)
+dist/
+
+# src/lab/: datos generados por el generador de a05; se regeneran, no se versionan
+lab/data/
+
+# src/lab/: puertos propios de cada máquina (ver lab/.env.example)
+lab/.env
+
+# Sistema operativo y editores
+.DS_Store
