@@ -46,7 +46,9 @@ class VerificadorDelCurso(PerfilCoursesIA):
     # (🎫 🎯 🔧 📝) y los títulos de era y de plataforma que ya existen. El verificador compara
     # carácter por carácter, así que van también sin el U+FE0F.
     EMOJI_H3 = {"💸", "🎫", "🎯", "🔧", "📝", "🩻", "🪦", "💻", "🚨", "🪟", "🐧", "🍎", "🏷️",
-                "✅", "🪨", "🧱", "🌀", "❌"}
+                "✅", "🪨", "🧱", "🌀", "❌",
+                # Las eras de la historia de la reescritura de 2026 (💎 🎡 🧊 🌊).
+                "💎", "🎡", "🧊", "🌊"}
     EMOJI_PERMITIDOS_H3 = (PerfilCoursesIA.EMOJI_PERMITIDOS_H3 | CALLOUTS | EMOJI_H3
                            | {c.replace("️", "") for c in CALLOUTS | EMOJI_H3})
     # El encabezado de fase (guía §8): «Tutorial React 16 — Rifas y chances · Fase N de 11 · N horas».
