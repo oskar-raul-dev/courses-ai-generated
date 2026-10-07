@@ -76,11 +76,11 @@ paciente definitivo.
 Aplica las dos preguntas a cada relación, con los patrones de acceso que ya
 conoces (dashboard, detalle, panel, búsqueda, transversal de auditoría). El
 destino natural — que debes **derivar tú, no copiar** — se parece
-sospechosamente a `minijira`: enums como strings validados (Fase 4),
+sospechosamente a `tiquetera`: enums como strings validados (Fase 4),
 usuario referenciado por username con la copia justificada si la hay
 (referencia extendida, Fase 3/5), historial embebido con su atomicidad
 (Fases 3/6), y el plan de índices derivado de las consultas (Fase 7).
-Donde tu `soporte_v2` difiera de `minijira`, mejor: defiéndelo por escrito y
+Donde tu `soporte_v2` difiera de `tiquetera`, mejor: defiéndelo por escrito y
 que ganen los números.
 
 ### 3. La migración — cirugía con protocolo
@@ -219,7 +219,7 @@ la lista que se pega en el post-mortem.
 10. Decide los huérfanos del ej. 6: ¿se migran (¿a dónde apuntan?), se archivan en una colección `_orphans`, se descartan con log? Política por escrito — en la vida real esta decisión tiene dueño de negocio; nómbralo.
 11. Escribe los validators de v2 (Fase 4) ANTES de migrar: la migración debe producir documentos que pasen `strict` desde el primer insert. El validator como red del cirujano.
 12. Diseña el plan de índices de v2 (Fase 7) a partir de las 5 operaciones — en papel, con la justificación ESR de cada uno. Se crean al final (script 106): ¿por qué no antes de la carga masiva? (Pista: tu instinto de DBA de cargas masivas ya lo sabe. 🩻)
-13. Documenta las diferencias entre tu `soporte_v2` y `minijira` (si las hay) y defiéndelas. Si no las hay, defiende eso: ¿por qué dos análisis independientes convergen?
+13. Documenta las diferencias entre tu `soporte_v2` y `tiquetera` (si las hay) y defiéndelas. Si no las hay, defiende eso: ¿por qué dos análisis independientes convergen?
 
 **🟠 La cirugía (14–22)**
 
@@ -274,7 +274,7 @@ Y una pieza nueva solo si haces el ej. 29:
 
 ## 🚀 Cierre
 
-El villano está enterrado y documentado. Tienes el arco completo que la vida
+El modelo traducido está enterrado y documentado. Tienes el arco completo que la vida
 real te pedirá: oler el modelo traducido (F3), medir su dolor (F5), agotarle
 las excusas con índices (F7), rediseñarlo con criterio, migrarlo con
 protocolo y **demostrar con una tabla** que la cirugía valió lo que costó —

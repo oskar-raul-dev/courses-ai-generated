@@ -2,7 +2,7 @@
 
 ## 🎯 Propósito
 
-Hasta hoy, el Mini Jira solo se entera de las cosas cuando pregunta: cada GET
+Hasta hoy, la Tiquetera solo se entera de las cosas cuando pregunta: cada GET
 es un "¿hay algo nuevo?". En esta fase el servidor gana voz propia: montamos
 un **mini servidor socket.io de ~30 líneas** y el dashboard se entera de los
 tickets nuevos **en vivo**, sin recargar nada.
@@ -803,7 +803,7 @@ Rooms solo si haces los ejercicios 🟠.
 
 ## 🚀 Cierre
 
-El Mini Jira ya no pregunta: escucha. Y tú te llevas:
+La Tiquetera ya no pregunta: escucha. Y tú te llevas:
 
 - el criterio **polling vs push** con números en la mano,
 - el modelo de eventos de socket.io (`emit`/`on`/`broadcast`) y su servidor

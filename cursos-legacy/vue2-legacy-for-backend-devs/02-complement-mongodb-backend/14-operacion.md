@@ -130,7 +130,7 @@ ensayada); aquí fijas por primera vez la **política** — frecuencia, retenci�
 ubicación y rito. Esa es toda la diferencia entre "sé hacer un backup" y
 "tengo backups":
 
-| Pieza | Decisión del Mini Jira (documenta la TUYA) |
+| Pieza | Decisión de la Tiquetera (documenta la TUYA) |
 |---|---|
 | Frecuencia | dump nocturno (cron/servicio) + oplog dimensionado a >24 h |
 | Retención | 7 diarios, 4 semanales, 3 mensuales (rotación en el script) |
@@ -241,7 +241,7 @@ version: "3.8"
 services:
   mongo:
     image: mongo:${MONGO_VERSION:-4.4}
-    container_name: ${MONGO_CONTAINER:-minijira-mongo}
+    container_name: ${MONGO_CONTAINER:-tiquetera-mongo}
     command: ["mongod", "--replSet", "rs0", "--oplogSize", "512"]
     ports: ["${MONGO_PORT:-27017}:27017"]
     volumes:
@@ -254,9 +254,9 @@ services:
 
   api:
     build: .
-    container_name: minijira-api
+    container_name: tiquetera-api
     environment:
-      - MONGO_URL=mongodb://mongo:27017/minijira?replicaSet=rs0
+      - MONGO_URL=mongodb://mongo:27017/tiquetera?replicaSet=rs0
       - JWT_SECRET=${JWT_SECRET:?definelo_en_.env}
       - NODE_ENV=production
     ports:
@@ -369,7 +369,7 @@ db.currentOp({ secs_running: { $gt: 10 } }) → db.killOp(id)
 15. Construye un índice grande en caliente: sobre la colección de 1M (genera si hace falta), crea un compuesto mientras el torture corre. Mide: duración del build, ¿se bloquearon las escrituras? (compara ops/s de mongostat durante/antes). El mantra foreground/background, enterrado con datos.
 16. Encuentra el fósil: agrega `{ background: true }` al createIndex en tu 4.4. ¿Error, warning o silencio? Busca en el log del server qué dijo. Escribe la nota de auditoría que dejarías en un PR legacy que lo tenga.
 17. `mongotop` no ve lo que no corre: compara la visión de mongotop vs el profiler para el MISMO minuto de tráfico. ¿Qué ve cada uno que el otro no? (Agregado por colección vs operación por operación.) ¿Cuál usarías para "algo está lento" y cuál para "ESTA query está lenta"?
-18. Dashboard de guardia mínimo: script `scripts/health-report.js` que junte en una pantalla: serverStatus (conexiones, memoria), printReplicationInfo (ventana oplog), top 5 del profiler, y espacio de `db.stats()`. Es tu `AWR de los pobres` — y suficiente para el Mini Jira.
+18. Dashboard de guardia mínimo: script `scripts/health-report.js` que junte en una pantalla: serverStatus (conexiones, memoria), printReplicationInfo (ventana oplog), top 5 del profiler, y espacio de `db.stats()`. Es tu `AWR de los pobres` — y suficiente para la Tiquetera.
 19. Restaura un backup de una versión "anterior": simula heredar un dump hecho con opciones viejas (hazlo sin gzip, sin oplog) y súbelo a tu 4.4. ¿Qué se pierde? ¿Los índices llegan? (El `.metadata.json` de la Fase 0, reencontrado en contexto serio.)
 20. Backup selectivo bajo fuego: la colección `attachments.chunks` pesa (Fase 12, ej. 28). Implementa la política de dos velocidades: dump diario SIN chunks (`--excludeCollection`) + dump semanal completo. Mide ambos y documenta el trade-off de recuperación (¿qué pierdes si el desastre cae en jueves?).
 

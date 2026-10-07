@@ -1,8 +1,8 @@
 # 📜 El contrato que el backend debe honrar
 
 > **Documento maestro del Curso 02 — MongoDB para cerebros SQL.** El jefe de
-> este proyecto no es Mongo ni Express: es el **frontend heredado** (el Mini
-> Jira que construye el [Curso 01](../01-vue2-legacy/README.md); se entrega
+> este proyecto no es Mongo ni Express: es el **frontend heredado** (la
+> Tiquetera que construye el [Curso 01](../01-vue2-legacy/README.md); se entrega
 > hecho y no se toca). Este documento fija qué significa exactamente "cambiar
 > el `baseURL` y que no se entere", dónde esa promesa es estricta y dónde pasa
 > a ser "el contrato crece, no se rompe".
@@ -251,9 +251,9 @@ con un script de seed que:
 Este script no es plomería: es el **primer ejercicio de paradigma** del curso.
 
 > ⚠️ **La fixture viene con referencias rotas, y es a propósito que no las
-> arreglamos en silencio.** Los tickets 2 y 3 tienen `assignee: "soporte2"` y
-> `reporter: "usuario2"` / `"usuario3"`, usernames que **no existen** en el
-> array `users`. json-server jamás se quejó porque no sabe qué es una
+> arreglamos en silencio.** Los tickets 2 y 3 tienen `assignee: "jpmesa"` y
+> `reporter: "cvelez"` / `"mrestrepo"`, usernames que **no existen** en el
+> array `users`: son de gente que se fue de Cuadre y cuyo usuario se borró. json-server jamás se quejó porque no sabe qué es una
 > referencia. Al importar a Mongo, la decisión es tuya y hay que **declararla**
 > en `DATA-MODEL.md`: ¿las conservas tal cual (fidelidad al legacy, y el
 > `$lookup` de la Fase 5 devolverá arrays vacíos), o las saneas creando los

@@ -661,7 +661,7 @@ recarga la aplicación.
 22. Normalización total: refactoriza `items` (array) a
     `{ byId: {...}, allIds: [...] }` con getters que reconstruyen el array.
     Mide qué mejora (UPSERT O(1), ticketById O(1)) contra qué complica
-    (mutations, Vue.set otra vez, legibilidad). Concluye si Mini Jira lo
+    (mutations, Vue.set otra vez, legibilidad). Concluye si la Tiquetera lo
     amerita — spoiler razonable: no, y saber decir "no amerita" es el punto.
 23. `canTransition` de la Fase 9 (ej. 18) como getter parametrizado que
     combina `auth` y el ticket: `getters["tickets/canTransition"](ticket, to)`
@@ -720,7 +720,7 @@ socket.
 
 ## 🚀 Cierre
 
-El estado del Mini Jira quedó donde la evidencia lo puso: sesión, tickets y
+El estado de la Tiquetera quedó donde la evidencia lo puso: sesión, tickets y
 flashes en el store; filtros en la URL; borradores, selecciones y comentarios
 en sus componentes. Y te llevas:
 

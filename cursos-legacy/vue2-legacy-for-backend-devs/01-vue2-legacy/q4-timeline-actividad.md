@@ -134,7 +134,7 @@ Colección nueva en el `db.json` del curso:
       "id": 1,
       "ticketId": 1,
       "type": "status_change",
-      "actor": "agente1",
+      "actor": "lmcorrea",
       "from": "open",
       "to": "in_progress",
       "at": "2020-03-10T11:00:00Z"
@@ -145,14 +145,14 @@ Colección nueva en el `db.json` del curso:
       "type": "assigned",
       "actor": "admin",
       "from": null,
-      "to": "agente1",
+      "to": "lmcorrea",
       "at": "2020-03-10T11:02:00Z"
     },
     {
       "id": 3,
       "ticketId": 1,
       "type": "comment",
-      "actor": "agente1",
+      "actor": "lmcorrea",
       "from": null,
       "to": "¿Probaste apagarla y prenderla?",
       "at": "2020-03-10T11:05:00Z"
@@ -552,7 +552,7 @@ export default {
 ### 7. El flujo completo, evento por evento
 
 ```
-PESTAÑA A (agente1 cambia el estado)          SERVER            PESTAÑA B (mirando el mismo ticket)
+PESTAÑA A (lmcorrea cambia el estado)         SERVER            PESTAÑA B (mirando el mismo ticket)
         │                                        │                        │
 1. click en "En progreso"                        │                        │
         │                                        │                        │

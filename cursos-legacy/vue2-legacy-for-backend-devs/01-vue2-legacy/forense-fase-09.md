@@ -47,7 +47,7 @@ Y en la pestaña Response:
 
 ```json
 { "id": 12, "title": "No me llega el correo", "status": "resolved",
-  "assignee": "soporte1", … }
+  "assignee": "lmcano", … }
 ```
 
 **Qué descarta.** Descarta el servicio, el mock y la escritura entera: el

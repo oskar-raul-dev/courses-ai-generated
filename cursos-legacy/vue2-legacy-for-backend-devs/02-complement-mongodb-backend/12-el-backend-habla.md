@@ -325,7 +325,7 @@ io.use(function (socket, next) {
 ¿Archivos **dentro** de la base? La respuesta de la época — y la sensata:
 GridFS brilla cuando quieres los archivos **con** la base (mismo backup de la
 Fase 0/13, misma replicación, sin infraestructura extra: exactamente un
-sistema interno como el Mini Jira); y pierde contra un object storage (S3 y
+sistema chico como la Tiquetera); y pierde contra un object storage (S3 y
 familia) en CDN, costos a escala y archivos enormes. Para adjuntos de mesa
 de soporte (~PDFs y capturas): GridFS es la herramienta correcta, no un
 compromiso. Documentado en `DATA-MODEL.md`, decisión defendida.
@@ -540,7 +540,7 @@ encontrar el bug que solo pasa "cuando llega en vivo".
 **🔴 Muy difícil (29–34)**
 
 29. El proxy unificador: monta nginx (o el proxy de webpack como referencia) que sirva `/api` → :3000 y `/socket.io` → :4000, y documenta qué cambiaría en el frontend (baseURL relativa + socket al mismo origin) para pagar la deuda de URLs hardcodeadas. Impleméntalo como docker-compose alterno — es el ensayo del compose final de la Fase 14.
-30. Dos procesos, un problema: levanta DOS instancias de tu backend (puertos 3000/3001 con sockets 4000/4001) tras el proxy con round-robin. Crea un ticket vía la instancia A: ¿los clientes conectados a B se enteran? Documenta el problema (cada io tiene sus conexiones) e investiga el adaptador Redis de la época (`socket.io-redis` 5.x para io 2.x) — implementa el esqueleto o justifica por qué el Mini Jira no lo necesita aún.
+30. Dos procesos, un problema: levanta DOS instancias de tu backend (puertos 3000/3001 con sockets 4000/4001) tras el proxy con round-robin. Crea un ticket vía la instancia A: ¿los clientes conectados a B se enteran? Documenta el problema (cada io tiene sus conexiones) e investiga el adaptador Redis de la época (`socket.io-redis` 5.x para io 2.x) — implementa el esqueleto o justifica por qué la Tiquetera no lo necesita aún.
 31. GridFS vs archivos en disco: implementa la alternativa (`multer.diskStorage` + metadata en Mongo + streaming con `fs`) detrás de la MISMA interfaz del service. Compara: backup, permisos, borrado consistente, migración entre servers. Tabla de trade-offs y veredicto para ESTE proyecto en `DATA-MODEL.md`.
 32. El emisor universal: crea `scripts/import-tickets.js` que inserte 50 tickets desde un CSV usando el **service** (no la colección directa). Verifica que los navegadores conectados recibieron los 50 eventos. Ahora reescríbelo insertando directo a la colección: silencio. La diferencia es el argumento "el emit vive en el service" — documéntala.
 33. Replay de auditoría: usando `history` (Fase 3) + los eventos, escribe un endpoint de administración `GET /tickets/:id/timeline` que fusione transiciones, comentarios y adjuntos en una línea de tiempo ordenada. Tres colecciones, un `$unionWith` que suena a MongoDB moderno: ¿estará en 4.4? Verifícalo en la doc antes de asumir que no (spoiler: llegó justo en 4.4). Impleméntalo con y sin él, compara.

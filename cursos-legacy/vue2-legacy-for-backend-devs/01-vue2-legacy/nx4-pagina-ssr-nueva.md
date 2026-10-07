@@ -1,7 +1,7 @@
 # 🆕 NX4 — Crear: página SSR nueva (timeline de actividad)
 
-> Nuxt puro. Sin traducir nada. La primera fase de toda la ruta que **no mira al
-> Mini Jira a pelo por encima del hombro** — construye algo que a pelo no podías.
+> Nuxt puro. Sin traducir nada. La primera fase de toda la ruta que **no mira a la
+> Tiquetera a pelo por encima del hombro** — construye algo que a pelo no podías.
 
 **Consume:** F8 (WebSockets). **Apoya en:** NX2 (`<client-only>`, `process.client`,
 la auth por cookie), NX3 (`asyncData`, el contexto, `error()`). **No migra nada.**
@@ -11,8 +11,8 @@ la auth por cookie), NX3 (`asyncData`, el contexto, `error()`). **No migra nada.
 ## 🎯 Propósito
 
 Hasta aquí la ruta NX ha sido demolición controlada: NX2 rompió la app y la
-recompuso, NX3 le quitó a Vuex el monopolio de cargar datos. Todo era el mismo
-Mini Jira **puesto sobre otro suelo**.
+recompuso, NX3 le quitó a Vuex el monopolio de cargar datos. Todo era la misma
+Tiquetera **puesta sobre otro suelo**.
 
 En NX4 dejas de reconstruir y **construyes**: una página que no existe en el curso
 base, el **timeline de actividad de un ticket** — el historial de qué le pasó,
@@ -75,7 +75,7 @@ transiciones de página de Nuxt.
 
 ## 🧠 Concepto 1: el híbrido SSR + tiempo real (la fase entera cabe aquí)
 
-Una SPA a pelo (el Mini Jira del tronco) solo sabe hacer una cosa con los datos:
+Una SPA a pelo (la Tiquetera del tronco) solo sabe hacer una cosa con los datos:
 **pedirlos desde el cliente, después de montar**. Por eso siempre ves el parpadeo
 "cargando…" → datos. El servidor manda un cascarón vacío y el navegador lo rellena.
 
@@ -150,7 +150,7 @@ curl -s http://localhost:3000/tickets/1/activity | grep -i "<title>\|description
 
 Verás el `<title>` y el `<meta name="description">` **con el título real del ticket
 dentro del HTML crudo**, sin que el navegador haya ejecutado nada. Eso es
-literalmente imposible en el Mini Jira a pelo. Guárdate ese `curl`: es la prueba
+literalmente imposible en la Tiquetera a pelo. Guárdate ese `curl`: es la prueba
 tangible de por qué alguien elige pagar el coste de SSR.
 
 ## 🧠 Concepto 3: `validate()` — el portero que actúa antes de renderizar
@@ -191,7 +191,7 @@ Añade la colección `activity` (json-server la sirve en `/activity` automática
       "id": 1,
       "ticketId": 1,
       "type": "status_change",
-      "actor": "agente1",
+      "actor": "lmcorrea",
       "from": "open",
       "to": "in_progress",
       "at": "2020-03-10T11:00:00Z"
@@ -200,7 +200,7 @@ Añade la colección `activity` (json-server la sirve en `/activity` automática
       "id": 2,
       "ticketId": 1,
       "type": "comment_added",
-      "actor": "usuario1",
+      "actor": "dprios",
       "from": null,
       "to": "¿Alguna novedad?",
       "at": "2020-03-10T12:30:00Z"
@@ -483,7 +483,7 @@ parecen, ya sabes por qué "en local va bien" nunca fue un diagnóstico.
 
 1. Levanta la página y hazle `curl -s http://localhost:3000/tickets/1/activity | grep -i title`.
    Pega la salida. Confirma que el `<title>` con el nombre del ticket **viaja en el
-   HTML del servidor**. Ahora hazlo contra el Mini Jira a pelo (`vue-cli-service serve`)
+   HTML del servidor**. Ahora hazlo contra la Tiquetera a pelo (`vue-cli-service serve`)
    y compara: ¿qué `<title>` sale ahí?
 2. Añade tres entradas más a `activity` en `db.json` (un `assignee_change`, dos
    `comment_added`) y verifica que aparecen ordenadas por fecha descendente sin
@@ -519,7 +519,7 @@ parecen, ya sabes por qué "en local va bien" nunca fue un diagnóstico.
 13. Añade una transición de página `fade` global en `nuxt.config.js` y compárala con
     declararla por-página con `transition: 'fade'` en el export del componente.
     ¿Cuándo querrías una distinta solo para esta ruta?
-14. `head()` con `titleTemplate`: que todas las páginas terminen en " · Mini Jira"
+14. `head()` con `titleTemplate`: que todas las páginas terminen en " · Tiquetera"
     salvo que la página diga lo contrario. Muévelo al layout y deja que `activity.vue`
     lo herede.
 15. Cuando llega un evento en vivo, resáltalo (animación de fondo que se desvanece)
@@ -531,7 +531,7 @@ parecen, ya sabes por qué "en local va bien" nunca fue un diagnóstico.
 17. Añade `assignee_change` al flujo de emisión: cuando en el panel de F9 reasignes
     un ticket, emite el evento y velo aparecer en vivo en el timeline de otra pestaña.
 18. Mide el TTFB (time to first byte) de la página SSR con `curl -w "%{time_starttransfer}"`
-    y compáralo con el mismo dato del Mini Jira a pelo (que manda cascarón vacío y
+    y compáralo con el mismo dato de la Tiquetera a pelo (que manda cascarón vacío y
     luego fetchea). Interpreta: ¿quién muestra contenido antes, y a costa de qué en
     el servidor?
 
@@ -565,7 +565,7 @@ parecen, ya sabes por qué "en local va bien" nunca fue un diagnóstico.
 24. **Meta social real.** Añade `og:title`, `og:description` y `twitter:card` con
     datos del ticket, y verifica con una herramienta de preview (o `curl` +
     inspección) que un bot vería la info correcta **sin ejecutar JS**. Escribe dos
-    frases sobre por qué esto era imposible en el Mini Jira a pelo.
+    frases sobre por qué esto era imposible en la Tiquetera a pelo.
 
 ### 🔴 Muy difícil (25–28)
 
@@ -648,7 +648,7 @@ del ejercicio 1 **antes** de seguir (es la prueba de que entendiste SSR).
 
 El timeline es la primera cosa de toda la ruta NX que **no existía**. No tradujiste
 un `QTable`, no reescribiste un formulario: construiste una página que hace algo que
-el Mini Jira a pelo **no podía hacer** — mandar HTML lleno desde el servidor, con
+la Tiquetera a pelo **no podía hacer** — mandar HTML lleno desde el servidor, con
 sus meta tags puestos para un crawler, y luego seguir viva por socket en el cliente.
 
 Te llevas:
@@ -666,7 +666,7 @@ En Q y VU el proyecto final es un **híbrido de UI**: media app en Bootstrap, me
 en el framework, conviviendo. Cambiaste de **vocabulario** — aprendiste a decir
 `QTable` donde antes escribías `<table>`.
 
-Aquí no. El proyecto final de NX es un **Mini Jira reconstruido sobre otro modelo de
+Aquí no. El proyecto final de NX es una **Tiquetera reconstruida sobre otro modelo de
 ejecución**. El vocabulario es el mismo — sigues escribiendo Options API, `function () {}`,
 Vuex, componentes `.vue` — pero **cambió de cabeza**: tu código ya no corre solo en
 un navegador, corre primero en un Node sin `window` y luego se hidrata en el cliente,

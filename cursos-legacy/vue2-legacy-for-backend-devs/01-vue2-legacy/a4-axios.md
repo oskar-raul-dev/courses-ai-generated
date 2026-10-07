@@ -2,7 +2,7 @@
 
 ## 🎯 Para qué sirve este apéndice
 
-axios es el sistema circulatorio del Mini Jira desde la Fase 0, pero sus
+axios es el sistema circulatorio de la Tiquetera desde la Fase 0, pero sus
 piezas se explicaron repartidas en cinco fases. Este apéndice las junta:
 instancias, config, la forma exacta de respuesta y error, interceptores y
 cancelación — con el ancla de dónde vive cada cosa en el proyecto. Consúltalo
@@ -185,7 +185,7 @@ Reconoce ambos.
 
 ## 📎 Subida de archivos: `multipart/form-data`
 
-El Mini Jira los rozó como mock (adjuntos del wizard, F6 ej. 18). Aquí va lo
+La Tiquetera los rozó como mock (adjuntos del wizard, F6 ej. 18). Aquí va lo
 real — y es la operación HTTP que más se hace mal en legacy.
 
 ### El concepto: por qué NO sirve JSON
@@ -375,7 +375,7 @@ ejercicio 32 monta un endpoint de subida real con un middleware Node.
    recorre sus cuatro campos (data, status, headers, config).
 6. Cambia `baseURL` a algo con `/` final y una url con `/` inicial: observa
    el doble slash en Network. Define tu convención y documéntala.
-7. Añade `headers: { "X-Cliente": "mini-jira" }` a la instancia y verifica
+7. Añade `headers: { "X-Cliente": "tiquetera" }` a la instancia y verifica
    que viaja en todos los requests.
 8. Compara `PUT` vs `PATCH` con un ticket incompleto (F3 ej. 22, ahora
    mirando el body real en Network).
@@ -454,7 +454,7 @@ ejercicio 32 monta un endpoint de subida real con un middleware Node.
     archivos en `uploads/`, devuelve `{id, filename, size, url}` y persiste
     la metadata en `db.json`. Conecta la UI de adjuntos del ticket
     end-to-end. Este es el ejercicio que convierte todo lo anterior en real.
-33. Adjuntos completos en el Mini Jira: colección `attachments`, subida desde
+33. Adjuntos completos en la Tiquetera: colección `attachments`, subida desde
     el workspace del panel (F9), listado con iconos por tipo, descarga y
     borrado. Emite un evento de socket (F8) para que otros agentes vean el
     adjunto nuevo en vivo. Integración de cuatro fases.

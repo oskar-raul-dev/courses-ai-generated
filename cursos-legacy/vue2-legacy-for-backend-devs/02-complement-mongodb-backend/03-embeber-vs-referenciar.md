@@ -13,9 +13,9 @@ ninguna de las dos cosas — así que la pregunta de diseño cambia:
 > Ya no es *"¿cuál es la forma normal de estos datos?"*
 > Es *"**¿qué se lee junto y qué cambia junto?**"*
 
-Al final de la fase decides, con números y no por reflejo, el modelo del Mini
-Jira — y conoces al villano del curso: una base modelada por alguien que nunca
-se hizo esa pregunta.
+Al final de la fase decides, con números y no por reflejo, el modelo de la
+Tiquetera — y conoces el caso de estudio del curso, `soporte_v1`: una base modelada
+por alguien que nunca se hizo esa pregunta, porque nadie se la había enseñado.
 
 ---
 
@@ -26,7 +26,7 @@ se hizo esa pregunta.
 - los patrones con nombre: embebido, referencia, referencia extendida,
   subset, computed, bucket;
 - los límites físicos que vetan diseños: 16 MB y arrays sin techo;
-- el modelo del Mini Jira decidido y **defendido por escrito** en
+- el modelo de la Tiquetera decidido y **defendido por escrito** en
   `DATA-MODEL.md` (nuevo entregable);
 - el historial de estados diseñado (el subdominio escritura-intensiva);
 - primera visita al anti-patrón ⚰️: la base "Postgres disfrazado" instalada y
@@ -67,7 +67,7 @@ Tres vetos físicos que anulan cualquier cuadrante:
   del legacy que heredarás, el "unbounded array" es EL anti-patrón número 1
   de los post-mortems.
 - **Lo que se consulta transversalmente vive mal embebido.** "Todos los
-  comentarios de soporte1 en todos los tickets" contra comentarios embebidos
+  comentarios de lmcano en todos los tickets" contra comentarios embebidos
   es posible (multikey, Fase 7) pero incómodo; si esa consulta es frecuente,
   es un voto por la colección separada.
 
@@ -120,7 +120,7 @@ aquí **lo dicta**.
 
 ---
 
-## 🧮 Las cuentas sobre Mini Jira (modelar con números, no con fe)
+## 🧮 Las cuentas sobre la Tiquetera (modelar con números, no con fe)
 
 Datos de partida (medibles en tu base; a escala, supónlos del negocio):
 ~3 comentarios por ticket en promedio, p99 ≈ 40, ~200 bytes por comentario.
@@ -181,7 +181,7 @@ Opciones sobre la mesa:
    decide si lo proyecta fuera; exponerlo algún día sería extensión, no
    ruptura — régimen de `00-audit-contrato.md`).
 2. **Colección `ticket_events`.** Correcto si el volumen fuera alto o el
-   acceso transversal ("todo lo que hizo soporte1 hoy") fuera lo caliente.
+   acceso transversal ("todo lo que hizo lmcano hoy") fuera lo caliente.
 3. **Bucket:** si registráramos *todo* (cada edición de campo, cada
    vista) — cientos de eventos por ticket — ni array infinito ni un documento
    por micro-evento: documentos-cubo por ticket y día/centena:
@@ -192,7 +192,7 @@ Opciones sobre la mesa:
   ticketId: ObjectId("..."),
   bucket: 3,                    // tercer cubo de este ticket
   count: 47,                    // eventos en el cubo (se cierra en 100)
-  events: [ { at: ISODate(...), user: "soporte1", type: "field_edit", ... } ]
+  events: [ { at: ISODate(...), user: "lmcano", type: "field_edit", ... } ]
 }
 ```
 
@@ -228,9 +228,9 @@ dev (o el que desearías que te hubieran dejado):
 
 ## ⚰️ Primera visita al anti-patrón: "Postgres disfrazado"
 
-Te instalo al villano. `soporte_v1` es la base de un Mini Jira paralelo,
-modelada por alguien que "migró a Mongo" en 2019 transcribiendo su esquema
-relacional tabla por tabla:
+Te instalo el caso de estudio. `soporte_v1` es la primera base del sistema,
+la que su fundador "migró a Mongo" en 2019 transcribiendo su esquema de MySQL
+tabla por tabla (la ficha de historia del sistema cuenta por qué):
 
 ```
 soporte_v1
@@ -269,11 +269,11 @@ const com = db.comments.find({ ticketId: id }).toArray();
 ```
 
 Cronométralo (ejercicios 22–24) y compáralo contra el detalle equivalente en
-`minijira` (1–2 consultas). Guarda los números en `DATA-MODEL.md`, sección
+`tiquetera` (1–2 consultas). Guarda los números en `DATA-MODEL.md`, sección
 "La autopsia — mediciones (antes)": los vas a necesitar en las fases 5, 7
 y la Fase 8.
 
-> 🎯 Lo que el villano enseña ya: ninguna de estas 7 colecciones es
+> 🎯 Lo que el modelo traducido enseña ya: ninguna de estas 7 colecciones es
 > *incorrecta* por sí sola. El error no está en ningún documento — está en
 > que **nadie hizo las dos preguntas**. Es un modelo traducido, no diseñado.
 > Aprende a olerlo: lookup-tables para enums, ids numéricos simulados,
@@ -308,7 +308,7 @@ Regla de oro de la época:
 
 - Modelar sin haber listado las pantallas/consultas dominantes (modelar "los
   datos" en abstracto es el hábito SQL; aquí se modela **el acceso**).
-- El extremo contrario al villano: embeberlo TODO porque "en Mongo se
+- El extremo contrario al modelo traducido: embeberlo TODO porque "en Mongo se
   embebe" — y fabricar documentos-bomba con arrays sin techo.
 - Crear lookup-tables para enums (`statuses`, `priorities`): un enum es un
   string en el documento + validación (Fase 4). Punto.
@@ -337,8 +337,8 @@ Los de análisis se entregan en `DATA-MODEL.md`; los de medición, con números.
 1. Clasifica en los 4 cuadrantes, con una línea de justificación: pedido–líneas de pedido, post–comentarios, empleado–departamento, factura–cliente, sensor–lecturas, usuario–preferencias de UI.
 2. Para cada caso del ejercicio 1: ¿aplica algún veto físico (16 MB / array sin techo)?
 3. Calcula: un ticket con historial embebido, 10 transiciones de ~150 bytes. ¿Qué porcentaje del límite de 16 MB usa? ¿Y con 10.000? ¿El veto aplica a nuestro historial de transiciones? ¿Por qué no?
-4. Escribe el documento JSON de un ticket del Mini Jira con las decisiones tomadas en la fase (comentarios fuera, `history` embebido con 2 transiciones de ejemplo).
-5. Dibuja (texto o papel) el modelo `minijira` final: colecciones, campos, qué referencia a qué. Compáralo con el diagrama ER que habrías hecho en SQL. Marca cada diferencia con la pregunta que la justificó.
+4. Escribe el documento JSON de un ticket de la Tiquetera con las decisiones tomadas en la fase (comentarios fuera, `history` embebido con 2 transiciones de ejemplo).
+5. Dibuja (texto o papel) el modelo `tiquetera` final: colecciones, campos, qué referencia a qué. Compáralo con el diagrama ER que habrías hecho en SQL. Marca cada diferencia con la pregunta que la justificó.
 6. Identifica en `soporte_v1` las tres lookup-tables y escribe cómo queda cada una en el modelo bien diseñado.
 7. En la doc 4.4, localiza el límite de 16 MB y qué se recomienda para datos que lo excedan (te va a sonar: GridFS, Fase 12).
 8. `distinct("statusId")` en `soporte_v1.tickets` y tradúcelo a nombres con la lookup-table. Siente el fastidio. Anótalo: el fastidio es dato.
@@ -355,18 +355,18 @@ Los de análisis se entregan en `DATA-MODEL.md`; los de medición, con números.
 16. Caso clásico de la época — carrito de compras: producto en el catálogo cambia de precio, pero la orden ya pagada debe conservar el precio del momento. ¿Qué patrón es? (Pista: aquí la "anomalía de actualización" no es un bug: es el requisito.) Escribe el documento `order`.
 17. Del mundo real de tu pasado: elige un esquema SQL que hayas mantenido (3+ tablas). Redis­éñalo para Mongo con las dos preguntas, documentando cada decisión. Entrega: el antes (DDL), el después (documentos ejemplo), y la tabla de decisiones.
 18. Sobre `soporte_v1`: escribe la función mongosh `ticketDetail(id)` que haga TODOS los viajes (incluidos los autores de comentarios, sin duplicar consultas por autor repetido). Cuenta cuántas consultas ejecuta para un ticket con 8 comentarios de 5 autores distintos.
-19. La misma función contra `minijira`: `healthyTicketDetail(id)`. ¿Cuántas consultas? ¿Qué dato de usuario NO tienes y el frontend actual NO necesita? (Mira el contrato: el frontend pinta `assignee` como username. La referencia extendida ya estaba pagada.)
+19. La misma función contra `tiquetera`: `healthyTicketDetail(id)`. ¿Cuántas consultas? ¿Qué dato de usuario NO tienes y el frontend actual NO necesita? (Mira el contrato: el frontend pinta `assignee` como username. La referencia extendida ya estaba pagada.)
 20. El historial embebido: escribe el update que agrega una transición (`$push` a `history` + `$set` del status) — en UNA operación. Todavía no sabes por qué esa unicidad es oro (Fase 6), pero deja el comentario: "// esto es atómico y me va a encantar".
 21. Encuentra el olor: te doy tres modelos de un blog (a: posts con comments embebidos y tags array; b: posts, comments, tags, post_tags como 4 colecciones; c: posts con subset de comments + colección comments). Para cada uno, di qué patrón de acceso lo justificaría y cuál lo condena. (No hay respuesta única: hay justificaciones buenas y malas.)
 
 **🟠 Difícil (22–29)**
 
-22. **Medición base del villano:** cronometra `ticketDetail(id)` de `soporte_v1` sobre 100 ids aleatorios (bucle en mongosh o script Node). Reporta promedio y p95. Haz lo mismo con `healthyTicketDetail` en una `minijira` inflada al mismo volumen (usa el generador). Tabla comparativa a `DATA-MODEL.md`, sección "autopsia (antes)".
+22. **Medición base del modelo traducido:** cronometra `ticketDetail(id)` de `soporte_v1` sobre 100 ids aleatorios (bucle en mongosh o script Node). Reporta promedio y p95. Haz lo mismo con `healthyTicketDetail` en una `tiquetera` inflada al mismo volumen (usa el generador). Tabla comparativa a `DATA-MODEL.md`, sección "autopsia (antes)".
 23. Mide el **listado**: la pantalla principal (20 tickets con status/prioridad/asignado legibles por humanos) contra ambas bases. En `soporte_v1` necesitas resolver 3 ids por fila. Implementa la versión ingenua (N+1) y la versión "batch" (junta ids, `$in`, mapea en memoria). Los tres tiempos a la tabla.
-24. La consulta transversal: "toda la actividad de soporte1 hoy" (tickets asignados + comentarios escritos + transiciones hechas) contra ambos modelos. ¿Dónde es más natural? ¿El modelo sano pierde en algo? Sé honesto en la tabla: el diseño por acceso optimiza los accesos elegidos, y este no fue elegido.
+24. La consulta transversal: "toda la actividad de lmcano hoy" (tickets asignados + comentarios escritos + transiciones hechas) contra ambos modelos. ¿Dónde es más natural? ¿El modelo sano pierde en algo? Sé honesto en la tabla: el diseño por acceso optimiza los accesos elegidos, y este no fue elegido.
 25. Implementa el bucket para la auditoría total hipotética: función `recordEvent(ticketId, event)` que haga `$push` + `$inc` sobre el cubo abierto y cree cubo nuevo al llegar a 100. (Te va a faltar atomicidad fina — anota exactamente DÓNDE está la carrera; la Fase 6 te espera con la respuesta.)
 26. Genera 50.000 eventos con esa función y compara contra la alternativa "un documento por evento": tamaño total en disco (`db.stats()`), cantidad de documentos, y el tiempo de leer "todos los eventos del ticket X".
-27. El rename de usuario con referencia extendida: supón que el ticket guarda `assigneeName` copiado. Escribe el update masivo que sincroniza el rename del agente soporte1 (su `name` pasa de "Agente Uno" a "Agente Uno Pérez") en todos sus tickets. Mídelo con 10.000 tickets afectados. Ahora tienes el costo REAL del lado malo del trade — compáralo contra el costo de 1 consulta extra × lecturas/día del lado bueno. ¿A partir de cuántas lecturas diarias gana la copia? Esa cuenta ES el capítulo.
+27. El rename de usuario con referencia extendida: supón que el ticket guarda `assigneeName` copiado. Escribe el update masivo que sincroniza el rename del agente lmcano (su `name` pasa de "Agente Uno" a "Agente Uno Pérez") en todos sus tickets. Mídelo con 10.000 tickets afectados. Ahora tienes el costo REAL del lado malo del trade — compáralo contra el costo de 1 consulta extra × lecturas/día del lado bueno. ¿A partir de cuántas lecturas diarias gana la copia? Esa cuenta ES el capítulo.
 28. Diseña el modelo Mongo para un dominio hostil: sistema de turnos médicos (pacientes, médicos, agendas, turnos, historias clínicas — acceso transversal intenso, escritura concurrente sobre la agenda, integridad dura en el turno). Documenta dónde Mongo te obliga a forzar patrones y escribe el párrafo honesto: ¿lo harías en Mongo? Anticipas la Fase 15.
 29. Audita un esquema ajeno: busca en GitHub un proyecto Node+Mongo de la época (2018–2020) con modelos definidos (los tutoriales de "MEAN stack blog" abundan). Aplica el olfato: ¿diseñado o traducido? Evidencias concretas, veredicto en 5 líneas. (Es la promesa del curso, versión entrenamiento.)
 
@@ -375,7 +375,7 @@ Los de análisis se entregan en `DATA-MODEL.md`; los de medición, con números.
 30. **La bomba de 16 MB, detonación controlada:** construye programáticamente un documento que se acerque al límite (array de sub-documentos). ¿Qué error exacto lanza el driver al pasarlo? ¿Y qué pasa con un `$push` sobre un documento que está a 100 bytes del límite? Documenta ambos mensajes de error: reconocerlos en un log de producción legacy vale oro.
 31. Mide la degradación del array creciente: script que haga `$push` de a 1.000 elementos hasta 200.000, cronometrando cada lote. Grafica/tabula tiempo por lote vs tamaño del documento. Explica la curva con lo que sepas de cómo el motor reescribe documentos. (Esta curva es la razón física del veto al array sin techo — ahora la tienes medida, no creída.)
 32. El subset con poda atómica: implementa "insertar comentario" que (a) inserte en la colección `comments`, (b) haga push al subset del ticket **manteniendo solo los 3 últimos** (investiga `$push` con `$slice` — sí, existe y es de época), (c) incremente `commentsCount`. Señala qué parte del combo puede quedar inconsistente si el proceso muere entre (a) y (b), y qué estrategia de reconciliación propones.
-33. Escribe el **detector de "traducido, no diseñado"**: script Node que recibe el nombre de una base y reporta olores: colecciones con ≤10 documentos y campos {_id numérico, nombre} (lookup-table probable), campos `*_id` numéricos, colecciones cuyo nombre singular/plural aparece referenciado en más de N otras colecciones, documentos cuyo tamaño promedio es sospechosamente uniforme y pequeño (~fila). Pruébalo contra `soporte_v1` (debe gritar) y `minijira` (debe callar).
+33. Escribe el **detector de "traducido, no diseñado"**: script Node que recibe el nombre de una base y reporta olores: colecciones con ≤10 documentos y campos {_id numérico, nombre} (lookup-table probable), campos `*_id` numéricos, colecciones cuyo nombre singular/plural aparece referenciado en más de N otras colecciones, documentos cuyo tamaño promedio es sospechosamente uniforme y pequeño (~fila). Pruébalo contra `soporte_v1` (debe gritar) y `tiquetera` (debe callar).
 34. **El ensayo de la fase** (1–2 páginas, al final de `DATA-MODEL.md`): "La normalización como respuesta cacheada". Tesis a desarrollar: las formas normales son la respuesta precalculada a las dos preguntas para un motor con JOIN gratis e integridad custodiada; al cambiar el motor, la respuesta cacheada se invalida pero la pregunta sobrevive. Usa tus mediciones (ej. 22–27) como evidencia. Este texto es el que le mostrarías a un colega SQL escéptico — escríbelo para él.
 
 ---
@@ -429,9 +429,9 @@ M320 si quieres la versión larga.
 
 Al final de esta fase tienes el cambio de paradigma #1 instalado: modelar es
 responder "¿qué se lee junto y qué cambia junto?" con números del negocio, no
-recitar formas normales. Tienes el modelo del Mini Jira decidido y defendido
+recitar formas normales. Tienes el modelo de la Tiquetera decidido y defendido
 en `DATA-MODEL.md`, el historial de estados diseñado, el vocabulario de
-patrones de la época, y al villano `soporte_v1` medido y documentado —
+patrones de la época, y al modelo traducido `soporte_v1` medido y documentado —
 esperando su autopsia en la Fase 8.
 
 La señal de que quedó bien:

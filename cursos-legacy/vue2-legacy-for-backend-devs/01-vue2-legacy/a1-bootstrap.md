@@ -2,8 +2,8 @@
 
 ## 🎯 Para qué sirve este apéndice
 
-No es un curso de Bootstrap: es el **diccionario de todo el Bootstrap que el
-Mini Jira usa**, para que puedas leer y extender la maquetación del proyecto
+No es un curso de Bootstrap: es el **diccionario de todo el Bootstrap que la
+Tiquetera usa**, para que puedas leer y extender la maquetación del proyecto
 (o de cualquier legacy 2018–2021, donde Bootstrap 4 es omnipresente) sin
 estudiar la documentación completa. Consúltalo cuando una clase del código no
 te diga nada, o cuando quieras maquetar algo nuevo "al estilo del curso".
@@ -94,7 +94,7 @@ receta clásica de "layout a pantalla completa con footer/contenido elástico".
 Los **colores contextuales** son un vocabulario que se repite en badges,
 botones, alertas, texto y fondos — apréndelo una vez:
 
-| Nombre | Color | Semántica en el Mini Jira |
+| Nombre | Color | Semántica en la Tiquetera |
 |---|---|---|
 | `primary` | azul | acción principal, seleccionado |
 | `secondary` | gris | neutro, cerrado |

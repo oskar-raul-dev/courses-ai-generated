@@ -2,7 +2,7 @@
 
 ## 🎯 Propósito
 
-El dashboard de la Fase 4 es de solo lectura. Hoy el Mini Jira aprende a
+El dashboard de la Fase 4 es de solo lectura. Hoy la Tiquetera aprende a
 **crear, editar y eliminar** tickets — y de paso, **vuelidate** paga por fin
 la instalación que hicimos en la Fase 0 🎉.
 
@@ -939,7 +939,7 @@ para las clases CSS.
 
 ## 🚀 Cierre
 
-El Mini Jira ya es un CRUD completo: nace, se edita y muere un ticket sin
+La Tiquetera ya es un CRUD completo: nace, se edita y muere un ticket sin
 tocar `db.json` a mano. Y las piezas quedaron donde deben:
 
 - **`TicketForm`** captura y valida (un solo formulario, dos modos),

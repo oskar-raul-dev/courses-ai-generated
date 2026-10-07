@@ -4,12 +4,18 @@
 > **Prerequisito duro: F11 (Testing).** Sin saber montar componentes y mockear
 > la frontera, aquí no hay nada que construir.
 
+> 📖 **Antes de esta fase, lee la historia de tu rama:**
+> [`nx00-historia-ruta-nx.md`](nx00-historia-ruta-nx.md). Cuenta quién empezó la rama
+> `nuxt-ayuda`, en qué estado quedó, por qué paró y qué le pide hoy PizzaPaisa. Son
+> ocho minutos, y son los que convierten esta ruta en un rescate en vez de un
+> ejercicio.
+
 ---
 
 ## 🎯 Propósito
 
-Nadie migra lo que no puede verificar. Antes de tocar Nuxt vas a blindar el
-Mini Jira **tal como está a pelo** con tests de regresión: fotos del
+Nadie migra lo que no puede verificar. Antes de tocar Nuxt vas a blindar la
+Tiquetera **tal como está a pelo** con tests de regresión: fotos del
 comportamiento actual que tienen que seguir en verde después de que la
 migración cambie las tripas por debajo.
 
@@ -172,7 +178,7 @@ seguir ahí, y cambiarlo rompe tests sin que el autor lo sospeche.
 
 ## 🧠 Concepto 3: el contrato con el store y con la API
 
-Una pieza del Mini Jira habla con dos vecinos: hacia arriba con el **store**
+Una pieza de la Tiquetera habla con dos vecinos: hacia arriba con el **store**
 (despacha acciones, lee getters) y hacia abajo, a través del servicio, con la
 **API**. La migración a Nuxt va a mover mucho —el componente puede cambiar de
 carpeta, el ciclo de vida se va a ejecutar dos veces, la carga de datos se va a
@@ -266,7 +272,7 @@ fallaría. Ver ese test verde, sabiendo que miente, es la lección.
 
 ## 💻 Código de la fase
 
-> ⚠️ **Cero Nuxt en todo lo que sigue.** Esto corre sobre el Mini Jira a pelo,
+> ⚠️ **Cero Nuxt en todo lo que sigue.** Esto corre sobre la Tiquetera a pelo,
 > con el mismo `vue add unit-jest` de F11 (Jest + `@vue/test-utils` 1.x +
 > `vue-jest` + `babel-jest`). Si no tienes la suite de F11 corriendo, vuelve a
 > F11 antes de seguir.
@@ -702,7 +708,7 @@ correr de verdad.*
 
 ## ✅ El checklist pre-migración
 
-Antes de migrar **cualquier** pieza del Mini Jira a Nuxt, pasa esta lista. Es la
+Antes de migrar **cualquier** pieza de la Tiquetera a Nuxt, pasa esta lista. Es la
 misma que en Q0/VU0 hasta el último punto, que es solo de Nuxt:
 
 ```
@@ -801,7 +807,7 @@ el servidor y el otro no— y tu red debería cubrir los dos. Deshaz con
 
 ## 🧪 Ejercicios (26)
 
-> Todos sobre el Mini Jira **a pelo**. Cero Nuxt hasta NX1. Options API,
+> Todos sobre la Tiquetera **a pelo**. Cero Nuxt hasta NX1. Options API,
 > `function () {}`, VTU 1.x + Jest.
 
 **🟢 Fácil (1–8)**
@@ -860,7 +866,7 @@ el servidor y el otro no— y tu red debería cubrir los dos. Deshaz con
     `change` con el destino. Hereda la confianza de `ticketTransitions.spec` —no
     re-verifiques qué transiciones existen.
 16. Escribe el "test de inventario de deuda": un archivo `WINDOW-DEBT.md` que
-    liste cada pieza del Mini Jira que toca `window`/`document`/`localStorage`
+    liste cada pieza de la Tiquetera que toca `window`/`document`/`localStorage`
     (guard, interceptor, chart.js de F7, socket.io de F8) con la línea y fase
     exactas. Es el entregable del último punto del checklist.
 17. Toma un test de F11 que use `mount` de un árbol grande y decide: para
@@ -911,14 +917,14 @@ el servidor y el otro no— y tu red debería cubrir los dos. Deshaz con
     a NX1. *(Nota: aún es cero Nuxt —solo dos entornos de Jest sobre el proyecto
     a pelo.)*
 25. **El mapa de qué se rompe.** Sin instalar Nuxt, produce `SSR-RISK-MAP.md`:
-    recorre el Mini Jira entero y clasifica cada módulo en 🟢 "sobrevive al
+    recorre la Tiquetera entera y clasifica cada módulo en 🟢 "sobrevive al
     servidor" / 🟡 "sobrevive si se mueve a `mounted()`" / 🔴 "necesita rediseño
     (auth, sockets)". Para cada 🔴/🟡, la línea exacta que toca `window` y la
     fase donde nació. Este documento es la agenda de trabajo de NX2 y NX3 —lo vas
     a tachar entero en las próximas fases.
 26. **La red que sí cubriría el agujero (diseño, no implementación).** Escribe
     `E2E-PLAN.md`: ¿qué haría un e2e que el unitario en jsdom estructuralmente no
-    puede? Especifica 3 escenarios concretos sobre el Mini Jira (p. ej. "cargar
+    puede? Especifica 3 escenarios concretos sobre la Tiquetera (p. ej. "cargar
     `/tickets` con el servidor apagado, verificar que el SSR no tira 500") que
     **solo** un test que arranque el servidor de verdad atraparía. Argumenta por
     qué, aun con e2e, **no borras** los unitarios. Estás escribiendo, hoy, la

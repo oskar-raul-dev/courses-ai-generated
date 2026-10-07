@@ -106,7 +106,7 @@ version: "3.8"
 services:
   mongo:
     image: mongo:${MONGO_VERSION:-4.4}          # ① variable con default
-    container_name: ${MONGO_CONTAINER:-minijira-mongo}
+    container_name: ${MONGO_CONTAINER:-tiquetera-mongo}
     command: ["mongod", "--replSet", "rs0"]     # ② pisa el CMD de la imagen
     ports: ["${MONGO_PORT:-27017}:27017"]       # ③ host:contenedor
     volumes:
@@ -120,7 +120,7 @@ services:
   api:
     build: .                                     # ⑤ construye desde tu Dockerfile
     environment:
-      - MONGO_URL=mongodb://mongo:27017/minijira?replicaSet=rs0   # ⑥ hostname de red
+      - MONGO_URL=mongodb://mongo:27017/tiquetera?replicaSet=rs0   # ⑥ hostname de red
       - JWT_SECRET=${JWT_SECRET:?definelo_en_.env}                # ⑦ sin default: EXIGIDO
     ports: ["3000:3000", "4000:4000"]
     depends_on:

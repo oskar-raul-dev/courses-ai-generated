@@ -240,9 +240,9 @@ Es de las pocas instalaciones globales legítimas del curso (el 📦 A3 explica
 por qué casi todo lo demás va local, dentro de cada proyecto).
 
 ```bash
-vue create mini-jira-legacy
+vue create tiquetera-legacy
 #   → elegir el preset "default (babel, eslint)": suficiente para el curso
-cd mini-jira-legacy
+cd tiquetera-legacy
 ```
 
 ### 🔬 Disección: el `package.json` que acaba de nacer
@@ -253,7 +253,7 @@ siempre tu primer acto. Campo por campo:
 
 ```json
 {
-  "name": "mini-jira-legacy",
+  "name": "tiquetera-legacy",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -371,7 +371,7 @@ Si eso carga, el taller completo funciona: npm encontró `vue-cli-service` en
 ### Estructura mínima de hoy
 
 ```
-mini-jira-legacy/
+tiquetera-legacy/
   .nvmrc              ← la versión de Node, por escrito
   package.json        ← identidad, verbos y dependencias del proyecto
   package-lock.json   ← la foto exacta del árbol (se versiona)
@@ -410,7 +410,7 @@ en este curso vas a romper cosas a propósito —los ejercicios están diseñado
 para eso— y necesitas poder volver a un estado sano sin pensarlo.
 
 ```bash
-# desde la raíz de mini-jira-legacy
+# desde la raíz de tiquetera-legacy
 git init
 git add .
 git commit -m "f00: scaffolding inicial de Vue CLI"

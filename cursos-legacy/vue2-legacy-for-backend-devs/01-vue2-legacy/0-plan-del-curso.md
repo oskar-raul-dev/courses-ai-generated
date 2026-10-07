@@ -1,4 +1,4 @@
-# 🗺️ Fase 00 — Plan del curso, alcance y proyecto Mini Jira
+# 🗺️ Fase 00 — Plan del curso, alcance y proyecto Tiquetera
 
 ## 🎯 De qué va este curso
 
@@ -74,11 +74,14 @@ firmado en
 
 ---
 
-## 🏗️ El proyecto: Mini Jira (mesa de soporte)
+## 🏗️ El proyecto: la Tiquetera (mesa de soporte)
 
-Durante todo el curso construiremos una **mesa de soporte interna** estilo
-mini-Jira. Es el hilo conductor de todas las fases — **y de las rutas**, que lo
-migran pieza a pieza.
+Durante todo el curso construiremos **la Tiquetera**, la mesa de soporte que
+Cuadre Software usa para atender a los comercios que le compran su sistema —y,
+de paso, sus propios tickets internos—. Es el hilo conductor de todas las fases
+— **y de las rutas**, que la migran pieza a pieza. Quién la escribió, cuándo y
+por qué lo cuenta la ficha
+[`../00-historia-del-sistema.md`](../00-historia-del-sistema.md).
 
 ### Funcionalidad final (tronco)
 
@@ -111,16 +114,16 @@ ejecución. Ver la ruta NX, de `nx0-red-de-seguridad.md` a
       "description": "Otra vez.",
       "status": "open",
       "priority": "high",
-      "assignee": "agente1",
-      "reporter": "usuario1",
+      "assignee": "lmcorrea",
+      "reporter": "dprios",
       "createdAt": "2020-03-10T10:00:00Z"
     }
   ],
   "users": [
-    { "id": 1, "username": "admin", "name": "Usuario Demo", "role": "agent" }
+    { "id": 1, "username": "admin", "name": "Andrés Felipe Ríos", "role": "agent" }
   ],
   "comments": [
-    { "id": 1, "ticketId": 1, "author": "agente1", "body": "¿Probaste apagarla y prenderla?" }
+    { "id": 1, "ticketId": 1, "author": "lmcorrea", "body": "¿Probaste apagarla y prenderla?" }
   ]
 }
 ```
@@ -220,7 +223,7 @@ añaden una colección más** (`activity`), para el timeline de X4.
 
 ## 🔀 Rutas opcionales (después de F11 — elige **una**)
 
-Arrancan con el Mini Jira **terminado a pelo**. Las tres tienen 5 fases (X0 → X4)
+Arrancan con la Tiquetera **terminada a pelo**. Las tres tienen 5 fases (X0 → X4)
 y **son excluyentes**: se elige una, no se acumulan.
 
 | Ruta | Framework | Naturaleza | Qué te cambia |
@@ -308,7 +311,7 @@ síntoma, no por la fase.
   paso, con la salida literal de cada uno y qué descarta. Más **una pieza por
   ruta** (`forense-ruta-q.md`, `-vu.md`, `-nx.md`), que cubre sus cinco fases:
   como las rutas son excluyentes, solo vas a abrir una.
-- **[`cuaderno-incidentes.md`](cuaderno-incidentes.md)** — 12 incidentes con el
+- **[`cuaderno-incidentes.md`](cuaderno-incidentes.md)** — 13 incidentes con el
   ticket como llegó, la preparación para tener el sistema roto, tres pistas
   plegadas, sitio para tu investigación y la solución de referencia.
 

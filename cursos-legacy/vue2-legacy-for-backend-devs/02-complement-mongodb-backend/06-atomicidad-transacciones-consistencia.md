@@ -35,7 +35,7 @@ contador (Fase 5, ej. 26) y la del bucket (Fase 3, ej. 25).
 - el patrón **update condicional** (read-check-write sin carrera) y con él
   resuelto el doble "tomar" → `409` (extensión pactada en `00-audit-contrato.md`);
 - write concern y read concern: qué prometen `w:1`, `w:"majority"`,
-  `journal`, y qué eliges para el Mini Jira;
+  `journal`, y qué eliges para la Tiquetera;
 - el entorno convertido a **replica set de un nodo** (requisito de
   transacciones) sin perder datos;
 - transacciones multi-documento: sintaxis, reintentos, costos, y el criterio
@@ -69,7 +69,7 @@ db.tickets.updateOne(
   {
     $set:  { status: "in_progress", updatedAt: new Date() },
     $push: { history: { from: "open", to: "in_progress",
-                        by: "soporte1", at: new Date() } },
+                        by: "lmcano", at: new Date() } },
     $inc:  { touchCount: 1 }
   }
 )
@@ -263,7 +263,7 @@ perillas — cuánta durabilidad exiges a cambio de latencia:
 await col.updateOne(filtro, cambio, { writeConcern: { w: "majority", j: true } });
 ```
 
-**Para el Mini Jira** (un nodo, sistema interno): los defaults son razonables
+**Para la Tiquetera** (un nodo, una empresa chica): los defaults son razonables
 y lo importante es **saber que las perillas existen** — el legacy que
 heredarás puede tenerlas afinadas (o des-afinadas: un `w: 0` "fire and
 forget" de la época era el "no me cuentes si falló"). Regla mental: `w`
@@ -297,8 +297,8 @@ procedimiento en `SETUP.md`.
 ## 💳 Transacciones multi-documento: el plan C, bien hecho
 
 Cuándo tocan de verdad: **todo-o-nada entre documentos/colecciones que no
-puede modelarse de otra forma y cuya tolerancia al drift es cero.** En el
-Mini Jira hay un caso legítimo de estudio: la doble escritura del rename
+puede modelarse de otra forma y cuya tolerancia al drift es cero.** En la
+Tiquetera hay un caso legítimo de estudio: la doble escritura del rename
 (Fase 5) si el negocio declarara tolerancia cero.
 
 ```js
@@ -307,12 +307,12 @@ const session = client.startSession();
 try {
   await session.withTransaction(async function () {
     await db.collection("users").updateOne(
-      { username: "soporte1" },
+      { username: "lmcano" },
       { $set: { name: "Agente Uno Pérez" } },
       { session }                                    // ⬅️ cada op DEBE llevarla
     );
     await db.collection("tickets").updateMany(
-      { assignee: "soporte1" },
+      { assignee: "lmcano" },
       { $set: { assigneeName: "Agente Uno Pérez" } },
       { session }
     );
@@ -434,7 +434,7 @@ ticket tiene un solo dueño. Ahora repítelo con la precondición dentro del fil
 ## 🧪 Ejercicios (34)
 
 Concurrencia se prueba con concurrencia: varios ejercicios piden lanzar
-operaciones simultáneas con `Promise.all` desde Node. La base: `minijira`.
+operaciones simultáneas con `Promise.all` desde Node. La base: `tiquetera`.
 
 **🟢 Fácil (1–10)**
 
@@ -447,7 +447,7 @@ operaciones simultáneas con `Promise.all` desde Node. La base: `minijira`.
 7. `findOneAndUpdate` con `returnOriginal: false` vs por defecto: ejecuta la misma operación con ambos y muestra qué documento devuelve cada uno. ¿Cuándo querrías el original? (Piensa en auditoría.)
 8. `upsert: true`: incrementa un contador en una colección `stats_daily` con clave `{ day: "2020-03-10" }` que puede no existir. Córrelo dos veces y verifica: primera crea, segunda incrementa.
 9. `updateOne` con precondición que no matchea: inspecciona `matchedCount` y `modifiedCount`. Fabrica también el caso `matchedCount: 1, modifiedCount: 0` (¿cómo?) y explica qué significa.
-10. Documenta en `DATA-MODEL.md` la sección "Invariantes y atomicidad": qué invariantes del Mini Jira caben en un documento (transición+history) y cuáles cruzan documentos (rename+copias, comment+contador).
+10. Documenta en `DATA-MODEL.md` la sección "Invariantes y atomicidad": qué invariantes de la Tiquetera caben en un documento (transición+history) y cuáles cruzan documentos (rename+copias, comment+contador).
 
 **🟡 Intermedio (11–20)**
 
@@ -479,7 +479,7 @@ operaciones simultáneas con `Promise.all` desde Node. La base: `minijira`.
 30. Outbox transaccional: mejora el patrón outbox del 🔥 opcional de la Fase 5 — la escritura de negocio y el insert a `_outbox` ahora viajan en la MISMA transacción (esa es la gracia del patrón completo: el evento existe si y solo si el cambio existe). Worker aparte procesa con at-least-once. Demuestra con sabotajes que no hay evento huérfano ni cambio sin evento.
 31. Saga en miniatura (el contraste arquitectónico): implementa el rename como saga — paso 1 (users) + paso 2 (tickets) con **compensación** (revertir users si tickets falla definitivamente). Compárala con la transacción del ej. 16 en: complejidad de código, qué ve un lector concurrente a mitad de camino, y qué pasa si la compensación TAMBIÉN falla. Media página honesta: cuándo la saga es sobreingeniería y cuándo es la única opción (pista: sharding, servicios separados).
 32. Auditoría de un legacy real: busca en GitHub un proyecto Node+Mongo de la época con updates. Caza: read-modify-writes con carrera, findOne+update separables, transacciones de un solo documento, `w:0`. Reporte de 1 página con veredicto por hallazgo (bug real / riesgo teórico / correcto). Es la promesa del curso aplicada a concurrencia.
-33. El torture-test del Mini Jira: script que durante 60 segundos lance mezcla concurrente realista (tomas, transiciones, comentarios con `$inc`, renames) y al final ejecute TODAS las verificaciones de invariantes (un solo assignee coherente con history, contadores exactos, copias sincronizadas o drift ≤ tolerancia). Déjalo como `npm run torture` — la Fase 13 lo convertirá en test de verdad.
+33. El torture-test de la Tiquetera: script que durante 60 segundos lance mezcla concurrente realista (tomas, transiciones, comentarios con `$inc`, renames) y al final ejecute TODAS las verificaciones de invariantes (un solo assignee coherente con history, contadores exactos, copias sincronizadas o drift ≤ tolerancia). Déjalo como `npm run torture` — la Fase 13 lo convertirá en test de verdad.
 34. **El ensayo de la fase** (1 página, `INSTINTOS.md`): "La transacción era el pegamento porque el modelo estaba en pedazos". Tesis a desarrollar: la normalización fragmenta la unidad de negocio en filas y tablas, y la transacción es el mecanismo que las vuelve a juntar en cada escritura; el documento invierte el orden — junta primero (modelado), pega después solo lo que quedó fuera. Usa el duelo (ej. 12–13), el precio medido (ej. 28) y tu experiencia SQL como evidencia. Cierra con tu escalera personal de consistencia (la de la chuleta, con tus palabras y tus números).
 
 **🔥 Opcionales (exceden el alcance base)**
@@ -562,7 +562,7 @@ La señal de que quedó bien:
 **Siguiente parada:** ⚡ Fase 7 — Índices: donde tu experiencia SQL vale
 intacta. Cuatro fases cuestionándote certezas; toca la fase reconfortante.
 Tu `EXPLAIN PLAN`, tus compuestos, tu prefijo izquierdo — casi todo viaja. Y
-el villano recibirá sus índices… para demostrar que ni así se salva.
+el modelo traducido recibirá sus índices… para demostrar que ni así se salva.
 
 ---
 

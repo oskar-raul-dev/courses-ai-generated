@@ -1,11 +1,11 @@
 # 🅥 Fase VU1 — Leer Vuetify
 
-> **Ruta VU · Fase 2 de 5** — Reconocimiento puro. Cero código del Mini Jira.
+> **Ruta VU · Fase 2 de 5** — Reconocimiento puro. Cero código de la Tiquetera.
 > Después de esta fase abres cualquier repo Vuetify 2 de la empresa y sabes **dónde está cada cosa** y **por qué el layout no pinta**.
 > Si tu trabajo es solo *leer* Vuetify — parchear un bug, revisar un PR, entender un flujo antes de una reunión — **esta fase te alcanza**. VU2, VU3 y VU4 son para quien va a escribir.
 
 > ### 📍 Vienes de VU0
-> Ya escribiste la red: tests de **regresión** sobre el CRUD (F5) y el dashboard (F4), **contra el código que vas a borrar**. Esos tests **no se tocan en VU1** — VU1 no escribe una línea del Mini Jira. Vuelven a correr en VU2, verdes o rojos, y ahí te dirán si migraste o si rompiste.
+> Ya escribiste la red: tests de **regresión** sobre el CRUD (F5) y el dashboard (F4), **contra el código que vas a borrar**. Esos tests **no se tocan en VU1** — VU1 no escribe una línea de la Tiquetera. Vuelven a correr en VU2, verdes o rojos, y ahí te dirán si migraste o si rompiste.
 >
 > VU0 te dejó **dos** preguntas abiertas, no una:
 > 1. *"tus tests buscan `.b-table`; `v-data-table` no la tiene."* → la contesta **VU3**.
@@ -15,7 +15,7 @@
 
 ## 🎯 1. Propósito
 
-Aprender a **leer** un proyecto Vuetify 2.6 sin escribir una línea del Mini Jira.
+Aprender a **leer** un proyecto Vuetify 2.6 sin escribir una línea de la Tiquetera.
 
 Tu objetivo al terminar: te pasan un repo Vuetify, lo clonas, y en 20 minutos puedes responder:
 
@@ -79,7 +79,7 @@ Esos tres son VU1. El resto es reconocer nombres.
 
 ## 🚫 3. Qué NO hacemos acá
 
-- ❌ **No tocamos el Mini Jira.** Cero. Ni un componente. VU1 es reconocimiento.
+- ❌ **No tocamos la Tiquetera.** Cero. Ni un componente. VU1 es reconocimiento.
 - ❌ **No tocamos los tests de VU0.** Siguen intactos hasta VU2. En VU1 no hay nada que puedan verificar.
 - ❌ **No migramos nada.** El CRUD a `v-form` es **VU2**. El dashboard a `v-data-table` es **VU3**.
 - ❌ **No usamos `v-form`, `v-data-table` ni `:rules`.** Los miras de lejos; se escriben en VU2/VU3.
@@ -125,7 +125,7 @@ En Vuetify:
 vue add vuetify
 ```
 
-Y eso es todo. **No hay proyecto nuevo.** Vuetify entra sobre tu Mini Jira existente. El plugin te pregunta un preset:
+Y eso es todo. **No hay proyecto nuevo.** Vuetify entra sobre tu Tiquetera existente. El plugin te pregunta un preset:
 
 | Pregunta | Respuesta | Por qué |
 |---|---|---|
@@ -451,7 +451,7 @@ export default {
 
 ### 4.9 🗺️ Tabla de equivalencias: curso base → Vuetify
 
-La internalizas y ya puedes mapear cualquier pantalla Bootstrap del Mini Jira a su versión Vuetify **sin migrar nada** todavía:
+La internalizas y ya puedes mapear cualquier pantalla Bootstrap de la Tiquetera a su versión Vuetify **sin migrar nada** todavía:
 
 | Curso base (Bootstrap / a pelo) | Vuetify 2 | Dónde se usa / migra |
 |---|---|---|
@@ -475,14 +475,14 @@ La internalizas y ya puedes mapear cualquier pantalla Bootstrap del Mini Jira a 
 
 ## 💻 5. Código mínimo: un tour de lectura, no de escritura
 
-Recuerda: **VU1 no escribe Mini Jira.** Este bloque es un `App.vue` de referencia para que **reconozcas** las piezas juntas. Míralo como quien abre un repo ajeno.
+Recuerda: **VU1 no escribe Tiquetera.** Este bloque es un `App.vue` de referencia para que **reconozcas** las piezas juntas. Míralo como quien abre un repo ajeno.
 
 ```html
 <!-- src/App.vue — el esqueleto típico de un proyecto Vuetify 2 -->
 <template>
   <v-app>                                <!-- 🔎 (1) raíz obligatoria. Sin esto, nada -->
     <v-app-bar app color="primary" dark> <!-- 🔎 (2) navbar; color="primary" sale del TEMA -->
-      <v-toolbar-title>Mini Jira</v-toolbar-title>
+      <v-toolbar-title>Tiquetera</v-toolbar-title>
       <v-spacer />
       <v-btn icon @click="toggleDark">   <!-- 🔎 (3) botón dark mode -->
         <v-icon>mdi-theme-light-dark</v-icon> <!-- 🔎 (4) icono MDI -->
@@ -565,7 +565,7 @@ proyecto ajeno dentro de dos años.
 
 ## 🧪 7. Ejercicios (30)
 
-Todos son de **lectura y reconocimiento** — cero migración del Mini Jira. Sirven igual al dev que solo va a leer Vuetify. Graduados 🟢 fácil → 🟡 medio → 🟠 difícil → 🔴 muy difícil.
+Todos son de **lectura y reconocimiento** — cero migración de la Tiquetera. Sirven igual al dev que solo va a leer Vuetify. Graduados 🟢 fácil → 🟡 medio → 🟠 difícil → 🔴 muy difícil.
 
 ### 🟢 Básicos (reconocer y ubicar)
 
@@ -623,7 +623,7 @@ Todos son de **lectura y reconocimiento** — cero migración del Mini Jira. Sir
    ```
    ¿Está roto? ¿Por qué conviven? ¿Cuál migrarías si tuvieras que tocar ese archivo, y cuál dejarías?
 
-**🟡 16.** `$vuetify.breakpoint.smAndDown` en un `computed`. Explica por qué esto permite algo que una media query CSS **no** puede, con un ejemplo del Mini Jira (pista: cantidad de items a cargar).
+**🟡 16.** `$vuetify.breakpoint.smAndDown` en un `computed`. Explica por qué esto permite algo que una media query CSS **no** puede, con un ejemplo de la Tiquetera (pista: cantidad de items a cargar).
 
 **🟡 17.** Comparas el `App.vue` "a pelo" del curso base con el `App.vue` post-Vuetify. Lista **exactamente** qué se agregó y qué se mantuvo igual (incluido `router-view`).
 
@@ -712,7 +712,7 @@ La clave es entender que `v-app` da/quita capacidad **según el árbol de la rut
 6. **Deuda de tema:** ¿hay colores hardcodeados en templates (`#hex`, `style="color:"`) que deberían salir del tema? (ej. 27). ¿Define `dark` pero nadie lo togglea?
 7. **Un bug que ya puedes predecir** sin correr el proyecto, y por qué.
 
-> 💡 **¿Sin conexión o sin repo a mano?** Haz el informe sobre tu Mini Jira **después de `vue add vuetify`** (secciones 1–3, 5) más un `plugins/vuetify.js` inventado con `v-flex` mezclado y un color hardcodeado (secciones 4, 6, 7). Lo que se entrena es la **lectura**, no de dónde salió el código.
+> 💡 **¿Sin conexión o sin repo a mano?** Haz el informe sobre tu Tiquetera **después de `vue add vuetify`** (secciones 1–3, 5) más un `plugins/vuetify.js` inventado con `v-flex` mezclado y un color hardcodeado (secciones 4, 6, 7). Lo que se entrena es la **lectura**, no de dónde salió el código.
 
 <details><summary>Guía de evaluación 🔴 30</summary>
 
@@ -782,7 +782,7 @@ Puedes abrir un repo Vuetify 2 y en 20 minutos armar el mapa mental completo. Sa
 - **"El icono no sale"** tiene tres causas conocidas y las descartas en orden.
 - Y arrancamos con **full import** a propósito: ~500kb de bundle, deuda 💸 consciente que se paga con un ejercicio 🔴 en VU3.
 
-**Lo que NO hiciste:** tocar el Mini Jira. Ni una línea. VU1 es reconocimiento y nada más.
+**Lo que NO hiciste:** tocar la Tiquetera. Ni una línea. VU1 es reconocimiento y nada más.
 
 **Y si tu trabajo es solo leer Vuetify** — parchear, revisar PRs, entender un flujo antes de una reunión — **acá puedes parar**. En serio. VU1 es autosuficiente para eso, y es la mayoría de la gente.
 

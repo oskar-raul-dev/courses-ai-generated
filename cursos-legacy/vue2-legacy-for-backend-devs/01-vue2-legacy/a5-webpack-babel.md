@@ -141,8 +141,8 @@ module.exports = {
       }
     }
   },
-  // 2) publicPath: si la app se sirve bajo una subruta (ej. /mini-jira/)
-  publicPath: process.env.NODE_ENV === "production" ? "/mini-jira/" : "/",
+  // 2) publicPath: si la app se sirve bajo una subruta (ej. /tiquetera/)
+  publicPath: process.env.NODE_ENV === "production" ? "/tiquetera/" : "/",
   // 3) escotillas a webpack crudo, cuando las perillas no alcanzan:
   configureWebpack: { /* se FUSIONA con la config generada */ }
 };
@@ -214,7 +214,7 @@ de las tres copias falta.
 
 1. Corre `npm run build` y explora `dist/` a mano: abre el index.html,
    identifica app vs chunk-vendors, verifica los hashes.
-2. Abre `dist/js/app.[hash].js` y busca un string tuyo ("Mini Jira").
+2. Abre `dist/js/app.[hash].js` y busca un string tuyo ("Tiquetera").
    Contempla tu código minificado — y confirma con tus ojos que nada del
    bundle es secreto.
 3. `npx vue inspect --rules`: lista los loaders activos. Identifica los cinco
@@ -307,7 +307,7 @@ de las tres copias falta.
     informe con números.
 30. Presupuesto de rendimiento (performance budget): configura webpack para
     que **falle el build** si el bundle inicial supera X KB. Elige el X con
-    criterio (justifícalo con el tipo de usuarios del Mini Jira) y arregla el
+    criterio (justifícalo con el tipo de usuarios de la Tiquetera) y arregla el
     proyecto hasta cumplirlo.
 31. Migración a Vite (el experimento honesto): monta el proyecto con Vite +
     `@vitejs/plugin-vue2`. Descubre qué funciona igual, qué rompe (CommonJS
@@ -317,7 +317,7 @@ de las tres copias falta.
 32. Módulo Federation / micro-frontend de juguete: expón el panel de soporte
     como un módulo remoto consumible por otra app webpack. (Requiere webpack
     5: hazlo en un proyecto aparte y evalúa qué implicaría subir de webpack
-    4 a 5 el Mini Jira.)
+    4 a 5 la Tiquetera.)
 33. Build determinista y auditable: consigue que dos builds del mismo commit
     produzcan bytes idénticos (hashes de contenido, orden de módulos,
     timestamps). Investiga qué lo rompe. Es requisito real en entornos
@@ -329,7 +329,7 @@ de las tres copias falta.
     de 8 minutos es un problema de negocio, no un capricho.
 35. El informe de modernización: con TODO lo aprendido (este apéndice, los
     ejercicios 28 de A3 y 31 de aquí), escribe `MODERNIZATION.md` — la
-    evaluación honesta de qué costaría llevar el Mini Jira a Vue 3 + Vite +
+    evaluación honesta de qué costaría llevar la Tiquetera a Vue 3 + Vite +
     Pinia: qué se migra mecánicamente, qué exige reescribir (filters, event
     bus, `$on`, vuelidate 0.x, chart.js 2, socket.io 2), en qué orden, con
     qué riesgos y qué red de seguridad (los tests de F11). Este documento es

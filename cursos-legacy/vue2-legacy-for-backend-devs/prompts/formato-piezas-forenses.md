@@ -1,5 +1,5 @@
 # 🕵️ Formato de las piezas forenses
-## Paquete Mini Jira — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
+## Paquete Tiquetera — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
 
 Este documento **no es** una pieza forense: es su especificación. Define cómo se
 construyen los `forense-master.md`, los `forense-fase-NN.md` y los

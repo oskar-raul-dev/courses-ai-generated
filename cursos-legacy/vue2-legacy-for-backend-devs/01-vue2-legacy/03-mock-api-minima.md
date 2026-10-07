@@ -2,7 +2,7 @@
 
 ## 🎯 Propósito
 
-Hasta ahora el Mini Jira vive de mentiras piadosas: tickets en un arreglo local
+Hasta ahora la Tiquetera vive de mentiras piadosas: tickets en un arreglo local
 y un login síncrono. En esta fase montamos una **Mock API real** con
 **json-server** y conectamos el frontend a ella por HTTP.
 
@@ -143,8 +143,8 @@ npm install --save-dev json-server@0.16.3
       "description": "Otra vez. Tercera vez esta semana.",
       "status": "open",
       "priority": "high",
-      "assignee": "soporte1",
-      "reporter": "usuario1",
+      "assignee": "lmcano",
+      "reporter": "dprios",
       "createdAt": "2020-03-10T10:00:00Z"
     },
     {
@@ -153,8 +153,8 @@ npm install --save-dev json-server@0.16.3
       "description": "Desde ayer en la tarde no recibo nada.",
       "status": "in_progress",
       "priority": "medium",
-      "assignee": "soporte2",
-      "reporter": "usuario2",
+      "assignee": "jpmesa",
+      "reporter": "cvelez",
       "createdAt": "2020-03-11T09:30:00Z"
     },
     {
@@ -163,27 +163,37 @@ npm install --save-dev json-server@0.16.3
       "description": "Necesito acceso a la carpeta de Finanzas.",
       "status": "resolved",
       "priority": "low",
-      "assignee": "soporte1",
-      "reporter": "usuario3",
+      "assignee": "lmcano",
+      "reporter": "mrestrepo",
       "createdAt": "2020-03-08T14:15:00Z"
     }
   ],
   "users": [
-    { "id": 1, "username": "admin", "name": "Usuario Demo", "role": "agent" },
-    { "id": 2, "username": "soporte1", "name": "Ana Soporte", "role": "agent" },
-    { "id": 3, "username": "usuario1", "name": "Carlos Usuario", "role": "reporter" }
+    { "id": 1, "username": "admin", "name": "Andrés Felipe Ríos", "role": "agent" },
+    { "id": 2, "username": "lmcano", "name": "Laura Marcela Cano", "role": "agent" },
+    { "id": 3, "username": "dprios", "name": "Diana Patricia Ríos", "role": "reporter" }
   ],
   "comments": [
     {
       "id": 1,
       "ticketId": 1,
-      "author": "soporte1",
+      "author": "lmcano",
       "body": "¿Probaste apagarla y prenderla?",
       "createdAt": "2020-03-10T10:30:00Z"
     }
   ]
 }
 ```
+
+> 📝 **Lo que este `db.json` no tiene, y la mesa de soporte sí necesita.** Los
+> casos de los comercios se identifican por el **NIT**, y los de facturación,
+> además, por la **resolución de numeración**. Ningún ticket tiene esos campos:
+> el campo iba a llegar "en la próxima versión", y mientras tanto los agentes
+> los escriben **al comienzo del título**, por convención
+> (`[900123456] No cuadra la caja del sábado`). La regla vive en la cabeza del
+> equipo, no en el sistema, y por eso el buscador `?q=` es la única forma de
+> encontrar los casos de un comercio. Guárdalo: es exactamente el tipo de
+> esquema que no está en ninguna parte, y el Curso 02 lo va a sacar a la luz.
 
 ### 3. Agregar el script en `package.json`
 
@@ -392,7 +402,7 @@ que el código quede con la forma exacta que tendrá contra un backend real.
 var MOCK_USER = {
   username: "admin",
   password: "1234",
-  name: "Usuario Demo"
+  name: "Andrés Felipe Ríos"
 };
 
 var FAKE_DELAY = 600; // ms — para que el loading se vea
@@ -1007,7 +1017,7 @@ filters) → MDN Using Promises → Vuex Composing Actions → volver al código
 
 ## 🚀 Cierre
 
-Al final de esta fase el Mini Jira ya tiene:
+Al final de esta fase la Tiquetera ya tiene:
 
 - una Mock API que se comporta como un backend real (persiste, filtra, da 404),
 - una capa de servicios que esconde el HTTP a las vistas,

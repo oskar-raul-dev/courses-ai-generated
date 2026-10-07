@@ -867,7 +867,7 @@ volver al código. Filters solo como lectura de reconocimiento.
 
 ## 🚀 Cierre
 
-Al final de esta fase el Mini Jira ya tiene cara de producto: tarjetas resumen,
+Al final de esta fase la Tiquetera ya tiene cara de producto: tarjetas resumen,
 tabla con badges, búsqueda y filtros instantáneos. Y tú tienes tres armas que
 valen para cualquier base legacy:
 

@@ -1,13 +1,17 @@
-# 🎫 Mini Jira — Un sistema legacy completo, de la pantalla a la base
+# 🎫 Tiquetera — Un sistema legacy completo, de la pantalla a la base
 
 Paquete de dos cursos para **desarrolladores backend senior** que tienen que
 entrar a mantener un sistema heredado real. No son dos cursos que se parecen:
 son **las dos mitades del mismo sistema**, y el punto donde se tocan es la
 lección principal.
 
-El sistema es **Mini Jira**, una mesa de soporte interna: tickets,
-comentarios, agentes, prioridades, un dashboard, un panel de soporte y
-notificaciones en vivo. Época **2018–2021**, con todo lo que eso implica.
+El sistema es **la Tiquetera**, la mesa de soporte de Cuadre Software, una
+empresa chica de Itagüí que vende pedidos, cuadre de caja y facturación a bares,
+estaderos, tiendas y pizzerías: tickets, comentarios, agentes, prioridades, un
+dashboard, un panel de soporte y notificaciones en vivo. Época **2018–2021**,
+con todo lo que eso implica. De dónde viene y por qué está como está lo cuenta
+la ficha [`00-historia-del-sistema.md`](00-historia-del-sistema.md), que
+se lee antes de la Fase 0 de cualquiera de los dos cursos.
 
 > 🧭 **La promesa que une los dos cursos, en una línea verificable:**
 > **se cambia el `baseURL` del frontend y la aplicación no se entera.**
@@ -33,7 +37,7 @@ qué es el framework, y qué te está haciendo por debajo.
 
 - **12 fases de tronco** (F0–F11) + **5 apéndices** de consulta
 - **3 rutas × 5 fases** (Q0–Q4 · VU0–VU4 · NX0–NX4)
-- Termina con el Mini Jira completo, testeado, y hablándole a un mock
+- Termina con la Tiquetera completa, testeada, y hablándole a un mock
 
 ### 02 · MongoDB para cerebros SQL — el backend real
 
@@ -59,7 +63,7 @@ reemplaza al mock del Curso 01.
         │  F0 ─ F1 ─ F2 ─ F3 ─ F4 ─ F5 ─ F6 ─ F7 ─ F8 ─ F9 ─ F10 ─ F11            │
         │ setup base auth mock dash crud wiz chart ws panel vuex test             │
         │                                              │                          │
-        │                            ✅ Mini Jira "a pelo", contra json-server    │
+        │                            ✅ Tiquetera "a pelo", contra json-server    │
         │                                              │                          │
         │                        ┌─────────────────────┼──────────────────┐       │
         │                        ▼                     ▼                  ▼       │
@@ -98,7 +102,7 @@ usan fuera de orden.
 |---|---|---|
 | `forense-master.md` — la puerta, con el 🩺 índice de síntomas | ✅ | ✅ |
 | `forense-fase-NN.md` — el recorrido paso a paso, con salidas literales | 12 + 3 de ruta | 12 |
-| `cuaderno-incidentes.md` — tickets vagos, pistas plegadas y solución de referencia | 12 incidentes | 12 incidentes |
+| `cuaderno-incidentes.md` — tickets vagos, pistas plegadas y solución de referencia | 13 incidentes | 12 incidentes |
 
 **No se leen de corrido.** Una pieza forense se entra por el síntoma —"la tabla
 se quedó igual", "esto va lento"— y por eso la puerta de cada curso es su índice
@@ -150,9 +154,18 @@ si aplican. Es el recorrido para el que está diseñado el paquete.
 | [`prompts/formato-piezas-forenses.md`](prompts/formato-piezas-forenses.md) | 🕵️ La especificación de las piezas forenses: qué es un paso, qué descarta, y dónde está la frontera con la fase |
 | [`prompts/formato-cuaderno-incidentes.md`](prompts/formato-cuaderno-incidentes.md) | 📓 La especificación del cuaderno de incidentes: la plantilla, las cuotas, las tres formas de preparación y la convención de commits de una investigación |
 
-Cada curso tiene además su propio `prompts/` con el material de autoría que le
-es propio: el contrato de API, el diccionario de código y las instrucciones de
-alcance.
+| [`prompts/diccionario-codigo.md`](prompts/diccionario-codigo.md) | 📖 El diccionario de código del dominio, compartido por los dos cursos |
+| [`prompts/instrucciones-proyecto-track-b.md`](prompts/instrucciones-proyecto-track-b.md) | 📋 Alcance del Curso 02 y su realidad en disco |
+
+> 🧭 **Un paquete, dos cursos, un solo `prompts/`.** Lo normal en este
+> repositorio es que cada curso tenga su `prompts/`. Este paquete es la
+> excepción: nació como **un curso con dos capas** —la pantalla y la base del
+> mismo sistema— que se partió en dos subcursos, y por eso comparte una guía,
+> un contrato y un diccionario. Toda la maquinaria vive aquí; los dos cursos no
+> tienen `prompts/` propio. La decisión está declarada en la guía de estilo,
+> §13.3. El contrato de API no es maquinaria —se publica y lo lee el alumno—, y
+> por eso sigue en
+> [`02-complement-mongodb-backend/00-audit-contrato.md`](02-complement-mongodb-backend/00-audit-contrato.md).
 
 ---
 

@@ -101,7 +101,7 @@ Tres diferencias que tu cerebro SQL debe registrar antes de seguir:
 
    > ⚠️ **Y aquí se cobra la Fase 1.** Esa propiedad suena inocente hasta que la
    > cruzas con las referencias rotas que el seed te reportó: los tickets 2 y 3
-   > apuntan a `soporte2` / `usuario2` / `usuario3`, que no existen en `users`.
+   > apuntan a `jpmesa` / `cvelez` / `mrestrepo`, que no existen en `users`.
    > Haz el `$lookup` de ticket → usuario y míralo: **array vacío, sin un solo
    > error.** El pipeline no distingue "este ticket no tiene asignado" de "este
    > ticket apunta a alguien que no existe" — las dos cosas se ven igual desde
@@ -172,7 +172,7 @@ antes de unir" + "el lado indexado es el barato" son tus reflejos de siempre.
 
 ## ⚖️ Las tres formas de unir, medidas
 
-El laboratorio central de la fase. Sobre `minijira` inflada a 100k
+El laboratorio central de la fase. Sobre `tiquetera` inflada a 100k
 (generador de la Fase 1) — el detalle: 20 tickets con su autor legible.
 
 ```js
@@ -226,7 +226,7 @@ siguiente.
 | Endpoint caliente (el listado, el detalle, lo que la UI pide en cada render) | 🚨 síntoma | si cada lectura caliente necesita unir, el modelo no siguió "lo que se lee junto se guarda junto" — estás pagando JOIN de SQL sin el motor de SQL |
 | Cadena de 3+ lookups en cualquier lado | 🚨🚨 síntoma agravado | nested-loops anidados sin optimizador: el olor inconfundible del modelo traducido |
 
-**En el Mini Jira:** el detalle y el listado NO necesitan `$lookup` — la
+**En la Tiquetera:** el detalle y el listado NO necesitan `$lookup` — la
 Fase 3 pagó por adelantado (username en el ticket = referencia extendida).
 El futuro `GET /stats` (Fase 9) podrá usarlo sin culpa: es agregación, no
 render. Esa asimetría **es** la regla, encarnada en tu proyecto.
@@ -251,7 +251,7 @@ db.tickets.aggregate([
 ])
 ```
 
-Cuatro nested-loops para pintar una tabla que `minijira` sirve con
+Cuatro nested-loops para pintar una tabla que `tiquetera` sirve con
 `find().sort().limit()` — **cero uniones**, porque el documento ya se parece
 a la fila que la UI pinta. Los ejercicios 23–25 lo cronometran (dashboard,
 detalle, y la búsqueda `?q=` que en `soporte_v1` ni siquiera puede unirse
@@ -287,10 +287,10 @@ perdiste. Documenta el dueño en `DATA-MODEL.md`.
 
 ```js
 await db.collection("users").updateOne(
-  { username: "soporte1" }, { $set: { name: "Agente Uno Pérez" } });
+  { username: "lmcano" }, { $set: { name: "Agente Uno Pérez" } });
 // ⚡ si el proceso muere AQUÍ: users nuevo, tickets viejos — drift nacido
 await db.collection("tickets").updateMany(
-  { assignee: "soporte1" }, { $set: { assigneeName: "Agente Uno Pérez" } });
+  { assignee: "lmcano" }, { $set: { assigneeName: "Agente Uno Pérez" } });
 ```
 
 La carrera queda **señalada con nombre y apellido**; la Fase 6 da las
@@ -380,7 +380,7 @@ la pantalla del listado una sola vez:
 ```js
 db.setProfilingLevel(2)
 // …carga la pantalla…
-db.system.profile.find({ ns: /minijira/ }).count()
+db.system.profile.find({ ns: /tiquetera/ }).count()
 db.setProfilingLevel(0)
 ```
 
@@ -394,7 +394,7 @@ Si el número crece cuando hay más tickets en la página, tienes un N+1, y el
 
 ## 🧪 Ejercicios (34)
 
-Base: `minijira` a 100k tickets / 400k comments (generador), `soporte_v1`
+Base: `tiquetera` a 100k tickets / 400k comments (generador), `soporte_v1`
 sembrada (Fase 3). Cronometra con `console.time` o el shell.
 
 **🟢 Fácil (1–8)**
@@ -413,7 +413,7 @@ sembrada (Fase 3). Cronometra con `console.time` o el shell.
 9. Escribe el SQL exacto equivalente al ejercicio 5 como comentario del script (el formato espejo ya es tuyo), y explica en dos líneas por qué el `$lookup` agrupa donde el `LEFT JOIN` aplana.
 10. Registra en `DATA-MODEL.md` la sección "Uniones y copias": qué endpoints del contrato usan qué forma (spoiler tras revisar: los calientes, ninguna — documenta POR QUÉ).
 11. `$lookup` con condición doble vía pipeline: comentarios del ticket **y** posteriores a la fecha del ticket (`$$` con dos variables en `let`). En SQL era un `ON` con AND — escríbelo como espejo.
-12. El detalle completo del ticket en `minijira` con UNA aggregation: ticket + comentarios ordenados + datos del reporter. Compárala contra la versión "2 finds + batch" de la Fase 3 (ejercicio 19 de aquella fase): ¿cuál prefieres para el endpoint real de la Fase 10 y por qué? (Pista: el contrato pide comments por endpoint separado — ¿cambia eso la respuesta?)
+12. El detalle completo del ticket en `tiquetera` con UNA aggregation: ticket + comentarios ordenados + datos del reporter. Compárala contra la versión "2 finds + batch" de la Fase 3 (ejercicio 19 de aquella fase): ¿cuál prefieres para el endpoint real de la Fase 10 y por qué? (Pista: el contrato pide comments por endpoint separado — ¿cambia eso la respuesta?)
 13. Implementa las tres formas (N+1, batch, `$lookup`) del laboratorio como funciones Node con la misma firma: `listWithReporter(limit)`. Idéntico output verificado con un diff profundo.
 14. Un `$lookup` de `tickets` (izquierda, 100k, sin `$match`) contra `users`: mídelo. Ahora con `$match` que deje 200 tickets. La diferencia ES "filtra antes de unir" — anota los números.
 15. Las referencias rotas, vistas de frente: haz `$lookup` de `tickets` → `users` por `assignee` y lista los tickets cuyo array de usuario salió vacío. Ahora sepáralos en dos grupos —los que no tienen `assignee` (null, legítimo) y los que apuntan a un username inexistente (roto)— con un solo pipeline. Compara el número con lo que te avisó el seed de la Fase 1. Esa consulta es tu `fsck`: guárdala.
@@ -428,9 +428,9 @@ sembrada (Fase 3). Cronometra con `console.time` o el shell.
 21. **(parte 2):** repite la celda peor con la colección `users` crecida a 50k usuarios falsos. ¿Cambió el ranking? ¿Por qué el batch `$in` sufre menos con la derecha grande… o más? Explica con lo que sabes del nested-loop.
 22. **(parte 3):** simula la latencia de red real (tu app y tu Mongo no comparten máquina en producción): agrega ~5 ms por round-trip (proxy con `toxiproxy`, o estimación aritmética documentada: viajes × 5 ms). Recalcula el ranking. El N+1 con red es OTRO deporte — demuéstralo.
 23. `explain` de una aggregation: corre `db.tickets.explain("executionStats").aggregate([...])` sobre la forma 3. Localiza cuánto examina la izquierda. ¿El lookup interno aparece detallado? (En 4.4, poco: documenta qué visibilidad tienes y qué no — saberlo es parte del oficio.)
-24. **Anti-patrón, medición 1:** el dashboard de `soporte_v1` (4 lookups) vs el de `minijira` (0 lookups), 100 ejecuciones, promedio y p95. A la tabla de la autopsia.
-25. **Anti-patrón, medición 2:** el detalle completo (tu engendro del ej. 16) vs el detalle de `minijira`. Incluye la variante `soporte_v1` "batch $in a mano" (como haría un dev espabilado sin cambiar el modelo): demuestra que mejora… y que sigue perdiendo. El modelo manda.
-26. **Anti-patrón, medición 3:** la búsqueda `?q=impresora` del contrato. En `minijira`: regex sobre title/description (Fase 2). En `soporte_v1`: el texto vive en `tickets` pero el dashboard necesita todo legible → regex + 4 lookups. Mide y documenta el efecto compuesto: el modelo malo encarece TAMBIÉN lo que no une.
+24. **Anti-patrón, medición 1:** el dashboard de `soporte_v1` (4 lookups) vs el de `tiquetera` (0 lookups), 100 ejecuciones, promedio y p95. A la tabla de la autopsia.
+25. **Anti-patrón, medición 2:** el detalle completo (tu engendro del ej. 16) vs el detalle de `tiquetera`. Incluye la variante `soporte_v1` "batch $in a mano" (como haría un dev espabilado sin cambiar el modelo): demuestra que mejora… y que sigue perdiendo. El modelo manda.
+26. **Anti-patrón, medición 3:** la búsqueda `?q=impresora` del contrato. En `tiquetera`: regex sobre title/description (Fase 2). En `soporte_v1`: el texto vive en `tickets` pero el dashboard necesita todo legible → regex + 4 lookups. Mide y documenta el efecto compuesto: el modelo malo encarece TAMBIÉN lo que no une.
 27. Computed bajo protocolo: implementa `commentsCount` (Fase 3, ej. 11) con el protocolo completo de la fase — escritor único (`addComment` es el dueño), reconciliación (`reconcile-comment-counts.js` comparando contra `countDocuments` real), tolerancia declarada por escrito. La carrera del `$inc` queda señalada para la Fase 6.
 28. El reporte nocturno legítimo: "actividad semanal por agente" (tickets asignados, comentarios escritos — cruza 3 colecciones con 2 lookups). Escríbelo SIN culpa, mídelo, y documenta por qué aquí `$lookup` es la herramienta correcta (frecuencia, quién espera, alternativa denormalizada que NO vale su costo). La regla de la fase, aplicada en positivo.
 
@@ -440,7 +440,7 @@ sembrada (Fase 3). Cronometra con `console.time` o el shell.
 30. El `$lookup` a la misma colección (self-join): agrega a algunos tickets un campo `duplicateOf` (ObjectId de otro ticket) y resuelve "tickets con los datos de su duplicado original". En SQL era un self-join de rutina; ¿aquí qué incomoda?
 31. Reconciliación a escala: tu `reconcile-assignee-names` recorre todo. Rediséñalo incremental usando `updatedAt` (Fase 4): solo verifica copias de tickets/users tocados desde la última corrida (persiste el watermark en una colección `_jobs`). Mide: reconciliación completa vs incremental sobre 100k con 0.1% de drift.
 32. Detector de síntomas: script `scripts/lookup-audit.js` que recibe un archivo con pipelines de aggregation (JSON) y reporta: cantidad de `$lookup` por pipeline, cadenas de 3+, lookups sin `$match` previo, pipelines internos con `$sort`/`$group`. Córrelo contra tus pipelines de la fase: ¿cuáles marcaría en un code review?
-33. El caso "no denormalices esto": encuentra en el Mini Jira (o inventa con justificación) un dato que NUNCA copiarías aunque el render lo pida caliente (candidato: algo con tolerancia cero y alta frecuencia de cambio). Argumenta con el protocolo: si la tolerancia es cero y la reconciliación no puede ser instantánea, la copia está prohibida — ¿qué alternativas quedan? (Unir siempre, rediseñar la pantalla, o Fase 6.) Página a `DATA-MODEL.md`.
+33. El caso "no denormalices esto": encuentra en la Tiquetera (o inventa con justificación) un dato que NUNCA copiarías aunque el render lo pida caliente (candidato: algo con tolerancia cero y alta frecuencia de cambio). Argumenta con el protocolo: si la tolerancia es cero y la reconciliación no puede ser instantánea, la copia está prohibida — ¿qué alternativas quedan? (Unir siempre, rediseñar la pantalla, o Fase 6.) Página a `DATA-MODEL.md`.
 34. **El ensayo de la fase** (1 página, `INSTINTOS.md`): "El JOIN nunca fue gratis; era prepago". Tesis: el JOIN de SQL costaba — en el modelo rígido, en el optimizador que alguien programó, en los índices y estadísticas que lo alimentaban; Mongo no eliminó el costo del join: te lo cobra en la mesa (modelas para no unir, o unes y pagas al contado). Usa tus mediciones (19–25) como evidencia. Cierra con tu regla personal de cuándo aceptas un `$lookup` en un PR.
 
 **🔥 Opcionales**
@@ -497,7 +497,7 @@ sembrada (Fase 3). Cronometra con `console.time` o el shell.
 la referencia de `$lookup` (las dos formas, 20 min) → Aggregation Pipeline
 Optimization (corto y revelador: verás qué poco reordena) → ejercicios 19–21
 (el laboratorio: la fase se entiende con cronómetro) → Extended Reference
-Pattern → 23–25 (el villano) → el ensayo.
+Pattern → 23–25 (el modelo traducido) → el ensayo.
 
 ---
 
@@ -507,7 +507,7 @@ Al final de esta fase, `$lookup` está en tu caja de herramientas con su
 etiqueta puesta: LEFT JOIN que agrupa, nested-loop sin optimizador, legítimo
 en lo analítico y nocturno, alarma en lo caliente. Tienes las tres formas de
 unir medidas a escala, el protocolo adulto de las copias (escritor único,
-carrera nombrada, reconciliación, tolerancia con número), y al villano con
+carrera nombrada, reconciliación, tolerancia con número), y al modelo traducido con
 dos mediciones más en su expediente — esperando que la Fase 7 demuestre que
 ni los índices lo salvan.
 

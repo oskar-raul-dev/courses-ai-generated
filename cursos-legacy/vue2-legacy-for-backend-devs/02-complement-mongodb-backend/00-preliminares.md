@@ -3,7 +3,7 @@
 ## 🎯 Propósito
 
 Dejar MongoDB **4.4 instalado, corriendo y tocado con las manos** antes de que
-la Fase 1 empiece a hablar en serio. Aquí no hay paradigmas ni Mini Jira:
+la Fase 1 empiece a hablar en serio. Aquí no hay paradigmas ni Tiquetera:
 hay terminal, un `docker-compose.yml` parametrizable que te va a acompañar
 todo el curso, y una base de juguete (`playground`, con personas) para perder
 el miedo a la CLI, cargar datos, y volcarlos a disco como JSON.
@@ -40,7 +40,7 @@ Piénsalo como el ritual de entrada: cuando termines, escribir
 
 ## 🚫 Qué NO entra todavía
 
-- el diccionario SQL↔Mongo y el proyecto Mini Jira (Fase 1)
+- el diccionario SQL↔Mongo y el proyecto Tiquetera (Fase 1)
 - consultas en serio: operadores, proyecciones, trampas (Fase 2)
 - modelado (Fase 3) — `people` es plastilina, no diseño
 - **operación** de backups (programación, oplog, point-in-time, restauración
@@ -200,7 +200,7 @@ escribir hoy ya son el proyecto. Entran a git ahora, en **su propio repo** —
 separado del frontend del Curso 01:
 
 ```bash
-mkdir minijira-backend && cd minijira-backend
+mkdir tiquetera-backend && cd tiquetera-backend
 git init
 
 cat > .gitignore <<'EOF'
@@ -646,7 +646,7 @@ La señal de que quedó bien:
 
 **Siguiente parada:** 🍃 Fase 1 — Mongo en 30 min para gente que ya sabe
 bases de datos. Se acabó la plastilina: entra el diccionario de traducción,
-el ObjectId con su capítulo propio, y el `db.json` heredado del Mini Jira —
+el ObjectId con su capítulo propio, y el `db.json` heredado de la Tiquetera —
 tu primer encuentro con una integridad referencial que ya no custodia nadie
 más que tú.
 

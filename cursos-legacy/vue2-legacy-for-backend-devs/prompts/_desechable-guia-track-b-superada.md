@@ -13,8 +13,8 @@ que produzca un `.md` la sigue. Su objetivo: que las decenas de documentos de
 los dos cursos se lean como escritos por la misma mano, orientados a la
 práctica de mantenimiento de un sistema real.
 
-Los dos cursos comparten un único dominio pedagógico —**Mini Jira**, una mesa
-de soporte interna— y por eso comparten esta guía y un único
+Los dos cursos comparten un único dominio pedagógico —**la Tiquetera**, la mesa
+de soporte de Cuadre Software— y por eso comparten esta guía y un único
 `diccionario-codigo.md`. Track A construye el frontend (Vue 2, época
 2018–2021); Track B construye el backend real (MongoDB 4.4 + Express/Node 14)
 que reemplaza al mock sin que el frontend se entere.
@@ -146,7 +146,7 @@ componente, módulo, acción, mutation, endpoint, colección, campo y constante.
 > `label` (`'Abierto'`) es UI y va en español. **Nunca** guardes `'Abierto'`
 > como valor de `status` en la base o en el payload.
 
-### 4.3 Diccionario del dominio (Mini Jira)
+### 4.3 Diccionario del dominio (Tiquetera)
 
 El diccionario completo y jerarquizado —entidades, estados, roles, campos,
 verbos de negocio, jerga de Vue y jerga de Mongo/Express— vive en
@@ -219,14 +219,14 @@ ajustan fase por fase, en el orden en que fueron escritos:
 No se reescribe la explicación ni la pedagogía: es un cambio de
 identificadores, no de contenido.
 
-> ⚖️ **La excepción del villano — `soporte_v1` (Track B).** El anti-patrón
+> ⚖️ **La excepción del modelo traducido — `soporte_v1` (Track B).** El anti-patrón
 > `soporte_v1` de las fases 3, 5, 7 y 7.5 es una base "migrada a Mongo
 > transcribiendo el esquema relacional tabla por tabla". **Decisión de estilo
-> (queda fijada acá):** el villano **también se normaliza a inglés** —
+> (queda fijada acá):** el modelo traducido **también se normaliza a inglés** —
 > `statuses`, `priorities`, `users`, `comments`, `statusId`, `assigneeId`,
 > `reporterId`— para no confundir dos problemas independientes: *"está en
 > español"* y *"está mal diseñado"*. Un esquema en inglés puede ser igual de
-> Postgres-disfrazado. El **olor** del villano se mantiene por sus decisiones,
+> Postgres-disfrazado. El **olor** del modelo traducido se mantiene por sus decisiones,
 > no por su idioma: lookup-tables de ≤10 documentos con forma
 > `{_id numérico, name}`, FKs enteras que nadie valida, siete colecciones para
 > lo que el buen modelo resuelve en una o dos. El "detector de traducido-no-
@@ -239,7 +239,7 @@ identificadores, no de contenido.
 
 ## 5. Orientación a la práctica
 
-Cada concepto se ancla en el dominio de Mini Jira y en código que corre.
+Cada concepto se ancla en el dominio de la Tiquetera y en código que corre.
 
 - **Nada de teoría suelta.** Si se explica `findOneAndUpdate` con precondición, se explica sobre el doble "tomar" de un ticket, no en abstracto. Si se explica un `watcher` de Vue, es sobre el filtro de estado del dashboard.
 - **Código ejecutable y coherente.** Todo fragmento corre con las versiones fijadas (§stack de cada track) y no contradice fases anteriores ni al otro track. Nada de pseudocódigo que "se entiende".
@@ -254,7 +254,7 @@ Cada concepto se ancla en el dominio de Mini Jira y en código que corre.
 - **No modernizar automáticamente.** Si el módulo real de Track A es un componente con Options API y `this.$store`, se muestra así. No se "mejora" a Composition API ni a `<script setup>` salvo en una fase o ejercicio 🔥 marcado. En Track B, se usa el **driver nativo** primero y **Mongoose** recién cuando el curso lo introduce (Fase 10): "primero a mano, después el wrapper".
 - **Estilos legacy conviven.** Options API y algún patrón viejo de Vuex conviven; se enseña a leer código mezclado sin marearse.
 - **Corrección mínima vs refactor.** Ante un fix, se distingue el parche mínimo (lo que va en un hotfix) de la refactorización (lo que iría en otro momento, con más pruebas).
-- **El idioma del código (§4) no es negociable ni en código legacy "feo".** Un módulo viejo y mal escrito se muestra viejo y mal escrito, pero con identificadores en inglés. La fealdad que se enseña es de arquitectura y decisiones, no de idioma (ver la excepción documentada del villano en §4.6).
+- **El idioma del código (§4) no es negociable ni en código legacy "feo".** Un módulo viejo y mal escrito se muestra viejo y mal escrito, pero con identificadores en inglés. La fealdad que se enseña es de arquitectura y decisiones, no de idioma (ver la excepción documentada del modelo traducido en §4.6).
 
 ### Convenciones de código concretas
 
@@ -399,8 +399,9 @@ advierte cuando un enlace apunta a docs de una versión distinta a la fijada.
 
 ## 11. Sobre el dominio (ficticio, sin NDA)
 
-Mini Jira es un dominio **enteramente ficticio**: una mesa de soporte interna
-inventada para estos cursos. No hay confidencialidad que preservar ni sistema
+La Tiquetera es un dominio **enteramente ficticio**: la mesa de soporte de una
+empresa inventada para estos cursos (su historia está en
+`../../00-historia-del-sistema.md`). No hay confidencialidad que preservar ni sistema
 real que disfrazar. Esto simplifica dos cosas respecto de otros cursos:
 
 - Los ejemplos pueden ser todo lo concretos que convenga; no hace falta

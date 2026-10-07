@@ -87,7 +87,7 @@ docker compose exec mongo mongosh --eval 'db.runCommand({ ping: 1 })'
 ```
 
 ```bash
-mongosh "mongodb://localhost:27017/minijira" --eval 'db.runCommand({ ping: 1 })'
+mongosh "mongodb://localhost:27017/tiquetera" --eval 'db.runCommand({ ping: 1 })'
 ```
 
 ```

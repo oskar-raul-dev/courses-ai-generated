@@ -1,5 +1,5 @@
 # 🕵️ Track forense — índice y método
-## Curso 02 · MongoDB para cerebros SQL — el backend de Mini Jira
+## Curso 02 · MongoDB para cerebros SQL — el backend de la Tiquetera
 
 > Puerta de entrada del track. Cubre las doce piezas escritas,
 > más las candidatas que §2 nombra.

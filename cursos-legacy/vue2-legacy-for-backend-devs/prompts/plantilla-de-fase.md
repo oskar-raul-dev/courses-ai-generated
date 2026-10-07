@@ -1,5 +1,5 @@
 # 🧩 Plantilla de fase (esqueleto)
-## Paquete Mini Jira — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
+## Paquete Tiquetera — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
 
 Copia este esqueleto al iniciar cada fase y rellena los `{{placeholders}}`.
 Mantiene la estructura de nueve secciones idéntica en los dos cursos. Borra las
@@ -13,7 +13,7 @@ notas entre llaves antes de entregar.
 
 > 🔄 **Recordatorio de convención (ver
 > `prompts/guia-de-estilo-y-convenciones.md` §5 y
-> `02-complement-mongodb-backend/prompts/diccionario-codigo.md`):** todo
+> `prompts/diccionario-codigo.md`):** todo
 > identificador de código —variables, funciones, componentes, módulos Vuex,
 > actions, mutations, endpoints, colecciones, campos, constantes, enums— va en
 > **inglés**. Los comentarios de código, los textos de interfaz (labels,
@@ -25,7 +25,7 @@ notas entre llaves antes de entregar.
 ```markdown
 # {{emoji}} Fase {{NN}} — {{Nombre}}
 
-> {{Curso 01 — Vue 2 Legacy · Mini Jira | Curso 02 — MongoDB para cerebros SQL}}
+> {{Curso 01 — Vue 2 Legacy · Tiquetera | Curso 02 — MongoDB para cerebros SQL}}
 > Fase {{N}} de {{total}}
 > Depende de: {{fase previa}} · Habilita: {{fase siguiente}}
 
@@ -34,7 +34,7 @@ notas entre llaves antes de entregar.
 ## 🎯 Propósito
 
 {{Una o dos frases: qué resuelve esta fase y por qué importa para el
-mantenimiento. Anclar al dominio de Mini Jira. Puede abrir con la situación
+mantenimiento. Anclar al dominio de la Tiquetera. Puede abrir con la situación
 heredada de la fase anterior: "el dashboard ya lista tickets, pero cada
 recarga vuelve a pedir todo…".}}
 
@@ -145,7 +145,7 @@ pieza lo enlaza. La especificación está en
 
 {{Mínimo 25, ideal 30-35. Reparto equilibrado entre niveles (no cargar todo
 en fácil). Numeración continua; el título lleva el conteo total. Accionables y
-verificables, anclados al dominio de Mini Jira — tickets, comentarios,
+verificables, anclados al dominio de la Tiquetera — tickets, comentarios,
 agentes, reportadores, estados, prioridades; nunca `foo` y `bar`. Al menos un
 tercio de diagnóstico: entregar un bug y pedir reproducir y localizar, no solo
 construir. Cuando un enunciado nombra código, usar el identificador en inglés

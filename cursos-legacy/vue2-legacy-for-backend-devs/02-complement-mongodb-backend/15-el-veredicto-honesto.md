@@ -30,8 +30,8 @@ sistema que quizá nunca debió existir así.
   escritos;
 - la **tabla de olores** consolidada (fases 3, 5, 7, 8) como instrumento de
   auditoría de 5 minutos;
-- el diagnóstico aplicado tres veces: a `soporte_v1` (el villano), al
-  `minijira` que construiste, y a un repo ajeno real;
+- el diagnóstico aplicado tres veces: a `soporte_v1` (el modelo traducido), al
+  `tiquetera` que construiste, y a un repo ajeno real;
 - el árbol de decisión post-diagnóstico: quedarse y reformar (la autopsia de
   la Fase 8 como precedente), estrangular por subdominios, migrar — con costos
   reales de cada rama;
@@ -119,7 +119,7 @@ tabla enciende, el sistema fue **traducido**; si el documento se parece a la
 pantalla, las uniones calientes no existen y las invariantes viven en el
 agregado, fue **diseñado**. Cinco minutos, Compass, y esta tabla.
 
-> ⚰️ El caso de estudio que cose las fases 3 a 8 —`soporte_v1`, el villano—
+> ⚰️ El caso de estudio que cose las fases 3 a 8 —`soporte_v1`, el modelo traducido—
 > ya recibió esta tabla entera en su autopsia (Fase 8). Aquí la tabla deja de
 > ser sobre *él* y pasa a ser tu instrumento para cualquier base ajena.
 
@@ -268,10 +268,10 @@ La pendiente > la capacidad: elige el motor por el error que cometerás por grav
 
 **🟢 Fácil (1–8)**
 
-1. Aplica las 5 preguntas del marco al Mini Jira como si no lo hubieras construido. ¿Cuántos votos por columna? ¿El veredicto coincide con lo que el curso decidió por ti?
+1. Aplica las 5 preguntas del marco a la Tiquetera como si no la hubieras construido. ¿Cuántos votos por columna? ¿El veredicto coincide con lo que el curso decidió por ti?
 2. Aplícalas a `soporte_v1`. Ojo: la trampa del ejercicio es que el DOMINIO es el mismo — ¿qué te dice que el mismo dominio dé veredictos distintos según el modelado? (Escríbelo: es la tesis del curso en una frase.)
 3. Aplica la tabla de olores completa a `soporte_v1` con Compass y capturas: tu primer informe forense formal, 1 página.
-4. Aplícala al `minijira` final. ¿Encendió algo? (Sé duro: ¿el `assigneeName` sin usar? ¿algún índice de la F7 que ningún query del profiler justificó?) La auditoría honesta incluye lo propio.
+4. Aplícala al `tiquetera` final. ¿Encendió algo? (Sé duro: ¿el `assigneeName` sin usar? ¿algún índice de la F7 que ningún query del profiler justificó?) La auditoría honesta incluye lo propio.
 5. Cierra `INSTINTOS.md`: reordena todas las entradas como checklist de auditoría, numéralas por fase, y escribe el prólogo de 5 líneas para un colega SQL que lo lea sin haber hecho el curso.
 6. Tres sistemas de tu pasado real: pásalos por las 5 preguntas (de memoria, con honestidad). ¿Cuál habría sido Mongo legítimo? ¿Alguno fue SQL por inercia?
 7. El caso de época: un blog MEAN de tutorial (posts, comments, users, tags). Diagnostícalo con el marco. ¿Por qué era el ejemplo perfecto para vender Mongo… y qué le pasaba al crecer?
@@ -282,9 +282,9 @@ La pendiente > la capacidad: elige el motor por el error que cometerás por grav
 9. El diagnóstico ajeno: elige un repo Node+Mongo real de GitHub (2017–2021, con modelos y queries visibles). Informe forense completo: tabla de olores con evidencia, 5 preguntas, veredicto. (La promesa del curso: cronométrate — ¿cuánto más de 5 minutos te tomó?)
 10. Repite con un repo que sospeches BIEN diseñado (busca proyectos con DATA-MODEL o ADRs). ¿Qué olores NO encendieron? Documentar la ausencia también entrena el olfato.
 11. El dominio hostil de la F3 (turnos médicos, ej. 28) pasado por el marco formal: ¿5-0 relacional o hay subdominios? Diseña la partición si la hay.
-12. Escribe el "abogado del diablo" doble: 1 página defendiendo Mongo para el Mini Jira ante un CTO SQL-fundamentalista, y 1 página defendiendo Postgres para el MISMO sistema ante un CTO MEAN-fundamentalista. Ambas con tus mediciones. (Si una te salió más fácil, ahí está tu sesgo: anótalo.)
+12. Escribe el "abogado del diablo" doble: 1 página defendiendo Mongo para la Tiquetera ante un CTO SQL-fundamentalista, y 1 página defendiendo Postgres para el MISMO sistema ante un CTO MEAN-fundamentalista. Ambas con tus mediciones. (Si una te salió más fácil, ahí está tu sesgo: anótalo.)
 13. La cuenta de la rama 3: estima la migración completa de `soporte_v1` a Postgres — entidades, queries a reescribir, doble-run, y conviértelo a semanas-persona con supuestos explícitos. Compárala contra el costo real de tu autopsia de la Fase 8 (que ya hiciste y mediste). El árbol, con números.
-14. El estrangulamiento diseñado: para un Mini Jira que creció (facturación de SLAs con invariantes duras + reporting corporativo), diseña la rama 2: qué subdominio migra, qué API lo esconde, cómo se sincronizan (tus outbox de F6), y el orden de etapas abortables.
+14. El estrangulamiento diseñado: para una Tiquetera que creció (facturación de SLAs con invariantes duras + reporting corporativo), diseña la rama 2: qué subdominio migra, qué API lo esconde, cómo se sincronizan (tus outbox de F6), y el orden de etapas abortables.
 15. El olor que falta: propón y justifica UN olor nuevo para la tabla, salido de tu experiencia del curso (algo que oliste en los ejercicios y la tabla no nombra). Redáctalo en el formato de la tabla con su "dónde lo aprendiste".
 16. Audita el epílogo: verifica en las release notes oficiales 3 afirmaciones de la tabla "después de 4.4" (¿cuándo llegaron exactamente las time series? ¿qué mejoró de `$lookup` y en qué versión?). Fechar afirmaciones es el hábito; hazlo con las del propio curso.
 
@@ -358,7 +358,7 @@ ejercicios 1–4 (el marco sobre lo que construiste) → Sarah Mei + tu respuest
 Empezaste con un mock que mentía y una década de instintos calibrados para
 otro motor. Terminas con: un backend real que el frontend nunca notó
 (`git diff`: una línea), cinco paradigmas invertidos con mediciones y no con
-fe, un villano diagnosticado, operado y documentado, un runbook que sobrevive
+fe, un modelo traducido diagnosticado, operado y documentado, un runbook que sobrevive
 a las 4 am, una suite que custodia el contrato, y dos documentos —
 `INSTINTOS.md` y `MODERNIZATION.md` — que son tu criterio hecho artefacto.
 

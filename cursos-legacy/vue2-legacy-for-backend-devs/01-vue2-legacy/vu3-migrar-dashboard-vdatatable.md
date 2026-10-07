@@ -63,11 +63,11 @@ fase entera.**
 
 - **Componentes nuevos que no existían**: eso es VU4 (el timeline). Aquí solo se
   traduce lo que ya funcionaba.
-- **Selección múltiple** (`show-select`, `v-model` de selección) — ejercicio 🟠. El
-  Mini Jira no tiene acciones en lote.
+- **Selección múltiple** (`show-select`, `v-model` de selección) — ejercicio 🟠. La
+  Tiquetera no tiene acciones en lote.
 - **Expansión de filas** (`show-expand`, slot `expanded-item`) — ejercicio 🟡.
 - **Agrupar por columna** (`group-by`, slot `group.header`) — se menciona, no se
-  implementa. Aparece con datos jerárquicos; el Mini Jira es plano.
+  implementa. Aparece con datos jerárquicos; la Tiquetera es plana.
 - **Virtual scroll** (`v-virtual-scroll`, `v-data-table-virtual` es v3) — fuera. Tú
   tienes 40 filas.
 - **Migrar el panel de soporte (F9)**: es el ejercicio 🔴 obligatorio del final. Tú
@@ -685,7 +685,7 @@ Como en F10: **elegir, y escribir por qué.**
 
 > **Manda `v-data-table`. Opción A.**
 >
-> **Salvo** que el estado tenga que salir del componente. Y en el Mini Jira, no
+> **Salvo** que el estado tenga que salir del componente. Y en la Tiquetera, no
 > tiene que salir.
 >
 > El razonamiento es el de F10, aplicado con honestidad. La regla no era "todo al
@@ -933,9 +933,9 @@ actions: {
 > sin pensar, el usuario clica "página 2" y ve la 1 otra vez, sin error, sin loading.
 > **`fetchTicketsPaged` no cachea. Punto.**
 
-**¿Cliente o servidor en el Mini Jira?** **Cliente.** 40 tickets. El modo server-side
+**¿Cliente o servidor en la Tiquetera?** **Cliente.** 40 tickets. El modo server-side
 está aquí porque **lo vas a ver en producción** y porque `serverItemsLength` es donde
-la deuda 💸 se hace visible — no porque el Mini Jira lo necesite. Montar server-side
+la deuda 💸 se hace visible — no porque la Tiquetera lo necesite. Montar server-side
 para 40 filas es la definición de complejidad accidental.
 
 ### 4.7 🤝 Convivencia Bootstrap + Vuetify
@@ -944,7 +944,7 @@ Esta sección **no es un anexo**. Es la mitad del valor de la fase.
 
 > ⚠️ **Sobre el modal.** El curso base **no usa bootstrap-vue** — usa Bootstrap 4
 > crudo con jQuery, encapsulado en un componente frontera (`ConfirmModal.vue`, ej. 18
-> de F5 y el patrón de librería imperativa de A1). Así que en el Mini Jira **no hay
+> de F5 y el patrón de librería imperativa de A1). Así que en la Tiquetera **no hay
 > `<b-modal>` ni `this.$bvModal`**: hay un `<div class="modal">` de Bootstrap que
 > abres con `$('#id').modal('show')`. Los bosquejos maestros escriben `<b-modal>` como
 > taquigrafía de "el modal de Bootstrap"; aquí lo escribimos como el curso lo enseña.
@@ -954,7 +954,7 @@ Esta sección **no es un anexo**. Es la mitad del valor de la fase.
 Después de VU2 y VU3, tu proyecto está así:
 
 ```
-Mini Jira (post-VU3)
+Tiquetera (post-VU3)
 ├── Dashboard         → v-data-table    🅥 Vuetify
 ├── Formulario CRUD   → v-form/v-text-field 🅥 Vuetify
 ├── Modal de crear    → div.modal+jQuery 🅱️ Bootstrap
@@ -1522,8 +1522,8 @@ anotado: ~500kb en el bundle.
 >    hace tree-shaking automático de los componentes que referencias en templates.
 > 3. Mide **otra vez**. Anota la diferencia.
 > 4. Escribe cinco líneas: ¿cuánto ahorraste? ¿qué se rompió al pasar a a-la-carte
->    (spoiler: algún componente que usabas sin darte cuenta)? ¿vale la pena para el
->    Mini Jira? ¿y para un proyecto de 200 pantallas?
+>    (spoiler: algún componente que usabas sin darte cuenta)? ¿vale la pena para la
+>    Tiquetera? ¿y para un proyecto de 200 pantallas?
 
 Esto **es** el diferencial de bundle de la ruta VU. En Quasar el tree-shaking venía
 de fábrica; en Vuetify 2 es una decisión que tomas tú, y si no la tomas, arrastras
@@ -1568,7 +1568,7 @@ Vuetify… o si solo aprendiste a traducir de Bootstrap.
 > | Deuda | Qué falta | Quién lo paga en producción |
 > |---|---|---|
 > | `X-Total-Count` → `serverItemsLength` | Mapeo a mano en el service. Y CORS con `Access-Control-Expose-Headers`. | **Backend**: te da el total en el body o en un header expuesto. Y lo acuerdas con el backend **antes**. |
-> | Server-side implementado pero no usado | El Mini Jira usa modo cliente (40 tickets). | Nadie. **El día que sean 40.000, el interruptor ya está montado.** |
+> | Server-side implementado pero no usado | La Tiquetera usa modo cliente (40 tickets). | Nadie. **El día que sean 40.000, el interruptor ya está montado.** |
 > | Bundle a-la-carte | Si NO hiciste el ejercicio 🔴: ~500kb de Vuetify entero. | **Tú.** Y cada segundo de carga, tus usuarios. |
 > | Bootstrap y Vuetify conviviendo | ~190KB de CSS y `.row` a tres bandas que nadie se atreve a tocar. | **Nadie, nunca.** Y no pasa nada. Bienvenido al legacy. |
 

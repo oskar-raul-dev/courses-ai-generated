@@ -59,8 +59,8 @@ con lo que Track A consume. Chequeá, endpoint por endpoint y evento por evento:
 - Fechas: Date de BSON en la base, string ISO 8601 en la frontera.
 - id vs _id: ObjectId interno, serializado a id string hex en salida, :id →
   ObjectId en entrada.
-- assignee/reporter guardan USERNAME (string), no id. (Track A usa "soporte1",
-  "usuario1"; vigilá que ningún ejemplo de Track B use un id ahí.)
+- assignee/reporter guardan USERNAME (string), no id. (Track A usa "lmcano",
+  "dprios"; vigilá que ningún ejemplo de Track B use un id ahí.)
 - Enums: status (open/in_progress/resolved/closed), priority (low/medium/high),
   role (agent/reporter; admin NO es rol). snake_case en in_progress.
 - Sockets: socket.io 2.4, eventos ticket:created/updated/deleted, puerto :4000,
@@ -81,7 +81,7 @@ diccionario-codigo.md sobre las 16 fases + 5 apéndices de Track B.
 Regla: código en inglés (identificadores, funciones, variables, endpoints,
 colecciones, campos, enums, nombres de archivo/capa, eventos de socket);
 comentarios y textos de interfaz en español; narrativa en español.
-Incluí el villano soporte_v1: también en inglés (statuses, priorities, users,
+Incluí el modelo traducido soporte_v1: también en inglés (statuses, priorities, users,
 statusId, assigneeId, reporterId), porque el olor del anti-patrón es
 ESTRUCTURA, no idioma (guía §4.6).
 
@@ -145,7 +145,7 @@ Revisá estos cuatro ejes:
   Express 4.17, Mongoose 5, socket.io 2.4), orden de lectura, aviso de versión.
 
 4) IDIOMA DEL CÓDIGO (§4)
-- Código en inglés (incluido el villano soporte_v1); comentarios y UI en español.
+- Código en inglés (incluido el modelo traducido soporte_v1); comentarios y UI en español.
 - Todo fragmento corre con las versiones fijadas del stack.
 
 Además, atendé especialmente la ficha de riesgos de esta fase:
@@ -169,7 +169,7 @@ Pegá la ficha correspondiente en `{{FICHA_DE_RIESGOS}}`.
 - mongosh + Compass + Database Tools. Base de juguete playground.personas.
 - El menú de backup REAL: mongodump/mongorestore con restore ensayado + copia
   fría del dbPath. Insistir "JSON ≠ backup" desde el día cero.
-- Entregable SETUP.md. No debe hablar todavía del Mini Jira ni del contrato.
+- Entregable SETUP.md. No debe hablar todavía de la Tiquetera ni del contrato.
 - No adelantar paradigmas: es setup, no modelado.
 ```
 
@@ -180,7 +180,7 @@ Pegá la ficha correspondiente en `{{FICHA_DE_RIESGOS}}`.
 - EL SEED del db.json heredado es el corazón: convertir cada id numérico a
   ObjectId nuevo, RETRADUCIR referencias (comments.ticketId → ObjectId nuevo del
   ticket), fechas string → Date de BSON.
-- Verificar que el seed usa username en assignee/reporter (soporte1, usuario1),
+- Verificar que el seed usa username en assignee/reporter (lmcano, dprios),
   coherente con Curso 01 · F3. Que la colección users trae role agent/reporter.
 - Descarte argumentado de ids autoincrementales (anti-patrón, contra el
   contrato §"id vs _id").
@@ -201,7 +201,7 @@ Pegá la ficha correspondiente en `{{FICHA_DE_RIESGOS}}`.
 ### Fase 3 — `03-embeber-vs-referenciar.md` ⭐
 ```
 - Cambio de paradigma #1. Los 4 cuadrantes (se lee junto × cambia junto) con
-  cuentas sobre Mini Jira: ¿comentarios embebidos? ¿historial de estados?
+  cuentas sobre la Tiquetera: ¿comentarios embebidos? ¿historial de estados?
 - Patrones canónicos: subset, extended reference, computed, bucket. Límite 16MB
   y arrays sin techo.
 - PRIMERA aparición del anti-patrón ⚰️ soporte_v1: presentarlo y MEDIR su dolor.

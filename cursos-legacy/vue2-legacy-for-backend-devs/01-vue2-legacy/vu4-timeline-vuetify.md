@@ -246,7 +246,7 @@ de datos no depende del framework de UI):
       "id": 1,
       "ticketId": 1,
       "type": "status_change",
-      "actor": "agente1",
+      "actor": "lmcorrea",
       "from": "open",
       "to": "in_progress",
       "at": "2020-03-10T11:00:00Z"
@@ -257,14 +257,14 @@ de datos no depende del framework de UI):
       "type": "assigned",
       "actor": "admin",
       "from": null,
-      "to": "agente1",
+      "to": "lmcorrea",
       "at": "2020-03-10T11:02:00Z"
     },
     {
       "id": 3,
       "ticketId": 1,
       "type": "comment",
-      "actor": "agente1",
+      "actor": "lmcorrea",
       "from": null,
       "to": "¿Probaste apagarla y prenderla?",
       "at": "2020-03-10T11:05:00Z"
@@ -696,7 +696,7 @@ porque sus colores son roles.
 <!-- AppHeader.vue -->
 <template>
   <v-app-bar app>
-    <v-toolbar-title>Mini Jira</v-toolbar-title>
+    <v-toolbar-title>Tiquetera</v-toolbar-title>
     <v-spacer />
     <!-- el interruptor. Un flag. Nada más. -->
     <v-btn icon @click="toggleDark" :title="dark ? 'Modo claro' : 'Modo oscuro'">
@@ -757,7 +757,7 @@ sabe qué está dentro de él y qué se quedó fuera.
 ### 8. El flujo completo, evento por evento
 
 ```
-PESTAÑA A (agente1 cambia el estado)          SERVER            PESTAÑA B (mira el mismo ticket)
+PESTAÑA A (lmcorrea cambia el estado)         SERVER            PESTAÑA B (mira el mismo ticket)
         │                                        │                        │
 1. click en "En progreso"                        │                        │
         │                                        │                        │

@@ -522,7 +522,7 @@ sesión (no puede: no sabe en qué mundo está). Solo valida:
 
 ```js
 // services/authService.js
-var MOCK_USER = { username: "admin", password: "1234", name: "Usuario Demo" };
+var MOCK_USER = { username: "admin", password: "1234", name: "Andrés Felipe Ríos" };
 
 function login(username, password) {
   if (username === MOCK_USER.username && password === MOCK_USER.password) {
@@ -668,7 +668,7 @@ HTML distintos, y uno de los dos perdió.
 
 ## 🧪 Ejercicios (26)
 
-> Todos corren sobre `mini-jira-nx` (el proyecto Nuxt de NX1) con json-server en
+> Todos corren sobre `tiquetera-nx` (el proyecto Nuxt de NX1) con json-server en
 > `:3000`. Recuerda: **el formulario de F5 no se toca en ningún ejercicio.** Si un
 > ejercicio te lleva a editar `:rules` o vuelidate, lo entendiste mal.
 
@@ -729,7 +729,7 @@ HTML distintos, y uno de los dos perdió.
 
 **🟠 Difícil (17–22)**
 
-17. **La cacería de `window`.** Recorre todo el Mini Jira (F2–F9) y haz una lista de
+17. **La cacería de `window`.** Recorre toda la Tiquetera (F2–F9) y haz una lista de
     cada punto que toca `window`, `document`, `localStorage` o `navigator`. Por cada
     uno, decide: ¿`mounted()`, `process.client`, `<client-only>` o cookie? Entrega
     `WINDOW-AUDIT.md`. (Esta es la fase entera en forma de checklist.)

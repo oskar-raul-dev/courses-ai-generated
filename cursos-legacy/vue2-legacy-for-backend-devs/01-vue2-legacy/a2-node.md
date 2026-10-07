@@ -2,7 +2,7 @@
 
 ## 🎯 Para qué sirve este apéndice
 
-La paradoja del frontend moderno-legacy: el Mini Jira **corre en el
+La paradoja del frontend moderno-legacy: la Tiquetera **corre en el
 navegador**, pero no existe sin Node. Este apéndice explica esa relación —
 qué es Node, qué papel juega en el proyecto, y las dos o tres cosas de su
 mundo (módulos, versiones, APIs) con las que ya chocaste durante el curso sin
@@ -19,7 +19,7 @@ archivos, abrir servidores, hablar con el sistema operativo. Mismo lenguaje,
 otro hábitat: en Node no existen `window`, `document` ni el DOM; existen
 `fs`, `http`, `process`.
 
-## 🗺️ Los cuatro papeles de Node en el Mini Jira
+## 🗺️ Los cuatro papeles de Node en la Tiquetera
 
 Aunque ninguna línea de `src/` corre en Node en producción, Node está debajo
 de todo:
@@ -257,7 +257,7 @@ json-server congela **todo** el mock: un hilo es un hilo.
     core). Descubre que los sockets se rompen (cada worker tiene sus
     conexiones) e investiga por qué en producción se usa un adaptador
     (Redis). Escribe qué implicaría hacerlo bien.
-32. CLI del proyecto: un `bin/minijira.js` con subcomandos
+32. CLI del proyecto: un `bin/tiquetera.js` con subcomandos
     (`seed`, `stats`, `validate`, `reset`) usando solo `process.argv`
     parseado a mano (o `commander` si prefieres). Añádelo a `package.json`
     como `bin` y úsalo con `npx`.

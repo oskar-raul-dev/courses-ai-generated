@@ -16,13 +16,13 @@ complementa Track A (Vue 2 Legacy). No enseña "aprende MongoDB": enseña a
 Oracle/PostgreSQL/MySQL/SQL Server que traicionan sus instintos en Mongo sin
 saberlo.
 
-**El proyecto:** Mini Jira (mesa de soporte interna) — el mismo dominio de
+**El proyecto:** la Tiquetera (la mesa de soporte de Cuadre Software) — el mismo dominio de
 Track A, ahora con backend real que reemplaza al mock.
 
 **Señal de éxito (compartida con Track A):** cambiar el `baseURL` del frontend
 y que la app **no se entere**. Track A deja el frontend viviendo de json-server;
 Track B lo reemplaza por un backend real que honra el mismo contrato
-(`../00-audit-contrato.md`).
+(`../02-complement-mongodb-backend/00-audit-contrato.md`).
 
 ---
 
@@ -54,22 +54,22 @@ El curso ya está escrito. Los archivos reales son:
 **Apéndices (prefijo `aNN-`):** `a01-docker.md`, `a02-mongosh-compass.md`,
 `a03-express.md`, `a04-seguridad.md`, `a05-mongo-vs-sql.md`.
 
-**Track forense y cuaderno (añadidos en 2026-09):** `../forense-master.md` —la
-puerta, con el 🩺 índice de síntomas— y **doce** `../forense-fase-NN.md`, una por
+**Track forense y cuaderno (añadidos en 2026-09):** `../02-complement-mongodb-backend/forense-master.md` —la
+puerta, con el 🩺 índice de síntomas— y **doce** `../02-complement-mongodb-backend/forense-fase-NN.md`, una por
 cada fase que tiene un recorrido de diagnóstico propio: 0, 1, 2, 4, 5, 6, 7, 8,
 9, 10, 12 y 13. **Las fases 3, 11, 14 y 15 no llevan pieza y es deliberado** —lo
 suyo son decisiones de modelado, pago de deudas, operación y veredicto—, y cada
-una lo declara en su sección 6. Más `../cuaderno-incidentes.md`, con doce
+una lo declara en su sección 6. Más `../02-complement-mongodb-backend/cuaderno-incidentes.md`, con doce
 incidentes de IDs propios de este curso.
 
-**Maestros y guías (fuentes de verdad):** `../00-audit-contrato.md`,
-`../../prompts/guia-de-estilo-y-convenciones.md` (compartida con Track A),
-`../../prompts/formato-piezas-forenses.md` y
-`../../prompts/formato-cuaderno-incidentes.md` (anexos de la guía, mandan sobre
+**Maestros y guías (fuentes de verdad):** `../02-complement-mongodb-backend/00-audit-contrato.md`,
+`guia-de-estilo-y-convenciones.md` (compartida con Track A),
+`formato-piezas-forenses.md` y
+`formato-cuaderno-incidentes.md` (anexos de la guía, mandan sobre
 el track forense y el cuaderno), `diccionario-codigo.md` (compartido con Track
 A), `README.md`.
 
-> ⚠️ **`guia-de-estilo-y-convenciones.md` de este mismo directorio está
+> ⚠️ **`_desechable-guia-track-b-superada.md` (antes la guía de este curso) está
 > superada.** Es la guía vieja del Track B, lleva su aviso 🪦 dentro y se conserva
 > como referencia histórica: la vigente es la del paquete, la de arriba. Los
 > duplicados `* copy.md` que había aquí se borraron el 2026-09-10.
@@ -97,18 +97,18 @@ revisar es verificar que el contenido las respeta, no re-decidirlas.
 | # | Decisión | Resuelto como |
 |---|---|---|
 | 1 | Nº de fases | **16** (0–15), numeración **entera y continua**, sin `.5` ni interludios; la autopsia es la Fase 8 |
-| 2 | Dominio | **Solo Mini Jira** (ficticio, sin NDA — ver guía §11) |
+| 2 | Dominio | **Solo Tiquetera** (ficticio, sin NDA — ver guía §11) |
 | 3 | Anti-patrón `soporte_v1` | **Transversal** (fases 3, 5, 7) con **clímax en la autopsia (8)** |
 | 4 | Veredicto honesto | **Capítulo real** (Fase 15) + Apéndice 5 que lo profundiza |
 | 5 | `id` vs `_id` | **ObjectId interno, mapeo `_id`→`id` hex en la frontera** (contrato) |
-| 6 | Villano en inglés | `soporte_v1` **también se normaliza a inglés** (guía §4.6): el olor es estructura, no idioma |
+| 6 | Modelo traducido en inglés | `soporte_v1` **también se normaliza a inglés** (guía §4.6): el olor es estructura, no idioma |
 | 7 | Driver antes que Mongoose | Driver nativo fases 1–10; **Mongoose entra en la Fase 11** |
 
 ---
 
 ## 📡 El contrato es la costura entre tracks (lo más importante a alinear)
 
-`../00-audit-contrato.md` es la fuente de verdad de la frontera. Todo lo que Track B
+`../02-complement-mongodb-backend/00-audit-contrato.md` es la fuente de verdad de la frontera. Todo lo que Track B
 expone hacia el frontend debe coincidir **exactamente** con lo que Track A
 consume. Los puntos que hay que verificar fase por fase:
 
@@ -154,8 +154,8 @@ evento ni el payload**.
 
 > 🎯 **Discrepancia de datos a vigilar entre tracks.** Track A, en su modelo de
 > referencia (`../01-vue2-legacy/0-plan-del-curso.md`), muestra un ejemplo con
-> `assignee: "agente1"` y un usuario `{ username: 'admin', role: 'agent' }`;
-> `../01-vue2-legacy/03-mock-api-minima.md` usa `assignee: "soporte1"/"soporte2"` (username,
+> `assignee: "lmcorrea"` y un usuario `{ username: 'admin', role: 'agent' }`;
+> `../01-vue2-legacy/03-mock-api-minima.md` usa `assignee: "lmcano"/"jpmesa"` (username,
 > no id). **El contrato real es: `assignee`/`reporter` guardan el `username`
 > (string), no un id.** Verificar que el seed de la Fase 1 y todos los ejemplos
 > de Track B usen `username` en `assignee`/`reporter`, coherente con Track A.
@@ -200,17 +200,17 @@ antes que Mongoose, para que las 8 líneas se sientan regalo y no magia opaca.
 
 ## ✍️ Convenciones de contenido (la guía manda)
 
-`../../prompts/guia-de-estilo-y-convenciones.md` y `diccionario-codigo.md` son la **fuente de
+`guia-de-estilo-y-convenciones.md` y `diccionario-codigo.md` son la **fuente de
 verdad editorial de ambos tracks**. Lo esencial para revisar:
 
 **Regla de una línea:** el **código en inglés**; todo lo demás —narrativa,
-comentarios, textos de interfaz— **en español** (guía §4). Incluye el villano:
+comentarios, textos de interfaz— **en español** (guía §4). Incluye el modelo traducido:
 `soporte_v1` también en inglés (`statuses`, `statusId`, `assigneeId`…), porque
 el olor del anti-patrón es **estructura, no idioma** (guía §4.6).
 
 **Tuteo, no voseo.** La narrativa se dirige al lector de **"tú"** ("apaga
 json-server y verás el error", "primero mide"), no de "vos". La guía §2 ya lo
-pedía; `../../prompts/guia-de-estilo-y-convenciones.md` y `diccionario-codigo.md` ya quedaron
+pedía; `guia-de-estilo-y-convenciones.md` y `diccionario-codigo.md` ya quedaron
 normalizados a tuteo. Al revisar cada fase, verificar que no se coló voseo
 (`tenés`, `medí`, `agregá`, `buscá`, `seguís`…) y pasarlo a tuteo
 (`tienes`, `mide`, `agrega`, `busca`, `sigues`…).
@@ -262,7 +262,7 @@ la fase que paga **la nombra, dice de qué fase viene, y muestra el cambio**:
 ## ✅ Smoke test de la promesa (checklist de la Fase 10)
 
 Con json-server apagado y `baseURL` apuntando al Express, debe sobrevivir todo
-el checklist de `../00-audit-contrato.md`: login mock, carga de tickets, `?q=` y
+el checklist de `../02-complement-mongodb-backend/00-audit-contrato.md`: login mock, carga de tickets, `?q=` y
 filtros, orden por columna, detalle con 404 real, crear (form y wizard),
 editar/tomar/cambiar estado/eliminar, comentarios ordenados, métricas en cliente,
 recarga con sesión activa, y **`git diff` del frontend: exactamente una línea**.
@@ -275,10 +275,10 @@ recarga con sesión activa, y **`git diff` del frontend: exactamente una línea*
 1. **Unificar numeración** a la de los archivos (0–15); re-sincronizar
    el `README` y las referencias cruzadas "Fase N", eliminando cualquier "7.5"
    o "interludio". (`PLAN-FORMACION` no se toca: está descartado.)
-2. **Auditar el contrato** de punta a punta contra `../00-audit-contrato.md` y contra
+2. **Auditar el contrato** de punta a punta contra `../02-complement-mongodb-backend/00-audit-contrato.md` y contra
    las fases de Track A que lo definen (`03`, `05`, `08` websockets, `09` panel).
 3. **Verificar la regla de idioma** (§4 guía) en todo el código de Track B,
-   incluido el villano, y llenar la matriz de `diccionario-codigo.md` §6.
+   incluido el modelo traducido, y llenar la matriz de `diccionario-codigo.md` §6.
 
 ### 🟡 Por fase (16 revisiones + 5 apéndices)
 4. Correr el **prompt de revisión de fase** (abajo, archivo aparte) sobre cada
@@ -301,9 +301,9 @@ recarga con sesión activa, y **`git diff` del frontend: exactamente una línea*
 - [ ] Flujo paso a paso (evento por evento) donde haya flujo
 - [ ] Deudas 💸 declaradas con su fase de pago; 🔥 lo opcional
 - [ ] **Código en inglés** (identificadores, endpoints, colecciones, campos,
-      enums), incluido el villano; **comentarios y UI en español**
+      enums), incluido el modelo traducido; **comentarios y UI en español**
 - [ ] **Tuteo, no voseo** en toda la narrativa
-- [ ] No contradice `../00-audit-contrato.md` (forma, `id`↔`_id`, enums, eventos)
+- [ ] No contradice `../02-complement-mongodb-backend/00-audit-contrato.md` (forma, `id`↔`_id`, enums, eventos)
 - [ ] No contradice fases anteriores **ni Track A** (pedagogía y nombres)
 - [ ] Referencias con URL completa de la versión exacta (Mongo 4.4, driver 3.6,
       Express 4.17, Mongoose 5, socket.io 2.4), orden de lectura, aviso de versión
@@ -313,7 +313,7 @@ recarga con sesión activa, y **`git diff` del frontend: exactamente una línea*
       fase no tiene pieza** (guía §15)
 - [ ] **Bloque 📌 "Reservas para el cuaderno de incidentes"** al final, con los
       IDs que la fase aporta, o la declaración de que no reserva ninguno. Cada ID
-      existe en el índice de `../cuaderno-incidentes.md` y no se reasigna
+      existe en el índice de `../02-complement-mongodb-backend/cuaderno-incidentes.md` y no se reasigna
 - [ ] Cierre con puente a la siguiente fase y "la señal de que quedó bien"
 
 ---

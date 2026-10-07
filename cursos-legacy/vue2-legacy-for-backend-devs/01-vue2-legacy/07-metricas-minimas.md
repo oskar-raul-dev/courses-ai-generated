@@ -2,7 +2,7 @@
 
 ## 🎯 Propósito
 
-Una mesa de soporte sin números es una caja negra. Hoy el Mini Jira estrena
+Una mesa de soporte sin números es una caja negra. Hoy la Tiquetera estrena
 una vista de **métricas** con dos gráficos: tickets por estado (dona) y
 tickets por agente (barras), construidos con **chart.js 2.x** — la librería
 de gráficos omnipresente en el legacy 2018–2021.
@@ -34,7 +34,9 @@ Y como siempre, los gráficos son la excusa. Lo que realmente se aprende:
 - tarjetas con indicadores numéricos (total, % resueltos, sin asignar);
 - los gráficos se **actualizan** al recargar datos sin recrearse;
 - cero memory leaks: instancias destruidas al salir de la vista;
-- un componente de gráfico reutilizable con la frontera bien trazada.
+- un componente de gráfico reutilizable con la frontera bien trazada;
+- la tabla de puntajes de la casa (🕹️), construida tal como se heredó y con
+  sus tres deudas declaradas.
 
 ## 🚫 Qué NO entra todavía
 
@@ -215,6 +217,7 @@ src/
       MetricCard.vue        ← indicador numérico
       StatusDoughnut.vue    ← dona por estado
       AgentBarChart.vue     ← barras por agente
+      ScoreBoard.vue        ← la tabla de puntajes (la rareza de la casa)
   utils/
     ticketStats.js          ← agregaciones puras (¡testeables gratis en Fase 11!)
   views/
@@ -231,7 +234,7 @@ export function countByStatus(tickets) {
   return _.countBy(tickets, "status");
 }
 
-// [{ agent: "soporte1", count: 4 }, ...] solo tickets activos, ordenado desc
+// [{ agent: "lmcano", count: 4 }, ...] solo tickets activos, ordenado desc
 export function activeByAgent(tickets) {
   var active = tickets.filter(function (t) {
     return t.status === "open" || t.status === "in_progress";
@@ -501,6 +504,133 @@ alternativa — pasar `label="Abiertos"` y que la tarjeta haga
 `if (label === "Abiertos")` — acopla presentación a textos y muere en la
 primera traducción.
 
+### 🕹️ La tabla de puntajes — la rareza de la casa
+
+Todo sistema heredado tiene una pieza que no existiría si lo hubiera diseñado
+otra persona. La de la Tiquetera es esta: Felipe sostenía que *"un arcade sin
+tabla de puntajes no lo juega nadie"*, y le puso una a la mesa de soporte (la
+historia completa está en la ficha del sistema,
+[`../00-historia-del-sistema.md`](../00-historia-del-sistema.md) §5).
+Cada agente aparece con **tres iniciales**, como en las máquinas que él mismo
+armaba, y suma puntos por cada ticket resuelto según la prioridad.
+
+La construyes tal como la dejó él, porque es la que vas a heredar. Las
+funciones van en el mismo `utils/ticketStats.js`:
+
+```js
+// utils/ticketStats.js (continúa)
+
+// puntos por ticket resuelto: los números de Felipe, estilo arcade
+export var POINTS_BY_PRIORITY = { low: 100, medium: 200, high: 300 };
+
+// "Laura Marcela Cano" -> "LMC"
+export function initialsOf(name) {
+  return (name || "")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(function (word) { return word.charAt(0).toUpperCase(); })
+    .join("")
+    .slice(0, 3);
+}
+
+// [{ initials: "LMC", solved: 4, points: 900 }, ...] ordenado por puntos desc
+export function scoreBoard(tickets, users) {
+  var userByUsername = _.keyBy(users, "username");
+
+  var solved = tickets.filter(function (t) {
+    return t.assignee && (t.status === "resolved" || t.status === "closed");
+  });
+
+  // 💸 DEUDA: la fila se agrupa por las iniciales, no por el username
+  var byInitials = _.groupBy(solved, function (t) {
+    var user = userByUsername[t.assignee];
+    return user ? initialsOf(user.name) : "???";
+  });
+
+  return _.orderBy(
+    Object.keys(byInitials).map(function (initials) {
+      var rows = byInitials[initials];
+      return {
+        initials: initials,
+        solved: rows.length,
+        points: _.sumBy(rows, function (t) { return POINTS_BY_PRIORITY[t.priority] || 0; })
+      };
+    }),
+    ["points"], ["desc"]
+  );
+}
+```
+
+Y el componente, que es tonto a propósito: recibe filas ya calculadas y las
+pinta, igual que los gráficos.
+
+```vue
+<!-- components/metrics/ScoreBoard.vue -->
+<template>
+  <div class="card">
+    <div class="card-body">
+      <h6 class="card-title text-muted">🕹️ Tabla de puntajes</h6>
+      <table class="table table-sm mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Agente</th>
+            <th class="text-right">Resueltos</th>
+            <th class="text-right">Puntos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in rows" :key="row.initials">
+            <td>{{ index + 1 }}</td>
+            <td class="text-monospace">{{ row.initials }}</td>
+            <td class="text-right">{{ row.solved }}</td>
+            <td class="text-right font-weight-bold">{{ row.points }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "ScoreBoard",
+  props: {
+    rows: { type: Array, required: true }
+  }
+};
+</script>
+```
+
+**🔎 Qué hace, pieza por pieza:**
+
+| Pieza | Su trabajo |
+|---|---|
+| `POINTS_BY_PRIORITY` | la regla de puntaje en un solo lugar: baja 100, media 200, alta 300 |
+| `initialsOf` | convierte el nombre en las tres letras de la máquina |
+| `scoreBoard` | filtra los resueltos y cerrados, agrupa por iniciales y suma; los usuarios borrados salen como `???` |
+| `ScoreBoard.vue` | pinta; no calcula nada |
+
+> 💸 **DEUDA — tres decisiones de la tabla que heredas, declaradas en voz alta.**
+>
+> 1. **Las iniciales son la identidad de la fila.** El grupo se arma por las tres
+>    letras, no por el `username`. Funcionó dos años, hasta que en la mesa hubo
+>    dos personas con las mismas iniciales.
+> 2. **El puntaje se calcula en el navegador, sobre la lista que tú cargaste.**
+>    No hay una verdad en el servidor: si dos personas tienen cargadas listas
+>    distintas (filtros, una recarga de diferencia), ven tablas distintas, y
+>    ninguna de las dos es "la" tabla.
+> 3. **Se premia resolver, no que lo resuelto se quede resuelto.** Si el comercio
+>    reabre un ticket, sale de la cuenta sin dejar rastro, pero la tabla de esa
+>    semana ya se celebró. Nadie hizo trampa: la tabla premiaba cerrar rápido, y
+>    la gente jugó el juego que le pusieron.
+>
+> Ninguna se arregla en este curso. Las dos primeras piden un servidor que sea
+> dueño del cálculo y una identidad que no dependa del nombre; la tercera pide
+> que alguien decida qué conducta quiere premiar. Es la pieza de la fase que
+> mejor enseña que una métrica convertida en marcador deja de medir y empieza a
+> mandar.
+
 ### `views/MetricsView.vue` — la vista orquestadora
 
 ```vue
@@ -544,6 +674,12 @@ primera traducción.
         </div>
       </div>
 
+      <div class="row">
+        <div class="col-md-5 mb-3">
+          <score-board :rows="scoreRows" />
+        </div>
+      </div>
+
       <p class="text-muted small text-right">
         Datos al {{ new Date() | formatDate }} ·
         <a href="#" @click.prevent="loadTickets">actualizar</a>
@@ -557,15 +693,18 @@ import PageTitle from "../components/common/PageTitle.vue";
 import MetricCard from "../components/metrics/MetricCard.vue";
 import StatusDoughnut from "../components/metrics/StatusDoughnut.vue";
 import AgentBarChart from "../components/metrics/AgentBarChart.vue";
+import ScoreBoard from "../components/metrics/ScoreBoard.vue";
+import apiClient from "../services/apiClient";
 import ticketService from "../services/ticketService";
-import { countByStatus, activeByAgent, resolvedPercent } from "../utils/ticketStats";
+import { countByStatus, activeByAgent, resolvedPercent, scoreBoard } from "../utils/ticketStats";
 
 export default {
   name: "MetricsView",
-  components: { PageTitle, MetricCard, StatusDoughnut, AgentBarChart },
+  components: { PageTitle, MetricCard, StatusDoughnut, AgentBarChart, ScoreBoard },
   data: function () {
     return {
       tickets: [],
+      users: [],     // solo para las iniciales de la tabla de puntajes
       loading: true, // arranca en true: adiós al parpadeo de la Fase 4
       error: ""
     };
@@ -575,6 +714,7 @@ export default {
     statusCounts: function () { return countByStatus(this.tickets); },
     agentRows: function () { return activeByAgent(this.tickets); },
     donePercent: function () { return resolvedPercent(this.tickets); },
+    scoreRows: function () { return scoreBoard(this.tickets, this.users); },
     unassignedCount: function () {
       return this.tickets.filter(function (t) {
         return !t.assignee && t.status !== "closed";
@@ -590,8 +730,13 @@ export default {
       this.loading = true;
       this.error = "";
 
-      ticketService
-        .getTickets()
+      // 💸 DEUDA: /users va directo por apiClient; userService llega en la Fase 9
+      apiClient
+        .get("/users")
+        .then(function (res) {
+          self.users = res.data;
+          return ticketService.getTickets();
+        })
         .then(function (tickets) {
           self.tickets = tickets;
         })
@@ -612,6 +757,7 @@ export default {
 | Pieza | Su trabajo |
 |---|---|
 | `tickets` (data) | el único estado crudo: la respuesta de la API tal cual |
+| `users` (data) | solo para que la tabla de puntajes convierta `assignee` en iniciales; se pide con `apiClient` directo porque `userService` llega en la Fase 9 (💸) |
 | computed de una línea | envolturas sobre las funciones puras de `utils/` — la vista no sabe agregar, sabe a quién preguntarle |
 | `loading: true` inicial | los gráficos no nacen hasta que hay datos (adiós parpadeo, herencia de la Fase 4) |
 | el trío loading/error/datos | el patrón de la Fase 3, intacto: nada nuevo que aprender aquí, y eso es bueno |
@@ -892,7 +1038,7 @@ ejercicio 24.
 
 ## 🚀 Cierre
 
-El Mini Jira ya cuenta su propia historia en números, y tú te llevas el
+La Tiquetera ya cuenta su propia historia en números, y tú te llevas el
 patrón que abre media internet legacy:
 
 - **el puente de tres tablones** (mounted crea, watch actualiza, beforeDestroy
@@ -934,3 +1080,4 @@ Esta fase aporta al [`cuaderno-incidentes.md`](cuaderno-incidentes.md) del curso
 | ID | Título propuesto | Categoría | Dif. |
 |---|---|---|---|
 | 07 | "A la media hora la laptop suena como un avión" | Reactividad | 🟠 |
+| 13 | "Laura dice que los puntos de la semana son de ella" | Datos e identidad | 🟡 |

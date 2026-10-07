@@ -1,5 +1,5 @@
 # 📓 Formato del cuaderno de incidentes
-## Paquete Mini Jira — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
+## Paquete Tiquetera — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
 
 Este documento **no es** un cuaderno: es su especificación. Define cómo se construyen los
 dos `cuaderno-incidentes.md` del paquete —uno en `01-vue2-legacy/`, otro en
@@ -418,7 +418,7 @@ que tocaste. Aparte, en una línea, la refactorización correcta que harías con
 **Causa raíz**
 
 {{Hasta el archivo y la línea. Si la causa es una decisión de diseño, se nombra la decisión
-y se explica en qué momento de la vida de Mini Jira tenía sentido.}}
+y se explica en qué momento de la vida de la Tiquetera tenía sentido.}}
 
 **Parche mínimo**
 
@@ -478,7 +478,7 @@ Cierra el archivo. Se llena al terminar, de una sola vez, releyendo tu propio `g
 - **Qué pista abriste antes de tiempo y por qué.** Sin culpa: es un dato sobre dónde te
   falta confianza, no sobre tu disciplina.
 - **Tu checklist de hotfix**, de una página, reescrita con lo que aprendiste. Es lo único
-  de este archivo que te llevas a un sistema que no es Mini Jira.
+  de este archivo que te llevas a un sistema que no es Tiquetera.
 
 ---
 

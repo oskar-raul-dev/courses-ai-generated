@@ -99,7 +99,7 @@ HTML y cuándo**:
 
 | Modo | Quién pinta el HTML | Cuándo | Es como… |
 |---|---|---|---|
-| `spa` | El navegador | En tiempo de ejecución, tras cargar el JS | Tu Mini Jira de F1–F11 |
+| `spa` | El navegador | En tiempo de ejecución, tras cargar el JS | Tu Tiquetera de F1–F11 |
 | `universal` (**el nuestro**) | El **servidor Node**, la primera vez; luego el navegador | En cada request + al navegar | SSR de verdad |
 | `static` | Se pre-genera **en el build** | Una sola vez, al desplegar | Un sitio estático con hidratación |
 
@@ -124,7 +124,7 @@ Este es **el** concepto. Si te llevas una sola cosa de la fase, es esta. Dedíca
 tiempo que haga falta, porque reordena todo lo que creías saber del ciclo de vida de
 Vue.
 
-En tu Mini Jira a pelo, cuando un componente nace, `beforeCreate → created →
+En tu Tiquetera a pelo, cuando un componente nace, `beforeCreate → created →
 beforeMount → mounted` corren **una vez, en el navegador**. Punto. Ese es el único
 mundo que existía.
 
@@ -189,7 +189,7 @@ Este es el mapa. Léelo como quien aprende a moverse por una ciudad nueva.
 ### `create-nuxt-app` — de dónde sale todo esto
 
 ```bash
-npx create-nuxt-app mini-jira-nx
+npx create-nuxt-app tiquetera-nx
 # En el asistente, elige:
 #   Rendering mode:  Universal (SSR / SSG)   ← la lección
 #   Vuex:            Yes
@@ -200,7 +200,7 @@ npx create-nuxt-app mini-jira-nx
 Y la estructura que te genera — **fíjate en lo que NO está**:
 
 ```
-mini-jira-nx/
+tiquetera-nx/
 ├── nuxt.config.js      ← ⭐ el nuevo main.js + vue.config.js
 ├── pages/              ← ⭐ el routing sale de AQUÍ (carpetas = rutas)
 │   └── index.vue
@@ -232,7 +232,7 @@ alias) vive ahora aquí, en un **objeto de configuración declarativo**:
 export default {
   ssr: true,                         // modo universal
   head: {                            // lo que hacías con vue-meta / <title>
-    title: 'Mini Jira',
+    title: 'Tiquetera',
     meta: [{ charset: 'utf-8' }]
   },
   css: ['bootstrap/dist/css/bootstrap.css'],  // CSS global (antes en main.js)
@@ -544,7 +544,7 @@ identificas, traduces. El entregable de casi todos es *"señala dónde"* o
 22. Lee `store/index.js` de un proyecto Nuxt y determina: ¿tiene módulo raíz con
     estado propio, o solo actúa de contenedor? ¿Cómo sabrías, leyendo, si
     `store/auth.js` está namespaced? (Pista: en Nuxt lo está por defecto.)
-23. Sin ejecutar nada, **predice** qué tres piezas del Mini Jira base van a
+23. Sin ejecutar nada, **predice** qué tres piezas de la Tiquetera base van a
     romperse bajo SSR con solo leer el código: busca todo lo que toque `window`,
     `document` o `localStorage` (auth de F2, chart.js de F7, socket.io de F8) y
     haz la lista de "sospechosos para NX2". Ordénalos por gravedad.
@@ -556,7 +556,7 @@ identificas, traduces. El entregable de casi todos es *"señala dónde"* o
     con sus propias analogías, por qué "migrar el CRUD a Nuxt no significa nada" y
     por qué **no va a haber** tabla de componentes equivalentes. Que quede claro que
     lo que cambia es el *entorno de ejecución*, no la UI. El entregable es el texto.
-25. **La caza del `window`.** Recorre el Mini Jira base entero y produce un
+25. **La caza del `window`.** Recorre la Tiquetera base entera y produce un
     `SSR-RISK-MAP.md`: cada archivo que toca una API del navegador, en qué hook lo
     hace, y una nota de "cómo se leería que está a salvo" vs "cómo se leería que va a
     reventar". No arregles nada — es el mapa de trabajo que NX2 va a consumir.
@@ -567,7 +567,7 @@ identificas, traduces. El entregable de casi todos es *"señala dónde"* o
     acierto. La lección: **cuánto se lee de un proyecto Nuxt solo por su estructura**.
 27. **El puente escrito.** Redacta el "informe de reconocimiento" que le entregarías
     a tu yo de NX2: el mapa completo del proyecto Nuxt, la tabla de equivalencias
-    aplicada al Mini Jira, la lista priorizada de lo que va a romperse bajo SSR, y —
+    aplicada a la Tiquetera, la lista priorizada de lo que va a romperse bajo SSR, y —
     lo importante — **la deuda de la auth explicada**: por qué `localStorage` en el
     servidor es imposible y qué pista tienes ya (cookies) para NX2. Este informe es
     literalmente tu punto de partida de la siguiente fase.

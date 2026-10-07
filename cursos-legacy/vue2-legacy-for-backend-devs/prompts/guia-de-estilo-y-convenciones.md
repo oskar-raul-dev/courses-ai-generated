@@ -1,5 +1,5 @@
 # ✍️ Guía de estilo, tono y convenciones
-## Paquete Mini Jira — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
+## Paquete Tiquetera — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
 
 Esta guía es la **fuente de verdad editorial de todo el directorio**
 `vue2-legacy-for-backend-devs/`. Cualquier chat que produzca o edite un `.md`
@@ -9,8 +9,8 @@ Su objetivo es simple: que los ~50 documentos de los dos cursos se lean como
 escritos por la misma mano, con la misma voz y el mismo criterio, y que todos
 apunten al mismo lugar — **mantener un sistema real sin romperlo**.
 
-Los dos cursos comparten un único dominio pedagógico —**Mini Jira**, una mesa
-de soporte interna— y por eso comparten esta guía, un único diccionario de
+Los dos cursos comparten un único dominio pedagógico —**la Tiquetera**, la mesa
+de soporte de Cuadre Software— y por eso comparten esta guía, un único diccionario de
 código y un único contrato de API:
 
 - **Curso 01 — `01-vue2-legacy/`** construye el frontend heredado (Vue 2,
@@ -142,7 +142,7 @@ perfil.
   Qué es: los comentarios viven como array dentro del documento del ticket.
   Cuándo conviene: cuando siempre se leen junto al ticket y son pocos.
   El costo: el documento crece sin techo y el ticket caliente se vuelve pesado.
-  Veredicto: es la que recomendamos por defecto en Mini Jira.
+  Veredicto: es la que recomendamos por defecto en la Tiquetera.
   ```
 
 - **Tablas solo para lo que de verdad es tabular y corto.** Versiones fijadas,
@@ -369,11 +369,11 @@ como literales en español, no como claves de traducción.
 > **Nunca** guardes `'Abierto'` como valor de `status` en la base o en el
 > payload.
 
-### 5.3 Diccionario mínimo del dominio (Mini Jira)
+### 5.3 Diccionario mínimo del dominio (Tiquetera)
 
 El diccionario completo —entidades, estados, roles, campos, verbos de negocio,
 jerga de Vue y jerga de Mongo/Express— vive en
-`02-complement-mongodb-backend/prompts/diccionario-codigo.md`. Referencia
+`prompts/diccionario-codigo.md`. Referencia
 mínima:
 
 - ticket → `ticket`
@@ -463,13 +463,13 @@ voseo, se ajusta en este orden:
 No se reescribe la explicación ni la pedagogía: es un cambio de forma, no de
 contenido.
 
-> ⚖️ **La excepción del villano — `soporte_v1` (Curso 02).** El anti-patrón
+> ⚖️ **La excepción del modelo traducido — `soporte_v1` (Curso 02).** El anti-patrón
 > `soporte_v1` de las fases 3, 5, 7 y 8 es una base "migrada a Mongo
-> transcribiendo el esquema relacional tabla por tabla". **El villano también
+> transcribiendo el esquema relacional tabla por tabla". **El modelo traducido también
 > se nombra en inglés** —`statuses`, `priorities`, `statusId`, `assigneeId`—
 > para no confundir dos problemas independientes: *"está en español"* y *"está
 > mal diseñado"*. Un esquema en inglés puede ser igual de Postgres-disfrazado.
-> El **olor** del villano se mantiene por sus decisiones, no por su idioma:
+> El **olor** del modelo traducido se mantiene por sus decisiones, no por su idioma:
 > lookup-tables de diez documentos con forma `{_id numérico, name}`, FKs
 > enteras que nadie valida, siete colecciones para lo que el buen modelo
 > resuelve en una o dos.
@@ -478,7 +478,7 @@ contenido.
 
 ## 6. Orientación a la práctica
 
-Cada concepto se ancla en el dominio de Mini Jira y en código que corre.
+Cada concepto se ancla en el dominio de la Tiquetera y en código que corre.
 
 - **Nada de teoría suelta.** Si se explica `findOneAndUpdate` con
   precondición, se explica sobre el doble "tomar" de un ticket, no en
@@ -836,8 +836,9 @@ qué leer primero.
 
 ## 12. Sobre el dominio (ficticio, sin NDA)
 
-Mini Jira es un dominio **enteramente ficticio**: una mesa de soporte interna
-inventada para estos cursos. No hay confidencialidad que preservar ni sistema
+La Tiquetera es un dominio **enteramente ficticio**: la mesa de soporte de una
+empresa inventada para estos cursos (su historia está en
+`../00-historia-del-sistema.md`). No hay confidencialidad que preservar ni sistema
 real que disfrazar. Eso simplifica dos cosas respecto de otros cursos del
 catálogo:
 
@@ -873,13 +874,15 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" �
 
 ### 13.1 Fuentes de verdad, en este orden
 
-1. Las instrucciones del proyecto (`CLAUDE.md` del repositorio).
-2. `02-complement-mongodb-backend/00-audit-contrato.md` — el contrato que
+1. Las instrucciones del proyecto (`CLAUDE.md` del repositorio), con las
+   divergencias que esta guía declara (§13.3).
+2. `00-historia-del-sistema.md` para todo lo narrativo (§13.4), y
+   `02-complement-mongodb-backend/00-audit-contrato.md` — el contrato que
    une los dos cursos.
 3. `01-vue2-legacy/0-plan-del-curso.md` y
    `01-vue2-legacy/0-ESTRUCTURA-CURSO.md` — alcance, stack y arquitectura del
    Curso 01.
-4. `02-complement-mongodb-backend/prompts/instrucciones-proyecto-track-b.md` —
+4. `prompts/instrucciones-proyecto-track-b.md` —
    alcance del Curso 02.
 5. Esta guía y sus tres anexos: `prompts/convencion-de-git-y-tags.md` para
    todo lo que toque git, repos y tags; `prompts/formato-piezas-forenses.md` y
@@ -889,9 +892,9 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" �
 7. Decisiones explícitas del chat actual.
 
 > 🚫 **Documentos deprecados que no cuentan como fuente:**
-> `02-complement-mongodb-backend/prompts/plan-formacion-nosql-mongodb.md`
+> `prompts/_desechable-plan-formacion-nosql-mongodb.md`
 > (descartado y así declarado en las instrucciones del Curso 02) y
-> `02-complement-mongodb-backend/prompts/guia-de-estilo-y-convenciones.md`
+> `prompts/_desechable-guia-track-b-superada.md`
 > (la guía del Track B, superada por ésta y con su aviso 🪦 dentro).
 >
 > Los duplicados de respaldo `* copy.md` que vivían en ese `prompts/` **se
@@ -915,6 +918,11 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" �
   `forense-ruta-q.md`, `forense-ruta-vu.md` y `forense-ruta-nx.md`, una por
   ruta y no una por fase de ruta.
 - **Cuaderno de incidentes:** `cuaderno-incidentes.md`, uno por curso.
+- **Ficha del sistema:** `00-historia-del-sistema.md`, una sola, en la raíz
+  del paquete.
+- **Historias de ruta (solo Curso 01):** `q00-historia-ruta-q.md`,
+  `vu00-historia-ruta-vu.md` e `nx00-historia-ruta-nx.md`, una por ruta, con el mismo
+  criterio que `forense-ruta-*` (§13.4).
 - **Documentos maestros:** `0-plan-del-curso.md`, `0-ESTRUCTURA-CURSO.md`,
   `README.md` (que hace de índice de cada curso).
 
@@ -922,6 +930,64 @@ En la narrativa, las fases del Curso 01 se citan como **Fase N** o **F*N***;
 las rutas como **Q0–Q4 / VU0–VU4 / NX0–NX4**, y **X0…X4** cuando algo aplica
 a las tres. Las fases del Curso 02 se citan como **Fase N** dentro de su
 curso, y como **Curso 02, Fase N** cuando se las nombra desde el Curso 01.
+
+### 13.3 Un paquete, dos cursos, un solo `prompts/`
+
+> 🧭 **Divergencia declarada del `CLAUDE.md` del repositorio.** El default del
+> repo es que cada curso tenga su propio `prompts/`. Este paquete lo reemplaza
+> por **un único `prompts/` en la raíz del paquete**, y ninguno de los dos
+> cursos tiene `prompts/` propio.
+
+La razón es de origen. La Tiquetera nació como **un curso con dos capas** —la
+pantalla y la base del mismo sistema— que se partió en dos subcursos cuando
+cada capa creció lo bastante para sostenerse sola. Los dos siguen siendo las
+dos mitades de un sistema: comparten dominio, ficha, contrato de API, guía de
+estilo, diccionario de código, convención de git y formatos del track forense.
+Tener esa maquinaria duplicada en dos `prompts/` es invitar a que diverja; ya
+pasó una vez (la guía del Track B quedó superada por esta) y por eso se
+consolidó el 2026-10-06.
+
+Qué vive en `prompts/`:
+
+- **Vigente:** esta guía, `plantilla-de-fase.md`, `convencion-de-git-y-tags.md`,
+  `formato-piezas-forenses.md`, `formato-cuaderno-incidentes.md`,
+  `diccionario-codigo.md` (compartido) e `instrucciones-proyecto-track-b.md`
+  (alcance del Curso 02).
+- **Desechable** (prefijo `_desechable-`, registro histórico que no se cita ni
+  se mantiene): la guía superada del Track B, el plan de formación descartado,
+  los prompts de revisión del Track B, el trabajo de traducción del código del
+  Curso 01 a inglés y los planes de producción.
+
+Lo que **no** se mueve a `prompts/`: el contrato de API
+(`02-complement-mongodb-backend/00-audit-contrato.md`), la ficha del sistema y
+las historias de ruta. Los lee el alumno, así que son material publicado, no
+maquinaria.
+
+### 13.4 La ficha del sistema y las historias de ruta
+
+La ficha `00-historia-del-sistema.md` es la **fuente de verdad narrativa** de
+los dos cursos: la empresa, la gente, las fechas, las decisiones y sus razones.
+Ninguna fase inventa un dato narrativo; si lo necesita y no está en la ficha,
+se agrega a la ficha primero.
+
+> 🧭 **Excepción declarada: las historias de ruta.** Las tres rutas del Curso 01
+> son excluyentes, y cada una rescata una rama distinta del sistema. Meter las
+> tres historias en la ficha obligaría a todos a leer dos que no les tocan. Por
+> eso cada ruta tiene su `<código>00-historia-ruta-<código>.md`, que se lee antes de X0.
+
+Reglas para que la excepción no se vuelva divergencia:
+
+1. **La ficha manda.** Lo compartido —personas, fechas, PizzaPaisa, el plan de
+   remediación— vive solo en la ficha; la historia de ruta lo **enlaza**, no lo
+   repite. Si se contradicen, la equivocada es la historia de ruta.
+2. **La historia de ruta solo agrega lo propio de su rama:** quién la llevó, en
+   qué estado quedó, por qué paró, qué le pide hoy la cadena y qué camino de
+   migración abre.
+3. **Encadenamiento explícito:** la ficha remite a las tres historias al cerrar
+   "Las ramas de los sábados"; cada historia abre con *"viene de la ficha"* y
+   cada X0 enlaza la suya.
+4. **El estado de la rama calza con lo que el curso construye.** Lo que una
+   historia diga del código heredado no puede contradecir lo que X1–X4 asumen.
 
 ---
 

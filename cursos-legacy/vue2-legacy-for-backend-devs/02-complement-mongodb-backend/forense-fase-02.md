@@ -60,20 +60,20 @@ explícito, y campo **ausente**. `{ assignee: null }` matchea los dos últimos.
 La otra mitad de la misma trampa, y la que produce reportes que faltan filas:
 
 ```js
-> db.tickets.countDocuments({ assignee: { $ne: "soporte1" } })
+> db.tickets.countDocuments({ assignee: { $ne: "lmcano" } })
 72
-> db.tickets.countDocuments({ assignee: { $ne: "soporte1", $exists: true, $ne: null } })
+> db.tickets.countDocuments({ assignee: { $ne: "lmcano", $exists: true, $ne: null } })
 ```
 
 Como `$ne` no se puede repetir en el mismo objeto, se escribe explícito:
 
 ```js
-> db.tickets.countDocuments({ assignee: { $nin: ["soporte1", null], $exists: true } })
+> db.tickets.countDocuments({ assignee: { $nin: ["lmcano", null], $exists: true } })
 31
 ```
 
 **Qué descarta.** Descarta la lectura ingenua de `$ne`. *"Asignados a alguien
-que no es soporte1"* y *"no asignados a soporte1"* son dos preguntas distintas:
+que no es lmcano"* y *"no asignados a lmcano"* son dos preguntas distintas:
 la segunda incluye a los que no están asignados a nadie. En SQL la
 tricotomía te obligaba a decidirlo; acá el filtro más corto decide por ti, y
 decide mal.

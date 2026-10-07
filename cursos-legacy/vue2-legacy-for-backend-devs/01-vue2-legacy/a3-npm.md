@@ -12,11 +12,11 @@ primero.
 
 ---
 
-## 🧬 Anatomía del `package.json` del Mini Jira
+## 🧬 Anatomía del `package.json` de la Tiquetera
 
 ```json
 {
-  "name": "mini-jira-legacy",
+  "name": "tiquetera-legacy",
   "version": "1.0.0",
   "private": true,                    // ← nunca publicar esto a npm por accidente
   "scripts": { ... },                 // ← los comandos del proyecto (abajo)
@@ -97,7 +97,7 @@ Juntas cierran el caso.
 
 ## 📜 Scripts — los verbos del proyecto
 
-Los del Mini Jira al final del curso:
+Los de la Tiquetera al final del curso:
 
 ```json
 "scripts": {
@@ -241,7 +241,7 @@ Ante un problema de dependencias, la escalera — de menos a más destructivo:
 **🔴 Muy difícil (25–34)**
 
 25. Publica un paquete propio: extrae `ticketTransitions` + `ticketStats` a
-    un paquete `@tuusuario/minijira-core` con su package.json, build a CJS y
+    un paquete `@tuusuario/tiquetera-core` con su package.json, build a CJS y
     ESM, y publícalo (en npm real o en un registry local con `verdaccio`).
     Consúmelo desde el proyecto. Acabas de vivir el otro lado del `npm
     install`.

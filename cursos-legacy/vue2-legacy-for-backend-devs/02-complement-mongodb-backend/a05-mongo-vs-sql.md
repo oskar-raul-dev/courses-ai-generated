@@ -57,7 +57,7 @@ Tres correcciones que hacen falta:
    **C**onsistencia.* Y esta segunda mitad es la que gobierna tu día a día,
    porque las particiones son raras y la latencia es todos los días.
 
-**Y el matiz que casi nadie dice:** tu Mini Jira corre en **un nodo**. CAP no
+**Y el matiz que casi nadie dice:** tu Tiquetera corre en **un nodo**. CAP no
 te aplica. Un solo nodo no se parte de sí mismo. Toda la angustia CAP del
 debate de la época pertenece a sistemas distribuidos — y la mayoría de los
 sistemas internos que heredarás no lo son. Saber cuándo un argumento **no
@@ -176,7 +176,7 @@ HISTORIA: casi todo argumento anti-Mongo es contra 2.x o contra el modelado de 2
 
 CAP:      la P no se elige · es un dial, no un interruptor (= las perillas de la F6)
 PACELC:   Else → Latencia vs Consistencia = tu día a día
-          Un nodo NO se parte de sí mismo → CAP no aplica a tu Mini Jira
+          Un nodo NO se parte de sí mismo → CAP no aplica a tu Tiquetera
 
 JEPSEN:   los defaults no son promesas · si la invariante es dura, DECLÁRALA
 
@@ -215,7 +215,7 @@ LAS 5 PREGUNTAS son 4 de diseño de software + 1 de operación.
 2. Fecha el ensayo: lista qué features que Mongo NO tenía en 2013 habrían cambiado el caso (o no). Sé riguroso: ¿`$lookup` habría salvado a Diaspora, o solo habría maquillado el problema? (Pista: tu Fase 5.)
 3. Lee las "6 Rules of Thumb" de Zola con ojos post-Fase 3. ¿Qué regla NO habrías sabido justificar antes del curso? ¿Alguna que hoy matizarías?
 4. Lee el resumen del Jepsen de 4.2.6. Lista 3 hallazgos y, para cada uno, qué configuración del curso lo evita o lo hace irrelevante.
-5. CAP aplicado (o no) al Mini Jira: escribe 5 líneas explicando por qué el teorema no gobierna tu sistema, y qué gobernaría en su lugar (PACELC-Else: latencia vs consistencia).
+5. CAP aplicado (o no) a la Tiquetera: escribe 5 líneas explicando por qué el teorema no gobierna tu sistema, y qué gobernaría en su lugar (PACELC-Else: latencia vs consistencia).
 6. Traduce las perillas de la Fase 6 a lenguaje CAP: ¿qué combinación es "más C"? ¿Cuál "más A"? ¿Cuál elegiste tú y por qué?
 7. Busca 3 artículos "Por qué migramos de MongoDB a PostgreSQL". Para cada uno, aplica la tabla de post-mortems: ¿cuál era el problema real bajo la queja declarada?
 8. Y ahora los contrarios: busca 2 "Por qué migramos de PostgreSQL a MongoDB". ¿Son más escasos? ¿Por qué crees que sí? (Ojo con la conclusión fácil: piensa en el sesgo de publicación y en quién escribe post-mortems.)
@@ -223,24 +223,24 @@ LAS 5 PREGUNTAS son 4 de diseño de software + 1 de operación.
 **🟡 Intermedio (9–18)**
 
 9. Lee el cap. 2 de Kleppmann. Mapea cada concepto (localidad, modelo relacional/documento/grafo, el "impedance mismatch", la convergencia) a la fase del curso que lo encarnó. ¿Qué concepto del capítulo el curso NO cubrió?
-10. El modelo de grafos: Kleppmann dedica media sección a él. ¿Existe en el Mini Jira algún subdominio que sería natural en grafo (dependencias entre tickets, jerarquías de asignación)? Diséñalo mentalmente en las tres formas (relacional, documento, grafo) y elige con las 5 preguntas.
+10. El modelo de grafos: Kleppmann dedica media sección a él. ¿Existe en la Tiquetera algún subdominio que sería natural en grafo (dependencias entre tickets, jerarquías de asignación)? Diséñalo mentalmente en las tres formas (relacional, documento, grafo) y elige con las 5 preguntas.
 11. Stonebraker vs el hype: lee su artículo de 2010 y escribe la refutación desde la perspectiva de 2021 — ¿qué acertó? ¿En qué el mundo no le hizo caso y le fue bien igual?
 12. Recopila 5 post-mortems de migraciones (en ambas direcciones) y arma una tabla comparativa: motivo declarado / problema real inferido / ¿rediseñaron o solo movieron? / ¿publicaron números? Es la evidencia empírica del capítulo, reunida por ti.
 13. El sesgo del superviviente: los sistemas Mongo que funcionaron bien no escriben post-mortems. ¿Cómo buscarías evidencia de esos? (Casos de estudio de MongoDB — sesgados; charlas técnicas de empresas; repos abiertos.) Encuentra DOS y evalúalos con la tabla de olores de la F15.
-14. Polyglot persistence con costos: para el Mini Jira crecido (facturación + reporting corporativo), calcula el costo REAL de la rama 2 — dos motores operados (dos F14 completas), la sincronización, y el equipo que necesita saber ambos. ¿A partir de qué tamaño de sistema se justifica?
-15. Postgres JSONB, honestamente: implementa el Mini Jira mínimo (tickets con history embebido, búsqueda por status y texto) en Postgres con JSONB e índices GIN. Compara: modelado, consultas, y qué te obligó a hacer el motor. Ahora responde el 🪞 final de la F15 con las manos, no con la opinión.
+14. Polyglot persistence con costos: para la Tiquetera crecida (facturación + reporting corporativo), calcula el costo REAL de la rama 2 — dos motores operados (dos F14 completas), la sincronización, y el equipo que necesita saber ambos. ¿A partir de qué tamaño de sistema se justifica?
+15. Postgres JSONB, honestamente: implementa una Tiquetera mínima (tickets con history embebido, búsqueda por status y texto) en Postgres con JSONB e índices GIN. Compara: modelado, consultas, y qué te obligó a hacer el motor. Ahora responde el 🪞 final de la F15 con las manos, no con la opinión.
 16. La convergencia, medida: lista 5 cosas que Mongo tomó del mundo SQL (transacciones, joins, validación, agregaciones ricas, ACID por documento→multi-doc) y 5 que Postgres tomó del documental (JSONB, índices GIN, operadores de path, generated columns, jsonb_agg). ¿Hacia dónde va la convergencia? ¿Queda algo irreductiblemente distinto? (Sí: piensa en scale-out y en la pendiente por defecto.)
 17. Reescribe el 🪞 final de la Fase 15 con lo que sabes ahora: ¿sigue en pie el concepto de "pendiente vs capacidad"? Refínalo con ejemplos concretos de los dos motores.
 18. El argumento fechado: encuentra en internet 3 argumentos contra Mongo que estén técnicamente obsoletos (contra 2.x/3.x) y que sigan circulando hoy. Escribe la refutación con versión y fecha. Es exactamente lo que harás en tu próxima reunión de arquitectura.
 
 **🟠 Difícil (19–25)**
 
-19. El debate estructurado: consigue un interlocutor (colega, o tú mismo por escrito en dos columnas). Tema: "El Mini Jira debió construirse en Postgres". 20 minutos por lado, con evidencia. Al final, ambos deben escribir **el mejor argumento del contrario**. Si no puedes hacerlo, no entendiste su posición.
+19. El debate estructurado: consigue un interlocutor (colega, o tú mismo por escrito en dos columnas). Tema: "La Tiquetera debió construirse en Postgres". 20 minutos por lado, con evidencia. Al final, ambos deben escribir **el mejor argumento del contrario**. Si no puedes hacerlo, no entendiste su posición.
 20. Reconstruye Diaspora: diseña el modelo social de Diaspora en Mongo 4.4 (con todo lo que aprendiste: agregados, referencias extendidas, bucket, `$lookup` solo en frío). ¿Es viable hoy? ¿En qué punto te rindes y admites que Mei tenía razón? Ese punto exacto es tu criterio de la pregunta 1, calibrado.
 21. El caso del dominio hostil: retoma el sistema de turnos médicos (F3 ej. 28) — invariantes cruzadas duras, sin solapes, transaccional puro. Diséñalo en Mongo con todo el arsenal (transacciones, precondiciones, índices únicos parciales). Documenta cada punto donde el motor te hace remar. ¿Es imposible, o solo cuesta más? La diferencia entre "no se puede" y "no conviene" es el nivel de madurez de un arquitecto.
-22. Escribe el ADR (Architecture Decision Record) que el equipo original del Mini Jira debió escribir en 2018: contexto, opciones consideradas, decisión, consecuencias — con la información que tenían ENTONCES (sin transacciones multi-doc; sin validación madura). ¿La decisión fue defendible con la información de la época? Este ejercicio te cura del juicio fácil al legacy ajeno.
+22. Escribe el ADR (Architecture Decision Record) que Felipe debió escribir en 2019, antes de pasar la Tiquetera a Mongo: contexto, opciones consideradas, decisión, consecuencias — con la información que tenían ENTONCES (sin transacciones multi-doc; sin validación madura). ¿La decisión fue defendible con la información de la época? Este ejercicio te cura del juicio fácil al legacy ajeno.
 23. El curso espejo (F15, ej. 20, en serio): escribe el capítulo completo (concepto + ejercicios) de "Fase 3 invertida: normalizar para cerebros Mongo" — los instintos documentales que traicionan en Postgres (embeber donde debiste referenciar, el JSONB como excusa para no modelar, la ausencia de constraints como costumbre). Enseñar el camino inverso demuestra que dominas el mapa completo.
-24. Análisis de sensibilidad del marco: toma el Mini Jira y ve cambiando UNA condición por vez (10× más lecturas; el reporting se vuelve el 80% del uso; entran 3 equipos con SQL-cultura; el negocio exige auditoría transaccional total). ¿En qué punto el veredicto se invierte? Grafica/tabula el punto de quiebre de cada variable. Acabas de convertir el marco en un instrumento cuantitativo.
+24. Análisis de sensibilidad del marco: toma la Tiquetera y ve cambiando UNA condición por vez (10× más lecturas; el reporting se vuelve el 80% del uso; entran 3 equipos con SQL-cultura; el negocio exige auditoría transaccional total). ¿En qué punto el veredicto se invierte? Grafica/tabula el punto de quiebre de cada variable. Acabas de convertir el marco en un instrumento cuantitativo.
 25. Lee el análisis Jepsen COMPLETO (no el resumen) de 4.2.6, incluida la respuesta de MongoDB. Escribe 1 página: ¿la respuesta del vendor fue honesta? ¿Qué harías tú distinto en tu sistema tras leerlo? ¿Qué pregunta le harías a Kingsbury? (Leer una crítica técnica dura, entenderla, y no ponerte defensivo ni fanático: es la habilidad final.)
 
 **🔴 Muy difícil (26–30)**

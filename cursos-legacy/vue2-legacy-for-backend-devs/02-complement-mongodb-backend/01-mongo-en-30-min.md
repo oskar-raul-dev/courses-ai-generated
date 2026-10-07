@@ -25,11 +25,11 @@ tu problema.**
 ## ✅ Qué queda listo al terminar
 
 - el entorno de la Fase 0 adoptado como entorno del proyecto
-  (`minijira-backend/` con su compose y su `.env` propios);
+  (`tiquetera-backend/` con su compose y su `.env` propios);
 - el diccionario de traducción SQL↔Mongo interiorizado (y colgado en la pared);
 - entender qué es un documento BSON, qué es un ObjectId y por qué no vas a
   extrañar el `AUTO_INCREMENT`;
-- la base `minijira` sembrada desde el `db.json` heredado, con referencias
+- la base `tiquetera` sembrada desde el `db.json` heredado, con referencias
   retraducidas y fechas convertidas a `Date`;
 - el archivo `INSTINTOS.md` creado con sus 2 primeras entradas.
 
@@ -95,7 +95,7 @@ Un documento es un objeto BSON (JSON binario con tipos extra: `Date`,
   title: "La impresora del piso 3 no imprime",
   status: "open",
   priority: "high",
-  reporter: "usuario1",
+  reporter: "dprios",
   assignee: null,
   createdAt: ISODate("2020-03-10T10:00:00Z")
 }
@@ -136,7 +136,7 @@ Consecuencias que un cerebro SQL debe registrar:
 
 > ### 🪞 Tu instinto dice… "primero el DDL: creo la base, las tablas, y después inserto"
 >
-> No hay DDL. `use minijira` no crea nada; el primer `insertOne` crea base y
+> No hay DDL. `use tiquetera` no crea nada; el primer `insertOne` crea base y
 > colección al vuelo. Comodísimo y aterrador: un typo en el nombre de la
 > colección no da error — **crea una colección nueva** y tu insert cae ahí.
 > `db.tikets.insertOne(...)` funciona perfecto. Ese es el precio.
@@ -148,13 +148,13 @@ Consecuencias que un cerebro SQL debe registrar:
 ## 🐳 El entorno (heredado de la Fase 0)
 
 El `docker-compose.yml` parametrizable de la Fase 0 es el del proyecto: cópialo
-(con su `.env`) a la raíz de `minijira-backend/` y ajusta dos parámetros para
+(con su `.env`) a la raíz de `tiquetera-backend/` y ajusta dos parámetros para
 que el entorno del curso quede identificado y separado de tu `playground`:
 
 ```bash
 # .env del proyecto
-MONGO_CONTAINER=minijira-mongo
-MONGO_DATA_PATH=./mongo-data     # los datos del Mini Jira, físicamente aquí
+MONGO_CONTAINER=tiquetera-mongo
+MONGO_DATA_PATH=./mongo-data     # los datos de la Tiquetera, físicamente aquí
 ```
 
 ```bash
@@ -168,8 +168,8 @@ mismas conexiones — tu `SETUP.md` de la Fase 0 ya documenta tu caso.
 ### Primeros comandos (2 minutos, en mongosh)
 
 ```js
-show dbs                 // tus bases (minijira aún no existe)
-use minijira             // "cámbiate" a ella (aún no existe: no importa)
+show dbs                 // tus bases (tiquetera aún no existe)
+use tiquetera             // "cámbiate" a ella (aún no existe: no importa)
 db.tickets.insertOne({ title: "hola mundo", status: "open" })
 show dbs                 // ahora sí existe
 db.tickets.find()
@@ -193,16 +193,16 @@ extracto de una fila por colección**, no el archivo entero:
     { "id": 1, "title": "La impresora no imprime",
       "description": "Otra vez. Tercera vez esta semana.",
       "status": "open", "priority": "high",
-      "assignee": "soporte1", "reporter": "usuario1",
+      "assignee": "lmcano", "reporter": "dprios",
       "createdAt": "2020-03-10T10:00:00Z" }
   ],
   "users": [
-    { "id": 1, "username": "admin", "name": "Usuario Demo", "role": "agent" },
-    { "id": 2, "username": "soporte1", "name": "Ana Soporte", "role": "agent" },
-    { "id": 3, "username": "usuario1", "name": "Carlos Usuario", "role": "reporter" }
+    { "id": 1, "username": "admin", "name": "Andrés Felipe Ríos", "role": "agent" },
+    { "id": 2, "username": "lmcano", "name": "Laura Marcela Cano", "role": "agent" },
+    { "id": 3, "username": "dprios", "name": "Diana Patricia Ríos", "role": "reporter" }
   ],
   "comments": [
-    { "id": 1, "ticketId": 1, "author": "soporte1",
+    { "id": 1, "ticketId": 1, "author": "lmcano",
       "body": "¿Probaste apagarla y prenderla?",
       "createdAt": "2020-03-10T10:30:00Z" }
   ]
@@ -215,9 +215,11 @@ extracto de una fila por colección**, no el archivo entero:
 > pinta.
 >
 > Y cuando lo abras, vas a encontrar un regalo para esta fase: los tickets 2 y
-> 3 tienen `assignee: "soporte2"` y `reporter: "usuario2"` / `"usuario3"`,
-> **usernames que no existen en el array `users`**. json-server nunca se quejó
-> porque json-server no sabe qué es una referencia. Guárdate la pregunta para
+> 3 tienen `assignee: "jpmesa"` y `reporter: "cvelez"` / `"mrestrepo"`,
+> **usernames que no existen en el array `users`**: son de gente que ya no
+> trabaja en Cuadre, y cuando alguien se iba, Felipe borraba su usuario. Sus
+> tickets quedaron apuntando a nadie. json-server nunca se quejó porque
+> json-server no sabe qué es una referencia. Guárdate la pregunta para
 > dentro de tres párrafos: cuando la integridad referencial pase a ser tuya,
 > ¿qué haces con las que ya venían rotas?
 
@@ -233,7 +235,7 @@ por ti**.
 ### Estructura inicial del proyecto
 
 ```
-minijira-backend/
+tiquetera-backend/
   docker-compose.yml
   package.json
   .nvmrc                  ← 14.21.3
@@ -259,7 +261,7 @@ const fs = require("fs");
 const path = require("path");
 
 const MONGO_URL = "mongodb://localhost:27017";
-const DB_NAME = "minijira";
+const DB_NAME = "tiquetera";
 
 async function main() {
   const raw = fs.readFileSync(path.join(__dirname, "../data/db.json"), "utf8");
@@ -370,14 +372,14 @@ Va a funcionar. Y va a avisarte de esto:
 
 ```
 ⚠️  Usernames referenciados que NO existen en users:
-   soporte2 → 1 referencia(s)
-   usuario2 → 1 referencia(s)
-   usuario3 → 1 referencia(s)
+   jpmesa → 1 referencia(s)
+   cvelez → 1 referencia(s)
+   mrestrepo → 1 referencia(s)
    Decide qué haces con esto y anótalo en DATA-MODEL.md.
 ```
 
 **La fixture heredada viene con referencias rotas.** Los tickets 2 y 3 dicen
-estar asignados a `soporte2` y reportados por `usuario2` / `usuario3`, y esos
+estar asignados a `jpmesa` y reportados por `cvelez` / `mrestrepo`, y esos
 tres usuarios **no existen** en la colección `users`. No es un error de este
 curso: está así en el `db.json` del sistema heredado desde su Fase 3, y llevaba
 meses en producción sin que nadie se enterara — porque json-server no sabe qué
@@ -428,7 +430,7 @@ node scripts/seed.js
 Verifica en Compass o mongosh:
 
 ```js
-use minijira
+use tiquetera
 db.tickets.countDocuments()
 db.comments.findOne()      // mira el ticketId: es un ObjectId, no un número
 ```
@@ -461,10 +463,10 @@ la implementa la Fase 10. Hoy solo debías saber que existe.
 ```js
 // Levantar / entrar
 docker compose up -d
-mongosh mongodb://localhost:27017/minijira
+mongosh mongodb://localhost:27017/tiquetera
 
 // Supervivencia en mongosh
-show dbs; use minijira; show collections
+show dbs; use tiquetera; show collections
 db.tickets.find()                        // SELECT *
 db.tickets.findOne({ status: "open" })   // TOP 1 con WHERE
 db.tickets.countDocuments()              // COUNT(*)
@@ -528,7 +530,7 @@ el segundo caso te llega en un ticket a las seis de la tarde.
 
 **🟢 Fácil (1–10)**
 
-1. Adopta el compose de la Fase 0 en `minijira-backend/` con contenedor y ruta de datos propios. Verifica con `db.version()` y deja anotado en el README puerto, versión y ruta física de los datos.
+1. Adopta el compose de la Fase 0 en `tiquetera-backend/` con contenedor y ruta de datos propios. Verifica con `db.version()` y deja anotado en el README puerto, versión y ruta física de los datos.
 2. Ejecuta el seed dos veces seguidas. ¿Por qué no duplica datos? Señala la línea responsable.
 3. En mongosh: lista todos los tickets con `status: "open"`.
 4. Cuenta cuántos usuarios tienen `role: "agent"` con `countDocuments`.
@@ -614,7 +616,7 @@ caps. 1–2 solo si quieres consolidar.
 ## 🚀 Cierre
 
 Al final de esta fase tienes: el entorno de época corriendo, el diccionario en
-la pared, la base `minijira` sembrada desde el mock heredado, y —más
+la pared, la base `tiquetera` sembrada desde el mock heredado, y —más
 importante— **dos instintos auditados por escrito** y la primera experiencia
 visceral de que la integridad referencial cambió de dueño: ahora eres tú.
 

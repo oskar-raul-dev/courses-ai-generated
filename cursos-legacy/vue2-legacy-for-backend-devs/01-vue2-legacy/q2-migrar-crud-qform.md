@@ -13,7 +13,7 @@ borra código y confía en piezas que otro puso.
 
 **Q1 te dejó** (si falta, es un bug de Q1, no de tu setup):
 
-- el proyecto Quasar CLI creado (`quasar create mini-jira-q`) — **no hay
+- el proyecto Quasar CLI creado (`quasar create tiquetera-q`) — **no hay
   `main.js`**;
 - `src/boot/axios.js` con el `apiClient` y el interceptor de token de F2;
 - **`src/boot/vuelidate.js`** con el `Vue.use(Vuelidate)` que en el tronco vivía
@@ -115,7 +115,7 @@ Lo que se aprende hoy:
 - `QTable` — el dashboard es Q3;
 - `QStepper` / el wizard de F6 — ejercicio 🔴 de Q4;
 - theming de Quasar / `brand colors` — no es una fase de estética;
-- `QEditor`, `QUploader`, `QDate` — fauna que reconocerás, pero el Mini Jira no
+- `QEditor`, `QUploader`, `QDate` — fauna que reconocerás, pero la Tiquetera no
   los necesita;
 - validación server-side de verdad — sigue siendo deuda 💸, y Quasar no la paga.
 
@@ -519,7 +519,7 @@ Q2 (:rules por defecto):
 ```
 
 ¿Es peor? **No necesariamente.** Es *más agresivo*. En un formulario de 3
-campos y usuarios internos (tu Mini Jira), el feedback instantáneo se agradece.
+campos y usuarios internos (tu Tiquetera), el feedback instantáneo se agradece.
 En un formulario de registro de 12 campos, es hostil — te grita antes de que
 termines de pensar.
 
@@ -1251,7 +1251,7 @@ exactamente el modo en que esta ruta rompe las cosas.
    que te ahorraste.
 4. Cambia `:disabled="saving"` del botón por `:loading="saving"`. ¿Qué se ve
    distinto? ¿Qué prefieres para una acción que tarda 2 segundos?
-5. Agrega un `hint` al campo asignado: "Username del agente, ej. soporte1".
+5. Agrega un `hint` al campo asignado: "Username del agente, ej. lmcano".
    Compara con el `placeholder` de F5: ¿cuándo usarías cada uno?
 6. Agrega un `q-btn type="reset"` y un `@reset="handleReset"` en el `QForm`.
    Implementa `handleReset` para limpiar `form` **y** llamar a

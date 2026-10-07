@@ -303,7 +303,7 @@ No hay respuesta universal. Hay una **decisión defendida**:
   HTML semántico puro. Para SEO de contenido suele bastar; para casos extremos
   de TTFB, `asyncData` gana por un pelo.
 
-**La respuesta honesta para Mini Jira:** dado que los tickets **ya cumplían las
+**La respuesta honesta para la Tiquetera:** dado que los tickets **ya cumplían las
 cuatro preguntas de F10** (multi-vista, sobreviven navegación, multi-fuente,
 inconsistencia = bug), y dado que **el socket de F8 commitea al store**, romper
 la fuente única para ganar un TTFB marginal es un mal negocio. → **Opción B:
@@ -388,7 +388,7 @@ export default {
   },
   data: function () { return { tickets: [] }; }
   // ❌ el socket commiteará al store; este 'tickets' de data() NUNCA se entera.
-  //    El tiempo real muere en silencio. Por eso NO es la opción para Mini Jira.
+  //    El tiempo real muere en silencio. Por eso NO es la opción para la Tiquetera.
 };
 ```
 
@@ -553,7 +553,7 @@ en tu aplicación.
 15. Compara TTFB real: con la extensión de red del navegador, mide el tiempo de
     la primera respuesta HTML en Opción A vs Opción B vs la versión SPA de NX2.
     Anota los tres números. ¿La diferencia justifica romper el store? (spoiler
-    razonable: no, para Mini Jira).
+    razonable: no, para la Tiquetera).
 16. Maneja el caso "el backend interno tarda 5s" en `asyncData`: el usuario ve
     **pantalla en blanco** hasta que el servidor responde (no hay spinner en
     SSR). Documenta este trade-off: SSR intercambia "spinner rápido" por
@@ -664,7 +664,7 @@ cuando toques el ej. 13 → `nuxtServerInit` antes del ej. 24.
 ## 🚀 Cierre
 
 Dos mecanismos querían el mismo trabajo, y elegiste con criterio, no con dogma:
-para Mini Jira, **`fetch` + Vuex**, porque los tickets ya cumplían las cuatro
+para la Tiquetera, **`fetch` + Vuex**, porque los tickets ya cumplían las cuatro
 preguntas de F10 y el socket commitea al store. El store que construiste con
 tanto cuidado **no se rindió** ante Nuxt: solo cambió de dónde recibe su primera
 carga — del `mounted()` del navegador al servidor Node. Te llevas:

@@ -71,7 +71,7 @@ Express que no hayas visto ya en tu stack de siempre.
 ### La estructura (tu arquitectura de capas, acento JavaScript)
 
 ```
-minijira-backend/
+tiquetera-backend/
   src/
     config.js               ← puerto, URI de Mongo, por variables de entorno
     db.js                   ← conexión singleton del driver
@@ -172,7 +172,7 @@ function serializeComment(doc) {
     body: doc.body,
     createdAt: doc.createdAt.toISOString()
     // OJO: el modelo sano usa `author` (username). El `authorId` numérico
-    // es del villano soporte_v1 — no cruza jamás la frontera del contrato.
+    // es de soporte_v1, el modelo traducido — no cruza jamás la frontera del contrato.
   };
 }
 function serializeUser(doc)    { /* id, username, name, role */ }
@@ -439,7 +439,7 @@ const config = require("./config");
 
 connect().then(function () {
   app.listen(config.port, function () {
-    console.log("Mini Jira backend en :" + config.port);
+    console.log("Tiquetera backend en :" + config.port);
   });
 });
 ```

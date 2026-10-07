@@ -204,7 +204,7 @@ y el porcentaje de resueltos. El backend lo hará en UNA pasada con `$facet`
 >
 > ```js
 > countByStatus(tickets)   // → { open: 5, in_progress: 3, resolved: 8, closed: 2 }
-> activeByAgent(tickets)   // → [{ agent: "soporte1", count: 4 }, …] desc
+> activeByAgent(tickets)   // → [{ agent: "lmcano", count: 4 }, …] desc
 > resolvedPercent(tickets) // → 62   (entero, Math.round)
 > ```
 >
@@ -375,7 +375,7 @@ Fase 13 sin HTTP de por medio.
 > {
 >   // —— espejo del cliente (forma fijada por Curso 01 · F7) ——
 >   byStatus:        { open: 5, in_progress: 3, resolved: 8, closed: 2 },
->   activeByAgent:   [{ agent: "soporte1", count: 4 }, …],  // desc, con "(sin asignar)"
+>   activeByAgent:   [{ agent: "lmcano", count: 4 }, …],  // desc, con "(sin asignar)"
 >   resolvedPercent: 62,
 >
 >   // —— extensiones (nuevas, el cliente no las pinta hoy) ——
@@ -521,7 +521,7 @@ método, y sirve para cualquier pipeline ajeno.
 
 ## 🧪 Ejercicios (36)
 
-Base: `minijira` a 100k con `history` poblado (si tu generador no lo pobló,
+Base: `tiquetera` a 100k con `history` poblado (si tu generador no lo pobló,
 el ejercicio 1 lo arregla). Formato espejo obligatorio: SQL como comentario
 encima de cada pipeline.
 
@@ -559,14 +559,14 @@ encima de cada pipeline.
 24. Optimización verificable: toma un pipeline deliberadamente mal ordenado (te lo escribes: `$project` primero, `$match` al final, `$unwind` temprano) y optimízalo por pasos, midiendo cada mejora con explain + cronómetro. Tabla de la evolución: es tu viejo oficio de afinar queries, en pipeline.
 25. `$merge` como vista materializada: materializa el resultado del `$facet` de stats a una colección `stats_cache` con timestamp, y escribe el par: `refreshStats()` (corre y merge) + `getStats()` (lee el caché con su edad). El patrón del stats nocturno de la época, completo.
 26. Decide la arquitectura de `/stats`: ¿en vivo ($facet por request) o cacheado ($merge + TTL/refresh)? Con tus números del ej. 19 y una frecuencia inventada-pero-declarada del dashboard, escribe la decisión formato `DATA-MODEL.md` con el trigger de cambio ("si stats supera N req/min o la base M docs → caché").
-27. La analítica transversal de la autopsia: re-implementa "actividad de un agente" (F8, tabla final) como aggregation sobre `soporte_v2`/`minijira` y añade la fila que faltaba: ¿la analítica pesada es donde el modelo normalizado se defendía? Mide contra `soporte_v1` (sus lookups ya indexados) y cierra el debate con números.
+27. La analítica transversal de la autopsia: re-implementa "actividad de un agente" (F8, tabla final) como aggregation sobre `soporte_v2`/`tiquetera` y añade la fila que faltaba: ¿la analítica pesada es donde el modelo normalizado se defendía? Mide contra `soporte_v1` (sus lookups ya indexados) y cierra el debate con números.
 28. Auditoría de nulls a escala, saldada: rehaz el ejercicio 24 de la Fase 2 (el reporte de 3 estados de `assignee`) ahora en UNA aggregation con `$cond` + `$type`. Compara el sufrimiento de entonces con el de ahora: ese delta ES esta fase.
 29. Encuentra el map-reduce fósil: busca en GitHub un `mapReduce()` de la época (2015–2019 abunda) y tradúcelo a pipeline. Documenta: ¿qué gana la traducción (legibilidad, rendimiento, mantenibilidad)? Es una tarea de modernización real que te va a tocar.
 30. El pipeline como dato: guarda los pipelines de stats en `pipelines/*.json` (son JSON puro — esa es una superpotencia silenciosa) y escribe el runner que los carga, ejecuta y valida su forma de salida contra un schema (ajv de la Fase 4). Configuración analítica versionable y testeable.
 
 **🔴 Muy difícil (31–36)**
 
-31. SLA por prioridad: define umbrales (high: 24h, medium: 72h, low: 168h) y calcula, POR prioridad, el % de tickets resueltos dentro de su SLA — todo en pipeline (necesitarás `$switch` o `$cond` anidados + la métrica de resolución). La consulta que un Mini Jira real cobraría.
+31. SLA por prioridad: define umbrales (high: 24h, medium: 72h, low: 168h) y calcula, POR prioridad, el % de tickets resueltos dentro de su SLA — todo en pipeline (necesitarás `$switch` o `$cond` anidados + la métrica de resolución). La consulta que una Tiquetera real cobraría.
 32. Cohortes: por mes de creación del ticket, ¿qué % está resuelto a los 7 / 30 / 90 días? Matriz mes × ventana. Es la consulta analítica más dura de la fase — método incremental o muerte.
 33. El "explain del pipeline" como herramienta propia: script `scripts/pipeline-lint.js` que recibe un pipeline JSON y advierte: `$match` no-inicial que podría subir, `$unwind` antes de `$match`, `$project` temprano que corta campos usados después (¡detecta el error!), `$facet` con filtros indexables adentro. Córrelo sobre todos tus pipelines de la fase.
 34. Percentiles sin percentile (llega en 7.0): calcula p50 y p95 del tiempo de resolución en 4.4 — `$push` + `$sort` del array + `$arrayElemAt` al índice calculado, o materializando. Implementa, valida contra un cálculo en Node, y documenta el truco: lo verás en legacy analítico.
@@ -578,6 +578,7 @@ encima de cada pipeline.
 - 🔥 **Fidelidad del contrato, probada:** corre `computeStats` + `serializeStats` contra tu base y, en paralelo, corre las funciones puras de Track A (`countByStatus`, `activeByAgent`, `resolvedPercent` de Curso 01 · F7) sobre el mismo dataset traído a Node. Assert con **igualdad profunda** (`toEqual`, no comparación de números sueltos): la salida del backend tiene que ser indistinguible de la del cliente, clave por clave. Asegúrate de que el dataset incluya **al menos un ticket sin `assignee`** y un total que fuerce un `.5` en el porcentaje — son los dos casos donde una implementación descuidada difiere. Si algo falla, encontraste una regresión antes que el usuario. (Este es el test que la Fase 13 formaliza.)
 - 🔥 **El caso `byAgent` que engaña:** construye a mano un escenario de 3 tickets (uno `open`, uno `closed`, uno `resolved`) todos del mismo agente y demuestra con números por qué `byAgent` (=3) y `activeByAgent` (=1) **deben** diferir. Escribe en una línea por qué mezclarlos rompería la dona del dashboard.
 - 🔥 **map-reduce vs pipeline, cronometrado:** toma el fósil que tradujiste en el ej. 29 y mide ambos con la base grande. Documenta el factor de aceleración real; suele ser aleccionador.
+- 🔥 **La tabla de puntajes, del lado del servidor:** el Curso 01 · F7 calcula la tabla de puntajes de la casa en el navegador, agrupada por iniciales, y su incidente 13 muestra a dos Lauras sumadas en una sola fila `LMC` (la historia está en la ficha del sistema, §5). Págala aquí con un pipeline: `$match` de resueltos y cerrados, `$group` por `assignee` (el username, nunca las iniciales), puntos con `$switch` sobre `priority` (baja 100, media 200, alta 300), y el nombre traído con un `$lookup` a `users` —legítimo: es analítica, no la ruta caliente—. Reporta aparte los `assignee` que no existen en `users` (los usuarios borrados de la gente que se fue) en vez de esconderlos. Después usa el `history` embebido para medir lo que la tabla nunca midió: por agente, cuántos tickets **pasó** a `resolved` y cuántos **siguen** resueltos; la diferencia es la tasa de reapertura. Cierra en 3 líneas: ¿qué conducta premiaba la tabla, y qué número pondrías en el monitor de la oficina?
 - 🔥 **`$out` destructivo, la lección cara:** corre un `$out` a una colección que YA tiene datos y observa que la reemplaza entera (no hace merge). Recupérate. Escribe la regla mnemotécnica que te ahorrará el susto en producción.
 
 ---

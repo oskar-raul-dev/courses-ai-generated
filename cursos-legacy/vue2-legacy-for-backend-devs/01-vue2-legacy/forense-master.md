@@ -1,5 +1,5 @@
 # 🕵️ Track forense — índice y método
-## Curso 01 · Vue 2 Legacy — Mini Jira
+## Curso 01 · Vue 2 Legacy — Tiquetera
 
 > Puerta de entrada del track. Cubre las doce piezas de tronco,
 > `forense-fase-00.md` … `forense-fase-11.md`, y las tres de ruta.
@@ -167,7 +167,7 @@ desapareció, y contesta el *"esto antes funcionaba"* sin discutirlo.
 
 Este archivo te dice **dónde empezar**. Las piezas te dicen **cómo recorrer** cada camino.
 Y lo que te llevas al trabajo real no está en ninguno de los dos: está en el hábito de
-contestar las cuatro preguntas de §1 en orden, sobre un sistema que no es Mini Jira.
+contestar las cuatro preguntas de §1 en orden, sobre un sistema que no es Tiquetera.
 
 Las piezas que más rinden son las de las fases 4, 8 y 10 ⭐, por el mismo motivo: las tres
 terminan en algo que no se ve en la pantalla —una propiedad que no es reactiva, un evento

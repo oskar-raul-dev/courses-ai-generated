@@ -1,6 +1,6 @@
 # 📓 Cuaderno de incidentes — Curso 01 · Vue 2 Legacy
 
-> Doce tickets vagos, como llegan de verdad: en palabras de quien los sufre, sin
+> Trece tickets vagos, como llegan de verdad: en palabras de quien los sufre, sin
 > pasos de reproducción y con la mitad de la información. Cada uno trae su
 > preparación, tres pistas plegadas, sitio para tu investigación y una solución
 > de referencia.
@@ -102,6 +102,7 @@ git tag -a inc/f05/etiqueta-invisible-fix  -m "Causa raíz, fix, y la prueba en 
 | 10 | 10 | "El contador del menú dice una cosa y la tabla otra" | Estado (Vuex) | 🟠 | ⬜ |
 | 11 | 11 | "El test pasa solo cuando lo corro aislado" | Testing | 🔴 | ⬜ |
 | 12 | 10 | "En el servidor de pruebas se comporta distinto que en mi máquina" | Build | 🔴 | ⬜ |
+| 13 | 7 | "Laura dice que los puntos de la semana son de ella" | Datos e identidad | 🟡 | ⬜ |
 
 ---
 
@@ -1667,10 +1668,10 @@ it("el detalle refleja el ticket actualizado sin cambiar de selección", functio
   var wrapper = shallowMount(SupportView, { … });
   wrapper.setData({ tickets: [{ id: 12, status: "open", assignee: null }], selectedId: 12 });
 
-  wrapper.vm.onTicketUpdated({ id: 12, status: "in_progress", assignee: "soporte1" });
+  wrapper.vm.onTicketUpdated({ id: 12, status: "in_progress", assignee: "lmcano" });
 
   expect(wrapper.vm.selectedTicket.status).toBe("in_progress");
-  expect(wrapper.vm.selectedTicket.assignee).toBe("soporte1");
+  expect(wrapper.vm.selectedTicket.assignee).toBe("lmcano");
 });
 ```
 
@@ -2215,10 +2216,185 @@ bug casi siempre es viejo y lo nuevo es quién lo tapaba.
 
 ---
 
+## Incidente 13 — "Laura dice que los puntos de la semana son de ella"
+
+> **Fase:** 7 · **Categoría:** Datos e identidad · **Dificultad:** 🟡
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 40-60 min
+
+### 🎫 El ticket
+
+> "Desde que entró Laura Milena, la tabla de puntajes está loca. Yo resolví
+> cuatro tickets esta semana y ella tres, y la tabla dice que una sola persona,
+> LMC, resolvió siete y va de primera. Las dos queremos saber de quién son los
+> puntos. Y otra cosa rara: abajo de todo aparece un `???` con puntos, y aquí no
+> trabaja nadie que se llame así."
+
+**Reportado por:** Laura Marcela Cano, agente de soporte · **Ambiente:**
+producción, el monitor de la oficina
+
+### 🎯 Qué se te pide
+
+Dos síntomas, una misma familia:
+
+1. Los puntos de dos personas sumados en una sola fila.
+2. La fila `???`.
+
+Para los dos, causa raíz y fix en el cliente. Y una respuesta escrita, de tres
+líneas, a la pregunta que de verdad hace el ticket: *¿de quién son los puntos?*
+Spoiler de la dificultad: el fix del primer síntoma es fácil; decidir qué se
+muestra en la pantalla de la oficina no lo es.
+
+### 🔧 Preparación
+
+Un `db.json` alterno con la mesa de 2022: la segunda Laura dada de alta, y
+tickets resueltos por las dos.
+
+```bash
+git checkout -- db.json          # guarda antes lo que tengas
+cp mock/db.incidente-13.json db.json
+```
+
+El archivo alterno es el `db.seed.json` con tres diferencias: el usuario
+`{ "username": "lmcorrea", "name": "Laura Milena Correa", "role": "agent" }`,
+cuatro tickets `resolved` con `assignee: "lmcano"` y tres con
+`assignee: "lmcorrea"`, y un ticket `closed` asignado a `jpmesa`, que no existe
+en `users`.
+
+---
+
+<details><summary>💡 <b>Pista 1</b> — dónde mirar</summary>
+
+No es un problema de red ni de reactividad: la respuesta del mock trae los siete
+tickets con su `assignee` correcto. Compara lo que llega en Network con lo que
+recibe `ScoreBoard` en sus props, en Vue DevTools. En algún punto entre los dos,
+siete filas de dos personas se volvieron una.
+
+</details>
+
+<details><summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+Corre `scoreBoard` a mano en la consola del navegador con los datos del mock, o
+léela con lápiz: ¿por qué campo agrupa? Y para la fila `???`: ¿qué devuelve la
+búsqueda del usuario cuando el `assignee` no está en `users`?
+
+</details>
+
+<details><summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+Escribe las iniciales de "Laura Marcela Cano" y de "Laura Milena Correa".
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+**Hipótesis (❌ descartada / ✅ confirmada)**
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details><summary>✅ <b>Solución de referencia</b></summary>
+
+**Causa raíz.** Una sola decisión, declarada 💸 desde la Fase 7: **la tabla
+agrupa por las iniciales, no por el usuario**. "Laura Marcela Cano" y "Laura
+Milena Correa" producen las dos `LMC`, y `_.groupBy` las mete en el mismo grupo
+sin quejarse, porque para él son la misma clave. La fila `???` es la otra cara de
+la misma decisión: `jpmesa` es un usuario borrado cuando la persona se fue de
+Cuadre, sus tickets siguen apuntando a él, y la búsqueda devuelve `undefined`.
+
+**Parche mínimo:** agrupar por la identidad de verdad y dejar las iniciales como
+lo que son, una etiqueta.
+
+```js
+// utils/ticketStats.js — la fila se agrupa por username; las iniciales solo se pintan
+var byUsername = _.groupBy(solved, "assignee");
+
+return _.orderBy(
+  Object.keys(byUsername).map(function (username) {
+    var user = userByUsername[username];
+    var rows = byUsername[username];
+    return {
+      username: username,
+      initials: user ? initialsOf(user.name) : "???",
+      name: user ? user.name : username + " (usuario borrado)",
+      solved: rows.length,
+      points: _.sumBy(rows, function (t) { return POINTS_BY_PRIORITY[t.priority] || 0; })
+    };
+  }),
+  ["points"], ["desc"]
+);
+```
+
+Y en `ScoreBoard.vue`, `:key="row.username"` y el nombre completo en un
+`title` sobre las iniciales, para que el monitor siga viéndose como arcade y
+quien pase el mouse sepa quién es quién.
+
+**La refactorización correcta.** El parche separa las filas, pero la pantalla
+sigue mostrando dos `LMC` iguales, y la pregunta del ticket sigue abierta. Eso
+ya no es código: es una conversación con quien pidió la tabla. Las opciones
+honestas son tres —un cuarto carácter para desempatar, el nombre corto en vez
+de las iniciales, o un alias que cada agente elige como en las máquinas— y la
+elección es de Felipe, no tuya. Tu entregable es ponerla sobre la mesa con el
+parche funcionando.
+
+Sobre `???`: el parche lo hace legible, no lo resuelve. Mientras los usuarios se
+borren en vez de desactivarse, va a haber tickets que apuntan a nadie. Eso se
+anota en los pendientes del cuaderno.
+
+**Prueba de regresión.**
+
+```js
+// tests/unit/ticketStats.spec.js
+it("no mezcla a dos agentes con las mismas iniciales", function () {
+  var users = [
+    { username: "lmcano", name: "Laura Marcela Cano" },
+    { username: "lmcorrea", name: "Laura Milena Correa" }
+  ];
+  var tickets = [
+    { id: 1, status: "resolved", priority: "low", assignee: "lmcano" },
+    { id: 2, status: "resolved", priority: "low", assignee: "lmcorrea" }
+  ];
+
+  var rows = scoreBoard(tickets, users);
+
+  expect(rows).toHaveLength(2);
+  expect(rows[0].initials).toBe("LMC");
+  expect(rows[1].initials).toBe("LMC");
+});
+```
+
+**Prevención.** Una regla que se verifica en una revisión: **una etiqueta para
+humanos nunca es una llave**. Iniciales, nombres y alias se pintan; se agrupa,
+se compara y se guarda por el identificador.
+
+**Por qué llegó a producción.** Porque durante dos años no hubo dos personas con
+las mismas iniciales, y un bug que necesita una coincidencia de nombres no se ve
+probando con los datos de siempre. La decisión de agrupar por iniciales no fue
+un descuido de esa semana: era la forma natural de pensarlo para quien armaba
+máquinas de arcade, donde las tres letras son todo lo que hay.
+
+**Si tu causa fue distinta a ésta.** Si concluiste "el mock duplica tickets",
+Network lo desmiente: llegan siete tickets distintos con siete `id`. Si tu fix
+fue "que `initialsOf` devuelva cuatro letras", funciona con estas dos Lauras y
+falla con la próxima coincidencia: arreglaste el síntoma, no la llave.
+
+</details>
+
+---
+
 ## 🪞 Retrospectiva
 
 Cuando cierres varios incidentes, vuelve acá y llénala. No es un formalismo: la
-lista de causas raíz de un sistema tiene forma, y verla es lo que convierte doce
+lista de causas raíz de un sistema tiene forma, y verla es lo que convierte trece
 casos sueltos en criterio.
 
 | ID | Capa donde vivía | Pista que lo resolvió | Cuánto tardaste | Lo habrías visto antes si… |
@@ -2262,11 +2438,16 @@ Lo que salió de los incidentes y no se arregló acá, con el motivo.
 - **La carrera del doble "tomar"** (incidente 09). El cliente puede reducir la
   ventana, no cerrarla. Hace falta que la escritura lleve la precondición dentro,
   y eso lo tiene que ofrecer el servidor.
+- **La tabla de puntajes no tiene dueño** (incidente 13). Se calcula en el
+  navegador sobre la lista que cada quien cargó, y los usuarios se borran en vez
+  de desactivarse, así que hay tickets que apuntan a nadie. Hace falta un
+  servidor que calcule el puntaje y una política de bajas que no rompa
+  referencias.
 - **`reporter` y `createdAt` los pone el navegador** (fases 5 y 6). Reglas de
   negocio en la capa equivocada, declaradas 💸 desde su fase. Mismo motivo: sin
   backend no hay dónde ponerlas bien.
 
-> 🧭 Los cuatro pendientes tienen algo en común, y no es casualidad: **son
+> 🧭 Los cinco pendientes tienen algo en común, y no es casualidad: **son
 > exactamente los límites de un frontend que le habla a un mock.** Que estén
 > escritos, con nombre y motivo, es lo que distingue una deuda técnica de un
 > descuido.

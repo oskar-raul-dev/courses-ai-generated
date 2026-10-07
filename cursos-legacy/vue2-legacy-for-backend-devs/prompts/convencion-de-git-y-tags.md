@@ -1,5 +1,5 @@
 # 🏷️ Convención de git: commits y tags de progreso
-## Paquete Mini Jira — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
+## Paquete Tiquetera — Curso 01 (Vue 2 legacy) + Curso 02 (MongoDB/Express)
 
 Cómo versionas el código que escribes mientras haces los cursos. Es corto a
 propósito: no es un proyecto de empresa, no hay releases ni equipo, y una
@@ -17,8 +17,8 @@ deudas 💸 que un curso le deja al otro.
 ## 📦 Un repo por curso
 
 Al empezar el Curso 01 haces `git init` en el proyecto que crea Vue CLI
-(`mini-jira-legacy`). Al empezar el Curso 02, otro `git init` en el del backend
-(`minijira-backend`). **Dos repos, no uno.**
+(`tiquetera-legacy`). Al empezar el Curso 02, otro `git init` en el del backend
+(`tiquetera-backend`). **Dos repos, no uno.**
 
 No es una preferencia estética. La señal de éxito del paquete se mide con git:
 se apaga json-server, se cambia el `baseURL` y **el `git diff` del frontend
@@ -362,7 +362,7 @@ imagen en `:latest`**: etiquétala con el mismo nombre del tag de git que la
 produjo.
 
 ```bash
-docker build -t minijira-api:fase-14-operacion .
+docker build -t tiquetera-api:fase-14-operacion .
 ```
 
 Es el mismo reflejo que ya practicaste sin darte cuenta al fijar

@@ -91,15 +91,15 @@ Así se ve una colección real tras 3 años de evolución sin disciplina:
 ```js
 // v1 (2019): sin prioridad, fecha string 😱
 { _id: ..., title: "...", status: "open",
-  reporter: "usuario1", createdAt: "2019-06-01T10:00:00Z" }
+  reporter: "dprios", createdAt: "2019-06-01T10:00:00Z" }
 
 // v2 (2020): prioridad y assignee, fecha ya Date
 { _id: ..., title: "...", status: "open", priority: "high",
-  assignee: null, reporter: "usuario1", createdAt: ISODate("...") }
+  assignee: null, reporter: "dprios", createdAt: ISODate("...") }
 
 // v3 (2021): history embebido (¡nuestra Fase 3!), tags
 { _id: ..., title: "...", status: "open", priority: "high",
-  assignee: "soporte1", reporter: "usuario1", createdAt: ISODate("..."),
+  assignee: "lmcano", reporter: "dprios", createdAt: ISODate("..."),
   history: [ ... ], tags: ["hardware"] }
 ```
 
@@ -145,7 +145,7 @@ async function main() {
   const dryRun = process.argv.includes("--dry");
   const client = await MongoClient.connect("mongodb://localhost:27017",
     { useUnifiedTopology: true });
-  const col = client.db("minijira").collection("tickets");
+  const col = client.db("tiquetera").collection("tickets");
 
   const filter = { updatedAt: { $exists: false } };
   const total = await col.countDocuments(filter);
@@ -376,7 +376,7 @@ validation` no es un diagnóstico; `errInfo` sí.
 30. Rollback honesto: agrega a tu framework el par `up`/`down` por migración e implementa el `down` de `002-add-updatedAt`. Escribe después el párrafo incómodo: ¿por qué el `down` de una migración perezosa es casi imposible? ¿Y el de una que *destruyó* información (`unset` de un campo)?
 31. Detección de drift: script `scripts/schema-drift.js` que compare la forma REAL de la colección (muestrea 1.000 docs, infiere campos/tipos/frecuencias) contra el `ticket.schema.json` declarado, y reporte: campos en datos que el schema no conoce, campos declarados que nadie usa, tipos divergentes. Córrelo tras sabotear la base. (Compass hace esto visual; tú lo acabas de hacer auditable y programable.)
 32. Versionado del validator mismo: diseña cómo evolucionar el `$jsonSchema` cuando el contrato crezca (Fase 11 agregará campos de auth). Propón el flujo: PR al `.schema.json` → migración que aplica `collMod` → censo. Implementa el esqueleto y documenta en `DATA-MODEL.md` la política.
-33. El caso multi-tenant de la época: una colección `tickets` compartida por 3 clientes donde el cliente A exige un campo extra obligatorio (`costCenter`) y los otros no lo tienen. ¿Se puede expresar en un solo validator? (`anyOf` por discriminador `tenant`.) Impleméntalo, mide la legibilidad, y escribe tu recomendación honesta: ¿un validator condicional o la validación por tenant en la app?
+33. **El esquema que vive en el título.** Los casos de los comercios llevan el NIT al comienzo del título por convención (`[900123456] No cuadra la caja del sábado`, Curso 01 F3): el campo "iba a llegar en la próxima versión" y nunca llegó. Sobre la base de 100k (siembra un 30% de títulos con la convención y un 5% con variantes rotas: guiones, espacios, el NIT al final), censa con una expresión regular cuántos la cumplen, cuántos la rompen y cuántos no la tienen. Diseña la migración a un campo `customerNit` con su regla en el validator, y decide qué haces con los que no se pueden parsear. Cierra en 3 líneas: ¿por qué un esquema que vive en la cabeza del equipo es peor que no tener esquema?
 34. **El ensayo de la fase** (1 página, `INSTINTOS.md`): "El ALTER TABLE era una ceremonia; la ceremonia era el punto". Tesis a explorar: el dolor del `ALTER` en SQL forzaba diseño previo y cambios deliberados; su ausencia en Mongo transfiere esa disciplina al equipo — y los equipos que no la asumieron produjeron los legacies de 3 versiones sin `schemaVersion` que ahora heredas. Usa tus experimentos como evidencia. Cierra con tu protocolo personal de 5 reglas para cambiar un esquema en Mongo.
 
 ---

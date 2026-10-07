@@ -38,9 +38,9 @@ herramienta cara— se discute al final y casi siempre se descarta.
 En el log de la API, o repitiendo la operación en `mongosh`:
 
 ```js
-> db.tickets.updateOne({ _id: id }, { $set: { assignee: "soporte1", status: "in_progress" } })
+> db.tickets.updateOne({ _id: id }, { $set: { assignee: "lmcano", status: "in_progress" } })
 { acknowledged: true, matchedCount: 1, modifiedCount: 1 }
-> db.tickets.updateOne({ _id: id }, { $set: { assignee: "soporte2", status: "in_progress" } })
+> db.tickets.updateOne({ _id: id }, { $set: { assignee: "jpmesa", status: "in_progress" } })
 { acknowledged: true, matchedCount: 1, modifiedCount: 1 }
 ```
 
@@ -81,8 +81,8 @@ puedas:
 
 ```js
 // sesión A y sesión B, casi a la vez
-db.tickets.updateOne({ _id: id }, { $set: { assignee: "soporte1" } })
-db.tickets.updateOne({ _id: id }, { $set: { assignee: "soporte2" } })
+db.tickets.updateOne({ _id: id }, { $set: { assignee: "lmcano" } })
+db.tickets.updateOne({ _id: id }, { $set: { assignee: "jpmesa" } })
 ```
 
 ```
@@ -102,11 +102,11 @@ Ahora la misma operación, escrita como una sola:
 ```js
 > db.tickets.updateOne(
     { _id: id, assignee: null },
-    { $set: { assignee: "soporte1", status: "in_progress" } })
+    { $set: { assignee: "lmcano", status: "in_progress" } })
 { matchedCount: 1, modifiedCount: 1 }
 > db.tickets.updateOne(
     { _id: id, assignee: null },
-    { $set: { assignee: "soporte2", status: "in_progress" } })
+    { $set: { assignee: "jpmesa", status: "in_progress" } })
 { matchedCount: 0, modifiedCount: 0 }        // ← el segundo pierde, y se entera
 ```
 

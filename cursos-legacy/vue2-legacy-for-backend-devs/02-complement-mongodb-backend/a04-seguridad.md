@@ -8,7 +8,7 @@ llenando desde la Fase 2 del Curso 01, entrada tras entrada de "esto lo
 debería hacer el backend" — merece un cierre completo, no parcial.
 
 Este apéndice es ese cierre: **el OWASP API Security Top 10 aplicado endpoint
-por endpoint a tu Mini Jira**, con los ataques ejecutados contra tu propio
+por endpoint a tu Tiquetera**, con los ataques ejecutados contra tu propio
 sistema. La regla del apéndice, que es también su ética:
 
 > No has defendido nada hasta que has escrito el ataque, lo has visto
@@ -295,12 +295,12 @@ proxy → `app.set("trust proxy", 1)` o limitarás al proxy, no al atacante.
 27. Refresh tokens: diseña e implementa el par access (15 min) + refresh (7 días, rotativo, revocable en base). Prueba el flujo completo, incluida la detección de reuso de un refresh robado. Es el sistema de auth que un producto real necesita — y el que la Fase 11 declinó por alcance.
 28. Cuotas de almacenamiento: límite por usuario en GridFS (suma de `length` en `attachments.files`). Implementa, prueba con un usuario que se pasa, y mide el costo de la comprobación. ¿Índice necesario? (Sí: cuál.)
 29. Escáner casero: script que recorra tus rutas y reporte las que NO tienen `requireAuth`, las que no validan entrada, y las que hacen `$set` del body completo. Un linter de seguridad para tu propia API — y para la ajena que audites.
-30. Pentest de una hora contra tu Mini Jira: cronómetro, sin mirar tu propio código, solo la API. Documenta cada hallazgo como un reporte real (severidad, reproducción paso a paso, impacto, remediación). Al terminar, compara con lo que sabías: ¿encontraste algo que no esperabas?
+30. Pentest de una hora contra tu Tiquetera: cronómetro, sin mirar tu propio código, solo la API. Documenta cada hallazgo como un reporte real (severidad, reproducción paso a paso, impacto, remediación). Al terminar, compara con lo que sabías: ¿encontraste algo que no esperabas?
 
 **🔴 Muy difícil (31–36)**
 
 31. Auditoría del OWASP API Top 10 completo (la lista de 2019, la de la época) endpoint por endpoint, en una matriz: 10 riesgos × N endpoints, con estado y evidencia. Los "no aplica" también se justifican. Es el documento que un cliente enterprise te pediría.
-32. Threat model del Mini Jira (STRIDE simplificado): identifica los activos (tickets, credenciales, adjuntos), los actores (reporter, agente, anónimo, atacante externo, insider), y las amenazas por límite de confianza (navegador↔API, API↔Mongo, API↔disco). 2 páginas. Descubrirás amenazas que ninguna checklist te habría dado — por ejemplo, ¿qué puede hacer un agente malicioso *legítimo*?
+32. Threat model de la Tiquetera (STRIDE simplificado): identifica los activos (tickets, credenciales, adjuntos), los actores (reporter, agente, anónimo, atacante externo, insider), y las amenazas por límite de confianza (navegador↔API, API↔Mongo, API↔disco). 2 páginas. Descubrirás amenazas que ninguna checklist te habría dado — por ejemplo, ¿qué puede hacer un agente malicioso *legítimo*?
 33. Defensa en profundidad, medida: para la inyección NoSQL, implementa las tres capas y luego **desactívalas de a una** verificando qué ataque pasa con cada combinación. Tabla de 8 filas (2³). El objetivo: entender qué capa te salvaría el día que otra falle por un bug.
 34. Seguridad de la operación (cierra la F14): audita el otro lado — ¿Mongo escucha en 0.0.0.0 sin auth? (¡es el default del contenedor!) Activa autenticación de MongoDB (usuarios, roles, `--auth`), crea un usuario de aplicación con permisos mínimos (no root), y actualiza la connection string. Es el hallazgo #1 de los escaneos de internet de 2016–2019: decenas de miles de Mongos abiertos y ransomeados. Que el tuyo no sea uno.
 35. Secretos como adultos: saca `JWT_SECRET` del `.env` a un gestor (Docker secrets, o un vault local), implementa la **rotación** (dos secretos válidos durante la transición: firma con el nuevo, verifica con ambos) y demuéstralo sin desloguear a nadie. Es el procedimiento que nadie ensaya hasta que lo necesita.

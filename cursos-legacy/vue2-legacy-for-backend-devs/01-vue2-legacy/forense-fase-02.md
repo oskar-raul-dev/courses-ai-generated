@@ -41,7 +41,7 @@ DevTools → **Application** → Storage → Local Storage → `http://localhost
 ```
 Key      Value
 ─────────────────────────────
-user     {"username":"admin","name":"Usuario Demo"}
+user     {"username":"admin","name":"Andrés Felipe Ríos"}
 ```
 
 **Qué descarta.** Descarta media investigación de una sentada. Si `token` no
@@ -78,7 +78,7 @@ Vue DevTools → pestaña **Vuex** → módulo `auth`.
 ```
 auth
   token: "mock-jwt-token-123"
-  user: { username: "admin", name: "Usuario Demo" }
+  user: { username: "admin", name: "Andrés Felipe Ríos" }
 ```
 
 **Qué descarta.** Acá está el hallazgo. El store cree que la sesión sigue viva

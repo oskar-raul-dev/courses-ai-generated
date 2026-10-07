@@ -1,9 +1,11 @@
-# 📘 Curso 01 · Vue 2 Legacy — Mini Jira
+# 📘 Curso 01 · Vue 2 Legacy — Tiquetera
 
 Curso práctico de **Vue 2 legacy (época 2018–2021)** para desarrolladores
 backend que necesitan entrar rápido a una base de código heredada.
 
-Proyecto hilo conductor: **Mini Jira**, una mesa de soporte interna.
+Proyecto hilo conductor: **la Tiquetera**, la mesa de soporte de Cuadre
+Software. Su historia está en la ficha del paquete,
+[`../00-historia-del-sistema.md`](../00-historia-del-sistema.md).
 
 El curso tiene **dos niveles**:
 
@@ -15,7 +17,7 @@ El curso tiene **dos niveles**:
 > No se puede lo segundo sin lo primero: si empiezas por Quasar, nunca sabrás
 > qué es Vue y qué es Quasar.
 
-Este curso es la primera mitad del paquete Mini Jira. La segunda —el backend
+Este curso es la primera mitad del paquete Tiquetera. La segunda —el backend
 real que reemplaza al mock— vive en
 [`../02-complement-mongodb-backend/`](../02-complement-mongodb-backend/README.md).
 
@@ -31,7 +33,7 @@ real que reemplaza al mock— vive en
 | [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio, un tag por fase, tags de ejercicio, y cómo volver a un estado sano cuando el ejercicio 22 te deje el proyecto irreconocible |
 | [`../prompts/guia-de-estilo-y-convenciones.md`](../prompts/guia-de-estilo-y-convenciones.md) | ✍️ Guía editorial compartida con el Curso 02 |
 | [`forense-master.md`](forense-master.md) | 🕵️ **La puerta del track forense**: el método de cuatro preguntas y el 🩺 índice de síntomas. Se entra por lo que ves, no por la fase |
-| [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **12 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |
+| [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **13 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |
 
 Si algo del `0-ESTRUCTURA-CURSO.md` contradice a este índice o al plan, hay
 que reconciliarlo — no ignorarlo.
@@ -55,7 +57,7 @@ que reconciliarlo — no ignorarlo.
 | [`10-vuex-a-fondo.md`](10-vuex-a-fondo.md) | 🗂️ **F10** | Refactor consciente del estado global · **cimiento de las rutas** |
 | [`11-testing-minimo.md`](11-testing-minimo.md) | ✅ **F11** | Jest + vue-test-utils · **prerequisito duro de X0** |
 
-Al terminar F11 tienes el Mini Jira completo, "a pelo" y testeado, hablándole
+Al terminar F11 tienes la Tiquetera completa, "a pelo" y testeada, hablándole
 a json-server. Ese es el punto de bifurcación.
 
 ---
@@ -83,6 +85,7 @@ Se come el proyecto: no hay `main.js`, hay `quasar.conf.js` y boot files.
 
 | Archivo | Fase | Qué hace |
 |---|---|---|
+| [`q00-historia-ruta-q.md`](q00-historia-ruta-q.md) | 📖 antes de Q0 | La historia de la rama `quasar-app`: quién la empezó, dónde quedó, qué pide PizzaPaisa |
 | [`q0-red-de-seguridad.md`](q0-red-de-seguridad.md) | 🛡️ **Q0** | Tests de regresión sobre el código que vas a borrar |
 | [`q1-leer-quasar.md`](q1-leer-quasar.md) | 🔷 **Q1** | Leer Quasar sin migrar nada. Reconocimiento puro |
 | [`q2-migrar-crud-qform.md`](q2-migrar-crud-qform.md) | 📝 **Q2** | Migrar el CRUD (F5) a `QForm`. 🪦 vuelidate sale del proyecto |
@@ -96,6 +99,7 @@ JS** y el bundle se te va a 500 kb.
 
 | Archivo | Fase | Qué hace |
 |---|---|---|
+| [`vu00-historia-ruta-vu.md`](vu00-historia-ruta-vu.md) | 📖 antes de VU0 | La historia de la rama `vuetify-redesign`: quién la empezó, dónde quedó, qué pide PizzaPaisa |
 | [`vu0-red-de-seguridad.md`](vu0-red-de-seguridad.md) | 🛡️ **VU0** | Red de seguridad. Y la pregunta abierta: `<v-app>` puede romper tu `mount()` |
 | [`vu1-leer-vuetify.md`](vu1-leer-vuetify.md) | 🅥 **VU1** | Leer Vuetify: `<v-app>`, theming en JS, la trampa de `v-flex` |
 | [`vu2-migrar-crud-vuetify.md`](vu2-migrar-crud-vuetify.md) | 📝 **VU2** | Migrar el CRUD a `v-form` y `:rules`. 🪦 vuelidate sale |
@@ -110,6 +114,7 @@ coincidir o el DOM se rompe.
 
 | Archivo | Fase | Qué hace |
 |---|---|---|
+| [`nx00-historia-ruta-nx.md`](nx00-historia-ruta-nx.md) | 📖 antes de NX0 | La historia de la rama `nuxt-ayuda`: quién la empezó, dónde quedó, qué pide PizzaPaisa |
 | [`nx0-red-de-seguridad.md`](nx0-red-de-seguridad.md) | 🛡️ **NX0** | Red de seguridad — y el descubrimiento de que **tus tests no detectan esto** |
 | [`nx1-leer-nuxt.md`](nx1-leer-nuxt.md) | 📖 **NX1** | Leer Nuxt: `pages/`, `plugins/`, los dos ciclos de vida |
 | [`nx2-hidratacion-window-not-defined.md`](nx2-hidratacion-window-not-defined.md) | 💥 **NX2** | Hidratación y `window is not defined`. La auth de F2 se rompe |
@@ -159,7 +164,7 @@ fallo en tu propia máquina. La especificación del formato vive en
 
 ## 📓 Cuaderno de incidentes
 
-[`cuaderno-incidentes.md`](cuaderno-incidentes.md) — **12 incidentes** repartidos
+[`cuaderno-incidentes.md`](cuaderno-incidentes.md) — **13 incidentes** repartidos
 por todo el curso, con su propia dificultad 🟢🟡🟠🔴. Cada uno trae el ticket
 **como llegó** —vago, en palabras del usuario y sin lenguaje técnico—, la
 preparación para tener el sistema roto en tu máquina, tres pistas plegadas, un
@@ -184,7 +189,7 @@ abrirla antes de escribir la tuya no te ahorra tiempo — te ahorra el ejercicio
  F0 ─ F1 ─ F2 ─ F3 ─ F4 ─ F5 ─ F6 ─ F7 ─ F8 ─ F9 ─ F10 ─ F11
 setup base auth mock dash crud wiz chart ws  panel vuex  test
                                                            │
-                                     ✅ Mini Jira "a pelo" completo
+                                     ✅ Tiquetera "a pelo" completa
                                                            │
                             ┌──────────────┼───────────────┐
                             ▼              ▼               ▼
@@ -268,7 +273,7 @@ las tres** — la convivencia es contenido, no un descuido.
 ## 📊 El material en números
 
 - **12 fases de tronco** + **5 apéndices** + **15 fases de ruta** (3 × 5)
-- **15 piezas forenses** (12 de tronco + 3 de ruta) y **12 incidentes** en el
+- **15 piezas forenses** (12 de tronco + 3 de ruta) y **13 incidentes** en el
   cuaderno
 - **911 ejercicios** graduados 🟢 fácil → 🟡 intermedio → 🟠 difícil →
   🔴 muy difícil, más los 🔥 opcionales

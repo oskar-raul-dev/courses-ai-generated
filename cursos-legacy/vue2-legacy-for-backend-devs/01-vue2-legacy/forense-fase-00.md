@@ -18,7 +18,7 @@ correcto.
 
 ## 🎫 El ticket
 
-> "Clonaste el repo del Mini Jira como te dije y no te arranca. A mí me
+> "Clonaste el repo de la Tiquetera como te dije y no te arranca. A mí me
 > funciona perfecto, o sea que algo hiciste mal en la instalación. Mándame el
 > error y lo vemos, pero seguro es tu máquina."
 >
@@ -70,7 +70,7 @@ npm ls vue vue-template-compiler
 ```
 
 ```
-mini-jira@0.1.0 /Users/…/mini-jira
+tiquetera@0.1.0 /Users/…/tiquetera
 ├── vue@2.6.14
 └── vue-template-compiler@2.6.12
 ```

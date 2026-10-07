@@ -3,6 +3,12 @@
 > **Prerequisito duro: F11 (Testing).** Si no tienes Jest corriendo, esta fase no
 > existe. Vuelve.
 
+> 📖 **Antes de esta fase, lee la historia de tu rama:**
+> [`q00-historia-ruta-q.md`](q00-historia-ruta-q.md). Cuenta quién empezó la rama
+> `quasar-app`, en qué estado quedó, por qué paró y qué le pide hoy PizzaPaisa. Son
+> ocho minutos, y son los que convierten esta ruta en un rescate en vez de un
+> ejercicio.
+
 > 🧩 **Núcleo común X0.** El ~85% de este capítulo es agnóstico al framework
 > destino: sirve igual para Quasar, Vuetify o Nuxt. Lo específico de Quasar vive
 > encapsulado en las secciones marcadas **🅠**. Si haces la ruta VU o NX, léelas
@@ -38,7 +44,7 @@ balas — porque `TicketsView`, `TicketsTable` y `TicketForm` no tienen un solo 
 En F11 eso eran los ejercicios 🟠, los opcionales. Los que la regla del curso te
 dejaba saltarte.
 
-Traducción: **la única parte del Mini Jira que no tiene red es exactamente la que
+Traducción: **la única parte de la Tiquetera que no tiene red es exactamente la que
 vas a borrar.** Esta fase existe para eso.
 
 > La regla de la fase: un test de regresión describe lo que el sistema **hace**,
@@ -67,7 +73,7 @@ vas a borrar.** Esta fase existe para eso.
 ## 🚫 Qué NO entra todavía
 
 - **Quasar.** Cero. No se instala, no se importa, no se menciona en el código.
-  Esta fase corre contra el Mini Jira a pelo tal como está hoy;
+  Esta fase corre contra la Tiquetera a pelo tal como está hoy;
 - e2e / Cypress: sería la red ideal para esto (una migración de UI es el caso de
   uso canónico del e2e) pero está fuera del stack del curso. Se discute en el
   ejercicio 25 y se deja como deuda honesta;
@@ -140,7 +146,7 @@ pregunta:
 
 > **¿esta aserción le importa a alguien que no seas tú?**
 
-El usuario del Mini Jira no sabe que existe una clase `.table-hover`. Le importa
+El usuario de la Tiquetera no sabe que existe una clase `.table-hover`. Le importa
 que **al escribir "impresora" queden menos filas**. Al backend no le importa que
 uses `axios.get`; le importa que **llegue un GET a `/tickets` con `_sort`**.
 
@@ -335,7 +341,7 @@ diff`:
 ```md
 # Red de seguridad — NO TOCAR durante la migración
 
-Estos tests describen el comportamiento del Mini Jira **antes** de Quasar.
+Estos tests describen el comportamiento de la Tiquetera **antes** de Quasar.
 
 Regla: durante Q1–Q4 estos archivos NO se editan.
 Si uno se pone rojo, hay exactamente dos respuestas válidas:
@@ -498,7 +504,7 @@ export function makeTickets() {
   return [
     {
       id: 1, title: "Impresora no imprime", description: "La del piso 3",
-      status: "open", priority: "high", assignee: "agente1",
+      status: "open", priority: "high", assignee: "lmcorrea",
       reporter: "user1", createdAt: "2020-03-10T09:00:00Z"
     },
     {
@@ -513,7 +519,7 @@ export function makeTickets() {
     },
     {
       id: 4, title: "Impresora atascada", description: "Otra vez la del piso 3",
-      status: "closed", priority: "medium", assignee: "agente1",
+      status: "closed", priority: "medium", assignee: "lmcorrea",
       reporter: "user3", createdAt: "2020-03-07T09:00:00Z"
     }
   ];
@@ -578,7 +584,7 @@ export function makeStore(overrides) {
       auth: {
         namespaced: true,
         getters: {
-          currentUser: function () { return { username: "agente1", role: "agent" }; }
+          currentUser: function () { return { username: "lmcorrea", role: "agent" }; }
         }
       }
     }
@@ -860,7 +866,7 @@ const VALIDO = {
   title: "Impresora no imprime",
   description: "La del piso 3 lleva dos días muerta",
   priority: "high",
-  assignee: "agente1"
+  assignee: "lmcorrea"
 };
 
 describe("REGRESIÓN · TicketForm", function () {
@@ -1094,7 +1100,7 @@ describe("REGRESIÓN · Contrato con la API", function () {
       title: "Impresora no imprime",
       description: "La del piso 3 lleva dos días muerta",
       priority: "high",
-      assignee: "agente1",
+      assignee: "lmcorrea",
       status: "open",
       reporter: "user1",
       createdAt: "2020-03-10T09:00:00Z"
@@ -1699,7 +1705,7 @@ tu test de regresión toca la API real y falla, el problema es tuyo."*
 > [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 📖 **Q1 — Leer Quasar**. Todavía sin migrar nada, todavía sin
-tocar el Mini Jira. Reconocimiento puro: qué es Quasar de verdad (no es "un
+tocar la Tiquetera. Reconocimiento puro: qué es Quasar de verdad (no es "un
 framework de formularios"), dónde vive lo que antes estaba en `main.js`, qué
 demonios es un boot file, y por qué `QLayout > QPageContainer > QPage` no es un
 capricho sino una obligación. Ya tienes red. Ahora aprende a leer el framework al

@@ -227,7 +227,7 @@ export default router;
 var MOCK_USER = {
   username: "admin",
   password: "1234",
-  name: "Usuario Demo"
+  name: "Andrés Felipe Ríos"
 };
 
 function login(username, password) {
@@ -454,7 +454,7 @@ Reparto de responsabilidades: la vista **captura datos**, el store
 ```vue
 <template>
   <header class="navbar navbar-dark bg-dark px-3 d-flex justify-content-between">
-    <span class="navbar-brand mb-0 h1">Mini Jira</span>
+    <span class="navbar-brand mb-0 h1">Tiquetera</span>
 
     <div v-if="currentUser" class="text-white">
       <span class="mr-3">{{ currentUser.name }}</span>
@@ -562,7 +562,7 @@ Para volver: `localStorage.clear()` y entra de nuevo con `admin` / `1234`.
 5. Agrega una ruta pública `/about` que no requiera autenticación.
 6. Muestra un `alert-success` de "Sesión iniciada" en Home tras un login correcto.
 7. Prueba manualmente: borra el token desde DevTools → Application → localStorage y navega a `/tickets`. ¿Qué pasa y por qué?
-8. Haz que el link "Mini Jira" del header navegue a `/`.
+8. Haz que el link "Tiquetera" del header navegue a `/`.
 
 **🟡 Intermedio (9–16)**
 

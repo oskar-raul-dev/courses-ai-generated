@@ -5,7 +5,7 @@
 Devolverte la fluidez. Llevas años pensando consultas sin pensar en la
 sintaxis; esta fase te lleva a ese mismo estado en MQL con el método más
 directo: **cada consulta primero en tu idioma, después en el nuevo**, lado a
-lado, sobre la base `minijira` que sembraste en la Fase 1.
+lado, sobre la base `tiquetera` que sembraste en la Fase 1.
 
 Y te vacuna contra las dos trampas que muerden a todo veterano SQL la primera
 semana: el `null` que no es tu `NULL`, y los tipos que nadie te obliga a
@@ -203,7 +203,7 @@ tienes el álgebra de tres valores tatuada a fuerza de sustos. Aquí hay **tres
 estados**, no dos:
 
 ```js
-{ title: "A", assignee: "soporte1" }   // 1. tiene valor
+{ title: "A", assignee: "lmcano" }   // 1. tiene valor
 { title: "B", assignee: null }         // 2. tiene null explícito
 { title: "C" }                         // 3. el campo NO EXISTE
 ```
@@ -229,10 +229,10 @@ Y la tabla que tienes que memorizar:
 > null sigue siendo sano; el mecanismo exacto cambió. 📓 A `INSTINTOS.md`.
 
 Bonus de la misma familia: `$ne: "x"` y `$nin` **también matchean documentos
-donde el campo no existe**. "Distinto de x" incluye "no tener el campo". En el
-Mini Jira: `find({ assignee: { $ne: "soporte1" } })` te trae los tickets sin
+donde el campo no existe**. "Distinto de x" incluye "no tener el campo". En la
+Tiquetera: `find({ assignee: { $ne: "lmcano" } })` te trae los tickets sin
 asignar. Si querías "asignados a otra persona", es
-`{ assignee: { $ne: "soporte1", $exists: true, $type: "string" } }` — sí, en
+`{ assignee: { $ne: "lmcano", $exists: true, $type: "string" } }` — sí, en
 serio.
 
 ### 🕳️ Trampa 2: los tipos que nadie custodia
@@ -313,7 +313,7 @@ filtro, no de los datos.
 
 Esta fase no monta una app todavía: su "implementación" es la **chuleta espejo
 condensada** que vas a tener al lado del teclado desde hoy hasta la Fase 10.
-Todo corre en **mongosh contra `minijira`** (driver 3.6 cuando toque Node),
+Todo corre en **mongosh contra `tiquetera`** (driver 3.6 cuando toque Node),
 sin Express aún.
 
 ### 🧩 Chuleta de la fase
@@ -391,7 +391,7 @@ mete en producción.
 
 ## 🧪 Ejercicios (32)
 
-Todos sobre la base `minijira` (re-siembra cuando la ensucies:
+Todos sobre la base `tiquetera` (re-siembra cuando la ensucies:
 `npm run seed`). Para los que piden volumen, usa el generador del ejercicio
 27 de la Fase 1.
 
@@ -408,9 +408,9 @@ Todos sobre la base `minijira` (re-siembra cuando la ensucies:
 
 **🟡 Intermedio (9–17)**
 
-9. Inserta 3 documentos de prueba: uno con `assignee: "soporte1"`, uno con `assignee: null` y uno **sin** el campo. Reproduce completa la tabla de la Trampa 1 (los 4 filtros × 3 documentos) y pégala verificada en `INSTINTOS.md`.
-10. Con esos documentos aún presentes: ¿tu conteo del ejercicio 8 distinguía "sin asignar explícito" de "campo ausente"? Escribe la versión estricta (solo `null` explícito) y la versión laxa, y decide cuál necesita el negocio del Mini Jira.
-11. "Tickets asignados a alguien que no es soporte1" — escríbelo mal (solo `$ne`) y bien (excluyendo ausentes y nulls). Verifica la diferencia con conteos.
+9. Inserta 3 documentos de prueba: uno con `assignee: "lmcano"`, uno con `assignee: null` y uno **sin** el campo. Reproduce completa la tabla de la Trampa 1 (los 4 filtros × 3 documentos) y pégala verificada en `INSTINTOS.md`.
+10. Con esos documentos aún presentes: ¿tu conteo del ejercicio 8 distinguía "sin asignar explícito" de "campo ausente"? Escribe la versión estricta (solo `null` explícito) y la versión laxa, y decide cuál necesita el negocio de la Tiquetera.
+11. "Tickets asignados a alguien que no es lmcano" — escríbelo mal (solo `$ne`) y bien (excluyendo ausentes y nulls). Verifica la diferencia con conteos.
 12. Tickets de prioridad alta o media creados en el primer trimestre de 2020, no cerrados. (Tres condiciones combinadas; escríbelo primero en SQL como comentario y traduce debajo — este es el formato de tus apuntes a partir de ahora.)
 13. Inserta un ticket con `priority: 3` (numérico). Encuentra todos los documentos donde `priority` **no** sea string. Escríbete un auditor general: un filtro por cada campo "sospechoso" (`priority`, `status`, `createdAt`).
 14. Contamina un ticket con `createdAt` string (ISO). Ordena por `createdAt` y observa dónde cae. Explica el orden entre tipos con la doc 4.4 en la mano. Repara el documento.

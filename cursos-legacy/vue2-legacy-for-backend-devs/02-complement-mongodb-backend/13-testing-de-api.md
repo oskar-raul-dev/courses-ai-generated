@@ -179,9 +179,9 @@ más un `afterEach` que borra colecciones y a veces olvida una.
 const { ObjectId } = require("mongodb");
 
 const users = {
-  agent:    { _id: new ObjectId(), username: "soporte1", name: "Agente Uno",
+  agent:    { _id: new ObjectId(), username: "lmcano", name: "Agente Uno",
               role: "agent" },
-  reporter: { _id: new ObjectId(), username: "usuario1", name: "Usuario Reportador",
+  reporter: { _id: new ObjectId(), username: "dprios", name: "Usuario Reportador",
               role: "reporter" }
 };
 
@@ -189,7 +189,7 @@ function makeTicket(overrides) {
   return Object.assign({
     _id: new ObjectId(), title: "Ticket de prueba", description: "",
     status: "open", priority: "medium", assignee: null,
-    reporter: "usuario1", createdAt: new Date(), updatedAt: new Date(),
+    reporter: "dprios", createdAt: new Date(), updatedAt: new Date(),
     schemaVersion: 3, history: []
   }, overrides || {});
 }
@@ -259,7 +259,7 @@ describe("takeTicket — el doble 'tomar' (Fase 6)", function () {
       await db.collection("tickets").insertOne(t);
 
       const [a, b] = await Promise.all([
-        service.takeTicket(t._id.toHexString(), "soporte1"),
+        service.takeTicket(t._id.toHexString(), "lmcano"),
         service.takeTicket(t._id.toHexString(), "admin")
       ]);
 
@@ -274,9 +274,9 @@ describe("takeTicket — el doble 'tomar' (Fase 6)", function () {
   test("tomar un tomado → conflict; inexistente → not_found", async function () {
     const t = makeTicket({ assignee: "admin", status: "in_progress" });
     await db.collection("tickets").insertOne(t);
-    const r1 = await service.takeTicket(t._id.toHexString(), "soporte1");
+    const r1 = await service.takeTicket(t._id.toHexString(), "lmcano");
     expect(r1).toEqual({ ok: false, reason: "conflict" });
-    const r2 = await service.takeTicket(new (require("mongodb").ObjectId)().toHexString(), "soporte1");
+    const r2 = await service.takeTicket(new (require("mongodb").ObjectId)().toHexString(), "lmcano");
     expect(r2).toEqual({ ok: false, reason: "not_found" });
   });
 });
@@ -299,7 +299,7 @@ const { mintToken } = require("../helpers/auth");   // acuña JWT de utilería (
 test("GET /tickets/:id inexistente → 404 real (manía del contrato)", async function () {
   const res = await request(app)
     .get("/tickets/5f8a1b2c3d4e5f6a7b8c9d0e")
-    .set("Authorization", "Bearer " + mintToken({ username: "soporte1", role: "agent" }));
+    .set("Authorization", "Bearer " + mintToken({ username: "lmcano", role: "agent" }));
   expect(res.status).toBe(404);
 });
 

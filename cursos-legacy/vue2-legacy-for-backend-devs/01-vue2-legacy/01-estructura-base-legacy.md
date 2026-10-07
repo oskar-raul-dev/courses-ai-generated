@@ -4,7 +4,7 @@
 
 Tomar el Hello World de la Fase 0 y darle **forma de proyecto real**: carpetas,
 layout, router y vistas placeholder. Todavía no construimos funcionalidades;
-construimos el esqueleto sobre el que crecerá el Mini Jira.
+construimos el esqueleto sobre el que crecerá la Tiquetera.
 
 La idea pedagógica es simple:
 
@@ -183,7 +183,7 @@ export default {
 ```vue
 <template>
   <header class="navbar navbar-dark bg-dark px-3">
-    <span class="navbar-brand mb-0 h1">Mini Jira</span>
+    <span class="navbar-brand mb-0 h1">Tiquetera</span>
   </header>
 </template>
 
@@ -274,7 +274,7 @@ new Vue({
 <template>
   <section>
     <h1>Inicio</h1>
-    <p>Mesa de soporte Mini Jira — base legacy del proyecto.</p>
+    <p>Mesa de soporte Tiquetera — base legacy del proyecto.</p>
   </section>
 </template>
 ```
@@ -452,8 +452,8 @@ más que el fix.
 1. Crea `AboutView.vue` con un título y una descripción del proyecto.
 2. Agrega la ruta `/about` al router.
 3. Agrega el enlace a `/about` en el sidebar.
-4. Cambia `HomeView.vue` para que hable del Mini Jira y no del Hello World.
-5. Cambia el título del header por "Mini Jira — Soporte" y agrega un emoji.
+4. Cambia `HomeView.vue` para que hable de la Tiquetera y no del Hello World.
+5. Cambia el título del header por "Tiquetera — Soporte" y agrega un emoji.
 6. Crea el componente `common/PageTitle.vue` que reciba un prop `title` y lo pinte en un `<h1>`.
 7. Usa `PageTitle` en dos vistas distintas.
 8. Navega a `/tickets/999` y verifica qué muestra el detalle. ¿Por qué no da 404?

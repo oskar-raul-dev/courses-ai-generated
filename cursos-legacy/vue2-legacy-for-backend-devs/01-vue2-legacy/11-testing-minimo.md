@@ -48,8 +48,8 @@ solos. La arquitectura buena no se nota al escribirla — se nota hoy.
 > ⚠️ **Nota sobre las vistas.** Los tests de `TicketsView`, `TicketsTable` y
 > `TicketForm` viven en los ejercicios 🟠 (18, 22) — es decir, en la zona
 > **opcional**. La regla de la fase ("testea primero lo que da miedo tocar")
-> te deja saltártelos, y mucha gente lo hace. Recuérdalo: **la única parte del
-> Mini Jira que puede quedar sin red es exactamente la que más caro sale
+> te deja saltártelos, y mucha gente lo hace. Recuérdalo: **la única parte de la
+> Tiquetera que puede quedar sin red es exactamente la que más caro sale
 > reescribir.** Volveremos a esto en el cierre.
 
 ---
@@ -60,7 +60,7 @@ La pirámide clásica (muchos unit, menos integración, poquitos e2e) es cierta
 pero abstracta. Para una base heredada, la versión operativa es **retorno
 por esfuerzo**:
 
-| Capa | Esfuerzo de testear | Qué atrapa | En Mini Jira |
+| Capa | Esfuerzo de testear | Qué atrapa | En Tiquetera |
 |---|---|---|---|
 | 🥇 Funciones puras (`utils/`) | trivial: entra dato, sale dato | lógica de negocio pura | `ticketStats`, `ticketTransitions` |
 | 🥈 Mutations del store | trivial: son asignaciones | corrupción del estado compartido | `UPSERT_TICKET` y familia |
@@ -807,7 +807,7 @@ started → volver al código → async y timers cuando los ejercicios los pidan
 
 ## 🚀 Cierre (de la fase… y del contenido base)
 
-El Mini Jira queda con guardianes: las funciones puras, la máquina de
+La Tiquetera queda con guardianes: las funciones puras, la máquina de
 estados, el store, los servicios y los componentes clave tienen tests que
 convierten cada cambio futuro de apuesta en verificación. Te llevas:
 

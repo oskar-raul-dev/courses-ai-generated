@@ -1,11 +1,11 @@
 # 🔷 Fase Q1 — Leer Quasar
 
-> **Ruta Q · Fase 2 de 5** — Reconocimiento puro. Cero código del Mini Jira.
+> **Ruta Q · Fase 2 de 5** — Reconocimiento puro. Cero código de la Tiquetera.
 > Después de esta fase abres cualquier repo Quasar de la empresa y sabes **dónde está cada cosa**.
 > Si tu trabajo es solo *leer* código Quasar (parchear un bug, entender un flujo, revisar un PR), **esta fase te alcanza**. Q2, Q3 y Q4 son para quien va a escribir.
 
 > ### 📍 Vienes de Q0
-> Ya escribiste la red: tests de **regresión** sobre el CRUD (F5) y el dashboard (F4), **contra el código que vas a borrar**. Esos tests **no se tocan en Q1** — Q1 no escribe una línea del Mini Jira. Vuelven a correr en Q2, verdes o rojos, y ahí te dirán si migraste o si rompiste.
+> Ya escribiste la red: tests de **regresión** sobre el CRUD (F5) y el dashboard (F4), **contra el código que vas a borrar**. Esos tests **no se tocan en Q1** — Q1 no escribe una línea de la Tiquetera. Vuelven a correr en Q2, verdes o rojos, y ahí te dirán si migraste o si rompiste.
 >
 > Y una pregunta que Q0 dejó abierta sigue abierta: *"tus tests buscan `.b-table`; `QTable` no la tiene."* Q1 **no** la contesta — solo te da el vocabulario para entenderla. La respuesta es de **Q3**.
 
@@ -13,7 +13,7 @@
 
 ## 🎯 1. Propósito
 
-Aprender a **leer** un proyecto Quasar 1.x sin escribir una línea del Mini Jira.
+Aprender a **leer** un proyecto Quasar 1.x sin escribir una línea de la Tiquetera.
 
 Tu objetivo al terminar: te pasan un repo Quasar, lo clonas, y en 20 minutos puedes responder:
 
@@ -66,7 +66,7 @@ El segundo punto es el que te muerde. Tú vienes del curso base con un `main.js`
 
 ## 🚫 3. Qué NO hacemos acá
 
-- ❌ **No tocamos el Mini Jira.** Cero. Ni un componente. Q1 es reconocimiento.
+- ❌ **No tocamos la Tiquetera.** Cero. Ni un componente. Q1 es reconocimiento.
 - ❌ **No tocamos los tests de Q0.** Siguen intactos hasta Q2. En Q1 no hay nada que puedan verificar.
 - ❌ **No migramos nada.** Eso es Q2.
 - ❌ **No usamos QTable, QForm ni componentes complejos.** Q3.
@@ -124,7 +124,7 @@ Además, seamos honestos: casi nadie usa el plugin de Vue CLI en producción. Qu
 
 ```bash
 npm i -g @quasar/cli@1
-quasar create mini-jira-q
+quasar create tiquetera-q
 ```
 
 Te pregunta cosas. Para este curso, responde:
@@ -141,7 +141,7 @@ Te pregunta cosas. Para este curso, responde:
 Lo que sale:
 
 ```
-mini-jira-q/
+tiquetera-q/
 ├── quasar.conf.js          ← 🔥 el archivo. Acá vive todo lo de main.js + vue.config.js
 ├── package.json
 ├── .eslintrc.js
@@ -448,7 +448,7 @@ export default {
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-btn flat dense round icon="menu" @click="drawer = !drawer" />
-        <q-toolbar-title>Mini Jira</q-toolbar-title>
+        <q-toolbar-title>Tiquetera</q-toolbar-title>
         <q-btn flat label="Salir" @click="logout" />
       </q-toolbar>
     </q-header>
@@ -814,17 +814,17 @@ this.$q.dark.isActive        // true si dark mode
 
 ## 💻 5. Código — La sesión de reconocimiento
 
-No hay Mini Jira acá. Hay **un proyecto scratch** que creas, miras y tiras.
+No hay Tiquetera acá. Hay **un proyecto scratch** que creas, miras y tiras.
 
 ```bash
 # 1. Instalar el CLI de Quasar 1 (¡el @1 importa!)
 npm i -g @quasar/cli@1
 
 # 2. Crear el proyecto
-quasar create mini-jira-q
+quasar create tiquetera-q
 # Responde según la tabla de 4.3
 
-cd mini-jira-q
+cd tiquetera-q
 
 # 3. Verificar que estás en v1
 cat package.json | grep quasar
@@ -1066,8 +1066,8 @@ cambios exigen reiniciar el servidor de desarrollo.
 
 ## 🧪 7. Ejercicios (29)
 
-> ⚠️ **Todos son de LECTURA y RECONOCIMIENTO.** No se migra nada. No se toca el Mini Jira.
-> Usa el proyecto scratch `mini-jira-q` que creaste en la sección 5, o repos Quasar públicos de GitHub.
+> ⚠️ **Todos son de LECTURA y RECONOCIMIENTO.** No se migra nada. No se toca la Tiquetera.
+> Usa el proyecto scratch `tiquetera-q` que creaste en la sección 5, o repos Quasar públicos de GitHub.
 
 ---
 
@@ -1789,7 +1789,7 @@ export default {
 6. **Deuda de CSS:** ¿hay Bootstrap/Tailwind/otra librería conviviendo? ¿Dónde colisionan?
 7. **Un bug que ya puedes predecir** sin correr el proyecto, y por qué.
 
-> 💡 **¿Sin conexión o sin encontrar un repo?** Haz el informe sobre tu `mini-jira-q` scratch (secciones 1–4) más el `quasar.conf.js` del **ejercicio 19** (secciones 5–7). El ejercicio funciona igual: lo que se entrena es la lectura, no de dónde salió el código.
+> 💡 **¿Sin conexión o sin encontrar un repo?** Haz el informe sobre tu `tiquetera-q` scratch (secciones 1–4) más el `quasar.conf.js` del **ejercicio 19** (secciones 5–7). El ejercicio funciona igual: lo que se entrena es la lectura, no de dónde salió el código.
 
 <details><summary>Guía de evaluación</summary>
 
@@ -1867,7 +1867,7 @@ Puedes abrir un repo Quasar 1 y en 20 minutos armar el mapa mental completo. Sab
 - Bootstrap y Quasar **conviven** en el proyecto, comparten `.row` y `.col-*`, y eso es una 💸 bomba de tiempo que vamos a desactivar en Q3.
 - Y sobre todo: **si un `<q-*>` no está en `framework.components`, no renderiza y nadie te avisa.** Eso solo te va a costar horas **una vez**. Después, es lo primero que miras.
 
-**Lo que NO hiciste:** tocar el Mini Jira. Ni una línea. Q1 es reconocimiento y nada más.
+**Lo que NO hiciste:** tocar la Tiquetera. Ni una línea. Q1 es reconocimiento y nada más.
 
 **Y si tu trabajo es solo leer código Quasar** — parchear, revisar PRs, entender un flujo antes de una reunión — **acá puedes parar**. En serio. Q1 es autosuficiente para eso, y esa es la mayoría de la gente.
 
@@ -1877,7 +1877,7 @@ Puedes abrir un repo Quasar 1 y en 20 minutos armar el mapa mental completo. Sab
 
 Ahora que sabes **dónde vive cada cosa**, Q2 te hace **moverlas**.
 
-Vas a tomar el Mini Jira que construiste en F0–F11 y lo vas a montar sobre `mini-jira-q`:
+Vas a tomar la Tiquetera que construiste en F0–F11 y la vas a montar sobre `tiquetera-q`:
 
 | De… (curso base) | A… (Q2) | Qué aprendes |
 |---|---|---|
@@ -1898,7 +1898,7 @@ Q2 no es solo "cambiar `<b-form-input>` por `<q-input>`". F5 valida con **vuelid
 **La pregunta que abre Q2:**
 
 > Tienes el CRUD de tickets (F5, con vuelidate) funcionando en Vue CLI + Bootstrap.
-> Tienes `mini-jira-q` vacío, en Quasar.
+> Tienes `tiquetera-q` vacío, en Quasar.
 > Y tienes los tests de regresión de Q0, intactos.
 > **¿Qué copias tal cual, qué reescribes, qué borras porque Quasar ya lo trae — y qué tests se ponen rojos sin que hayas roto nada?**
 

@@ -989,7 +989,7 @@ ref → volver al código. Slots y Nested Routes solo si haces los ejercicios
 
 ## 🚀 Cierre
 
-El Mini Jira ya guía al usuario paso a paso, y tú te llevas cuatro
+La Tiquetera ya guía al usuario paso a paso, y tú te llevas cuatro
 herramientas y una decisión:
 
 - **`<component :is>`** para intercambiar componentes sin router,

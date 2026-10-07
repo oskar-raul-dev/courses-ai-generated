@@ -1,14 +1,14 @@
 # 📖 Diccionario de código: español → inglés
-## Cursos Mini Jira — Track A (Vue 2 Legacy) + Track B (MongoDB / Express)
+## Cursos Tiquetera — Track A (Vue 2 Legacy) + Track B (MongoDB / Express)
 
-Documento operativo, complementario a `../../prompts/guia-de-estilo-y-convenciones.md` §4.
-Úsalo mientras escribís código nuevo o ajustás una fase ya escrita, en
+Documento operativo, complementario a `guia-de-estilo-y-convenciones.md` §4.
+Úsalo mientras escribes código nuevo o ajustas una fase ya escrita, en
 cualquiera de los dos tracks.
 
 **Regla de una línea:** el **código en inglés**; todo lo demás —comentarios,
 narrativa, textos de interfaz— **en español**.
 
-Los dos tracks comparten dominio (Mini Jira) y contrato (`../00-audit-contrato.md`),
+Los dos tracks comparten dominio (Tiquetera) y contrato (`../02-complement-mongodb-backend/00-audit-contrato.md`),
 así que comparten este diccionario. Lo que un ticket es en Vue es lo mismo que
 es en Express y en Mongo: `ticket`. Esa es la razón de que el diccionario sea
 uno solo.
@@ -40,7 +40,7 @@ uno solo.
 
 ---
 
-## 2. Diccionario del dominio (Mini Jira)
+## 2. Diccionario del dominio (Tiquetera)
 
 ### 2.1 Entidades principales
 
@@ -217,9 +217,9 @@ Combina un verbo con el sustantivo del dominio: `fetch` + `Tickets` →
 
 ### 4.3 El anti-patrón `soporte_v1` (Track B) — también en inglés
 
-`soporte_v1` es el villano: una base "migrada a Mongo transcribiendo el
+`soporte_v1` es el modelo traducido: una base "migrada a Mongo transcribiendo el
 esquema relacional tabla por tabla". Por decisión de estilo
-(`../../prompts/guia-de-estilo-y-convenciones.md` §4.6), **el villano se nombra en inglés
+(`guia-de-estilo-y-convenciones.md` §4.6), **el modelo traducido se nombra en inglés
 igual que todo lo demás.** Su fealdad es de estructura, no de idioma.
 
 | ❌ Nombre viejo (español) | ✅ Nombre normalizado (inglés) |
@@ -242,7 +242,7 @@ igual que todo lo demás.** Su fealdad es de estructura, no de idioma.
 > El olor a "Postgres disfrazado" se conserva por lo que sí lo delata:
 > lookup-tables de ≤10 docs con forma `{ _id: <número>, name: '…' }`, FKs
 > enteras sin validar, siete colecciones para lo que el buen modelo
-> (`minijira`) resuelve en una o dos. El "detector de traducido-no-diseñado"
+> (`tiquetera`) resuelve en una o dos. El "detector de traducido-no-diseñado"
 > (ejercicio de la Fase 3) huele estructura, no idioma.
 >
 > ⚠️ **Excepción SQL:** en las 📖 tablas de traducción, el lado **SQL** puede
@@ -377,14 +377,14 @@ async function takeTicket(db, ticketId, agent) {
 #### ❌ Antes (español)
 ```javascript
 const users = {
-  agente:    { _id: new ObjectId(), username: 'soporte1', name: 'Agente Uno',   role: 'agent' },
-  reportero: { _id: new ObjectId(), username: 'usuario1', name: 'Usuario Reportador', role: 'reporter' }
+  agente:    { _id: new ObjectId(), username: 'lmcano', name: 'Agente Uno',   role: 'agent' },
+  reportero: { _id: new ObjectId(), username: 'dprios', name: 'Usuario Reportador', role: 'reporter' }
 };
 
 function ticketLibre(overrides) {
   return Object.assign({
     _id: new ObjectId(), title: 'Ticket de prueba', status: 'open',
-    priority: 'medium', assignee: null, reporter: 'usuario1'
+    priority: 'medium', assignee: null, reporter: 'dprios'
   }, overrides || {});
 }
 ```
@@ -392,20 +392,20 @@ function ticketLibre(overrides) {
 #### ✅ Después
 ```javascript
 const users = {
-  agent:    { _id: new ObjectId(), username: 'soporte1', name: 'Agente Uno',   role: 'agent' },
-  reporter: { _id: new ObjectId(), username: 'usuario1', name: 'Usuario Reportador', role: 'reporter' }
+  agent:    { _id: new ObjectId(), username: 'lmcano', name: 'Agente Uno',   role: 'agent' },
+  reporter: { _id: new ObjectId(), username: 'dprios', name: 'Usuario Reportador', role: 'reporter' }
 };
 
 // fábrica de ticket "libre" (sin asignar) para los tests
 function makeTicket(overrides) {
   return Object.assign({
     _id: new ObjectId(), title: 'Ticket de prueba', status: 'open',
-    priority: 'medium', assignee: null, reporter: 'usuario1'
+    priority: 'medium', assignee: null, reporter: 'dprios'
   }, overrides || {});
 }
 ```
 
-Notá que el `username` (`'soporte1'`, `'usuario1'`) y el `name`
+Notá que el `username` (`'lmcano'`, `'dprios'`) y el `name`
 (`'Agente Uno'`) **no** se traducen: son datos de la fixture, no
 identificadores. Lo que cambia son las **claves** del objeto (`agente` →
 `agent`) y el nombre de la **función** (`ticketLibre` → `makeTicket`).
@@ -453,7 +453,7 @@ comentarios/UI, que sigue intacto en español).
 
 - [ ] Ningún `function`, `const`, `class`, `data()`, `methods`, mutation o action con nombre en español.
 - [ ] Ningún endpoint ni ruta Express con segmento en español.
-- [ ] Ninguna colección ni campo de Mongo en español (incluido el villano `soporte_v1`, ver §4.3).
+- [ ] Ninguna colección ni campo de Mongo en español (incluido el modelo traducido `soporte_v1`, ver §4.3).
 - [ ] Ningún valor de `status`/`priority`/`role`/enum interno en español.
 - [ ] Nombres de componente y archivo en `PascalCase` inglés; uso en template en `kebab-case`.
 - [ ] Mutations en `SCREAMING_SNAKE_CASE` inglés; actions/getters en `camelCase` inglés.
@@ -464,13 +464,13 @@ comentarios/UI, que sigue intacto en español).
 - [ ] Etiquetas de estado/prioridad: clave en inglés, `label` en español (§2.6).
 - [ ] Consistencia con otras fases ya ajustadas **y con el otro track** (mismo nombre para el mismo concepto: `takeTicket` en Vue y en Express).
 - [ ] Ejercicios que mencionan identificadores actualizados al nuevo nombre.
-- [ ] Nada contradice `../00-audit-contrato.md` (forma de respuestas, `id`↔`_id`, enums).
+- [ ] Nada contradice `../02-complement-mongodb-backend/00-audit-contrato.md` (forma de respuestas, `id`↔`_id`, enums).
 
 ---
 
 ## 8. Duda frecuente: ¿y si dudo del nombre?
 
-Antes de inventar un identificador nuevo, buscá el concepto en §2 y §3. Si no
+Antes de inventar un identificador nuevo, busca el concepto en §2 y §3. Si no
 está, componelo con un verbo de §3.1 + un sustantivo de dominio de §2, y —si
 va a vivir en más de una fase o cruza tracks— agregalo a este diccionario para
 que el próximo documento lo use igual. La consistencia entre tracks es más

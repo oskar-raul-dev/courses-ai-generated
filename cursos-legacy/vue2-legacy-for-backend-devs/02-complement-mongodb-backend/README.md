@@ -1,4 +1,4 @@
-# 🍃 Curso 02 · MongoDB para cerebros SQL — el backend de Mini Jira
+# 🍃 Curso 02 · MongoDB para cerebros SQL — el backend de la Tiquetera
 
 Curso práctico de **MongoDB 4.4 + Express/Node 14 (época 2018–2021)** para
 desarrolladores con años en Oracle, PostgreSQL, MySQL o SQL Server que tienen
@@ -9,7 +9,7 @@ criterio**: a saber cuáles de tus instintos relacionales siguen siendo
 correctos, cuáles te van a traicionar, y cómo medir la diferencia en vez de
 discutirla.
 
-Proyecto hilo conductor: **Mini Jira**, la misma mesa de soporte interna del
+Proyecto hilo conductor: **la Tiquetera**, la misma mesa de soporte de Cuadre Software del
 [Curso 01](../01-vue2-legacy/README.md) — ahora con un backend real que
 reemplaza al mock.
 
@@ -30,18 +30,19 @@ reemplaza al mock.
 |---|---|
 | **Este `README.md`** | 📑 **Índice del curso** — empieza aquí |
 | [`00-audit-contrato.md`](00-audit-contrato.md) | 📜 **El contrato que el backend debe honrar.** Dialecto de json-server a reimplementar, regímenes estricto y de crecimiento, checklist de smoke test. Fuente de verdad de la costura entre los dos cursos |
-| [`prompts/diccionario-codigo.md`](prompts/diccionario-codigo.md) | 📖 Diccionario de código del dominio, compartido con el Curso 01 |
-| [`prompts/instrucciones-proyecto-track-b.md`](prompts/instrucciones-proyecto-track-b.md) | 📋 Alcance del curso y realidad en disco |
+| [`../prompts/diccionario-codigo.md`](../prompts/diccionario-codigo.md) | 📖 Diccionario de código del dominio, compartido con el Curso 01 |
+| [`../prompts/instrucciones-proyecto-track-b.md`](../prompts/instrucciones-proyecto-track-b.md) | 📋 Alcance del curso y realidad en disco |
 | [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio (separado del frontend, y por qué), un tag por fase, y el mensaje del tag como cuaderno de mediciones |
 | [`../prompts/guia-de-estilo-y-convenciones.md`](../prompts/guia-de-estilo-y-convenciones.md) | ✍️ Guía editorial compartida con el Curso 01 |
 | [`forense-master.md`](forense-master.md) | 🕵️ **La puerta del track forense**: el método de cuatro preguntas y el 🩺 índice de síntomas. Se entra por lo que ves, no por la fase |
 | [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **12 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |
 
-> 🚫 `prompts/plan-formacion-nosql-mongodb.md` está **descartado**: su
-> numeración no corresponde a los archivos reales. No se usa como fuente de
-> verdad. Y `prompts/guia-de-estilo-y-convenciones.md` es la guía **superada**
-> del Track B: se conserva como referencia histórica y lleva su aviso 🪦 dentro
-> — la vigente es la del paquete, enlazada arriba.
+> 📝 Este curso **no tiene `prompts/` propio**: todo el material de autoría del
+> paquete vive en [`../prompts/`](../prompts/), que es uno solo para los dos
+> cursos (la razón está en la guía de estilo, §13.3). Lo que fue de este curso y
+> ya no es fuente de verdad —el plan de formación descartado, la guía superada
+> del Track B y los prompts de revisión de 2026-09— quedó allí con el prefijo
+> `_desechable-`.
 
 ---
 
@@ -227,7 +228,7 @@ un apéndice:
 2. Haz la **Fase 0** y deja Docker y Mongo 4.4 respirando. No sigas sin eso.
 3. Avanza **en orden** y **cierra cada fase con su tag**
    (`git tag -a fase-07-indices …`). Las fases 3 a 8 son un arco: la autopsia
-   de F8 no funciona si no mediste el villano en F5 y lo indexaste en F7 — y
+   de F8 no funciona si no mediste el modelo traducido en F5 y lo indexaste en F7 — y
    esos números viven mejor en el mensaje de un tag anotado que en un `.md` que
    vas a sobrescribir tres veces.
 4. Completa al menos los ejercicios 🟢 y 🟡 antes de avanzar. Los 🔴 exigen

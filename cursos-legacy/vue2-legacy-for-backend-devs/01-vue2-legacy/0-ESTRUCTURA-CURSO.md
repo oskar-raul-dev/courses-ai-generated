@@ -29,7 +29,7 @@ es opcional**, y **en qué orden se puede estudiar cada cosa**.
  setup  base  auth  mock  dash  crud  wiz  chart  ws   panel  vuex   test
                                                                        │
                                                                        │
-                                              ✅ Mini Jira "a pelo" completo
+                                              ✅ Tiquetera "a pelo" completa
                                                                        │
                     ┌──────────────────────────────────────────────────┤
                     │           RUTAS (opcionales, EXCLUYENTES)        │
@@ -162,7 +162,7 @@ F2  (Auth/interceptor) ──────► Q1 (boot files) / NX1 (plugins)
 
 **No hay una "fase de migrar todo lo demás".** Sería una fase de deberes.
 
-En su lugar: la migración del resto del Mini Jira se distribuye como **ejercicios
+En su lugar: la migración del resto de la Tiquetera se distribuye como **ejercicios
 graduados** a lo largo de la ruta. El dev migra el proyecto entero **si quiere**,
 pero pieza a pieza y con dificultad creciente:
 
@@ -262,6 +262,9 @@ nx2-hidratacion-window-not-defined.md
 nx3-asyncdata-vs-vuex.md
 nx4-pagina-ssr-nueva.md
 
+# Historias de ruta (una por ruta; se leen antes de X0)
+q00-historia-ruta-q.md · vu00-historia-ruta-vu.md · nx00-historia-ruta-nx.md
+
 # Track forense (uno por fase, y uno por ruta)
 forense-master.md
 forense-fase-00.md  …  forense-fase-11.md
@@ -276,6 +279,8 @@ cuaderno-incidentes.md
 > `forense-master.md`, `forense-fase-NN.md` y `cuaderno-incidentes.md`. Lo único
 > propio de este curso es `forense-ruta-<código>.md`, que nace de que las rutas
 > son excluyentes y cinco fases comparten una sola pieza.
+> `<código>00-historia-ruta-<código>.md` sigue el mismo criterio: es la excepción a la ficha
+> única del sistema, declarada en la guía de estilo (§ "Historias de ruta").
 
 ---
 
@@ -329,7 +334,7 @@ hecho:
 | `0-ESTRUCTURA-CURSO.md` | ✅ este documento |
 | `README.md` (índice del curso, con las tres rutas) | ✅ terminado |
 | `forense-master.md` + 12 piezas de fase + 3 de ruta | ✅ terminado |
-| `cuaderno-incidentes.md` (12 incidentes) | ✅ terminado |
+| `cuaderno-incidentes.md` (13 incidentes) | ✅ terminado |
 | Fases Q0–Q4 (contenido) | ✅ escritas |
 | Fases VU0–VU4 (contenido) | ✅ escritas |
 | Fases NX0–NX4 (contenido) | ✅ escritas |

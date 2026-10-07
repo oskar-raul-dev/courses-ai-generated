@@ -431,7 +431,7 @@ heredada de verdad:
 node scripts/seed.incidente-03.js
 ```
 
-Siembra tickets con `assignee: "soporte1"`, con `assignee: null` explícito, y
+Siembra tickets con `assignee: "lmcano"`, con `assignee: null` explícito, y
 otros **sin el campo**.
 
 ---
@@ -522,7 +522,7 @@ siguiente reporte descuadrado:
 ```js
 it("el filtro de sin asignar cubre null explícito y campo ausente", async function () {
   await col.insertMany([
-    { title: "A", assignee: "soporte1" },
+    { title: "A", assignee: "lmcano" },
     { title: "B", assignee: null },
     { title: "C" }
   ]);
@@ -542,7 +542,7 @@ nulo; el tercer estado no existía en el modelo mental de nadie, y el sistema no
 tenía cómo señalarlo.
 
 **Si tu causa fue distinta a ésta.** Si la diferencia venía de `$ne` —"asignados
-a alguien que no es soporte1" contra "no asignados a soporte1"— es la misma
+a alguien que no es lmcano" contra "no asignados a lmcano"— es la misma
 trampa por el otro lado, y también es un hallazgo legítimo: `$ne` incluye a los
 ausentes. Si venía de `count()` contra `countDocuments()`, encontraste un tercer
 miembro de la familia: el primero puede estimar.
@@ -666,7 +666,7 @@ referencia al ticket:
 ```js
 // ticket_events
 { _id: ObjectId("…"), ticketId: ObjectId("…"), at: ISODate("…"),
-  from: "open", to: "in_progress", by: "soporte1" }
+  from: "open", to: "in_progress", by: "lmcano" }
 ```
 
 Y con eso:
@@ -1587,7 +1587,7 @@ El frontend se entrega construido, con su `db.json` y su mock por si necesitas
 comparar contra el comportamiento original:
 
 ```bash
-git clone <repo-del-frontend> mini-jira-front && cd mini-jira-front
+git clone <repo-del-frontend> tiquetera-front && cd tiquetera-front
 npm ci
 npm run mock            # el mock original, en :3000 — tu referencia
 npm run serve           # el frontend, en :8080
@@ -1783,7 +1783,7 @@ El mismo frontend construido del incidente anterior, apuntado a tu backend, y tu
 servidor con sockets levantado:
 
 ```bash
-cd mini-jira-front && npm ci && npm run serve      # frontend en :8080
+cd tiquetera-front && npm ci && npm run serve      # frontend en :8080
 npm run dev                                        # tu backend, con sockets
 ```
 

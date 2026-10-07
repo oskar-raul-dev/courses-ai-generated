@@ -145,7 +145,7 @@ dotfiles — es capital acumulado.
 
 ```bash
 # Ejecutar y salir: la base de todo script de operación
-mongosh "mongodb://localhost:27017/minijira" --quiet --eval 'db.tickets.countDocuments()'
+mongosh "mongodb://localhost:27017/tiquetera" --quiet --eval 'db.tickets.countDocuments()'
 
 # --quiet: sin banner de bienvenida → la salida es PARSEABLE por bash
 COLECCIONES=$(mongosh "$URI" --quiet --eval 'db.getCollectionNames().join(" ")')
@@ -171,7 +171,7 @@ lo que corre solo** (las migraciones de la F4 son driver, no shell — por eso).
 
 ```js
 show dbs                                   // las bases
-use minijira
+use tiquetera
 show collections
 db.getCollectionInfos()                    // ⬅️ incluye el VALIDATOR (F4)
 db.tickets.getIndexes()                    // los índices
@@ -295,7 +295,7 @@ mongosh "$URI" script.js  ·  load("helpers.js")
 14. Pipeline Builder de Compass: construye el `GET /stats` de la Fase 9 etapa por etapa, mirando la salida intermedia. Expórtalo a Node y compáralo con lo que escribiste a mano. ¿Alguna diferencia interesante?
 15. Explain visual vs `explain("executionStats")`: corre la misma query lenta en ambos. ¿Qué te dice Compass más rápido? ¿Qué solo ves en el JSON?
 16. Un script bash de operación real: recorre todas las colecciones (vía `--eval` + `getCollectionNames`) y reporta conteo + tamaño de cada una en formato tabla. Es el `scripts/health-report` de la F14, versión shell.
-17. Prueba tus scripts contra el shell CLÁSICO (`docker exec -it minijira-mongo mongo`). ¿Cuáles se rompen? Anota exactamente qué sintaxis no soportó — esa lista es tu guía para escribir scripts que sobrevivan a un servidor legacy.
+17. Prueba tus scripts contra el shell CLÁSICO (`docker exec -it tiquetera-mongo mongo`). ¿Cuáles se rompen? Anota exactamente qué sintaxis no soportó — esa lista es tu guía para escribir scripts que sobrevivan a un servidor legacy.
 18. Cursores grandes: `find()` sin límite sobre 100k. Usa `it`, luego `.itcount()`, luego `.batchSize(1000)`. Explica qué hace cada uno con la memoria del shell.
 19. La reparación con confirmación: escribe un helper que reciba un filtro y un update, muestre CUÁNTOS documentos afectaría, pida confirmación (variable booleana), y solo entonces ejecute. Tu `--dry` en el shell.
 20. Conecta mongosh a la base efímera de los tests (F13): imprime la URI desde el globalSetup y explora la base mientras un test corre en debug. Depurar tests contra un motor real es un superpoder.
@@ -312,10 +312,10 @@ mongosh "$URI" script.js  ·  load("helpers.js")
 
 **🔴 Muy difícil (28–32)**
 
-28. El auditor automático: script que, dado un URI, produzca el informe forense de la Fase 15 completo — aplica la tabla de olores programáticamente (detecta lookup-tables por conteo bajo + referencias, ids numéricos, arrays sin techo, ausencia de validators/schemaVersion, índices sin uso) y emita un veredicto con evidencia. Pruébalo contra `soporte_v1` (debe encender) y `minijira` (debe callarse). Es el curso entero, ejecutable.
+28. El auditor automático: script que, dado un URI, produzca el informe forense de la Fase 15 completo — aplica la tabla de olores programáticamente (detecta lookup-tables por conteo bajo + referencias, ids numéricos, arrays sin techo, ausencia de validators/schemaVersion, índices sin uso) y emita un veredicto con evidencia. Pruébalo contra `soporte_v1` (debe encender) y `tiquetera` (debe callarse). Es el curso entero, ejecutable.
 29. Shell interactivo con estado: escribe un `load()`-able que implemente un "modo investigación": captura cada query que ejecutas (wrapper sobre `find`), la cronometra y la va apilando en un array; al final imprime tu sesión con tiempos. Un profiler del lado del cliente, hecho por ti.
 30. Portabilidad total: verifica que tu librería del ej. 21 funciona en mongosh, en `mongo` clásico y como script no interactivo. Documenta las tres incompatibilidades que tuviste que rodear. Es el ejercicio que te enseña a escribir herramientas de operación duraderas.
-31. Enseña con Compass: prepara una demo de 10 minutos que le explique el modelo del Mini Jira a un dev SQL usando solo Compass (Schema para mostrar la heterogeneidad, Explain para el índice, Pipeline Builder para el stats). Grábate. Descubrirás qué NO entiendes cuando no puedas explicarlo.
+31. Enseña con Compass: prepara una demo de 10 minutos que le explique el modelo de la Tiquetera a un dev SQL usando solo Compass (Schema para mostrar la heterogeneidad, Explain para el índice, Pipeline Builder para el stats). Grábate. Descubrirás qué NO entiendes cuando no puedas explicarlo.
 32. El fósil datador: reúne 8 comandos/APIs deprecados o eliminados desde 4.4 (`count()`, `db.copyDatabase()`, `$eval`, `background: true`...) con su versión de deprecación y su reemplazo. Es la tabla que te permitirá **fechar** un script legacy con solo leerlo — el ejercicio 8 de la Fase 15, con munición real.
 
 ---

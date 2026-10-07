@@ -2,7 +2,7 @@
 
 ## 🎯 Propósito
 
-Todo lo construido hasta ahora mira al Mini Jira desde el lado del que
+Todo lo construido hasta ahora mira a la Tiquetera desde el lado del que
 **reporta**. Hoy construimos el otro lado: el **panel del agente de
 soporte** — la pantalla donde alguien de la mesa trabaja la cola: toma
 tickets, cambia estados, comenta y ve llegar trabajo nuevo en vivo.
@@ -1176,7 +1176,7 @@ Promise.all → volver al código. Meta fields solo si extiendes el guard.
 
 ## 🚀 Cierre
 
-El Mini Jira ya tiene sus dos caras — quien reporta y quien resuelve — y la
+La Tiquetera ya tiene sus dos caras — quien reporta y quien resuelve — y la
 fase de síntesis dejó su veredicto: los badges, servicios, la máquina de
 estados nacida de un ejercicio, los sockets y hasta los filtros de fecha se
 ensamblaron **sin modificar nada de lo anterior**. Examen aprobado. 🎓

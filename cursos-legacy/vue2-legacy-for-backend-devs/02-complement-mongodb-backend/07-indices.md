@@ -10,10 +10,10 @@ izquierdo, el costo de mantener índices en cada escritura, el plan de
 ejecución como juez — tu década afinando queries viaja casi entera. Lo que
 esta fase agrega es lo que tu mundo no tenía (índices **multikey** sobre
 arrays — la pieza que hace viable embeber —, parciales, TTL, de texto) y una
-lección final con el villano: **el índice acelera el plan; no arregla el
+lección final con el modelo traducido: **el índice acelera el plan; no arregla el
 modelo.**
 
-Al terminar, el Mini Jira tiene su plan de índices completo, derivado del
+Al terminar, la Tiquetera tiene su plan de índices completo, derivado del
 contrato endpoint por endpoint, con cada índice justificado por un `explain`
 antes/después.
 
@@ -30,14 +30,14 @@ antes/después.
 - índices únicos, parciales y TTL en uso real;
 - la búsqueda `?q=` del contrato resuelta con criterio: regex anclado vs
   índice de texto, medidos;
-- **el plan de índices del Mini Jira**, derivado del contrato y documentado
+- **el plan de índices de la Tiquetera**, derivado del contrato y documentado
   en `DATA-MODEL.md` con sus números;
 - tercera visita al anti-patrón ⚰️: `soporte_v1` indexada a conciencia… y
   perdiendo igual.
 
 ## 🚫 Qué NO entra todavía
 
-- la autopsia completa del villano (Fase 8 — inmediatamente después)
+- la autopsia completa del modelo traducido (Fase 8 — inmediatamente después)
 - `$group`/aggregation y sus índices (Fase 9 los aprovecha)
 - creación de índices en producción sin ventana (Fase 14, operación)
 - sharding y sus índices (fuera de alcance del curso)
@@ -131,7 +131,7 @@ db.tickets.find({ tags: "hardware" })            // IXSCAN 🎉
 
 // Y sobre campos DE documentos DENTRO de arrays:
 db.tickets.createIndex({ "history.by": 1 })
-db.tickets.find({ "history.by": "soporte1" })    // "todo lo que tocó soporte1"
+db.tickets.find({ "history.by": "lmcano" })    // "todo lo que tocó lmcano"
                                                   // — la consulta transversal de
                                                   // la Fase 3, ahora indexada
 ```
@@ -139,7 +139,7 @@ db.tickets.find({ "history.by": "soporte1" })    // "todo lo que tocó soporte1"
 > ### 🪞 Tu instinto dice… "los datos dentro de un array embebido son de segunda: no se pueden indexar ni consultar en serio"
 >
 > **Predicción falsable:** "la consulta transversal '¿qué tickets tocó
-> soporte1?' contra `history` embebido va a ser un full scan inevitable; por
+> lmcano?' contra `history` embebido va a ser un full scan inevitable; por
 > eso el historial debía ser tabla aparte".
 >
 > Mídelo (ejercicio 17): con `{ "history.by": 1 }`, es un IXSCAN con los
@@ -156,7 +156,7 @@ db.tickets.find({ "history.by": "soporte1" })    // "todo lo que tocó soporte1"
 > IXSCAN, no el full scan que el instinto temía. Y la **Fase 5** difirió
 > explícitamente "índices para acelerar el lado derecho del `$lookup` — Fase 7":
 > los índices en cada `foreignField` de `soporte_v1` (⚰️ más abajo) saldan esa
-> otra deuda… y demuestran que ni pagándola el villano se salva.
+> otra deuda… y demuestran que ni pagándola el modelo traducido se salva.
 
 La letra chica del multikey (para que no te sorprenda): infla el índice (un
 ticket con 10 entradas de history = 10 claves), tiene restricciones en
@@ -233,7 +233,7 @@ acceso en la mano, no por catálogo.**
 
 ---
 
-## 📋 El plan de índices del Mini Jira (derivado del contrato)
+## 📋 El plan de índices de la Tiquetera (derivado del contrato)
 
 | Endpoint / operación | Consulta | Índice | Justificación |
 |---|---|---|---|
@@ -261,7 +261,7 @@ Re-corre las mediciones de la Fase 5 (dashboard, detalle, búsqueda):
 - mejora — a veces mucho: los nested-loops del `$lookup` ahora pegan en
   índice en vez de escanear (celebra: tu reflejo de "indexa la FK" sigue
   siendo correcto);
-- y **sigue perdiendo** contra `minijira`, que sirve lo mismo con CERO
+- y **sigue perdiendo** contra `tiquetera`, que sirve lo mismo con CERO
   uniones — porque ningún índice elimina los 4 viajes por render, ni el
   trabajo de armar en runtime un documento que el modelo sano ya tenía
   armado en disco.
@@ -346,7 +346,7 @@ vuelve a medir. Los tres números juntos son la explicación entera.
 
 ## 🧪 Ejercicios (34)
 
-Base: `minijira` a 100k/400k y `soporte_v1`. Todo índice se justifica con
+Base: `tiquetera` a 100k/400k y `soporte_v1`. Todo índice se justifica con
 explain antes/después — sin números no cuenta.
 
 **🟢 Fácil (1–10)**
@@ -366,11 +366,11 @@ explain antes/después — sin números no cuenta.
 
 11. ESR completo: "abiertos, ordenados por prioridad, creados en 2020". Diseña el compuesto por la regla, créalo, verifica sort-sin-SORT, y luego **desordénalo a propósito** (R en medio) para ver la degradación en el explain.
 12. La dirección importa: `sort({ priority: 1, createdAt: -1 })` — ¿tu compuesto `{priority: 1, createdAt: 1}` lo sirve sin SORT? ¿Y `{priority: 1, createdAt: -1}`? ¿Y el sort espejo exacto? Tabla de las 4 combinaciones.
-13. El parcial de la cola del agente: créalo, y compara su tamaño (`db.tickets.stats().indexSizes`) contra la versión no-parcial. ¿Cuánto ahorraste? ¿La consulta `{assignee: "soporte1", status: "in_progress"}` lo usa? ¿Y `{assignee: null}`? (Esa última NO debe — explica por qué está bien que no.)
+13. El parcial de la cola del agente: créalo, y compara su tamaño (`db.tickets.stats().indexSizes`) contra la versión no-parcial. ¿Cuánto ahorraste? ¿La consulta `{assignee: "lmcano", status: "in_progress"}` lo usa? ¿Y `{assignee: null}`? (Esa última NO debe — explica por qué está bien que no.)
 14. Resuelve el unique-con-nulls: índice único parcial sobre `email` en users (campo que **agregas tú** para el ejercicio — no está en la fixture del contrato — y que no todos tienen). Demuestra: dos sin email conviven; dos con el mismo email, no.
 15. TTL en vivo: colección `sessions` con `expireAfterSeconds: 60`, inserta, cronometra su desaparición (recuerda: el monitor pasa cada ~60 s — puede tardar hasta ~2 min). Ahora inserta una con fecha string y demuestra el silencio más caro.
 16. `hint()`: fuerza un índice subóptimo en una consulta y compara contra el que el planner eligió. ¿Cuándo usarías hint en producción? (Respuesta corta esperada: casi nunca, y documentado.)
-17. **El experimento del 🪞:** la transversal `{"history.by": "soporte1"}` sin índice (COLLSCAN, número gordo) y con `{"history.by": 1}` (multikey). Compara además contra la alternativa "colección separada `ticketEvents` indexada" (constrúyela con un script desde los history): ¿los números le dan la razón a quién?
+17. **El experimento del 🪞:** la transversal `{"history.by": "lmcano"}` sin índice (COLLSCAN, número gordo) y con `{"history.by": 1}` (multikey). Compara además contra la alternativa "colección separada `ticketEvents` indexada" (constrúyela con un script desde los history): ¿los números le dan la razón a quién?
 18. Multikey sutil: tickets con `checklist: [{name, priority: n}]`. ¿`find({"checklist.priority": {$gte: 3, $lte: 5}})` significa "UN elemento en ese rango" o "alguno ≥3 y alguno ≤5"? Demuestra la diferencia con `$elemMatch` y dos documentos trampa. (El bug de rangos multikey de la época.)
 19. Compuesto con array: intenta crear `{ tags: 1, "history.by": 1 }` (dos arrays). Lee el error. Ahora `{ status: 1, tags: 1 }` (uno solo): funciona. Documenta la restricción.
 20. La comparación `?q=`: regex flotante insensible vs índice de texto en español, sobre 100k. Mide: tiempo, `totalDocsExamined`, y 5 búsquedas semánticamente traicioneras ("impre", "imprime", "IMPRESORA", una palabra con tilde, una frase de dos palabras). Tabla completa.
@@ -381,8 +381,8 @@ explain antes/después — sin números no cuenta.
 22. Covered query estricta para el dashboard: diseña el índice que cubra COMPLETO el listado (todos los campos que la tabla del frontend pinta). ¿Vale la pena el tamaño? Mide índice vs ganancia y decide con números.
 23. Los índices que NO creamos: elige 3 candidatos plausibles (p. ej. `{priority: 1}`, `{reporter: 1}`, `{title: 1}`), argumenta por qué no entran al plan (frecuencia, selectividad, redundancia con compuestos existentes) y déjalo escrito. Decir que no también se documenta.
 24. El costo de escritura: mide 10.000 inserts en tickets con 0, 3, 6 y 9 índices activos (crea dummies para llegar). Tabula tiempo vs número de índices. ¿Lineal? Es el precio del catálogo que ahora puedes citar.
-25. **El villano indexado (parte 1):** crea los 6 índices de foreignFields en `soporte_v1`. Verifica con explain que los `$lookup` del dashboard ahora pegan en IXSCAN (el explain de aggregation de la Fase 5 te dijo qué visibilidad hay).
-26. **(parte 2):** re-corre las tres mediciones de la Fase 5 (dashboard, detalle, búsqueda) contra `soporte_v1` indexada Y contra `minijira`. Tabla final de la fase a la autopsia: sin índices / con índices / modelo sano. Escribe la conclusión en una frase que le dirías a tu yo del pasado.
+25. **El modelo traducido, indexado (parte 1):** crea los 6 índices de foreignFields en `soporte_v1`. Verifica con explain que los `$lookup` del dashboard ahora pegan en IXSCAN (el explain de aggregation de la Fase 5 te dijo qué visibilidad hay).
+26. **(parte 2):** re-corre las tres mediciones de la Fase 5 (dashboard, detalle, búsqueda) contra `soporte_v1` indexada Y contra `tiquetera`. Tabla final de la fase a la autopsia: sin índices / con índices / modelo sano. Escribe la conclusión en una frase que le dirías a tu yo del pasado.
 27. Selectividad en carne propia: crea `{ status: 1 }` solo, y compara `find({status: "closed"})` (60% de la base, generador dixit) contra `find({status: "open"})` (20%). ¿El planner usa el índice en ambos? ¿DEBERÍA? Mide IXSCAN vs COLLSCAN forzado con hint para el caso gordo. Tu regla de selectividad de siempre, verificada aquí.
 28. El planner cambia de opinión: con dos índices candidatos para la misma consulta, usa explain con `allPlansExecution` para ver los planes rivales y quién ganó. Investiga (doc 4.4) cómo cachea el planner los planes y qué lo hace re-evaluar. ¿Te suena de tu motor anterior?
 
@@ -392,8 +392,8 @@ explain antes/después — sin números no cuenta.
 30. Paginación profunda, revisited: retoma el ejercicio 23 de la Fase 2 (skip vs range-based) y re-mídelo CON el índice `{createdAt: -1, _id: -1}`. ¿El índice salvó al skip profundo? ¿Por qué el range-based sí lo aprovecha completo? Explica con el B-tree y cierra la recomendación para el contrato (que pagina con `_sort` + límites).
 31. El experimento del orden físico: ¿importa el orden de inserción? Genera dos colecciones idénticas, una insertada en orden cronológico y otra en orden aleatorio, mismo índice `{createdAt: -1}`. Mide la consulta del listado en ambas (y mira `totalKeysExamined` vs docs). Investiga qué papel juega la localidad en WiredTiger. Media página de hallazgos honestos (incluido "no encontré diferencia", si es el caso: negativo medido > positivo supuesto).
 32. Índice comodín de la época tardía: investiga los wildcard indexes de 4.2+ (`{"$**": 1}`), crea uno sobre una colección con metadatos variables (`meta.*` de la Fase 2, ej. 25), mide contra índices explícitos, y escribe cuándo son herramienta y cuándo son rendición del diseño.
-33. El torture de lectura: adapta el `npm run torture` de la Fase 6 para que mezcle las consultas calientes del contrato bajo carga, y corre 3 configuraciones: sin índices, plan del Mini Jira, plan + 6 índices basura. Latencias p50/p95 de cada consulta por configuración. La tabla que demuestra que MÁS índices no es MEJOR.
-34. **El ensayo de la fase** (1 página, `INSTINTOS.md`): "El explain limpio que sigue lento". Tesis: el índice optimiza el acceso a un modelo dado; cuando el modelo obliga a N accesos por operación, el índice solo abarata cada uno de los N — y el DBA que no modela se estanca en ese óptimo local. Usa la tabla del villano (ej. 26) como evidencia central. Cierra con tu checklist personal de "cuándo dejo de indexar y empiezo a remodelar" — que es exactamente lo que harás en la Fase 8.
+33. El torture de lectura: adapta el `npm run torture` de la Fase 6 para que mezcle las consultas calientes del contrato bajo carga, y corre 3 configuraciones: sin índices, plan de la Tiquetera, plan + 6 índices basura. Latencias p50/p95 de cada consulta por configuración. La tabla que demuestra que MÁS índices no es MEJOR.
+34. **El ensayo de la fase** (1 página, `INSTINTOS.md`): "El explain limpio que sigue lento". Tesis: el índice optimiza el acceso a un modelo dado; cuando el modelo obliga a N accesos por operación, el índice solo abarata cada uno de los N — y el DBA que no modela se estanca en ese óptimo local. Usa la tabla del modelo traducido (ej. 26) como evidencia central. Cierra con tu checklist personal de "cuándo dejo de indexar y empiezo a remodelar" — que es exactamente lo que harás en la Fase 8.
 
 ---
 
@@ -439,12 +439,12 @@ como consulta.
 
 ## 🚀 Cierre
 
-Al final de esta fase, el Mini Jira tiene su plan de índices completo —
+Al final de esta fase, la Tiquetera tiene su plan de índices completo —
 derivado del contrato, verificado con explain, documentado con números,
 incluidos los índices que decidimos NO crear. Tu experiencia de DBA quedó
 validada donde correspondía (compuestos, prefijos, selectividad, costo de
 escritura) y ampliada donde hacía falta (multikey, parciales, TTL). Y el
-villano recibió su mejor oportunidad: índices perfectos en cada foreignField…
+modelo traducido recibió su mejor oportunidad: índices perfectos en cada foreignField…
 y la tabla final lo condena igual.
 
 La señal de que quedó bien:
@@ -466,7 +466,7 @@ La señal de que quedó bien:
 > `-fix`. Todo eso está en
 > [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
 
-**Siguiente parada:** ⚰️ Fase 8 — La autopsia. El villano está
+**Siguiente parada:** ⚰️ Fase 8 — La autopsia. El modelo traducido está
 medido tres veces y condenado con evidencia. Ahora te toca a ti hacer lo que
 harás en la vida real: rediseñarlo, migrarlo y demostrar con números que la
 cirugía valió la pena.

@@ -27,7 +27,7 @@ porque no era Mongo, era Postgres con menos garantías.
 
 ## 🏗️ El escenario (autocontenido)
 
-Te entregan un sistema interno real de época: **Mini Jira**, una mesa de
+Te entregan un sistema real de época: **la Tiquetera**, una mesa de
 soporte con dos caras (quien reporta tickets y el agente que los resuelve).
 
 **Lo que recibes con el curso:**
@@ -121,12 +121,12 @@ problema"). Incluye el descarte argumentado de los ids autoincrementales.
 
 `find` como `SELECT`, operadores, proyección, sort/skip/limit — todo en
 **formato espejo SQL↔Mongo**. Trampas: el `NULL` que no es tu `NULL`, tipos no
-estrictos. Se consulta la base del Mini Jira ya sembrada en la Fase 1.
+estrictos. Se consulta la base de la Tiquetera ya sembrada en la Fase 1.
 
 ### Fase 3 — ⚔️ Embeber vs referenciar: el capítulo que decide todo
 
 **Cambio de paradigma #1.** Los 4 cuadrantes (se lee junto × cambia junto) con
-las cuentas hechas sobre Mini Jira: ¿comentarios embebidos? ¿el historial de
+las cuentas hechas sobre la Tiquetera: ¿comentarios embebidos? ¿el historial de
 estados? — el contraste escritura-intensiva entra aquí con el bucket pattern.
 Patrones canónicos (subset, extended reference, computed, bucket). Límite de
 16 MB y arrays sin techo. Corolario incómodo dicho en voz alta: si todo es

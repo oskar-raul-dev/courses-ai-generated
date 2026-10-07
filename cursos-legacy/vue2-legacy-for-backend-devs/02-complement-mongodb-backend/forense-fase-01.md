@@ -42,7 +42,7 @@ test
 admin     41 kB
 config    61 kB
 local     41 kB
-minijira  2.4 MB
+tiquetera  2.4 MB
 ```
 
 **Qué descarta.** Descarta la mitad de los sustos de esta fase en dos líneas. Si
@@ -52,7 +52,7 @@ vacío sin una sola queja. Es la primera pregunta y casi nadie se la hace.
 ### Paso 2 — ¿la colección se llama como tú crees?
 
 ```js
-> use minijira
+> use tiquetera
 > show collections
 comments
 tickets

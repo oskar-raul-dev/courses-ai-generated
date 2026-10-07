@@ -55,7 +55,7 @@ Esto no es un detalle de configuración. **Es la fase entera.**
 - **Componentes nuevos que no existían**: eso es Q4 (el timeline). Aquí solo se
   traduce lo que ya funcionaba.
 - **Selección múltiple** (`selection`, `selected.sync`) — ejercicio 🟠, no
-  contenido guiado. El Mini Jira no tiene acciones en lote.
+  contenido guiado. La Tiquetera no tiene acciones en lote.
 - **Exportar a CSV / imprimir** — ejercicio 🟠.
 - **`QTable` con `grid` prop** (modo tarjetas) — ejercicio 🟡. Es una vista, no
   un concepto.
@@ -540,7 +540,7 @@ Vamos a hacer lo que hicimos en F10: **elegir, y escribir por qué.**
 
 > **Manda `QTable`. Opción A.**
 >
-> **Salvo** que el estado tenga que salir del componente. Y en el Mini Jira, no
+> **Salvo** que el estado tenga que salir del componente. Y en la Tiquetera, no
 > tiene que salir.
 >
 > El razonamiento es el mismo de F10, aplicado con honestidad. La regla no era
@@ -793,9 +793,9 @@ actions: {
 > sin error, sin loading. Y no vas a saber por qué. **`fetchTicketsPaged` no
 > cachea. Punto.**
 
-**¿Cliente o servidor en el Mini Jira?** **Cliente.** 40 tickets. El modo
+**¿Cliente o servidor en la Tiquetera?** **Cliente.** 40 tickets. El modo
 server-side está aquí porque **lo vas a ver en producción** y porque `rowsNumber`
-es donde la deuda 💸 se hace visible — no porque el Mini Jira lo necesite. Montar
+es donde la deuda 💸 se hace visible — no porque la Tiquetera lo necesite. Montar
 server-side para 40 filas es la definición de complejidad accidental.
 
 ### 4.7 🤝 Convivencia Bootstrap + Quasar
@@ -805,8 +805,8 @@ Esta sección **no es un anexo**. Es la mitad del valor de la fase.
 >
 > ⚠️ **Sobre el modal.** El curso base **no usa bootstrap-vue** — usa Bootstrap 4
 > crudo con jQuery, encapsulado en un componente frontera (`ConfirmModal.vue`, el
-> ejercicio 18 de F5 y el patrón de librería imperativa de A1). Así que en el Mini
-> Jira **no hay `<b-modal>` ni `this.$bvModal`**: hay un `<div class="modal">` de
+> ejercicio 18 de F5 y el patrón de librería imperativa de A1). Así que en la
+> Tiquetera **no hay `<b-modal>` ni `this.$bvModal`**: hay un `<div class="modal">` de
 > Bootstrap que abres con `$('#id').modal('show')`. Los bosquejos maestros dicen
 > `<b-modal>` como taquigrafía de "el modal de Bootstrap"; aquí lo escribimos como
 > el curso lo enseña. La lección de convivencia es idéntica: es un componente que
@@ -815,7 +815,7 @@ Esta sección **no es un anexo**. Es la mitad del valor de la fase.
 Después de Q2 y Q3, tu proyecto está así:
 
 ```
-Mini Jira (post-Q3)
+Tiquetera (post-Q3)
 ├── Dashboard         → QTable          🅠 Quasar
 ├── Formulario CRUD   → QForm/QInput    🅠 Quasar
 ├── Modal de crear    → div.modal+jQuery 🅱️ Bootstrap
@@ -1768,7 +1768,7 @@ aprendiste Quasar… o si solo aprendiste a traducir de Bootstrap.
 > | Deuda | Qué falta | Quién lo paga en producción |
 > |---|---|---|
 > | `X-Total-Count` → `rowsNumber` | Mapeo a mano en el service. Y CORS con `Access-Control-Expose-Headers`. | **Backend**: te da el total en el body o en un header expuesto. Y lo acuerdas con el backend **antes**. |
-> | Server-side implementado pero no usado | El Mini Jira usa modo cliente (40 tickets). | Nadie. **El día que sean 40.000, el interruptor ya está montado.** |
+> | Server-side implementado pero no usado | La Tiquetera usa modo cliente (40 tickets). | Nadie. **El día que sean 40.000, el interruptor ya está montado.** |
 > | Dos sistemas de notificación (`ui/FLASH` + `$q.notify`) | Uno de los dos sobra. | **Tú.** Ejercicio 20. |
 > | Bootstrap y Quasar conviviendo | 190KB de CSS que nadie se atreve a quitar. | **Nadie, nunca.** Y no pasa nada. Bienvenido al legacy. |
 
