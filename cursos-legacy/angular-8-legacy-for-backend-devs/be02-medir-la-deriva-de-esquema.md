@@ -13,13 +13,13 @@ Descubrir, midiendo y no suponiendo, que el modelo Java que escribiste en `be01`
 
 Esta fase no construye nada. Es la primera del track que no deja código funcionando, y es a propósito: **antes de conectar la base hay que mirar qué hay dentro de ella**, y lo que hay no se parece a `Patient.java`.
 
-Hasta aquí todo se portaba bien. Escribiste una clase con seis campos tipados, un repositorio, un controller, y todo parecía JPA con otro nombre. Ahora se te entrega un volcado de la colección real de producción —seis años de operación— y se te hace una sola pregunta:
+Hasta aquí todo se portaba bien. Escribiste una clase con seis campos tipados, un repositorio, un controller, y todo parecía JPA con otro nombre. Ahora se te entrega un volcado de la colección real de producción —siete años de operación— y se te hace una sola pregunta:
 
 > **¿Cuántas formas distintas del documento de paciente existen en esa colección?**
 
 Son cinco. Ninguna la dice el modelo Java. Y la parte incómoda no es que existan: es que **el repository de Spring te devolvió objetos perfectamente válidos sobre todas ellas, sin una sola excepción**.
 
-> 🧠 **La deriva de esquema no produce errores. Produce campos vacíos.** Un sistema que falla te avisa. Un sistema que silenciosamente te entrega `null` donde había un dato te deja escribir seis años de código encima antes de que alguien note que la pantalla de un paciente de 2019 sale sin nombre.
+> 🧠 **La deriva de esquema no produce errores. Produce campos vacíos.** Un sistema que falla te avisa. Un sistema que silenciosamente te entrega `null` donde había un dato te deja escribir siete años de código encima antes de que alguien note que la pantalla de un paciente de 2019 sale sin nombre.
 
 ---
 
@@ -58,7 +58,7 @@ Aquí no hay ningún sitio así. Y el error es creer que entonces el esquema "no
 
 **Está en el código Java de ayer.** La versión de esa misma clase que corría en 2019 tenía cinco campos y ninguno se llamaba `active`. Todo lo que se escribió en aquel entonces tiene esa forma, y sigue ahí. El esquema viejo no se fue a ninguna parte: **se quedó dentro de los documentos que creó**.
 
-**Y está en el script de importación que alguien corrió una vez en 2020**, cuando entró la sede que venía del sistema anterior. Ese script no lo escribió el equipo de la aplicación, no está en el repositorio, y nadie recuerda quién lo tenía. Metió documentos con los nombres de campo del sistema de origen. Esos documentos también siguen ahí.
+**Y está en el script de importación que alguien corrió una vez en 2020**, cuando Andina compró el punto de toma de Gatineau que traía a sus pacientes en el sistema de agenda de la clínica anterior. Ese script no lo escribió el equipo de la aplicación, no está en el repositorio, y nadie recuerda quién lo tenía. Metió documentos con los nombres de campo del sistema de origen. Esos documentos también siguen ahí.
 
 > 🧭 **La regla que gobierna la fase:** en una base sin esquema impuesto, **el esquema es la unión de todos los esquemas que alguna vez estuvieron vigentes**. No hay migración implícita. Lo que se escribió con la forma de 2019 tiene la forma de 2019 hasta que alguien la toque, y nadie la toca.
 
@@ -100,7 +100,7 @@ Cuando `spring-data-mongodb` lee un documento y lo convierte a tu `Patient`, hac
 
 Junta las dos y tienes el mecanismo: un documento de la forma de 2020, con `name` en vez de `fullName`, se convierte en un `Patient` **perfectamente válido** cuyo `fullName` es `null` y cuyo `name` se descartó por el camino. Ninguna excepción. Ningún log. El objeto existe, tiene su `id`, viaja al controller, se serializa, llega al navegador, y la pantalla muestra una fila con el nombre vacío.
 
-> 🧠 **El mapeo no valida: traduce lo que puede y calla lo que no.** Y esa es exactamente la propiedad que hizo posible que seis años de deriva pasaran inadvertidos. No hubo un día en que el sistema se rompiera. Hubo seis años de pantallas con un campo vacío que alguien reportó tres veces y que se cerraron como "no reproducible" porque el paciente que el que reportaba tenía delante sí tenía nombre.
+> 🧠 **El mapeo no valida: traduce lo que puede y calla lo que no.** Y esa es exactamente la propiedad que hizo posible que siete años de deriva pasaran inadvertidos. No hubo un día en que el sistema se rompiera. Hubo siete años de pantallas con un campo vacío que alguien reportó tres veces y que se cerraron como "no reproducible" porque el paciente que el que reportaba tenía delante sí tenía nombre.
 
 Y aquí está la simetría que hay que nombrar en voz alta, porque es la misma conversación del track base vista desde el otro lado del cable:
 
@@ -261,8 +261,8 @@ db.patients.find({ birthDate: { $type: 'date'   } }, { documentId: 1, birthDate:
 ```
 
 ```
-{ "_id": ..., "documentId": "CC-1032456789", "birthDate": "1984-03-12" }
-{ "_id": ..., "documentId": "CC-1098765432", "birthDate": ISODate("1991-11-02T00:00:00Z") }
+{ "_id": ..., "documentId": "HC-1032456789", "birthDate": "1984-03-12" }
+{ "_id": ..., "documentId": "HC-1098765432", "birthDate": ISODate("1991-11-02T00:00:00Z") }
 ```
 
 **Y el `Patient.java` de `be01` lee los dos sin quejarse**, porque su `birthDate` es un `String` y el convertidor de Spring Data hace la conversión que puede. El segundo llega al navegador como `"1991-11-02T00:00:00Z"` y el primero como `"1984-03-12"`. Dos formatos distintos en la misma columna de la misma tabla de la pantalla, y ninguna excepción en ninguna capa.
@@ -300,7 +300,7 @@ Treinta y siete órdenes médicas apuntan a un paciente que no existe. Las pregu
 2. ¿Qué muestra hoy la pantalla de órdenes para esas treinta y siete? Ábrela y míralo. La respuesta —una columna vacía, sin error— es el incidente **be-02**.
 3. ¿Cuántas de esas órdenes tienen resultados **validados** colgando? Porque una orden huérfana sin resultados es basura; una con un resultado validado es **un informe clínico emitido a un paciente que el sistema no puede identificar**, y eso tiene otro nombre en una auditoría.
 
-Repite la medición hacia abajo en la cadena —muestras que apuntan a órdenes que no están, resultados que apuntan a muestras que no están— y anota los tres números juntos. La forma de esa tabla dice más que los números sueltos: si la rotura se concentra en un eslabón, hubo un evento; si está repartida, hubo seis años.
+Repite la medición hacia abajo en la cadena —muestras que apuntan a órdenes que no están, resultados que apuntan a muestras que no están— y anota los tres números juntos. La forma de esa tabla dice más que los números sueltos: si la rotura se concentra en un eslabón, hubo un evento; si está repartida, hubo siete años.
 
 > 💡 En una base relacional, esta agregación es innecesaria porque la respuesta es siempre cero: la clave foránea no dejó entrar la fila. Merece la pena decirlo sin dramatismo: **eso es lo que se compró con la velocidad de esquema de 2019**. No fue gratis; fue a plazos, y esta es una de las cuotas.
 
@@ -334,7 +334,7 @@ Los tres casos son tres historias distintas, y esa es la parte que hay que lleva
 
 Y ahora el remate, que es donde la fase se cierra sobre sí misma:
 
-> 🧠 **Las tres llegan a tu `Patient.java` como el mismo `null`.** El getter devuelve `null` en los tres casos y el objeto es indistinguible. **La información de qué tipo de vacío era se destruye en el mapeo**, y una vez destruida no se puede recuperar desde Java: hay que bajar a la agregación. Esa es, exactamente, la misma conversación que `strict: true` tiene en el frontend —¿`undefined` y `null` son lo mismo?— vista desde el otro lado del cable y con seis años de datos encima.
+> 🧠 **Las tres llegan a tu `Patient.java` como el mismo `null`.** El getter devuelve `null` en los tres casos y el objeto es indistinguible. **La información de qué tipo de vacío era se destruye en el mapeo**, y una vez destruida no se puede recuperar desde Java: hay que bajar a la agregación. Esa es, exactamente, la misma conversación que `strict: true` tiene en el frontend —¿`undefined` y `null` son lo mismo?— vista desde el otro lado del cable y con siete años de datos encima.
 
 🧨 **Rompe a propósito.** Levanta el backend de `be01`, apúntalo a estos datos con un repositorio de prueba, y pide los tres grupos por su `documentId`. Serializa las tres respuestas y compáralas byte a byte. Después contesta: ¿qué tendría que cambiar en el modelo Java para poder distinguirlas? Y la pregunta de verdad: **¿querrías distinguirlas?** El coste de esa distinción se paga en todas las capas, para siempre, y solo hay dos o tres sitios donde importa. Esa es la forma canónica de una decisión de mantenimiento, y no tiene respuesta obvia.
 
@@ -343,7 +343,7 @@ Y ahora el remate, que es donde la fase se cierra sobre sí misma:
 ```javascript
 // La consulta que el validador asíncrono del formulario dispara con cada
 // tecla que el operador escribe en el campo de documento.
-db.patients.find({ documentId: 'CC-1032456789' }).explain('executionStats');
+db.patients.find({ documentId: 'HC-1032456789' }).explain('executionStats');
 ```
 
 De toda esa salida —que `bea-05` desmenuza— importan cuatro líneas:
@@ -406,7 +406,7 @@ Está en el §5.6 y es **el `null` que en Java llega como `null` y en la base es
 **El método, aplicado.** Las cuatro preguntas del track forense, contestadas sobre este caso concreto:
 
 1. **¿Qué se ve?** Una pantalla de pacientes donde algunas filas no tienen correo, y un reporte de "pacientes sin correo" cuyo total nunca cuadra con el que da Operaciones.
-2. **¿Qué capa lo produce?** Ninguna. Ese es el hallazgo: no hay una capa culpable. El dato entró vacío de tres maneras distintas a lo largo de seis años y todas las capas lo transportaron correctamente.
+2. **¿Qué capa lo produce?** Ninguna. Ese es el hallazgo: no hay una capa culpable. El dato entró vacío de tres maneras distintas a lo largo de siete años y todas las capas lo transportaron correctamente.
 3. **🧬 ¿Lo escribió el sistema o llegó roto en el dato?** Las tres cosas a la vez, y por eso hay tres poblaciones. Esta pregunta —la propia del track— es la que separa un bug de una deriva.
 4. **¿Con qué se demuestra?** Con las tres consultas del §5.6 y sus tres números, que suman el cuarto. Un argumento; tres números.
 
@@ -438,7 +438,7 @@ Esta fase **no tiene archivo `forense-fase-NN.md`**: la pieza forense del track 
 15. Usa `$facet` para obtener en **una sola pasada** el recuento de formas, la partición por tipo de `birthDate` y los tres casos de `email`. Mide el tiempo de las dos versiones —una pasada contra tres— sobre esta colección y anota si la diferencia justifica la complejidad.
 16. **Diagnóstico.** Toma un paciente de la forma **C** (`name`, sin `fullName`), búscalo en la pantalla de pacientes de la aplicación y describe exactamente qué ve el operador. Después localiza en qué capa se perdió el nombre.
 17. **Diagnóstico.** Un compañero dice que su `$lookup` "no encuentra nada". Reprodúcelo cruzando por un campo cuyo tipo difiera entre las dos colecciones, y explica por qué el resultado es un arreglo vacío y no un error.
-18. **Diagnóstico.** El validador de documento duplicado del formulario "a veces no detecta el duplicado". Busca en `patients` los `documentId` que aparezcan más de una vez con `$group` + `$match`, y después mira si alguno difiere solo en el guion (`CC-10…` contra `CC10…`). Anota cuántos pares hay.
+18. **Diagnóstico.** El validador de documento duplicado del formulario "a veces no detecta el duplicado". Busca en `patients` los `documentId` que aparezcan más de una vez con `$group` + `$match`, y después mira si alguno difiere solo en el guion (`HC-10…` contra `CC10…`). Anota cuántos pares hay.
 19. Crea el índice sobre `documentId` en una copia de la colección, vuelve a correr el `explain`, y anota los cuatro números otra vez. **No lo crees en la colección principal**: `be03` lo hace con su before/after.
 
 **🟠 Difícil (20–27)**
@@ -457,7 +457,7 @@ Esta fase **no tiene archivo `forense-fase-NN.md`**: la pieza forense del track 
 28. **Adversarial.** Alguien propone arreglar la deriva con un script de normalización que ponga las 4.820 filas en la forma **A**. Escríbelo. Después, **antes de correrlo**, enumera qué información se destruiría de forma irreversible —piensa en los tres tipos de `null` y en `_source`—, y decide. Si decides no correrlo, escribe el párrafo que se lo explica a quien lo propuso.
 29. **Diagnóstico.** Toma las 37 órdenes huérfanas y reconstruye, solo con lo que hay en la base, la historia más probable de cómo llegaron ahí. Usa fechas, `_source` y la forma de los documentos vecinos. Presenta la hipótesis con su evidencia y, sobre todo, **con lo que la refutaría**.
 30. **Diseño.** El equipo tiene ocho horas al trimestre para deuda de datos. Ordena todas las mediciones de esta fase por *(daño si no se toca) / (costo de tocarlo)*, y defiende el primer puesto contra alguien que sostenga que lo primero es la integridad referencial. La fecha de decomisión es parte del argumento.
-31. **Adversarial.** Argumenta bien la posición contraria a la fase: *"esto no es deriva, es evolución sana; el sistema lleva seis años funcionando y los cinco formatos conviven sin incidentes graves"*. Dale sus mejores razones —incluida la de que ninguna de estas mediciones corresponde a un ticket abierto— y después refútala con el único argumento que no admite réplica: el que un auditor usaría.
+31. **Adversarial.** Argumenta bien la posición contraria a la fase: *"esto no es deriva, es evolución sana; el sistema lleva siete años funcionando y los cinco formatos conviven sin incidentes graves"*. Dale sus mejores razones —incluida la de que ninguna de estas mediciones corresponde a un ticket abierto— y después refútala con el único argumento que no admite réplica: el que un auditor usaría.
 32. **Diagnóstico y escritura.** Escribe el post-mortem de ocho puntos del incidente **be-03** —el reporte de "pacientes sin nombre" que se cerró tres veces como no reproducible— con el formato del cuaderno y sin culpabilización. Incluye el test de regresión: la agregación semanal del ejercicio 27.
 33. **La medición que cierra la fase.** Con todo lo anterior en `MEASUREMENTS.md`, escribe una sola página titulada *"Qué hay de verdad guardado en LabCore"*, dirigida a alguien técnico que no ha visto la base. Solo hechos y números, sin recomendaciones. Esa página es el primer capítulo del documento que vas a firmar en `be08`, y la escribes ahora porque ahora tienes los datos frescos y todavía no tienes una tesis que defender.
 

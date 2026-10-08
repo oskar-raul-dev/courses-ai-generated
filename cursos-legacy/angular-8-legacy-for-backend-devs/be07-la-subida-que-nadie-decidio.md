@@ -120,7 +120,7 @@ Reconstruirla es el primer trabajo, y la lección de método es que **ninguna de
 
 > 📝 Los tags de la tabla son los últimos parches visibles de cada línea a **10/09/2026**, comprobados en el registro y no de memoria. Los vas a volver a comprobar tú en el ejercicio 2, porque van a haber cambiado: un tag flotante como `mongo:6.0` apunta hoy a un parche y mañana a otro, y **eso también es un cambio que nadie decide**.
 
-Las cuatro ventanas tienen una cosa en común y hay que nombrarla: **cada salto ocurrió porque la versión anterior llegó a fin de soporte**. Nadie en Laboratorios Andina decidió subir; el proveedor dejó de sostener lo viejo y avisó. La decisión existía —se podía haber pedido quedarse, pagar soporte extendido, o migrar a otro proveedor— pero para tomarla había que leer el correo, y el correo llegaba a una lista de distribución de Operaciones.
+Las cuatro ventanas tienen una cosa en común y hay que nombrarla: **cada salto ocurrió porque la versión anterior llegó a fin de soporte**. Nadie en Andina Laboratories decidió subir; el proveedor dejó de sostener lo viejo y avisó. La decisión existía —se podía haber pedido quedarse, pagar soporte extendido, o migrar a otro proveedor— pero para tomarla había que leer el correo, y el correo llegaba a una lista de distribución de Operaciones.
 
 ### 5.2 El upgrade, en una línea
 
@@ -266,7 +266,7 @@ docker exec mongo-70 cat /LICENSE | head -5
 
 MongoDB pasó de AGPL a **SSPL** en octubre de 2018, con efecto sobre las versiones publicadas a partir de entonces. Es decir: **la versión que LabCore desplegó en 2019 ya era SSPL**, y nadie lo comprobó ni en el despliegue inicial ni en ninguno de los cuatro escalones.
 
-Para una empresa que solo *usa* el producto —que es el caso de Laboratorios Andina— el impacto práctico es limitado, y `bea-10` explica por qué con precisión. Lo que importa aquí es otra cosa:
+Para una empresa que solo *usa* el producto —que es el caso de Andina Laboratories— el impacto práctico es limitado, y `bea-10` explica por qué con precisión. Lo que importa aquí es otra cosa:
 
 > 🧭 **Tu deuda técnica la puede crear un abogado.** Ni una línea de tu código cambió, ni una versión de tu `pom.xml` se movió, y las condiciones bajo las que puedes usar tu base de datos son distintas de las que había cuando se eligió. Es el mismo mecanismo de esta fase —un cambio con efecto y sin commit— llevado a su forma más pura, y la lista de precedentes es larga: Elasticsearch, Redis, Terraform, Akka pasando a BSL en 2022. **Comprobar la licencia de tus dependencias tiene fecha de caducidad**, y casi nadie la vuelve a comprobar.
 
@@ -359,7 +359,7 @@ Esta es la pieza más valiosa del track y hay que trabajarla sin saber la respue
 20. **Diagnóstico.** Encuentra una agregación sin `$sort` explícito en el material del track o en tu código. Ejecútala cien veces en 4.0 y cien en 7.0 y compara el orden. Explica por qué este es el fallo más peligroso de todos.
 21. Escribe el guion `version-diff.sh` que ejecuta una lista de consultas contra dos contenedores de versiones distintas y reporta las diferencias. Es el hermano de `contract-diff.sh` del ejercicio 23 de `be00`, y es lo que habría convertido cada uno de los cuatro escalones en una tarde de trabajo en vez de en un salto de fe.
 22. **Diagnóstico.** Mide el rendimiento de las tres consultas más frecuentes en 4.0 y en 7.0, con el mismo volumen de datos. Anota si alguna empeoró. Un upgrade que mejora el 95 % y empeora una consulta crítica es un upgrade que hay que revisar.
-23. **Diseño.** Escribe el procedimiento que Laboratorios Andina debería seguir la próxima vez que llegue un correo del proveedor: quién lo recibe, qué se comprueba, con qué guion, en qué ambiente y con qué criterio se aprueba. Una página. Es un entregable de `be08`.
+23. **Diseño.** Escribe el procedimiento que Andina Laboratories debería seguir la próxima vez que llegue un correo del proveedor: quién lo recibe, qué se comprueba, con qué guion, en qué ambiente y con qué criterio se aprueba. Una página. Es un entregable de `be08`.
 24. **Diagnóstico.** Averigua cuál es la fecha de fin de soporte de la versión que corres hoy, en la documentación oficial del producto. Si ya pasó o está cerca, tienes un quinto escalón en el horizonte y nadie lo sabe. Esa comprobación es una fila de `be08`.
 
 **🔴 Muy difícil (25–29)**

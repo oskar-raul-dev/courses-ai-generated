@@ -599,8 +599,8 @@ Con esto, el curso está cerrado. Las fases obligatorias construyeron una aplica
 
 ### Reservas para el cuaderno de incidentes
 
-Esta fase **no tiene incidentes asignados**: el índice de `cuaderno-incidentes.md` cierra en el 21 y esta fase es opcional, así que no consume ninguno. Un incidente que solo pueden resolver los estudiantes que hicieron una fase 🔥 no es un incidente del curso.
+Esta fase **no tiene incidentes asignados**: el índice de `cuaderno-incidentes.md` cierra en el 22 y esta fase es opcional, así que no consume ninguno. Un incidente que solo pueden resolver los estudiantes que hicieron una fase 🔥 no es un incidente del curso.
 
-Queda un candidato anotado por si algún día se abre el 22, con esa misma salvedad:
+Queda un candidato anotado por si algún día se abre el 23, con esa misma salvedad:
 
-- **22 (🔥 candidato, no dado de alta)** · Fase 14 · *"El pod arrancó bien y la aplicación le habla al ambiente equivocado"* · Categoría: despliegue · Dificultad 🟠 — alguien cambió el ConfigMap, nadie reinició el Deployment, y los pods siguen sirviendo el `config.json` que escribieron al arrancar hace tres días. Es el hermano en Kubernetes del incidente 19, con la misma moraleja y otro culpable: allá el caché del navegador, acá un pod que nunca releyó su configuración.
+- **23 (🔥 candidato, no dado de alta)** · Fase 14 · *"El pod arrancó bien y la aplicación le habla al ambiente equivocado"* · Categoría: despliegue · Dificultad 🟠 — alguien cambió el ConfigMap, nadie reinició el Deployment, y los pods siguen sirviendo el `config.json` que escribieron al arrancar hace tres días. Es el hermano en Kubernetes del incidente 19, con la misma moraleja y otro culpable: allá el caché del navegador, acá un pod que nunca releyó su configuración.

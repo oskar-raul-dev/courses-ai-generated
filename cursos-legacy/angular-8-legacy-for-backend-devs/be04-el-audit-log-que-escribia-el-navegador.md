@@ -80,14 +80,14 @@ Fíjate además en lo que **no** cambia: la cláusula de `CONTRACT.md` que dice 
 
 Antes de escribir nada, el inventario. Hoy, en LabCore, conviven cuatro representaciones del tiempo, y solo una tiene dueño:
 
-1. **El `-05:00` del `db.json`** — `"2019-09-02T08:15:00-05:00"`. Cadena, con desplazamiento explícito de `America/Bogota`. Es la de los datos sembrados.
+1. **El `-05:00` del `db.json`** — `"2022-01-03T08:15:00-05:00"`. Cadena, con el desplazamiento de `America/Toronto` en invierno, escrito como constante desde la Era 1. Es la de los datos sembrados, que caen todos en invierno.
 2. **La `Z` del navegador** — `new Date().toISOString()` produce `"2026-09-10T15:04:05.123Z"`. Cadena, en UTC, calculada a partir del reloj **y de la zona** de la máquina del operador.
 3. **El `BSON Date`** de los 912 documentos que midió `be02` — un entero de milisegundos desde 1970, sin zona porque no la necesita.
 4. **El reloj del servidor**, que a partir de esta fase entra en escena y es el único que alguien controla.
 
 Las conversiones entre esas cuatro no son inocentes, y `bea-08` las cubre entera. Lo mínimo para trabajar hoy:
 
-> 🧠 **Un `BSON Date` no guarda zona horaria y no la necesita: guarda un instante.** La zona es una propiedad de la *presentación*, no del dato. El error clásico —y está en LabCore— es guardar cadenas con desplazamiento y creer que eso "conserva la zona". Conserva el desplazamiento de aquel día, que con horario de verano no es lo mismo; Colombia no lo tiene, así que aquí funciona por suerte y no por diseño. Guardar el instante en UTC y decidir la zona al pintarlo es lo correcto, y es lo que el servidor va a hacer.
+> 🧠 **Un `BSON Date` no guarda zona horaria y no la necesita: guarda un instante.** La zona es una propiedad de la *presentación*, no del dato. El error clásico —y está en LabCore— es guardar cadenas con desplazamiento y creer que eso "conserva la zona". Conserva el desplazamiento de aquel día, que con horario de verano no es lo mismo; Ottawa lo tiene, y el `-05:00` de LabCore solo es correcto de noviembre a marzo: funciona por calendario y no por diseño (`bea-08` §8). Guardar el instante en UTC y decidir la zona al pintarlo es lo correcto, y es lo que el servidor va a hacer.
 
 Y la trampa sutil, la que produce el incidente **be-07**: `toISOString()` del navegador **sí** convierte a UTC correctamente… usando el reloj y la zona del sistema operativo del operador. Si el portátil tiene la hora adelantada veinte minutos, el resultado es un UTC impecablemente formado y veinte minutos falso. **El formato no valida el contenido.** Un asiento con hora del futuro no tiene ningún error de sintaxis.
 
@@ -247,7 +247,7 @@ import java.time.Instant;
 // esparcido por cinco servicios es imposible de probar, y esta fase produce
 // mediciones de tiempo que hay que poder reproducir.
 //
-// El instante se guarda en UTC y NADA MÁS. La zona America/Bogota es una
+// El instante se guarda en UTC y NADA MÁS. La zona America/Toronto es una
 // decisión de presentación y vive en el frontend, que ya la tiene desde la
 // Fase 2. Ver bea-08.
 @Component

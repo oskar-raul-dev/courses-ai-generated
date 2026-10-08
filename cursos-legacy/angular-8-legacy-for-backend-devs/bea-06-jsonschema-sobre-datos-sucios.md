@@ -73,7 +73,7 @@ db.runCommand({
       properties: {
         documentId: {
           bsonType: 'string',
-          pattern: '^(CC|TI|CE)-[0-9]+$',
+          pattern: '^(HC|PP|LB)-[0-9]+$',
           description: 'documento de identidad con su prefijo'
         },
         // Un arreglo de tipos: el campo puede ser CUALQUIERA de ellos.

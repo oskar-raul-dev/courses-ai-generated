@@ -69,7 +69,7 @@ En las dos direcciones, porque las dos hacen falta: para leer el sistema y para 
 
 Y la frase que más ayuda a un relacional, porque reordena la intuición entera:
 
-> 🧠 *"En SQL modelas **la verdad** y las consultas se adaptan. Aquí modelas **la consulta** y la verdad se reparte."* Ninguna de las dos es mejor: la primera aguanta preguntas que nadie previó, la segunda contesta muy rápido las que sí. LabCore es un sistema con seis años de preguntas imprevistas, y ahí está buena parte de lo que `be02` midió.
+> 🧠 *"En SQL modelas **la verdad** y las consultas se adaptan. Aquí modelas **la consulta** y la verdad se reparte."* Ninguna de las dos es mejor: la primera aguanta preguntas que nadie previó, la segunda contesta muy rápido las que sí. LabCore es un sistema con siete años de preguntas imprevistas, y ahí está buena parte de lo que `be02` midió.
 
 ---
 
@@ -127,7 +127,7 @@ Por qué es un error y no una preferencia: **el documento crece de forma no acot
 
 **Y ahora lo interesante: LabCore no cometió este error, y lo esquivó dos veces.**
 
-La primera, en la auditoría. La Fase 11 del track base dice, con todas las letras, que *"el asiento no vive dentro de la muestra: vive en su propia colección, apunta a la muestra por id, y nadie lo edita nunca"*. Es exactamente la decisión correcta, tomada por el equipo del frontend, y es la razón de que la bitácora de LabCore siga siendo consultable seis años después.
+La primera, en la auditoría. La Fase 11 del track base dice, con todas las letras, que *"el asiento no vive dentro de la muestra: vive en su propia colección, apunta a la muestra por id, y nadie lo edita nunca"*. Es exactamente la decisión correcta, tomada por el equipo del frontend, y es la razón de que la bitácora de LabCore siga siendo consultable cinco años después.
 
 La segunda, en la custodia, y aquí la cosa se pone más interesante porque **la solución tiene su propio precio**. En vez de un arreglo, LabCore aplanó la cadena en pares de campos fijos dentro del documento de la muestra:
 
@@ -222,7 +222,7 @@ La tabla que resume las cinco decisiones de 2019. La columna de la derecha es la
 | **Resultado** | Colección propia, referencia a la muestra, **`rangeVersionApplied` desnormalizado** | ✅ Acierto grande | Nada — y **salvó la fase `be06`**: es el único rastro que sobrevivió al `$set` de los rangos |
 | **Rango de referencia** | Colección propia, una versión por documento | ✅ La forma es correcta | El modelo estaba bien; **lo que falló fue mutarlo** (`be06` §4.2). Un acierto de modelado arruinado por una operación |
 
-> 🧠 **La fila del resultado merece pararse.** Guardar `rangeVersionApplied` dentro del resultado es desnormalización pura: es un dato que "ya está" en la colección de rangos. Un purista relacional lo habría quitado en una revisión. Y es exactamente lo que permitió, seis años después, saber contra qué versión se juzgó cada informe cuando la colección de rangos ya había perdido su historia.
+> 🧠 **La fila del resultado merece pararse.** Guardar `rangeVersionApplied` dentro del resultado es desnormalización pura: es un dato que "ya está" en la colección de rangos. Un purista relacional lo habría quitado en una revisión. Y es exactamente lo que permitió, años después, saber contra qué versión se juzgó cada informe cuando la colección de rangos ya había perdido su historia.
 >
 > **La lección no es "desnormaliza siempre".** Es que congelar un dato que participó en una **decisión** —un veredicto, un precio, un cálculo firmado— no es redundancia: es evidencia. Un precio en una factura no es una copia del precio del catálogo; es el precio al que se vendió. La misma distinción, con otro sustantivo.
 

@@ -55,7 +55,7 @@ Los hechos, con fecha y fuente:
 
 Lo que la SSPL añade respecto de la AGPL, en una frase: si **ofreces el programa como servicio a terceros**, tienes que publicar bajo la misma licencia el código de **todo lo que haga funcionar ese servicio** —herramientas de gestión, interfaces, orquestación, copias de seguridad—. Está escrito para el caso concreto de un proveedor de nube que revende la base como producto gestionado.
 
-> ⚠️ **LabCore corre `mongo:4.0`, cuyo último parche es `4.0.28`. O sea: la base de datos que Laboratorios Andina desplegó en 2019 ya estaba bajo SSPL, y nadie lo comprobó** — ni en el despliegue inicial, ni en ninguno de los cuatro escalones de `be07`.
+> ⚠️ **LabCore corre `mongo:4.0`, cuyo último parche es `4.0.28`. O sea: la base de datos que Andina Laboratories desplegó en 2019 ya estaba bajo SSPL, y nadie lo comprobó** — ni en el despliegue inicial, ni en ninguno de los cuatro escalones de `be07`.
 
 ---
 
@@ -63,7 +63,7 @@ Lo que la SSPL añade respecto de la AGPL, en una frase: si **ofreces el program
 
 Y aquí hay que ser directo, porque la tentación de este apéndice es fabricar alarma y sería un error:
 
-> 🧭 **Para una empresa que solo *usa* el producto —que es el caso de Laboratorios Andina— la respuesta corta es: casi nada.**
+> 🧭 **Para una empresa que solo *usa* el producto —que es el caso de Andina Laboratories— la respuesta corta es: casi nada.**
 
 LabCore no ofrece MongoDB como servicio a terceros. Lo usa internamente, para su propio sistema, dentro de su propia operación. La cláusula que hace especial a la SSPL **no se activa** en ese escenario. No hay obligación de publicar nada, no hay que pagar nada, y no hay nada que arreglar.
 
@@ -73,7 +73,7 @@ Lo que sí cambia, y es lo que hay que anotar en `IRRECOVERABLE.md`:
 |---|---|
 | **No se instala desde los repositorios de la distribución** | Debian y RHEL lo retiraron. Hay que usar el repositorio del fabricante o un contenedor — que es lo que LabCore hace |
 | **Puede chocar con una política interna** | "Solo licencias aprobadas por la OSI" es una regla habitual en empresas medianas y grandes, y la SSPL no lo está |
-| **Condiciona qué se puede hacer si algún día se ofrece como servicio** | Hoy no aplica. Si Laboratorios Andina vendiera LabCore a otros laboratorios, **la conversación cambia** y hay que tenerla antes, no después |
+| **Condiciona qué se puede hacer si algún día se ofrece como servicio** | Hoy no aplica. Si Andina Laboratories vendiera LabCore a otros laboratorios, **la conversación cambia** y hay que tenerla antes, no después |
 | **Y afecta a quién puede hospedarla** | Es el motivo por el que existen las alternativas gestionadas que existen y no otras |
 
 > 🧠 **Lo interesante no es el riesgo, que es bajo. Es que nadie lo comprobó nunca, en siete años y cinco decisiones de despliegue.** La comprobación cuesta diez minutos y no se hizo ni una vez, y eso sí es un hallazgo: no sobre la licencia, sino sobre el proceso.
@@ -231,7 +231,7 @@ Todos sobre las dependencias reales de tu propio proyecto. Ninguno requiere sabe
 1. Genera el informe `THIRD-PARTY.txt` de tu `server/pom.xml` y cuenta cuántas licencias distintas aparecen en tu árbol. Anota cuántas dependencias transitivas tienes frente a las que declaraste.
 2. Busca en ese informe alguna dependencia que **no** esté bajo una licencia aprobada por la OSI. Si no hay ninguna, anótalo: también es un resultado.
 3. Saca la licencia de la imagen de MongoDB que estás corriendo, leyéndola **dentro del contenedor**. Anota cuál es y compárala con la que tendría `mongo:4.0.3`.
-4. **Diagnóstico.** Contesta por escrito, para el escenario real de Laboratorios Andina, si la SSPL le impone alguna obligación. Argumenta con la cláusula concreta, no con el titular de una noticia. Después responde la misma pregunta para el escenario hipotético de que la empresa vendiera LabCore a otros laboratorios.
+4. **Diagnóstico.** Contesta por escrito, para el escenario real de Andina Laboratories, si la SSPL le impone alguna obligación. Argumenta con la cláusula concreta, no con el titular de una noticia. Después responde la misma pregunta para el escenario hipotético de que la empresa vendiera LabCore a otros laboratorios.
 5. Elige tres dependencias de tu `pom.xml` y contesta las seis preguntas del §8 para cada una. La sexta —cuándo se revisa— escríbela como una fecha concreta.
 6. **Escritura.** Redacta el párrafo de `IRRECOVERABLE.md` sobre licencias: qué se comprobó, cuándo, qué se encontró, qué obligación hay (probablemente ninguna), y **quién** vuelve a comprobarlo y con qué periodicidad. Cinco líneas, sin alarma y sin minimizar. Es el entregable del apéndice.
 

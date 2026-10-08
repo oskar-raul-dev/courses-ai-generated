@@ -148,7 +148,7 @@ La segunda es que LabCore ya lo tiene montado. No lo estás eligiendo.
 > más caliente y muchos equipos eligieron NgRx por defecto para proyectos que no
 > lo necesitaban. Hoy la recomendación de la comunidad es bastante más
 > conservadora. No importa: el sistema que vas a mantener tomó la decisión hace
-> seis años y no se revierte.
+> siete años y no se revierte.
 
 ### Dónde vive la configuración por ambiente
 

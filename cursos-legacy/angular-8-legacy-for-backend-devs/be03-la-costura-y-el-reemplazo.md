@@ -215,7 +215,7 @@ public interface PatientRepository extends MongoRepository<Patient, String> {
 
     Patient findByLegacyId(Integer legacyId);
 
-    // El filtro del dialecto de json-server: /patients?documentId=CC-…
+    // El filtro del dialecto de json-server: /patients?documentId=HC-…
     // Devuelve lista aunque el resultado sea único, porque el contrato dice
     // que ese endpoint devuelve un ARREGLO. El validador asíncrono del
     // formulario decide "ya existe" mirando length > 0.
@@ -388,7 +388,7 @@ El antes y el después de la consulta que dispara el validador asíncrono con ca
 | `totalDocsExamined` | 4.820 | 1 |
 | `executionTimeMillis` | 12 | 0 |
 
-Doce milisegundos contra cero. **Y esa es exactamente la razón de que nadie lo arreglara en seis años**: doce milisegundos no se sienten. El argumento para crear el índice no es el número de hoy, es la derivada: el mismo `COLLSCAN` con cien veces más datos es más de un segundo, por tecla, en la pantalla que más se usa del sistema. Anota las dos cosas —el número y el razonamiento— porque en `be08` vas a necesitar defender por qué unas deudas se pagan y otras no, y esta es de las baratas.
+Doce milisegundos contra cero. **Y esa es exactamente la razón de que nadie lo arreglara en siete años**: doce milisegundos no se sienten. El argumento para crear el índice no es el número de hoy, es la derivada: el mismo `COLLSCAN` con cien veces más datos es más de un segundo, por tecla, en la pantalla que más se usa del sistema. Anota las dos cosas —el número y el razonamiento— porque en `be08` vas a necesitar defender por qué unas deudas se pagan y otras no, y esta es de las baratas.
 
 ### 5.7 La paginación que nadie llama todavía
 
@@ -517,7 +517,7 @@ Va a pasar, y conviene provocarlo a propósito en vez de sufrirlo: quita el `@Js
   ok   GET /patients responde (200)
   ok   GET /patients es un arreglo
   FALLA el id de un paciente es entero — el cuerpo no casó con /"id"\s*:\s*[0-9]+/
-         recibido: [{"id":"5f4a1c8e9b2d3a4f5c6d7e8f","documentId":"CC-10324567
+         recibido: [{"id":"5f4a1c8e9b2d3a4f5c6d7e8f","documentId":"HC-10324567
 ```
 
 Y ahora, el recorrido completo del síntoma, que es lo que hace que esto sea una pieza forense y no un mensaje de error:

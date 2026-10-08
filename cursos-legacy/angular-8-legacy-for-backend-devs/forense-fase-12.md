@@ -84,8 +84,8 @@ Ahora sí, el test que faltaba. Mismo mecanismo del spec ancla, con la única di
 ```typescript
 // src/app/patients/store/patients.effects.spec.ts — el test de regresión
 it('createPatient$ no pierde un alta cuando llegan dos seguidas', function (done) {
-  var first   = { fullName: 'Ana Ruiz',  documentId: 'CC-1001', active: true };
-  var second  = { fullName: 'Beto Diaz', documentId: 'CC-1002', active: true };
+  var first   = { fullName: 'Ana Ruiz',  documentId: 'HC-1001', active: true };
+  var second  = { fullName: 'Beto Diaz', documentId: 'HC-1002', active: true };
 
   // El servicio devuelve algo distinto por cada llamada, para poder distinguirlas.
   serviceSpy.createPatient.and.returnValues(

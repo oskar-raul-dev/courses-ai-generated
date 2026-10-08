@@ -166,7 +166,7 @@ Cinco bloques:
 4. **🧰 Las herramientas, y en qué miente cada una** — una línea por herramienta,
    con su mentira característica (§6.2).
 5. **Cierre** — remite al **post-mortem de ocho puntos** de la §13 de la guía de
-   estilo, que es el formato con el que se cierran los veintiún incidentes. El
+   estilo, que es el formato con el que se cierran los veintidós incidentes. El
    master **no lo duplica**: lo enlaza y dice cuándo se usa.
 
 ### 6.1 La cuarta pregunta del método
@@ -210,7 +210,7 @@ fase tardía. **Este curso no lo tiene** —su Fase 13 termina en la prueba de f
 del contenedor— y **no se inventa uno**, porque crearlo obligaría a tocar una
 fase publicada y eso choca con la regla de content lock. El equivalente ya existe
 y ya está en uso: el **post-mortem de ocho puntos** de la §13 de la guía
-de estilo, que es el molde de los veintiún incidentes y el cierre de la
+de estilo, que es el molde de los veintidós incidentes y el cierre de la
 retrospectiva del cuaderno. El master cierra ahí.
 
 ---

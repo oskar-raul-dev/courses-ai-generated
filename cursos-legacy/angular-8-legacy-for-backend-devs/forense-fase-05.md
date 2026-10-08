@@ -85,7 +85,7 @@ Legítimo preguntarlo: el formulario tiene un validador asíncrono que consulta 
 
 ```
 Name                                  Status  Type  Time
-patients?documentId=CC-1032456789     200     xhr   3.0 s
+patients?documentId=HC-1032456789     200     xhr   3.0 s
 patients                              201     xhr   3.0 s
 ```
 
@@ -140,7 +140,7 @@ Si el paso 2 te trajo acá, olvida todo lo anterior: el navegador pidió una vez
 #    del log de acciones estaba mal contado.
 
 # 3. ¿Estaba ya en el dato? El duplicado puede ser más viejo que el ticket.
-grep -c '"documentId": "CC-1032456789"' db.json
+grep -c '"documentId": "HC-1032456789"' db.json
 ```
 
 **Qué descarta.** Si el `request-id` se repite, el duplicado lo produjo un reintento —de un proxy, del propio navegador ante una conexión cortada— y el fix no está en Angular: está en hacer la operación idempotente del lado del servidor. Si los `request-id` difieren, vuelve al paso 2 y cuenta otra vez. Y si el duplicado ya estaba en `db.json` antes del ticket, no hay bug: hay un dato sucio, y es la pregunta 🧬 del método —¿lo escribió el sistema, o llegó ya roto?— contestada del lado incómodo.

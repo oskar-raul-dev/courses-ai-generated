@@ -97,26 +97,26 @@ Hasta ahora el `db.json` tenía una sola colección con lo que el formulario de 
 ```json
 {
   "patients": [
-    { "id": 1, "documentId": "CC-1032456789", "fullName": "Marcela Ríos", "birthDate": "1984-03-12", "email": "marcela.rios@example.com" },
-    { "id": 2, "documentId": "CC-1098765432", "fullName": "Julián Prada", "birthDate": "1991-11-02", "email": "julian.prada@example.com" },
-    { "id": 3, "documentId": "TI-1122334455", "fullName": "Deisy Cárdenas", "birthDate": "2009-07-25", "email": null }
+    { "id": 1, "documentId": "HC-1032456789", "fullName": "Marcela Ríos", "birthDate": "1984-03-12", "email": "marcela.rios@example.com" },
+    { "id": 2, "documentId": "HC-1098765432", "fullName": "Julián Prada", "birthDate": "1991-11-02", "email": "julian.prada@example.com" },
+    { "id": 3, "documentId": "PP-1122334455", "fullName": "Deisy Cárdenas", "birthDate": "2009-07-25", "email": null }
   ],
   "orders": [
-    { "id": 101, "patientId": 1, "status": "pending", "createdAt": "2019-09-02T08:15:00-05:00", "dueAt": "2019-09-04T08:15:00-05:00", "testCodes": ["CBC", "GLU"] },
-    { "id": 102, "patientId": 2, "status": "in_process", "createdAt": "2019-09-02T09:40:00-05:00", "dueAt": "2019-09-05T09:40:00-05:00", "testCodes": ["GLU"] },
-    { "id": 103, "patientId": 1, "status": "expired", "createdAt": "2019-08-20T07:00:00-05:00", "dueAt": "2019-08-22T07:00:00-05:00", "testCodes": ["TSH"] }
+    { "id": 101, "patientId": 1, "status": "pending", "createdAt": "2022-01-03T08:15:00-05:00", "dueAt": "2022-01-05T08:15:00-05:00", "testCodes": ["CBC", "GLU"] },
+    { "id": 102, "patientId": 2, "status": "in_process", "createdAt": "2022-01-03T09:40:00-05:00", "dueAt": "2022-01-06T09:40:00-05:00", "testCodes": ["GLU"] },
+    { "id": 103, "patientId": 1, "status": "expired", "createdAt": "2021-12-21T07:00:00-05:00", "dueAt": "2021-12-23T07:00:00-05:00", "testCodes": ["TSH"] }
   ],
   "samples": [
-    { "id": 501, "orderId": 101, "status": "received", "collectedAt": "2019-09-02T10:05:00-05:00", "collectedBy": "analista1" },
+    { "id": 501, "orderId": 101, "status": "received", "collectedAt": "2022-01-03T10:05:00-05:00", "collectedBy": "analista1" },
     { "id": 502, "orderId": 102, "status": "scheduled", "collectedAt": null, "collectedBy": null }
   ],
   "results": [
     { "id": 9001, "sampleId": 501, "analyte": "glucose", "value": 118, "unit": "mg/dL", "status": "preliminary", "validatedBy": null, "validatedAt": null, "rangeVersionApplied": null },
-    { "id": 9002, "sampleId": 501, "analyte": "tsh", "value": 4.1, "unit": "mUI/L", "status": "validated", "validatedBy": "supervisor1", "validatedAt": "2019-09-02T14:20:00-05:00", "rangeVersionApplied": 1 }
+    { "id": 9002, "sampleId": 501, "analyte": "tsh", "value": 4.1, "unit": "mUI/L", "status": "validated", "validatedBy": "supervisor1", "validatedAt": "2022-01-03T14:20:00-05:00", "rangeVersionApplied": 1 }
   ],
   "referenceRanges": [
-    { "id": 1, "analyte": "glucose", "version": 1, "unit": "mg/dL", "low": 70, "high": 110, "criticalLow": 50, "criticalHigh": 250, "effectiveFrom": "2019-01-01T00:00:00-05:00", "effectiveTo": "2019-05-31T23:59:59-05:00" },
-    { "id": 2, "analyte": "glucose", "version": 2, "unit": "mg/dL", "low": 70, "high": 100, "criticalLow": 50, "criticalHigh": 250, "effectiveFrom": "2019-06-01T00:00:00-05:00", "effectiveTo": null },
+    { "id": 1, "analyte": "glucose", "version": 1, "unit": "mg/dL", "low": 70, "high": 110, "criticalLow": 50, "criticalHigh": 250, "effectiveFrom": "2019-01-01T00:00:00-05:00", "effectiveTo": "2021-12-31T23:59:59-05:00" },
+    { "id": 2, "analyte": "glucose", "version": 2, "unit": "mg/dL", "low": 70, "high": 100, "criticalLow": 50, "criticalHigh": 250, "effectiveFrom": "2022-01-01T00:00:00-05:00", "effectiveTo": null },
     { "id": 3, "analyte": "tsh", "version": 1, "unit": "mUI/L", "low": 0.4, "high": 4.0, "criticalLow": 0.1, "criticalHigh": 20, "effectiveFrom": "2019-01-01T00:00:00-05:00", "effectiveTo": null }
   ]
 }
@@ -126,10 +126,10 @@ Hasta ahora el `db.json` tenía una sola colección con lo que el formulario de 
 
 - Todo en inglés, incluidos los valores de `status`. Son identificadores del sistema, no textos de interfaz: lo que ve el usuario sale de una clave de traducción que mapea `orders.status.inProcess`.
 - **Los estados salen del flujo canónico y de ningún otro sitio.** Una orden vive en `pending → in_process → partial_results → complete → delivered → expired`, y una muestra en `scheduled → collected → received → in_process → processed → discarded`. Los dos flujos comparten la palabra `in_process` y no significan lo mismo: una orden en proceso es una a la que ya se le tomó algo, una muestra en proceso está dentro del analizador. Que se llamen igual es una decisión de LabCore que vas a mantener, y es una fuente de confusión real en los tickets.
-- Las fechas llevan **offset explícito** (`-05:00`), no `Z` ni fecha suelta. La Fase 2 fijó `America/Bogota` como zona de la aplicación y la Fase 8 va a comparar fechas de verdad; una fecha sin zona guardada hoy es un incidente dentro de tres fases.
+- Las fechas llevan **offset explícito** (`-05:00`), no `Z` ni fecha suelta. Ese `-05:00` es el de Ottawa en invierno, y la Era 1 lo escribió como constante: todas las fechas de la semilla caen entre diciembre y enero, donde es correcto. La Fase 2 fijó `America/Toronto` como zona de la aplicación y la Fase 8 va a comparar fechas de verdad; una fecha sin zona guardada hoy es un incidente dentro de tres fases, y un `-05:00` escrito en julio es otro (el **22**).
 - El paciente 3 tiene `email: null` y la orden 103 está `expired`. No son datos de relleno: son los casos borde que las fases siguientes necesitan para tener algo que romper.
 - **Un resultado se identifica por `analyte`, no por el `testCode` de la orden**, y son dos vocabularios distintos a propósito: la orden pide un examen (`GLU`, el código que usa quien la crea) y el resultado mide un analito (`glucose`, lo que el aparato reporta). En un laboratorio de verdad un examen puede arrojar varios analitos, y esa asimetría es la razón de que los rangos de referencia cuelguen del segundo y no del primero.
-- `referenceRanges` ya trae **dos versiones del mismo analito**, con ventana de vigencia cerrada la primera y abierta la segunda. La glucosa pasa de un techo de 110 a uno de 100 el 1 de junio de 2019, así que un mismo valor de 105 cae dentro o fuera según la fecha del resultado. La **Fase 8 vive de eso**; acá solo se sirve.
+- `referenceRanges` ya trae **dos versiones del mismo analito**, con ventana de vigencia cerrada la primera y abierta la segunda. La glucosa pasa de un techo de 110 a uno de 100 el 1 de enero de 2022, así que un mismo valor de 105 cae dentro o fuera según la fecha del resultado. La **Fase 8 vive de eso**; acá solo se sirve.
 - El resultado 9002 nace `validated` y con su `rangeVersionApplied` puesto, que es como tiene que verse un resultado firmado (Fase 8 §5.6). El 9001 está `preliminary` y por eso los tres campos de validación van en `null`.
 - Solo `patients` tiene store en esta fase. Las demás colecciones existen como datos y nada más.
 

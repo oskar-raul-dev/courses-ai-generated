@@ -12,10 +12,10 @@ exactamente la respuesta que el estudiante tiene que encontrar por su cuenta.
 **Por qué existe.** La §5 de
 [`formato-cuaderno-incidentes.md`](formato-cuaderno-incidentes.md) define **cómo**
 llega el sistema roto a la máquina del estudiante —un flag del caos, un
-`db.incidente-NN.json`, o una rama `incidente/NN`—, y los veintiún enunciados usan
+`db.incidente-NN.json`, o una rama `incidente/NN`—, y los veintidós enunciados usan
 ese mecanismo. Lo que no estaba escrito en ninguna parte era **el contenido**: qué
-línea rompe cada rama y qué registros lleva cada archivo de datos. Sin eso, trece
-de los veintiún incidentes se quedaban en la línea del `git checkout` o del `cp`.
+línea rompe cada rama y qué registros lleva cada archivo de datos. Sin eso, catorce
+de los veintidós incidentes se quedaban en la línea del `git checkout` o del `cp`.
 
 **Quién lo aplica.** El curso se trabaja sin instructor, así que hay dos formas y
 las dos son legítimas:
@@ -36,7 +36,7 @@ las dos son legítimas:
 - [1. Cómo se usa este documento](#1-cómo-se-usa-este-documento)
 - [2. Mapa: qué necesita cada incidente](#2-mapa-qué-necesita-cada-incidente)
 - [3. Las nueve ramas](#3-las-nueve-ramas)
-- [4. Los tres `db.incidente-NN.json`](#4-los-tres-dbincidente-nnjson)
+- [4. Los cuatro `db.incidente-NN.json`](#4-los-cuatro-dbincidente-nnjson)
 - [5. El que sólo necesita un comando de arranque](#5-el-que-sólo-necesita-un-comando-de-arranque)
 - [6. Verificar que la preparación sirve](#6-verificar-que-la-preparación-sirve)
 - [⚠️ Advertencias](#️-advertencias)
@@ -93,8 +93,9 @@ porque el síntoma los necesita a los dos, y lo dice.
 | 19 | comando de arranque | `docker run` con las variables de UAT |
 | 20 | rama | `incidente/20` |
 | 21 | rama | `incidente/21` |
+| 22 | datos | `db.incidente-22.json` |
 
-**Nueve ramas, tres archivos de datos, un comando.** Los tres flags de caos no
+**Nueve ramas, cuatro archivos de datos, un comando.** Los tres flags de caos no
 necesitan preparación —son los que construye la Fase 4— y los seis restantes se
 reproducen con el proyecto tal como quedó escrito, que es justamente lo que los
 hace incómodos: no hay nada que "poner mal".
@@ -350,7 +351,7 @@ borra con la línea: si se queda, la pista 3 sobra.
 
 ---
 
-## 4. Los tres `db.incidente-NN.json`
+## 4. Los cuatro `db.incidente-NN.json`
 
 Los tres se construyen igual: se parte de un `db.json` recién sembrado y se cambian
 **sólo** los registros que el incidente necesita. Nada de un archivo escrito a
@@ -368,10 +369,11 @@ cp db.json db.incidente-NN.json
 > enunciados nombran ids concretos (`501`, `9003`, `4021`); si en tu semilla son
 > otros, ajusta el enunciado o ajusta el dato, pero que coincidan.
 
-### `db.incidente-07.json` — el crítico del sábado por la noche
+### `db.incidente-07.json` — el crítico de la noche del 31
 
-**Lo que cambia:** una muestra tomada en el borde exacto de la vigencia, y su
-resultado crítico.
+**Lo que cambia:** una muestra tomada en el borde exacto de la vigencia, su
+resultado crítico, y los dos bordes del potasio escritos en UTC, como los dejó el
+script que cargó la v2 a fines de 2021.
 
 ```jsonc
 // samples — la muestra 612
@@ -380,11 +382,11 @@ resultado crítico.
   "orderId": 4102,
   "status": "processed",
   "collectedBy": "analista1",
-  "collectedAt": "2019-05-31T20:15:00-05:00",   // ← sábado, 20:15 local = 01:15Z del 1 de junio
+  "collectedAt": "2021-12-31T20:15:00-05:00",   // ← viernes 31, 20:15 en Ottawa = 01:15Z del 1 de enero
   "receivedBy": "analista1",
-  "receivedAt": "2019-05-31T20:40:00-05:00",
+  "receivedAt": "2021-12-31T20:40:00-05:00",
   "processedBy": "analista1",
-  "processedAt": "2019-05-31T21:10:00-05:00"
+  "processedAt": "2021-12-31T21:10:00-05:00"
 }
 
 // results — el potasio crítico
@@ -398,27 +400,31 @@ resultado crítico.
   "rangeVersionApplied": null
 }
 
-// referenceRanges — dos versiones de potasio con el borde en el 1 de junio
+// referenceRanges — dos versiones de potasio con el borde en el 1 de enero,
+// escrito en UTC (la "Z"): es el dato roto del incidente
 { "id": 31, "analyte": "potassium", "version": 1,
-  "low": 3.5, "high": 5.5, "criticalLow": 2.5, "criticalHigh": 7.0,
+  "low": 3.5, "high": 5.1, "criticalLow": 2.5, "criticalHigh": 6.5,
   "effectiveFrom": "2019-01-01T00:00:00-05:00",
-  "effectiveTo":   "2019-05-31T23:59:59-05:00" },
+  "effectiveTo":   "2021-12-31T23:59:59Z" },
 { "id": 32, "analyte": "potassium", "version": 2,
-  "low": 3.5, "high": 5.1, "criticalLow": 2.8, "criticalHigh": 6.5,
-  "effectiveFrom": "2019-06-01T00:00:00-05:00",
+  "low": 3.5, "high": 5.2, "criticalLow": 2.8, "criticalHigh": 7.0,
+  "effectiveFrom": "2022-01-01T00:00:00Z",
   "effectiveTo":   null }
 ```
 
 **El mecanismo:** con la v1 vigente (la que de verdad le tocaba), 6.8 está **por
-debajo** del `criticalHigh` de 7.0 → sale fuera de rango pero **no crítico**. Con la
-v2, que es la que elige la comparación en UTC, el `criticalHigh` baja a 6.5 y 6.8
-**sí** es crítico. Los dos veredictos son defendibles y sólo uno es el correcto,
-que es exactamente lo que hace al incidente incómodo.
+encima** del `criticalHigh` de 6.5 → sale **crítico**, en rojo. Pero el borde de la
+v2 quedó escrito como medianoche UTC, que en Ottawa son las 19:00 del 31, y la
+muestra de las 20:15 cae del lado de la v2: el `criticalHigh` sube a 7.0 y 6.8
+queda solo fuera de rango, en amarillo, que es lo que vio la coordinadora. Los dos
+veredictos son defendibles y sólo uno es el correcto, que es exactamente lo que
+hace al incidente incómodo.
 
 **Queda bien si:** abriendo el resultado 9102 se ve una marca distinta de la que
 daría la norma que le tocaba, y
-`selectActiveRange(ranges, 'potassium', '2019-05-31T20:15:00-05:00').version`
-devuelve `2`. Con la misma fecha a las 12:15 devuelve `1`.
+`selectActiveRange(ranges, 'potassium', '2021-12-31T20:15:00-05:00').version`
+devuelve `2`. Con la misma fecha a las 12:15 devuelve `1`, y con los bordes
+corregidos a `-05:00` las dos devuelven `1`.
 
 ### `db.incidente-11.json` — la custodia con el hueco
 
@@ -431,17 +437,18 @@ devuelve `2`. Con la misma fecha a las 12:15 devuelve `1`.
   "orderId": 4021,
   "status": "processed",
   "collectedBy": "analista1",
-  "collectedAt": "2019-09-02T10:05:00-05:00",
+  "collectedAt": "2022-01-03T10:05:00-05:00",
   // receivedBy y receivedAt: BORRADOS, no puestos en null.
   "processedBy": "analista1",
-  "processedAt": "2019-09-02T16:40:12.418-05:00"
+  "processedAt": "2022-01-03T16:40:12.418-05:00"
 }
 ```
 
 Y **un par más con el mismo patrón**, para que el recuento del enunciado tenga
 sentido: el estudiante tiene que poder contestar *"¿cuántas más hay?"* con un
 número mayor que uno. Tres o cuatro es suficiente, todas con `collectedAt` de la
-misma semana de 2019 — que es lo que sostiene la hipótesis de la migración.
+primera semana de enero de 2022 —la del cierre de año y la carga de la v2 de
+rangos— que es lo que sostiene la hipótesis de una migración o un script de carga.
 
 > 🧭 **Se borran los campos, no se ponen en `null`.** `custodyEvents()` empuja el
 > evento si el campo tiene valor, así que las dos formas producen el mismo hueco en
@@ -468,14 +475,14 @@ Sample` para esa muestra.
   "unit": "mg/dL",
   "status": "validated",
   "validatedBy": "analista1",
-  "validatedAt": "2019-09-07T21:04:10.887-05:00",   // ← sábado, 21:04
+  "validatedAt": "2022-01-08T21:04:10.887-05:00",   // ← sábado, 21:04
   "rangeVersionApplied": 2
 }
 
 // auditLog — el asiento que la coordinadora le mandó a la analista
 {
   "id": "c4e8b1a2",
-  "timestamp": "2019-09-07T21:04:11.002-05:00",
+  "timestamp": "2022-01-08T21:04:11.002-05:00",
   "actor": "analista1",
   "action": "[Results] Validate Result Success",
   "entityType": "result",
@@ -498,6 +505,51 @@ incidente.
 
 ---
 
+### `db.incidente-22.json` — la toma de Gatineau que llega después de su recepción
+
+**Lo que cambia:** cuatro muestras de la semana del cambio de hora de marzo de 2021.
+Tres son de Gatineau, con la toma copiada por la interfaz de la agenda (`-05:00`
+pegado a la hora de la pared); una es de Ottawa, estampada por el navegador, como
+control. Las recepciones son todas del navegador, en `Z`.
+
+```jsonc
+// samples — viernes 12: Gatineau, en invierno. El -05:00 es verdad.
+{ "id": 7201, "orderId": 4301, "status": "received",
+  "collectedBy": "agenda-gatineau", "collectedAt": "2021-03-12T09:00:00-05:00",  // 09:00 en Ottawa
+  "receivedBy": "analista2",        "receivedAt":  "2021-03-12T14:41:00.000Z" }  // 09:41
+
+// lunes 15: Gatineau, ya en horario de verano. La del ticket.
+{ "id": 7202, "orderId": 4302, "status": "received",
+  "collectedBy": "agenda-gatineau", "collectedAt": "2021-03-15T09:00:00-05:00",  // ← la pantalla dice 10:00
+  "receivedBy": "analista2",        "receivedAt":  "2021-03-15T13:38:00.000Z" }  // 09:38: "antes" de la toma
+
+// lunes 15: Gatineau, corrida igual, pero llegó con margen y el orden se conserva.
+{ "id": 7203, "orderId": 4303, "status": "received",
+  "collectedBy": "agenda-gatineau", "collectedAt": "2021-03-15T11:30:00-05:00",  // la pantalla dice 12:30
+  "receivedBy": "analista2",        "receivedAt":  "2021-03-15T16:52:00.000Z" }  // 12:52
+
+// lunes 15: Ottawa, todo del navegador. El control.
+{ "id": 7210, "orderId": 4310, "status": "received",
+  "collectedBy": "analista1",       "collectedAt": "2021-03-15T13:05:00.000Z",   // 09:05
+  "receivedBy": "analista2",        "receivedAt":  "2021-03-15T13:50:00.000Z" }  // 09:50
+```
+
+Las cuatro órdenes (`4301`–`4303` y `4310`) se agregan con el mismo `createdAt` que
+la toma de su muestra y `status: "in_process"`; no intervienen en el diagnóstico.
+
+**El mecanismo:** `2021-03-15T09:00:00-05:00` es el instante `14:00Z`, que en Ottawa
+—en `-04:00` desde el domingo 14— son las 10:00. La recepción de las 09:38 queda
+22 minutos antes. La 7201 tiene el mismo formato y está bien porque el viernes 12
+Ottawa todavía estaba en `-05:00`; la 7203 está corrida una hora y no se invierte
+porque llegó con más de una hora de margen.
+
+**Queda bien si:** la línea de custodia de la 7202 muestra *Recogida — agenda-gatineau
+— 15/3/21 10:00* y *Recibida — analista2 — 15/3/21 9:38*; la de la 7201 muestra 9:00
+y 9:41; y `offsetDoesNotMatchZone(collectedAt, 'America/Toronto')` da `true` para
+la 7202 y la 7203 y `false` para la 7201 y la 7210.
+
+---
+
 ## 5. El que sólo necesita un comando de arranque
 
 ### Incidente 19 — el contenedor con las variables de UAT
@@ -510,7 +562,7 @@ docker build -t lab-frontend:inc19 .
 docker run -d --name lab-frontend-prod -p 8080:80 \
   -e API_URL=http://uat.interno:3000 \
   -e ENVIRONMENT_NAME=uat \
-  -e APP_TIME_ZONE=America/Bogota \
+  -e APP_TIME_ZONE=America/Toronto \
   -e FEATURE_DELIVERY_PDF=true \
   lab-frontend:inc19
 ```
@@ -529,7 +581,7 @@ la máquina del estudiante, que es justamente el efecto buscado—.
 
 ## 6. Verificar que la preparación sirve
 
-Antes de dar por lista cualquiera de las trece, la misma comprobación de tres
+Antes de dar por lista cualquiera de las catorce, la misma comprobación de tres
 pasos. Salteársela es cómo se manda a alguien a investigar un bug que no está:
 
 1. **Reproduce el síntoma exactamente como lo describe el ticket.** No "algo
@@ -559,7 +611,7 @@ las piezas forenses y los apéndices porque son material de consulta legítimo
 durante una investigación; esto es la respuesta, y un enlace a un clic de distancia
 es una tentación que no hace falta poner.
 
-**Las trece preparaciones no se aplican todas a la vez.** Se aplica la del
+**Las catorce preparaciones no se aplican todas a la vez.** Se aplica la del
 incidente que se va a trabajar y se revierte al terminar. Dos preparaciones
 simultáneas producen síntomas que ningún enunciado describe, y el estudiante se
 pasa la tarde persiguiendo una interacción que no existe en el material.

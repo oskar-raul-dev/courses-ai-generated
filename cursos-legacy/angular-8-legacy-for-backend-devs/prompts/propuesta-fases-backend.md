@@ -266,7 +266,7 @@ track: el curso no depende de ningún `pom.xml` externo.
 
 | Pieza | Versión | Por qué esta y no otra |
 |---|---|---|
-| Java | **8** (`eclipse-temurin:8-jdk`) | Verificado `1.8.0_502` aarch64 el 8/09/2026. Lo que corría un laboratorio colombiano en 2019 |
+| Java | **8** (`eclipse-temurin:8-jdk`) | Verificado `1.8.0_502` aarch64 el 8/09/2026. Lo que instalaba una consultora canadiense para un cliente chico en 2019 |
 | Framework | **Spring Boot 2.1.18.RELEASE** | Octubre de 2018: lo que instalaría un equipo que arranca en 2019. Boot 1.5 implicaría 2017 y contradice la historia publicada |
 | Acceso a datos | **`spring-data-mongodb`** de la línea 2.1 | El mecanismo pedagógico central (§3.1) |
 | Driver Mongo | **`mongo-java-driver` 3.8.2** | Verificado: conecta contra 4.0, 4.2, 5.0, 6.0, 7.0 y 8.0. **Nunca hubo bump de `pom.xml`** |
@@ -600,8 +600,8 @@ Sale a `bea-07` (transacciones, replica sets y por qué un standalone no puede).
 
 Cobra la deuda 💸 4 y es la fase **más incómoda del track**.
 
-Un auditor pregunta: *"¿qué rango de glucosa estaba vigente el 12 de marzo de
-2020?"*. Un sistema clínico tiene que poder responder eso. El de 2019 hacía `$set`
+Un auditor pregunta: *"¿qué rango de glucosa estaba vigente el 12 de octubre de
+2022?"*. Un sistema clínico tiene que poder responder eso. El de 2019 hacía `$set`
 sobre el documento del rango, así que **el histórico se sobrescribió**. Es dato
 bitemporal —tiempo de vigencia y tiempo de registro— y no hay forma de
 reconstruirlo. Solo de dejar de perderlo desde hoy.
@@ -618,7 +618,7 @@ no se pueden reinterpretar.
 > irrecuperable. Después: N versiones, 0 pérdidas, y un `effectiveTo` que se
 > escribe en vez de borrarse.
 
-Pieza forense: un resultado validado en 2020 cuyo `rangeVersionApplied` apunta a
+Pieza forense: un resultado validado en 2022 cuyo `rangeVersionApplied` apunta a
 una versión que **ya no existe con esos límites**. El puntero sobrevivió; el
 destino no.
 
@@ -714,7 +714,7 @@ ejercicios cortos cada uno, contra el laboratorio propio.
 | `bea-05-indices-y-explain-en-mongodb.md` | Índices compuestos, la regla ESR, índices parciales y TTL, y cómo se lee un `explain()` — incluido el `COLLSCAN` que el repository de Spring escondía |
 | `bea-06-jsonschema-sobre-datos-sucios.md` | Validación retroactiva: `$jsonSchema`, los niveles `off`/`warn`/`error`, `validationAction`, y el procedimiento para subir el nivel sin tumbar producción |
 | `bea-07-transacciones-replica-sets-y-el-standalone.md` | Por qué un standalone no puede, qué cuesta convertirlo, el *write concern* y el *read concern*, la idempotencia como sustituto, y el patrón de asiento compensatorio |
-| `bea-08-tiempo-zonas-y-fechas-en-mongo.md` | UTC como única verdad, `BSON Date` y lo que **no** guarda, `America/Bogota`, el reloj del cliente como fuente de bugs, y por qué el `-05:00` del `db.json` importa |
+| `bea-08-tiempo-zonas-y-fechas-en-mongo.md` | UTC como única verdad, `BSON Date` y lo que **no** guarda, `America/Toronto` y su horario de verano, el reloj del cliente como fuente de bugs, y por qué el `-05:00` del `db.json` es correcto en invierno y una hora corrido en verano |
 | `bea-09-cassandra-la-tentacion-y-el-acierto-que-nadie-tuvo.md` 🔴 | Las dos mitades del mismo círculo. **La tentación:** el nuevo arquitecto propone Cassandra "porque escala"; se modela contra el patrón de acceso real de LabCore y se **mide** que es peor, porque la tabla se diseña por consulta y aquí hay demasiadas. **El acierto:** dónde Cassandra sí era la respuesta y nadie la usó — la telemetría del analizador, serie temporal pura. No era mala la tecnología: estaba en el módulo equivocado |
 | `bea-10-riesgo-de-licencia-sspl.md` | **Tu deuda técnica la creó un abogado.** El cambio de MongoDB a SSPL en 2018, el de Elasticsearch, el precedente de Akka pasando a BSL en 2022, qué significa cada uno para una empresa que solo *usa* el producto, y cómo se lee una licencia antes de elegir. Con la nota de RethinkDB: *elegiste bien y perdiste igual* |
 | `bea-11-mapa-de-deuda-del-track-be.md` | Qué quedó feo a propósito en el backend, qué lo vuelve exigible y en qué orden se pagaría. ⚠️ **Corregido al escribirlo (10/09/2026):** el track base de este curso **no tiene** mapa de deuda —`a12` es el de arm64/Apple Silicon— así que este apéndice no tiene hermano; sus 💸 se declaran dentro de cada fase. La divergencia queda declarada en el propio apéndice |

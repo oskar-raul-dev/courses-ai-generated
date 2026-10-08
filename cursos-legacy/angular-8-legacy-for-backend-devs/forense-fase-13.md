@@ -31,7 +31,7 @@ Seis pasos. Los tres primeros se hacen desde el navegador de cualquiera que pued
 Network → filtro `XHR` → recarga → busca **`config.json`**, que es la primera petición que hace la aplicación antes de mostrar nada. Pestaña **Response**:
 
 ```json
-{"apiUrl":"http://uat.interno:3000","environmentName":"uat","timeZone":"America/Bogota","features":{"deliveryPdfEnabled":true}}
+{"apiUrl":"http://uat.interno:3000","environmentName":"uat","timeZone":"America/Toronto","features":{"deliveryPdfEnabled":true}}
 ```
 
 **Qué descarta.** Todo. La aplicación desplegada en PROD arrancó con la configuración de UAT, y el `environmentName` lo confirma sin margen de interpretación. El backend de PROD está arriba y nadie le está hablando; el de UAT probablemente no acepta peticiones desde este origen, o responde con datos que no son.
@@ -79,7 +79,7 @@ docker logs lab-frontend-prod | head -3
 docker inspect -f '{{range .Config.Env}}{{println .}}{{end}}' lab-frontend-prod
 # API_URL=http://uat.interno:3000
 # ENVIRONMENT_NAME=uat
-# APP_TIME_ZONE=America/Bogota
+# APP_TIME_ZONE=America/Toronto
 # FEATURE_DELIVERY_PDF=true
 ```
 

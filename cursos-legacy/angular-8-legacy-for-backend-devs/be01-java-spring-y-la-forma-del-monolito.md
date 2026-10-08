@@ -64,7 +64,7 @@ Este capítulo asume que sabes qué es una clase, la inyección de dependencias 
 
 La versión está fijada y verificada: **2.1.18.RELEASE**, publicada el **29 de octubre de 2020**, la **última de la línea 2.1**, que llegó a fin de soporte el 1 de noviembre de 2020.
 
-Eso encaja con la ficción y conviene decir cómo. El equipo contratado arrancó en 2019 con lo que había —la 2.1 salió en octubre de 2018 y era lo estable—, y el sistema recibió su último parche de framework en 2020, poco antes de que el frente se fuera. Desde entonces, nada. **El backend de LabCore corre hoy sobre un framework sin soporte desde hace seis años**, y esa frase es la mitad del argumento de `be08`.
+Eso encaja con la ficción y conviene decir cómo. El equipo de la consultora arrancó en 2019 con lo que había —la 2.1 salió en octubre de 2018 y era lo estable—, y el sistema recibió su último parche de framework en 2020, poco antes de que el frente se fuera. Desde entonces, nada. **El backend de LabCore corre hoy sobre un framework sin soporte desde hace seis años**, y esa frase es la mitad del argumento de `be08`.
 
 Lo que esa versión arrastra, medido en su propio `spring-boot-dependencies`:
 
@@ -864,7 +864,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    // El filtro por igualdad del dialecto de json-server: ?documentId=CC-…
+    // El filtro por igualdad del dialecto de json-server: ?documentId=HC-…
     // Es un parámetro OPCIONAL y por eso required=false: la misma ruta sirve
     // la colección entera y la búsqueda, igual que hace json-server.
     @GetMapping

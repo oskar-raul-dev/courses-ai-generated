@@ -8,6 +8,10 @@ con un prefijo, y un tag por fase cerrada. Más tres usos de los tags que en est
 curso rinden muchísimo por lo poco que cuestan: los ejercicios, los incidentes y
 los puntos de retorno.
 
+> **Cuándo se lee:** antes de la [Fase 0](00-setup-hola-mundo.md), y cada vez que el bloque 🏷️
+> de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-07.
+
 > 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa
 > espacio, no agrega overhead y se borra con `git tag -d`. La pregunta no es
 > "¿vale la pena etiquetar esto?", es "¿por qué no?".
@@ -109,8 +113,8 @@ en verde— haces commit y creas el tag.** Uno por fase, y no hace falta más.
 > produce cada incidente**, y lo hacen nombrando el tag —
 > `git checkout -b incidente/03 fase-01-estructura-base-ngrx`. Sin tag, ese
 > commit no tiene nombre, y preparar el incidente pasa de un comando a bucear
-> en `git log` a ver cuál era. **Nueve de los veintiún incidentes** empiezan
-> así, y los otros doce siguen necesitando el tag como punto de retorno cuando
+> en `git log` a ver cuál era. **Nueve de los veintidós incidentes** empiezan
+> así, y los otros trece siguen necesitando el tag como punto de retorno cuando
 > el diagnóstico te deja el sistema peor de lo que estaba. Los tags de
 > ejercicio son tuyos y puedes saltártelos; éste no.
 
@@ -236,10 +240,10 @@ decir si subió o bajó sin discutir de memoria.
 
 ## 🚑 Incidentes: acá el tag sí es contenido
 
-El `cuaderno-incidentes.md` reserva **veintiún IDs** —el paciente que se guardó y
-dice que no, el resultado crítico que no alertó el sábado, la muestra con la
+El `cuaderno-incidentes.md` reserva **veintidós IDs** —el paciente que se guardó y
+dice que no, el resultado crítico que no alertó en Nochevieja, la muestra con la
 custodia imposible— y pide resolverlos con la estructura de post-mortem de ocho
-puntos de la guía de estilo (§13): síntoma, repro, evidencia, causa raíz,
+puntos: síntoma, repro, evidencia, causa raíz,
 corrección, prueba de regresión, prevención, y el análisis sin culpabilización.
 
 Esa estructura tiene una traducción exacta a git, y por eso acá el par de tags
@@ -249,19 +253,18 @@ dos sufijos de siempre, `-roto` y `-fix`:
 
 ```bash
 # Puntos 1-3: el síntoma reproducido y la prueba de regresión EN ROJO
-git tag -a inc/07/alerta-del-sabado-roto -m "Síntoma: un resultado crítico del
-sábado no disparó alerta. Repro: navegador en UTC-5, muestra procesada el
-sábado 23:40 hora local. Evidencia: la acción entra al log de DevTools, el
-selector devuelve lista vacía, y el spec de regresión falla."
+git tag -a inc/07/critico-de-nochevieja-roto -m "Síntoma: un potasio de 6.8 del
+viernes 31 a las 20:15 salió en amarillo y no en rojo. Repro: db.incidente-07.json,
+muestra 612. Evidencia: selectActiveRange elige la v2 a las 20:15 y la v1 a las
+12:15; los bordes del potasio terminan en Z. El spec de regresión falla."
 
 # Puntos 4-6: la causa raíz, el fix, y la misma prueba EN VERDE
-git tag -a inc/07/alerta-del-sabado-fix -m "Causa raíz: el selector compara la
-fecha con new Date() sin normalizar zona horaria, así que el sábado tarde cae
-en el día siguiente. Fix: normalizar a la zona de la aplicación antes de
-comparar. Regresión: el spec con TZ fijada pasa."
+git tag -a inc/07/critico-de-nochevieja-fix -m "Causa raíz: la v2 se cargó con
+bordes en UTC; medianoche UTC son las 19:00 del 31 en Ottawa. Fix: los dos
+bordes con -05:00. Regresión: el spec de la noche del 31 pasa."
 ```
 
-Con eso, `git diff inc/07/alerta-del-sabado-roto inc/07/alerta-del-sabado-fix`
+Con eso, `git diff inc/07/critico-de-nochevieja-roto inc/07/critico-de-nochevieja-fix`
 **es** el punto 5 del post-mortem —la corrección, aislada del ruido— y los dos
 mensajes de tag son los puntos 1 a 6 escritos donde no se pierden.
 `git tag -n99 -l 'inc/*'` te devuelve el cuaderno entero, con causa raíz y fix,

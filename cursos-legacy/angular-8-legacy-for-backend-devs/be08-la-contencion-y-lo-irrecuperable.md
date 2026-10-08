@@ -82,12 +82,12 @@ Es un documento corto que dice, sobre cada pieza de historia que el sistema no c
 
 Suena a burocracia y no lo es. Es la diferencia entre dos conversaciones con un auditor:
 
-> — *¿Pueden demostrar contra qué rango se validó este resultado de 2020?*
+> — *¿Pueden demostrar contra qué rango se validó este resultado de 2022?*
 > — *No lo sé, déjame investigar.*
 
 frente a:
 
-> — *¿Pueden demostrar contra qué rango se validó este resultado de 2020?*
+> — *¿Pueden demostrar contra qué rango se validó este resultado de 2022?*
 > — *No. Está declarado en este documento desde septiembre de 2026, con la ventana exacta, el número de resultados afectados, el método con el que lo determinamos, y las medidas que tomamos para que no vuelva a ocurrir.*
 
 **La segunda respuesta no arregla nada y cambia el resultado de la auditoría.** No porque haga desaparecer el problema, sino porque demuestra control: un equipo que sabe qué no sabe es un equipo fiable. Un equipo que se entera del problema en la reunión, no.
@@ -192,7 +192,7 @@ db.runCommand({
 
 **Paso 3 — subir a `error`, colección por colección y nunca todo a la vez.** Y solo cuando el log de `warn` lleve semanas limpio. El criterio que se escribe: *"se sube a `error` cuando pasen treinta días sin un solo aviso nuevo"*. Sin un criterio escrito, la subida se decide por corazonada un viernes — que es el incidente **be-12**.
 
-> 🧭 **El patrón general, y vale para cualquier validación retroactiva en cualquier sistema:** *primero se cuenta cuántos no pasan, después se decide qué se tolera con la razón escrita, y solo entonces se endurece.* Invertir ese orden —aplicar y ver qué pasa— funciona en un sistema con datos limpios y es un incidente en uno con seis años encima.
+> 🧭 **El patrón general, y vale para cualquier validación retroactiva en cualquier sistema:** *primero se cuenta cuántos no pasan, después se decide qué se tolera con la razón escrita, y solo entonces se endurece.* Invertir ese orden —aplicar y ver qué pasa— funciona en un sistema con datos limpios y es un incidente en uno con siete años encima.
 
 ### 5.3 El outbox y el read-model
 
@@ -267,8 +267,8 @@ lo es, y por eso el informe se genera contra Mongo y no contra el read-model.
 //
 // Crear versiones nuevas (insert) sigue permitido. Mutar las existentes, no.
 // Nótese lo que esto implica: el $set del §4.2 de be06 habría FALLADO, en
-// 2020, con un error de permisos, y alguien habría tenido que preguntar por
-// qué. Toda la fase be06 existe porque nadie puso esta línea hace siete años.
+// 2023, con un error de permisos, y alguien habría tenido que preguntar por
+// qué. Toda la fase be06 existe porque nadie puso esta línea en 2019.
 db.createRole({
   role: 'labcoreApp',
   privileges: [
@@ -309,7 +309,7 @@ El tiempo de ciclo favorece claramente la segunda. Pero la decisión **no se tom
 
 Las cuatro opciones, costeadas, con la fecha de decomisión como eje.
 
-**A. Migrar a un motor relacional.** El coste real, no el optimista: rehacer las cinco entidades, reescribir todas las consultas, migrar seis años de datos con cinco formas distintas —y decidir qué hacer con los 1.630 documentos que no encajan—, reescribir el `SeedRunner`, y validar que el contrato sigue cumpliéndose. **Estimación honesta: 4 a 6 meses** con un equipo de dos, más el riesgo de un sistema sin una sola prueba de regresión al empezar. **Qué arregla de los ocho hallazgos: dos** (la integridad referencial y, en parte, la deriva de esquema). No arregla la historia perdida, ni la auditoría del navegador, ni la atomicidad —que sí tendría, pero que ya se puede tener por otra vía mucho más barata—. **Veredicto: no.** Y no por MongoDB: por aritmética.
+**A. Migrar a un motor relacional.** El coste real, no el optimista: rehacer las cinco entidades, reescribir todas las consultas, migrar siete años de datos con cinco formas distintas —y decidir qué hacer con los 1.630 documentos que no encajan—, reescribir el `SeedRunner`, y validar que el contrato sigue cumpliéndose. **Estimación honesta: 4 a 6 meses** con un equipo de dos, más el riesgo de un sistema sin una sola prueba de regresión al empezar. **Qué arregla de los ocho hallazgos: dos** (la integridad referencial y, en parte, la deriva de esquema). No arregla la historia perdida, ni la auditoría del navegador, ni la atomicidad —que sí tendría, pero que ya se puede tener por otra vía mucho más barata—. **Veredicto: no.** Y no por MongoDB: por aritmética.
 
 **B. Convertir a replica set.** Dos días de trabajo, semanas de calendario ajeno, riesgo técnico bajo. **Arregla la atomicidad de golpe** y desactiva la trampa de `be07` —el `@Transactional` que el manual promete y el despliegue niega—. **Veredicto: sí, y es la única recomendación fuerte del documento.** Se paga en meses.
 
@@ -327,7 +327,7 @@ El índice del documento. Cinco secciones y una página y media, porque un docum
 
 ````markdown
 # Declaración de historia irrecuperable — LabCore
-Laboratorios Andina S.A.S. · Sistema de gestión de laboratorio clínico
+Andina Laboratories Inc. · Laboratoires Andina · Sistema de gestión de laboratorio clínico
 Fecha: 10 de septiembre de 2026 · Responsable: [nombre y cargo]
 Dirigido a: Calidad, Dirección Técnica, y a quien herede este sistema
 
@@ -343,7 +343,7 @@ si es medido o inferido · cuántos registros afecta.
 ## 3. Consecuencia práctica
 Qué preguntas concretas no se pueden contestar hoy, con ejemplos reales.
 "No podemos demostrar contra qué límites se validó un resultado de glucosa
-entre junio de 2019 y agosto de 2020. Son 1.204 resultados, de los cuales 37
+entre enero de 2022 y marzo de 2023. Son 1.204 resultados, de los cuales 37
 tendrían hoy un veredicto distinto."
 
 ## 4. Qué se hizo, desde cuándo, y qué garantiza

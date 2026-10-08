@@ -61,7 +61,7 @@ demanda. La Fase 14 tampoco: es opcional y va sin horas asignadas al calendario.
 | 🚚 13 | Build, despliegue y cierre | **7h** | 🆕 Docker + nginx + config en runtime · +1h: §5.9 los diccionarios de i18n en el contenedor |
 | 🔥 14 | Ambiente "casi prod" con kind | **—** | 🆕 **Opcional.** Sin horas en el calendario |
 | | **Subtotal fases** | **108h** | |
-| 📓 | **Cuaderno de incidentes** | **14h** | 21 incidentes, ≈3.5h/semana |
+| 📓 | **Cuaderno de incidentes** | **14h** | 22 incidentes, ≈3.5h/semana (presupuesto, no suma) |
 | | **Total** | **122h** | |
 
 ### Sobre la numeración de la Fase 14
@@ -223,7 +223,7 @@ lleva.
 
 ## 📓 6. Cuaderno de incidentes (14h)
 
-21 incidentes, ≈3.5h por semana. Distribución por dificultad:
+22 incidentes, ≈3.5h por semana. Distribución por dificultad (la proyección original; la real está en `formato-cuaderno-incidentes.md` §3):
 
 - **Semana 1** (fases 0-4): 4-5 🟢 — configuración, endpoints mal, CORS.
 - **Semana 2** (fases 5-8): 5-6 🟡 — máquinas de estado rotas, validación floja,

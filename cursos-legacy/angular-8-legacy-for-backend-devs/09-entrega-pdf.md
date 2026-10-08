@@ -148,15 +148,17 @@ export class ReportService {
     doc.save('report-' + snapshot.resultId + '.pdf');
   }
 
-  // Formatea una fecha ISO en la zona de la aplicación (America/Bogotá, fijada
+  // Formatea una fecha ISO en la zona de la aplicación (America/Toronto, fijada
   // en environment desde la Fase 2). Se usa toLocaleString con timeZone porque
-  // acá no corre el pipe date de Angular: estamos fuera de una plantilla.
+  // acá no corre ningún pipe: estamos fuera de una plantilla. Y a diferencia de
+  // formatDate, toLocaleString sí entiende un identificador IANA, con el
+  // horario de verano incluido.
   // 💸 Misma deuda de fondo que 5.3 de la Fase 8: la zona está bien fijada acá,
   // pero el validatedAt que llega fue estampado en cliente al validar, así que
   // arrastra la imprecisión de origen. No se paga en Track A.
   formatDate(iso: string): string {
     if (!iso) { return ''; }
-    return new Date(iso).toLocaleString('es-CO', { timeZone: environment.timeZone });
+    return new Date(iso).toLocaleString('es', { timeZone: environment.timeZone });
   }
 }
 ```

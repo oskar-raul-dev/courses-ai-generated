@@ -103,7 +103,11 @@ en los tres idiomas de su barrio.
 ### 🩺 El patólogo y la plata
 
 A un laboratorio clínico en Canadá no lo dirige quien quiere. La licencia
-provincial exige un director médico, y ninguna de las dos lo era. Lo encontraron
+provincial exige un director de laboratorio, y ninguna de las dos cumplía las
+condiciones: la vía corta era un médico con formación en medicina de
+laboratorio, y la larga —un posgrado en ciencias más cinco años de experiencia
+acreditada después de él— le quedaba lejos a la maestría todavía fresca de
+Rocío. Necesitaban un médico. Lo encontraron
 por la red de amigos latinos de Ottawa, en un asado de cumpleaños: **Tomás
 Lagos**, patólogo general, nacido en Montreal en 1976, hijo de una pareja de
 chilenos que llegó como refugiada después del golpe de 1973. Tomás creció
@@ -214,7 +218,12 @@ En 2020 llegó la pandemia, y para un laboratorio privado eso fue, ante todo,
 demanda. Las pruebas PCR de pago para viajeros, para empresas y para quienes no
 querían esperar la fila pública multiplicaron el volumen en meses. Andina abrió
 puntos de toma en Ottawa y, por primera vez, cruzó el río: dos puntos en
-Gatineau, uno de ellos en un barrio con mucha población latinoamericana.
+Gatineau, uno de ellos en un barrio con mucha población latinoamericana. El otro
+no se abrió: se compró. Era el punto de toma de una clínica privada que cerraba, y
+llegó con su fichero de pacientes en el sistema de agenda de la clínica; un script
+los pasó a LabCore una sola vez, y nadie volvió a mirar cómo. El punto siguió
+registrando las tomas en esa agenda, y desde noviembre de 2020 una interfaz de la
+misma consultora las copia a LabCore.
 
 El sistema creció con la empresa, y creció por el camino que Angular hacía
 natural: **un módulo con carga diferida por cada feature, cada uno arrastrando
@@ -418,8 +427,9 @@ encontrar, y no es que no las hayas visto todavía.
 No hay `strict` ni tipado de formularios —`patientForm.get('documentId').value` es
 `any`, y escribirlo con una mayúscula de más devuelve `null` sin que nadie te
 avise—. No hay pruebas hasta que las escribas tú (Fase 12). No hay CI. No hay
-refresh token. No hay paginación de servidor. No hay zona horaria en ningún
-lado: solo desfases. No hay observabilidad más allá de la consola y de la
+refresh token. No hay paginación de servidor. No hay zona horaria en los datos:
+solo desfases; la única zona del sistema vive en la configuración y sirve para
+mostrar fechas, no para compararlas. No hay observabilidad más allá de la consola y de la
 bitácora que escribe el propio front. No hay feature flags. No hay backend en
 este repositorio: el de LabCore existe, no tiene dueño y está descrito arriba,
 pero lo que tú levantas es un mock que lo imita (Fase 4). Y no hay nada

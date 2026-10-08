@@ -4,7 +4,7 @@
 > Se trabaja solo. El changelog es `git log -- cuaderno-incidentes.md`.
 
 Este es el único archivo de incidentes del curso: acá están los enunciados, las
-pistas, las soluciones y tu registro de cómo llegaste a cada una. Los veintiún
+pistas, las soluciones y tu registro de cómo llegaste a cada una. Los veintidós
 incidentes vienen escritos de antemano; lo que vas agregando tú es la parte de
 abajo de cada entrada — tu reproducción, tus hipótesis, tu fix.
 
@@ -77,11 +77,11 @@ El asunto del commit sigue este formato, para que `git log --oneline` se lea com
 la línea de tiempo de tu investigación:
 
 ```
-incidente(07): abre — resultados críticos sin alerta el sábado
-incidente(07): repro — falla con TZ del navegador en UTC-5
+incidente(07): abre — resultados críticos sin alerta el fin de semana
+incidente(07): repro — falla con el navegador en America/Toronto
 incidente(07): hipótesis descartada — no es el effect, la acción sí se despacha
-incidente(07): causa — comparación de fecha sin zona horaria en el selector
-incidente(07): fix — normaliza a la TZ de la aplicación antes de comparar
+incidente(07): causa — borde de vigencia de la v2 cargado en UTC
+incidente(07): fix — bordes del potasio con el desfase de Ottawa
 incidente(07): cierre — test de regresión y post-mortem
 ```
 
@@ -95,8 +95,8 @@ solo el fix no le sirve a nadie, y menos a ti dentro de seis meses.
 Y como el fix de casi todos estos incidentes es de una o dos líneas, conviene
 marcarlo además con el par de tags de
 [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md):
-`inc/07/alerta-del-sabado-roto` con el síntoma reproducido y la regresión en
-rojo, `inc/07/alerta-del-sabado-fix` con la causa raíz y el fix en verde. El
+`inc/07/critico-de-nochevieja-roto` con el síntoma reproducido y la regresión en
+rojo, `inc/07/critico-de-nochevieja-fix` con la causa raíz y el fix en verde. El
 `git diff` entre los dos **es** el punto 5 del post-mortem, aislado del ruido de
 la fase, y `git tag -n99 -l 'inc/*'` te devuelve el cuaderno entero sin abrir un
 archivo. El ID es el que ya tiene reservado el índice de acá abajo, nunca uno
@@ -123,9 +123,9 @@ inventado.
 
 Lo actualizas en el mismo commit que abre o cierra un incidente.
 
-Los veintiún IDs quedaron reservados por las fases que los producen; el título es
+Los veintidós IDs quedaron reservados por las fases que los producen; el título es
 el que va a llegar en el ticket, en palabras del usuario y no en lenguaje técnico.
-**Los veintiún enunciados están escritos abajo**, cada uno con su preparación, sus
+**Los veintidós enunciados están escritos abajo**, cada uno con su preparación, sus
 tres pistas plegadas y su solución de referencia. La columna de estado es tuya: un
 ⬜ quiere decir que todavía no lo tocaste, y el ID **nunca** se reasigna aunque un
 incidente se retire.
@@ -153,6 +153,7 @@ incidente se retire.
 | 19 | 13 | Desplegamos a PROD y le sigue hablando a UAT | Despliegue | 🔴 | ⬜ |
 | 20 | 13 | Si recargo la página en cualquier pantalla, me da 404 | Despliegue | 🟠 | ⬜ |
 | 21 | 7 | La lista no cambia al cambiar de orden | Estado (store) | 🟠 | ⬜ |
+| 22 | 7 | La muestra llegó al laboratorio antes de que se la sacaran al paciente | Tiempo | 🟠 | ⬜ |
 
 **Categorías:** máquina de estados · concurrencia · tiempo · normativo ·
 trazabilidad · integración · performance · UI · estado (store) · i18n ·
@@ -777,7 +778,7 @@ código la dejó pasar porque el `return` de la última línea tenía la forma b
 
 > *"Puse la aplicación en francés para la doctora que viene los martes. Los
 > títulos y los botones cambiaron bien, pero las fechas de las órdenes siguen
-> saliendo en español: dice '2 septiembre 2019' en medio de una pantalla que está
+> saliendo en español: dice '3 ene. 2022' en medio de una pantalla que está
 > toda en francés. Se ve descuidado."*
 
 **Reportado por:** coordinadora del laboratorio
@@ -815,7 +816,7 @@ de idioma y qué no**. La línea divisoria es exacta y no pasa por el azar.
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 Todo lo que pasa por el pipe `translate` cambia. Nada de lo que pasa por los
-pipes de `@angular/common` —`date`, `decimal`, `currency`— cambia. Son dos
+pipes de formato —`appDate` (que delega en `formatDate` de `@angular/common`), `decimal`, `currency`— cambia. Son dos
 sistemas distintos: uno lee un diccionario que tú cargas, el otro lee un token de
 Angular que se resuelve **una sola vez, al arrancar**.
 
@@ -824,7 +825,7 @@ Angular que se resuelve **una sola vez, al arrancar**.
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-En la consola, `translate.currentLang` dice `"fr"`. ¿Quién le dijo al pipe `date`
+En la consola, `translate.currentLang` dice `"fr"`. ¿Quién le dijo al pipe `appDate`
 que el idioma es `'es'`, y en qué momento de la vida de la aplicación se lo dijo?
 
 </details>
@@ -877,9 +878,9 @@ translate.currentLang
 
 ```
 Patients
-Document: CC-1032456789
+Document: HC-1032456789
 1 commande en attente
-Dernière commande: 2 septiembre 2019, 8:15:00
+Dernière commande: 3 ene. 2022 8:15:00
 ```
 
 Toda la tarjeta en francés menos el mes. Eso no es "las fechas se ven raras": es
@@ -1419,8 +1420,8 @@ de admitir que falló**.
 
 ### 🎫 El ticket
 
-> *"Un potasio de 6.8 de un paciente de urgencias entró el sábado por la noche y
-> nadie se enteró hasta el lunes a las siete. Eso es un valor crítico, tendría que
+> *"Un potasio de 6.8 de un paciente de urgencias entró el viernes 31 por la noche
+> y nadie se enteró hasta el lunes a las siete. Eso es un valor crítico, tendría que
 > haber saltado una alarma. Y cuando por fin lo abrimos, la pantalla lo mostraba
 > en amarillo, no en rojo. Necesito saber si el sistema lo detectó o no."*
 
@@ -1440,7 +1441,9 @@ dirección tiene que leer.
 ### 🔧 Preparación
 
 Un `db.json` alterno: hace falta un resultado crítico tomado en el borde exacto
-de una ventana de vigencia, un sábado por la noche. Es un dato, no un código.
+de una ventana de vigencia —la noche del 31 de diciembre de 2021, la última de la
+v1— y una v2 cargada como la cargó el script de fines de 2021. Es un dato, no un
+código.
 
 ```bash
 cp db.json db.json.mio
@@ -1470,9 +1473,10 @@ Después convierte esa hora a UTC a mano, con lápiz.
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-En `America/Bogota` (UTC-5), cualquier hora local a partir de las 19:00 **ya es el
-día siguiente en UTC**. La comparación de vigencia usa `.getTime()`, que compara
-instantes absolutos. ¿De qué lado del borde cae un sábado a las 20:00?
+Mira cómo está escrito cada borde, no qué día dice: uno lleva `-05:00` y otro
+`Z`. En Ottawa, en invierno, la medianoche UTC son **las 19:00 del día anterior**.
+La comparación de vigencia usa `.getTime()`, que compara instantes absolutos.
+¿De qué lado del borde cae el viernes 31 a las 20:15?
 
 </details>
 
@@ -1517,12 +1521,13 @@ grep -rn "critical" src/ | grep -v ".spec.ts"
 
 Dos apariciones: una que **calcula** y otra que **pinta**. No hay ninguna que
 notifique. El sistema marca el resultado crítico en rojo en una pantalla, y eso es
-todo lo que hace. Si nadie abre esa pantalla, nadie se entera — y el sábado a las
-nueve de la noche no hay nadie abriendo pantallas.
+todo lo que hace. Si nadie abre esa pantalla, nadie se entera — y un 31 de
+diciembre a las nueve de la noche no hay nadie abriendo pantallas.
 
-La respuesta a la coordinadora, entonces, es: **sí lo detectó, y no tenía forma de
-avisar**. No es un fallo del sistema, es un hueco de alcance que lleva ahí desde
-2019 y que nadie declaró nunca por escrito. Es la clase de hallazgo que un
+La respuesta a la coordinadora, entonces, tiene dos partes: **esta vez no lo
+detectó** —es el hallazgo 2— **y, aunque lo hubiera detectado, no tenía forma de
+avisar**. La segunda no es un fallo del sistema, es un hueco de alcance que lleva
+ahí desde 2019 y que nadie declaró nunca por escrito. Es la clase de hallazgo que un
 post-mortem tiene que subir, porque la solución no es de mantenimiento: es de
 producto y cuesta dinero.
 
@@ -1535,33 +1540,42 @@ en rojo"*— y es un bug real.
 
 ```bash
 curl -s "http://localhost:3000/samples/612" | grep collectedAt
-# "collectedAt": "2019-05-31T20:15:00-05:00"      ← sábado, 8:15 de la noche
+# "collectedAt": "2021-12-31T20:15:00-05:00"      ← viernes 31, 8:15 de la noche
+curl -s "http://localhost:3000/referenceRanges?analyte=potassium"
+# v1 … "criticalHigh": 6.5, "effectiveTo": "2021-12-31T23:59:59Z"
+# v2 … "criticalHigh": 7.0, "effectiveFrom": "2022-01-01T00:00:00Z"
 ```
 
 ```
-2019-05-31T20:15:00-05:00   ==   2019-06-01T01:15:00Z
-                                 └─ ya es junio en UTC
+muestra   2021-12-31T20:15:00-05:00   ==   2022-01-01T01:15:00Z
+borde v2  2022-01-01T00:00:00Z        ==   2021-12-31T19:00:00-05:00
+                                           └─ la v2 "empezó" a las 7 de la noche del 31
 ```
 
-La muestra se tomó el 31 de mayo por la noche en Bogotá, que **es el 1 de junio en
-UTC**, y la ventana de la v2 abre el 1 de junio. `selectActiveRange` compara con
-`.getTime()`, o sea instantes absolutos, mientras que el borde de vigencia se
-definió en hora local. Resultado: se aplicó la norma que todavía no regía.
+La norma armonizada rige desde la medianoche del 1 de enero **en Ottawa**, pero el
+script que la cargó escribió los dos bordes con `toISOString()`, en UTC. La
+medianoche UTC son las 19:00 del 31 en Ottawa, y la muestra de las 20:15 cae del
+lado de la v2. `selectActiveRange` compara bien —con `.getTime()`, instantes
+absolutos—; lo que no está bien es el borde. Resultado: se aplicó la norma que
+todavía no regía. Con la v1, que era la que le tocaba, 6.8 supera el
+`criticalHigh` de 6.5 y es **crítico** (rojo); con la v2, que sube el crítico a
+7.0, queda solo **fuera de rango** (amarillo). Eso es exactamente lo que vio la
+coordinadora.
 
 Confirmado sin depurador, sobre la función pura:
 
 ```js
-selectActiveRange(ranges, 'potassium', '2019-05-31T20:15:00-05:00').version
+selectActiveRange(ranges, 'potassium', '2021-12-31T20:15:00-05:00').version
 // 2      ← debería ser 1
-selectActiveRange(ranges, 'potassium', '2019-05-31T12:15:00-05:00').version
+selectActiveRange(ranges, 'potassium', '2021-12-31T12:15:00-05:00').version
 // 1      ← la misma fecha, de día, elige bien
 ```
 
 **La hora, y no el día, decide el veredicto.** Y eso explica la parte del ticket
 que sonaba a superstición: falla **de noche**, y en el borde. En el 95% de los días
 da igual porque la fecha cae lejos de un límite; los días que no da igual son los
-bordes, y los bordes caen en fin de semana tantas veces como en cualquier otro
-día — sólo que en fin de semana nadie está mirando.
+bordes, y este cayó en la noche de un viernes antes de un feriado, cuando nadie
+estaba mirando.
 
 > 🧬 Y el hallazgo que hay que anotar aparte, porque es peor: el `atDate` de uno de
 > los llamadores cae a `new Date().toISOString()` cuando la muestra no tiene
@@ -1572,15 +1586,21 @@ día — sólo que en fin de semana nadie está mirando.
 
 **Parche mínimo**
 
-Para el hallazgo 2, forzar que los dos lados de la comparación lleven el offset
-explícito de la aplicación:
+Para el hallazgo 2, corregir el dato: los dos bordes, con el desfase de Ottawa en
+invierno, que es lo que la norma dice.
 
-```typescript
-// reference-range.selector.ts — tapa el caso reportado, no la clase entera.
-// El borde de vigencia se definió en hora LOCAL; comparar instantes UTC hace
-// que una muestra del 31 por la noche caiga del lado de junio.
-var atLocal = new Date(atDate).toLocaleString('sv-SE', { timeZone: environment.timeZone });
+```bash
+# El borde se corrige en el dato; el código no se toca.
+curl -s -X PATCH -H "Content-Type: application/json" \
+  -d '{"effectiveTo": "2021-12-31T23:59:59-05:00"}' http://localhost:3000/referenceRanges/31
+curl -s -X PATCH -H "Content-Type: application/json" \
+  -d '{"effectiveFrom": "2022-01-01T00:00:00-05:00"}' http://localhost:3000/referenceRanges/32
 ```
+
+El resultado 9102 sigue `preliminary`, así que su veredicto se recalcula al
+mostrarse: vuelve a salir en rojo. Si ya hubiera estado validado, el parche no lo
+tocaría —`rangeVersionApplied` está congelado— y habría que revisarlo a mano: es
+el detector de la prevención.
 
 Para el hallazgo 1 **no hay parche**, y proponer uno sería el error: una alarma
 que avise de verdad —un canal, un turno de guardia, un acuse de recibo— es un
@@ -1588,9 +1608,13 @@ subsistema, no una línea.
 
 **La refactorización correcta** (que en Track A 💸 no se paga)
 
-Normalizar **los dos lados** a `America/Bogotá` con una librería con soporte de
-zona (Luxon, `date-fns-tz`), como dice la deuda 💸 declarada en la **Fase 8 §5.3**.
-Eso arregla la clase entera, no el caso.
+Que la vigencia deje de ser un instante y pase a ser lo que la norma dice: **una
+fecha de calendario en la zona de la aplicación** (`'2022-01-01'` en
+`America/Toronto`), y que `selectActiveRange` convierta el instante del evento a
+esa fecha antes de comparar, con `Intl` o con una librería con soporte de zona
+(Luxon, `date-fns-tz`), como dice la deuda 💸 declarada en la **Fase 8 §5.3**. Así
+deja de importar cómo escribió el borde quien lo cargó, y eso arregla la clase
+entera, no el caso.
 
 Y encima de eso hay una tercera pregunta, que no es de código y que hay que hacer
 antes de escribir nada: **¿a qué hora, exactamente, entra en vigor una norma
@@ -1601,26 +1625,32 @@ que es la razón por la que un "bug de fechas" casi nunca es un bug de fechas.
 
 ```typescript
 // src/app/results/store/reference-range.selector.spec.ts
-it('una muestra del 31 de mayo por la noche aplica la v1, no la v2', function () {
+var V1 = { version: 1, analyte: 'potassium', low: 3.5, high: 5.1, criticalLow: 2.5, criticalHigh: 6.5,
+           effectiveFrom: '2019-01-01T00:00:00-05:00' };
+var V2 = { version: 2, analyte: 'potassium', low: 3.5, high: 5.2, criticalLow: 2.8, criticalHigh: 7.0,
+           effectiveTo: null };
+
+it('con los bordes en hora de Ottawa, la noche del 31 aplica la v1', function () {
   var ranges = [
-    { version: 1, analyte: 'potassium', low: 3.5, high: 5.5, criticalHigh: 6.5,
-      effectiveFrom: '2019-01-01T00:00:00-05:00', effectiveTo: '2019-05-31T23:59:59-05:00' },
-    { version: 2, analyte: 'potassium', low: 3.5, high: 5.1, criticalHigh: 6.0,
-      effectiveFrom: '2019-06-01T00:00:00-05:00', effectiveTo: null }
+    Object.assign({}, V1, { effectiveTo: '2021-12-31T23:59:59-05:00' }),
+    Object.assign({}, V2, { effectiveFrom: '2022-01-01T00:00:00-05:00' })
   ];
-
-  // 20:15 local del 31 de mayo = 01:15Z del 1 de junio. Antes del fix
-  // esto devolvía la 2, y un potasio de 6.8 cambiaba de veredicto.
-  var range = selectActiveRange(ranges, 'potassium', '2019-05-31T20:15:00-05:00');
-
+  // 20:15 del 31 en Ottawa = 01:15Z del 1. Con el borde bien escrito, sigue
+  // siendo el 31 para la norma, y un potasio de 6.8 sale crítico.
+  var range = selectActiveRange(ranges, 'potassium', '2021-12-31T20:15:00-05:00');
   expect(range.version).toBe(1);
+  expect(evaluateResult(6.8, range).critical).toBe(true);
 });
 
-it('el veredicto de un crítico no depende de la hora del día', function () {
-  var deNoche = selectActiveRange(ranges, 'potassium', '2019-05-31T20:15:00-05:00');
-  var deDia = selectActiveRange(ranges, 'potassium', '2019-05-31T12:15:00-05:00');
-  // El mismo día tiene que elegir la misma norma, sean las 12 o las 20.
-  expect(deNoche.version).toBe(deDia.version);
+it('un borde escrito en UTC adelanta la norma nueva a las 19:00 del 31', function () {
+  var ranges = [
+    Object.assign({}, V1, { effectiveTo: '2021-12-31T23:59:59Z' }),
+    Object.assign({}, V2, { effectiveFrom: '2022-01-01T00:00:00Z' })
+  ];
+  // Documenta la trampa: si este test deja de pasar, alguien cambió cómo
+  // compara selectActiveRange y hay que revisar todos los bordes cargados.
+  expect(selectActiveRange(ranges, 'potassium', '2021-12-31T18:59:00-05:00').version).toBe(1);
+  expect(selectActiveRange(ranges, 'potassium', '2021-12-31T19:00:00-05:00').version).toBe(2);
 });
 ```
 
@@ -1628,9 +1658,11 @@ it('el veredicto de un crítico no depende de la hora del día', function () {
 
 Tres cosas, en orden de lo que cuestan:
 
-1. **Un test por cada borde de vigencia que exista en los datos**, con la hora
-   puesta a propósito en la franja de las 19:00 a las 23:59. Es el único horario
-   en el que este bug vive.
+1. **Un chequeo del dato, y un test por cada borde de vigencia**: ningún
+   `effectiveFrom` ni `effectiveTo` termina en `Z`
+   (`curl -s http://localhost:3000/referenceRanges | grep -c '[0-9]Z"'` tiene que
+   dar 0), y cada borde se prueba con la hora puesta a propósito en la franja de
+   las 19:00 a las 23:59. Es el único horario en el que este bug vive.
 2. **Un detector**: recorrer los resultados validados y recalcular qué versión
    les tocaba. Los que no coincidan con su `rangeVersionApplied` son la lista de
    veredictos que hay que revisar a mano.
@@ -1646,23 +1678,24 @@ críticos. Marcar y avisar suenan parecido en una reunión y son sistemas
 completamente distintos —uno es un `<span>` con una clase, el otro es un canal,
 una guardia y un acuse de recibo—. Nadie mintió; nadie preguntó.
 
-El bug de zona horaria llegó porque en 2019 no había en el proyecto ninguna
-librería de zonas, `Date` de JavaScript parecía suficiente y la comparación de
+El bug de zona horaria llegó porque a fines de 2021 la v2 la cargó un script que
+armó los bordes con `new Date('2022-01-01').toISOString()` —que es medianoche UTC,
+no de Ottawa—, nadie miró la letra final de la cadena, y la comparación de
 instantes **es** la forma correcta de comparar instantes. El error no está en la
-comparación: está en que uno de los dos lados no era un instante, era una fecha de
-calendario escrita en hora local. Es el bug más difícil de ver de todo el curso
-porque el código se lee bien.
+comparación: está en que uno de los dos lados no era el instante que la norma
+decía. Es el bug más difícil de ver de todo el curso porque el código se lee bien
+y el dato también, salvo por una `Z`.
 
 **Si tu causa fue distinta a esta**
 
 - Si dijiste **"el umbral crítico está mal configurado"**, compruébalo y descarta:
-  los `criticalLow`/`criticalHigh` están en el rango y son correctos en las dos
-  versiones. Lo que cambió no fue el umbral, fue cuál de los dos se aplicó.
+  el `criticalHigh` es 6.5 en la v1 y 7.0 en la v2, y los dos son correctos para
+  su norma. Lo que cambió no fue el umbral, fue cuál de los dos se aplicó.
 - Si dijiste **"el resultado entró mal desde el analizador"**, es una hipótesis
   legítima y se tumba mirando el `value`: 6.8 es 6.8 en los dos casos. Lo que
   cambia es el juicio, no el dato.
 - Si te quedaste **sólo con el hallazgo 2**, arreglaste el veredicto y la
-  coordinadora sigue sin enterarse el sábado que viene. Si te quedaste **sólo con
+  coordinadora sigue sin enterarse el próximo fin de semana. Si te quedaste **sólo con
   el hallazgo 1**, escalaste un problema de producto y dejaste un bug de cálculo
   suelto en un dominio clínico. Este incidente se aprueba con los dos.
 
@@ -1984,7 +2017,7 @@ Nadie se reactiva. La baja funcionó perfectamente y el dato lleva ahí desde el
 lunes:
 
 ```bash
-grep -A3 '"documentId": "CC-1032456789"' db.json
+grep -A3 '"documentId": "HC-1032456789"' db.json
 #   "fullName": "Ana Ruiz",
 #   "active": false,
 ```
@@ -2442,8 +2475,8 @@ La cadena de evidencia, en el orden en que hay que producirla:
    ```
    Muestra 501 — estado actual: processed
 
-     Recogida    analista1    2019-09-02 10:05
-     Procesada   analista1    2019-09-02 16:40
+     Recogida    analista1    2022-01-03 10:05
+     Procesada   analista1    2022-01-03 16:40
    ```
 
    `custodyEvents()` sólo empuja un evento si el campo `*By` tiene valor. Falta
@@ -2454,7 +2487,7 @@ La cadena de evidencia, en el orden en que hay que producirla:
    #   "status": "processed",
    #   "collectedBy": "analista1",
    #   "processedBy": "analista1",
-   #   "processedAt": "2019-09-02T16:40:12.418-05:00"
+   #   "processedAt": "2022-01-03T16:40:12.418-05:00"
    #   ← no hay receivedBy, no hay receivedAt
    ```
 
@@ -2509,7 +2542,7 @@ grep -c '"receivedBy"' db.json
 
 Si los dos números no coinciden, la diferencia es el tamaño del problema. Un
 ticket que dice *"hay una muestra rara"* y un post-mortem que dice *"hay catorce,
-todas de la misma semana de 2019, y ninguna la escribió esta aplicación"* son dos
+todas de la primera semana de enero de 2022, y ninguna la escribió esta aplicación"* son dos
 documentos con destinos distintos: el segundo va a Calidad.
 
 **La refactorización correcta** (que en Track A 💸 no se paga)
@@ -2565,7 +2598,7 @@ de registros que entraron por otra puerta.
 
 **Por qué llegó a producción**
 
-Porque durante seis años hubo más de una puerta de escritura y sólo una de ellas
+Porque durante siete años hubo más de una puerta de escritura y sólo una de ellas
 —la aplicación— tenía las reglas. El `db.json` de LabCore equivale a una base a la
 que también llegaron migraciones, cargas del analizador y correcciones manuales de
 madrugada, y ninguna de esas rutas conocía la máquina de estados. Nadie decidió
@@ -2692,7 +2725,7 @@ el effect al validar de verdad:
 {
   "status": "validated",
   "validatedBy": "analista1",
-  "validatedAt": "2019-09-02T16:40:12.418-05:00",
+  "validatedAt": "2022-01-03T16:40:12.418-05:00",
   "rangeVersionApplied": 2,
   "outOfRange": false,
   "critical": false
@@ -2705,7 +2738,7 @@ Y esto es lo que tiene el registro del ticket:
 {
   "status": "validated",
   "validatedBy": "analista1",
-  "validatedAt": "2019-06-14T09:12:00-05:00",
+  "validatedAt": "2019-02-15T09:12:00-05:00",
   "rangeVersionApplied": null
 }
 ```
@@ -2956,7 +2989,7 @@ Lo que queda en el registro, y es lo que hay que contestarle a la analista:
 {
   "status": "validated",
   "validatedBy": "analista2",
-  "validatedAt": "2019-09-02T16:40:15.902-05:00",
+  "validatedAt": "2022-01-03T16:40:15.902-05:00",
   "rangeVersionApplied": 2
 }
 ```
@@ -3550,7 +3583,7 @@ encabezado (`Informe`, `Paciente`, `Resultado`) no lleva ni un acento.
 - Si además el informe **sale entero en rojo a partir de un valor crítico**, has
   encontrado el otro bug de estado del lápiz de esta familia: `setTextColor` no se
   revierte solo. Está en [**A08 §2**](./a08-pdf-cliente.md) y es un incidente que
-  este cuaderno no tiene — buen candidato para el **22**.
+  este cuaderno no tiene — buen candidato para el **23**.
 
 </details>
 
@@ -3930,13 +3963,13 @@ curl -s "http://localhost:3000/auditLog?entityId=9003&_sort=timestamp"
 ```json
 [{ "actor": "analista1",
    "action": "[Results] Validate Result Success",
-   "timestamp": "2019-09-07T21:04:11.002-05:00",
+   "timestamp": "2022-01-08T21:04:11.002-05:00",
    "after": { "id": 9003, "status": "validated", "validatedBy": "analista1" } }]
 ```
 
 ```bash
 curl -s "http://localhost:3000/results/9003" | grep validatedAt
-# "validatedAt": "2019-09-07T21:04:10.887-05:00"
+# "validatedAt": "2022-01-08T21:04:10.887-05:00"
 ```
 
 El dato y el asiento coinciden — **y coinciden porque los escribió la misma
@@ -4358,7 +4391,7 @@ docker build -t lab-frontend:inc19 .
 docker run -d --name lab-frontend-prod -p 8080:80 \
   -e API_URL=http://uat.interno:3000 \
   -e ENVIRONMENT_NAME=uat \
-  -e APP_TIME_ZONE=America/Bogota \
+  -e APP_TIME_ZONE=America/Toronto \
   -e FEATURE_DELIVERY_PDF=true \
   lab-frontend:inc19
 ```
@@ -4428,7 +4461,7 @@ La cadena, en tres comandos y sin ambigüedad:
 ```json
 // Network -> config.json -> Response
 {"apiUrl":"http://uat.interno:3000","environmentName":"uat",
- "timeZone":"America/Bogota","features":{"deliveryPdfEnabled":true}}
+ "timeZone":"America/Toronto","features":{"deliveryPdfEnabled":true}}
 ```
 
 ```bash
@@ -4468,7 +4501,7 @@ docker rm -f lab-frontend-prod
 docker run -d --name lab-frontend-prod -p 8080:80 \
   -e API_URL=http://prod.interno:3000 \
   -e ENVIRONMENT_NAME=prod \
-  -e APP_TIME_ZONE=America/Bogota \
+  -e APP_TIME_ZONE=America/Toronto \
   -e FEATURE_DELIVERY_PDF=true \
   lab-frontend:inc19
 
@@ -5022,6 +5055,266 @@ clínica.
 
 ---
 
+## Incidente 22 — La muestra llegó al laboratorio antes de que se la sacaran al paciente
+
+> **Fase:** 7 · **Categoría:** Tiempo · **Dificultad:** 🟠
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 60-90 min · **Ruta forense:** [`forense-fase-07.md`](./forense-fase-07.md), paso 5
+
+### 🎫 El ticket
+
+> *"Calidad me trae la línea de custodia de varias muestras de Gatineau y dice que
+> llegaron al laboratorio antes de que se las sacaran al paciente. La de esta
+> mañana: tomada a las 10:00, recibida a las 9:38. El auxiliar de Gatineau jura
+> que la sacó a las 9 en punto, y la agenda de allá le da la razón. No es una sola,
+> y en febrero no pasaba."*
+
+**Reportado por:** directora de operaciones
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Explicarle a Calidad, con evidencia, **qué hora es la verdadera**, desde cuándo
+pasa y a cuántas muestras afecta. Y dejar algo que lo detecte, porque arreglarlo
+no está en tus manos.
+
+No termina en fix.
+
+### 🔧 Preparación
+
+Un `db.json` alterno con las muestras de esa semana: las de Gatineau, tal como las
+copió al sistema la interfaz de su agenda, y una de Ottawa como control.
+
+```bash
+cp db.json db.json.mio
+cp db.incidente-22.json db.json
+```
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
+
+La pantalla y la agenda no discrepan en el día ni en los minutos: discrepan en
+**una hora exacta**. Deja la pantalla y mira el dato crudo: no qué hora dice cada
+marca, sino **cómo está escrita**.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+Compara el `collectedAt` de las muestras de Gatineau con el de la muestra de
+Ottawa, y quién las escribió (`collectedBy`). Después busca la última muestra de
+Gatineau que salió bien y la primera que salió mal.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+¿Qué cambió en Ottawa entre el viernes 12 y el lunes 15 de marzo de 2021: el
+desfase que escribe la agenda, o el desfase que de verdad tiene la ciudad?
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+```
+
+```
+
+**Hipótesis**
+- ❌ Descartada:
+- ✅ Confirmada:
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
+
+**Causa raíz**
+
+La toma de Gatineau no la escribe LabCore. El punto de toma que Andina compró en
+2020 sigue registrando las tomas en la agenda de la clínica, y desde noviembre de
+2020 una interfaz las copia a LabCore. Esa interfaz arma `collectedAt` con **la
+hora de la pared y el `-05:00` de la Era 1 pegado**. En invierno es verdad; desde
+el 14 de marzo de 2021, que es el segundo domingo de marzo, Ottawa y Gatineau
+están en `-04:00`, y cada toma queda escrita **una hora más tarde** de cuando
+ocurrió.
+
+La evidencia, en el orden en que hay que producirla:
+
+1. **Las dos marcas no se escribieron igual.**
+
+   ```bash
+   curl -s "http://localhost:3000/samples?id=7202&id=7210"
+   ```
+
+   ```
+   7202  collectedBy: agenda-gatineau  collectedAt: "2021-03-15T09:00:00-05:00"
+         receivedBy:  analista2        receivedAt:  "2021-03-15T13:38:00.000Z"
+   7210  collectedBy: analista1        collectedAt: "2021-03-15T13:05:00.000Z"
+         receivedBy:  analista2        receivedAt:  "2021-03-15T13:50:00.000Z"
+   ```
+
+   La de Ottawa la estampó el navegador, en `Z` (Fase 7 §5.5). La de Gatineau
+   trae un desfase escrito a mano. Esa diferencia de formato es la huella de quién
+   escribió cada cosa.
+
+2. **La aritmética, sin pantalla de por medio.**
+
+   ```
+   collectedAt  2021-03-15T09:00:00-05:00   ==   14:00Z   ==   10:00 en Ottawa
+   receivedAt   2021-03-15T13:38:00.000Z                 ==   09:38 en Ottawa
+   ```
+
+   ```js
+   new Date('2021-03-15T09:00:00-05:00').toLocaleString('es', { timeZone: 'America/Toronto' })
+   // '15/3/2021, 10:00:00'
+   ```
+
+   La pantalla no miente: `appDate` convierte bien y dice 10:00 porque **el dato
+   dice 10:00**. El auxiliar tampoco miente: escribió 09:00 en la agenda. Lo que
+   miente es el `-05:00` que la interfaz le pegó a esas 09:00 un lunes de marzo.
+
+3. **La fecha en que empezó.** La 7201, del viernes 12, tiene el mismo formato y
+   está bien: ese día Ottawa todavía estaba en `-05:00`. La 7202, del lunes 15,
+   está corrida. Entre las dos hay un domingo: el **14 de marzo de 2021**, el día
+   del cambio de hora. Y el problema volverá a desaparecer solo el 7 de
+   noviembre, cuando la ciudad vuelva a `-05:00`, sin que nadie haya tocado nada.
+
+> 🧬 La pregunta del método, contestada: **el sistema no escribió esto** —ni el
+> reducer, ni el effect, ni el navegador—. Llegó así de otro sistema, igual que
+> en el incidente **11**, y por eso ninguna línea de la Fase 7 tiene la culpa.
+
+Que una toma de Gatineau aparezca **antes** de su recepción depende de una sola
+cosa: que la muestra llegue a Ottawa en menos de una hora. Con más margen, el
+orden se conserva y la hora sigue corrida sin que nada lo delate —es la 7203—.
+Por eso el ticket dice *"varias"* y no *"todas"*: las corridas son todas; las que
+se notan son las del mensajero de la mañana.
+
+**Parche mínimo**
+
+En el código de LabCore, **ninguno**: la interfaz no es nuestra. Lo que sí se
+hace hoy es contener, y tiene tres partes.
+
+La primera es **un detector**. Un `-05:00` escrito en una fecha en que Ottawa
+estaba en `-04:00` es comprobable, y para comprobarlo ya tienes la función que
+hace falta: el `offsetAt` del pipe de la Fase 2.
+
+```typescript
+// src/app/shared/offset-check.ts
+import { offsetAt } from './app-date.pipe';
+
+// True when an ISO string carries a hand-written offset that the zone did not
+// have at that instant: the Era 1 '-05:00' written in summer. 'Z' and strings
+// without an offset are not judged here.
+export function offsetDoesNotMatchZone(iso: string, timeZone: string): boolean {
+  var match = /([+-])(\d\d):(\d\d)$/.exec(iso);
+  if (!match) { return false; }
+  return match[1] + match[2] + match[3] !== offsetAt(new Date(iso), timeZone);
+}
+```
+
+La segunda es **la nota, no la corrección**. Igual que en el 11, el `collectedAt`
+no se reescribe: es evidencia de custodia, y cambiarla a mano es fabricar una
+firma. Se agrega al lado lo que se puede sostener —la hora de la agenda,
+interpretada en la zona correcta—:
+
+```bash
+curl -X PATCH http://localhost:3000/samples/7202 \
+  -H "Content-Type: application/json" \
+  -d '{"custodyNote":"collectedAt con -05:00 en horario de verano (incidente 22); hora de la agenda 09:00 en Ottawa = 2021-03-15T13:00:00Z"}'
+```
+
+La tercera es **el texto para Calidad**, que es el entregable de verdad: *"Toda
+toma de Gatineau registrada por la agenda desde el 14 de marzo de 2021 figura una
+hora más tarde de lo ocurrido. La hora válida es la de la agenda. Lo
+detectamos así, son N muestras, y seguirá pasando hasta el 7 de noviembre y otra
+vez desde el segundo domingo de marzo de 2022, salvo que alguien cambie la
+interfaz."* El número N sale del detector, no de una estimación.
+
+**La refactorización correcta** (que en Track A 💸 no se paga)
+
+Que la interfaz deje de pegar un desfase: que mande el instante en UTC, o que
+calcule el desfase **para esa fecha** con la zona (`ZoneId.of("America/Toronto")`
+en Java, `Intl` en JavaScript). Es una línea en un sistema que escribió la
+consultora y que hoy no tiene dueño: está del otro lado, como el backend. El
+apéndice **`bea-08` §8** cuenta esta misma deuda vista desde el servidor.
+
+**Prueba de regresión**
+
+Lo que se blinda desde aquí no es la interfaz sino el detector: que encuentre el
+caso y que no acuse a los que están bien.
+
+```typescript
+// src/app/shared/offset-check.spec.ts
+import { offsetDoesNotMatchZone } from './offset-check';
+
+describe('offsetDoesNotMatchZone', function () {
+  var ottawa = 'America/Toronto';
+
+  it('marca el -05:00 escrito en horario de verano', function () {
+    expect(offsetDoesNotMatchZone('2021-03-15T09:00:00-05:00', ottawa)).toBe(true);
+  });
+
+  it('no marca el -05:00 de invierno, que es verdad', function () {
+    expect(offsetDoesNotMatchZone('2021-03-12T09:00:00-05:00', ottawa)).toBe(false);
+  });
+
+  it('no marca un -04:00 de verano ni una marca en Z', function () {
+    expect(offsetDoesNotMatchZone('2021-03-15T09:00:00-04:00', ottawa)).toBe(false);
+    expect(offsetDoesNotMatchZone('2021-03-15T13:38:00.000Z', ottawa)).toBe(false);
+  });
+});
+```
+
+**Prevención**
+
+Correr el detector sobre las muestras **cada segundo domingo de marzo y cada
+primer domingo de noviembre**, que son las dos fechas en que esta clase de error
+cambia de signo; y la regla que se lleva a cualquier sistema: **una marca de
+tiempo entra como instante, o con el desfase calculado para su fecha. Nunca con
+uno escrito a mano.**
+
+**Por qué llegó a producción**
+
+La interfaz se escribió y se probó en noviembre de 2020, en invierno, con la
+constante que el resto del sistema ya usaba y que en invierno es verdad. Su primer
+cambio de hora fue el domingo 14 de marzo de 2021, cuando nadie de la consultora
+estaba mirando; el lunes, el mensajero de las 9:30 hizo el resto. Ningún test
+habría fallado en noviembre, porque ningún test corría con una fecha de julio. Y
+la constante nació en un equipo que trabajaba desde Costa Rica, donde la hora no
+cambia nunca: nadie se hizo la pregunta de marzo.
+
+**Si tu causa fue distinta a esta**
+
+- Si dijiste **"el reloj del auxiliar está adelantado"**, compruébalo y descarta:
+  la diferencia es de una hora exacta en todas las muestras de Gatineau, empezó un
+  día preciso, y la agenda —que usa el mismo reloj— dice la hora buena.
+- Si dijiste **"el navegador de quien recibe está en otra zona"**, descarta con la
+  7210: la recepción de Ottawa está en `Z` y cuadra con el registro del mensajero.
+  Las recepciones están bien; las tomas no.
+- Si dijiste **"`appDate` convierte mal"**, prueba la cadena con `toLocaleString`
+  fuera de Angular: da lo mismo. El pipe convierte bien un dato que está mal.
+- Si **corregiste el `collectedAt` a mano**, arreglaste la pantalla y destruiste la
+  evidencia. Es el mismo error que el 11 entrena a no cometer.
+
+</details>
+
+---
+
 # 🪞 Retrospectiva del mes
 
 Se llena al terminar, de una sola vez, releyendo tu propio `git log`.
@@ -5070,7 +5363,7 @@ produjo.
   decide correrlos en serio.
 - **[15]** `setTextColor` no se revierte solo: a partir del primer valor crítico,
   la firma y la fecha del informe también salen en rojo. Mismo mecanismo que este
-  incidente, otro estado del lápiz → buen candidato al **22**, que sigue sin dar
+  incidente, otro estado del lápiz → buen candidato al **23**, que sigue sin dar
   de alta.
 - **[16]** El patrón de suscribirse sin `ngOnDestroy` está en todo el curso, no
   sólo en el dashboard. `grep -rn "\.subscribe(" src/` da el tamaño real →
@@ -5081,6 +5374,10 @@ produjo.
 - **[18]** Una factoría de datos de prueba —`buildPatientsState(overrides)`— que
   quite la tentación de compartir estado entre specs → media tarde sobre la suite
   de la **Fase 12**.
+- **[22]** La interfaz de la agenda de Gatineau sigue pegando `-05:00` y nadie es su
+  dueño → el arreglo es de quien herede ese sistema; mientras tanto, el detector
+  `offsetDoesNotMatchZone` se corre el segundo domingo de marzo y el primero de
+  noviembre, y el número va al informe de Calidad.
 - **[19] [20]** Los dos guiones de humo —`smoke-deploy.sh` y `smoke-routing.sh`—
   deberían correr solos después de cada despliegue → el pipeline de CI/CD está
   **fuera del alcance del curso**, así que hoy se corren a mano y se anota quién.

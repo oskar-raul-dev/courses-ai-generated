@@ -13,9 +13,9 @@ Contestar la pregunta del auditor, descubrir que no se puede, y saber exactament
 
 La pregunta es esta, y es trivial:
 
-> *"¿Qué rango de glucosa estaba vigente el 12 de marzo de 2020?"*
+> *"¿Qué rango de glucosa estaba vigente el 12 de octubre de 2022?"*
 
-Un sistema clínico tiene que poder contestarla. No es una curiosidad: es el fundamento de que un informe firmado en 2020 signifique algo. Un resultado de 105 mg/dL es normal o es una alerta según el rango contra el que se juzgó, y ese rango cambió por norma. Si el sistema no puede decir cuál estaba vigente, entonces **no puede defender ninguno de los veredictos que emitió**.
+Un sistema clínico tiene que poder contestarla. No es una curiosidad: es el fundamento de que un informe firmado en 2022 signifique algo. Un resultado de 105 mg/dL es normal o es una alerta según el rango contra el que se juzgó, y ese rango cambió por norma. Si el sistema no puede decir cuál estaba vigente, entonces **no puede defender ninguno de los veredictos que emitió**.
 
 El sistema de 2019 hacía `$set` sobre el documento del rango cuando la norma cambiaba. Así que el histórico se sobrescribió. No hay copia, no hay diff, no hay bitácora del cambio: hay un documento con los límites de hoy y la fecha de vigencia de ayer.
 
@@ -28,7 +28,7 @@ Y hay un giro que salva la fase de ser solo malas noticias. Algo sobrevivió, y 
 ## ✅ 2. Qué queda listo al terminar
 
 - [ ] Puedes explicar en una frase la diferencia entre **tiempo de vigencia** y **tiempo de registro**, y señalar cuál de los dos tenía LabCore y cuál no.
-- [ ] Tienes la evidencia del `$set`: un resultado validado en 2020 cuyo `rangeVersionApplied` apunta a una versión que hoy **no tiene esos límites**.
+- [ ] Tienes la evidencia del `$set`: un resultado validado en 2022 cuyo `rangeVersionApplied` apunta a una versión que hoy **no tiene esos límites**.
 - [ ] Tienes el inventario de la pérdida, con fechas exactas: qué analitos, qué versiones, qué ventana temporal, y cuántos resultados validados caen dentro.
 - [ ] Tienes el número que importa: **cuántos resultados históricos cambian de veredicto** si se releen con los límites de hoy. No cuántos están afectados: cuántos *cambian*.
 - [ ] La reconstrucción parcial está hecha y sus límites están escritos: qué se pudo recuperar, de dónde, y qué margen de confianza tiene cada pieza.
@@ -41,7 +41,7 @@ Y hay un giro que salva la fase de ser solo malas noticias. Algo sobrevivió, y 
 ## 🚫 3. Qué NO entra todavía
 
 - **La declaración formal de lo irrecuperable.** Aquí se produce el inventario; en **be08** se firma, se fecha y se le pone destinatario. Son dos actos distintos y confundirlos abarata el segundo.
-- **Reescribir los veredictos históricos.** Ni para corregirlos ni para congelarlos. Un resultado validado en 2020 se queda como está → si algo se hace, es un asiento en el libro de correcciones de `be05`.
+- **Reescribir los veredictos históricos.** Ni para corregirlos ni para congelarlos. Un resultado validado en 2022 se queda como está → si algo se hace, es un asiento en el libro de correcciones de `be05`.
 - **El modelo bitemporal completo.** Se declara entero y **se implementa la mitad**. La razón está en el §4.4 y es una decisión, no una limitación.
 - **Tocar el frontend.** El selector de rango vigente de la Fase 8 sigue comparando fechas en el navegador, con su deuda de zona horaria y todo → sigue sin tocarse.
 - **La subida de versión de la base**, que es lo que va a explicar por qué nadie revisó nada de esto en cinco años → **be07**.
@@ -54,20 +54,20 @@ Y hay un giro que salva la fase de ser solo malas noticias. Algo sobrevivió, y 
 
 Un dato con historia tiene dos ejes temporales, y confundirlos es el origen de esta fase.
 
-**Tiempo de vigencia** (*valid time*): desde cuándo y hasta cuándo el hecho es cierto **en el mundo**. "El rango de glucosa v2 rige desde el 1 de junio de 2019". Es una propiedad de la norma, no del sistema.
+**Tiempo de vigencia** (*valid time*): desde cuándo y hasta cuándo el hecho es cierto **en el mundo**. "El rango de glucosa v2 rige desde el 1 de enero de 2022". Es una propiedad de la norma, no del sistema.
 
-**Tiempo de registro** (*transaction time*): desde cuándo y hasta cuándo **el sistema creyó** ese hecho. "Este documento decía `high: 100` desde que lo escribimos el 28 de mayo de 2019 hasta que alguien lo cambió el 1 de agosto de 2020."
+**Tiempo de registro** (*transaction time*): desde cuándo y hasta cuándo **el sistema creyó** ese hecho. "Este documento decía `high: 100` desde que lo escribimos el 28 de diciembre de 2021 hasta que alguien lo cambió el 1 de marzo de 2023."
 
 Un modelo que tiene los dos se llama **bitemporal**, y permite contestar dos preguntas distintas que suenan iguales:
 
 | Pregunta | Qué eje necesita |
 |---|---|
 | *¿Qué rango rige hoy para la glucosa?* | Solo vigencia |
-| *¿Qué rango regía el 12 de marzo de 2020?* | Solo vigencia — **si nadie mutó nada** |
-| *¿Qué rango creía el sistema que regía el 12 de marzo de 2020?* | **Los dos** |
+| *¿Qué rango regía el 12 de octubre de 2022?* | Solo vigencia — **si nadie mutó nada** |
+| *¿Qué rango creía el sistema que regía el 12 de octubre de 2022?* | **Los dos** |
 | *¿Contra qué se juzgó de verdad este resultado?* | **Los dos** |
 
-LabCore tiene el primero y no tiene el segundo. Y aquí está la trampa que hace que el problema pasara desapercibido seis años: **con solo el eje de vigencia, la segunda pregunta parece contestable**. El documento tiene `effectiveFrom` y `effectiveTo`, así que consultas por fecha y sale una respuesta. Sale una respuesta **con los límites de hoy**, y nadie te avisa de que esos límites no son los que había en 2020.
+LabCore tiene el primero y no tiene el segundo. Y aquí está la trampa que hace que el problema pasara desapercibido tres años: **con solo el eje de vigencia, la segunda pregunta parece contestable**. El documento tiene `effectiveFrom` y `effectiveTo`, así que consultas por fecha y sale una respuesta. Sale una respuesta **con los límites de hoy**, y nadie te avisa de que esos límites no son los que había en 2022.
 
 > 🧠 **Un modelo con un solo eje temporal no falla al contestar: contesta mal con toda confianza.** Es peor que no tener historia, porque no tener historia se nota.
 
@@ -77,10 +77,10 @@ LabCore tiene el primero y no tiene el segundo. Y aquí está la trampa que hace
 
 La autopsia, con números en las dos columnas.
 
-**Qué se hizo.** En agosto de 2020 llegó una actualización de la norma: el límite superior de glucosa en ayunas bajaba de 100 a 99 mg/dL. Alguien —con buen criterio aparente— pensó: *"la v2 ya existe y sigue vigente, solo cambian los números"*. Y ejecutó:
+**Qué se hizo.** En marzo de 2023 llegó una actualización de la norma: el límite superior de glucosa en ayunas bajaba de 100 a 99 mg/dL. Alguien —con buen criterio aparente— pensó: *"la v2 ya existe y sigue vigente, solo cambian los números"*. Y ejecutó:
 
 ```javascript
-// Agosto de 2020. Una línea. Catorce meses de historia.
+// Marzo de 2023. Una línea. Catorce meses de historia.
 db.referenceRanges.updateOne(
   { analyte: 'glucose', version: 2 },
   { $set: { high: 99 } }
@@ -95,7 +95,7 @@ db.referenceRanges.updateOne(
 |---|---|---|
 | Versiones de glucosa en la base | 2 (v1, v2) | 2 (v1, v2) |
 | Límite superior de la v2 | 100 | 99 |
-| Ventana de historia recuperable | completa | **14 meses perdidos** (jun 2019 – ago 2020) |
+| Ventana de historia recuperable | completa | **14 meses perdidos** (ene 2022 – mar 2023) |
 | Resultados validados en esa ventana | 1.204 | 1.204, ahora ilegibles |
 | Resultados que **cambian de veredicto** al releerse | — | **37** |
 | Documentos añadidos a la base | — | 0 |
@@ -107,13 +107,13 @@ db.referenceRanges.updateOne(
 // Cerrar la vigencia de la v2, sin tocar sus límites.
 db.referenceRanges.updateOne(
   { analyte: 'glucose', version: 2 },
-  { $set: { effectiveTo: ISODate('2020-07-31T23:59:59Z') } }
+  { $set: { effectiveTo: ISODate('2023-02-28T23:59:59Z') } }
 );
 // Y nacer la v3 con los límites nuevos.
 db.referenceRanges.insertOne({
   analyte: 'glucose', version: 3, unit: 'mg/dL',
   low: 70, high: 99, criticalLow: 50, criticalHigh: 250,
-  effectiveFrom: ISODate('2020-08-01T00:00:00Z'), effectiveTo: null
+  effectiveFrom: ISODate('2023-03-01T00:00:00Z'), effectiveTo: null
 });
 ```
 
@@ -162,15 +162,15 @@ Siete piezas: primero se demuestra la pérdida, después se delimita, después s
 ```javascript
 // Un resultado validado en la ventana perdida, con su puntero intacto.
 db.results.findOne(
-  { status: 'validated', validatedAt: { $gte: ISODate('2020-03-01'),
-                                        $lt:  ISODate('2020-04-01') } },
+  { status: 'validated', validatedAt: { $gte: ISODate('2022-10-01'),
+                                        $lt:  ISODate('2022-11-01') } },
   { legacyId: 1, analyte: 1, value: 1, validatedAt: 1, rangeVersionApplied: 1 }
 );
 ```
 
 ```
 { legacyId: 91204, analyte: "glucose", value: 99.4,
-  validatedAt: ISODate("2020-03-12T15:41:00Z"), rangeVersionApplied: 2 }
+  validatedAt: ISODate("2022-10-12T15:41:00Z"), rangeVersionApplied: 2 }
 ```
 
 ```javascript
@@ -180,10 +180,10 @@ db.referenceRanges.findOne({ analyte: 'glucose', version: 2 });
 
 ```
 { analyte: "glucose", version: 2, low: 70, high: 99,
-  effectiveFrom: ISODate("2019-06-01T05:00:00Z"), effectiveTo: null }
+  effectiveFrom: ISODate("2022-01-01T05:00:00Z"), effectiveTo: null }
 ```
 
-Léelo dos veces. El resultado vale **99,4** y se juzgó contra la v2. Con la v2 de hoy —`high: 99`— ese valor está **fuera de rango**: es una alerta. Con la v2 de marzo de 2020 —`high: 100`— estaba **dentro**: era normal.
+Léelo dos veces. El resultado vale **99,4** y se juzgó contra la v2. Con la v2 de hoy —`high: 99`— ese valor está **fuera de rango**: es una alerta. Con la v2 de octubre de 2022 —`high: 100`— estaba **dentro**: era normal.
 
 El informe que se le entregó a ese paciente dice una cosa. El sistema, hoy, dice la contraria. Y las dos afirmaciones citan la misma versión del mismo rango.
 
@@ -222,8 +222,8 @@ db.results.aggregate([
 
 ```
 Ventana de historia irrecuperable — glucosa v2
-  desde: 2019-06-01  (effectiveFrom de la v2, dato fiable)
-  hasta: 2020-08-01  (fecha de la resolución; el ObjectId y la frontera de
+  desde: 2022-01-01  (effectiveFrom de la v2, dato fiable)
+  hasta: 2023-03-01  (fecha de la resolución; el ObjectId y la frontera de
                       valores son compatibles con ella y no la contradicen)
   duración: 14 meses
   resultados validados en la ventana: 1.204
@@ -243,8 +243,8 @@ Que 1.204 resultados estén "afectados" es un titular. El número que se lleva a
 db.results.aggregate([
   { $match: { analyte: 'glucose', status: 'validated',
               rangeVersionApplied: 2,
-              validatedAt: { $gte: ISODate('2019-06-01'),
-                             $lt:  ISODate('2020-08-01') } } },
+              validatedAt: { $gte: ISODate('2022-01-01'),
+                             $lt:  ISODate('2023-03-01') } } },
   { $project: {
       legacyId: 1, value: 1, validatedAt: 1,
       // 100 era el límite de entonces; 99 es el de hoy.
@@ -278,7 +278,7 @@ Lo que se puede recuperar sale de cruzar el puntero superviviente con la aritmé
 // 98,7 y no habrá forma de saber si el techo era 99, 100 o 105.
 db.results.aggregate([
   { $match: { analyte: 'glucose', status: 'validated', rangeVersionApplied: 2,
-              validatedAt: { $lt: ISODate('2020-08-01') },
+              validatedAt: { $lt: ISODate('2023-03-01') },
               outOfRangeReported: { $ne: true } } },
   { $group: { _id: null, maximoValidadoComoNormal: { $max: '$value' } } }
 ]);
@@ -373,7 +373,7 @@ public class ReferenceRangeImmutabilityListener
             if (!MUTABLES.contains(field)) {
                 // Se rechaza y se registra. El rechazo tiene que ser ruidoso:
                 // esta excepción es el único punto del sistema donde alguien
-                // se va a enterar de que estaba a punto de repetir 2020.
+                // se va a enterar de que estaba a punto de repetir 2023.
                 throw new ImmutableVersionException(
                     "referenceRanges es append-only: solo se puede escribir "
                     + "effectiveTo. Intento de modificar: " + field);
@@ -387,7 +387,7 @@ public class ReferenceRangeImmutabilityListener
 
 - **`effectiveTo` es el único campo mutable**, y esa lista corta es la regla del §4.2 hecha código. Si alguien la amplía, tendrá que escribir por qué, que es exactamente el efecto que se busca.
 - La guarda **no cubre el shell**. Un `db.referenceRanges.updateOne(...)` desde `mongo` la esquiva entera. Está declarado como límite y es material de `be08`: la contención de verdad es quitar el permiso, no pedirlo por favor.
-- Se lanza una excepción propia y no se registra en silencio. Un `log.warn` aquí sería inútil: el `$set` de 2020 fue una acción deliberada de alguien que creía estar haciendo lo correcto, y a esa persona hay que **interrumpirla**, no anotarla.
+- Se lanza una excepción propia y no se registra en silencio. Un `log.warn` aquí sería inútil: el `$set` de 2023 fue una acción deliberada de alguien que creía estar haciendo lo correcto, y a esa persona hay que **interrumpirla**, no anotarla.
 
 ### 5.7 `RANGES-LOSS.md`
 
@@ -397,8 +397,8 @@ El entregable escrito, en borrador para que `be08` lo firme. Cuatro secciones y 
 # Pérdida de historia en rangos de referencia — inventario
 
 ## 1. Qué se perdió
-Los límites que tuvo la versión 2 del rango de glucosa entre el 1/06/2019 y
-el 1/08/2020. Fueron sobrescritos por una actualización directa, sin crear
+Los límites que tuvo la versión 2 del rango de glucosa entre el 1/01/2022 y
+el 1/03/2023. Fueron sobrescritos por una actualización directa, sin crear
 una versión nueva y sin dejar registro del cambio.
 
 ## 2. Desde cuándo, y cómo lo sabemos
@@ -448,14 +448,14 @@ Causa: la primera de las dos escrituras del §5.5 falló. Es el problema de `be0
 
 Es el documento del §5.1 y merece recorrerse con el método completo, porque es el caso más difícil de los que has visto: **no hay ningún dato malformado en ninguna parte**.
 
-- **¿Qué se ve?** Un resultado de 99,4 mg/dL, validado el 12 de marzo de 2020, que la pantalla de hoy pinta con la marca de fuera de rango. El informe en PDF que se archivó en 2020 —y que existe, porque la Fase 9 lo generó— lo muestra como normal.
-- **¿Qué capa lo produce?** Ninguna capa del sistema actual. Todas están haciendo bien su trabajo: el selector elige la versión correcta por fecha, el comparador compara bien, la pantalla pinta lo que le dicen. **El error ocurrió en 2020 y lo que ves hoy es su consecuencia**, cinco años después, en un sistema que funciona.
+- **¿Qué se ve?** Un resultado de 99,4 mg/dL, validado el 12 de octubre de 2022, que la pantalla de hoy pinta con la marca de fuera de rango. El informe en PDF que se archivó en 2022 —y que existe, porque la Fase 9 lo generó— lo muestra como normal.
+- **¿Qué capa lo produce?** Ninguna capa del sistema actual. Todas están haciendo bien su trabajo: el selector elige la versión correcta por fecha, el comparador compara bien, la pantalla pinta lo que le dicen. **El error ocurrió en 2023 y lo que ves hoy es su consecuencia**, tres años después, en un sistema que funciona.
 - **🧬 ¿Lo escribió el sistema o llegó roto en el dato?** Ninguna de las dos. Lo escribió **una persona**, con una operación válida, sobre un dato correcto, con buena intención. Esta pregunta —la propia del track forense— aquí devuelve una tercera respuesta que no estaba en el menú, y ese es el hallazgo.
-- **¿Con qué se demuestra?** Con el PDF de 2020 al lado de la pantalla de hoy. La prueba de que hubo una pérdida de historia **no está en la base de datos**: está en un artefacto que salió del sistema y que nadie modificó porque nadie podía. Búscalo, porque es el único testigo que queda.
+- **¿Con qué se demuestra?** Con el PDF de 2022 al lado de la pantalla de hoy. La prueba de que hubo una pérdida de historia **no está en la base de datos**: está en un artefacto que salió del sistema y que nadie modificó porque nadie podía. Búscalo, porque es el único testigo que queda.
 
 > 🧠 **Ese último punto es lo más transferible de toda la fase.** Cuando un sistema pierde su propia historia, la evidencia sobrevive en lo que ese sistema **exportó**: informes, correos, archivos adjuntos, capturas en tickets. En una investigación real, esos artefactos suelen ser la única fuente independiente que queda, y la primera reacción de casi todo el mundo —buscar en la base— es la que no lleva a ninguna parte.
 
-🧨 **Rompe a propósito.** Crea una v3 con límites nuevos y después, desde el shell, hazle un `$set` a la v2 cambiando `low`. Ahora releé un resultado de 2019 validado contra la v2 y observa cómo cambia su veredicto en la pantalla, sin que nada avise, sin que ningún log lo registre y sin que ninguna prueba se ponga en rojo. Cronometra cuánto te ha llevado destruir historia: menos de treinta segundos. Después revierte tu base al estado anterior y anota **cómo** la revertiste — porque si no tenías copia, no has podido, y acabas de aprender la mitad de `be08`.
+🧨 **Rompe a propósito.** Crea una v3 con límites nuevos y después, desde el shell, hazle un `$set` a la v2 cambiando `low`. Ahora releé un resultado de 2022 validado contra la v2 y observa cómo cambia su veredicto en la pantalla, sin que nada avise, sin que ningún log lo registre y sin que ninguna prueba se ponga en rojo. Cronometra cuánto te ha llevado destruir historia: menos de treinta segundos. Después revierte tu base al estado anterior y anota **cómo** la revertiste — porque si no tenías copia, no has podido, y acabas de aprender la mitad de `be08`.
 
 ---
 
@@ -499,7 +499,7 @@ Es el documento del §5.1 y merece recorrerse con el método completo, porque es
 **🔴 Muy difícil (27–33)**
 
 27. **Diagnóstico.** Busca en el resto del sistema otros documentos que representen **versiones** y que se estén mutando con `$set`. Empieza por los estados de muestra y por el propio `auditLog`. La lista que salga es el alcance real del anti-patrón y va a `be08`.
-28. **Adversarial.** Argumenta bien la posición contraria: *"la norma de 2020 bajó el límite porque el criterio clínico cambió; releer un resultado de 2019 con el criterio de hoy es exactamente lo que la medicina hace, así que no hay nada que arreglar"*. Es un argumento fuerte y hay que dárselo entero. Después refútalo con la distinción que lo desmonta: **releer con criterio nuevo es medicina; no poder demostrar con qué criterio se firmó es un problema de registro**. Escribe las dos cosas.
+28. **Adversarial.** Argumenta bien la posición contraria: *"la norma de 2023 bajó el límite porque el criterio clínico cambió; releer un resultado de 2022 con el criterio de hoy es exactamente lo que la medicina hace, así que no hay nada que arreglar"*. Es un argumento fuerte y hay que dárselo entero. Después refútalo con la distinción que lo desmonta: **releer con criterio nuevo es medicina; no poder demostrar con qué criterio se firmó es un problema de registro**. Escribe las dos cosas.
 29. **Diseño.** Si el sistema tuviera diez años por delante en vez de dos, ¿implementarías el modelo completo? Escribe la respuesta con el punto de equilibrio: a partir de cuántos años de vida restante el modelo completo se paga. Ese cálculo, con sus supuestos, es el tipo de argumento que `be08` necesita.
 30. **Diagnóstico y escritura.** Escribe el post-mortem de ocho puntos del incidente **be-10** con el formato del cuaderno, sin culpabilización. El punto difícil es el de la causa raíz: **la persona que ejecutó el `$set` hizo lo que su modelo mental indicaba**, y el post-mortem tiene que explicar por qué ese modelo mental era razonable.
 31. **Escritura.** Redacta el párrafo de `RANGES-LOSS.md` dirigido a Calidad. Tiene que decir que hay 37 informes cuyo veredicto no se puede reproducir, sin alarmar más de lo que corresponde y sin minimizar. Máximo 150 palabras. Es el ejercicio más difícil de escribir de todo el track.
@@ -509,7 +509,7 @@ Es el documento del §5.1 y merece recorrerse con el método completo, porque es
 **🔥 Opcionales**
 
 - 🔥 Implementa el modelo bitemporal completo en una rama y mide cuánto crece la consulta de rango vigente. Compara la complejidad con lo que gana. Después bórralo, y guarda la medición.
-- 🔥 Busca en la documentación de tu proveedor de base de datos si hay copias de seguridad de 2020 todavía disponibles. Casi seguro que no —la retención típica es de días o semanas— y esa comprobación, con su resultado escrito, es una fila de `RANGES-LOSS.md`.
+- 🔥 Busca en la documentación de tu proveedor de base de datos si hay copias de seguridad de 2023 todavía disponibles. Casi seguro que no —la retención típica es de días o semanas— y esa comprobación, con su resultado escrito, es una fila de `RANGES-LOSS.md`.
 - 🔥 Escribe la consulta bitemporal que un motor con `SYSTEM VERSIONING` de SQL:2011 resolvería de un solo golpe (`FOR SYSTEM_TIME AS OF`). Compárala con lo que tendrías que escribir aquí. No es una crítica a Mongo: es para saber qué existe y qué se está construyendo a mano.
 
 ---
@@ -548,11 +548,11 @@ Lo que se lleva de aquí un mantenedor no es el modelo bitemporal. Son tres fras
 
 **Un hecho fechado es inmutable; si cambia, es otro hecho.** Y la precisión que la hace útil: se puede escribir su cierre, nunca sus valores.
 
-**Un modelo con un solo eje temporal no falla al contestar, contesta mal con confianza.** Por eso este problema sobrevivió seis años sin un solo ticket.
+**Un modelo con un solo eje temporal no falla al contestar, contesta mal con confianza.** Por eso este problema sobrevivió tres años sin un solo ticket.
 
 **Y la que hay que decir con estas palabras: el frontend salvó lo que el backend perdió.** Un campo que alguien puso en la Fase 8 por buen criterio es hoy la única prueba superviviente. Nadie coordinó eso; salió bien por casualidad, y la casualidad no es una estrategia de trazabilidad.
 
-Queda una pregunta que esta fase deja sin contestar y que es la que abre **be07**: si el `$set` de 2020 no dejó rastro en el código, y las cinco formas de `be02` tampoco, ¿qué **más** ha cambiado en este sistema sin que nadie lo decidiera ni lo apuntara? La respuesta es incómoda y está fuera del árbol de fuentes. Entre 2019 y hoy, el proveedor subió la base de datos cuatro versiones mayores —4.0 a 4.4 a 6.0 a 7.0—, cada una en su ventana de mantenimiento y cada una anunciada por un correo que alguien archivó. La aplicación no se movió nunca. En `be07` vas a investigar un incidente cuyo `git log` está vacío, y vas a descubrir que el cambio no está en el repositorio: está en una línea de un archivo que no es código.
+Queda una pregunta que esta fase deja sin contestar y que es la que abre **be07**: si el `$set` de 2023 no dejó rastro en el código, y las cinco formas de `be02` tampoco, ¿qué **más** ha cambiado en este sistema sin que nadie lo decidiera ni lo apuntara? La respuesta es incómoda y está fuera del árbol de fuentes. Entre 2019 y hoy, el proveedor subió la base de datos cuatro versiones mayores —4.0 a 4.4 a 6.0 a 7.0—, cada una en su ventana de mantenimiento y cada una anunciada por un correo que alguien archivó. La aplicación no se movió nunca. En `be07` vas a investigar un incidente cuyo `git log` está vacío, y vas a descubrir que el cambio no está en el repositorio: está en una línea de un archivo que no es código.
 
 > **La señal de que quedó bien:** *"sé exactamente qué historia perdimos, desde cuándo, con qué pruebas, y sé que desde hoy no se pierde ni un día más."*
 
@@ -581,4 +581,4 @@ Queda una pregunta que esta fase deja sin contestar y que es la que abre **be07*
 |---|---|---|---|
 | **be-10** | *"El informe dice normal y la pantalla dice alto"* | Historia sobrescrita / datos temporales | 🔴 |
 
-Llega como una consulta de Calidad, no como un ticket: *"un paciente trajo su informe de 2020 y no coincide con lo que muestra el sistema"*. El primer reflejo —buscar un bug en el comparador de rangos— no lleva a ninguna parte, porque el comparador funciona. El trabajo del incidente es descubrir que la discrepancia no está en el código sino en el dato, que el dato se perdió hace cinco años, y que **el propio informe en papel es la única prueba que queda**. El post-mortem tiene que llegar a las dos conclusiones: que quien ejecutó el `$set` en 2020 hizo lo que su modelo mental indicaba, y que la prevención no era una revisión de código sino una regla de modelado que nadie había escrito.
+Llega como una consulta de Calidad, no como un ticket: *"un paciente trajo su informe de 2022 y no coincide con lo que muestra el sistema"*. El primer reflejo —buscar un bug en el comparador de rangos— no lleva a ninguna parte, porque el comparador funciona. El trabajo del incidente es descubrir que la discrepancia no está en el código sino en el dato, que el dato se perdió hace tres años, y que **el propio informe en papel es la única prueba que queda**. El post-mortem tiene que llegar a las dos conclusiones: que quien ejecutó el `$set` en 2023 hizo lo que su modelo mental indicaba, y que la prevención no era una revisión de código sino una regla de modelado que nadie había escrito.

@@ -63,7 +63,7 @@ Tres cosas, y solo tres.
 ## 3. Leer un `explain()`: los cinco campos
 
 ```javascript
-db.patients.find({ documentId: 'CC-1032456789' }).explain('executionStats');
+db.patients.find({ documentId: 'HC-1032456789' }).explain('executionStats');
 ```
 
 Los tres modos, y cuál usar:
@@ -112,7 +112,7 @@ Las etapas que vas a ver, y qué significan:
 
 ```javascript
 // Truco: quedarse solo con lo que importa, sin leer el JSON entero.
-var e = db.patients.find({ documentId: 'CC-1032456789' })
+var e = db.patients.find({ documentId: 'HC-1032456789' })
                    .explain('executionStats').executionStats;
 print(e.executionStages.stage + '  docs=' + e.totalDocsExamined +
       '  keys=' + e.totalKeysExamined + '  ret=' + e.nReturned +
@@ -148,7 +148,7 @@ Ese método no menciona ningún índice, no devuelve ninguna advertencia, y func
 | `totalKeysExamined` | 0 | 1 |
 | `executionTimeMillis` | 12 | 0 |
 
-**Doce milisegundos.** Y ahí está la razón exacta de que nadie lo arreglara en seis años: doce milisegundos no se sienten. No hay ticket, no hay queja, no hay alerta.
+**Doce milisegundos.** Y ahí está la razón exacta de que nadie lo arreglara en siete años: doce milisegundos no se sienten. No hay ticket, no hay queja, no hay alerta.
 
 > 🧠 **El argumento para crear el índice no es el número de hoy: es la derivada.** El mismo `COLLSCAN` con diez veces más datos son ciento veinte milisegundos; con cien veces, más de un segundo — **por cada tecla**, en la pantalla que más se usa del sistema. Un `COLLSCAN` no es un problema de rendimiento: es un problema de rendimiento **aplazado**, y la fecha del aplazamiento la pone el crecimiento de los datos, no tú.
 
@@ -350,7 +350,7 @@ db.patients.aggregate([ { $indexStats: {} } ]);
 
 **`auto-index-creation` es una trampa de arranque.** En Boot 2.1 está en `true` por defecto y crea índices desde las anotaciones `@Indexed` **al arrancar**. Sobre una colección grande eso es un arranque que se cuelga, y nadie relaciona un despliegue lento con una anotación en un modelo. `be03` lo pone en `false` a propósito.
 
-**Un índice no es gratis.** Encarece cada escritura, ocupa espacio y hay que mantenerlo. Con cinco colecciones y seis años de datos que crecen despacio, el balance está clarísimo a favor de los cinco que faltan. **Crearlos "por si acaso" sobre cada campo que aparece en un filtro es la otra forma de hacerlo mal**, y `$indexStats` es lo que lo delata.
+**Un índice no es gratis.** Encarece cada escritura, ocupa espacio y hay que mantenerlo. Con cinco colecciones y siete años de datos que crecen despacio, el balance está clarísimo a favor de los cinco que faltan. **Crearlos "por si acaso" sobre cada campo que aparece en un filtro es la otra forma de hacerlo mal**, y `$indexStats` es lo que lo delata.
 
 **Y los planes cambian entre versiones.** El mismo `explain()` sobre la misma consulta puede elegir otro índice en 7.0 que en 4.0. Es una de las comprobaciones que `be07` §5.5 manda hacer al subir, y es de las silenciosas: no falla nada, solo va más lento.
 

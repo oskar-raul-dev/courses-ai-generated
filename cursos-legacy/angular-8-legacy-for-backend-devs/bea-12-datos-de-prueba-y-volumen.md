@@ -34,7 +34,7 @@ Conviene tenerlas separadas desde el primer día, porque mezclarlas es el error 
 | Fuente | Qué es | Quién la usa | Dónde vive |
 |---|---|---|---|
 | **Tu `db.json`** | Lo que generó `npm run seed` en el track base: ~25 pacientes, ~40 órdenes, limpio | `be03` y todo lo demás | La base `labcore` |
-| **El volcado sucio** | 4.820 pacientes con seis años de deriva, sintético y determinista | `be02`, `be05` | La base **`labcore_prod_sample`** |
+| **El volcado sucio** | 4.820 pacientes con siete años de deriva, sintético y determinista | `be02`, `be05` | La base **`labcore_prod_sample`** |
 | **El volumen sintético** | El volcado sucio multiplicado, solo para medir rendimiento | ejercicios de escalado de `be02` y `be03` | Una base desechable |
 
 > 🧭 **La regla que ordena la tabla, y viene de `be03`:** *la aplicación corre siempre sobre tu propio `db.json`; el volcado sucio vive en una base aparte y solo se mide.* Si los dos se mezclan, pasan dos cosas malas a la vez: las mediciones de `be02` dejan de ser reproducibles porque la aplicación va escribiendo encima, y la aplicación empieza a mostrar pacientes sin nombre que tú no sembraste.
@@ -74,7 +74,7 @@ Dónde sí vale lo aleatorio, para no tirar el bebé con el agua: **pruebas de p
 
 ```javascript
 // dump/generate-dump.js
-// Genera el volcado sintético "de producción" de be02: seis años de deriva
+// Genera el volcado sintético "de producción" de be02: siete años de deriva
 // de esquema, fabricados a propósito y reproducibles byte a byte.
 //
 // Se corre con el Node del track base (12 o 14, ver A03):
@@ -147,7 +147,7 @@ function buildPatients() {
     for (var i = 0; i < shape.n; i++) {
       var base = {
         legacyId: legacyId++,
-        documentId: 'CC-10' + pad(Math.floor(random() * 99999999), 8)
+        documentId: 'HC-10' + pad(Math.floor(random() * 99999999), 8)
       };
 
       // --- Forma C: la importación de 2020 -------------------------------
@@ -227,7 +227,7 @@ Y los demás generadores, en resumen —el código completo sigue el mismo patr�
 | `orders` | 4.180 | **37 huérfanas**: su `patientId` apunta a un `legacyId` que no existe. 31 de ellas con `_source: legacy-import` en su rastro, 6 sin él — dos historias distintas |
 | `samples` | 6.240 | **23 con la cadena rota**: tienen `processedBy` sin `receivedBy`, o `status: processed` sin `processedAt` |
 | `results` | 9.870 | 1.204 de glucosa validados con `rangeVersionApplied: 2` dentro de la ventana de `be06`, de los cuales **37 cambian de veredicto** con los límites de hoy |
-| `referenceRanges` | 9 | La v2 de glucosa **ya mutada**, con `high: 99` y su `effectiveFrom` de 2019 intacto. El `$set` de 2020 ya ocurrió: el volcado es el después, no el antes |
+| `referenceRanges` | 9 | La v2 de glucosa **ya mutada**, con `high: 99` y su `effectiveFrom` de 2022 intacto. El `$set` de 2023 ya ocurrió: el volcado es el después, no el antes |
 
 > 🧠 **Esa última fila es la más importante del apéndice y la más fácil de pasar por alto.** El volcado no contiene la historia perdida de `be06` — **no puede contenerla**, porque el punto de esa fase es que no existe en ninguna parte. El generador escribe directamente el estado posterior al `$set`. Si algún día alguien "mejora" el generador para que guarde también la versión anterior, `be06` deja de tener sentido.
 
@@ -389,7 +389,7 @@ Tres cosas que hay que tener presentes al medir sobre volumen, y las tres se olv
 5. Escribe el generador de `orders` con sus 37 huérfanas, repartidas 31 con `_source: legacy-import` y 6 sin él. Verifica con la agregación de `be02` §5.5.
 6. **Diagnóstico.** Carga el volcado sucio en `labcore` —la base de la aplicación— a propósito. Corre `smoke.sh` y anota qué falla y qué pasa aunque no debería. Después limpia y vuelve a sembrar desde tu `db.json`.
 7. Multiplica el volcado ×10 en una base desechable y repite el `explain()` de `be02` §5.7. Anota los cuatro números y compáralos con los originales.
-8. **Diagnóstico.** Alguien "mejoró" el generador para que `referenceRanges` conserve también la versión anterior al `$set` de 2020. Aplica ese cambio y después lee `be06` §5.1. Explica en tres líneas qué fase acabas de destruir y por qué.
+8. **Diagnóstico.** Alguien "mejoró" el generador para que `referenceRanges` conserve también la versión anterior al `$set` de 2023. Aplica ese cambio y después lee `be06` §5.1. Explica en tres líneas qué fase acabas de destruir y por qué.
 
 ---
 

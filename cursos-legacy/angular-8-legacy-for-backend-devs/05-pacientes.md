@@ -119,6 +119,12 @@ var ORDER_STATUSES = ['pending', 'in_process', 'partial_results', 'complete', 'd
 // mentiría sobre como llegaron ahí.
 var SEEDABLE_ORDER_STATUSES = ['pending', 'in_process', 'partial_results', 'complete'];
 
+// Los meses que se siembran: diciembre a febrero, el invierno de LabCore ya en
+// producción. Todas las fechas llevan el -05:00 que la Era 1 escribe como
+// constante, y en invierno ese desfase es verdad. Sembrar julio con -05:00
+// sería sembrar el incidente 22 en datos que no lo anuncian.
+var SEED_MONTHS = ['2021-12', '2022-01', '2022-02'];
+
 // Generador pseudoaleatorio con semilla fija. Sin esto, cada corrida produce
 // datos distintos y un bug reproducible deja de serlo. La semilla es parte
 // del contrato del semillero, no un detalle.
@@ -143,7 +149,7 @@ function buildPatients(count) {
   for (var i = 1; i <= count; i++) {
     patients.push({
       id: i,
-      documentId: 'CC-10' + pad(Math.floor(random() * 99999999), 8),
+      documentId: 'HC-10' + pad(Math.floor(random() * 99999999), 8),
       fullName: pick(FIRST_NAMES) + ' ' + pick(LAST_NAMES),
       // Fecha de nacimiento como string ISO corto, igual que la Fase 4.
       // Que llegue como string y no como Date es la causa del ejercicio 18.
@@ -163,7 +169,7 @@ function buildOrders(patients, count) {
   var orders = [];
   for (var i = 0; i < count; i++) {
     var patient = pick(patients);
-    var createdAt = '2019-' + pad(1 + Math.floor(random() * 9), 2) + '-' +
+    var createdAt = pick(SEED_MONTHS) + '-' +
                     pad(1 + Math.floor(random() * 28), 2) + 'T08:15:00-05:00';
     orders.push({
       id: 101 + i,
@@ -227,7 +233,7 @@ El modelo queda así, y esto es lo que heredan las Fases 7 a 11:
 ```json
 {
   "id": 1,
-  "documentId": "CC-1032456789",
+  "documentId": "HC-1032456789",
   "fullName": "Marcela Rios",
   "birthDate": "1984-03-12",
   "email": "marcela.rios@example.com",
@@ -237,7 +243,7 @@ El modelo queda así, y esto es lo que heredan las Fases 7 a 11:
 
 ### 5.3 `SharedModule` — lo que hay que importar antes de nada
 
-La Fase 1 dejó el `SharedModule` con `FormsModule` (template-driven, de la Fase 0) y tres módulos de Material. Esta fase le agrega lo suyo.
+La Fase 1 dejó el `SharedModule` con `FormsModule` (template-driven, de la Fase 0) y tres módulos de Material, y la Fase 2 le sumó el pipe `appDate`. Esta fase le agrega lo suyo.
 
 ```typescript
 // src/app/shared/shared.module.ts
@@ -265,6 +271,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+import { AppDatePipe } from './app-date.pipe';
+
 var SHARED_MODULES = [
   CommonModule,
   FormsModule,
@@ -291,15 +299,16 @@ var SHARED_MODULES = [
 ];
 
 @NgModule({
+  declarations: [AppDatePipe],
   imports: SHARED_MODULES,
-  exports: SHARED_MODULES
+  exports: [...SHARED_MODULES, AppDatePipe]
 })
 export class SharedModule { }
 ```
 
 **Detalles con intención**
 
-- El arreglo `SHARED_MODULES` se usa en `imports` y en `exports` a la vez. No es magia: un módulo compartido tiene que importar lo que usa y exportar lo que presta, y en este caso son lo mismo. Escribirlo dos veces es la forma segura de que un día se desincronicen.
+- El arreglo `SHARED_MODULES` se usa en `imports` y en `exports` a la vez. No es magia: un módulo compartido tiene que importar lo que usa y exportar lo que presta, y en este caso son lo mismo. Escribirlo dos veces es la forma segura de que un día se desincronicen. El pipe `appDate` va aparte: no se importa, se **declara**, y se exporta junto al arreglo para que lo vean los feature modules.
 - `MatTableModule` viene de `@angular/cdk` por debajo. Si el `package.json` tiene `@angular/cdk` en una versión distinta a `@angular/material` (ambas deberían ser **8.2.3**), el `ng serve` falla con un error de tipos que no menciona ninguna de las dos. Ejercicio 21.
 - `TranslateModule` acá cierra el bucle que abrió la Fase 2: se declaró que su lugar natural eran los `exports` del `SharedModule` en vez de repetirlo en cada feature module. Este es el momento.
 
@@ -1002,6 +1011,13 @@ import { map, switchMap, catchError } from 'rxjs/operators';
 
 import { PatientsService } from '../patients.service';
 
+// 'yyyy-MM-dd' -> local midnight of that day. new Date('yyyy-MM-dd') would be
+// UTC midnight, which west of UTC is still the previous day.
+function toLocalDate(isoDate: string): Date {
+  var parts = isoDate.split('-');
+  return new Date(+parts[0], +parts[1] - 1, +parts[2]);
+}
+
 @Component({
   selector: 'app-patient-form',
   templateUrl: './patient-form.component.html'
@@ -1031,7 +1047,7 @@ export class PatientFormComponent implements OnInit {
         patient ? patient.documentId : '',
         // Segundo argumento: validadores síncronos. Tercero: asíncronos.
         // Confundir las posiciones es el error de 6.2.
-        [Validators.required, Validators.pattern(/^(CC|TI|CE)-\d{6,12}$/)],
+        [Validators.required, Validators.pattern(/^(HC|PP|LB)-\d{6,12}$/)],
         [this.documentIdTakenValidator()]
       ],
 
@@ -1043,8 +1059,10 @@ export class PatientFormComponent implements OnInit {
       birthDate: [
         // El datepicker de Material espera un Date, no una cadena. El mock
         // devuelve cadena. Convertir acá y volver a convertir al guardar es
-        // fricción pura, y es la que produce el bug de 6.3.
-        patient && patient.birthDate ? new Date(patient.birthDate) : null,
+        // fricción pura, y es la que produce el bug de 6.3: new Date('1984-03-12')
+        // sería la medianoche UTC, o sea el 11 a las 19:00 en Ottawa. Por eso la
+        // fecha local se arma a mano, igual que en save().
+        patient && patient.birthDate ? toLocalDate(patient.birthDate) : null,
         [Validators.required]
       ],
 
@@ -1101,7 +1119,7 @@ export class PatientFormComponent implements OnInit {
 
     // La fecha vuelve a cadena ISO corta antes de salir, para que el mock
     // reciba lo mismo que entregó. toISOString() daría UTC y restaría un día
-    // en America/Bogotá; por eso se corta a mano. Ver 6.3.
+    // en cualquier navegador al este de UTC; por eso se corta a mano. Ver 6.3.
     var birth: Date = value.birthDate;
     var normalized = {
       ...value,
@@ -1270,7 +1288,7 @@ export class PatientDeleteDialogComponent implements OnInit {
 
 > **Nota de continuidad (editada desde la Fase 9).** El flujo canónico del ALCANCE termina en `complete → delivered → expired`, pero la versión original de esta fase dejó `delivered` fuera del `seed.js` con el argumento —correcto— de que a ese estado solo se llega entregando el informe. La Fase 9 es donde se entrega: construye la acción `markDelivered` y el primer `order.transitions.ts` que endurece la máquina de órdenes con una guarda real. Para que ese estado destino exista en la máquina, se agregó `'delivered'` a `ORDER_STATUSES` acá —que es donde el `seed.js` de esta fase define el flujo de la orden—, sin sembrar ninguna orden ya entregada: el sorteo usa `SEEDABLE_ORDER_STATUSES`, que excluye `delivered` y `expired`. La guarda `complete → delivered` **no** vive en esta fase: nace en la Fase 9, igual que la guarda de la muestra nace en la Fase 7 y no en la fase que sembró las muestras. Y el `MatSelect` que ofrece los seis estados sin distinguir cuál es alcanzable es material de la **Fase 6 §5.4**, que es donde la máquina de órdenes se ve por primera vez y donde se declara que todavía no es una máquina.
 
-> **Prueba de fuego.** Corre `npm run seed`, después `npm run mock`, después `npx ng serve`, y entra a `/patients`. Deberías ver 25 pacientes paginados de diez en diez. Crea uno nuevo con documento `CC-123456` y mira Redux DevTools: cuatro acciones —`Upsert`, `Create`, `Create Success`, `Load Patients`— y la lista completa llegando otra vez. Ahora da de baja y abre `db.json` en el editor: el registro sigue ahí, con `active: false`. Por último, levanta el mock con `CHAOS=latency=3000`, abre el formulario, escribe un documento que ya exista y cuenta hasta tres antes de que el campo se ponga rojo. Durante esos tres segundos el botón de guardar estuvo habilitado.
+> **Prueba de fuego.** Corre `npm run seed`, después `npm run mock`, después `npx ng serve`, y entra a `/patients`. Deberías ver 25 pacientes paginados de diez en diez. Crea uno nuevo con documento `HC-123456` y mira Redux DevTools: cuatro acciones —`Upsert`, `Create`, `Create Success`, `Load Patients`— y la lista completa llegando otra vez. Ahora da de baja y abre `db.json` en el editor: el registro sigue ahí, con `active: false`. Por último, levanta el mock con `CHAOS=latency=3000`, abre el formulario, escribe un documento que ya exista y cuenta hasta tres antes de que el campo se ponga rojo. Durante esos tres segundos el botón de guardar estuvo habilitado.
 
 ---
 
@@ -1289,9 +1307,9 @@ Causa: casi siempre, el validador está en la posición equivocada del arreglo d
 Fix mínimo: mover el validador al tercer argumento, siempre dentro de su propio arreglo. La segunda causa en frecuencia es que un validador síncrono ya está fallando: los asíncronos solo corren cuando todos los síncronos pasan, así que un patrón mal escrito deja al asíncrono muerto para siempre y el síntoma es idéntico.
 
 **La fecha se guarda un día antes.**
-Síntoma: eliges el 12 de marzo en el datepicker, guardas, recargas, y aparece el 11.
-Causa: `Date.toISOString()` convierte a UTC. En `America/Bogota` —la zona que fijó la Fase 2— la medianoche local del 12 es el 12 a las 05:00 UTC, pero cualquier hora anterior a las 19:00 local del día 11 se convierte al día 11. Con un `Date` construido a medianoche local y convertido a UTC, el resultado depende del signo del offset, y con UTC-5 el signo juega en contra.
-Fix mínimo: extraer año, mes y día del `Date` con `getFullYear()`, `getMonth()` y `getDate()` —que devuelven la fecha **local**— y armar la cadena a mano, como hace `save()` en §5.10. La refactorización correcta sería no usar `Date` para representar fechas sin hora, que es el problema de fondo y es tema del incidente 07 en la Fase 8.
+Síntoma: abres un paciente para editarlo, el datepicker muestra el 11 de marzo cuando el dato dice el 12, y si guardas sin tocar nada queda guardado el 11. O al revés: eliges el 12 en el datepicker, guardas, recargas, y aparece el 11.
+Causa: hay dos conversiones entre la cadena `'yyyy-MM-dd'` del mock y el `Date` del datepicker, y cada una falla de un lado distinto del meridiano. **Al cargar**, `new Date('1984-03-12')` no es la medianoche local: una fecha ISO sin hora se interpreta como medianoche **UTC**, y en Ottawa eso es el 11 a las 19:00 —el primer síntoma, que en LabCore se ve en cualquier máquina de Ottawa o Gatineau—. **Al guardar**, `Date.toISOString()` convierte a UTC: la medianoche local del 12 en Ottawa es el 12 a las 05:00 UTC y no pasa nada, pero en un navegador al este de UTC (Madrid, Tokio) es el 11 por la tarde —el segundo síntoma, el de quien trabaja a distancia desde allá—.
+Fix mínimo: no dejar que ninguna de las dos conversiones pase por UTC. Al cargar, armar la fecha local con `new Date(año, mes - 1, día)` (`toLocalDate()` en §5.10); al guardar, extraer año, mes y día con `getFullYear()`, `getMonth()` y `getDate()` —que devuelven la fecha **local**— y armar la cadena a mano, como hace `save()`. La refactorización correcta sería no usar `Date` para representar fechas sin hora, que es el problema de fondo y es tema del incidente 07 en la Fase 8.
 
 **El paciente dado de baja sigue apareciendo en una pantalla y en otra no.**
 Síntoma: la tabla de pacientes ya no lo muestra, pero el selector de paciente del formulario de órdenes sí.

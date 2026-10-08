@@ -47,7 +47,7 @@ Seis horas, y no se escribe una sola línea de Java. Salen dos artefactos: `CONT
 
 La historia larga está en [`00-historia-del-sistema.md`](./00-historia-del-sistema.md); acá va la parte que hace falta para trabajar.
 
-En 2019, el mismo equipo contratado que escribió el frontend que ya conoces escribió también el otro lado del cable: **Java 8, Spring Boot 2.1 y MongoDB**. Cuando el contrato terminó, ese frente se fue igual que el del frontend, y el backend quedó **congelado y sin dueño**. En los papeles lo heredó Maintenance. O sea, tú.
+En 2019, la misma consultora —Chaudière Conseils, con su equipo de San José— que escribió el frontend que ya conoces escribió también el otro lado del cable: **Java 8, Spring Boot 2.1 y MongoDB**. Cuando el contrato terminó, ese frente se fue igual que el del frontend, y el backend quedó **congelado y sin dueño**. En los papeles lo heredó Maintenance. O sea, tú.
 
 Esa frase explica las dos deudas más incómodas del track base, y conviene releerlas ahora con ojos de servidor:
 
@@ -202,7 +202,7 @@ El formato es una tabla por recurso más una nota de forma. Así queda el de pac
 **Forma del documento** (observada, no declarada):
 
 ```json
-{ "id": 1, "documentId": "CC-1032456789", "fullName": "Marcela Ríos",
+{ "id": 1, "documentId": "HC-1032456789", "fullName": "Marcela Ríos",
   "birthDate": "1984-03-12", "email": null, "active": true }
 ```
 
@@ -231,7 +231,7 @@ Repite eso para `/orders`, `/samples`, `/results`, `/referenceRanges`, `/auditLo
 | `/referenceRanges` | **ninguno** | se traen todos, siempre, y se filtra en memoria (Fase 8) |
 | `/auditLog` | **ninguno** | se trae toda la bitácora y se filtra en el navegador (Fase 11) |
 
-> 🧭 **Los dos "ninguno" de esa tabla son el hallazgo más caro de la fase.** No es que el frontend no filtre: es que filtra **en el navegador**, trayéndose la colección entera. Con el semillero del curso eso son unos cientos de documentos y no se nota. En un laboratorio con seis años de operación, `GET /auditLog` es la bitácora completa viajando por el cable cada vez que alguien abre una timeline. Anótalo con esas palabras: es la 💸 3 del track base —paginar, filtrar y ordenar se hace en el cliente porque el servidor nunca lo expuso— y es lo que **be03** viene a cobrar.
+> 🧭 **Los dos "ninguno" de esa tabla son el hallazgo más caro de la fase.** No es que el frontend no filtre: es que filtra **en el navegador**, trayéndose la colección entera. Con el semillero del curso eso son unos cientos de documentos y no se nota. En un laboratorio con siete años de operación, `GET /auditLog` es la bitácora completa viajando por el cable cada vez que alguien abre una timeline. Anótalo con esas palabras: es la 💸 3 del track base —paginar, filtrar y ordenar se hace en el cliente porque el servidor nunca lo expuso— y es lo que **be03** viene a cobrar.
 
 Y el hallazgo incómodo, que va en su propia sección del archivo:
 
@@ -507,7 +507,7 @@ Eso, que en el track base era una curiosidad, aquí es una cláusula del contrat
 
 8. Añade a `smoke.sh` una afirmación de que `GET /orders?patientId=1` devuelve **solo** órdenes de ese paciente. Pista: no necesitas `jq`; te basta con negar la presencia de otro `patientId` en el cuerpo.
 9. Documenta la sección `/auditLog` de `CONTRACT.md` incluyendo la forma completa del asiento y el hecho de que `before` es siempre `null`. Explica por qué siempre es `null` citando la fase que lo produce.
-10. Mide con `curl -w '%{time_total}'` cuánto tarda `GET /auditLog` con la bitácora vacía y después de generar treinta asientos usando la aplicación. Extrapola a seis años de operación y escribe el número en `CONTRACT.md`.
+10. Mide con `curl -w '%{time_total}'` cuánto tarda `GET /auditLog` con la bitácora vacía y después de generar treinta asientos usando la aplicación. Extrapola a siete años de operación y escribe el número en `CONTRACT.md`.
 11. Levanta el mock con `CHAOS=latency=2000` y confirma con `curl -w` que **todas** las respuestas tardan eso, incluido `POST /login`. Explica por qué el login no es inmune, citando la decisión de la Fase 4 §5.3.
 12. Con `CHAOS=fail=500@100` arrancado, manda una petición con `X-Chaos: latency=1`. Anota si falla o no, y escribe la regla de precedencia que acabas de comprobar.
 13. Escribe la sección de régimen de crecimiento de `CONTRACT.md` y demuestra una de sus afirmaciones: añade a mano un campo `nickname` a un paciente en `db.json`, reinicia el mock, y confirma que la pantalla no cambia ni se rompe.

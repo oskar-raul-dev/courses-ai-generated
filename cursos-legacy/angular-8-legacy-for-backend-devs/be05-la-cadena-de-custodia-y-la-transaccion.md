@@ -302,7 +302,7 @@ M-11 · Muestras con eslabón huérfano:        23
 M-12 · Órdenes que se quedaron atrás:         9
 ```
 
-Veintitrés y nueve, sobre seis años. **No son muchos, y esa es la parte incómoda.** Un número pequeño es el peor escenario posible para conseguir presupuesto: no duele lo bastante para que nadie lo priorice, y duele exactamente lo suficiente para que un auditor lo encuentre. Anótalo tal cual, sin inflarlo: `be08` va a necesitar el número honesto, no el que convence.
+Veintitrés y nueve, sobre siete años. **No son muchos, y esa es la parte incómoda.** Un número pequeño es el peor escenario posible para conseguir presupuesto: no duele lo bastante para que nadie lo priorice, y duele exactamente lo suficiente para que un auditor lo encuentre. Anótalo tal cual, sin inflarlo: `be08` va a necesitar el número honesto, no el que convence.
 
 > 💡 Cruza las 23 con `auditLogServer` y con el `X-Request-Id`. Las que tengan asiento cuentan una historia —hubo un intento, algo falló después— y las que no, otra: llegaron así de la importación de 2020, y entonces no son un problema de transacciones sino de `be02`. **Separar esas dos poblaciones antes de contar es lo que distingue una medición de un titular.**
 
@@ -564,7 +564,7 @@ Las cuatro preguntas, contestadas con evidencia y no con hipótesis:
 **🔴 Muy difícil (27–33)**
 
 27. **Adversarial — Cassandra.** El nuevo arquitecto propone migrar a Cassandra "porque escala y no tiene estos problemas". Antes de opinar, modela el dominio de LabCore contra su patrón de acceso real y **mide**: cuántas tablas harían falta si se diseña una por consulta, qué pasa con las consultas que hoy son un `$lookup`, y qué garantía transaccional te daría (menos que la que tienes). Apóyate en [`bea-09`](./bea-09-cassandra-la-tentacion-y-el-acierto-que-nadie-tuvo.md). Escribe la respuesta con números. Y después escribe la segunda mitad, que es la honesta: **dónde sí era la respuesta correcta y nadie la usó** —la telemetría del analizador, serie temporal pura—. No era mala la tecnología: estaba en el módulo equivocado.
-28. **Adversarial.** Argumenta bien la posición contraria a la fase: *"veintitrés muestras en seis años es una tasa de error de 0,0004; cualquier proceso manual de un laboratorio tiene una tasa peor; esto es sobreingeniería"*. Dale sus mejores razones, con los números reales. Después refútala con el único argumento que importa en un dominio regulado, que no es estadístico.
+28. **Adversarial.** Argumenta bien la posición contraria a la fase: *"veintitrés muestras en siete años es una tasa de error de 0,0004; cualquier proceso manual de un laboratorio tiene una tasa peor; esto es sobreingeniería"*. Dale sus mejores razones, con los números reales. Después refútala con el único argumento que importa en un dominio regulado, que no es estadístico.
 29. **Diseño.** El detector corre cada hora. Diseña qué pasaría con dos instancias de la aplicación: qué se rompe, cómo se arregla, y cuánto cuesta. Después decide, con la fecha de decomisión delante, si lo implementas. La respuesta correcta probablemente sea que no, y hay que saber escribir por qué.
 30. **Diagnóstico y escritura.** Escribe el post-mortem de ocho puntos del incidente **be-08** con el formato del cuaderno, sin culpabilización, y con el test de regresión — que en este caso no puede ser una prueba unitaria, y explicar por qué es parte del ejercicio.
 31. **Escritura.** Redacta el párrafo del documento de `be08` que le explica a un auditor por qué el sistema no puede garantizar la atomicidad de la cadena de custodia, qué se hizo en su lugar, y por qué eso es defendible. Máximo doscientas palabras, sin una sola palabra técnica que no expliques.
@@ -615,7 +615,7 @@ Lo que te llevas no es una técnica de MongoDB. Es la secuencia completa de trab
 
 Y queda un cabo suelto que `be07` va a recoger, así que anótalo: **nadie convierte un standalone en replica set durante un bump de versión**. La topología de 2019 sobrevive intacta a todo lo que le pase a la base, y eso significa que la transacción va a seguir siendo imposible en 2026 — con el agravante de que, para entonces, el manual va a decir que se puede.
 
-Antes de eso, **be06**: los rangos de referencia versionados y una pregunta de auditor que parece fácil. *"¿Qué rango de glucosa estaba vigente el 12 de marzo de 2020?"*. Un sistema clínico tiene que poder contestarla. El de 2019 hacía `$set` sobre el documento del rango, así que el histórico se sobrescribió. Aquí perdiste 23 cadenas de custodia; allí vas a perder catorce meses de historia, y esa sí que no se puede reconstruir.
+Antes de eso, **be06**: los rangos de referencia versionados y una pregunta de auditor que parece fácil. *"¿Qué rango de glucosa estaba vigente el 12 de octubre de 2022?"*. Un sistema clínico tiene que poder contestarla. El de 2019 hacía `$set` sobre el documento del rango, así que el histórico se sobrescribió. Aquí perdiste 23 cadenas de custodia; allí vas a perder catorce meses de historia, y esa sí que no se puede reconstruir.
 
 > **La señal de que quedó bien:** *"sé exactamente qué garantía no me da mi despliegue, tengo el mensaje de error que lo demuestra, y tengo un libro donde consta cada vez que eso me costó algo."*
 

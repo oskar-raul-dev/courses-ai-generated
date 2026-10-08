@@ -38,10 +38,10 @@ curl "http://localhost:3000/auditLog?entityType=order&entityId=4021&_sort=timest
 
 ```json
 [
-  { "id":"a7f3…", "timestamp":"2019-09-07T09:12:04.881-05:00", "actor":"analista1",
+  { "id":"a7f3…", "timestamp":"2022-01-08T09:12:04.881-05:00", "actor":"analista1",
     "action":"[Orders] Transition Order Success", "entityType":"order", "entityId":"4021",
     "before":null, "after":{ "id":4021, "status":"complete", … } },
-  { "id":"b1c9…", "timestamp":"2019-09-07T09:12:31.204-05:00", "actor":"system",
+  { "id":"b1c9…", "timestamp":"2022-01-08T09:12:31.204-05:00", "actor":"system",
     "action":"[Orders] Mark Delivered Success", "entityType":"order", "entityId":"4021",
     "before":null, "after":{ "id":4021, "status":"delivered", … } }
 ]
@@ -84,7 +84,7 @@ curl -s "http://localhost:3000/results/9003"
 
 ```json
 { "id":9003, "sampleId":88, "analyte":"glucose", "value":97, "status":"validated",
-  "validatedBy":"analista1", "validatedAt":"2019-09-07T09:11:58.402-05:00",
+  "validatedBy":"analista1", "validatedAt":"2022-01-08T09:11:58.402-05:00",
   "rangeVersionApplied":2 }
 ```
 
@@ -123,7 +123,7 @@ Vuelve al asiento de la entrega. `actor: "system"` no es un error: es lo que `bu
 Queda una afirmación del ticket sin verificar, y es la primera palabra: **"el sábado"**. El `timestamp` del asiento lo pone `new Date().toISOString()` en el navegador.
 
 ```
-"timestamp": "2019-09-07T09:12:31.204-05:00"     ← con el offset explícito
+"timestamp": "2022-01-08T09:12:31.204-05:00"     ← con el offset explícito
 ```
 
 **Qué descarta.** Compara ese `timestamp` con el `validatedAt` del dato y con el día que dice la coordinadora. Si el navegador que disparó la entrega tenía otra zona horaria —o el reloj corrido—, el asiento puede caer en otro día que el evento real, y "el sábado" puede ser el viernes por la noche visto desde otro huso. En una queja que empieza con un día de la semana, eso no es un detalle.

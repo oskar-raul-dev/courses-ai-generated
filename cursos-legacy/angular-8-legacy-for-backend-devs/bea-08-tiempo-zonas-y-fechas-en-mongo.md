@@ -15,8 +15,9 @@ Resuelve una cosa: **que las fechas de LabCore signifiquen lo mismo en la base, 
 
 Antes de nada, lo que no se discute porque ya está decidido y funcionando:
 
-- El `db.json` guarda **todas** las fechas con desplazamiento explícito: `"2019-09-02T08:15:00-05:00"`. Nunca `Z`, nunca fecha desnuda.
-- La Fase 2 fijó **`America/Bogota`** como zona de la aplicación.
+- El `db.json` guarda **todas** las fechas con desplazamiento explícito: `"2022-01-03T08:15:00-05:00"`. Nunca `Z`, nunca fecha desnuda. (En PROD hay dos excepciones que son un incidente: los bordes de la v2 del potasio, que un script escribió en `Z` — el **07** del cuaderno base.)
+- Ese `-05:00` es el de Ottawa **en invierno**, y todas las fechas de la semilla caen entre diciembre y enero. La Era 1 lo escribió como constante.
+- La Fase 2 fijó **`America/Toronto`** como zona de la aplicación.
 - Y el track base declara que **las fechas se comparan con `Date` pelado**, y que eso es correcto el 95 % de los días.
 
 Este apéndice explica **el 5 % restante desde el servidor**, que es donde ese 5 % se convierte en un asiento de auditoría con hora imposible.
@@ -32,7 +33,7 @@ Este apéndice explica **el 5 % restante desde el servidor**, que es donde ese 5
 - [5. Java 8: `java.time` y el `java.util.Date` de 2019](#5-java-8-javatime-y-el-javautildate-de-2019)
 - [6. La conversión en el borde, y dónde ponerla](#6-la-conversión-en-el-borde-y-dónde-ponerla)
 - [7. El reloj del cliente como fuente de bugs](#7-el-reloj-del-cliente-como-fuente-de-bugs)
-- [8. Horario de verano: Colombia no, y aun así](#8-horario-de-verano-colombia-no-y-aun-así)
+- [8. Horario de verano: Ottawa sí, y por eso](#8-horario-de-verano-ottawa-sí-y-por-eso)
 - [🧭 Cuándo usar qué](#-cuándo-usar-qué)
 - [⚠️ Advertencias](#️-advertencias)
 - [📚 Referencias](#-referencias)
@@ -46,7 +47,7 @@ En LabCore, hoy, el mismo instante puede estar guardado de cuatro formas distint
 
 | # | Forma | Ejemplo | De dónde sale | ¿Tiene dueño? |
 |---|---|---|---|---|
-| 1 | **Cadena con desplazamiento** | `"2019-09-02T08:15:00-05:00"` | El `db.json` y el `seed.js` | — |
+| 1 | **Cadena con desplazamiento** | `"2022-01-03T08:15:00-05:00"` | El `db.json` y el `seed.js` | — |
 | 2 | **Cadena UTC (`Z`)** | `"2026-09-10T15:04:05.123Z"` | `new Date().toISOString()` del navegador | El reloj del operador |
 | 3 | **`BSON Date`** | `ISODate("2026-09-10T15:04:05.123Z")` | Los 912 documentos de `be02`, y todo lo que escribe `be04` | El reloj del servidor |
 | 4 | **Cadena de fecha suelta** | `"1984-03-12"` | `birthDate` de casi todos los pacientes | — |
@@ -71,10 +72,10 @@ Y el error que la gente comete creyendo que lo hace bien:
 
 ```javascript
 // "Guardo el desplazamiento, así conservo la zona."
-"2019-09-02T08:15:00-05:00"
+"2022-01-03T08:15:00-05:00"
 ```
 
-No conservas la zona: conservas **el desplazamiento de aquel día**. Son cosas distintas. Con un país sin horario de verano —Colombia— coinciden, así que funciona. Con datos de un proveedor en un país que sí lo tiene, el mismo `-05:00` significa dos zonas distintas según el mes. Funciona **por suerte y no por diseño**, y saber que estás en ese caso es lo que hace que no te sorprenda el día que dejes de estarlo.
+No conservas la zona: conservas **el desplazamiento de aquel día**. Son cosas distintas. En Ottawa coinciden de noviembre a marzo y no el resto del año: el `-05:00` de la semilla es correcto porque todas sus fechas caen en invierno, y el mismo `-05:00` escrito un día de julio es un instante una hora más tarde que el reloj de la pared. Funciona **por calendario y no por diseño**, y saber que estás en ese caso es lo que hace que no te sorprenda el día que dejes de estarlo (§8).
 
 ---
 
@@ -98,20 +99,21 @@ Cómo se pinta en una zona concreta, cuando de verdad hace falta:
 
 ```javascript
 // $dateToString con timezone (desde MongoDB 3.6). Es la forma correcta de
-// agrupar "por día en Bogotá": la conversión se hace en la agregación, no
-// guardando hora local.
+// agrupar "por día en Ottawa": la conversión se hace en la agregación, no
+// guardando hora local, y con el identificador IANA el horario de verano
+// sale solo.
 db.auditLog.aggregate([
   { $group: {
       _id: { $dateToString: { format: '%Y-%m-%d',
                               date: '$timestamp',
-                              timezone: 'America/Bogota' } },
+                              timezone: 'America/Toronto' } },
       asientos: { $sum: 1 }
   }},
   { $sort: { _id: 1 } }
 ]);
 ```
 
-> 💡 **Ese `timezone` es la línea que separa un informe correcto de uno que reparte mal los asientos de la noche.** Sin él, `$dateToString` agrupa en UTC, y todo lo ocurrido entre las 19:00 y las 24:00 de Bogotá cae en el día siguiente. Cinco horas de cada día en la casilla equivocada, todos los días, sin ningún error.
+> 💡 **Ese `timezone` es la línea que separa un informe correcto de uno que reparte mal los asientos de la noche.** Sin él, `$dateToString` agrupa en UTC, y todo lo ocurrido desde las 19:00 de Ottawa en invierno —desde las 20:00 en verano— cae en el día siguiente. Cinco horas de cada día en la casilla equivocada, o cuatro según el mes, todos los días, sin ningún error. Y un `timezone: '-05:00'` fijo no lo arregla: acierta en invierno, y en verano manda al día anterior todo lo ocurrido entre la medianoche y la una.
 
 ---
 
@@ -156,7 +158,7 @@ Java 8 trajo `java.time` (2014) y es lo correcto. LabCore usa las dos cosas, y s
 // Lo correcto, y lo que usa el track a partir de be04:
 Instant now = Instant.now();                         // un instante, UTC, sin zona
 LocalDate birthDate = LocalDate.parse("1984-03-12"); // una fecha de calendario
-ZonedDateTime inBogota = now.atZone(ZoneId.of("America/Bogota"));    // para pintar
+ZonedDateTime inOttawa = now.atZone(ZoneId.of("America/Toronto"));   // para pintar
 
 // Lo de 2019, que sigue vivo en medio código:
 java.util.Date date = new java.util.Date();
@@ -169,10 +171,12 @@ Las tres cosas que hay que saber de `java.util.Date` para leer el código viejo 
 **No tiene zona, pero su `toString()` sí.** Y esta es la trampa de verdad:
 
 ```java
-java.util.Date d = new java.util.Date(1757516645123L);
+java.util.Date d = new java.util.Date(1789052645123L);   // 2026-09-10T15:04:05.123Z
 System.out.println(d);
-// Imprime la hora en la zona POR DEFECTO DE LA JVM. En el contenedor, UTC.
-// En el portátil de un desarrollador en Bogotá, cinco horas menos.
+// Imprime la hora en la zona POR DEFECTO DE LA JVM. En el contenedor, UTC:
+// "Thu Sep 10 15:04:05 UTC 2026". En el portátil de un desarrollador en
+// Ottawa, "Thu Sep 10 11:04:05 EDT 2026": cuatro horas menos en septiembre,
+// cinco en enero.
 // El MISMO objeto, dos salidas distintas, y ninguna es "la fecha guardada".
 ```
 
@@ -193,7 +197,7 @@ Y el mapeo con Spring Data MongoDB 2.1, que es lo que decide qué acaba en la ba
 | `java.time.LocalDate` | `BSON Date` a medianoche | ⚠️ Le inventa una hora. Ver abajo |
 | `String` | `String` | Lo que hace el `birthDate` de casi todos |
 
-> ⚠️ **`LocalDate` es la trampa sutil.** Se guarda como un instante a medianoche —y según la versión y los convertidores, en UTC o en la zona por defecto—. Un cumpleaños guardado así en un sistema configurado en `America/Bogota` y leído en UTC **sale un día antes**. Es el clásico "la fecha se mueve un día" y casi nunca se diagnostica a la primera. Para fechas de calendario, la cadena `YYYY-MM-DD` es más tonta y no miente.
+> ⚠️ **`LocalDate` es la trampa sutil.** Spring Data 2.1 lo guarda como la medianoche **en la zona por defecto de la JVM que escribe**, y lo lee en la zona de la JVM que lee. Un cumpleaños escrito por el contenedor —en UTC: `1984-03-12T00:00:00Z`— y leído en el portátil de un desarrollador en Ottawa **sale un día antes**: esa medianoche UTC son las 19:00 del 11. Al revés no pasa: escrito en Ottawa queda en `05:00Z` del mismo día, y leído en UTC sigue siendo el 12. Es el clásico "la fecha se mueve un día" y casi nunca se diagnostica a la primera. Para fechas de calendario, la cadena `YYYY-MM-DD` es más tonta y no miente.
 
 ---
 
@@ -254,19 +258,50 @@ Y la defensa, que no es técnica sino de diseño:
 
 ---
 
-## 8. Horario de verano: Colombia no, y aun así
+## 8. Horario de verano: Ottawa sí, y por eso
 
-Colombia **no** tiene horario de verano. `America/Bogota` es UTC−05:00 todo el año, y por eso el `-05:00` del `db.json` funciona.
+Ottawa y Gatineau **sí** tienen horario de verano. `America/Toronto` es UTC−05:00 de noviembre a marzo y UTC−04:00 de marzo a noviembre, y el cambio cae en domingo a las 02:00 de la madrugada. Los de los años que importan aquí, sacados de la base IANA y no de un calendario:
 
-Con una nota histórica que parece trivia y no lo es: **Colombia sí lo tuvo una vez**, durante la crisis energética de 1992-1993. Si alguna fecha de tu sistema cae en esa ventana —y las fechas de nacimiento de los pacientes cubren décadas—, la base de datos de zonas horarias lo sabe y aplica el desplazamiento de entonces. Un cálculo de edad hecho con `java.time` y uno hecho restando cadenas pueden diferir en un día para alguien nacido en esos meses.
+| Año | Empieza el horario de verano | Termina |
+|---|---|---|
+| 2019 | 10 de marzo | 3 de noviembre |
+| 2020 | 8 de marzo | 1 de noviembre |
+| 2021 | 14 de marzo | 7 de noviembre |
+| 2022 | 13 de marzo | 6 de noviembre |
 
-> 💡 Es un caso de una persona entre miles y no justifica ningún trabajo. Lo que sí justifica es la regla general: **nunca calcules un desplazamiento a mano.** `ZoneId.of("America/Bogota")` consulta la base de datos IANA, que tiene la historia completa de todos los cambios por decreto de todos los países. Restar cinco horas a mano es correcto hoy, para Colombia, y falso en general.
+Y eso explica la frase del anclaje: el `-05:00` de los datos es correcto **porque todos caen en invierno**. Es el desfase que la Era 1 escribió como constante, en un proyecto que arrancó en febrero, con la mitad del equipo en Costa Rica, donde la hora no cambia nunca. Nadie se hizo la pregunta de marzo.
 
-Dónde te muerde igual aunque tú no tengas horario de verano:
+La aritmética del error, comprobada en Java 8:
 
-- **Datos de un proveedor extranjero** —un fabricante de analizadores con soporte en otra zona, un archivo de resultados externo—: sus marcas de tiempo sí cruzan cambios de horario.
-- **Un contenedor con la zona mal puesta**: el proceso cree estar en otro sitio.
-- **Una biblioteca con la base de zonas desactualizada**: los cambios de huso los deciden gobiernos, a veces con semanas de aviso, y una JVM vieja tiene la tabla de cuando se publicó.
+```java
+OffsetDateTime era1 = OffsetDateTime.parse("2021-07-15T09:00:00-05:00");
+era1.atZoneSameInstant(ZoneId.of("America/Toronto"));
+// 2021-07-15T10:00-04:00[America/Toronto]
+```
+
+Quien escribió `09:00:00-05:00` en julio quería decir "las nueve en Ottawa". El instante que guardó son **las diez**. Una hora corrida en todo lo que se escribió con la constante entre marzo y noviembre, y ningún error en ningún lado: es una cadena ISO válida que representa un instante que existe. Cuando una marca así queda a menos de una hora de otra bien escrita —una toma copiada con la constante por la agenda de Gatineau y una recepción estampada por el navegador—, el orden entre las dos se invierte. Es el incidente **22** del cuaderno base, y su síntoma es exactamente ese: muestras que llegaron al laboratorio antes de que se las sacaran al paciente.
+
+Y las dos madrugadas del año que no se parecen a ninguna otra:
+
+```java
+ZoneId ottawa = ZoneId.of("America/Toronto");
+ZonedDateTime.of(LocalDateTime.parse("2021-03-14T02:30"), ottawa);
+// 2021-03-14T03:30-04:00 — las 02:30 de ese domingo no existen: java.time las corre una hora
+ZonedDateTime early = ZonedDateTime.of(LocalDateTime.parse("2021-11-07T01:30"), ottawa);
+// 2021-11-07T01:30-04:00 — y esta existe dos veces:
+early.withLaterOffsetAtOverlap();
+// 2021-11-07T01:30-05:00
+```
+
+Una muestra tomada "a la 01:30" del primer domingo de noviembre es ambigua si solo se guardó la hora local; con un instante no lo es. Es el argumento más corto que existe a favor de §2.
+
+> 💡 **Nunca calcules un desplazamiento a mano.** `ZoneId.of("America/Toronto")` consulta la base de datos IANA, que tiene la historia completa de los cambios por decreto. Y la historia importa aunque parezca trivia: hasta 2006, Canadá cambiaba la hora el primer domingo de abril y el último de octubre; desde 2007, el segundo domingo de marzo y el primero de noviembre. Una regla escrita a mano con las fechas de hoy calcula mal cualquier marca de 2006 o anterior. Restar cinco horas a mano es correcto medio año, y falso en general.
+
+Dónde más te muerde, aparte de la constante:
+
+- **Un contenedor con la zona mal puesta**: el proceso cree estar en otro sitio, y todo `Date.toString()` y todo `LocalDate` de Spring Data se van con él (§5).
+- **Una biblioteca con la base de zonas desactualizada**: los cambios de huso los deciden gobiernos, a veces con semanas de aviso, y una JVM vieja tiene la tabla de cuando se publicó. La tuya dice qué versión trae: `ZoneRulesProvider.getVersions("America/Toronto")`.
+- **Los datos de un proveedor**: un fabricante de analizadores con soporte en otra zona escribe sus marcas con su propio desfase, y el de él también cambia, en otras fechas.
 
 ---
 
@@ -276,12 +311,12 @@ Dónde te muerde igual aunque tú no tengas horario de verano:
 |---|---|
 | Cuándo ocurrió un hecho | `Instant` en Java, `BSON Date` en la base, **reloj del servidor** |
 | Una fecha de calendario (cumpleaños, vigencia) | Cadena `YYYY-MM-DD`. Nunca `LocalDate` mapeado a `Date` |
-| Pintarlo para un operador | `ZonedDateTime` con `America/Bogota`, **en el borde de salida** |
+| Pintarlo para un operador | `ZonedDateTime` con `America/Toronto`, **en el borde de salida** |
 | Agrupar por día en un informe | `$dateToString` **con `timezone`** |
 | Un campo que ya consume el frontend | Lo que el contrato diga. No se normaliza |
 | La hora que dice el cliente | Campo aparte, con otro nombre. Nunca mezclada |
 | Comparar un rango de fechas | **Mide el `$type` primero.** Siempre |
-| Calcular un desplazamiento | `ZoneId`, nunca aritmética a mano |
+| Calcular un desplazamiento | `ZoneId`, nunca aritmética a mano ni un `-05:00` fijo |
 | Un log | `Instant` formateado explícitamente, no `Date.toString()` |
 
 ---
@@ -290,7 +325,7 @@ Dónde te muerde igual aunque tú no tengas horario de verano:
 
 **El shell y los logs mienten sobre la zona, no sobre el dato.** Un `ISODate(...)` en pantalla y un `Date.toString()` en un log están aplicando una zona —la del cliente o la de la JVM— que nadie declaró. Antes de concluir que una fecha está mal guardada, comprueba en qué zona la estás mirando.
 
-**El contenedor no tiene por qué estar en tu zona.** Las imágenes base suelen venir en UTC, así que el servidor piensa en UTC y el operador en Bogotá. Eso está bien y es lo que se quiere; lo que no se quiere es que **el código dependa** de cuál sea, y por eso `be04` fija `Clock.systemUTC()` en vez de confiar en el valor por defecto.
+**El contenedor no tiene por qué estar en tu zona.** Las imágenes base suelen venir en UTC, así que el servidor piensa en UTC y el operador en Ottawa. Eso está bien y es lo que se quiere; lo que no se quiere es que **el código dependa** de cuál sea, y por eso `be04` fija `Clock.systemUTC()` en vez de confiar en el valor por defecto.
 
 **Una cadena que parece una fecha no es una fecha.** No se compara, no se ordena y no se agrupa como tal. En una colección donde el mismo campo es cadena en unos documentos y `Date` en otros —que es el caso de `birthDate` en LabCore—, **toda consulta de rango devuelve una de las dos poblaciones y ninguna advertencia**.
 
@@ -319,7 +354,7 @@ Dónde te muerde igual aunque tú no tengas horario de verano:
 
 1. Busca en tu volcado un documento de cada una de las cuatro representaciones del §1 e imprímelas juntas. Anota cuál es cuál sin mirar la tabla.
 2. Guarda un `Instant` desde el servidor y léelo en el shell. Después cambia la zona de tu cliente y vuelve a leerlo. Anota que el dato no cambió y la salida sí.
-3. Escribe el `$dateToString` que agrupa asientos por día **en Bogotá** y el mismo sin `timezone`. Compara los dos resultados y cuenta cuántos asientos cambian de día.
+3. Escribe el `$dateToString` que agrupa asientos por día **en Ottawa** y el mismo sin `timezone`, y un tercero con `timezone: '-05:00'`. Compara los tres resultados, cuenta cuántos asientos cambian de día, y separa los de invierno de los de verano.
 4. Imprime `TimeZone.getDefault()` dentro del contenedor y en tu máquina. Anota los dos valores y explica qué habría pasado si el código dependiera de ese valor.
 5. **Diagnóstico.** Reproduce la trampa del §4: escribe la consulta "nacidos después del 2000" de las dos formas y anota los dos recuentos. Después calcula a mano cuál debería ser el número real y explica la diferencia con el orden de tipos BSON.
 6. **Diagnóstico.** Adelanta el reloj de tu máquina veinticinco minutos, valida un resultado desde la aplicación, y compara el asiento del cliente con el del servidor. Después atrásalo veinte minutos y repite. Anota cuál de los dos casos te costó más detectar y por qué.

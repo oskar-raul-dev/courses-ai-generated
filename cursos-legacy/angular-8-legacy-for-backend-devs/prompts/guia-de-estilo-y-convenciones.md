@@ -552,6 +552,14 @@ decomisión prevista en dos o tres años. El curso lo **construye pieza por piez
 al terminar la última fase obligatoria, el estudiante tiene LabCore delante, en su
 disco, y puede abrir cualquier archivo del que el material haya hablado.
 
+El escenario lo fija `00-historia-del-sistema.md`: **Andina Laboratories Inc.**
+(Laboratoires Andina del lado de Quebec), una red chica de laboratorio clínico con
+sede y laboratorio central en Ottawa y puntos de toma en Ottawa y en Gatineau; el
+sistema lo escribió la consultora **Chaudière Conseils**, de Gatineau, con un equipo
+*nearshore* en San José, Costa Rica. Cualquier dato de lugar, de gente o de empresa
+sale de esa ficha, y si un documento necesita uno que la ficha no tiene, se agrega
+primero a la ficha.
+
 Esa es toda la ficción, y es lo que hace el curso autocontenido. También impone
 cuatro reglas, y la primera es la que de verdad cuesta.
 
@@ -578,8 +586,9 @@ las deudas 💸 — pero se cuentan **en pasado y como contexto**:
 La segunda promete un código que nadie puede abrir. La primera dice lo mismo, es
 igual de útil, y es verdad.
 
-**Regla 3 — La cronología es fija.** 2019 el nacimiento, 2021 el último crecimiento
-grande, hoy el mantenimiento. Toda 📝 **Nota de época** se sitúa dentro de esa
+**Regla 3 — La cronología es fija.** 2017 la apertura de Andina con un sistema
+alquilado, 2019 el nacimiento de LabCore, 2020 la red y el i18n, 2021 el último
+crecimiento grande, 2022 la decisión de reemplazarlo, hoy el mantenimiento. Toda 📝 **Nota de época** se sitúa dentro de esa
 línea, y ninguna decisión de LabCore puede justificarse con algo que no existía
 cuando se tomó. Es lo que hace creíbles las notas de época, que son de lo mejor que
 tiene este curso.
@@ -605,6 +614,14 @@ propio es el **Apéndice A03 §8**, y es una sección, no una instrucción suelt
 - **Nombres estables.** Archivos, servicios, componentes y acciones se mantienen
   idénticos entre fases. Si algo se renombra, se documenta el cambio y se
   ajustan las fases afectadas.
+- **Tres invariantes del escenario**, que ningún dato, ejemplo ni incidente
+  contradice: la zona horaria de la aplicación es **`America/Toronto`** (Ottawa y
+  Gatineau, con horario de verano); las marcas de tiempo de los datos caen en
+  **horario de invierno** y llevan el `-05:00` de la Era 1, que en invierno es
+  correcto, y el único lugar donde el desfase fijo se cruza con el cambio de hora
+  es el incidente 22 (y `bea-08` §8, que lo explica); y el identificador del
+  paciente es **`HC-`** (tarjeta sanitaria provincial), **`PP-`** (pasaporte) o
+  **`LB-`** (número interno del laboratorio). La moneda, cuando aparece, es `CAD`.
 - **Fuentes de verdad, en este orden:** (1) instrucciones del proyecto, (2)
   `prompts/alcance-del-proyecto.md`, (3) `prompts/propuesta-fases-y-alcance.md`,
   (4) esta guía —con `00-convencion-de-git-y-tags.md` como su anexo para todo lo
@@ -676,6 +693,8 @@ enlazan desde su bloque 🏷️ sin reexplicarlo.
 - [ ] No contradice ninguna fase anterior, ni en pedagogía ni en nombres.
 - [ ] Coherencia de la ficción (§11): nada que afirme sobre LabCore algo que el
       curso no pueda mostrar, y ningún ejercicio que exija un sistema externo.
+- [ ] Respeta las tres invariantes del escenario (§12): `America/Toronto`, marcas
+      de tiempo en invierno con `-05:00`, identificadores `HC-`/`PP-`/`LB-`.
 - [ ] Incluye "La señal de que quedó bien" en el cierre.
 - [ ] Lleva el bloque 🏷️ del tag al final, con el nombre correcto (`fase-` + el
       slug del archivo) y el prefijo de commit correcto (§8.1). En los apéndices,
@@ -819,7 +838,7 @@ viajan tal cual al frontend, que los convierte en claves de i18n.
 §11 sigue mandando, con tres anclas nuevas que **ninguna fase del track puede
 contradecir**:
 
-- **El backend es de 2019**, lo escribió otro frente del mismo equipo contratado, y
+- **El backend es de 2019**, lo escribió otro frente de la misma consultora, y
   está descrito en `00-historia-del-sistema.md`. Quedó congelado y sin dueño, y eso
   es lo que explica el audit log escrito por el frontend y el timestamp de custodia
   puesto por el navegador.

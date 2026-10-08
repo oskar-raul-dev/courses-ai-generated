@@ -387,8 +387,9 @@ track BE opcional 🔥 del tutorial Angular 8 + LabCore. Su único entregable es
 - **Qué problema resuelve (una línea):** que las fechas de LabCore signifiquen lo
   mismo en la base, en el servidor y en el navegador.
 - **El anclaje al track base:** el `db.json` del curso guarda todas las fechas con
-  offset explícito `-05:00`, nunca `Z` ni fecha desnuda, y la Fase 2 fijó
-  `America/Bogota` como zona de la aplicación. El track base también declara que
+  offset explícito `-05:00` —el de Ottawa en invierno, que la Era 1 escribió como
+  constante—, nunca `Z` ni fecha desnuda, y la Fase 2 fijó `America/Toronto` como
+  zona de la aplicación. El track base también declara que
   **las fechas se comparan con `Date` pelado** y que eso es correcto el 95% de los
   días. Este apéndice explica el 5% restante desde el servidor.
 - **Secciones esperadas:** UTC como única verdad; **`BSON Date` y lo que no
@@ -396,7 +397,9 @@ track BE opcional 🔥 del tutorial Angular 8 + LabCore. Su único entregable es
   8 y por qué en 2019 medio código seguía con `java.util.Date`; la conversión en
   el borde y dónde ponerla; el reloj del cliente como fuente de bugs, que es
   literalmente el incidente 17 del cuaderno base; y el horario de verano, que en
-  Colombia no aplica pero en los datos de un proveedor sí.
+  Ottawa y Gatineau sí aplica: el `-05:00` constante es correcto de noviembre a
+  marzo y una hora corrido el resto del año, que es el incidente 22 del cuaderno
+  base visto desde el servidor.
 - **Qué queda explícitamente fuera:** librerías de tiempo de terceros —el track
   base declara que LabCore nunca adoptó ninguna, y contradecirlo rompería la
   ficción—.
@@ -583,6 +586,6 @@ opcional 🔥 del tutorial Angular 8 + LabCore. Su único entregable es
 1. ~~**`cuaderno-incidentes-be.md`**~~ ✅ escrito, con los doce IDs `be-01` …
    `be-12` y la escala **6 🟠 · 6 🔴** declarada con su razón: no hay incidentes
    🟢 ni 🟡 porque para llegar aquí hay que haber cerrado once fases del track
-   base y sus veintiún incidentes.
+   base y sus veintidós incidentes.
 2. ~~**Las adiciones de encuadre de §10 de `propuesta-fases-backend.md`**~~
    ✅ hechas antes de `be00`.

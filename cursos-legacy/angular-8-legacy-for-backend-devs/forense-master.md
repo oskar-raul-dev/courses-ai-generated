@@ -78,7 +78,8 @@ Cada fila te manda **a la fase**, que es donde está el código y el contexto. E
 | Dos peticiones en Network y una sola acción de éxito | [Fase 5](05-pacientes.md) — el operador de aplanado decide qué se pierde |
 | Un dato imposible según las reglas del dominio 🧬 | [Fase 7](07-muestras-custodia.md) ⭐ — ¿hay intento en el log? Si no lo hay, llegó roto en el dato |
 | Un hueco en la línea de custodia, sin ningún error | [Fase 7](07-muestras-custodia.md) ⭐ — el bug se ve como un dato imposible, no como algo rojo |
-| Un veredicto de rango que cambia según la fecha, y sólo de noche | [Fase 8](08-resultados-rangos.md) — nunca es un bug de fechas: es no haber decidido la zona horaria |
+| Una hora exacta de diferencia, desde un domingo de marzo | [Fase 7](07-muestras-custodia.md) ⭐ — un `-05:00` escrito a mano en horario de verano: mira cómo está escrita la marca, no qué hora dice |
+| Un veredicto de rango que cambia según la fecha, y sólo de noche | [Fase 8](08-resultados-rangos.md) — casi nunca es un bug de la comparación: mira si el borde está escrito en la zona de la norma |
 | Un resultado `validated` con `rangeVersionApplied` en `null` | [Fase 8](08-resultados-rangos.md) — un veredicto sin norma detrás; ¿se sembró o se validó así? |
 | Un breakpoint que no dispara sobre código que sí corre | [Fase 8](08-resultados-rangos.md) — source map desfasado respecto del bundle |
 | El documento exportado no dice lo mismo que la pantalla | [Fase 9](09-entrega-pdf.md) — se armó desde una copia; mira la propiedad del componente |

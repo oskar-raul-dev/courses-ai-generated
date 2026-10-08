@@ -15,15 +15,15 @@ Y lo primero, porque es la confusión de origen: **aquí hay dos preguntas indep
 > desbloquea. Si lo que quieres es entender **por qué** funciona —qué es un image index y
 > cómo un tag contiene varias imágenes, qué hace exactamente QEMU frente a Rosetta y cuánto
 > cuesta cada uno medido, o por qué `node_modules` no puede cruzar de arquitectura—, eso vive
-> en un curso propio de este repositorio: **[Docker Legacy Node](../docker-container-legacy/README.md)**.
+> en un curso propio de este repositorio: **[Docker Legacy Node](../../cursos-contenedores-cloud-infra/docker-container-legacy/README.md)**.
 >
 > Los tres capítulos que continúan lo de aquí son
-> **[F21 — Arquitecturas, OCI multi-platform y emulación](../docker-container-legacy/21-arquitecturas-y-emulacion.md)**,
-> **[F22 — Apple Silicon y el zoológico de hosts](../docker-container-legacy/22-apple-silicon-y-hosts.md)** y
-> **[F23 — Estudios de caso y árbol de decisión](../docker-container-legacy/23-estudios-de-caso-multiplataforma.md)**;
-> el devcontainer de §6 lo abre por dentro **[F19](../docker-container-legacy/19-dev-containers.md)**.
+> **[F21 — Arquitecturas, OCI multi-platform y emulación](../../cursos-contenedores-cloud-infra/docker-container-legacy/21-arquitecturas-y-emulacion.md)**,
+> **[F22 — Apple Silicon y el zoológico de hosts](../../cursos-contenedores-cloud-infra/docker-container-legacy/22-apple-silicon-y-hosts.md)** y
+> **[F23 — Estudios de caso y árbol de decisión](../../cursos-contenedores-cloud-infra/docker-container-legacy/23-estudios-de-caso-multiplataforma.md)**;
+> el devcontainer de §6 lo abre por dentro **[F19](../../cursos-contenedores-cloud-infra/docker-container-legacy/19-dev-containers.md)**.
 > Y si nunca has usado Docker, su **Parte I** lo enseña desde `docker --version` sin dar nada
-> por sabido: **[índice del curso](../docker-container-legacy/0-programa-del-curso.md)**.
+> por sabido: **[índice del curso](../../cursos-contenedores-cloud-infra/docker-container-legacy/0-programa-del-curso.md)**.
 
 **Qué queda fuera:** la **comparativa exhaustiva de runtimes** —Podman, OrbStack, Lima y compañía se nombran en una línea y no se comparan: este apéndice responde "qué hago yo el lunes", no "cuál es mejor"—; el `Dockerfile` de dos etapas, el `nginx.conf` y el `entrypoint.sh` del proyecto, que son de la **Fase 13 §5.6-5.8** y **no son los de acá** (§6); `node-sass`, `node-gyp` y el Node del curso, que son el **Apéndice A12**; kind y el cluster local, que son la **Fase 14**; y por qué se compila sobre Debian y no sobre Alpine, que es del **A03 §9**.
 

@@ -271,7 +271,7 @@ export class PatientsService {
 }
 ```
 
-> 💸 **Deuda técnica intencional.** LabCore todavía tiene `apiUrl` horneado en `environment.ts`, y no todos los servicios se migraron a `AppConfigService` de un tirón: vas a encontrar servicios nuevos leyendo del config y servicios viejos leyendo del `environment`, conviviendo en el mismo bundle. **Lo correcto hoy** sería una sola fuente de verdad para la configuración —el `AppConfigService`— y ni un solo `import { environment }` para leer `apiUrl` en toda la base de código; incluso podrías borrar `apiUrl` de `environment.ts` para que el compilador te grite dónde quedó un rezagado. **En Track A no se paga**: migrar los diez servicios y borrar la clave es un refactor con pruebas, no un hotfix, y el objetivo de la fase es que entiendas el mecanismo y sepas reconocer los dos patrones cuando los veas mezclados en producción. Este mismo cambio aplica a `orders.service.ts`, `samples.service.ts`, `results.service.ts` y `audit.service.ts`; queda como ejercicios 9 a 12. Y hay un rezagado que no es un servicio y que por eso se escapa de esa lista: **`environment.timeZone`**, que la Fase 2 §5.9 puso para el `DatePipe` de la lista de pacientes y la Fase 9 §5.1 usa para formatear la fecha del PDF. También se mudó a `config.json` —está en la plantilla de §5.2 y en la interfaz de §5.3— y también hay dos consumidores que siguen leyéndolo del `environment`. Localizarlos es el ejercicio 13.
+> 💸 **Deuda técnica intencional.** LabCore todavía tiene `apiUrl` horneado en `environment.ts`, y no todos los servicios se migraron a `AppConfigService` de un tirón: vas a encontrar servicios nuevos leyendo del config y servicios viejos leyendo del `environment`, conviviendo en el mismo bundle. **Lo correcto hoy** sería una sola fuente de verdad para la configuración —el `AppConfigService`— y ni un solo `import { environment }` para leer `apiUrl` en toda la base de código; incluso podrías borrar `apiUrl` de `environment.ts` para que el compilador te grite dónde quedó un rezagado. **En Track A no se paga**: migrar los diez servicios y borrar la clave es un refactor con pruebas, no un hotfix, y el objetivo de la fase es que entiendas el mecanismo y sepas reconocer los dos patrones cuando los veas mezclados en producción. Este mismo cambio aplica a `orders.service.ts`, `samples.service.ts`, `results.service.ts` y `audit.service.ts`; queda como ejercicios 9 a 12. Y hay un rezagado que no es un servicio y que por eso se escapa de esa lista: **`environment.timeZone`**, que la Fase 2 §5.9 puso para el pipe `appDate`, que la línea de custodia de la Fase 7 §5.8 usa para mostrar sus horas y que la Fase 9 §5.1 usa para formatear la fecha del PDF. También se mudó a `config.json` —está en la plantilla de §5.2 y en la interfaz de §5.3— y también hay dos consumidores que siguen leyéndolo del `environment`. Localizarlos es el ejercicio 13.
 
 ### 5.6 `Dockerfile` — el build de dos etapas
 
@@ -410,7 +410,7 @@ set -e
 # literal metido en el JSON. Un default sensato evita un config roto silencioso.
 export API_URL="${API_URL:-http://localhost:3000}"
 export ENVIRONMENT_NAME="${ENVIRONMENT_NAME:-local}"
-export APP_TIME_ZONE="${APP_TIME_ZONE:-America/Bogota}"
+export APP_TIME_ZONE="${APP_TIME_ZONE:-America/Toronto}"
 export FEATURE_DELIVERY_PDF="${FEATURE_DELIVERY_PDF:-true}"
 
 TEMPLATE=/usr/share/nginx/html/assets/config.template.json
@@ -555,7 +555,7 @@ Lo que se debuggea acá no es un stack trace: es un **diff entre ambientes**. El
 10. Haz lo mismo con `samples.service.ts`.
 11. Haz lo mismo con `results.service.ts`.
 12. Haz lo mismo con `audit.service.ts`. Al terminar, `grep` `environment.apiUrl` en `src/` y anota cuántos rezagados quedan.
-13. `timeZone` ya está en el `config.json` (§5.2 y §5.3), pero sus dos consumidores siguen leyendo `environment.timeZone`: el `PatientListComponent` de la Fase 2 §5.9 y el `ReportService` de la Fase 9 §5.1. Migra los dos a `AppConfigService` y después levanta el contenedor con `-e APP_TIME_ZONE=America/Mexico_City`: la fecha de una orden emitida a las 23:40 tiene que cambiar de día. Es el ejercicio que demuestra que la migración de §5.5 no había terminado.
+13. `timeZone` ya está en el `config.json` (§5.2 y §5.3), pero sus dos consumidores siguen leyendo `environment.timeZone`: el `SampleTimelineComponent` de la Fase 7 §5.8 y el `ReportService` de la Fase 9 §5.1. (La lista de pacientes de la Fase 2 §5.9 también lo leía, pero esa tarjeta desapareció cuando la Fase 5 reescribió la lista.) Migra los dos a `AppConfigService` y después levanta el contenedor con `-e APP_TIME_ZONE=America/Vancouver`: una custodia y una validación hechas a la 01:30 hora de Ottawa tienen que mostrarse el día anterior, a las 22:30, en la línea de custodia y en el PDF. Es el ejercicio que demuestra que la migración de §5.5 no había terminado.
 14. Añade un feature flag `auditLogVisible` y usa `isFeatureEnabled('auditLogVisible')` con un `*ngIf` para ocultar la vista de audit log cuando esté apagado.
 15. Reduce el tamaño de la imagen: verifica que la etapa final parte de `nginx:stable-alpine` y no de una imagen con Node. Compara el tamaño con el del ejercicio 2.
 16. Escribe el `.dockerignore` y demuestra, comparando el "sending build context" de dos `docker build`, que reduce el contexto enviado.

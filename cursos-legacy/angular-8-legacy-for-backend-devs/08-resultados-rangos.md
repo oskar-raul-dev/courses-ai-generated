@@ -50,7 +50,7 @@ Un resultado de laboratorio es un número con una unidad: glucosa 105 mg/dL, TSH
 
 Y acá aparece el problema que define esta fase. Los rangos de referencia **cambian con el tiempo**. Una sociedad médica revisa un umbral, sale una norma nueva, y a partir de cierta fecha el rango "normal" de un analito es otro. Pero los resultados viejos no se recalculan: un resultado que se validó en marzo con el rango de marzo tiene que seguir diciendo lo que decía en marzo, aunque en junio el rango haya cambiado. Si recalcularas, estarías reescribiendo la historia clínica de un paciente cada vez que cambia una norma, y eso en un sistema regulado es exactamente lo que no puede pasar.
 
-La solución no es guardar un solo rango por analito, sino **versionar el rango**. Cada rango tiene una versión y una ventana de vigencia: "esta v1 rige desde enero hasta mayo; esta v2 rige desde junio en adelante". Cuando llega el momento de juzgar un resultado, el sistema no pregunta "¿cuál es el rango de este analito?" sino "¿cuál era el rango vigente **el día que corresponde a este resultado**?". Esa pregunta —qué versión aplica en qué fecha— es el núcleo de la fase, y es también su trampa, porque comparar fechas es el punto donde el sistema miente más fácil.
+La solución no es guardar un solo rango por analito, sino **versionar el rango**. Cada rango tiene una versión y una ventana de vigencia: "esta v1 rige hasta el 31 de diciembre; esta v2 rige desde el 1 de enero en adelante". Cuando llega el momento de juzgar un resultado, el sistema no pregunta "¿cuál es el rango de este analito?" sino "¿cuál era el rango vigente **el día que corresponde a este resultado**?". Esa pregunta —qué versión aplica en qué fecha— es el núcleo de la fase, y es también su trampa, porque comparar fechas es el punto donde el sistema miente más fácil.
 
 ### La irreversibilidad, y por qué vive en el reducer
 
@@ -90,8 +90,9 @@ El semillero de la Fase 7 dejó `results` y `referenceRanges` como venían del `
 ```javascript
 // seed.js (fragmentos que se agregan al de la Fase 7)
 
-// Un analito de referencia con DOS versiones de rango. La v1 rige la primera
-// mitad de 2019; la v2 la segunda mitad, con un umbral más estricto (así el
+// Un analito de referencia con DOS versiones de rango. La v1 rige desde 2019
+// hasta el 31 de diciembre de 2021; la v2, decidida en 2021 con los intervalos
+// armonizados, desde el 1 de enero de 2022, con un umbral más estricto (así el
 // mismo value cae distinto según que versión se aplique, que es lo que hace
 // visible el bug de versionado). effectiveTo null significa "vigente, sin
 // fecha de cierre". Las fechas llevan offset -05:00 explicito porque la zona
@@ -108,7 +109,7 @@ function buildReferenceRanges() {
       criticalLow: 50,
       criticalHigh: 250,
       effectiveFrom: '2019-01-01T00:00:00-05:00',
-      effectiveTo: '2019-05-31T23:59:59-05:00'
+      effectiveTo: '2021-12-31T23:59:59-05:00'
     },
     {
       id: 2,
@@ -122,7 +123,7 @@ function buildReferenceRanges() {
       high: 100,
       criticalLow: 50,
       criticalHigh: 250,
-      effectiveFrom: '2019-06-01T00:00:00-05:00',
+      effectiveFrom: '2022-01-01T00:00:00-05:00',
       effectiveTo: null
     },
     {
@@ -227,18 +228,21 @@ Este es el archivo nuevo más importante de la fase. Dado un analito y una fecha
 // [effectiveFrom, effectiveTo]. effectiveTo null significa "sin cierre".
 //
 // 💸 DEUDA INTENCIONAL: la comparación se hace con new Date(...) sobre strings
-// ISO y con .getTime(), que compara instantes absolutos en UTC. Suena bien,
-// pero el borde de vigencia se definió en hora LOCAL (-05:00) y el "atDate"
-// que llega del componente suele construirse con new Date() del navegador o
-// con una fecha sin hora. Cuando la fecha del resultado cae justo en el límite
-// de una ventana -medianoche del 31 de mayo, un sábado- el instante UTC puede
-// caer del lado equivocado y elegir la versión que NO correspondía.
+// ISO y con .getTime(), que compara instantes absolutos. Eso es correcto
+// mientras los dos lados sean instantes con su offset, y deja de serlo en dos
+// casos que LabCore tiene: un borde de vigencia cargado en UTC por un script
+// que lo escribió con toISOString() ('2022-01-01T00:00:00Z' es el 31 de
+// diciembre a las 19:00 en Ottawa), y un atDate sin hora ('2022-01-01', que
+// JavaScript lee como medianoche UTC). En los dos, cuando la fecha cae junto
+// al borde -la noche del 31 de diciembre- el instante queda del lado
+// equivocado y se elige la versión que NO correspondía.
 //
-//   Lo correcto hoy: comparar en la zona de la aplicación (America/Bogotá,
-//   fijada en environment desde la Fase 2) usando una librería con soporte de
-//   zona horaria (Luxon, date-fns-tz), normalizando ambos lados a la misma
-//   zona antes de comparar. La comparación de vigencia nunca debería usar la
-//   zona del navegador, que el usuario puede cambiar.
+//   Lo correcto hoy: que la vigencia sea una fecha de calendario en la zona de
+//   la aplicación (America/Toronto, fijada en environment desde la Fase 2), y
+//   que el instante del evento se convierta a esa fecha antes de comparar, con
+//   Intl o con una librería con soporte de zona (Luxon, date-fns-tz). La
+//   comparación de vigencia no debería depender de cómo se escribió el borde
+//   ni de la zona del navegador, que el usuario puede cambiar.
 //
 //   Por que en Track A NO se paga: LabCore compara así, y el bug que
 //   produce -un rango de un día mal aplicado en el borde de una norma nueva-
@@ -280,7 +284,7 @@ export function evaluateResult(value: number, range: any): any {
 
 **Detalles con intención**
 
-- La comparación con `.getTime()` es correcta como comparación de instantes absolutos; lo que está mal es que **los dos lados no vienen en la misma zona**. `effectiveFrom` trae su offset `-05:00`; el `atDate` que llega del componente muchas veces no (ver §5.7). En el 95% de los días eso da igual porque la fecha cae lejos del borde de una ventana. Los días que no da igual son los bordes, y los peores bordes caen en fin de semana, que es cuando nadie está mirando. Esa es la firma temporal del incidente 07.
+- La comparación con `.getTime()` es correcta como comparación de instantes absolutos, y con este semillero —bordes y muestras con `-05:00`— elige bien. Lo que la rompe es que **uno de los dos lados no sea el instante que parece**: un borde que alguien cargó en UTC, o un `atDate` sin hora (ver §5.7). En el 95% de los días eso da igual porque la fecha cae lejos del borde de una ventana. Los días que no da igual son los bordes, y los peores bordes caen en fin de semana, que es cuando nadie está mirando. Esa es la firma temporal del incidente 07.
 - `evaluateResult` distingue tres estados, no dos: dentro, fuera, y **sin rango**. Un resultado sin rango vigente no es "normal", es "no evaluable", y meterlo en el mismo saco que "dentro de rango" sería mostrar en verde algo que el sistema no supo juzgar.
 - Ni `selectActiveRange` ni `evaluateResult` viven en el reducer. Son funciones puras que el componente y el effect llaman. El reducer solo custodia el estado válido; el juicio contra el rango es cálculo, no estado.
 
@@ -712,11 +716,12 @@ export class ResultsEffects {
         var ranges = state.results.referenceRanges || [];
 
         // La fecha contra la que se selecciona el rango. 💸 DEUDA: se usa la
-        // fecha de creación de la muestra actual, y si no hay, la de HOY del
-        // navegador (new Date()). Ese "hoy sin zona" es el otro extremo del
-        // problema de 5.3: entra en selectActiveRange sin offset y en el borde
-        // de una ventana de vigencia elige mal. Lo correcto sería usar la fecha
-        // del EVENTO (cuando se tomó la muestra) normalizada a America/Bogotá.
+        // fecha de creación de la muestra actual, y si no hay, la de HOY según
+        // el reloj del navegador (new Date()). Ese "hoy" es el otro extremo del
+        // problema de 5.3: no es la fecha del evento, y el mismo resultado
+        // juzgado dos días distintos puede aplicar normas distintas. Lo
+        // correcto sería usar siempre la fecha del EVENTO (cuando se tomó la
+        // muestra), convertida a la fecha de calendario de America/Toronto.
         var sample = state.results.currentSample;
         var atDate = sample && sample.collectedAt
           ? sample.collectedAt
@@ -972,7 +977,7 @@ Y en la plantilla, el veredicto y los estados salen de i18n, sin una sola cadena
 - El botón de validar oculto sobre un resultado ya validado es **cortesía visual, no seguridad**. La irreversibilidad de verdad vive en el reducer; esto solo evita que el usuario vea un botón que no haría nada. Confundir "no muestro el botón" con "protejo la invariante" es un error clásico, y el ejercicio 26 lo explota despachando la acción sin pasar por el botón.
 - `sample` llega de la navegación (resuelto arriba en la cadena de rutas, igual que la orden llegaba a la muestra en la Fase 7). Que pueda venir `null` y el `verdictFor` se caiga a `new Date()` es el punto exacto donde la deuda de zona horaria se filtra al componente.
 
-> **Prueba de fuego.** Corre `npm run seed`, `npm run mock`, `npx ng serve`. Entra a los resultados de una muestra procesada. Deberías ver valores con su unidad y badges de dentro/fuera/crítico. Toma un resultado de glucosa con `value` 105 y una muestra recogida el **15 de junio de 2019**: debería aplicar la v2 (techo 100) y salir fuera de rango. Ahora cambia a mano en `db.json` el `collectedAt` de esa muestra al **15 de mayo**: debería aplicar la v1 (techo 110) y salir dentro de rango. El mismo número, dos veredictos, según la fecha. Por último valida el resultado, mira `db.json`: `status: 'validated'`, `rangeVersionApplied` con el número de versión que aplicó, y `validatedBy` con tu usuario. Intenta validarlo otra vez desde DevTools despachando `validateResult` con su id: en el log entra la acción, no sale ningún éxito, y `db.json` no cambia.
+> **Prueba de fuego.** Corre `npm run seed`, `npm run mock`, `npx ng serve`. Entra a los resultados de una muestra procesada. Deberías ver valores con su unidad y badges de dentro/fuera/crítico. Toma un resultado de glucosa con `value` 105 y una muestra recogida el **15 de enero de 2022**: debería aplicar la v2 (techo 100) y salir fuera de rango. Ahora cambia a mano en `db.json` el `collectedAt` de esa muestra al **15 de diciembre de 2021**: debería aplicar la v1 (techo 110) y salir dentro de rango. El mismo número, dos veredictos, según la fecha. Por último valida el resultado, mira `db.json`: `status: 'validated'`, `rangeVersionApplied` con el número de versión que aplicó, y `validatedBy` con tu usuario. Intenta validarlo otra vez desde DevTools despachando `validateResult` con su id: en el log entra la acción, no sale ningún éxito, y `db.json` no cambia.
 
 ---
 
@@ -981,8 +986,8 @@ Y en la plantilla, el veredicto y los estados salen de i18n, sin una sola cadena
 ### Errores comunes
 
 **Síntoma:** un resultado sale en verde (dentro de rango) cuando debería salir en rojo, o al revés, y solo en ciertas fechas.
-**Causa:** `selectActiveRange` eligió la versión equivocada porque comparó la fecha del resultado contra las ventanas de vigencia sin normalizar la zona horaria (§5.3). En el borde de una ventana, el instante UTC cae del lado equivocado.
-**Fix mínimo:** para el hotfix, forzar que el `atDate` que entra al selector lleve el offset explícito de la aplicación antes de comparar. **Fix correcto:** normalizar ambos lados a `America/Bogota` con una librería de zona horaria. No los confundas: el mínimo tapa el caso reportado; el correcto arregla la clase entera de bugs.
+**Causa:** `selectActiveRange` eligió la versión equivocada porque uno de los dos lados de la comparación no era el instante que parecía (§5.3): un borde de vigencia cargado en UTC (`Z`) donde la norma decía medianoche de Ottawa, o un `atDate` sin hora. En el borde de una ventana, el instante cae del lado equivocado.
+**Fix mínimo:** corregir el dato: reescribir el borde con el desfase de la aplicación (`-05:00`), o pasarle al selector el instante completo del evento y no una fecha sin hora. **Fix correcto:** guardar la vigencia como fecha de calendario de `America/Toronto` y convertir el instante del evento a esa fecha antes de comparar, con `Intl` o con una librería de zona horaria. No los confundas: el mínimo tapa el caso reportado; el correcto arregla la clase entera de bugs.
 
 **Síntoma:** un resultado figura `validated` pero su `rangeVersionApplied` es `null`.
 **Causa:** o se sembró así (los validados del `seed.js` nacen sin versión, §5.1), o se validó cuando `selectActiveRange` devolvió `null` porque ninguna ventana cubría la fecha. Un validado sin versión es un veredicto sin norma detrás.
@@ -1002,7 +1007,7 @@ Lo que se depura acá son los **source maps en producción**: cómo activarlos, 
 
 El punto forense central: un source map puede estar **desactualizado** respecto al bundle que sirve producción (se rebuildeo el JS pero se subió el map viejo), y entonces te lleva a una línea de tu fuente que *parece* la culpable y no lo es. La firma de eso es un breakpoint que nunca se dispara sobre código que claramente se ejecuta. [`forense-fase-08.md`](./forense-fase-08.md) te enseña a detectar el desfase comparando el hash del bundle con el que el map dice cubrir.
 
-**Rompe a propósito y observa.** Toma la deuda de zona horaria de §5.3 y hazla gritar. Cambia el `collectedAt` de una muestra a exactamente `'2019-05-31T20:00:00-05:00'` (las 8 de la noche del último día de la v1, hora local). Un resultado de glucosa 105 sobre esa muestra **debería** aplicar la v1 y salir dentro de rango. Mira qué versión elige `selectActiveRange` en realidad: pon un `console.log(activeRange.version)` en el effect antes del patch. Lo que vas a ver es que las 8pm del 31 en `-05:00` son la 1am del 1 de junio en UTC, así que `.getTime()` las cuenta como dentro de la ventana de la v2, y el sistema aplica el techo estricto de 100: el resultado sale **fuera de rango**, un día antes de que la norma nueva empezara a regir. Esa es la mentira: la pantalla te muestra un veredicto con total seguridad, calculado sobre la versión equivocada, y nada en la interfaz delata que la comparación de fechas se resbaló. Solo lo ves si sabes que la comparación es en UTC y que el borde cae de noche.
+**Rompe a propósito y observa.** Toma la deuda de zona horaria de §5.3 y hazla gritar. Primero deja los bordes de la glucosa como los dejó en PROD el script que cargó la v2, que los escribió con `toISOString()`: el `effectiveTo` de la v1 pasa a `'2021-12-31T23:59:59Z'` y el `effectiveFrom` de la v2 a `'2022-01-01T00:00:00Z'`. Después cambia el `collectedAt` de una muestra a exactamente `'2021-12-31T20:00:00-05:00'` (las 8 de la noche del último día de la v1, hora de Ottawa). Un resultado de glucosa 105 sobre esa muestra **debería** aplicar la v1 y salir dentro de rango. Mira qué versión elige `selectActiveRange` en realidad: pon un `console.log(activeRange.version)` en el effect antes del patch. Lo que vas a ver es que las 8pm del 31 en `-05:00` son la 1am del 1 de enero en UTC, y el borde que el script escribió en UTC ya pasó, así que `.getTime()` las cuenta dentro de la ventana de la v2 y el sistema aplica el techo estricto de 100: el resultado sale **fuera de rango**, cinco horas antes de que la norma nueva empezara a regir. Con la misma muestra a mediodía, elige bien. Esa es la mentira: la pantalla te muestra un veredicto con total seguridad, calculado sobre la versión equivocada, y nada en la interfaz delata que el borde se escribió en otra zona. Solo lo ves si miras cómo está escrito el borde y no solo qué día dice.
 
 ---
 
@@ -1022,7 +1027,7 @@ El punto forense central: un source map puede estar **desactualizado** respecto 
 
 **🟡 Intermedio (10–19)**
 
-10. Toma un resultado de glucosa 105 sobre una muestra del 15 de mayo (v1, `high` 110). Confirma que sale dentro de rango. Cambia el `collectedAt` de la muestra al 15 de junio (v2, `high` 100) y confirma que ahora sale fuera. Explica en una frase por qué el mismo número cambió de veredicto.
+10. Toma un resultado de glucosa 105 sobre una muestra del 15 de diciembre de 2021 (v1, `high` 110). Confirma que sale dentro de rango. Cambia el `collectedAt` de la muestra al 15 de enero de 2022 (v2, `high` 100) y confirma que ahora sale fuera. Explica en una frase por qué el mismo número cambió de veredicto.
 11. **Diagnóstico.** El `ResultListComponent` usa `route.paramMap` como observable. Cámbialo a `route.snapshot.paramMap` y navega entre dos muestras distintas sin recargar. Reproduce el bug (la lista no cambia), explícalo relacionándolo con el reuso del componente, y revierte.
 12. Siembra un resultado sobre una muestra en `collected` (edita `db.json` a mano). Intenta cargarle un value con `enterResult` desde la UI. Explica por qué el reducer lo rechaza y qué mitad de la doble guarda actuó.
 13. **Diagnóstico.** Un resultado `validated` tiene `rangeVersionApplied: null`. Localiza las dos formas en que pudo llegar a ese estado (sembrado, o validado sin rango vigente) y di cómo distinguirías cuál fue mirando solo `db.json`.
@@ -1038,16 +1043,16 @@ El punto forense central: un source map puede estar **desactualizado** respecto 
 20. **Espejo de CRUD.** Escribe el alta de un resultado nuevo sobre una muestra procesada (acción, reducer case, effect, servicio), copiando el molde de la Fase 5. Marca con 💸 cualquier atajo que tomes.
 21. Implementa `rangeVersionApplied` como parte del veredicto **mostrado** en preliminary (hoy solo se congela al validar). Muestra "se aplicaría v2" antes de validar. Discute por qué el valor mostrado en preliminary y el congelado al validar podrían diferir si pasa el tiempo entre ambos.
 22. **Performance.** `verdictFor` se llama desde el template en cada detección de cambios. Con `console.count('verdict')` dentro del método, cuenta cuántas veces se ejecuta al escribir en un input de la página. Propón cómo lo resolverías en la Fase 10 (memoización, `OnPush`, pipe puro) sin implementarlo aún.
-23. **Diagnóstico.** Un resultado de glucosa sobre una muestra del 31 de mayo a las 20:00 `-05:00` sale fuera de rango cuando debería salir dentro. Reproduce el bug de zona horaria de §5.3, localiza la línea exacta de `selectActiveRange` donde se pierde la zona, y explica por qué falla de noche y no de día.
+23. **Diagnóstico.** Con los bordes de la glucosa como están en PROD (en UTC, ver el 🧨 de §6), un resultado sobre una muestra del 31 de diciembre de 2021 a las 20:00 `-05:00` sale fuera de rango cuando debería salir dentro. Reproduce el bug de §5.3, localiza la línea exacta de `selectActiveRange` donde los dos lados dejan de estar en la misma zona, y explica por qué falla de noche y no de día, y a partir de qué hora exacta.
 24. Escribe una prueba de regresión (Jasmine) que verifique que `resultsReducer` deja el estado intacto ante `validateResult` sobre un resultado ya `validated`, y que lo cambia (a `saving: true`) ante uno `preliminary` con muestra lista. Es la prueba que la Fase 12 espera encontrar.
 25. **El cruce.** Completa `pushOrderAfterValidate$`: cuenta las muestras de la orden y sus resultados validados, y despacha la acción de ordenes que lleve la orden a `partial_results` (algunas listas) o `complete` (todas). Documenta qué tres slices del store acopla y por qué eso es material de la Fase 11.
 26. **Diagnóstico.** El botón de validar está oculto sobre un resultado `validated` (`*ngIf`). Despacha `validateResult` con su id desde DevTools de todas formas. Confirma que el estado no cambia y explica por qué la guarda real no era el `*ngIf`.
 27. **Discusión con código.** El reducer rechaza una validación ilegal en silencio. Argumenta la posición contraria —el rechazo debería ser visible, con un `validateResultRejected` que diga *por qué* (irreversible vs muestra no lista)— y escribe esa versión. Decide cuál dejarías en un sistema regulado y justifica el comentario.
-28. Siembra un rango de glucosa v3 con `effectiveFrom` en el futuro (2020). Valida hoy un resultado y confirma que **no** aplica la v3. Ahora cambia el reloj mental: ¿qué pasaría con los resultados ya validados con v2 cuando llegue 2020? Explica por qué `rangeVersionApplied` los protege.
+28. Siembra un rango de glucosa v3 con `effectiveFrom` en el futuro (2030). Valida hoy un resultado y confirma que **no** aplica la v3. Ahora cambia el reloj mental: ¿qué pasaría con los resultados ya validados con v2 cuando llegue 2030? Explica por qué `rangeVersionApplied` los protege.
 
 **🔴 Muy difícil (29–35)**
 
-29. **Diagnóstico intermitente.** Un resultado aplica bien la versión de rango los lunes a viernes y mal los sábados. Sin ver el código, formula la hipótesis (borde de vigencia + zona horaria + qué días caen los primeros/últimos de mes en 2019) y diseña el experimento mínimo que la confirma. Es el **incidente 07**.
+29. **Diagnóstico intermitente.** Un resultado aplica bien la versión de rango de día y mal de noche, y sólo la última noche antes de una norma nueva. Sin ver el código, formula la hipótesis (borde de vigencia + cómo quedó escrito el borde + zona horaria) y diseña el experimento mínimo que la confirma. Es el **incidente 07**.
 30. **Concurrencia.** Dos pestañas abiertas sobre el mismo resultado `preliminary`. Ambas despachan `validateResult` casi a la vez. Describe qué pasa con json-server (que no tiene locks), qué queda en `validatedBy`, y por qué el reducer no protege de esto (la guarda es por instancia de store, no global). Es el **incidente 13**.
 31. Refactoriza la doble guarda para que el reducer distinga tres rechazos —resultado ya validado, muestra no lista, sin rango vigente— sin dejar de ser un `switch-case` de NgRx 8 (sin `createReducer` con `on()`). Mide qué se gana en depurabilidad y qué se pierde en simplicidad.
 32. **Forense de source maps.** Buildea con `ng build --prod --source-map`, sirve el `dist`, provoca un error en `selectActiveRange` (pásale un `ranges` no-array). Abre el stack trace en DevTools, confirma que el source map te lleva a la línea correcta, y después sube a mano un source map viejo (rebuildeando el código pero conservando el map anterior) y observa cómo te miente. Documenta la firma del desfase.
@@ -1120,7 +1125,7 @@ Cosas que aparecieron escribiendo esta fase y que no caben acá:
 - **[A]** El **analizador externo simulado** que empuja resultados que la aplicación no controla (`alcance-del-proyecto.md` §5). Es la única regla de negocio del dominio que ninguna fase construye, y conviene decidirla en vez de arrastrarla: o se retira del alcance, o se convierte en un **modo del inyector de caos** (`CHAOS=analyzer`, un `setInterval` en el Express que escribe en `/results` sin pasar por el store) y entonces es un ejercicio 🔥 de la **Fase 4** y material del audit log de la **Fase 11**, que tendría que registrar un evento que la aplicación no originó. La segunda opción es barata y cierra dos huecos; queda como decisión de proyecto.
 - **[B]** El cruce completo `muestra → orden` (`pushOrderAfterValidate$` con su conteo real) acopla tres slices del store → queda como **ejercicio 25** acá y como material central del **apéndice A06 (NgRx 8)** y de la **Fase 11**, donde el desacople se vuelve necesario.
 - **[C]** 🪦 **Resuelto.** La doble grafía `in_process` (dato) vs `inProcess` (clave i18n) reaparece en `results.status.*` en cuanto haya un estado compuesto. El patrón para escribirla —mapa explícito en vez de concatenación— quedó en el **Apéndice A07 §4**; la deuda en sí sigue declarada y sin pagar.
-- 🪦 **[D] Ya estaba pagado acá.** El fix correcto de la zona horaria —normalizar ambos lados a `America/Bogota` con una librería de zonas— está en **§5.3** con la deuda 💸, en **§6** con la distinción entre fix mínimo y fix correcto, y en los ejercicios 23, 29 y el 🔥 de resolver la vigencia en el servidor. No es material de A06: no tiene nada de NgRx. Sigue siendo el **incidente 07** y en Track A no se paga.
+- 🪦 **[D] Ya estaba pagado acá.** El fix correcto de la zona horaria —vigencia como fecha de calendario de `America/Toronto` y el evento convertido a esa fecha con `Intl` o con una librería de zonas— está en **§5.3** con la deuda 💸, en **§6** con la distinción entre fix mínimo y fix correcto, y en los ejercicios 23, 29 y el 🔥 de resolver la vigencia en el servidor. No es material de A06: no tiene nada de NgRx. Sigue siendo el **incidente 07** y en Track A no se paga.
 - **[E]** La performance de `verdictFor` llamado desde el template en cada detección de cambios → es de la **Fase 10 (dashboard)**; queda anotado como ejercicio 22 acá y central allá.
 
 ### Reservas para el cuaderno de incidentes

@@ -166,7 +166,7 @@ No es un descuido del reparto: es una consecuencia del prerrequisito, y se
 escribe en vez de disimularse —el mismo precedente que sentó el cuaderno base
 cuando su reparto real no coincidió con el proyectado—.
 
-Para llegar aquí hay que haber cerrado once fases del track base, sus veintiún
+Para llegar aquí hay que haber cerrado once fases del track base, sus veintidós
 incidentes, y nueve fases más de backend. **No queda ningún incidente de
 principiante que dar**: los errores de arranque, de configuración de entorno y de
 lectura de una petición HTTP ya se cobraron todos en el otro cuaderno. Lo que
@@ -475,7 +475,7 @@ Comprobar la existencia del paciente al crear una orden, y un detector semanal
 como el de `be05` §5.6 para lo que ya está roto. Lo primero cuesta una consulta
 extra por escritura y no es atómico —alguien puede dar de baja al paciente en
 medio—; lo segundo es media jornada. Con dos años de decomisión y treinta y siete
-casos en seis años, **el detector entra y la comprobación no**: ver `bea-11` §5.
+casos en siete años, **el detector entra y la comprobación no**: ver `bea-11` §5.
 
 **Prueba de regresión**
 
@@ -606,8 +606,8 @@ intentó reproducirlo las dos veces anteriores?
 **Causa raíz**
 
 Setecientos dieciocho documentos de `patients` no tienen el campo `fullName`:
-tienen **`name`**, porque así se llamaba en el sistema de origen de la sede que
-entró en 2020 y el script de importación no tradujo el campo. `Patient.java`
+tienen **`name`**, porque así se llamaba en el sistema de agenda del punto de
+Gatineau que Andina compró en 2020, y el script de importación no tradujo el campo. `Patient.java`
 declara `fullName`; `spring-data-mongodb` **ignora en silencio** un campo que no
 está en la clase y deja en `null` uno que no está en el documento. Ninguna
 excepción, ningún log, una fila con la celda vacía.
@@ -672,7 +672,7 @@ Un script de importación que nadie del equipo escribió, que no está en el
 repositorio, y que corrió una vez. El mapeo permisivo de Spring Data hizo el
 resto: **el sistema no falló, y por eso nadie miró**. Y el proceso de soporte
 cerró el ticket dos veces porque su definición de "reproducible" era "me pasa a
-mí ahora", que en un sistema con seis años de datos es una definición demasiado
+mí ahora", que en un sistema con siete años de datos es una definición demasiado
 estrecha.
 
 **Si tu causa fue distinta a esta**
@@ -1754,7 +1754,7 @@ la evidencia está fuera del sistema** — y esa es la misma lección de `be-10`
 
 ### 🎫 El ticket
 
-> *"Un paciente trajo su informe de glucosa de marzo de 2020, impreso, donde dice
+> *"Un paciente trajo su informe de glucosa de octubre de 2022, impreso, donde dice
 > que su resultado estaba dentro del rango normal. Lo buscamos en el sistema y
 > ahora aparece marcado como fuera de rango. El valor es el mismo en los dos.
 > ¿Cuál de los dos está mal?"*
@@ -1771,7 +1771,7 @@ están en la misma situación.
 ### 🔧 Preparación
 
 Colección sembrada: el volcado de `be02` ya contiene el estado posterior al
-`$set` de 2020.
+`$set` de 2023.
 
 ```bash
 ./verify-dump.sh    # confirma que el volcado está cargado y correcto
@@ -1834,7 +1834,7 @@ de una versión sin crear una nueva?
 
 **Causa raíz**
 
-En agosto de 2020, cuando la norma bajó el límite superior de glucosa de 100 a
+En marzo de 2023, cuando la norma bajó el límite superior de glucosa de 100 a
 99 mg/dL, alguien ejecutó:
 
 ```javascript
@@ -1843,7 +1843,7 @@ db.referenceRanges.updateOne({ analyte: 'glucose', version: 2 },
 ```
 
 En vez de cerrar la vigencia de la v2 y crear una v3. **El puntero sobrevivió; el
-destino cambió.** El resultado de marzo de 2020 vale 99,4 y dice haberse juzgado
+destino cambió.** El resultado de octubre de 2022 vale 99,4 y dice haberse juzgado
 contra la v2: contra la v2 *de entonces* (`high: 100`) estaba dentro; contra la
 v2 *de hoy* (`high: 99`) está fuera.
 
@@ -1866,10 +1866,10 @@ Lo que sí se hace, en dos partes:
 ```javascript
 // 1. El corte: a partir de hoy, append-only. Cerrar la v2 y nacer la v3.
 db.referenceRanges.updateOne({ analyte: 'glucose', version: 2 },
-  { $set: { effectiveTo: ISODate('2020-07-31T23:59:59Z') } });   // este $set SÍ
+  { $set: { effectiveTo: ISODate('2023-02-28T23:59:59Z') } });   // este $set SÍ
 db.referenceRanges.insertOne({ analyte: 'glucose', version: 3, unit: 'mg/dL',
   low: 70, high: 99, criticalLow: 50, criticalHigh: 250,
-  effectiveFrom: ISODate('2020-08-01T00:00:00Z'), effectiveTo: null,
+  effectiveFrom: ISODate('2023-03-01T00:00:00Z'), effectiveTo: null,
   recordedAt: new Date(), recordedBy: "maintenance" });
 
 // 2. Y la guarda que impide repetirlo (be06 §5.6), en el mismo commit.
@@ -1914,7 +1914,7 @@ una.
 
 **Por qué llegó a producción**
 
-Porque quien ejecutó el `$set` en 2020 hizo lo que su modelo mental indicaba: *"la
+Porque quien ejecutó el `$set` en 2023 hizo lo que su modelo mental indicaba: *"la
 versión 2 ya existe y sigue vigente, solo cambian los números"*. En esa lectura,
 `$set` es exactamente lo que se hace. La pista de que `referenceRanges` no guarda
 entidades sino **hechos fechados** estaba en el nombre de la colección y en el
@@ -2318,8 +2318,8 @@ Lo que apareció investigando y no cabía en el fix, con el ID que lo originó:
 
 ## 🔥 El cuaderno hermano del track base
 
-Los veintiún incidentes del frontend viven en
-[`cuaderno-incidentes.md`](cuaderno-incidentes.md), con IDs `01`–`21` en un rango
+Los veintidós incidentes del frontend viven en
+[`cuaderno-incidentes.md`](cuaderno-incidentes.md), con IDs `01`–`22` en un rango
 independiente de este. Los dos no se cruzan y ninguno renumera al otro.
 
 Si hiciste los dos, hay tres parejas que vale la pena leer seguidas, porque son

@@ -86,8 +86,9 @@ Reglas del track que no se negocian:
 - **Entregables dentro del entregable:** `CONTRACT.md` y `smoke.sh` ejecutable,
   que a partir de aquí es el juez de todas las fases.
 - **Aquí se cuenta de dónde salió el backend**, apoyándote en la sección nueva de
-  `00-historia-del-sistema.md`: lo escribió otro frente del equipo contratado de
-  2019, quedó congelado y sin dueño, y ahora lo heredaste tú.
+  `00-historia-del-sistema.md`: lo escribió en 2019 otro frente de la misma
+  consultora, Chaudière Conseils, quedó congelado y sin dueño, y ahora lo
+  heredaste tú.
 - **Y aquí va la defensa de Mongo**, antes de la primera factura. Si el track
   presenta la decisión de 2019 como una estupidez, el alumno no aprende nada.
 - **Pieza forense:** dos peticiones que el alumno juraría que son iguales y que
@@ -540,7 +541,7 @@ versionados. Bloque 🏷️ con `be-fase-06-…` y prefijo `be06:`.
 - **Propósito (una línea):** Contestar la pregunta del auditor, descubrir que no
   se puede, y saber exactamente desde cuándo.
 - **La pregunta que abre la fase:** *"¿qué rango de glucosa estaba vigente el 12
-  de marzo de 2020?"*. Un sistema clínico tiene que poder responder eso. El de
+  de octubre de 2022?"*. Un sistema clínico tiene que poder responder eso. El de
   2019 hacía `$set` sobre el documento del rango, así que **el histórico se
   sobrescribió**. Es dato bitemporal —tiempo de vigencia y tiempo de registro— y
   no hay forma de reconstruirlo: solo de dejar de perderlo desde hoy.
@@ -557,7 +558,7 @@ versionados. Bloque 🏷️ con `be-fase-06-…` y prefijo `be06:`.
   que se escribe en vez de borrarse. Con números en las dos columnas.
 - **Qué NO entra:** la declaración formal de lo irrecuperable, que es el
   entregable de be08. Aquí se produce el inventario; allí se firma.
-- **Pieza forense:** un resultado validado en 2020 cuyo `rangeVersionApplied`
+- **Pieza forense:** un resultado validado en 2022 cuyo `rangeVersionApplied`
   apunta a una versión que ya no existe con esos límites. El puntero sobrevivió;
   el destino no.
 - **Deuda del track base que cobra:** 💸 4.

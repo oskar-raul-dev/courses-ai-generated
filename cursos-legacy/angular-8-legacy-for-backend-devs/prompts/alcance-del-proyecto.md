@@ -111,7 +111,9 @@ scheduled → collected → received → in_process → processed → discarded
   irreversible.
 - Dos analistas pueden intentar validar el mismo resultado a la vez.
 - Un resultado tiene vigencia, y una orden sin toma vence sola. Las fechas
-  llevan zona horaria explícita: los resultados de fin de semana viven de eso.
+  llevan desfase explícito (`-05:00`, el de Ottawa en invierno) y la aplicación
+  tiene zona (`America/Toronto`): los resultados de fin de semana y los del
+  cambio de hora viven de esa diferencia.
 - Los rangos de referencia se **versionan**: cuando cambia la norma nace una v2
   y el histórico queda intacto.
 - Todo lo relevante deja rastro en el `auditLog`: quién tomó, procesó, validó y

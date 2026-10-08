@@ -10,14 +10,14 @@ Dos recorridos que la fase junta a propósito, porque en la práctica llegan jun
 
 ## 🎫 Los tickets
 
-> **T-1:** *"Un resultado de glucosa de 105 salió marcado fuera de rango. El mismo valor, la semana pasada, salía normal. La muestra es del 31 de mayo."*
+> **T-1:** *"Un resultado de glucosa de 105 salió marcado fuera de rango. El mismo valor, la semana pasada, salía normal. La muestra es del 31 de diciembre."*
 >
 > **T-2:** *"Puse un breakpoint donde dice el stack trace de PROD y no se dispara nunca, pero el error sigue apareciendo."*
 
 **Reportados por:** una analista de resultados (T-1) y un compañero del equipo (T-2)
 **Ambiente:** PROD
 
-T-1 trae los tres datos que hacen falta y no lo sabe: **el valor** (105), **la fecha de la muestra** (31 de mayo) y **el contraste** (la semana pasada era normal). Con eso ya se puede sospechar de qué familia es el bug antes de abrir nada: algo que depende de la fecha.
+T-1 trae los tres datos que hacen falta y no lo sabe: **el valor** (105), **la fecha de la muestra** (31 de diciembre) y **el contraste** (la semana pasada era normal). Con eso ya se puede sospechar de qué familia es el bug antes de abrir nada: algo que depende de la fecha.
 
 ---
 
@@ -27,7 +27,7 @@ Cuatro pasos. Los dos primeros son aritmética y cuestan un minuto; el tercero e
 
 ### Paso 1 — Las dos ventanas, escritas una debajo de la otra
 
-Antes de mirar código, mira la norma. Los rangos son datos, y están a una consulta:
+Antes de mirar código, mira la norma. Los rangos son datos, y están a una consulta. En PROD los bordes de la glucosa están como los dejó el script que cargó la v2 a fines de 2021; tu semillero los trae corregidos, así que para ver lo mismo que PROD déjalos así en tu `db.json` (es el 🧨 de la Fase 8 §6):
 
 ```bash
 curl -s "http://localhost:3000/referenceRanges?analyte=glucose"
@@ -36,13 +36,13 @@ curl -s "http://localhost:3000/referenceRanges?analyte=glucose"
 ```json
 [
   { "version":1, "low":70, "high":110, "effectiveFrom":"2019-01-01T00:00:00-05:00",
-    "effectiveTo":"2019-05-31T23:59:59-05:00" },
-  { "version":2, "low":70, "high":100, "effectiveFrom":"2019-06-01T00:00:00-05:00",
+    "effectiveTo":"2021-12-31T23:59:59Z" },
+  { "version":2, "low":70, "high":100, "effectiveFrom":"2022-01-01T00:00:00Z",
     "effectiveTo":null }
 ]
 ```
 
-**Qué descarta.** Con esto el ticket se explica solo **si se eligió la versión equivocada**: 105 está dentro con la v1 (techo 110) y fuera con la v2 (techo 100). No hay tercera posibilidad, y no hace falta leer una línea de TypeScript para saberlo. La pregunta pasa a ser una sola: **¿por qué eligió la v2 una muestra del 31 de mayo?**
+**Qué descarta.** Con esto el ticket se explica solo **si se eligió la versión equivocada**: 105 está dentro con la v1 (techo 110) y fuera con la v2 (techo 100). No hay tercera posibilidad, y no hace falta leer una línea de TypeScript para saberlo. La pregunta pasa a ser una sola: **¿por qué eligió la v2 una muestra del 31 de diciembre?** Y la respuesta ya está en pantalla, si miras cómo está escrito cada borde y no solo qué día dice: el `effectiveFrom` de la v1 lleva `-05:00`; los dos bordes nuevos, `Z`.
 
 ### Paso 2 — La aritmética del borde, hecha a mano
 
@@ -50,32 +50,33 @@ Mira la fecha exacta de la muestra, no el día:
 
 ```bash
 curl -s "http://localhost:3000/samples/501" | grep collectedAt
-# "collectedAt": "2019-05-31T20:00:00-05:00"
+# "collectedAt": "2021-12-31T20:00:00-05:00"
 ```
 
-Las ocho de la noche del último día de la v1, hora local. Ahora conviértelo, que es lo que hace `.getTime()`:
+Las ocho de la noche del último día de la v1, hora de Ottawa. Ahora pon los dos lados en la misma escala, que es lo que hace `.getTime()`:
 
 ```
-2019-05-31T20:00:00-05:00   ==   2019-06-01T01:00:00Z
-                                 └─ ya es junio en UTC
+muestra   2021-12-31T20:00:00-05:00   ==   2022-01-01T01:00:00Z
+borde v2  2022-01-01T00:00:00Z        ==   2021-12-31T19:00:00-05:00
+                                           └─ la v2 "empezó" a las 7 de la noche del 31
 ```
 
-**Qué descarta.** El diagnóstico está prácticamente cerrado y no ha hecho falta ningún depurador: la muestra se tomó el 31 de mayo por la noche en Bogotá, que es el 1 de junio en UTC, y la ventana de la v2 abre el 1 de junio. **La comparación de instantes es correcta; lo que está mal es que los dos lados no viven en la misma zona.**
+**Qué descarta.** El diagnóstico está prácticamente cerrado y no ha hecho falta ningún depurador: la norma dice que la v2 rige desde la medianoche del 1 de enero en Ottawa, pero el borde quedó escrito como medianoche **UTC**, que en Ottawa son las 19:00 del 31. La muestra de las 20:00 cae después de ese borde. **La comparación de instantes es correcta; lo que está mal es el borde, que no dice lo que la norma dice.**
 
-Y explica la parte del ticket que parecía folclore: esto sólo falla **de noche**, y sólo en el borde. Con UTC-5, cualquier hora local a partir de las 19:00 ya pertenece al día siguiente en UTC. En el 95% de los días eso da igual porque la fecha cae lejos de un borde; los días que no da igual son los bordes, y los peores caen en fin de semana, cuando nadie está mirando.
+Y explica la parte del ticket que parecía folclore: esto sólo falla **de noche**, y sólo en el borde. En invierno Ottawa va cinco horas detrás de UTC, así que cualquier hora local a partir de las 19:00 del último día ya cae del lado de la norma nueva. En el 95% de los días eso da igual porque la fecha cae lejos de un borde; los días que no da igual son los bordes, y los peores caen en fin de semana, cuando nadie está mirando.
 
 ### Paso 3 — Confirmarlo en la función, sin depurador
 
 Una línea de consola sobre la función pura, que no necesita ni store ni componente:
 
 ```js
-selectActiveRange(ranges, 'glucose', '2019-05-31T20:00:00-05:00').version
+selectActiveRange(ranges, 'glucose', '2021-12-31T20:00:00-05:00').version
 // 2      ← debería ser 1
-selectActiveRange(ranges, 'glucose', '2019-05-31T12:00:00-05:00').version
+selectActiveRange(ranges, 'glucose', '2021-12-31T12:00:00-05:00').version
 // 1      ← la misma fecha, de día, elige bien
 ```
 
-**Qué descarta.** Dos llamadas y queda demostrado que la hora —no el día— decide el resultado. Muere cualquier hipótesis sobre el reducer, el effect o el componente: la función pura, aislada de todo, ya elige mal.
+**Qué descarta.** Dos llamadas y queda demostrado que la hora —no el día— decide el resultado. Muere cualquier hipótesis sobre el reducer, el effect o el componente: la función pura, aislada de todo, ya elige mal. Y con los bordes del semillero (`-05:00`) las dos llamadas devuelven `1`: el código hace lo que dice; el dato no.
 
 > 💡 Si prefieres no tocar la consola, el mismo experimento con un `console.log(activeRange.version)` en el effect antes del PATCH da la misma respuesta y es el 🧨 que propone la fase.
 
@@ -95,9 +96,9 @@ var atDate = sample && sample.collectedAt
 curl -s "http://localhost:3000/samples" | grep -c '"collectedAt": null'
 ```
 
-Y ahí la ruta termina, con dos hallazgos y no uno: la comparación pierde la zona, y la fecha de referencia a veces ni siquiera es la del evento.
+Y ahí la ruta termina, con dos hallazgos y no uno: un borde de vigencia que no está escrito en la zona de la norma, y una fecha de referencia que a veces ni siquiera es la del evento.
 
-**El fix mínimo y el correcto, que no son el mismo:** forzar que el `atDate` lleve el offset explícito de la aplicación antes de comparar tapa el caso reportado. Normalizar **los dos lados** a `America/Bogota` con una librería de zona horaria arregla la clase entera. Y hay una tercera pregunta, que no es de código: *¿a qué hora, exactamente, entra en vigor una norma?* Mientras nadie la conteste, cualquier implementación está adivinando — que es la razón por la que un "bug de fechas" casi nunca es un bug de fechas.
+**El fix mínimo y el correcto, que no son el mismo:** reescribir los dos bordes con `-05:00` tapa el caso reportado. Guardar la vigencia como fecha de calendario de `America/Toronto` y convertir el instante del evento a esa fecha antes de comparar —con `Intl` o con una librería de zona horaria— arregla la clase entera, porque deja de importar cómo escribió el borde quien lo cargó. Y hay una tercera pregunta, que no es de código: *¿a qué hora, exactamente, entra en vigor una norma?* Mientras nadie la conteste, cualquier implementación está adivinando — que es la razón por la que un "bug de fechas" casi nunca es un bug de fechas.
 
 ---
 

@@ -95,12 +95,12 @@ Pon la interfaz en francés y lee una tarjeta de paciente entera, campo por camp
 
 ```
 Patients
-Document: CC-1032456789
+Document: HC-1032456789
 1 commande en attente
-Dernière commande: 2 septiembre 2019, 8:15:00
+Dernière commande: 3 ene. 2022 8:15:00
 ```
 
-Todo en francés menos el mes. **Qué descarta.** Eso no es "las fechas se ven raras": es que **una parte de la pantalla escucha al selector de idioma y otra no**. Y la línea divisoria es exacta: lo que pasa por el pipe `translate` cambia; lo que pasa por los pipes de `@angular/common` —`date`, `decimal`, `currency`— no.
+Todo en francés menos el mes. **Qué descarta.** Eso no es "las fechas se ven raras": es que **una parte de la pantalla escucha al selector de idioma y otra no**. Y la línea divisoria es exacta: lo que pasa por el pipe `translate` cambia; lo que pasa por los pipes de formato —`appDate` (que delega en `formatDate` de `@angular/common`), `decimal`, `currency`— no.
 
 ### Paso 2 — Las dos verdades, en la consola
 
@@ -109,7 +109,7 @@ translate.currentLang
 // "fr"
 ```
 
-Y al mismo tiempo, el pipe `date` está formateando en español. **Qué descarta.** Ninguna de las dos está rota: las dos hacen exactamente lo que se les configuró. `LOCALE_ID` se resolvió **una sola vez, al arrancar**, con el valor fijo `'es'` que el `i18n.module.ts` le provee, y los pipes de `@angular/common` leen ese token y nada más. No conocen `@ngx-translate` y no tienen por qué: son dos sistemas distintos que nadie conectó.
+Y al mismo tiempo, el pipe `appDate` está formateando en español. **Qué descarta.** Ninguna de las dos está rota: las dos hacen exactamente lo que se les configuró. `LOCALE_ID` se resolvió **una sola vez, al arrancar**, con el valor fijo `'es'` que el `i18n.module.ts` le provee, y los pipes de formato —`appDate` incluido, que lo inyecta igual que `DatePipe`— leen ese token y nada más. No conocen `@ngx-translate` y no tienen por qué: son dos sistemas distintos que nadie conectó.
 
 Dos verdades simultáneas y contradictorias, que es la forma exacta de este bug.
 

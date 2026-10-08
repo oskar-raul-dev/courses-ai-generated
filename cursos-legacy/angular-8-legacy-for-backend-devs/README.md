@@ -12,9 +12,11 @@ romperlo, que es el trabajo que de verdad hace un equipo de Maintenance.
 
 Todo el curso gira alrededor de un sistema con nombre propio:
 
-> **LabCore** es el sistema de gestión de laboratorio clínico que tu equipo
-> heredó. Lo escribió entre 2019 y 2021 un equipo que ya no está, hoy está en
-> mantenimiento y tiene decomisión prevista en dos o tres años. Casi no entran
+> **LabCore** es el sistema de gestión de laboratorio clínico de Andina
+> Laboratories Inc., una red chica de laboratorio con sede en Ottawa y puntos de
+> toma a los dos lados del río, en Ottawa y en Gatineau. Lo escribió entre 2019 y
+> 2021 una consultora cuyo equipo ya no está, hoy está en mantenimiento y tiene
+> decomisión prevista en dos o tres años. Casi no entran
 > features nuevas: entran cambios normativos, legales y hotfixes.
 
 Administra pacientes, órdenes médicas, muestras con cadena de custodia,
@@ -112,17 +114,19 @@ Sus horas no cuentan en el calendario.
 ## 📓 El cuaderno de incidentes
 
 [`cuaderno-incidentes.md`](cuaderno-incidentes.md) es el otro eje del curso:
-**veintiún tickets vagos, escritos**, con su preparación, tres pistas escalonadas
-y la solución colapsada, que se trabajan **sin instructor**. Los veintiún IDs los
+**veintidós tickets vagos, escritos**, con su preparación, tres pistas escalonadas
+y la solución colapsada, que se trabajan **sin instructor**. Los veintidós IDs los
 reservan las fases que los producen —cada una los declara en su cierre— y el
 índice del archivo dice a partir de qué fase se puede resolver cada uno; el ID
 nunca se reasigna. Cada incidente cierra con un post-mortem de ocho puntos y sin
 culpabilización.
 
-La escala quedó en **2 🟢 · 8 🟡 · 9 🟠 · 2 🔴**, repartidos 7 / 7 / 4 / 3 por
+La escala quedó en **2 🟢 · 8 🟡 · 10 🟠 · 2 🔴**, repartidos 7 / 8 / 4 / 3 por
 semana: el curso carga incidentes en las fases que producen material y se
-aligera al final, cuando ya estás desplegando. Y **no todos terminan en fix**:
-seis de ellos —el 03, el 04, el 07, el 11, el 12 y el 17— terminan en un
+aligera al final, cuando ya estás desplegando. Las 14h son el presupuesto del
+calendario, no la suma de los tiempos sugeridos, que es mayor. Y **no todos
+terminan en fix**: siete de ellos —el 03, el 04, el 07, el 11, el 12, el 17 y el
+22— terminan en un
 diagnóstico, un recuento o una declaración por escrito, que es lo que de verdad
 se hace cuando lo que está mal es una decisión de hace siete años o un dato que
 llegó roto de otra puerta.
@@ -135,7 +139,7 @@ sirva.
 ## 🔥 Track opcional de backend (completo)
 
 Del otro lado del cable hay un backend que este curso no construye: lo escribió
-otro frente del equipo contratado de 2019 en **Java 8 + Spring Boot 2.1 sobre un
+otro frente de la misma consultora en 2019, en **Java 8 + Spring Boot 2.1 sobre un
 `mongod` suelto**, quedó congelado y sin dueño, y está descrito en
 `00-historia-del-sistema.md`. El **track BE** es la continuación opcional que lo
 levanta, lo mide y lo contiene.
@@ -232,7 +236,7 @@ que es exactamente lo que el track viene a enseñar.
 Con eso, **el curso está completo**: las catorce fases, los trece apéndices, el
 track forense —[`forense-master.md`](forense-master.md) y las quince piezas, de
 [`forense-fase-00.md`](forense-fase-00.md) a
-[`forense-fase-14.md`](forense-fase-14.md)—, los **veintiún incidentes** de
+[`forense-fase-14.md`](forense-fase-14.md)—, los **veintidós incidentes** de
 [`cuaderno-incidentes.md`](cuaderno-incidentes.md) con su enunciado, sus pistas
 escalonadas y su solución de referencia, y el 🔥 track BE entero con su propio
 cuaderno. No queda ningún enlace del material sin resolver.

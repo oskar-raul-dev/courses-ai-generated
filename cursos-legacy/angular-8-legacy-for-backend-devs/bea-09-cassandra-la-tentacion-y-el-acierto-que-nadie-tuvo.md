@@ -150,7 +150,7 @@ El invariante de `be05` necesita que tres escrituras pasen juntas: la muestra, l
 
 Y ahora la otra mitad, que es la que hace honesto el apéndice.
 
-**Hay un sitio en Laboratorios Andina donde Cassandra era exactamente la respuesta correcta. Y nadie la usó, porque nadie usó ninguna base de datos.**
+**Hay un sitio en Andina Laboratories donde Cassandra era exactamente la respuesta correcta. Y nadie la usó, porque nadie usó ninguna base de datos.**
 
 Los analizadores de la sede central emiten telemetría continua: temperatura de la cámara, presión, estado de los reactivos, ciclos completados, códigos de error. Decenas de miles de lecturas por hora, veinticuatro horas al día, desde 2019.
 
@@ -201,7 +201,7 @@ Por qué aquí gana, punto por punto:
 
 > **El modelo de acceso manda sobre el producto.** No se elige base de datos: se identifica qué forma tiene el acceso a cada parte del dominio, y eso decide. Y admite **respuestas distintas dentro del mismo sistema**, que es lo que casi nadie se permite.
 
-Aplicada a Laboratorios Andina, la respuesta honesta de todo el track cabe en tres líneas:
+Aplicada a Andina Laboratories, la respuesta honesta de todo el track cabe en tres líneas:
 
 | Parte del dominio | Modelo de acceso | Qué le venía bien |
 |---|---|---|

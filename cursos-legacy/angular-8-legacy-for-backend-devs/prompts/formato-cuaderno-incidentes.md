@@ -15,9 +15,12 @@ track base y el entregable del chat correspondiente. La §🔥 final lo extiende
 > es donde más tienta partirlo. **Los IDs son globales y nunca se reasignan**,
 > aunque un incidente se retire.
 
-**Presupuesto:** 21 incidentes, **14h** repartidas en el mes, ≈3.5h por semana.
+**Presupuesto:** 22 incidentes, **14h** repartidas en el mes, ≈3.5h por semana.
 Está fuera de las 108h de las fases y así suma las 122h de
-`propuesta-fases-y-alcance.md` §2.
+`propuesta-fases-y-alcance.md` §2. Las 14h son el **presupuesto del calendario**,
+no la suma de los tiempos sugeridos: esa suma da de 18 a 26 horas, y quien haga
+los veintidós con calma se pasa. Se declara así para no inflar el calendario del
+curso con un número que depende de cuánto se atasque cada uno.
 
 **Fuentes de verdad de esta especificación**, en el orden de la §12 de la guía de
 estilo: `prompts/alcance-del-proyecto.md`,
@@ -58,6 +61,12 @@ tres idiomas**, no un sistema genérico con bugs genéricos:
    trazabilidad). Son los que un curso de CRUD no puede producir, y los tres
    anclan deudas 💸 declaradas en su fase.
 
+   Y **dos son de tiempo**, con el mismo `Date` pelado debajo y causas que no se
+   parecen: el borde de vigencia escrito en UTC (07) y el `-05:00` de invierno
+   pegado a una toma de verano (22). Los dos nacen en un dato, no en una línea de
+   la aplicación, y por eso los dos se diagnostican mirando **cómo está escrita**
+   una fecha y no qué día dice.
+
 3. **Dos son de i18n**: la fecha con el locale del navegador en vez del de la app
    (04) y los acentos del PDF en francés (15). La categoría existe porque el
    curso monta tres idiomas desde la Fase 2, y esos bugs solo se ven cuando
@@ -67,8 +76,10 @@ Y dos ausencias que también son decisiones: la **Fase 6** no toma ningún
 incidente, porque su síntoma ya está reservado como candidato en el §📌 de A05; y
 la **Fase 14** tampoco, porque es 🔥 opcional y *un incidente que solo pueden
 resolver los estudiantes que hicieron una fase opcional no es un incidente del
-curso*. Las dos dejaron anotado el mismo **candidato 22**, que **no está dado de
-alta**: si algún día se abre, ese es su sitio.
+curso*. Las dos dejaron anotado un candidato —distinto cada una—, y ninguno **está
+dado de alta**: si algún día se abre uno, su sitio es el **23**. El 22 es el
+cambio de hora (el `-05:00` constante de la Era 1 cruzando el horario de verano),
+que se escribió cuando LabCore pasó a Ottawa y que se ancla en la Fase 7.
 
 ---
 
@@ -81,7 +92,7 @@ alta**: si algún día se abre, ese es su sitio.
 2. **🧭 Cómo se trabaja un incidente** — el método, el puente al track forense
    (§4), las tres formas de llegar al sistema roto (§5), la convención de commits
    (§6) y la tabla de estados (§7).
-3. **📋 Índice** — la tabla de los 21 IDs (§3).
+3. **📋 Índice** — la tabla de los 22 IDs (§3).
 4. **🧪 Incidentes** — una entrada por incidente, con el bloque completo de §8. Se
    repite entero cada vez: nada de "ver incidente 03". Se leen salteados y con
    semanas de diferencia.
@@ -110,7 +121,7 @@ El título va **en palabras del usuario**, no en lenguaje técnico. *"A veces no
 carga"* es un buen título —y es el del incidente 08—; *"json-server devuelve 500
 intermitente con `fail=500@30`"* es la respuesta, y va en la solución.
 
-### El reparto de los 21
+### El reparto de los 22
 
 Las fases ya lo fijaron al reservar sus IDs, y **ese reparto manda**: son
 entregables cerrados y reasignar un ID partiría alguno de ellos.
@@ -119,9 +130,10 @@ entregables cerrados y reasignar un ID partiría alguno de ellos.
   setup, la máquina de al lado, el store que no se entera, la fecha en el idioma
   equivocado, la sesión que sobrevive en la otra pestaña, la respuesta malformada
   con `200` y el intermitente.
-- **Semana 2** — fases 5-8 · **7 incidentes** (07, 09, 10, 11, 12, 13, 21): la
+- **Semana 2** — fases 5-8 · **8 incidentes** (07, 09, 10, 11, 12, 13, 21, 22): la
   baja lógica que sigue en la lista, la escritura cancelada, la custodia
-  imposible, la norma que falta, la doble firma y la alerta del sábado.
+  imposible, la norma que falta, la doble firma, el crítico de Nochevieja y la
+  toma de Gatineau que llega después de su recepción.
 - **Semana 3** — fases 9-11 · **4 incidentes** (14, 15, 16, 17): el informe con
   datos viejos, los acentos del PDF, el dashboard que se arrastra y el asiento de
   auditoría que acusa a quien no estaba.
@@ -140,6 +152,10 @@ entregables cerrados y reasignar un ID partiría alguno de ellos.
 >
 > Lo que sí se conserva de §6 es la **progresión**: la semana 1 arranca con los
 > dos únicos 🟢 y no tiene ningún 🔴, y los dos 🔴 están los dos en la semana 4.
+>
+> Y el **22** se agregó después, con el giro de LabCore a Ottawa: es el cambio de
+> hora, anclado en la custodia de la Fase 7, 🟠. El reparto quedó **7 / 8 / 4 / 3**
+> y la escala **2 🟢 · 8 🟡 · 10 🟠 · 2 🔴**.
 
 ### Categorías
 
@@ -238,11 +254,11 @@ El asunto del commit sigue este formato, para que `git log --oneline` se lea com
 la línea de tiempo de la investigación:
 
 ```
-incidente(07): abre — resultados críticos sin alerta el sábado
-incidente(07): repro — falla con TZ del navegador en UTC-5
+incidente(07): abre — resultados críticos sin alerta el fin de semana
+incidente(07): repro — falla con el navegador en America/Toronto
 incidente(07): hipótesis descartada — no es el effect, la acción sí se despacha
-incidente(07): causa — comparación de fecha sin zona horaria en el selector
-incidente(07): fix — normaliza a la TZ de la aplicación antes de comparar
+incidente(07): causa — borde de vigencia de la v2 cargado en UTC
+incidente(07): fix — bordes del potasio con el desfase de Ottawa
 incidente(07): cierre — test de regresión y post-mortem
 ```
 
@@ -256,8 +272,8 @@ le sirve a nadie, y menos a ti dentro de seis meses.
 Y como el fix de casi todos estos incidentes es de una o dos líneas, conviene
 marcarlo además con el par de tags de
 [`00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md):
-`inc/07/alerta-del-sabado-roto` con el síntoma reproducido y la regresión en rojo,
-`inc/07/alerta-del-sabado-fix` con la causa raíz y el fix en verde. El `git diff`
+`inc/07/critico-de-nochevieja-roto` con el síntoma reproducido y la regresión en rojo,
+`inc/07/critico-de-nochevieja-fix` con la causa raíz y el fix en verde. El `git diff`
 entre los dos **es** el punto 5 del post-mortem, aislado del ruido de la fase, y
 `git tag -n99 -l 'inc/*'` devuelve el cuaderno entero sin abrir un archivo. El ID
 es el que el índice ya tiene reservado, nunca uno inventado.
@@ -474,16 +490,20 @@ Lo que apareció investigando y no cabía en el fix, con el ID que lo originó:
 > tres formas de preparación de §5 se usaron diez veces la rama, tres veces el
 > `db.incidente-NN.json` y tres el flag de caos —sin inventar ni un modo que la
 > Fase 4 no construya—, y cinco incidentes no necesitan ninguna porque el
-> comportamiento vive en el código tal como se escribió. El 22 sigue **sin dar de
-> alta**, con dos candidatos anotados: el `setTextColor` que no se revierte (desde
-> el 15) y el `undefined` del slice lazy que la Fase 6 dejó apuntado.
+> comportamiento vive en el código tal como se escribió. Los dos candidatos que
+> quedaron anotados —el `setTextColor` que no se revierte (desde el 15) y el
+> `undefined` del slice lazy que la Fase 6 dejó apuntado— pasan al **23**.
+>
+> ✅ **El 22, el 07/10/2026**, con el giro a Ottawa: un cuarto
+> `db.incidente-NN.json`, anclado en la Fase 7, 🟠, semana 2; reparto 7 / 8 / 4 / 3
+> y escala 2 🟢 · 8 🟡 · 10 🟠 · 2 🔴, verificados contra el índice fila por fila.
 
-- [ ] 21 incidentes, con el reparto por semana de §3 y la escala
-      2 🟢 · 8 🟡 · 9 🟠 · 2 🔴.
+- [ ] 22 incidentes, con el reparto por semana de §3 (7 / 8 / 4 / 3) y la escala
+      2 🟢 · 8 🟡 · 10 🟠 · 2 🔴.
 - [ ] Cuatro de estado (store) con cuatro causas raíz distintas, tres del núcleo
       clínico (normativo, concurrencia, trazabilidad) y dos de i18n.
-- [ ] Todos los IDs del índice tienen entrada abajo, ninguno se reasignó, y el 22
-      sigue **sin dar de alta**.
+- [ ] Todos los IDs del índice tienen entrada abajo y ninguno se reasignó. El 22
+      es el cambio de hora; el 23 sigue **sin dar de alta**.
 - [ ] Cada incidente dice cuál de las tres formas de preparación usa, y usa la más
       barata que sirve. Cero flags de caos que la Fase 4 no construyó.
 - [ ] Los tags de fase se escriben con el slug completo

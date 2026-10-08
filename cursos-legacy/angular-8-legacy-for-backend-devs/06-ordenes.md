@@ -538,5 +538,5 @@ síntoma que produce —la pantalla que se comporta distinto según por dónde e
 ya está reservado como el **candidato de A05 §📌**, *"la validación no hace nada,
 pero solo si entras por el enlace que te pasaron por chat"*, que es el mismo
 mecanismo un slice más adelante y con un `withLatestFrom` que se queda mudo en vez
-de un `undefined` que revienta. Si alguna vez se abre el **22**, ese es su sitio, y
+de un `undefined` que revienta. Si alguna vez se abre el **23**, ese es su sitio, y
 esta fase es donde el estudiante ya lo habría visto una vez.

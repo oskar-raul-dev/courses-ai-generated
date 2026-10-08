@@ -61,7 +61,7 @@ services:
       - mongodata:/data/db
     # El 27017 NO se publica por defecto. Se publica bajo demanda, y aquí
     # abajo está cómo. Un puerto de base de datos abierto en el portátil es
-    # una costumbre que conviene no coger.
+    # una costumbre que conviene no adoptar.
     healthcheck:
       # Sin esto, la API arranca antes de que Mongo esté lista y falla en la
       # primera consulta con un error que apunta al sitio equivocado.

@@ -33,8 +33,8 @@ Abre la orden y mira la línea de tiempo de la muestra. Lo que dibuja `custodyEv
 ```
 Muestra 501 — estado actual: processed
 
-  Recogida    analista1    2019-09-02 10:05
-  Procesada   analista1    2019-09-02 16:40
+  Recogida    analista1    2022-01-03 10:05
+  Procesada   analista1    2022-01-03 16:40
 ```
 
 Dos eventos donde tendría que haber tres. Falta **Recibida**, que es justo el paso que el analista niega.
@@ -105,7 +105,7 @@ Network → filtro `XHR` → la petición `PATCH /samples/501` → pestaña **Pa
 {
   "status": "processed",
   "processedBy": "analista1",
-  "processedAt": "2019-09-02T16:40:12.418-05:00"
+  "processedAt": "2022-01-03T16:40:12.418-05:00"
 }
 ```
 
@@ -199,5 +199,5 @@ Y si encendiste `CHAOS=latency` para provocar la doble transición, apágalo ant
 
 Y el segundo, que es la pregunta 🧬 del método y vale para cualquier sistema con log de eventos: **antes de buscar quién lo hizo mal, pregunta si alguien lo hizo.** Un intento registrado y un dato roto sin ningún intento son dos mundos distintos: uno se arregla en el código y el otro en el dato, y no comparten ni una sola herramienta. Contestar esa pregunta cuesta una mirada al log; equivocarse cuesta medio día.
 
-**Incidentes del cuaderno que usan esta ruta:** el **11** —*"la muestra figura procesada pero nunca se recibió"*, que llega con un `db.json` alterno y por lo tanto entra por la rama del paso 5— y el **21** —*"la lista no cambia al cambiar de orden"*, que es el `snapshot` de la última fila de la tabla.
+**Incidentes del cuaderno que usan esta ruta:** el **11** —*"la muestra figura procesada pero nunca se recibió"*, que llega con un `db.json` alterno y por lo tanto entra por la rama del paso 5— el **21** —*"la lista no cambia al cambiar de orden"*, que es el `snapshot` de la última fila de la tabla— y el **22** —*"la muestra llegó al laboratorio antes de que se la sacaran al paciente"*, que también entra por el paso 5: el dato no lo escribió la aplicación, lo copió la agenda de Gatineau.
 **Amplía:** la [**Fase 11**](./11-trazabilidad-audit-log.md) para cuando la pregunta "¿quién escribió esto?" tenga respuesta en el sistema y no en el `git log`, y el [**Apéndice A06**](./a06-ngrx.md) para por qué una guarda en el reducer es más fuerte que una guarda en la interfaz.

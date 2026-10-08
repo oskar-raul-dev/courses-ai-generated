@@ -3,7 +3,7 @@
 > Tutorial Angular 8 — Laboratorio clínico · Fase 7 de 14 · **8 horas**
 > Depende de: Fase 5 — Pacientes · Fase 6 — Órdenes
 > Habilita: Fase 8 — Resultados y rangos versionados · Fases 10-12
-> Apéndices de apoyo: [A01 (Angular Material)](./a01-material.md) · [A06 (NgRx 8)](./a06-ngrx.md) · [A07 (i18n en Angular 8)](./a07-i18n.md) · [Incidentes asociados](./cuaderno-incidentes.md): 11, 21
+> Apéndices de apoyo: [A01 (Angular Material)](./a01-material.md) · [A06 (NgRx 8)](./a06-ngrx.md) · [A07 (i18n en Angular 8)](./a07-i18n.md) · [Incidentes asociados](./cuaderno-incidentes.md): 11, 21, 22
 
 ---
 
@@ -565,6 +565,7 @@ import { Store } from '@ngrx/store';
 import * as SamplesActions from '../store/samples.actions';
 import * as SamplesSelectors from '../store/samples.selectors';
 import { SAMPLE_TRANSITIONS, canTransition } from '../store/sample.transitions';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sample-timeline',
@@ -576,6 +577,11 @@ export class SampleTimelineComponent implements OnInit {
   orderId: number = null;
   samples: any[] = [];
   loading = false;
+
+  // Las horas de custodia son evidencia de auditoría: se muestran en la hora
+  // del laboratorio, no en la del navegador. Mismo campo y mismo pipe que la
+  // lista de pacientes de la Fase 2 (appDate, §5.10 de aquella).
+  timeZone: string = environment.timeZone;
 
   // Los seis estados en orden, para dibujar la línea de custodia completa y
   // marcar por donde va la muestra. Se lee del mapa para no escribir la lista
@@ -678,7 +684,7 @@ export class SampleTimelineComponent implements OnInit {
   <ul class="custody-timeline">
     <li *ngFor="let event of custodyEvents(sample)">
       {{ ('samples.status.' + event.status) | translate }}
-      — {{ event.by }} — {{ event.at | date:'short' }}
+      — {{ event.by }} — {{ event.at | appDate:'short':timeZone }}
     </li>
   </ul>
 
@@ -883,7 +889,10 @@ Cosas que aparecieron escribiendo esta fase y que no caben acá:
 
 ### Reservas para el cuaderno de incidentes
 
-Esta fase toma los incidentes **11 y 21**, los dos nuevos.
+Esta fase toma los incidentes **11, 21 y 22**. El 22 llegó después, con el giro de
+LabCore a Ottawa: es la toma de Gatineau que la interfaz de su agenda copia con el
+`-05:00` de la Era 1, y que en horario de verano aparece después de su propia
+recepción. Se ancla aquí porque la línea de custodia es donde se ve.
 
 Un apunte sobre el 21, porque nació de una corrección: durante un tiempo este
 síntoma —la lista que no cambia al navegar de una orden a otra— viajó pegado al

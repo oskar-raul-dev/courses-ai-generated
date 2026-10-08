@@ -151,7 +151,7 @@ describe('patientsReducer', function () {
   it('loadPatientsSuccess apaga loading y guarda los items', function () {
     var previousState: PatientsState = { ...initialState, loading: true };
     // Datos anclados al dominio: pacientes, no foo/bar.
-    var list = [{ id: 1, fullName: 'Ana Ruiz', documentId: 'CC-1001', active: true }];
+    var list = [{ id: 1, fullName: 'Ana Ruiz', documentId: 'HC-1001', active: true }];
     var action = PatientsActions.loadPatientsSuccess({ patients: list });
     var result = patientsReducer(previousState, action);
     expect(result.loading).toBe(false);
@@ -186,7 +186,7 @@ describe('patientsReducer', function () {
       saving: true,
       items: [{ id: 1, fullName: 'Ana Ruiz' } as any]
     };
-    var created = { id: 2, fullName: 'Beto Diaz', documentId: 'CC-1002', active: true };
+    var created = { id: 2, fullName: 'Beto Diaz', documentId: 'HC-1002', active: true };
     var action = PatientsActions.createPatientSuccess({ patient: created });
     var result = patientsReducer(previousState, action);
     expect(result.saving).toBe(false);
@@ -226,9 +226,9 @@ describe('patients selectors', function () {
   // reproducir el dato heredado de la Fase 5.
   var state: PatientsState = {
     items: [
-      { id: 1, fullName: 'Ana Ruiz', documentId: 'CC-1001', active: true } as any,
-      { id: 2, fullName: 'Beto Diaz', documentId: 'CC-1002', active: false } as any,
-      { id: 3, fullName: 'Cielo Mora', documentId: 'CC-1003' } as any // sin "active"
+      { id: 1, fullName: 'Ana Ruiz', documentId: 'HC-1001', active: true } as any,
+      { id: 2, fullName: 'Beto Diaz', documentId: 'HC-1002', active: false } as any,
+      { id: 3, fullName: 'Cielo Mora', documentId: 'HC-1003' } as any // sin "active"
     ],
     loading: false,
     error: null,
@@ -244,7 +244,7 @@ describe('patients selectors', function () {
   it('selectAllPatients devuelve todos, incluido el inactivo', function () {
     // .projector() ejecuta la función del selector con el estado que le doy,
     // saltándome el store y la memoización.
-    var result = PatientsSelectors.selectAllPatients.projector(state.items);
+    var result = PatientsSelectors.selectAllPatients.projector(state);
     expect(result.length).toBe(3);
   });
 
@@ -252,7 +252,7 @@ describe('patients selectors', function () {
   // (Cielo, el dato viejo) cuenta como activo. Este test blinda esa defensa:
   // si alguien lo cambia a "active === true", Cielo desaparece y el test cae.
   it('selectActivePatients incluye al paciente sin campo active', function () {
-    var all = PatientsSelectors.selectAllPatients.projector(state.items);
+    var all = PatientsSelectors.selectAllPatients.projector(state);
     var activePatients = PatientsSelectors.selectActivePatients.projector(all);
     // Ana (true) y Cielo (sin campo) entran; Beto (false) no. Son dos.
     expect(activePatients.length).toBe(2);
@@ -261,7 +261,7 @@ describe('patients selectors', function () {
   });
 
   it('selectFilteredPatients filtra por texto sobre los activos', function () {
-    var all = PatientsSelectors.selectAllPatients.projector(state.items);
+    var all = PatientsSelectors.selectAllPatients.projector(state);
     var activePatients = PatientsSelectors.selectActivePatients.projector(all);
     // El proyector de un selector con dos entradas recibe las dos: la lista
     // ya filtrada por active, y el string del filtro.
@@ -325,7 +325,7 @@ describe('PatientsService', function () {
     // El PUT que borra campos si no los mandas: la trampa del ejercicio 31 de
     // la Fase 5. El test fija que es PUT, no PATCH, para que la diferencia sea
     // visible y deliberada, no un accidente.
-    var patient = { id: 7, fullName: 'Ana Ruiz', documentId: 'CC-1001', active: true };
+    var patient = { id: 7, fullName: 'Ana Ruiz', documentId: 'HC-1001', active: true };
     service.updatePatient(patient).subscribe();
     var req = httpMock.expectOne(environment.apiUrl + '/patients/7');
     expect(req.request.method).toBe('PUT');
@@ -393,7 +393,7 @@ describe('PatientsEffects', function () {
   });
 
   it('createPatient$ despacha createPatientSuccess con el paciente que devolvió el server', function (done) {
-    var sent = { fullName: 'Beto Diaz', documentId: 'CC-1002', active: true };
+    var sent = { fullName: 'Beto Diaz', documentId: 'HC-1002', active: true };
     var returned = { id: 2, ...sent }; // json-server asigna el id
     serviceSpy.createPatient.and.returnValue(of(returned));
 

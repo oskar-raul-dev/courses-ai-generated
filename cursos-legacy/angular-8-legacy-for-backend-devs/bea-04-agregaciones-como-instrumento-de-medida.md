@@ -100,7 +100,7 @@ db.patients.aggregate([
 
 Paso a paso, porque merece entenderse y no copiarse:
 
-1. `$objectToArray: '$$ROOT'` → `[{k:"_id",v:…}, {k:"documentId",v:"CC-10…"}, …]`
+1. `$objectToArray: '$$ROOT'` → `[{k:"_id",v:…}, {k:"documentId",v:"HC-10…"}, …]`
 2. `$unwind` → un documento por cada **clave** del original
 3. `$group` por `pairs.k` → una fila por nombre de campo, con su recuento
 
