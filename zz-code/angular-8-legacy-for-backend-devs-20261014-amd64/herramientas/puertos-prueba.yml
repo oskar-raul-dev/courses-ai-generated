@@ -1,0 +1,8 @@
+# Solo para la prueba: publica 4200 (ng serve), 9229 (inspector de ng serve) y 9230 (inspector de ng test)
+# en 127.0.0.1 con puerto aleatorio. No forma parte del apéndice: el apéndice usa forwardPorts.
+services:
+  app:
+    ports:
+      - "127.0.0.1::4200"
+      - "127.0.0.1::9229"
+      - "127.0.0.1::9230"

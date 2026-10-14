@@ -1,0 +1,497 @@
+[
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 102,
+  "literal": "2009-07-25"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 105,
+  "literal": "2019-09-02T08:15:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 105,
+  "literal": "2019-09-04T08:15:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 106,
+  "literal": "2019-09-02T09:40:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 106,
+  "literal": "2019-09-05T09:40:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 107,
+  "literal": "2019-08-20T07:00:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 107,
+  "literal": "2019-08-22T07:00:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 110,
+  "literal": "2019-09-02T10:05:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 115,
+  "literal": "2019-09-02T14:20:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 118,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 118,
+  "literal": "2019-05-31T23:59:59-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 119,
+  "literal": "2019-06-01T00:00:00-05:00"
+ },
+ {
+  "file": "04-mock-api-caos.md",
+  "line": 120,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "08-resultados-rangos.md",
+  "line": 110,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "08-resultados-rangos.md",
+  "line": 111,
+  "literal": "2019-05-31T23:59:59-05:00"
+ },
+ {
+  "file": "08-resultados-rangos.md",
+  "line": 125,
+  "literal": "2019-06-01T00:00:00-05:00"
+ },
+ {
+  "file": "08-resultados-rangos.md",
+  "line": 137,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "08-resultados-rangos.md",
+  "line": 1005,
+  "literal": "2019-05-31T20:00:00-05:00"
+ },
+ {
+  "file": "a04-webpack-oculto.md",
+  "line": 95,
+  "literal": "2019-11-08T14:22:31.104Z"
+ },
+ {
+  "file": "be00-el-contrato-auditoria-del-mock.md",
+  "line": 417,
+  "literal": "2026-09-10T10:00:00.000Z"
+ },
+ {
+  "file": "be02-medir-la-deriva-de-esquema.md",
+  "line": 373,
+  "literal": "2026-09-10"
+ },
+ {
+  "file": "be04-el-audit-log-que-escribia-el-navegador.md",
+  "line": 83,
+  "literal": "2019-09-02T08:15:00-05:00"
+ },
+ {
+  "file": "be04-el-audit-log-que-escribia-el-navegador.md",
+  "line": 84,
+  "literal": "2026-09-10T15:04:05.123Z"
+ },
+ {
+  "file": "be04-el-audit-log-que-escribia-el-navegador.md",
+  "line": 499,
+  "literal": "2026-09-08T14:47:11.000Z"
+ },
+ {
+  "file": "be04-el-audit-log-que-escribia-el-navegador.md",
+  "line": 500,
+  "literal": "2026-09-08T13:22:04.881Z"
+ },
+ {
+  "file": "be04-el-audit-log-que-escribia-el-navegador.md",
+  "line": 508,
+  "literal": "2026-09-08T14:47:11.000Z"
+ },
+ {
+  "file": "be05-la-cadena-de-custodia-y-la-transaccion.md",
+  "line": 480,
+  "literal": "2026-09-10T18:22:41Z"
+ },
+ {
+  "file": "be05-la-cadena-de-custodia-y-la-transaccion.md",
+  "line": 481,
+  "literal": "2026-09-10T18:22:41Z"
+ },
+ {
+  "file": "be05-la-cadena-de-custodia-y-la-transaccion.md",
+  "line": 492,
+  "literal": "2026-09-10T18:22:41Z"
+ },
+ {
+  "file": "be05-la-cadena-de-custodia-y-la-transaccion.md",
+  "line": 508,
+  "literal": "2026-09-10T18:22:41Z"
+ },
+ {
+  "file": "be05-la-cadena-de-custodia-y-la-transaccion.md",
+  "line": 509,
+  "literal": "2026-09-10T18:22:44Z"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 110,
+  "literal": "2020-07-31T23:59:59Z"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 116,
+  "literal": "2020-08-01T00:00:00Z"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 165,
+  "literal": "2020-03-01"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 166,
+  "literal": "2020-04-01"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 173,
+  "literal": "2020-03-12T15:41:00Z"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 183,
+  "literal": "2019-06-01T05:00:00Z"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 225,
+  "literal": "2019-06-01"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 226,
+  "literal": "2020-08-01"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 246,
+  "literal": "2019-06-01"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 247,
+  "literal": "2020-08-01"
+ },
+ {
+  "file": "be06-los-rangos-y-la-historia-perdida.md",
+  "line": 281,
+  "literal": "2020-08-01"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 18,
+  "literal": "2019-09-02T08:15:00-05:00"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 49,
+  "literal": "2019-09-02T08:15:00-05:00"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 50,
+  "literal": "2026-09-10T15:04:05.123Z"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 51,
+  "literal": "2026-09-10T15:04:05.123Z"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 74,
+  "literal": "2019-09-02T08:15:00-05:00"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 134,
+  "literal": "2000-01-01"
+ },
+ {
+  "file": "bea-08-tiempo-zonas-y-fechas-en-mongo.md",
+  "line": 139,
+  "literal": "2000-01-01"
+ },
+ {
+  "file": "cuaderno-incidentes-be.md",
+  "line": 1294,
+  "literal": "2026-09-08T14:47:11.000Z"
+ },
+ {
+  "file": "cuaderno-incidentes-be.md",
+  "line": 1312,
+  "literal": "2026-09-08T14:47:11.000Z"
+ },
+ {
+  "file": "cuaderno-incidentes-be.md",
+  "line": 1313,
+  "literal": "2026-09-08T13:22:04.881Z"
+ },
+ {
+  "file": "cuaderno-incidentes-be.md",
+  "line": 1869,
+  "literal": "2020-07-31T23:59:59Z"
+ },
+ {
+  "file": "cuaderno-incidentes-be.md",
+  "line": 1872,
+  "literal": "2020-08-01T00:00:00Z"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1538,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1542,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1542,
+  "literal": "2019-06-01T01:15:00Z"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1554,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1556,
+  "literal": "2019-05-31T12:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1607,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1607,
+  "literal": "2019-05-31T23:59:59-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1609,
+  "literal": "2019-06-01T00:00:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1614,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1620,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 1621,
+  "literal": "2019-05-31T12:15:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 2445,
+  "literal": "2019-09-02"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 2446,
+  "literal": "2019-09-02"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 2457,
+  "literal": "2019-09-02T16:40:12.418-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 2695,
+  "literal": "2019-09-02T16:40:12.418-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 2708,
+  "literal": "2019-06-14T09:12:00-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 2959,
+  "literal": "2019-09-02T16:40:15.902-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 3933,
+  "literal": "2019-09-07T21:04:11.002-05:00"
+ },
+ {
+  "file": "cuaderno-incidentes.md",
+  "line": 3939,
+  "literal": "2019-09-07T21:04:10.887-05:00"
+ },
+ {
+  "file": "forense-fase-07.md",
+  "line": 36,
+  "literal": "2019-09-02"
+ },
+ {
+  "file": "forense-fase-07.md",
+  "line": 37,
+  "literal": "2019-09-02"
+ },
+ {
+  "file": "forense-fase-07.md",
+  "line": 108,
+  "literal": "2019-09-02T16:40:12.418-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 38,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 39,
+  "literal": "2019-05-31T23:59:59-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 40,
+  "literal": "2019-06-01T00:00:00-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 53,
+  "literal": "2019-05-31T20:00:00-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 59,
+  "literal": "2019-05-31T20:00:00-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 59,
+  "literal": "2019-06-01T01:00:00Z"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 72,
+  "literal": "2019-05-31T20:00:00-05:00"
+ },
+ {
+  "file": "forense-fase-08.md",
+  "line": 74,
+  "literal": "2019-05-31T12:00:00-05:00"
+ },
+ {
+  "file": "forense-fase-11.md",
+  "line": 41,
+  "literal": "2019-09-07T09:12:04.881-05:00"
+ },
+ {
+  "file": "forense-fase-11.md",
+  "line": 44,
+  "literal": "2019-09-07T09:12:31.204-05:00"
+ },
+ {
+  "file": "forense-fase-11.md",
+  "line": 87,
+  "literal": "2019-09-07T09:11:58.402-05:00"
+ },
+ {
+  "file": "forense-fase-11.md",
+  "line": 126,
+  "literal": "2019-09-07T09:12:31.204-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 383,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 385,
+  "literal": "2019-05-31T20:40:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 387,
+  "literal": "2019-05-31T21:10:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 404,
+  "literal": "2019-01-01T00:00:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 405,
+  "literal": "2019-05-31T23:59:59-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 408,
+  "literal": "2019-06-01T00:00:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 420,
+  "literal": "2019-05-31T20:15:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 434,
+  "literal": "2019-09-02T10:05:00-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 437,
+  "literal": "2019-09-02T16:40:12.418-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 471,
+  "literal": "2019-09-07T21:04:10.887-05:00"
+ },
+ {
+  "file": "prompts/preparaciones-de-incidentes.md",
+  "line": 478,
+  "literal": "2019-09-07T21:04:11.002-05:00"
+ }
+]

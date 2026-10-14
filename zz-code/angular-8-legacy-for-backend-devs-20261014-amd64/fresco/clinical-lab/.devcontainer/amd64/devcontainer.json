@@ -1,0 +1,15 @@
+{
+  "name": "clinical-lab (Angular 8, amd64)",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "node",
+
+  // 4200 es ng serve; 9229 es el inspector de ng serve y 9230 el de ng test (A15).
+  // VS Code los reenvía al Mac. El CLI de devcontainer no los publica por sí solo.
+  "forwardPorts": [4200, 9229, 9230],
+
+  // El volumen de node_modules nace vacío y pertenece a root: se lo damos a 'node'.
+  // npm ci se corre a mano después, para poder medirlo (A14 §6).
+  "postCreateCommand": "sudo chown -R node:node node_modules"
+}

@@ -1,0 +1,615 @@
+[2026-10-14T06:18:26.665Z] @devcontainers/cli 0.89.0. Node.js v24.21.0. darwin 25.6.0 arm64.
+[2026-10-14T06:18:27.049Z] Start: Run: docker compose -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml --profile * config
+[2026-10-14T06:18:27.138Z] Start: Run: docker compose -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml --profile * config
+[2026-10-14T06:18:27.198Z] name: clinical-lab-amd64
+services:
+  app:
+    build:
+      context: /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer
+      dockerfile: Dockerfile
+    command:
+      - sleep
+      - infinity
+    labels:
+      curso: angular-8-legacy
+    networks:
+      default: null
+    platform: linux/amd64
+    volumes:
+      - type: bind
+        source: /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose
+        target: /workspace
+        bind: {}
+      - type: volume
+        source: lab-node-modules-amd64
+        target: /workspace/node_modules
+        volume: {}
+networks:
+  default:
+    name: clinical-lab-amd64_default
+volumes:
+  lab-node-modules-amd64:
+    name: clinical-lab-amd64_lab-node-modules-amd64
+[2026-10-14T06:18:27.200Z] Start: Run: docker inspect --type image node:14.21.3-bullseye-slim
+[2026-10-14T06:18:27.256Z] Docker Compose override file for building image:
+services:
+  app:
+    build:
+      dockerfile: /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/container-features/0.89.0-1791958707255/Dockerfile-with-features
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+        - _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label
+
+[2026-10-14T06:18:27.256Z] Start: Run: docker compose --project-name clinical-lab-amd64 -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml -f /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1791958707256.yml build app
+[2026-10-14T06:18:27.350Z]  Image clinical-lab-amd64-app Building 
+
+[2026-10-14T06:18:27.468Z] #1 [internal] load local bake definitions
+[2026-10-14T06:18:27.619Z] #1 reading from stdin 925B done
+#1 DONE 0.0s
+[2026-10-14T06:18:27.987Z] 
+#2 [internal] load build definition from Dockerfile-with-features
+#2 transferring dockerfile: 671B done
+#2 DONE 0.0s
+[2026-10-14T06:18:27.988Z] 
+#3 [internal] load metadata for docker.io/library/node:14.21.3-bullseye-slim
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [dev_container_auto_added_stage_label 1/3] FROM docker.io/library/node:14.21.3-bullseye-slim@sha256:0f5b374fae506741ff14db84daff2937ae788e88fb48a6c66d15de5ee808ccd3
+#5 resolve docker.io/library/node:14.21.3-bullseye-slim@sha256:0f5b374fae506741ff14db84daff2937ae788e88fb48a6c66d15de5ee808ccd3 0.0s done
+#5 CACHED
+
+#6 [dev_container_auto_added_stage_label 2/3] RUN apt-get update && apt-get install -y --no-install-recommends       python3 build-essential git curl sudo chromium     && rm -rf /var/lib/apt/lists/*     && echo "node ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/node
+[2026-10-14T06:18:28.474Z] #6 0.635 Get:1 http://deb.debian.org/debian bullseye InRelease [75.1 kB]
+[2026-10-14T06:18:28.851Z] #6 1.014 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.1 kB]
+[2026-10-14T06:18:29.026Z] #6 1.038 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+[2026-10-14T06:18:29.594Z] #6 1.757 Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8066 kB]
+[2026-10-14T06:18:30.972Z] #6 3.135 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [475 kB]
+[2026-10-14T06:18:31.495Z] #6 3.657 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [18.8 kB]
+[2026-10-14T06:18:32.099Z] #6 4.258 Fetched 8706 kB in 4s (2230 kB/s)
+#6 4.258 Reading package lists...
+[2026-10-14T06:18:32.711Z] 
+[2026-10-14T06:18:32.823Z] #6 4.985 Reading package lists...
+[2026-10-14T06:18:33.438Z] 
+[2026-10-14T06:18:33.627Z] #6 5.639 Building dependency tree...
+[2026-10-14T06:18:33.681Z] 
+#6 5.843 Reading state information...
+[2026-10-14T06:18:33.832Z] 
+[2026-10-14T06:18:33.892Z] #6 6.055 The following additional packages will be installed:
+[2026-10-14T06:18:34.048Z] #6 6.055   adwaita-icon-theme binutils binutils-common binutils-x86-64-linux-gnu bzip2
+#6 6.055   chromium-common cpp cpp-10 dbus dbus-user-session dconf-gsettings-backend
+#6 6.055   dconf-service dmsetup dpkg-dev fontconfig fontconfig-config
+#6 6.055   fonts-dejavu-core g++ g++-10 gcc gcc-10 git-man glib-networking
+#6 6.055   glib-networking-common glib-networking-services gsettings-desktop-schemas
+#6 6.055   gtk-update-icon-cache hicolor-icon-theme libapparmor1 libargon2-1 libasan6
+#6 6.055   libasound2 libasound2-data libasyncns0 libatk-bridge2.0-0 libatk1.0-0
+#6 6.055   libatk1.0-data libatomic1 libatspi2.0-0 libavahi-client3
+#6 6.055   libavahi-common-data libavahi-common3 libbinutils libbrotli1 libbsd0
+#6 6.055   libc-dev-bin libc6 libc6-dev libcairo-gobject2 libcairo2 libcap2 libcc1-0
+#6 6.055   libcolord2 libcrypt-dev libcryptsetup12 libctf-nobfd0 libctf0 libcups2
+#6 6.055   libcurl3-gnutls libcurl4 libdatrie1 libdbus-1-3 libdconf1 libdeflate0
+#6 6.055   libdevmapper1.02.1 libdouble-conversion3 libdpkg-perl libdrm-amdgpu1
+#6 6.055   libdrm-common libdrm-intel1 libdrm-nouveau2 libdrm-radeon1 libdrm2 libedit2
+#6 6.055   libelf1 libepoxy0 liberror-perl libevent-2.1-7 libexpat1 libflac8
+#6 6.055   libfontconfig1 libfontenc1 libfreetype6 libfribidi0 libgbm1 libgcc-10-dev
+#6 6.055   libgdbm-compat4 libgdbm6 libgdk-pixbuf-2.0-0 libgdk-pixbuf2.0-common libgl1
+#6 6.055   libgl1-mesa-dri libglapi-mesa libglib2.0-0 libglvnd0 libglx-mesa0 libglx0
+#6 6.055   libgomp1 libgraphite2-3 libgtk-3-0 libgtk-3-common libharfbuzz0b libice6
+#6 6.056   libicu67 libip4tc2 libisl23 libitm1 libjbig0 libjpeg62-turbo libjson-c5
+#6 6.056   libjson-glib-1.0-0 libjson-glib-1.0-common libjsoncpp24 libkmod2 liblcms2-2
+#6 6.056   libldap-2.4-2 libllvm11 liblsan0 libmd0 libminizip1 libmpc3 libmpdec3
+#6 6.056   libmpfr6 libncursesw6 libnghttp2-14 libnsl-dev libnspr4 libnss3 libogg0
+#6 6.056   libopenjp2-7 libopus0 libpam-systemd libpango-1.0-0 libpangocairo-1.0-0
+#6 6.056   libpangoft2-1.0-0 libpciaccess0 libperl5.32 libpixman-1-0 libpng16-16
+#6 6.056   libproxy1v5 libpsl5 libpulse0 libpython3-stdlib libpython3.9-minimal
+#6 6.056   libpython3.9-stdlib libquadmath0 libreadline8 librest-0.7-0 librtmp1
+#6 6.056   libsasl2-2 libsasl2-modules-db libsensors-config libsensors5 libsm6
+[2026-10-14T06:18:34.048Z] #6 6.057   libsnappy1v5 libsndfile1 libsoup-gnome2.4-1 libsoup2.4-1 libsqlite3-0
+#6 6.057   libssh2-1 libstdc++-10-dev libsystemd0 libthai-data libthai0 libtiff5
+#6 6.057   libtinfo6 libtirpc-dev libtsan0 libubsan1 libvorbis0a libvorbisenc2
+#6 6.057   libvulkan1 libwayland-client0 libwayland-cursor0 libwayland-egl1
+#6 6.057   libwayland-server0 libwebp6 libwebpdemux2 libwebpmux3 libwoff1 libwrap0
+#6 6.057   libx11-6 libx11-data libx11-xcb1 libxau6 libxaw7 libxcb-dri2-0 libxcb-dri3-0
+#6 6.057   libxcb-glx0 libxcb-present0 libxcb-render0 libxcb-shape0 libxcb-shm0
+#6 6.057   libxcb-sync1 libxcb-xfixes0 libxcb1 libxcomposite1 libxcursor1 libxdamage1
+#6 6.057   libxdmcp6 libxext6 libxfixes3 libxft2 libxi6 libxinerama1 libxkbcommon0
+#6 6.057   libxkbfile1 libxml2 libxmu6 libxmuu1 libxnvctrl0 libxpm4 libxrandr2
+#6 6.057   libxrender1 libxshmfence1 libxslt1.1 libxt6 libxtst6 libxv1 libxxf86dga1
+#6 6.057   libxxf86vm1 libz3-4 linux-libc-dev make media-types patch perl perl-base
+#6 6.057   perl-modules-5.32 python3-minimal python3.9 python3.9-minimal
+#6 6.058   readline-common sensible-utils shared-mime-info systemd systemd-sysv ucf
+#6 6.058   x11-common x11-utils xdg-utils xkb-data xz-utils
+#6 6.060 Suggested packages:
+#6 6.060   binutils-doc bzip2-doc chromium-l10n chromium-shell chromium-driver cpp-doc
+#6 6.060   gcc-10-locales debian-keyring g++-multilib g++-10-multilib gcc-10-doc
+#6 6.060   gcc-multilib manpages-dev autoconf automake libtool flex bison gdb gcc-doc
+#6 6.060   gcc-10-multilib gettext-base git-daemon-run | git-daemon-sysvinit git-doc
+#6 6.060   git-el git-email git-gui gitk gitweb git-cvs git-mediawiki git-svn
+#6 6.060   libasound2-plugins alsa-utils glibc-doc libc-l10n locales colord cups-common
+#6 6.060   gnupg bzr gdbm-l10n gvfs liblcms2-utils opus-tools pciutils pulseaudio
+#6 6.060   lm-sensors libstdc++-10-doc make-doc ed diffutils-doc perl-doc
+#6 6.060   libterm-readline-gnu-perl | libterm-readline-perl-perl
+#6 6.060   libtap-harness-archive-perl python3-doc python3-tk python3-venv
+#6 6.060   python3.9-venv python3.9-doc binfmt-support readline-doc systemd-container
+#6 6.060   policykit-1 mesa-utils
+#6 6.060 Recommended packages:
+#6 6.060   librsvg2-common chromium-sandbox upower libu2f-udev fonts-liberation
+#6 6.060   notification-daemon system-config-printer fakeroot gnupg
+#6 6.060   libalgorithm-merge-perl ca-certificates less ssh-client alsa-ucm-conf
+#6 6.060   alsa-topology-conf at-spi2-core manpages manpages-dev libc-devtools
+#6 6.060   libnss-nis libnss-nisplus libfile-fcntllock-perl liblocale-gettext-perl
+#6 6.060   libgdk-pixbuf2.0-bin libglib2.0-data xdg-user-dirs libgtk-3-bin
+#6 6.060   libldap-common libgpm2 publicsuffix libsasl2-modules mesa-vulkan-drivers
+#6 6.060   | vulkan-icd netbase systemd-timesyncd | time-daemon libnss-systemd
+#6 6.060   libfile-mimeinfo-perl libnet-dbus-perl libx11-protocol-perl
+#6 6.060   x11-xserver-utils
+[2026-10-14T06:18:34.917Z] #6 7.080 The following NEW packages will be installed:
+#6 7.080   adwaita-icon-theme binutils binutils-common binutils-x86-64-linux-gnu
+#6 7.080   build-essential bzip2 chromium chromium-common cpp cpp-10 curl dbus
+#6 7.080   dbus-user-session dconf-gsettings-backend dconf-service dmsetup dpkg-dev
+#6 7.080   fontconfig fontconfig-config fonts-dejavu-core g++ g++-10 gcc gcc-10 git
+#6 7.080   git-man glib-networking glib-networking-common glib-networking-services
+#6 7.080   gsettings-desktop-schemas gtk-update-icon-cache hicolor-icon-theme
+#6 7.080   libapparmor1 libargon2-1 libasan6 libasound2 libasound2-data libasyncns0
+#6 7.080   libatk-bridge2.0-0 libatk1.0-0 libatk1.0-data libatomic1 libatspi2.0-0
+[2026-10-14T06:18:35.071Z] #6 7.080   libavahi-client3 libavahi-common-data libavahi-common3 libbinutils
+#6 7.080   libbrotli1 libbsd0 libc-dev-bin libc6-dev libcairo-gobject2 libcairo2
+#6 7.080   libcap2 libcc1-0 libcolord2 libcrypt-dev libcryptsetup12 libctf-nobfd0
+#6 7.080   libctf0 libcups2 libcurl3-gnutls libcurl4 libdatrie1 libdbus-1-3 libdconf1
+[2026-10-14T06:18:35.072Z] 
+#6 7.080   libdeflate0 libdevmapper1.02.1 libdouble-conversion3 libdpkg-perl
+#6 7.080   libdrm-amdgpu1 libdrm-common libdrm-intel1 libdrm-nouveau2 libdrm-radeon1
+#6 7.080   libdrm2 libedit2 libelf1 libepoxy0 liberror-perl libevent-2.1-7 libexpat1
+#6 7.080   libflac8 libfontconfig1 libfontenc1 libfreetype6 libfribidi0 libgbm1
+#6 7.080   libgcc-10-dev libgdbm-compat4 libgdbm6 libgdk-pixbuf-2.0-0
+#6 7.080   libgdk-pixbuf2.0-common libgl1 libgl1-mesa-dri libglapi-mesa libglib2.0-0
+#6 7.080   libglvnd0 libglx-mesa0 libglx0 libgomp1 libgraphite2-3 libgtk-3-0
+#6 7.080   libgtk-3-common libharfbuzz0b libice6 libicu67 libip4tc2 libisl23 libitm1
+#6 7.080   libjbig0 libjpeg62-turbo libjson-c5 libjson-glib-1.0-0
+#6 7.080   libjson-glib-1.0-common libjsoncpp24 libkmod2 liblcms2-2 libldap-2.4-2
+#6 7.080   libllvm11 liblsan0 libmd0 libminizip1 libmpc3 libmpdec3 libmpfr6
+#6 7.080   libncursesw6 libnghttp2-14 libnsl-dev libnspr4 libnss3 libogg0 libopenjp2-7
+#6 7.080   libopus0 libpam-systemd libpango-1.0-0 libpangocairo-1.0-0 libpangoft2-1.0-0
+#6 7.080   libpciaccess0 libperl5.32 libpixman-1-0 libpng16-16 libproxy1v5 libpsl5
+#6 7.080   libpulse0 libpython3-stdlib libpython3.9-minimal libpython3.9-stdlib
+#6 7.080   libquadmath0 libreadline8 librest-0.7-0 librtmp1 libsasl2-2
+#6 7.080   libsasl2-modules-db libsensors-config libsensors5 libsm6 libsnappy1v5
+#6 7.080   libsndfile1 libsoup-gnome2.4-1 libsoup2.4-1 libsqlite3-0 libssh2-1
+#6 7.080   libstdc++-10-dev libthai-data libthai0 libtiff5 libtirpc-dev libtsan0
+#6 7.080   libubsan1 libvorbis0a libvorbisenc2 libvulkan1 libwayland-client0
+#6 7.080   libwayland-cursor0 libwayland-egl1 libwayland-server0 libwebp6 libwebpdemux2
+#6 7.080   libwebpmux3 libwoff1 libwrap0 libx11-6 libx11-data libx11-xcb1 libxau6
+#6 7.080   libxaw7 libxcb-dri2-0 libxcb-dri3-0 libxcb-glx0 libxcb-present0
+#6 7.080   libxcb-render0 libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-xfixes0 libxcb1
+#6 7.080   libxcomposite1 libxcursor1 libxdamage1 libxdmcp6 libxext6 libxfixes3 libxft2
+#6 7.080   libxi6 libxinerama1 libxkbcommon0 libxkbfile1 libxml2 libxmu6 libxmuu1
+#6 7.080   libxnvctrl0 libxpm4 libxrandr2 libxrender1 libxshmfence1 libxslt1.1 libxt6
+#6 7.080   libxtst6 libxv1 libxxf86dga1 libxxf86vm1 libz3-4 linux-libc-dev make
+#6 7.080   media-types patch perl perl-modules-5.32 python3 python3-minimal python3.9
+#6 7.080   python3.9-minimal readline-common sensible-utils shared-mime-info sudo
+#6 7.081   systemd systemd-sysv ucf x11-common x11-utils xdg-utils xkb-data xz-utils
+#6 7.082 The following packages will be upgraded:
+#6 7.083   libc6 libsystemd0 libtinfo6 perl-base
+[2026-10-14T06:18:35.284Z] #6 7.446 4 upgraded, 245 newly installed, 0 to remove and 39 not upgraded.
+#6 7.446 Need to get 259 MB of archives.
+#6 7.446 After this operation, 935 MB of additional disk space will be used.
+#6 7.446 Err:1 http://deb.debian.org/debian-security bullseye-security/main amd64 perl-base amd64 5.32.1-4+deb11u5
+#6 7.446   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:35.492Z] #6 7.654 Err:2 http://deb.debian.org/debian-security bullseye-security/main amd64 libsystemd0 amd64 247.3-7+deb11u8
+#6 7.654   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:35.740Z] #6 7.903 Err:3 http://deb.debian.org/debian-security bullseye-security/main amd64 libc6 amd64 2.31-13+deb11u14
+#6 7.903   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:35.896Z] #6 7.908 Get:4 http://deb.debian.org/debian bullseye/main amd64 libapparmor1 amd64 2.13.6-10 [99.3 kB]
+[2026-10-14T06:18:39.367Z] #6 11.53 Err:5 http://deb.debian.org/debian-security bullseye-security/main amd64 libcap2 amd64 1:2.44-1+deb11u1
+#6 11.53   404  Not Found [IP: 199.232.178.132 80]
+#6 11.53 Get:6 http://deb.debian.org/debian bullseye/main amd64 libargon2-1 amd64 0~20171227-0.2 [19.6 kB]
+[2026-10-14T06:18:39.593Z] #6 11.60 Get:7 http://deb.debian.org/debian bullseye/main amd64 dmsetup amd64 2:1.02.175-2.1 [92.1 kB]
+[2026-10-14T06:18:39.633Z] #6 11.80 Get:8 http://deb.debian.org/debian bullseye/main amd64 libdevmapper1.02.1 amd64 2:1.02.175-2.1 [143 kB]
+[2026-10-14T06:18:39.821Z] #6 11.98 Get:9 http://deb.debian.org/debian bullseye/main amd64 libjson-c5 amd64 0.15-2+deb11u1 [42.9 kB]
+[2026-10-14T06:18:40.020Z] #6 12.03 Get:10 http://deb.debian.org/debian bullseye/main amd64 libcryptsetup12 amd64 2:2.3.7-1+deb11u1 [248 kB]
+[2026-10-14T06:18:40.113Z] #6 12.27 Get:11 http://deb.debian.org/debian bullseye/main amd64 libip4tc2 amd64 1.8.7-1 [34.6 kB]
+[2026-10-14T06:18:40.298Z] #6 12.31 Get:12 http://deb.debian.org/debian bullseye/main amd64 libkmod2 amd64 28-1 [55.6 kB]
+[2026-10-14T06:18:40.308Z] #6 12.47 Err:13 http://deb.debian.org/debian-security bullseye-security/main amd64 systemd amd64 247.3-7+deb11u8
+#6 12.47   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:40.469Z] #6 12.63 Err:14 http://deb.debian.org/debian-security bullseye-security/main amd64 systemd-sysv amd64 247.3-7+deb11u8
+#6 12.63   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:40.641Z] #6 12.65 Get:15 http://deb.debian.org/debian bullseye/main amd64 libdbus-1-3 amd64 1.12.28-0+deb11u1 [223 kB]
+[2026-10-14T06:18:40.641Z] 
+[2026-10-14T06:18:40.731Z] #6 12.89 Err:16 http://deb.debian.org/debian-security bullseye-security/main amd64 libexpat1 amd64 2.2.10-2+deb11u7
+#6 12.89   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:40.909Z] #6 12.92 Get:17 http://deb.debian.org/debian bullseye/main amd64 dbus amd64 1.12.28-0+deb11u1 [244 kB]
+[2026-10-14T06:18:41.069Z] #6 13.23 Err:18 http://deb.debian.org/debian-security bullseye-security/main amd64 perl-modules-5.32 all 5.32.1-4+deb11u5
+#6 13.23   404  Not Found [IP: 199.232.178.132 80]
+#6 13.23 Get:19 http://deb.debian.org/debian bullseye/main amd64 libgdbm6 amd64 1.19-2 [64.9 kB]
+[2026-10-14T06:18:41.240Z] #6 13.27 Get:20 http://deb.debian.org/debian bullseye/main amd64 libgdbm-compat4 amd64 1.19-2 [44.7 kB]
+#6 13.40 Err:21 http://deb.debian.org/debian-security bullseye-security/main amd64 libperl5.32 amd64 5.32.1-4+deb11u5
+#6 13.40   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:41.422Z] #6 13.58 Err:22 http://deb.debian.org/debian-security bullseye-security/main amd64 perl amd64 5.32.1-4+deb11u5
+#6 13.58   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:41.601Z] #6 13.76 Err:23 http://deb.debian.org/debian-security bullseye-security/main amd64 libpython3.9-minimal amd64 3.9.2-1+deb11u7
+#6 13.76   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:41.751Z] #6 13.91 Err:24 http://deb.debian.org/debian-security bullseye-security/main amd64 python3.9-minimal amd64 3.9.2-1+deb11u7
+#6 13.91   404  Not Found [IP: 199.232.178.132 80]
+#6 13.91 Get:25 http://deb.debian.org/debian bullseye/main amd64 python3-minimal amd64 3.9.2-3 [38.2 kB]
+[2026-10-14T06:18:41.948Z] #6 13.93 Get:26 http://deb.debian.org/debian bullseye/main amd64 media-types all 4.0.0 [30.3 kB]
+#6 13.96 Get:27 http://deb.debian.org/debian bullseye/main amd64 libmpdec3 amd64 2.5.1-1 [87.7 kB]
+[2026-10-14T06:18:41.967Z] #6 14.13 Get:28 http://deb.debian.org/debian bullseye/main amd64 libtinfo6 amd64 6.2+20201114-2+deb11u2 [342 kB]
+[2026-10-14T06:18:42.594Z] #6 14.75 Get:29 http://deb.debian.org/debian bullseye/main amd64 libncursesw6 amd64 6.2+20201114-2+deb11u2 [132 kB]
+[2026-10-14T06:18:42.834Z] #6 15.00 Get:30 http://deb.debian.org/debian bullseye/main amd64 readline-common all 8.1-1 [73.7 kB]
+[2026-10-14T06:18:42.957Z] #6 15.12 Get:31 http://deb.debian.org/debian bullseye/main amd64 libreadline8 amd64 8.1-1 [169 kB]
+[2026-10-14T06:18:43.579Z] #6 15.74 Err:32 http://deb.debian.org/debian-security bullseye-security/main amd64 libsqlite3-0 amd64 3.34.1-3+deb11u1
+#6 15.74   404  Not Found [IP: 199.232.178.132 80]
+#6 15.74 Err:33 http://deb.debian.org/debian-security bullseye-security/main amd64 libpython3.9-stdlib amd64 3.9.2-1+deb11u7
+#6 15.74   404  Not Found [IP: 199.232.178.132 80]
+#6 15.74 Err:34 http://deb.debian.org/debian-security bullseye-security/main amd64 python3.9 amd64 3.9.2-1+deb11u7
+#6 15.74   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:43.723Z] #6 15.79 Get:35 http://deb.debian.org/debian bullseye/main amd64 libpython3-stdlib amd64 3.9.2-3 [21.4 kB]
+#6 15.89 Get:36 http://deb.debian.org/debian bullseye/main amd64 python3 amd64 3.9.2-3 [37.9 kB]
+[2026-10-14T06:18:44.048Z] #6 16.21 Get:37 http://deb.debian.org/debian bullseye/main amd64 sensible-utils all 0.0.14 [14.8 kB]
+[2026-10-14T06:18:44.259Z] #6 16.42 Get:38 http://deb.debian.org/debian bullseye/main amd64 bzip2 amd64 1.0.8-4 [49.3 kB]
+[2026-10-14T06:18:44.930Z] #6 17.09 Err:39 http://deb.debian.org/debian-security bullseye-security/main amd64 libpam-systemd amd64 247.3-7+deb11u8
+#6 17.09   404  Not Found [IP: 199.232.178.132 80]
+#6 17.09 Err:40 http://deb.debian.org/debian-security bullseye-security/main amd64 ucf all 3.0043+deb11u2
+#6 17.09   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:45.081Z] #6 17.09 Err:41 http://deb.debian.org/debian-security bullseye-security/main amd64 xz-utils amd64 5.2.5-2.1~deb11u2
+#6 17.09   404  Not Found [IP: 199.232.178.132 80]
+#6 17.09 Get:42 http://deb.debian.org/debian bullseye/main amd64 hicolor-icon-theme all 0.17-2 [11.4 kB]
+[2026-10-14T06:18:45.094Z] #6 17.26 Err:43 http://deb.debian.org/debian-security bullseye-security/main amd64 libgdk-pixbuf2.0-common all 2.42.2+dfsg-1+deb11u5
+#6 17.26   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:45.328Z] #6 17.26 Err:44 http://deb.debian.org/debian-security bullseye-security/main amd64 libglib2.0-0 amd64 2.66.8-1+deb11u8
+#6 17.26   404  Not Found [IP: 199.232.178.132 80]
+#6 17.26 Err:45 http://deb.debian.org/debian-security bullseye-security/main amd64 libicu67 amd64 67.1-7+deb11u1
+#6 17.26   404  Not Found [IP: 199.232.178.132 80]
+#6 17.30 Err:46 http://deb.debian.org/debian-security bullseye-security/main amd64 libxml2 amd64 2.9.10+dfsg-6.7+deb11u10
+#6 17.30   404  Not Found [IP: 199.232.178.132 80]
+#6 17.34 Get:47 http://deb.debian.org/debian bullseye/main amd64 shared-mime-info amd64 2.0-1 [701 kB]
+[2026-10-14T06:18:52.673Z] #6 24.83 Get:48 http://deb.debian.org/debian bullseye/main amd64 libjpeg62-turbo amd64 1:2.0.6-4 [151 kB]
+[2026-10-14T06:18:55.170Z] #6 27.33 Err:49 http://deb.debian.org/debian-security bullseye-security/main amd64 libpng16-16 amd64 1.6.37-3+deb11u4
+#6 27.33   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:55.321Z] #6 27.33 Get:50 http://deb.debian.org/debian bullseye/main amd64 libdeflate0 amd64 1.7-1 [53.1 kB]
+[2026-10-14T06:18:55.363Z] #6 27.53 Get:51 http://deb.debian.org/debian bullseye/main amd64 libjbig0 amd64 2.1-3.1+b2 [31.0 kB]
+[2026-10-14T06:18:55.468Z] #6 27.63 Get:52 http://deb.debian.org/debian bullseye/main amd64 libwebp6 amd64 0.6.1-2.1+deb11u2 [259 kB]
+[2026-10-14T06:18:55.999Z] #6 28.16 Err:53 http://deb.debian.org/debian-security bullseye-security/main amd64 libtiff5 amd64 4.2.0-1+deb11u8
+#6 28.16   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:18:56.228Z] #6 28.23 Err:54 http://deb.debian.org/debian-security bullseye-security/main amd64 libgdk-pixbuf-2.0-0 amd64 2.42.2+dfsg-1+deb11u5
+#6 28.23   404  Not Found [IP: 199.232.178.132 80]
+#6 28.23 Get:55 http://deb.debian.org/debian bullseye/main amd64 gtk-update-icon-cache amd64 3.24.24-4+deb11u4 [88.4 kB]
+[2026-10-14T06:18:56.358Z] #6 28.52 Get:56 http://deb.debian.org/debian bullseye/main amd64 adwaita-icon-theme all 3.38.0-1 [10.9 MB]
+[2026-10-14T06:19:01.231Z] #6 33.39 Get:57 http://deb.debian.org/debian bullseye/main amd64 binutils-common amd64 2.35.2-2 [2220 kB]
+[2026-10-14T06:19:02.158Z] #6 34.32 Get:58 http://deb.debian.org/debian bullseye/main amd64 libbinutils amd64 2.35.2-2 [570 kB]
+[2026-10-14T06:19:02.312Z] #6 34.47 Get:59 http://deb.debian.org/debian bullseye/main amd64 libctf-nobfd0 amd64 2.35.2-2 [110 kB]
+[2026-10-14T06:19:02.494Z] #6 34.49 Get:60 http://deb.debian.org/debian bullseye/main amd64 libctf0 amd64 2.35.2-2 [53.2 kB]
+#6 34.51 Get:61 http://deb.debian.org/debian bullseye/main amd64 binutils-x86-64-linux-gnu amd64 2.35.2-2 [1809 kB]
+[2026-10-14T06:19:02.771Z] #6 34.93 Get:62 http://deb.debian.org/debian bullseye/main amd64 binutils amd64 2.35.2-2 [61.2 kB]
+[2026-10-14T06:19:02.898Z] #6 35.06 Err:63 http://deb.debian.org/debian-security bullseye-security/main amd64 libc-dev-bin amd64 2.31-13+deb11u14
+#6 35.06   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:19:03.068Z] #6 35.23 Err:64 http://deb.debian.org/debian-security bullseye-security/main amd64 linux-libc-dev amd64 5.10.262-1
+#6 35.23   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:19:03.283Z] #6 35.26 Get:65 http://deb.debian.org/debian bullseye/main amd64 libcrypt-dev amd64 1:4.4.18-4 [104 kB]
+#6 35.27 Get:66 http://deb.debian.org/debian bullseye/main amd64 libtirpc-dev amd64 1.3.1-1+deb11u1 [191 kB]
+#6 35.32 Get:67 http://deb.debian.org/debian bullseye/main amd64 libnsl-dev amd64 1.3.0-2 [66.4 kB]
+#6 35.45 Err:68 http://deb.debian.org/debian-security bullseye-security/main amd64 libc6-dev amd64 2.31-13+deb11u14
+#6 35.45   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:19:03.454Z] #6 35.47 Get:69 http://deb.debian.org/debian bullseye/main amd64 libisl23 amd64 0.23-1 [676 kB]
+[2026-10-14T06:19:03.486Z] #6 35.65 Get:70 http://deb.debian.org/debian bullseye/main amd64 libmpfr6 amd64 4.1.0-3 [2012 kB]
+[2026-10-14T06:19:03.888Z] #6 36.05 Get:71 http://deb.debian.org/debian bullseye/main amd64 libmpc3 amd64 1.2.0-1 [45.0 kB]
+[2026-10-14T06:19:04.069Z] #6 36.08 Get:72 http://deb.debian.org/debian bullseye/main amd64 cpp-10 amd64 10.2.1-6 [8528 kB]
+[2026-10-14T06:19:05.377Z] #6 37.54 Get:73 http://deb.debian.org/debian bullseye/main amd64 cpp amd64 4:10.2.1-1 [19.7 kB]
+[2026-10-14T06:19:05.585Z] #6 37.54 Get:74 http://deb.debian.org/debian bullseye/main amd64 libcc1-0 amd64 10.2.1-6 [47.0 kB]
+#6 37.55 Get:75 http://deb.debian.org/debian bullseye/main amd64 libgomp1 amd64 10.2.1-6 [99.9 kB]
+#6 37.56 Get:76 http://deb.debian.org/debian bullseye/main amd64 libitm1 amd64 10.2.1-6 [25.8 kB]
+#6 37.57 Get:77 http://deb.debian.org/debian bullseye/main amd64 libatomic1 amd64 10.2.1-6 [9008 B]
+#6 37.60 Get:78 http://deb.debian.org/debian bullseye/main amd64 libasan6 amd64 10.2.1-6 [2065 kB]
+[2026-10-14T06:19:05.758Z] #6 37.92 Get:79 http://deb.debian.org/debian bullseye/main amd64 liblsan0 amd64 10.2.1-6 [828 kB]
+[2026-10-14T06:19:06.489Z] #6 38.65 Get:80 http://deb.debian.org/debian bullseye/main amd64 libtsan0 amd64 10.2.1-6 [2000 kB]
+[2026-10-14T06:19:07.137Z] #6 39.30 Get:81 http://deb.debian.org/debian bullseye/main amd64 libubsan1 amd64 10.2.1-6 [777 kB]
+[2026-10-14T06:19:07.345Z] #6 39.51 Get:82 http://deb.debian.org/debian bullseye/main amd64 libquadmath0 amd64 10.2.1-6 [145 kB]
+[2026-10-14T06:19:07.562Z] #6 39.57 Get:83 http://deb.debian.org/debian bullseye/main amd64 libgcc-10-dev amd64 10.2.1-6 [2328 kB]
+[2026-10-14T06:19:08.192Z] #6 40.35 Get:84 http://deb.debian.org/debian bullseye/main amd64 gcc-10 amd64 10.2.1-6 [17.0 MB]
+[2026-10-14T06:19:43.575Z] #6 75.74 Get:85 http://deb.debian.org/debian bullseye/main amd64 gcc amd64 4:10.2.1-1 [5192 B]
+[2026-10-14T06:19:43.763Z] #6 75.78 Get:86 http://deb.debian.org/debian bullseye/main amd64 libstdc++-10-dev amd64 10.2.1-6 [1741 kB]
+[2026-10-14T06:19:54.215Z] #6 86.38 Get:87 http://deb.debian.org/debian bullseye/main amd64 g++-10 amd64 10.2.1-6 [9380 kB]
+[2026-10-14T06:19:58.786Z] #6 90.95 Get:88 http://deb.debian.org/debian bullseye/main amd64 g++ amd64 4:10.2.1-1 [1644 B]
+[2026-10-14T06:19:58.936Z] #6 90.95 Get:89 http://deb.debian.org/debian bullseye/main amd64 make amd64 4.3-4.1 [396 kB]
+[2026-10-14T06:19:58.941Z] #6 91.10 Err:90 http://deb.debian.org/debian-security bullseye-security/main amd64 libdpkg-perl all 1.20.14
+#6 91.10   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:19:59.119Z] #6 91.13 Get:91 http://deb.debian.org/debian bullseye/main amd64 patch amd64 2.7.6-7 [128 kB]
+[2026-10-14T06:19:59.143Z] #6 91.31 Err:92 http://deb.debian.org/debian-security bullseye-security/main amd64 dpkg-dev all 1.20.14
+#6 91.31   404  Not Found [IP: 199.232.178.132 80]
+#6 91.31 Get:93 http://deb.debian.org/debian bullseye/main amd64 build-essential amd64 12.9 [7704 B]
+[2026-10-14T06:19:59.313Z] #6 91.48 Err:94 http://deb.debian.org/debian-security bullseye-security/main amd64 libasound2-data all 1.2.4-1.1+deb11u1
+#6 91.48   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:19:59.458Z] #6 91.62 Err:95 http://deb.debian.org/debian-security bullseye-security/main amd64 libasound2 amd64 1.2.4-1.1+deb11u1
+#6 91.62   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:19:59.583Z] #6 91.64 Get:96 http://deb.debian.org/debian bullseye/main amd64 libatk1.0-data all 2.36.0-2 [149 kB]
+#6 91.68 Get:97 http://deb.debian.org/debian bullseye/main amd64 libatk1.0-0 amd64 2.36.0-2 [52.2 kB]
+#6 91.70 Get:98 http://deb.debian.org/debian bullseye/main amd64 libxau6 amd64 1:1.0.9-1 [19.7 kB]
+#6 91.71 Get:99 http://deb.debian.org/debian bullseye/main amd64 libmd0 amd64 1.0.3-3 [28.0 kB]
+#6 91.75 Get:100 http://deb.debian.org/debian bullseye/main amd64 libbsd0 amd64 0.11.3-1+deb11u1 [108 kB]
+[2026-10-14T06:19:59.689Z] #6 91.78 Get:101 http://deb.debian.org/debian bullseye/main amd64 libxdmcp6 amd64 1:1.1.2-3 [26.3 kB]
+#6 91.78 Get:102 http://deb.debian.org/debian bullseye/main amd64 libxcb1 amd64 1.14-3 [140 kB]
+#6 91.85 Get:103 http://deb.debian.org/debian bullseye/main amd64 libx11-data all 2:1.7.2-1+deb11u2 [311 kB]
+[2026-10-14T06:19:59.951Z] #6 92.11 Get:104 http://deb.debian.org/debian bullseye/main amd64 libx11-6 amd64 2:1.7.2-1+deb11u2 [772 kB]
+[2026-10-14T06:20:00.293Z] #6 92.46 Get:105 http://deb.debian.org/debian bullseye/main amd64 libatspi2.0-0 amd64 2.38.0-4+deb11u1 [72.4 kB]
+[2026-10-14T06:20:00.524Z] #6 92.48 Get:106 http://deb.debian.org/debian bullseye/main amd64 libatk-bridge2.0-0 amd64 2.38.0-1 [64.6 kB]
+#6 92.54 Get:107 http://deb.debian.org/debian bullseye/main amd64 libbrotli1 amd64 1.0.9-2+b2 [279 kB]
+[2026-10-14T06:20:00.539Z] #6 92.70 Err:108 http://deb.debian.org/debian-security bullseye-security/main amd64 libfreetype6 amd64 2.10.4+dfsg-1+deb11u2
+#6 92.70   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:00.711Z] #6 92.72 Get:109 http://deb.debian.org/debian bullseye/main amd64 fonts-dejavu-core all 2.37-2 [1069 kB]
+[2026-10-14T06:20:01.160Z] #6 93.32 Get:110 http://deb.debian.org/debian bullseye/main amd64 fontconfig-config all 2.13.1-4.2 [281 kB]
+[2026-10-14T06:20:01.308Z] #6 93.47 Get:111 http://deb.debian.org/debian bullseye/main amd64 libfontconfig1 amd64 2.13.1-4.2 [347 kB]
+[2026-10-14T06:20:01.462Z] #6 93.63 Get:112 http://deb.debian.org/debian bullseye/main amd64 libpixman-1-0 amd64 0.40.0-1.1~deb11u1 [543 kB]
+[2026-10-14T06:20:01.678Z] #6 93.84 Get:113 http://deb.debian.org/debian bullseye/main amd64 libxcb-render0 amd64 1.14-3 [111 kB]
+[2026-10-14T06:20:01.787Z] #6 93.90 Get:114 http://deb.debian.org/debian bullseye/main amd64 libxcb-shm0 amd64 1.14-3 [101 kB]
+#6 93.93 Get:115 http://deb.debian.org/debian bullseye/main amd64 libxext6 amd64 2:1.3.3-1.1 [52.7 kB]
+#6 93.95 Get:116 http://deb.debian.org/debian bullseye/main amd64 libxrender1 amd64 1:0.9.10-1 [33.0 kB]
+[2026-10-14T06:20:01.969Z] #6 93.98 Get:117 http://deb.debian.org/debian bullseye/main amd64 libcairo2 amd64 1.16.0-5 [694 kB]
+[2026-10-14T06:20:02.072Z] #6 94.23 Err:118 http://deb.debian.org/debian-security bullseye-security/main amd64 libavahi-common-data amd64 0.8-5+deb11u3
+#6 94.23   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:02.238Z] #6 94.40 Err:119 http://deb.debian.org/debian-security bullseye-security/main amd64 libavahi-common3 amd64 0.8-5+deb11u3
+#6 94.40   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:02.401Z] #6 94.56 Err:120 http://deb.debian.org/debian-security bullseye-security/main amd64 libavahi-client3 amd64 0.8-5+deb11u3
+#6 94.56   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:02.556Z] #6 94.72 Err:121 http://deb.debian.org/debian-security bullseye-security/main amd64 libcups2 amd64 2.3.3op2-3+deb11u10
+#6 94.72   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:02.659Z] #6 94.72 Get:122 http://deb.debian.org/debian bullseye/main amd64 libdouble-conversion3 amd64 3.1.5-6.1 [41.0 kB]
+#6 94.73 Get:123 http://deb.debian.org/debian bullseye/main amd64 libdrm-common all 2.4.104-1 [14.9 kB]
+#6 94.73 Get:124 http://deb.debian.org/debian bullseye/main amd64 libdrm2 amd64 2.4.104-1 [41.5 kB]
+#6 94.78 Get:125 http://deb.debian.org/debian bullseye/main amd64 libevent-2.1-7 amd64 2.1.12-stable-1 [188 kB]
+#6 94.82 Get:126 http://deb.debian.org/debian bullseye/main amd64 libogg0 amd64 1.3.4-0.1 [27.3 kB]
+[2026-10-14T06:20:02.782Z] #6 94.84 Get:127 http://deb.debian.org/debian bullseye/main amd64 libflac8 amd64 1.3.3-2+deb11u2 [112 kB]
+#6 94.87 Get:128 http://deb.debian.org/debian bullseye/main amd64 libwayland-server0 amd64 1.18.0-2~exp1.1 [34.4 kB]
+#6 94.95 Err:129 http://deb.debian.org/debian-security bullseye-security/main amd64 libgbm1 amd64 20.3.5-1+deb11u1
+#6 94.95   404  Not Found [IP: 199.232.178.132 80]
+#6 94.95 Get:130 http://deb.debian.org/debian bullseye/main amd64 libjsoncpp24 amd64 1.9.4-4 [78.9 kB]
+[2026-10-14T06:20:02.957Z] #6 95.12 Err:131 http://deb.debian.org/debian-security bullseye-security/main amd64 liblcms2-2 amd64 2.12~rc1-2+deb11u1
+#6 95.12   404  Not Found [IP: 199.232.178.132 80]
+#6 95.12 Get:132 http://deb.debian.org/debian bullseye/main amd64 libminizip1 amd64 1.1-8+deb11u1 [20.1 kB]
+[2026-10-14T06:20:03.152Z] #6 95.16 Get:133 http://deb.debian.org/debian bullseye/main amd64 libnspr4 amd64 2:4.29-1 [112 kB]
+[2026-10-14T06:20:03.152Z] 
+[2026-10-14T06:20:03.173Z] #6 95.33 Err:134 http://deb.debian.org/debian-security bullseye-security/main amd64 libnss3 amd64 2:3.61-1+deb11u7
+#6 95.33   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:03.439Z] #6 95.60 Err:135 http://deb.debian.org/debian-security bullseye-security/main amd64 libopenjp2-7 amd64 2.4.0-3+deb11u3
+#6 95.60   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:03.619Z] #6 95.78 Get:136 http://deb.debian.org/debian bullseye/main amd64 libopus0 amd64 1.3.1-0.1 [190 kB]
+[2026-10-14T06:20:03.924Z] #6 96.09 Get:137 http://deb.debian.org/debian bullseye/main amd64 fontconfig amd64 2.13.1-4.2 [417 kB]
+[2026-10-14T06:20:05.783Z] #6 97.95 Get:138 http://deb.debian.org/debian bullseye/main amd64 libfribidi0 amd64 1.0.8-2+deb11u1 [64.9 kB]
+[2026-10-14T06:20:06.486Z] #6 98.65 Get:139 http://deb.debian.org/debian bullseye/main amd64 libgraphite2-3 amd64 1.3.14-1 [81.2 kB]
+[2026-10-14T06:20:07.153Z] #6 99.31 Get:140 http://deb.debian.org/debian bullseye/main amd64 libharfbuzz0b amd64 2.7.4-1 [1471 kB]
+[2026-10-14T06:20:10.070Z] #6 102.2 Get:141 http://deb.debian.org/debian bullseye/main amd64 libthai-data all 0.1.28-3 [170 kB]
+[2026-10-14T06:20:10.428Z] #6 102.6 Get:142 http://deb.debian.org/debian bullseye/main amd64 libdatrie1 amd64 0.2.13-1 [42.7 kB]
+[2026-10-14T06:20:10.551Z] #6 102.7 Get:143 http://deb.debian.org/debian bullseye/main amd64 libthai0 amd64 0.1.28-3 [54.2 kB]
+[2026-10-14T06:20:10.672Z] #6 102.8 Get:144 http://deb.debian.org/debian bullseye/main amd64 libpango-1.0-0 amd64 1.46.2-3 [191 kB]
+[2026-10-14T06:20:11.058Z] #6 103.2 Get:145 http://deb.debian.org/debian bullseye/main amd64 libasyncns0 amd64 0.8-6+b2 [12.9 kB]
+[2026-10-14T06:20:11.236Z] #6 103.2 Get:146 http://deb.debian.org/debian bullseye/main amd64 libvorbis0a amd64 1.3.7-1 [93.0 kB]
+[2026-10-14T06:20:11.327Z] #6 103.5 Get:147 http://deb.debian.org/debian bullseye/main amd64 libvorbisenc2 amd64 1.3.7-1 [80.6 kB]
+[2026-10-14T06:20:11.509Z] #6 103.7 Err:148 http://deb.debian.org/debian-security bullseye-security/main amd64 libsndfile1 amd64 1.0.31-2+deb11u2
+#6 103.7   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:11.759Z] #6 103.8 Get:149 http://deb.debian.org/debian bullseye/main amd64 libwrap0 amd64 7.6.q-31 [59.0 kB]
+[2026-10-14T06:20:11.878Z] #6 104.0 Get:150 http://deb.debian.org/debian bullseye/main amd64 libpulse0 amd64 14.2-2 [285 kB]
+[2026-10-14T06:20:17.011Z] #6 109.2 Get:151 http://deb.debian.org/debian bullseye/main amd64 libsnappy1v5 amd64 1.1.8-1 [17.9 kB]
+[2026-10-14T06:20:17.166Z] #6 109.2 Get:152 http://deb.debian.org/debian bullseye/main amd64 libwebpdemux2 amd64 0.6.1-2.1+deb11u2 [87.8 kB]
+#6 109.3 Get:153 http://deb.debian.org/debian bullseye/main amd64 libwebpmux3 amd64 0.6.1-2.1+deb11u2 [97.7 kB]
+[2026-10-14T06:20:17.287Z] #6 109.4 Get:154 http://deb.debian.org/debian bullseye/main amd64 libwoff1 amd64 1.0.2-1+b1 [42.4 kB]
+[2026-10-14T06:20:17.518Z] #6 109.5 Get:155 http://deb.debian.org/debian bullseye/main amd64 libxcomposite1 amd64 1:0.4.5-1 [16.6 kB]
+[2026-10-14T06:20:17.518Z] 
+#6 109.5 Get:156 http://deb.debian.org/debian bullseye/main amd64 libxdamage1 amd64 1:1.1.5-2 [15.7 kB]
+#6 109.5 Get:157 http://deb.debian.org/debian bullseye/main amd64 libxfixes3 amd64 1:5.0.3-2 [22.1 kB]
+#6 109.5 Get:158 http://deb.debian.org/debian bullseye/main amd64 xkb-data all 2.29-2 [655 kB]
+[2026-10-14T06:20:17.779Z] #6 109.9 Get:159 http://deb.debian.org/debian bullseye/main amd64 libxkbcommon0 amd64 1.0.3-2 [101 kB]
+[2026-10-14T06:20:17.949Z] #6 110.1 Err:160 http://deb.debian.org/debian-security bullseye-security/main amd64 libxnvctrl0 amd64 535.309.01-0+deb11u1
+#6 110.1   404  Not Found [IP: 199.232.178.132 80]
+#6 110.1 Get:161 http://deb.debian.org/debian bullseye/main amd64 libxrandr2 amd64 2:1.5.1-1 [37.5 kB]
+[2026-10-14T06:20:18.093Z] #6 110.3 Err:162 http://deb.debian.org/debian-security bullseye-security/main amd64 libxslt1.1 amd64 1.1.34-4+deb11u3
+#6 110.3   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:20:18.202Z] #6 110.3 Get:163 http://deb.debian.org/debian bullseye/main amd64 libcairo-gobject2 amd64 1.16.0-5 [125 kB]
+#6 110.4 Get:164 http://deb.debian.org/debian bullseye/main amd64 libcolord2 amd64 1.4.5-3 [144 kB]
+[2026-10-14T06:20:18.398Z] #6 110.5 Get:165 http://deb.debian.org/debian bullseye/main amd64 libepoxy0 amd64 1.5.5-1 [193 kB]
+#6 110.6 Get:166 http://deb.debian.org/debian bullseye/main amd64 libjson-glib-1.0-common all 1.6.2-1 [56.9 kB]
+[2026-10-14T06:20:18.518Z] #6 110.6 Get:167 http://deb.debian.org/debian bullseye/main amd64 libjson-glib-1.0-0 amd64 1.6.2-1 [65.4 kB]
+#6 110.7 Get:168 http://deb.debian.org/debian bullseye/main amd64 libpangoft2-1.0-0 amd64 1.46.2-3 [62.2 kB]
+[2026-10-14T06:20:18.624Z] #6 110.7 Get:169 http://deb.debian.org/debian bullseye/main amd64 libpangocairo-1.0-0 amd64 1.46.2-3 [50.6 kB]
+#6 110.8 Get:170 http://deb.debian.org/debian bullseye/main amd64 libproxy1v5 amd64 0.4.17-1 [59.5 kB]
+[2026-10-14T06:20:18.741Z] #6 110.8 Get:171 http://deb.debian.org/debian bullseye/main amd64 glib-networking-common all 2.66.0-2 [68.1 kB]
+#6 110.9 Get:172 http://deb.debian.org/debian bullseye/main amd64 glib-networking-services amd64 2.66.0-2 [17.5 kB]
+[2026-10-14T06:20:18.930Z] #6 111.0 Get:173 http://deb.debian.org/debian bullseye/main amd64 dbus-user-session amd64 1.12.28-0+deb11u1 [100 kB]
+#6 111.1 Get:174 http://deb.debian.org/debian bullseye/main amd64 libdconf1 amd64 0.38.0-2 [43.5 kB]
+[2026-10-14T06:20:19.035Z] #6 111.1 Get:175 http://deb.debian.org/debian bullseye/main amd64 dconf-service amd64 0.38.0-2 [37.4 kB]
+#6 111.2 Get:176 http://deb.debian.org/debian bullseye/main amd64 dconf-gsettings-backend amd64 0.38.0-2 [30.6 kB]
+[2026-10-14T06:20:19.246Z] #6 111.3 Get:177 http://deb.debian.org/debian bullseye/main amd64 gsettings-desktop-schemas all 3.38.0-2 [588 kB]
+[2026-10-14T06:20:20.589Z] #6 112.8 Get:178 http://deb.debian.org/debian bullseye/main amd64 glib-networking amd64 2.66.0-2 [67.6 kB]
+[2026-10-14T06:20:20.960Z] #6 113.1 Get:179 http://deb.debian.org/debian bullseye/main amd64 libpsl5 amd64 0.21.0-1.2 [57.3 kB]
+[2026-10-14T06:20:21.278Z] #6 113.4 Err:180 http://deb.debian.org/debian-security bullseye-security/main amd64 libsoup2.4-1 amd64 2.72.0-2+deb11u3
+#6 113.4   404  Not Found [IP: 199.232.178.132 80]
+#6 113.4 Err:181 http://deb.debian.org/debian-security bullseye-security/main amd64 libsoup-gnome2.4-1 amd64 2.72.0-2+deb11u3
+#6 113.4   404  Not Found [IP: 199.232.178.132 80]
+#6 113.4 Get:182 http://deb.debian.org/debian bullseye/main amd64 librest-0.7-0 amd64 0.8.1-1.1 [33.8 kB]
+[2026-10-14T06:20:21.443Z] #6 113.6 Get:183 http://deb.debian.org/debian bullseye/main amd64 libwayland-client0 amd64 1.18.0-2~exp1.1 [26.9 kB]
+[2026-10-14T06:20:21.558Z] #6 113.7 Get:184 http://deb.debian.org/debian bullseye/main amd64 libwayland-cursor0 amd64 1.18.0-2~exp1.1 [14.6 kB]
+#6 113.7 Get:185 http://deb.debian.org/debian bullseye/main amd64 libwayland-egl1 amd64 1.18.0-2~exp1.1 [8448 B]
+#6 113.7 Get:186 http://deb.debian.org/debian bullseye/main amd64 libxcursor1 amd64 1:1.2.0-2 [37.3 kB]
+[2026-10-14T06:20:21.741Z] #6 113.8 Get:187 http://deb.debian.org/debian bullseye/main amd64 libxi6 amd64 2:1.7.10-1 [83.4 kB]
+#6 113.9 Get:188 http://deb.debian.org/debian bullseye/main amd64 libxinerama1 amd64 2:1.1.4-2 [17.7 kB]
+[2026-10-14T06:20:21.936Z] #6 113.9 Get:189 http://deb.debian.org/debian bullseye/main amd64 libgtk-3-common all 3.24.24-4+deb11u4 [3757 kB]
+[2026-10-14T06:20:23.767Z] #6 115.9 Get:190 http://deb.debian.org/debian bullseye/main amd64 libgtk-3-0 amd64 3.24.24-4+deb11u4 [2715 kB]
+[2026-10-14T06:20:24.484Z] #6 116.6 Get:191 http://deb.debian.org/debian bullseye/main amd64 libfontenc1 amd64 1:1.1.4-1 [24.3 kB]
+[2026-10-14T06:20:24.634Z] #6 116.7 Get:192 http://deb.debian.org/debian bullseye/main amd64 libglvnd0 amd64 1.3.2-1 [53.6 kB]
+#6 116.7 Err:193 http://deb.debian.org/debian-security bullseye-security/main amd64 libglapi-mesa amd64 20.3.5-1+deb11u1
+#6 116.7   404  Not Found [IP: 199.232.178.132 80]
+#6 116.7 Get:194 http://deb.debian.org/debian bullseye/main amd64 libx11-xcb1 amd64 2:1.7.2-1+deb11u2 [204 kB]
+#6 116.8 Get:195 http://deb.debian.org/debian bullseye/main amd64 libxcb-dri2-0 amd64 1.14-3 [103 kB]
+[2026-10-14T06:20:24.785Z] #6 116.8 Get:196 http://deb.debian.org/debian bullseye/main amd64 libxcb-dri3-0 amd64 1.14-3 [102 kB]
+#6 116.9 Get:197 http://deb.debian.org/debian bullseye/main amd64 libxcb-glx0 amd64 1.14-3 [118 kB]
+#6 116.9 Get:198 http://deb.debian.org/debian bullseye/main amd64 libxcb-present0 amd64 1.14-3 [101 kB]
+[2026-10-14T06:20:24.899Z] #6 117.0 Get:199 http://deb.debian.org/debian bullseye/main amd64 libxcb-sync1 amd64 1.14-3 [105 kB]
+#6 117.0 Get:200 http://deb.debian.org/debian bullseye/main amd64 libxcb-xfixes0 amd64 1.14-3 [105 kB]
+#6 117.1 Get:201 http://deb.debian.org/debian bullseye/main amd64 libxshmfence1 amd64 1.3-1 [8820 B]
+[2026-10-14T06:20:25.016Z] #6 117.1 Get:202 http://deb.debian.org/debian bullseye/main amd64 libxxf86vm1 amd64 1:1.1.4-1+b2 [20.8 kB]
+#6 117.1 Get:203 http://deb.debian.org/debian bullseye/main amd64 libdrm-amdgpu1 amd64 2.4.104-1 [28.5 kB]
+#6 117.1 Get:204 http://deb.debian.org/debian bullseye/main amd64 libpciaccess0 amd64 0.16-1 [53.6 kB]
+#6 117.1 Get:205 http://deb.debian.org/debian bullseye/main amd64 libdrm-intel1 amd64 2.4.104-1 [71.8 kB]
+#6 117.1 Get:206 http://deb.debian.org/debian bullseye/main amd64 libdrm-nouveau2 amd64 2.4.104-1 [26.8 kB]
+#6 117.1 Get:207 http://deb.debian.org/debian bullseye/main amd64 libdrm-radeon1 amd64 2.4.104-1 [30.2 kB]
+#6 117.1 Get:208 http://deb.debian.org/debian bullseye/main amd64 libelf1 amd64 0.183-1 [165 kB]
+#6 117.2 Get:209 http://deb.debian.org/debian bullseye/main amd64 libedit2 amd64 3.1-20191231-2+b1 [96.7 kB]
+[2026-10-14T06:20:25.188Z] #6 117.2 Get:210 http://deb.debian.org/debian bullseye/main amd64 libz3-4 amd64 4.8.10-1 [6949 kB]
+[2026-10-14T06:20:31.863Z] #6 124.0 Get:211 http://deb.debian.org/debian bullseye/main amd64 libllvm11 amd64 1:11.0.1-2 [17.9 MB]
+[2026-10-14T06:21:33.560Z] #6 185.7 Get:212 http://deb.debian.org/debian bullseye/main amd64 libsensors-config all 1:3.6.0-7 [32.3 kB]
+[2026-10-14T06:21:33.783Z] #6 185.8 Get:213 http://deb.debian.org/debian bullseye/main amd64 libsensors5 amd64 1:3.6.0-7 [52.3 kB]
+[2026-10-14T06:21:33.860Z] #6 186.0 Get:214 http://deb.debian.org/debian bullseye/main amd64 libvulkan1 amd64 1.2.162.0-1 [103 kB]
+[2026-10-14T06:21:34.207Z] #6 186.4 Err:215 http://deb.debian.org/debian-security bullseye-security/main amd64 libgl1-mesa-dri amd64 20.3.5-1+deb11u1
+#6 186.4   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:21:34.425Z] #6 186.4 Err:216 http://deb.debian.org/debian-security bullseye-security/main amd64 libglx-mesa0 amd64 20.3.5-1+deb11u1
+#6 186.4   404  Not Found [IP: 199.232.178.132 80]
+#6 186.4 Get:217 http://deb.debian.org/debian bullseye/main amd64 libglx0 amd64 1.3.2-1 [35.7 kB]
+#6 186.4 Get:218 http://deb.debian.org/debian bullseye/main amd64 libgl1 amd64 1.3.2-1 [89.5 kB]
+[2026-10-14T06:21:34.754Z] #6 186.9 Get:219 http://deb.debian.org/debian bullseye/main amd64 x11-common all 1:7.7+22 [252 kB]
+[2026-10-14T06:21:36.377Z] #6 188.5 Get:220 http://deb.debian.org/debian bullseye/main amd64 libice6 amd64 2:1.0.10-1 [58.5 kB]
+[2026-10-14T06:21:36.935Z] #6 189.1 Get:221 http://deb.debian.org/debian bullseye/main amd64 libsm6 amd64 2:1.2.3-1 [35.1 kB]
+[2026-10-14T06:21:37.249Z] #6 189.4 Get:222 http://deb.debian.org/debian bullseye/main amd64 libxt6 amd64 1:1.2.0-1 [189 kB]
+[2026-10-14T06:21:39.106Z] #6 191.3 Get:223 http://deb.debian.org/debian bullseye/main amd64 libxmu6 amd64 2:1.1.2-2+b3 [60.8 kB]
+[2026-10-14T06:21:40.360Z] #6 192.5 Get:224 http://deb.debian.org/debian bullseye/main amd64 libxpm4 amd64 1:3.5.12-1.1+deb11u1 [50.0 kB]
+[2026-10-14T06:21:41.468Z] #6 193.6 Get:225 http://deb.debian.org/debian bullseye/main amd64 libxaw7 amd64 2:1.0.13-1.1 [202 kB]
+[2026-10-14T06:21:43.943Z] #6 196.1 Get:226 http://deb.debian.org/debian bullseye/main amd64 libxcb-shape0 amd64 1.14-3 [102 kB]
+[2026-10-14T06:21:44.313Z] #6 196.5 Get:227 http://deb.debian.org/debian bullseye/main amd64 libxft2 amd64 2.3.2-2 [57.2 kB]
+[2026-10-14T06:21:44.420Z] #6 196.6 Get:228 http://deb.debian.org/debian bullseye/main amd64 libxkbfile1 amd64 1:1.1.0-1 [75.2 kB]
+[2026-10-14T06:21:44.641Z] #6 196.8 Get:229 http://deb.debian.org/debian bullseye/main amd64 libxmuu1 amd64 2:1.1.2-2+b3 [23.9 kB]
+[2026-10-14T06:21:44.743Z] #6 196.8 Get:230 http://deb.debian.org/debian bullseye/main amd64 libxtst6 amd64 2:1.2.3-1 [27.8 kB]
+#6 196.9 Get:231 http://deb.debian.org/debian bullseye/main amd64 libxv1 amd64 2:1.0.11-1 [24.6 kB]
+[2026-10-14T06:21:44.977Z] #6 196.9 Get:232 http://deb.debian.org/debian bullseye/main amd64 libxxf86dga1 amd64 2:1.1.4-1+b3 [22.1 kB]
+#6 197.0 Get:233 http://deb.debian.org/debian bullseye/main amd64 x11-utils amd64 7.7+5 [202 kB]
+[2026-10-14T06:21:45.250Z] #6 197.4 Get:234 http://deb.debian.org/debian bullseye/main amd64 xdg-utils all 1.1.3-4.1 [75.5 kB]
+[2026-10-14T06:21:45.469Z] #6 197.6 Get:235 http://deb.debian.org/debian bullseye/main amd64 chromium-common amd64 120.0.6099.224-1~deb11u1 [5013 kB]
+[2026-10-14T06:21:56.485Z] #6 208.6 Get:236 http://deb.debian.org/debian bullseye/main amd64 chromium amd64 120.0.6099.224-1~deb11u1 [72.1 MB]
+[2026-10-14T06:23:02.027Z] #6 274.2 Ign:236 http://deb.debian.org/debian bullseye/main amd64 chromium amd64 120.0.6099.224-1~deb11u1
+[2026-10-14T06:23:02.397Z] #6 274.6 Get:237 http://deb.debian.org/debian bullseye/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg-2.1+deb11u1 [69.1 kB]
+[2026-10-14T06:23:02.556Z] #6 274.7 Get:238 http://deb.debian.org/debian bullseye/main amd64 libsasl2-2 amd64 2.1.27+dfsg-2.1+deb11u1 [106 kB]
+[2026-10-14T06:23:02.745Z] #6 274.9 Get:239 http://deb.debian.org/debian bullseye/main amd64 libldap-2.4-2 amd64 2.4.57+dfsg-3+deb11u1 [232 kB]
+[2026-10-14T06:23:02.936Z] #6 275.1 Err:240 http://deb.debian.org/debian-security bullseye-security/main amd64 libnghttp2-14 amd64 1.43.0-1+deb11u3
+#6 275.1   404  Not Found [IP: 199.232.178.132 80]
+#6 275.1 Get:241 http://deb.debian.org/debian bullseye/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b2 [60.8 kB]
+[2026-10-14T06:23:03.095Z] #6 275.1 Get:242 http://deb.debian.org/debian bullseye/main amd64 libssh2-1 amd64 1.9.0-2+deb11u1 [156 kB]
+[2026-10-14T06:23:03.101Z] #6 275.3 Err:243 http://deb.debian.org/debian-security bullseye-security/main amd64 libcurl4 amd64 7.74.0-1.3+deb11u16
+#6 275.3   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:03.268Z] #6 275.4 Err:244 http://deb.debian.org/debian-security bullseye-security/main amd64 curl amd64 7.74.0-1.3+deb11u16
+#6 275.4   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:03.434Z] #6 275.6 Err:245 http://deb.debian.org/debian-security bullseye-security/main amd64 libcurl3-gnutls amd64 7.74.0-1.3+deb11u16
+#6 275.6   404  Not Found [IP: 199.232.178.132 80]
+#6 275.6 Get:246 http://deb.debian.org/debian bullseye/main amd64 liberror-perl all 0.17029-1 [31.0 kB]
+[2026-10-14T06:23:03.589Z] #6 275.8 Err:247 http://deb.debian.org/debian-security bullseye-security/main amd64 git-man all 1:2.30.2-1+deb11u5
+#6 275.8   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:03.756Z] #6 275.9 Err:248 http://deb.debian.org/debian-security bullseye-security/main amd64 git amd64 1:2.30.2-1+deb11u5
+#6 275.9   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:03.910Z] #6 276.1 Err:249 http://deb.debian.org/debian-security bullseye-security/main amd64 sudo amd64 1.9.5p2-3+deb11u4
+#6 276.1   404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:04.087Z] #6 276.2 Err:236 http://deb.debian.org/debian bullseye/main amd64 chromium amd64 120.0.6099.224-1~deb11u1
+#6 276.2   Connection timed out [IP: 199.232.178.132 80]
+[2026-10-14T06:23:04.277Z] #6 276.3 Fetched 120 MB in 4min 29s (447 kB/s)
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/perl/perl-base_5.32.1-4%2bdeb11u5_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/systemd/libsystemd0_247.3-7%2bdeb11u8_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/glibc/libc6_2.31-13%2bdeb11u14_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libc/libcap2/libcap2_2.44-1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/systemd/systemd_247.3-7%2bdeb11u8_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/systemd/systemd-sysv_247.3-7%2bdeb11u8_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/e/expat/libexpat1_2.2.10-2%2bdeb11u7_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/perl/perl-modules-5.32_5.32.1-4%2bdeb11u5_all.deb  404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:04.277Z] #6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/perl/libperl5.32_5.32.1-4%2bdeb11u5_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/perl/perl_5.32.1-4%2bdeb11u5_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/python3.9/libpython3.9-minimal_3.9.2-1%2bdeb11u7_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/python3.9/python3.9-minimal_3.9.2-1%2bdeb11u7_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/sqlite3/libsqlite3-0_3.34.1-3%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/python3.9/libpython3.9-stdlib_3.9.2-1%2bdeb11u7_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/p/python3.9/python3.9_3.9.2-1%2bdeb11u7_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/systemd/libpam-systemd_247.3-7%2bdeb11u8_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/u/ucf/ucf_3.0043%2bdeb11u2_all.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/x/xz-utils/xz-utils_5.2.5-2.1%7edeb11u2_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/gdk-pixbuf/libgdk-pixbuf2.0-common_2.42.2%2bdfsg-1%2bdeb11u5_all.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/glib2.0/libglib2.0-0_2.66.8-1%2bdeb11u8_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/i/icu/libicu67_67.1-7%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libx/libxml2/libxml2_2.9.10%2bdfsg-6.7%2bdeb11u10_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libp/libpng1.6/libpng16-16_1.6.37-3%2bdeb11u4_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/t/tiff/libtiff5_4.2.0-1%2bdeb11u8_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/gdk-pixbuf/libgdk-pixbuf-2.0-0_2.42.2%2bdfsg-1%2bdeb11u5_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/glibc/libc-dev-bin_2.31-13%2bdeb11u14_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/l/linux/linux-libc-dev_5.10.262-1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/glibc/libc6-dev_2.31-13%2bdeb11u14_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/d/dpkg/libdpkg-perl_1.20.14_all.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/d/dpkg/dpkg-dev_1.20.14_all.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/a/alsa-lib/libasound2-data_1.2.4-1.1%2bdeb11u1_all.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/a/alsa-lib/libasound2_1.2.4-1.1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/f/freetype/libfreetype6_2.10.4%2bdfsg-1%2bdeb11u2_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/a/avahi/libavahi-common-data_0.8-5%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/a/avahi/libavahi-common3_0.8-5%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/a/avahi/libavahi-client3_0.8-5%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/cups/libcups2_2.3.3op2-3%2bdeb11u10_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/m/mesa/libgbm1_20.3.5-1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/l/lcms2/liblcms2-2_2.12%7erc1-2%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/n/nss/libnss3_3.61-1%2bdeb11u7_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/o/openjpeg2/libopenjp2-7_2.4.0-3%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libs/libsndfile/libsndfile1_1.0.31-2%2bdeb11u2_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/n/nvidia-settings/libxnvctrl0_535.309.01-0%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libx/libxslt/libxslt1.1_1.1.34-4%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libs/libsoup2.4/libsoup2.4-1_2.72.0-2%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/libs/libsoup2.4/libsoup-gnome2.4-1_2.72.0-2%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/m/mesa/libglapi-mesa_20.3.5-1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/m/mesa/libgl1-mesa-dri_20.3.5-1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/m/mesa/libglx-mesa0_20.3.5-1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/chromium/chromium_120.0.6099.224-1%7edeb11u1_amd64.deb  Connection timed out [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/n/nghttp2/libnghttp2-14_1.43.0-1%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/curl/libcurl4_7.74.0-1.3%2bdeb11u16_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/curl/curl_7.74.0-1.3%2bdeb11u16_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/curl/libcurl3-gnutls_7.74.0-1.3%2bdeb11u16_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/git/git-man_2.30.2-1%2bdeb11u5_all.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/git/git_2.30.2-1%2bdeb11u5_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/sudo/sudo_1.9.5p2-3%2bdeb11u4_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+#6 276.3 E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+[2026-10-14T06:23:04.514Z] #6 ERROR: process "/bin/sh -c apt-get update && apt-get install -y --no-install-recommends       python3 build-essential git curl sudo chromium     && rm -rf /var/lib/apt/lists/*     && echo \"node ALL=(root) NOPASSWD:ALL\" > /etc/sudoers.d/node" did not complete successfully: exit code: 100
+[2026-10-14T06:23:04.549Z] ------
+ > [dev_container_auto_added_stage_label 2/3] RUN apt-get update && apt-get install -y --no-install-recommends       python3 build-essential git curl sudo chromium     && rm -rf /var/lib/apt/lists/*     && echo "node ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/node:
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/m/mesa/libglx-mesa0_20.3.5-1%2bdeb11u1_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/chromium/chromium_120.0.6099.224-1%7edeb11u1_amd64.deb  Connection timed out [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/n/nghttp2/libnghttp2-14_1.43.0-1%2bdeb11u3_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/curl/libcurl4_7.74.0-1.3%2bdeb11u16_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+[2026-10-14T06:23:04.549Z] 276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/curl/curl_7.74.0-1.3%2bdeb11u16_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/c/curl/libcurl3-gnutls_7.74.0-1.3%2bdeb11u16_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/git/git-man_2.30.2-1%2bdeb11u5_all.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/g/git/git_2.30.2-1%2bdeb11u5_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Failed to fetch http://deb.debian.org/debian-security/pool/updates/main/s/sudo/sudo_1.9.5p2-3%2bdeb11u4_amd64.deb  404  Not Found [IP: 199.232.178.132 80]
+276.3 E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+------
+[2026-10-14T06:23:04.553Z] Dockerfile-with-features:4
+
+--------------------
+
+   3 |     FROM node:14.21.3-bullseye-slim AS dev_container_auto_added_stage_label
+
+   4 | >>> RUN apt-get update && apt-get install -y --no-install-recommends \
+
+   5 | >>>       python3 build-essential git curl sudo chromium \
+
+   6 | >>>     && rm -rf /var/lib/apt/lists/* \
+
+   7 | >>>     && echo "node ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/node
+
+   8 |     ENV CHROME_BIN=/usr/bin/chromium
+
+--------------------
+
+failed to solve: process "/bin/sh -c apt-get update && apt-get install -y --no-install-recommends       python3 build-essential git curl sudo chromium     && rm -rf /var/lib/apt/lists/*     && echo \"node ALL=(root) NOPASSWD:ALL\" > /etc/sudoers.d/node" did not complete successfully: exit code: 100
+
+
+
+View build details: docker-desktop://dashboard/build/default/default/sk0onbg458tytzv6oa32s9yn1
+
+
+[2026-10-14T06:23:04.559Z] Exit code 1
+Error: Command failed: docker compose --project-name clinical-lab-amd64 -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml -f /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1791958707256.yml build app
+    at Dp (/Users/oskar/.npm/_npx/73d01a769cc497cb/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:434:525)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async f9 (/Users/oskar/.npm/_npx/73d01a769cc497cb/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:671:3341)
+    at async h9 (/Users/oskar/.npm/_npx/73d01a769cc497cb/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:670:5791)
+    at async /Users/oskar/.npm/_npx/73d01a769cc497cb/node_modules/@devcontainers/cli/dist/spec-node/devContainersSpecCLI.js:488:1917
+{"outcome":"error","message":"Command failed: docker compose --project-name clinical-lab-amd64 -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml -f /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1791958707256.yml build app","description":"An error occurred building the Docker Compose images."}

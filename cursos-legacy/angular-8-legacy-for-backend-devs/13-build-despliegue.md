@@ -2,7 +2,7 @@
 
 > Tutorial Angular 8 — Laboratorio clínico · Fase 13 de 14 · **7 horas**
 > Depende de: Fase 12 · Habilita: Fase 14
-> Apéndices de apoyo: [A04 (Webpack oculto)](./a04-webpack-oculto.md) · [A09 (Kubernetes para el dev de front)](./a09-kubernetes.md) · [A03 (Node y npm)](./a03-node-npm.md) · [A07 (i18n en Angular 8)](./a07-i18n.md) · [A02 (Bootstrap 4 + Sass)](./a02-bootstrap-sass.md) · [A13 (Docker + Colima en Apple Silicon)](./a13-docker-colima.md) · [Incidentes asociados](./cuaderno-incidentes.md): 19, 20
+> Apéndices de apoyo: [A04 (Webpack oculto)](./a04-webpack-oculto.md) · [A09 (Kubernetes para el dev de front)](./a09-kubernetes.md) · [A03 (Node y npm)](./a03-node-npm.md) · [A07 (i18n en Angular 8)](./a07-i18n.md) · [A02 (Bootstrap 4 + Sass)](./a02-bootstrap-sass.md) · [A13 (Docker + Colima en Apple Silicon)](./a13-docker-colima.md), [A14 (Docker Desktop, amd64 y VS Code)](./a14-docker-desktop-amd64-vscode.md) · [Incidentes asociados](./cuaderno-incidentes.md): 19, 20
 
 ---
 

@@ -447,14 +447,24 @@ bloque nuevo.
 son consulta rápida y el código que explican lo escriben las fases, **no llevan
 tag propio**, y el bloque lo dice explícitamente junto con qué prefijo usar para
 lo que sí salga de leerlos (`f05: …`, el de la fase desde la que se llegó). La
-única excepción es **A13**, cuyo §6 escribe el `.devcontainer/`: si se decide
-versionarlo, ese commit se etiqueta `apendice-a13-docker-colima`. Un tag que no
-apunta a un cambio no marca nada.
+excepciones son **A13** y **A14**, cuyos §6 y §4 escriben un `.devcontainer/`. El
+de A13 se versiona con el tag `apendice-a13-docker-colima` si se decide. **A14
+no lleva tag** (decisión D4 del plan de edición, 14/10/2026): su devcontainer va en
+`.devcontainer/amd64/` con el prefijo de commit `f00:`, la fase desde la que se
+llega. Un tag que no apunta a un cambio no marca nada.
 
 ---
 
 Los apéndices no siguen esta plantilla: usan índice de salto rápido, secciones
 cortas, una guía final de "cuándo usar qué" y 5-10 ejercicios cortos.
+
+> 📝 **Excepción declarada: A14 y A15 no tienen ejercicios.** Son recetas de
+> entorno (Docker Desktop con un devcontainer amd64, y la depuración de ese
+> contenedor). **Su porqué:** un ejercicio sobre una receta se reduce a repetirla,
+> y la verificación ya está en cada paso: cada una cierra con una sección
+> «Cómo saber que funcionó» con comprobaciones observables. Sustituye al bloque de
+> ejercicios, no a la verificación. Esta excepción reemplaza, solo para estos dos
+> apéndices, la regla de 5-10 ejercicios.
 
 ---
 
@@ -500,7 +510,8 @@ cortas, una guía final de "cuándo usar qué" y 5-10 ejercicios cortos.
 - **Con el identificador vigente.** Si el ejercicio nombra código, usa el nombre
   en inglés que ya existe en la fase (`validateResult`, no `validarResultado`).
 
-En apéndices bastan 5-10 ejercicios cortos de consulta.
+En apéndices bastan 5-10 ejercicios cortos de consulta. **Excepción:** A14 y A15
+no llevan ejercicios; ver la nota de la sección de apéndices.
 
 ---
 

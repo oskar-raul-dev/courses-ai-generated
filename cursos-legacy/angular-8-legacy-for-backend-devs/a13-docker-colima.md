@@ -176,6 +176,8 @@ Esta es la sección que decide si un devcontainer se usa o se abandona el primer
 
 ## 6. Un devcontainer para este proyecto
 
+> 🧭 **Si tu Mac usa Docker Desktop en vez de Colima,** la receta de ese camino es el **Apéndice A14**, con su devcontainer amd64 en `.devcontainer/amd64/`. Este §6 no cambia: los dos conviven en el mismo repositorio.
+
 > ⚠️ **Esto NO es el `Dockerfile` de la Fase 13.** Aquel compila la aplicación y la sirve con nginx: es el artefacto que va a producción, y no lleva Node en su etapa final (**Fase 13 §5.6**). Este es un ambiente **de desarrollo**, con Node, Python y las build tools, donde tú trabajas. Viven en carpetas distintas, se construyen por separado y confundirlos produce imágenes de producción con medio compilador dentro.
 
 ```dockerfile

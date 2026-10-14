@@ -1,0 +1,25 @@
+{
+  "patients": [
+    { "id": 1, "documentId": "HC-1032456789", "fullName": "Marcela Ríos", "birthDate": "1984-03-12", "email": "marcela.rios@example.com" },
+    { "id": 2, "documentId": "HC-1098765432", "fullName": "Julián Prada", "birthDate": "1991-11-02", "email": "julian.prada@example.com" },
+    { "id": 3, "documentId": "PP-1122334455", "fullName": "Deisy Cárdenas", "birthDate": "2009-07-25", "email": null }
+  ],
+  "orders": [
+    { "id": 101, "patientId": 1, "status": "pending", "createdAt": "2022-01-03T08:15:00-05:00", "dueAt": "2022-01-05T08:15:00-05:00", "testCodes": ["CBC", "GLU"] },
+    { "id": 102, "patientId": 2, "status": "in_process", "createdAt": "2022-01-03T09:40:00-05:00", "dueAt": "2022-01-06T09:40:00-05:00", "testCodes": ["GLU"] },
+    { "id": 103, "patientId": 1, "status": "expired", "createdAt": "2021-12-21T07:00:00-05:00", "dueAt": "2021-12-23T07:00:00-05:00", "testCodes": ["TSH"] }
+  ],
+  "samples": [
+    { "id": 501, "orderId": 101, "status": "received", "collectedAt": "2022-01-03T10:05:00-05:00", "collectedBy": "analista1" },
+    { "id": 502, "orderId": 102, "status": "scheduled", "collectedAt": null, "collectedBy": null }
+  ],
+  "results": [
+    { "id": 9001, "sampleId": 501, "analyte": "glucose", "value": 118, "unit": "mg/dL", "status": "preliminary", "validatedBy": null, "validatedAt": null, "rangeVersionApplied": null },
+    { "id": 9002, "sampleId": 501, "analyte": "tsh", "value": 4.1, "unit": "mUI/L", "status": "validated", "validatedBy": "supervisor1", "validatedAt": "2022-01-03T14:20:00-05:00", "rangeVersionApplied": 1 }
+  ],
+  "referenceRanges": [
+    { "id": 1, "analyte": "glucose", "version": 1, "unit": "mg/dL", "low": 70, "high": 110, "criticalLow": 50, "criticalHigh": 250, "effectiveFrom": "2019-01-01T00:00:00-05:00", "effectiveTo": "2021-12-31T23:59:59-05:00" },
+    { "id": 2, "analyte": "glucose", "version": 2, "unit": "mg/dL", "low": 70, "high": 100, "criticalLow": 50, "criticalHigh": 250, "effectiveFrom": "2022-01-01T00:00:00-05:00", "effectiveTo": null },
+    { "id": 3, "analyte": "tsh", "version": 1, "unit": "mUI/L", "low": 0.4, "high": 4.0, "criticalLow": 0.1, "criticalHigh": 20, "effectiveFrom": "2019-01-01T00:00:00-05:00", "effectiveTo": null }
+  ]
+}

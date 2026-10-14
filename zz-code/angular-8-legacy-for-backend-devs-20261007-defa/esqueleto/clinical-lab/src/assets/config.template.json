@@ -1,0 +1,8 @@
+{
+  "apiUrl": "${API_URL}",
+  "environmentName": "${ENVIRONMENT_NAME}",
+  "timeZone": "${APP_TIME_ZONE}",
+  "features": {
+    "deliveryPdfEnabled": ${FEATURE_DELIVERY_PDF}
+  }
+}

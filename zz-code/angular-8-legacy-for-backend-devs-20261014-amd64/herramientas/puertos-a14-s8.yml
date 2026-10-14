@@ -1,0 +1,7 @@
+# Igual que el bloque de A14 §8 (puertos 4200, 9229 y 9230 en 127.0.0.1, aleatorios).
+services:
+  app:
+    ports:
+      - "127.0.0.1::4200"
+      - "127.0.0.1::9229"
+      - "127.0.0.1::9230"

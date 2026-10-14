@@ -1326,7 +1326,7 @@ Recordatorio de las tres reglas que más se rompen:
 
 ## Identidad de esta fase
 
-- Número y nombre: Fase 14 de 14 — 🔥 Ambiente "casi prod" con kind
+- Número y nombre: Fase 14 (opcional) — 🔥 Ambiente "casi prod" con kind
 - Horas: — (sin horas contadas)
 - Depende de: Fase 13
 - Habilita: ninguna

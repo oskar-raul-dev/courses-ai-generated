@@ -1,0 +1,9 @@
+{
+  "name": "clinical-lab amd64 (runArgs)",
+  "build": { "dockerfile": "Dockerfile" },
+  "runArgs": ["--platform=linux/amd64"],
+  "mounts": ["source=lab-node-modules-amd64,target=/workspace/node_modules,type=volume"],
+  "workspaceFolder": "/workspace",
+  "remoteUser": "node",
+  "postCreateCommand": "sudo chown -R node:node node_modules && uname -m && node -v"
+}

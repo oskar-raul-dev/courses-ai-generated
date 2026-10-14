@@ -1,0 +1,92 @@
+[2026-10-14T06:29:50.016Z] @devcontainers/cli 0.89.0. Node.js v24.21.0. darwin 25.6.0 arm64.
+[2026-10-14T06:29:50.247Z] Start: Run: docker compose -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml --profile * config
+[2026-10-14T06:29:50.360Z] Start: Run: docker compose -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml --profile * config
+[2026-10-14T06:29:50.426Z] name: clinical-lab-amd64
+services:
+  app:
+    build:
+      context: /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer
+      dockerfile: Dockerfile
+    command:
+      - sleep
+      - infinity
+    labels:
+      curso: angular-8-legacy
+    networks:
+      default: null
+    platform: linux/amd64
+    volumes:
+      - type: bind
+        source: /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose
+        target: /workspace
+        bind: {}
+      - type: volume
+        source: lab-node-modules-amd64
+        target: /workspace/node_modules
+        volume: {}
+networks:
+  default:
+    name: clinical-lab-amd64_default
+volumes:
+  lab-node-modules-amd64:
+    name: clinical-lab-amd64_lab-node-modules-amd64
+[2026-10-14T06:29:50.429Z] Start: Run: docker inspect --type image node:14.21.3-bullseye-slim
+[2026-10-14T06:29:50.487Z] Docker Compose override file for building image:
+services:
+  app:
+    build:
+      dockerfile: /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/container-features/0.89.0-1791959390486/Dockerfile-with-features
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+        - _DEV_CONTAINERS_BASE_IMAGE=dev_container_auto_added_stage_label
+
+[2026-10-14T06:29:50.487Z] Start: Run: docker compose --project-name clinical-lab-amd64 -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml -f /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1791959390487.yml build
+[2026-10-14T06:29:50.584Z]  Image clinical-lab-amd64-app Building 
+
+[2026-10-14T06:29:50.660Z] #1 [internal] load local bake definitions
+[2026-10-14T06:29:50.803Z] #1 reading from stdin 925B done
+#1 DONE 0.0s
+[2026-10-14T06:29:50.906Z] 
+#2 [internal] load build definition from Dockerfile-with-features
+#2 transferring dockerfile: 1.17kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:14.21.3-bullseye-slim
+[2026-10-14T06:29:50.907Z] #3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [dev_container_auto_added_stage_label 1/3] FROM docker.io/library/node:14.21.3-bullseye-slim@sha256:0f5b374fae506741ff14db84daff2937ae788e88fb48a6c66d15de5ee808ccd3
+#5 resolve docker.io/library/node:14.21.3-bullseye-slim@sha256:0f5b374fae506741ff14db84daff2937ae788e88fb48a6c66d15de5ee808ccd3 0.0s done
+#5 DONE 0.0s
+
+#6 [dev_container_auto_added_stage_label 2/3] RUN rm -f /etc/apt/sources.list.d/*     && printf 'deb [check-valid-until=no] http://archive.debian.org/debian bullseye main\ndeb [check-valid-until=no] http://archive.debian.org/debian-security bullseye-security main\n' > /etc/apt/sources.list     && printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99archive     && apt-get update && apt-get install -y --no-install-recommends       python3 build-essential git curl sudo chromium     && rm -rf /var/lib/apt/lists/*     && echo "node ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/node
+#6 CACHED
+
+#7 [dev_container_auto_added_stage_label 3/3] WORKDIR /workspace
+#7 CACHED
+
+#8 exporting to image
+#8 exporting layers done
+[2026-10-14T06:29:50.907Z] #8 preparing layers for inline cache 0.0s done
+#8 exporting manifest sha256:9965713dda3248e4d17c2f6fb56246d6d50216afbb1bb0ae095f86f144794b16 done
+#8 exporting config sha256:79463b3ff72b1e5bfec936e5b307bf0658c63aec5dc041dae75f8252ad8ebb27
+[2026-10-14T06:29:51.061Z] #8 exporting config sha256:79463b3ff72b1e5bfec936e5b307bf0658c63aec5dc041dae75f8252ad8ebb27 done
+#8 exporting attestation manifest sha256:a90a678de9f29c02f68369cc03aafd222c74174c9c83a5d33cbfa17741d75db5 done
+#8 exporting manifest list sha256:1682170270840bd1982b838804d102b5f148487c8c1aa039148807fdf1577da8 done
+#8 naming to docker.io/library/clinical-lab-amd64-app:latest done
+#8 DONE 0.1s
+
+#9 resolving provenance for metadata file
+[2026-10-14T06:29:51.096Z] #9 DONE 0.0s
+[2026-10-14T06:29:51.139Z]  Image clinical-lab-amd64-app Built 
+
+[2026-10-14T06:29:51.231Z] Start: Run: docker compose --project-name clinical-lab-amd64 -f /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-8-legacy-for-backend-devs-20261014-amd64/t2/variante-a-compose/.devcontainer/docker-compose.yml -f /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.build-1791959390487.yml -f /var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/devcontainercli/docker-compose/docker-compose.devcontainer.containerFeatures-1791959391229-cf3c4108-c236-4b6b-913e-c07e8ea4349d.yml up -d
+[2026-10-14T06:29:57.795Z] Running the postCreateCommand from devcontainer.json...
+
+[2026-10-14T06:29:57.994Z] x86_64
+[2026-10-14T06:29:58.060Z] v14.21.3
+[2026-10-14T06:29:58.061Z] 
+{"outcome":"success","containerId":"035d4f76f6397d21a50d3d0a74aa481f966ec93ce887c06155deeb471e5e9cb2","composeProjectName":"clinical-lab-amd64","remoteUser":"node","remoteWorkspaceFolder":"/workspace","ociAuthDiagnostics":{"authLookupWouldBeBlocked":false,"registryRedirectWouldPreventCredentialForwarding":false,"authServerRedirect":false}}

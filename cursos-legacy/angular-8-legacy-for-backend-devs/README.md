@@ -90,7 +90,7 @@ Cada fase sigue la misma plantilla de nueve secciones: propósito, qué queda
 listo, qué no entra todavía, concepto mínimo, código mínimo con comentarios,
 errores comunes y pieza forense, ejercicios, referencias y cierre.
 
-### 📎 Los trece apéndices
+### 📎 Los quince apéndices
 
 Consulta bajo demanda: se entra por el índice buscando algo concreto y se sale.
 Sus horas no cuentan en el calendario.
@@ -110,6 +110,8 @@ Sus horas no cuentan en el calendario.
 | 🔥 A11 · Migración 9 → 16 | [`a11-migracion-9-16.md`](a11-migracion-9-16.md) | Fases 4, 13, como referencia |
 | 🔥 A12 · Dependencias problemáticas en arm64 / M1 | [`a12-arm64-m1.md`](a12-arm64-m1.md) | Fases 0, 14 |
 | 🔥 A13 · Docker + Colima en Apple Silicon | [`a13-docker-colima.md`](a13-docker-colima.md) | Fases 0, 13, 14 |
+| 🔥 A14 · Docker Desktop, amd64 y VS Code | [`a14-docker-desktop-amd64-vscode.md`](a14-docker-desktop-amd64-vscode.md) | Fases 0, 13 |
+| 🔥 A15 · Depurar dentro del contenedor amd64 | [`a15-depurar-en-el-contenedor.md`](a15-depurar-en-el-contenedor.md) | A14 |
 
 ## 📓 El cuaderno de incidentes
 
@@ -184,7 +186,7 @@ Angular no cambia ni un archivo.
 | 🔥 bea-12 · Datos de prueba y volumen ✅ | [`bea-12-datos-de-prueba-y-volumen.md`](bea-12-datos-de-prueba-y-volumen.md) |
 
 Sus horas no cuentan en ningún calendario: son consulta bajo demanda, igual que
-`a01`–`a13` del track base.
+`a01`–`a15` del track base.
 
 El track **no vende MongoDB ni Java**: vende el método para diagnosticar un
 sistema cuyo modelo de datos se volvió un pasivo, y para defender por escrito la
@@ -217,8 +219,8 @@ que es exactamente lo que el track viene a enseñar.
   sabes de qué fase es tu problema— y en qué miente cada herramienta.
 - `forense-fase-NN.md` — el paso a paso de la pieza forense de cada fase. Cada
   fase deja el gancho en su sección 6 y el desarrollo vive acá.
-- `aNN-*.md` — consulta rápida bajo demanda: los trece apéndices, con su tabla
-  completa y a quién sirve cada uno, están en **📚 Las fases → 📎 Los trece
+- `aNN-*.md` — consulta rápida bajo demanda: los quince apéndices, con su tabla
+  completa y a quién sirve cada uno, están en **📚 Las fases → 📎 Los quince
   apéndices**.
 - [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) — cómo versionas el código que escribes
   mientras haces el curso: un repo, commits con el prefijo de la fase, un tag
@@ -233,7 +235,7 @@ que es exactamente lo que el track viene a enseñar.
   archivo aparte del base**: quien haga solo el track base no recibe incidentes
   de MongoDB mezclados con los suyos.
 
-Con eso, **el curso está completo**: las catorce fases, los trece apéndices, el
+Con eso, **el curso está completo**: las catorce fases obligatorias y la 14 opcional, los quince apéndices, el
 track forense —[`forense-master.md`](forense-master.md) y las quince piezas, de
 [`forense-fase-00.md`](forense-fase-00.md) a
 [`forense-fase-14.md`](forense-fase-14.md)—, los **veintidós incidentes** de
@@ -267,7 +269,7 @@ compile-time: la comparación entre las dos familias y el porqué de la decisió
 están en la Fase 2.
 
 Windows 11 es el entorno por defecto y Linux amd64 funciona sin sorpresas;
-macOS Apple Silicon vive en los apéndices A12 y A13, donde `node-sass` que no
+macOS Apple Silicon vive en los apéndices A12, A13 y A14, donde `node-sass` que no
 compila en arm64 deja de ser una molestia y pasa a ser parte del ejercicio.
 
 > 🧭 **Estas versiones están fijadas y el curso es autocontenido:** son las que

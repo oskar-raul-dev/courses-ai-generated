@@ -456,6 +456,13 @@ son la intención con la que se escribió cada línea (§2).
     "@angular/language-service": "~8.2.14",
     "typescript": "~3.5.3",
 
+    // Tipos para las pruebas (Fase 12). Sin @types/jasmine, TypeScript no
+    // encuentra los tipos de los specs. @types/node va fijado a la línea 8: sin
+    // fijar, una instalación limpia trae la 26.x, que usa sintaxis de TypeScript 3.7
+    // y no compila con el TypeScript 3.5 de este stack (TS1144 en ng test).
+    "@types/jasmine": "^3.4.6",
+    "@types/node": "~8.9.4",
+
     // Sass. El par node-sass ↔ Node es una tabla que se consulta (A02 §1.1).
     "node-sass": "4.14.1",
 

@@ -194,8 +194,9 @@ a chocar viene de ahí:
   La alternativa segura exigía cambios en un backend que era de otro frente.
 - **Las fechas con desfase fijo.** Los datos de prueba y buena parte del código
   escriben las horas con `-05:00` pegado, el desfase de Ottawa en invierno. El
-  proyecto arrancó en febrero, el equipo que más código escribió vivía en Costa
-  Rica —donde la hora no cambia nunca— y nadie se hizo la pregunta de marzo. Es
+  proyecto arrancó en junio, ya con Angular 8 estable; el equipo que más código
+  escribió vivía en Costa Rica —donde la hora no cambia nunca— y nadie se hizo la
+  pregunta de marzo, que recién llegó en marzo de 2020. Es
   la deuda de tiempo más cara del sistema, y la que menos se ve: hablamos de ella
   en §4.
 
@@ -220,7 +221,7 @@ querían esperar la fila pública multiplicaron el volumen en meses. Andina abri
 puntos de toma en Ottawa y, por primera vez, cruzó el río: dos puntos en
 Gatineau, uno de ellos en un barrio con mucha población latinoamericana. El otro
 no se abrió: se compró. Era el punto de toma de una clínica privada que cerraba, y
-llegó con su fichero de pacientes en el sistema de agenda de la clínica; un script
+llegó con su archivo de pacientes en el sistema de agenda de la clínica; un script
 los pasó a LabCore una sola vez, y nadie volvió a mirar cómo. El punto siguió
 registrando las tomas en esa agenda, y desde noviembre de 2020 una interfaz de la
 misma consultora las copia a LabCore.
@@ -297,8 +298,9 @@ Desde 2021 no entran features. Entran **cambios normativos, requerimientos
 legales y hotfixes**, y casi todos vienen del lado de Quebec: la Ley 96 obliga a
 cada vez más empresas a trabajar en francés, y la Ley 25 cambió las reglas sobre
 qué datos personales pueden salir de la provincia y en qué condiciones. Node
-quedó en la 12 (la 14 en las máquinas donde `node-sass` no compilaba de otra
-forma), Angular en 8.2.14, y nadie va a subir eso: migrar cuesta más que
+quedó en la 12 en Windows y Linux, y en la 14 en los Mac con chip M, donde
+`node-sass` no compilaba de otra forma (el Apéndice A03 explica el reparto);
+Angular quedó en 8.2.14, y nadie va a subir eso: migrar cuesta más que
 aguantar.
 
 La aplicación se despliega como un contenedor con nginx delante, y arrastra la

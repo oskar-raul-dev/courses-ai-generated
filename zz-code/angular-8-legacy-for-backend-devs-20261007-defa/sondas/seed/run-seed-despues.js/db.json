@@ -1,0 +1,724 @@
+{
+  "patients": [
+    {
+      "id": 1,
+      "documentId": "HC-1041426182",
+      "fullName": "Deisy Prada",
+      "birthDate": "1986-07-11",
+      "email": "paciente1@example.com",
+      "active": true
+    },
+    {
+      "id": 2,
+      "documentId": "HC-1098455931",
+      "fullName": "Paola Quintero",
+      "birthDate": "1952-03-13",
+      "email": null,
+      "active": true
+    },
+    {
+      "id": 3,
+      "documentId": "HC-1067188356",
+      "fullName": "Andres Osorio",
+      "birthDate": "1970-02-02",
+      "email": "paciente3@example.com",
+      "active": true
+    },
+    {
+      "id": 4,
+      "documentId": "HC-1091759258",
+      "fullName": "Ricardo Prada",
+      "birthDate": "1966-02-04",
+      "email": "paciente4@example.com",
+      "active": true
+    },
+    {
+      "id": 5,
+      "documentId": "HC-1057045181",
+      "fullName": "Camilo Cardenas",
+      "birthDate": "1981-03-26",
+      "email": "paciente5@example.com",
+      "active": true
+    },
+    {
+      "id": 6,
+      "documentId": "HC-1010885630",
+      "fullName": "Ricardo Quintero",
+      "birthDate": "1961-01-25",
+      "email": "paciente6@example.com",
+      "active": true
+    },
+    {
+      "id": 7,
+      "documentId": "HC-1052971964",
+      "fullName": "Julian Beltran",
+      "birthDate": "1974-01-19",
+      "email": "paciente7@example.com",
+      "active": true
+    },
+    {
+      "id": 8,
+      "documentId": "HC-1090402948",
+      "fullName": "Paola Cardenas",
+      "birthDate": "1963-10-06",
+      "email": "paciente8@example.com",
+      "active": true
+    },
+    {
+      "id": 9,
+      "documentId": "HC-1059906978",
+      "fullName": "Julian Salazar",
+      "birthDate": "1978-09-03",
+      "email": "paciente9@example.com",
+      "active": true
+    },
+    {
+      "id": 10,
+      "documentId": "HC-1016730966",
+      "fullName": "Deisy Prada",
+      "birthDate": "1952-02-26",
+      "email": "paciente10@example.com",
+      "active": true
+    },
+    {
+      "id": 11,
+      "documentId": "HC-1090195901",
+      "fullName": "Deisy Osorio",
+      "birthDate": "1950-11-05",
+      "email": "paciente11@example.com",
+      "active": true
+    },
+    {
+      "id": 12,
+      "documentId": "HC-1005919067",
+      "fullName": "Ricardo Salazar",
+      "birthDate": "1961-10-18",
+      "email": "paciente12@example.com",
+      "active": true
+    },
+    {
+      "id": 13,
+      "documentId": "HC-1074702931",
+      "fullName": "Deisy Prada",
+      "birthDate": "2004-06-23",
+      "email": "paciente13@example.com",
+      "active": true
+    },
+    {
+      "id": 14,
+      "documentId": "HC-1048090705",
+      "fullName": "Julian Rios",
+      "birthDate": "1991-07-21",
+      "email": "paciente14@example.com",
+      "active": true
+    },
+    {
+      "id": 15,
+      "documentId": "HC-1040588562",
+      "fullName": "Deisy Quintero",
+      "birthDate": "1961-05-12",
+      "email": "paciente15@example.com",
+      "active": true
+    },
+    {
+      "id": 16,
+      "documentId": "HC-1018554526",
+      "fullName": "Camilo Prada",
+      "birthDate": "1962-11-08",
+      "email": "paciente16@example.com",
+      "active": true
+    },
+    {
+      "id": 17,
+      "documentId": "HC-1055754028",
+      "fullName": "Camilo Osorio",
+      "birthDate": "1973-07-24",
+      "email": "paciente17@example.com",
+      "active": true
+    },
+    {
+      "id": 18,
+      "documentId": "HC-1055582132",
+      "fullName": "Camilo Cardenas",
+      "birthDate": "1973-04-11",
+      "email": "paciente18@example.com",
+      "active": true
+    },
+    {
+      "id": 19,
+      "documentId": "HC-1039952417",
+      "fullName": "Julian Cardenas",
+      "birthDate": "1985-04-06",
+      "email": "paciente19@example.com",
+      "active": true
+    },
+    {
+      "id": 20,
+      "documentId": "HC-1004852537",
+      "fullName": "Paola Prada",
+      "birthDate": "2001-10-11",
+      "email": "paciente20@example.com",
+      "active": true
+    },
+    {
+      "id": 21,
+      "documentId": "HC-1042566443",
+      "fullName": "Deisy Osorio",
+      "birthDate": "1992-06-12",
+      "email": "paciente21@example.com",
+      "active": true
+    },
+    {
+      "id": 22,
+      "documentId": "HC-1030563271",
+      "fullName": "Camilo Cardenas",
+      "birthDate": "1959-07-14",
+      "email": "paciente22@example.com",
+      "active": true
+    },
+    {
+      "id": 23,
+      "documentId": "HC-1087052896",
+      "fullName": "Marcela Quintero",
+      "birthDate": "1960-05-08",
+      "email": "paciente23@example.com",
+      "active": true
+    },
+    {
+      "id": 24,
+      "documentId": "HC-1093208160",
+      "fullName": "Paola Beltran",
+      "birthDate": "1960-11-13",
+      "email": "paciente24@example.com",
+      "active": true
+    },
+    {
+      "id": 25,
+      "documentId": "HC-1082053754",
+      "fullName": "Marcela Cardenas",
+      "birthDate": "1989-09-03",
+      "email": null,
+      "active": true
+    }
+  ],
+  "orders": [
+    {
+      "id": 101,
+      "patientId": 24,
+      "status": "pending",
+      "createdAt": "2021-12-04T08:15:00-05:00",
+      "dueAt": "2021-12-04T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 102,
+      "patientId": 11,
+      "status": "in_process",
+      "createdAt": "2022-01-28T08:15:00-05:00",
+      "dueAt": "2022-01-28T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 103,
+      "patientId": 15,
+      "status": "pending",
+      "createdAt": "2022-01-12T08:15:00-05:00",
+      "dueAt": "2022-01-12T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 104,
+      "patientId": 13,
+      "status": "partial_results",
+      "createdAt": "2021-12-07T08:15:00-05:00",
+      "dueAt": "2021-12-07T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 105,
+      "patientId": 23,
+      "status": "in_process",
+      "createdAt": "2021-12-28T08:15:00-05:00",
+      "dueAt": "2021-12-28T08:15:00-05:00",
+      "testCodes": [
+        "TSH"
+      ],
+      "active": true
+    },
+    {
+      "id": 106,
+      "patientId": 18,
+      "status": "partial_results",
+      "createdAt": "2022-02-09T08:15:00-05:00",
+      "dueAt": "2022-02-09T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 107,
+      "patientId": 18,
+      "status": "pending",
+      "createdAt": "2022-02-26T08:15:00-05:00",
+      "dueAt": "2022-02-26T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 108,
+      "patientId": 9,
+      "status": "partial_results",
+      "createdAt": "2021-12-17T08:15:00-05:00",
+      "dueAt": "2021-12-17T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 109,
+      "patientId": 23,
+      "status": "in_process",
+      "createdAt": "2021-12-14T08:15:00-05:00",
+      "dueAt": "2021-12-14T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 110,
+      "patientId": 15,
+      "status": "complete",
+      "createdAt": "2022-01-08T08:15:00-05:00",
+      "dueAt": "2022-01-08T08:15:00-05:00",
+      "testCodes": [
+        "TSH"
+      ],
+      "active": true
+    },
+    {
+      "id": 111,
+      "patientId": 23,
+      "status": "in_process",
+      "createdAt": "2022-02-25T08:15:00-05:00",
+      "dueAt": "2022-02-25T08:15:00-05:00",
+      "testCodes": [
+        "LIP"
+      ],
+      "active": true
+    },
+    {
+      "id": 112,
+      "patientId": 5,
+      "status": "partial_results",
+      "createdAt": "2021-12-03T08:15:00-05:00",
+      "dueAt": "2021-12-03T08:15:00-05:00",
+      "testCodes": [
+        "LIP"
+      ],
+      "active": true
+    },
+    {
+      "id": 113,
+      "patientId": 8,
+      "status": "complete",
+      "createdAt": "2022-02-11T08:15:00-05:00",
+      "dueAt": "2022-02-11T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 114,
+      "patientId": 15,
+      "status": "complete",
+      "createdAt": "2022-02-28T08:15:00-05:00",
+      "dueAt": "2022-02-28T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 115,
+      "patientId": 17,
+      "status": "partial_results",
+      "createdAt": "2022-01-04T08:15:00-05:00",
+      "dueAt": "2022-01-04T08:15:00-05:00",
+      "testCodes": [
+        "LIP"
+      ],
+      "active": true
+    },
+    {
+      "id": 116,
+      "patientId": 23,
+      "status": "pending",
+      "createdAt": "2022-01-09T08:15:00-05:00",
+      "dueAt": "2022-01-09T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 117,
+      "patientId": 14,
+      "status": "complete",
+      "createdAt": "2022-02-26T08:15:00-05:00",
+      "dueAt": "2022-02-26T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 118,
+      "patientId": 11,
+      "status": "in_process",
+      "createdAt": "2022-01-21T08:15:00-05:00",
+      "dueAt": "2022-01-21T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 119,
+      "patientId": 12,
+      "status": "partial_results",
+      "createdAt": "2021-12-05T08:15:00-05:00",
+      "dueAt": "2021-12-05T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 120,
+      "patientId": 21,
+      "status": "partial_results",
+      "createdAt": "2022-02-22T08:15:00-05:00",
+      "dueAt": "2022-02-22T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 121,
+      "patientId": 14,
+      "status": "complete",
+      "createdAt": "2022-02-28T08:15:00-05:00",
+      "dueAt": "2022-02-28T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 122,
+      "patientId": 3,
+      "status": "partial_results",
+      "createdAt": "2022-02-28T08:15:00-05:00",
+      "dueAt": "2022-02-28T08:15:00-05:00",
+      "testCodes": [
+        "TSH"
+      ],
+      "active": true
+    },
+    {
+      "id": 123,
+      "patientId": 13,
+      "status": "pending",
+      "createdAt": "2021-12-19T08:15:00-05:00",
+      "dueAt": "2021-12-19T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 124,
+      "patientId": 2,
+      "status": "pending",
+      "createdAt": "2022-01-27T08:15:00-05:00",
+      "dueAt": "2022-01-27T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 125,
+      "patientId": 22,
+      "status": "in_process",
+      "createdAt": "2021-12-26T08:15:00-05:00",
+      "dueAt": "2021-12-26T08:15:00-05:00",
+      "testCodes": [
+        "TSH"
+      ],
+      "active": true
+    },
+    {
+      "id": 126,
+      "patientId": 18,
+      "status": "complete",
+      "createdAt": "2022-02-20T08:15:00-05:00",
+      "dueAt": "2022-02-20T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 127,
+      "patientId": 4,
+      "status": "in_process",
+      "createdAt": "2022-01-20T08:15:00-05:00",
+      "dueAt": "2022-01-20T08:15:00-05:00",
+      "testCodes": [
+        "TSH"
+      ],
+      "active": true
+    },
+    {
+      "id": 128,
+      "patientId": 21,
+      "status": "partial_results",
+      "createdAt": "2022-01-01T08:15:00-05:00",
+      "dueAt": "2022-01-01T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 129,
+      "patientId": 12,
+      "status": "in_process",
+      "createdAt": "2022-01-25T08:15:00-05:00",
+      "dueAt": "2022-01-25T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 130,
+      "patientId": 22,
+      "status": "partial_results",
+      "createdAt": "2022-02-11T08:15:00-05:00",
+      "dueAt": "2022-02-11T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 131,
+      "patientId": 3,
+      "status": "partial_results",
+      "createdAt": "2022-01-10T08:15:00-05:00",
+      "dueAt": "2022-01-10T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 132,
+      "patientId": 23,
+      "status": "complete",
+      "createdAt": "2021-12-11T08:15:00-05:00",
+      "dueAt": "2021-12-11T08:15:00-05:00",
+      "testCodes": [
+        "LIP"
+      ],
+      "active": true
+    },
+    {
+      "id": 133,
+      "patientId": 6,
+      "status": "complete",
+      "createdAt": "2022-02-28T08:15:00-05:00",
+      "dueAt": "2022-02-28T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 134,
+      "patientId": 20,
+      "status": "in_process",
+      "createdAt": "2022-02-01T08:15:00-05:00",
+      "dueAt": "2022-02-01T08:15:00-05:00",
+      "testCodes": [
+        "TSH"
+      ],
+      "active": true
+    },
+    {
+      "id": 135,
+      "patientId": 3,
+      "status": "partial_results",
+      "createdAt": "2021-12-06T08:15:00-05:00",
+      "dueAt": "2021-12-06T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 136,
+      "patientId": 10,
+      "status": "in_process",
+      "createdAt": "2021-12-19T08:15:00-05:00",
+      "dueAt": "2021-12-19T08:15:00-05:00",
+      "testCodes": [
+        "GLU"
+      ],
+      "active": true
+    },
+    {
+      "id": 137,
+      "patientId": 23,
+      "status": "pending",
+      "createdAt": "2022-02-03T08:15:00-05:00",
+      "dueAt": "2022-02-03T08:15:00-05:00",
+      "testCodes": [
+        "CBC"
+      ],
+      "active": true
+    },
+    {
+      "id": 138,
+      "patientId": 3,
+      "status": "complete",
+      "createdAt": "2022-01-14T08:15:00-05:00",
+      "dueAt": "2022-01-14T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    },
+    {
+      "id": 139,
+      "patientId": 11,
+      "status": "in_process",
+      "createdAt": "2022-01-14T08:15:00-05:00",
+      "dueAt": "2022-01-14T08:15:00-05:00",
+      "testCodes": [
+        "LIP"
+      ],
+      "active": true
+    },
+    {
+      "id": 140,
+      "patientId": 15,
+      "status": "partial_results",
+      "createdAt": "2022-02-20T08:15:00-05:00",
+      "dueAt": "2022-02-20T08:15:00-05:00",
+      "testCodes": [
+        "CREA"
+      ],
+      "active": true
+    }
+  ],
+  "samples": [
+    {
+      "id": 501,
+      "orderId": 101,
+      "status": "received",
+      "collectedAt": "2022-01-03T10:05:00-05:00",
+      "collectedBy": "analista1"
+    },
+    {
+      "id": 502,
+      "orderId": 102,
+      "status": "scheduled",
+      "collectedAt": null,
+      "collectedBy": null
+    }
+  ],
+  "results": [
+    {
+      "id": 9001,
+      "sampleId": 501,
+      "analyte": "glucose",
+      "value": 118,
+      "unit": "mg/dL",
+      "status": "preliminary",
+      "validatedBy": null,
+      "validatedAt": null,
+      "rangeVersionApplied": null
+    },
+    {
+      "id": 9002,
+      "sampleId": 501,
+      "analyte": "tsh",
+      "value": 4.1,
+      "unit": "mUI/L",
+      "status": "validated",
+      "validatedBy": "supervisor1",
+      "validatedAt": "2022-01-03T14:20:00-05:00",
+      "rangeVersionApplied": 1
+    }
+  ],
+  "referenceRanges": [
+    {
+      "id": 1,
+      "analyte": "glucose",
+      "version": 1,
+      "unit": "mg/dL",
+      "low": 70,
+      "high": 110,
+      "criticalLow": 50,
+      "criticalHigh": 250,
+      "effectiveFrom": "2019-01-01T00:00:00-05:00",
+      "effectiveTo": "2021-12-31T23:59:59-05:00"
+    },
+    {
+      "id": 2,
+      "analyte": "glucose",
+      "version": 2,
+      "unit": "mg/dL",
+      "low": 70,
+      "high": 100,
+      "criticalLow": 50,
+      "criticalHigh": 250,
+      "effectiveFrom": "2022-01-01T00:00:00-05:00",
+      "effectiveTo": null
+    },
+    {
+      "id": 3,
+      "analyte": "tsh",
+      "version": 1,
+      "unit": "mUI/L",
+      "low": 0.4,
+      "high": 4,
+      "criticalLow": 0.1,
+      "criticalHigh": 20,
+      "effectiveFrom": "2019-01-01T00:00:00-05:00",
+      "effectiveTo": null
+    }
+  ]
+}

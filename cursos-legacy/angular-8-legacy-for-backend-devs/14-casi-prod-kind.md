@@ -1,6 +1,6 @@
 # 🔥 Fase 14 — Ambiente "casi prod" con kind
 
-> Tutorial Angular 8 — Laboratorio clínico · Fase 14 de 14 · **🔥 Opcional · sin horas**
+> Tutorial Angular 8 — Laboratorio clínico · Fase 14 (opcional) · **🔥 Opcional · sin horas**
 > Depende de: Fase 13 · Habilita: cierre del curso
 > Apéndices de apoyo: [A09 (Kubernetes para el dev de front)](./a09-kubernetes.md) · [A03 (Node y npm)](./a03-node-npm.md) · [A12 (dependencias en arm64)](./a12-arm64-m1.md) · [A13 (Docker + Colima en Apple Silicon)](./a13-docker-colima.md) · [Incidentes asociados](./cuaderno-incidentes.md): —
 

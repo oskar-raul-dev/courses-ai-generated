@@ -1,0 +1,15 @@
+name: clinical-lab-amd64
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    labels:
+      curso: angular-8-legacy
+    volumes:
+      - ..:/workspace:cached
+      - lab-node-modules-amd64:/workspace/node_modules
+    command: sleep infinity
+volumes:
+  lab-node-modules-amd64:

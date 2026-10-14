@@ -269,7 +269,7 @@ Ottawa y Gatineau **sí** tienen horario de verano. `America/Toronto` es UTC−0
 | 2021 | 14 de marzo | 7 de noviembre |
 | 2022 | 13 de marzo | 6 de noviembre |
 
-Y eso explica la frase del anclaje: el `-05:00` de los datos es correcto **porque todos caen en invierno**. Es el desfase que la Era 1 escribió como constante, en un proyecto que arrancó en febrero, con la mitad del equipo en Costa Rica, donde la hora no cambia nunca. Nadie se hizo la pregunta de marzo.
+Y eso explica la frase del anclaje: el `-05:00` de los datos es correcto **porque todos caen en invierno**. Es el desfase que la Era 1 escribió como constante, en un proyecto que arrancó en junio de 2019, con la mitad del equipo en Costa Rica, donde la hora no cambia nunca. Nadie se hizo la pregunta de marzo.
 
 La aritmética del error, comprobada en Java 8:
 

@@ -3,7 +3,7 @@
 > Tutorial Angular 8 — Laboratorio clínico · Fase 0 de 14 · **8 horas**
 > Depende de: ninguna · Habilita: Fase 1 — Estructura base + NgRx
 > Antes de empezar: [`00-historia-del-sistema.md`](./00-historia-del-sistema.md), veinte minutos que explican por qué LabCore está así
-> Apéndices de apoyo: [A02 (Bootstrap 4 + Sass)](./a02-bootstrap-sass.md), [A03 (Node y npm)](./a03-node-npm.md), [A12 (dependencias problemáticas en arm64 / M1)](./a12-arm64-m1.md), [A13 (Docker + Colima en Apple Silicon)](./a13-docker-colima.md) · [Incidentes asociados](./cuaderno-incidentes.md): 01, 02
+> Apéndices de apoyo: [A02 (Bootstrap 4 + Sass)](./a02-bootstrap-sass.md), [A03 (Node y npm)](./a03-node-npm.md), [A12 (dependencias problemáticas en arm64 / M1)](./a12-arm64-m1.md), [A13 (Docker + Colima en Apple Silicon)](./a13-docker-colima.md), [A14 (Docker Desktop, amd64 y VS Code)](./a14-docker-desktop-amd64-vscode.md) · [Incidentes asociados](./cuaderno-incidentes.md): 01, 02
 
 ---
 
