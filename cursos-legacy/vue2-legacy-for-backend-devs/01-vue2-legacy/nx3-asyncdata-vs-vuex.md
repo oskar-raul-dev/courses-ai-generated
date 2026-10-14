@@ -697,7 +697,7 @@ La señal de que quedó bien:
 > número (`nx3 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/nx3/17`, y un incidente resuelto en el par `inc/nx3/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🆕 NX4 — la página SSR nueva. Hasta aquí has **traducido**
 lo que ya existía. Ahora construyes algo que a pelo no podías: un timeline de

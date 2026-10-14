@@ -636,7 +636,7 @@ La señal de que quedó bien:
 > número (`f01 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f01/17`, y un incidente resuelto en el par `inc/f01/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🔍 Fase 2 — Consultar: tu SQL, traducido. Todo tu
 `SELECT` con su gemelo Mongo al lado, y las dos trampas (`null` y los tipos)

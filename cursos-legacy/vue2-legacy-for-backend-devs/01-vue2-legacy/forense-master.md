@@ -155,7 +155,7 @@ propia pestaña, **WS**, no entre las peticiones.
 **El `db.json`** miente por escritura. json-server guarda de verdad, así que después de
 media hora de ejercicios el "caso limpio del enunciado" ya no existe. Antes de dar por
 bueno un síntoma raro, mira si el dato es el que crees
-([convención de git §🧹](../prompts/convencion-de-git-y-tags.md)).
+([convención de git §🧹](../00-convencion-de-git-y-tags.md)).
 
 **Y `git log -S`**, que no es una herramienta de depuración hasta que lo es:
 `git log --oneline -S "socket.emit"` encuentra el commit donde una línea apareció o

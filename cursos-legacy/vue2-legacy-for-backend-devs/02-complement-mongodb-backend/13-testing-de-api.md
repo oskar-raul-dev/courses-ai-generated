@@ -504,7 +504,7 @@ La señal de que quedó bien:
 > número (`f13 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f13/17`, y un incidente resuelto en el par `inc/f13/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🛠️ Fase 14 — Operación: lo que un dev SQL sí extraña.
 El sistema funciona y está blindado; falta operarlo como adulto: backups

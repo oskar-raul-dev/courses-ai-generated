@@ -891,7 +891,7 @@ La señal de que quedó bien:
 > número (`f04 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f04/17`, y un incidente resuelto en el par `inc/f04/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 📝 Fase 5 — CRUD de tickets: crear, editar y eliminar
 con formularios validados por vuelidate (por fin paga la instalación que

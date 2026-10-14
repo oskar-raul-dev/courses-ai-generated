@@ -1783,4 +1783,4 @@ aprendiste Quasar… o si solo aprendiste a traducir de Bootstrap.
 > número (`q3 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/q3/17`, y un incidente resuelto en el par `inc/q3/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).

@@ -649,7 +649,7 @@ La señal de que quedó bien:
 > número (`f02 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f02/17`, y un incidente resuelto en el par `inc/f02/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🧪 Fase 3 — Mock API con json-server, donde Stubby se
 jubila y el login se vuelve asíncrono de verdad.

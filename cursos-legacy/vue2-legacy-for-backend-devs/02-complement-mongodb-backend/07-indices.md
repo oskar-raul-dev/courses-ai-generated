@@ -464,7 +464,7 @@ La señal de que quedó bien:
 > número (`f07 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f07/17`, y un incidente resuelto en el par `inc/f07/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** ⚰️ Fase 8 — La autopsia. El modelo traducido está
 medido tres veces y condenado con evidencia. Ahora te toca a ti hacer lo que

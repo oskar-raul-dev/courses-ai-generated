@@ -691,4 +691,4 @@ La señal de que quedó bien:
 > número (`nx4 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/nx4/17`, y un incidente resuelto en el par `inc/nx4/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).

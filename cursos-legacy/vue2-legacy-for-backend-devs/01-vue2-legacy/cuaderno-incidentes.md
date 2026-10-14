@@ -45,7 +45,7 @@ git switch -c incidente/07 fase-07-metricas-minimas   # 3 · una rama, solo si h
 > ⚠️ Antes de pisar `db.json`, guarda el tuyo: `git checkout -- db.json` te
 > devuelve el que commiteaste; `npm run mock:reset` lo regenera desde la semilla
 > y se lleva por delante tus escenarios. La diferencia está en
-> [la convención de git §🧹](../prompts/convencion-de-git-y-tags.md).
+> [la convención de git §🧹](../00-convencion-de-git-y-tags.md).
 
 ### La convención de commits
 

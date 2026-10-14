@@ -997,4 +997,4 @@ componentes. Estás cambiando de **modelo de ejecución**.
 > número (`nx0 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/nx0/17`, y un incidente resuelto en el par `inc/nx0/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).

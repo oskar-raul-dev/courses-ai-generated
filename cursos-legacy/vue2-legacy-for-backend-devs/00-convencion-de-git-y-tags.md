@@ -8,6 +8,10 @@ commits con un prefijo, y un tag por fase cerrada. Más tres usos de los tags qu
 rinden mucho por lo poco que cuestan: los ejercicios, los incidentes y las
 deudas 💸 que un curso le deja al otro.
 
+> **Cuándo se lee:** antes de la Fase 0 de cada curso, y cada vez que el bloque
+> 🏷️ de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-07.
+
 > 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa
 > espacio, no agrega overhead y se borra con `git tag -d`. La pregunta no es
 > "¿vale la pena etiquetar esto?", es "¿por qué no?".
@@ -23,7 +27,7 @@ Al empezar el Curso 01 haces `git init` en el proyecto que crea Vue CLI
 No es una preferencia estética. La señal de éxito del paquete se mide con git:
 se apaga json-server, se cambia el `baseURL` y **el `git diff` del frontend
 tiene exactamente una línea** —lo firmado en
-[`../02-complement-mongodb-backend/00-audit-contrato.md`](../02-complement-mongodb-backend/00-audit-contrato.md)
+[`../02-complement-mongodb-backend/00-audit-contrato.md`](02-complement-mongodb-backend/00-audit-contrato.md)
 y ejecutado en la Fase 10 del Curso 02. En un monorepo ese `git diff` te
 devuelve además todo el backend que acabas de escribir, y la medición se
 convierte en humo.
@@ -76,8 +80,7 @@ git commit -m "a02: pipeline de agregación probado en Compass"
 **Los apéndices no cierran con tag**, y no es un olvido: un tag marca un cambio
 en el repositorio, y un apéndice explica lo que ya está ahí. Un tag que no marca
 un cambio no marca nada. Por eso ningún apéndice trae el bloque 🏷️ de cierre que
-sí traen las fases — está dicho en la
-[guía de estilo §9.1](guia-de-estilo-y-convenciones.md).
+sí traen las fases.
 
 > 💡 **Si un apéndice te deja archivos versionados** —el `docker-compose.yml`
 > de A01, los scripts de `package.json` que arma A3— y quieres poder volver a
@@ -201,7 +204,7 @@ autopsia: los números de antes están en los tags de la 5 y la 7.
 Los cursos plantean **incidentes de juguete** —el mock caído que parece un bug
 del frontend, el test que descarga medio internet la primera vez, la query
 fugitiva de la guardia simulada de F14— y piden resolverlos con la estructura
-de post-mortem de ocho puntos de la guía de estilo (§14): síntoma, repro,
+de post-mortem de ocho puntos: síntoma, repro,
 evidencia, causa raíz, corrección, prueba de regresión, prevención, y el
 análisis sin culpabilización.
 
@@ -256,8 +259,7 @@ inventa uno nuevo**:
   `ej/f08/25-roto` / `ej/f08/25-fix`.
 
 No existe un namespace `forense/`, y no debería: un tag marca un cambio, y
-mirar no cambia nada. El detalle de cómo se escriben las piezas y el cuaderno
-vive en `formato-piezas-forenses.md` y `formato-cuaderno-incidentes.md`, no acá.
+mirar no cambia nada.
 
 ---
 
@@ -306,7 +308,7 @@ mitad del libro mayor, y las dos juntas son la factura completa.
 > 💡 **Y esto le da mecánica a algo que ya venías escribiendo.**
 > `SECURITY-NOTES.md` acumula desde la Fase 2 del Curso 01 todo lo que "lo
 > debería hacer el backend", y la
-> [Fase 11 del Curso 02](../02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md)
+> [Fase 11 del Curso 02](02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md)
 > te pide tachar cada deuda **referenciando el commit que la resolvió**. Ese
 > commit es exactamente el que lleva el tag `deuda/…-pagada`: en vez de buscarlo
 > en el log, lo nombras.
@@ -331,7 +333,7 @@ La primera te deja el archivo tal como estaba en tu último commit, con los
 escenarios que hubieras construido dentro. La segunda lo regenera desde la
 semilla y se los lleva por delante. `db.seed.json` y el script `mock:reset` los
 creas tú en el ejercicio 14 de la
-[Fase 3](../01-vue2-legacy/03-mock-api-minima.md), y ésa es la razón por la que
+[Fase 3](01-vue2-legacy/03-mock-api-minima.md), y ésa es la razón por la que
 ese ejercicio no es opcional.
 
 De ahí sale el hábito que más te va a servir: cuando un ejercicio te pida un dato
@@ -349,14 +351,14 @@ tiempo.
 > 📝 **En el Curso 02 el estado sucio no está en un archivo, está en la base.**
 > Se vuelve con `npm run seed`, o levantando el contenedor de cero cuando la
 > cosa se puso fea de verdad
-> ([A01](../02-complement-mongodb-backend/a01-docker.md)).
+> ([A01](02-complement-mongodb-backend/a01-docker.md)).
 
 ---
 
 ## 🐳 Una cosa más, para la Fase 14 del Curso 02
 
 El compose final de la
-[Fase 14](../02-complement-mongodb-backend/14-operacion.md) empaqueta el sistema
+[Fase 14](02-complement-mongodb-backend/14-operacion.md) empaqueta el sistema
 entero, y el Dockerfile de la API aparece ahí. Cuando llegues, **no dejes esa
 imagen en `:latest`**: etiquétala con el mismo nombre del tag de git que la
 produjo.
@@ -367,7 +369,7 @@ docker build -t tiquetera-api:fase-14-operacion .
 
 Es el mismo reflejo que ya practicaste sin darte cuenta al fijar
 `MONGO_VERSION` en vez de aceptar `mongo:latest`
-([A01](../02-complement-mongodb-backend/a01-docker.md)) — solo que ahora la
+([A01](02-complement-mongodb-backend/a01-docker.md)) — solo que ahora la
 imagen sin versionar es la tuya. El día que algo se comporte distinto de como se comportaba
 ayer, la primera pregunta es *"¿qué código hay adentro?"*, y con `:latest` no
 tienes cómo contestarla. Es la mitad barata del diagnóstico, y es la que casi

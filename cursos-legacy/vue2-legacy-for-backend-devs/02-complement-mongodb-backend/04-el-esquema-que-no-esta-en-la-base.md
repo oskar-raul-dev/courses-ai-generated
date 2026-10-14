@@ -445,7 +445,7 @@ La señal de que quedó bien:
 > número (`f04 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f04/17`, y un incidente resuelto en el par `inc/f04/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🔗 Fase 5 — `$lookup` y por qué es una alarma. El JOIN
 existe en Mongo. Vas a aprenderlo, vas a medirlo… y vas a aprender a

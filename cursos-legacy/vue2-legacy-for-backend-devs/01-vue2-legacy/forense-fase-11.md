@@ -201,7 +201,7 @@ npx vue-cli-service test:unit
 
 Y si el experimento te resultó revelador, es material de commit: el par
 `ej/f11/3-roto` / `ej/f11/3-fix` de la
-[convención de tags](../prompts/convencion-de-git-y-tags.md) existe para eso.
+[convención de tags](../00-convencion-de-git-y-tags.md) existe para eso.
 
 ---
 

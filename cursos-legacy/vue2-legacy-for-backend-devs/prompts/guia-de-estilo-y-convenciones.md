@@ -661,7 +661,7 @@ commit— y va **después** de "La señal de que quedó bien" y **antes** de
 > número (`f04 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f04/17`, y un incidente resuelto en el par `inc/f04/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 ````
 
 El nombre del tag es **`fase-` + el mismo slug del archivo `.md`**, sin
@@ -884,8 +884,9 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" �
    Curso 01.
 4. `prompts/instrucciones-proyecto-track-b.md` —
    alcance del Curso 02.
-5. Esta guía y sus tres anexos: `prompts/convencion-de-git-y-tags.md` para
-   todo lo que toque git, repos y tags; `prompts/formato-piezas-forenses.md` y
+5. Esta guía y sus dos anexos, más la convención de git publicada en la raíz
+   (`00-convencion-de-git-y-tags.md`) para todo lo que toque git, repos y
+   tags; los anexos son `prompts/formato-piezas-forenses.md` y
    `prompts/formato-cuaderno-incidentes.md` para el track forense y el
    cuaderno de incidentes.
 6. Entregables ya aprobados de fases anteriores.
@@ -949,7 +950,7 @@ consolidó el 2026-10-06.
 
 Qué vive en `prompts/`:
 
-- **Vigente:** esta guía, `plantilla-de-fase.md`, `convencion-de-git-y-tags.md`,
+- **Vigente:** esta guía, `plantilla-de-fase.md`,
   `formato-piezas-forenses.md`, `formato-cuaderno-incidentes.md`,
   `diccionario-codigo.md` (compartido) e `instrucciones-proyecto-track-b.md`
   (alcance del Curso 02).
@@ -1014,8 +1015,8 @@ incidente es del alumno: el par de tags `inc/<fase>/<slug>-roto` y
 `inc/<fase>/<slug>-fix` deja el síntoma y la prueba en rojo en el primero, la
 causa raíz y el fix en el segundo, y el `git diff` entre los dos **es** el
 punto 5 aislado del ruido. El detalle está en
-`convencion-de-git-y-tags.md`, y las fases lo enlazan desde su bloque 🏷️ sin
-reexplicarlo.
+`00-convencion-de-git-y-tags.md`, en la raíz del paquete, y las fases lo
+enlazan desde su bloque 🏷️ sin reexplicarlo.
 
 ---
 

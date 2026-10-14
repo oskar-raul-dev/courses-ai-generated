@@ -500,7 +500,7 @@ La señal de que quedó bien:
 > número (`f02 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f02/17`, y un incidente resuelto en el par `inc/f02/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** ⚔️ Fase 3 — Embeber vs referenciar: el capítulo que
 decide todo. Hasta ahora consultaste un modelo que otro decidió. Ahora te

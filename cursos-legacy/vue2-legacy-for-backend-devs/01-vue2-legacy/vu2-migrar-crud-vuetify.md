@@ -1269,7 +1269,7 @@ Y la señal de que quedó **muy** bien:
 > número (`vu2 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/vu2/17`, y un incidente resuelto en el par `inc/vu2/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 📋 **VU3 — Migrar el dashboard a `v-data-table`.**
 

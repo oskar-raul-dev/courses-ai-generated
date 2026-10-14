@@ -750,7 +750,7 @@ La señal de que quedó bien:
 > número (`f10 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f10/17`, y un incidente resuelto en el par `inc/f10/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** ✅ Fase 11 — Testing mínimo: Jest + vue-test-utils
 contra todo lo que construimos. Y la venganza de las decisiones buenas: las

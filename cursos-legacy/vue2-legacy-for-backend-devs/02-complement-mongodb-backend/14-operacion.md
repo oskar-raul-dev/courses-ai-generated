@@ -468,7 +468,7 @@ La señal de que quedó bien:
 > número (`f14 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f14/17`, y un incidente resuelto en el par `inc/f14/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** ⚖️ Fase 15 — El veredicto honesto: ¿debías haber usado
 Mongo? Sabes modelar, consultar, garantizar, servir y operar. Queda la

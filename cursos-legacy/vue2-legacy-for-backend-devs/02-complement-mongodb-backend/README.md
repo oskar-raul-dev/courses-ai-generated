@@ -32,7 +32,7 @@ reemplaza al mock.
 | [`00-audit-contrato.md`](00-audit-contrato.md) | 📜 **El contrato que el backend debe honrar.** Dialecto de json-server a reimplementar, regímenes estricto y de crecimiento, checklist de smoke test. Fuente de verdad de la costura entre los dos cursos |
 | [`../prompts/diccionario-codigo.md`](../prompts/diccionario-codigo.md) | 📖 Diccionario de código del dominio, compartido con el Curso 01 |
 | [`../prompts/instrucciones-proyecto-track-b.md`](../prompts/instrucciones-proyecto-track-b.md) | 📋 Alcance del curso y realidad en disco |
-| [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio (separado del frontend, y por qué), un tag por fase, y el mensaje del tag como cuaderno de mediciones |
+| [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio (separado del frontend, y por qué), un tag por fase, y el mensaje del tag como cuaderno de mediciones |
 | [`../prompts/guia-de-estilo-y-convenciones.md`](../prompts/guia-de-estilo-y-convenciones.md) | ✍️ Guía editorial compartida con el Curso 01 |
 | [`forense-master.md`](forense-master.md) | 🕵️ **La puerta del track forense**: el método de cuatro preguntas y el 🩺 índice de síntomas. Se entra por lo que ves, no por la fase |
 | [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **12 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |

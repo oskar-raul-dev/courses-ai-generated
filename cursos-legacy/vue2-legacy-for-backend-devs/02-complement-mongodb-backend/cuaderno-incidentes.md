@@ -60,7 +60,7 @@ incidente(06): cierre — test de concurrencia con 50 rondas y post-mortem
 
 Los verbos son fijos: `abre`, `repro`, `hipótesis`, `hipótesis descartada`,
 `causa`, `fix`, `cierre`. **Commitea también los callejones sin salida.** Y marca
-el par de tags de la [convención §🚑](../prompts/convencion-de-git-y-tags.md):
+el par de tags de la [convención §🚑](../00-convencion-de-git-y-tags.md):
 
 ```bash
 git tag -a inc/f06/doble-take-roto -m "Síntoma, repro y la prueba en rojo."

@@ -1208,7 +1208,7 @@ La señal de que quedó bien:
 > número (`f09 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f09/17`, y un incidente resuelto en el par `inc/f09/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🗂️ Fase 10 — Vuex a fondo: con tres fases de
 experiencia diciendo "esto NO va al store todavía", por fin la pregunta con

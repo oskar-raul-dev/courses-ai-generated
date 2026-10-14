@@ -1583,4 +1583,4 @@ Vuetify… o si solo aprendiste a traducir de Bootstrap.
 > número (`vu3 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/vu3/17`, y un incidente resuelto en el par `inc/vu3/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).

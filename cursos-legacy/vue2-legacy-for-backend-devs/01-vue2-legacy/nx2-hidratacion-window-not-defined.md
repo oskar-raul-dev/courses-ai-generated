@@ -877,7 +877,7 @@ La señal de que quedó bien:
 > número (`nx2 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/nx2/17`, y un incidente resuelto en el par `inc/nx2/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🔄 **NX3 — `asyncData` vs Vuex**. La app ya no revienta. Pero
 fíjate en lo que dejamos feo a propósito: el dashboard carga los tickets en

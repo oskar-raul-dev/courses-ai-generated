@@ -440,7 +440,7 @@ siguiente. Doce fases después vas a poder correr `git tag -l 'fase-*'` y ver
 el curso entero en una pantalla. La convención completa —por qué el backend va
 en otro repo, cómo etiquetar ejercicios y cómo dejar un incidente resuelto con
 su par de tags— está en
-[`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+[`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 > 💡 **¿Nunca usaste git más allá de `pull` y `commit`?** No hace falta más que
 > eso. Los tags son punteros a un commit: no ocupan espacio, no cambian nada y
@@ -1203,7 +1203,7 @@ La señal de que quedó bien:
 > número (`f00 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f00/17`, y un incidente resuelto en el par `inc/f00/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🏗️ Fase 1 — Estructura base legacy: este Hello World se
 muda a una estructura de proyecto real (carpetas, layout con header y sidebar,

@@ -830,7 +830,7 @@ La señal de que quedó bien:
 > número (`f08 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f08/17`, y un incidente resuelto en el par `inc/f08/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🎧 Fase 9 — Panel de soporte: la vista de agente que
 integra TODO — cola, asignación, comentarios, estados y eventos en vivo.

@@ -254,7 +254,7 @@ incidente del cuaderno, se usa el par `inc/<fase>/<slug>-roto` / `-fix` que el c
 reservó, y cuando sale de un ejercicio de "rompe a propósito", el par
 `ej/f08/25-roto` / `-fix`. **No existe un namespace `forense/` y no se inventa uno.**
 
-Todo eso está en [`convencion-de-git-y-tags.md`](convencion-de-git-y-tags.md) §🕵️, y no se
+Todo eso está en [`00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md) §🕵️, y no se
 reexplica en ninguna pieza: se enlaza.
 
 ---

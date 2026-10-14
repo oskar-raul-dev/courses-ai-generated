@@ -1898,7 +1898,7 @@ de regresión toca la API real y falla, el problema es tuyo."*
 > número (`vu0 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/vu0/17`, y un incidente resuelto en el par `inc/vu0/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 📖 **VU1 — Leer Vuetify**. Todavía sin migrar nada, todavía sin
 tocar la Tiquetera. Reconocimiento puro: qué es Vuetify de verdad (Material Design,

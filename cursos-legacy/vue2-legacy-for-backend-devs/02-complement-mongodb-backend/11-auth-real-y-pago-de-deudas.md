@@ -455,7 +455,7 @@ La señal de que quedó bien:
 > número (`f11 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f11/17`, y un incidente resuelto en el par `inc/f11/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🔌 Fase 12 — El backend habla. Quedan dos mentiras del
 sistema heredado: el "cliente mentiroso" que emite sus propios eventos de

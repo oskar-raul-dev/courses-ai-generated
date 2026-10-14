@@ -150,7 +150,7 @@ si aplican. Es el recorrido para el que está diseñado el paquete.
 |---|---|
 | [`prompts/guia-de-estilo-y-convenciones.md`](prompts/guia-de-estilo-y-convenciones.md) | ✍️ **Fuente de verdad editorial de los dos cursos.** Tono, tuteo, idioma del código, callouts, plantilla, ejercicios, referencias |
 | [`prompts/plantilla-de-fase.md`](prompts/plantilla-de-fase.md) | 🧩 Esqueleto rellenable de las nueve secciones de una fase |
-| [`prompts/convencion-de-git-y-tags.md`](prompts/convencion-de-git-y-tags.md) | 🏷️ **Cómo versionas tu código mientras haces los cursos.** Dos repos, un tag por fase, tags de ejercicio y los comandos que te dicen dónde te quedaste |
+| [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) | 🏷️ **Cómo versionas tu código mientras haces los cursos.** Dos repos, un tag por fase, tags de ejercicio y los comandos que te dicen dónde te quedaste |
 | [`prompts/formato-piezas-forenses.md`](prompts/formato-piezas-forenses.md) | 🕵️ La especificación de las piezas forenses: qué es un paso, qué descarta, y dónde está la frontera con la fase |
 | [`prompts/formato-cuaderno-incidentes.md`](prompts/formato-cuaderno-incidentes.md) | 📓 La especificación del cuaderno de incidentes: la plantilla, las cuotas, las tres formas de preparación y la convención de commits de una investigación |
 

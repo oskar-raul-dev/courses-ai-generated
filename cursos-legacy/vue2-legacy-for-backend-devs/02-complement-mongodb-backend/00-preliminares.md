@@ -248,7 +248,7 @@ base, SETUP.md escrito."
 Las dieciséis fases cierran igual. La convención completa —tags de ejercicio,
 cómo guardar un `explain()` en el mensaje de un tag, y el par `-roto`/`-fix`
 con que se cierra un incidente— está en
-[`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+[`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 ---
 
@@ -642,7 +642,7 @@ La señal de que quedó bien:
 > número (`f00 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f00/17`, y un incidente resuelto en el par `inc/f00/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🍃 Fase 1 — Mongo en 30 min para gente que ya sabe
 bases de datos. Se acabó la plastilina: entra el diccionario de traducción,

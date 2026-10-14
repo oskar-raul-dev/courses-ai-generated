@@ -612,7 +612,7 @@ La señal de que quedó bien:
 > número (`f12 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f12/17`, y un incidente resuelto en el par `inc/f12/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🧪 Fase 13 — Testing de API. Todo lo construido —
 endpoints, precondiciones atómicas, serializers, sockets, streams — se puede

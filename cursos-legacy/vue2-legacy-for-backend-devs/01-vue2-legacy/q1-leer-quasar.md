@@ -1919,4 +1919,4 @@ Y spoiler: la columna de "borrar" es más larga de lo que esperas. Y la de "copi
 > número (`q1 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/q1/17`, y un incidente resuelto en el par `inc/q1/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).

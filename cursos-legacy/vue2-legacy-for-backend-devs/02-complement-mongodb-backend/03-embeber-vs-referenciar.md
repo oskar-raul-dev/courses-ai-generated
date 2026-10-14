@@ -451,7 +451,7 @@ La señal de que quedó bien:
 > número (`f03 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f03/17`, y un incidente resuelto en el par `inc/f03/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🧬 Fase 4 — El esquema que no está en la base. Ya
 decidiste la forma de tus documentos; ahora la pregunta incómoda: si el motor

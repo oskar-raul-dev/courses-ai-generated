@@ -276,7 +276,7 @@ investigación y uno de fix es un registro honesto; uno que muestra solo el fix 
 a nadie, y menos a ti dentro de seis meses.
 
 Y como el fix de casi todos estos incidentes es de una o dos líneas, márcalo además con el
-par de tags de [`convencion-de-git-y-tags.md`](convencion-de-git-y-tags.md) §🚑:
+par de tags de [`00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md) §🚑:
 
 ```bash
 git tag -a inc/f05/etiqueta-invisible-roto -m "Síntoma, repro y la prueba en rojo."

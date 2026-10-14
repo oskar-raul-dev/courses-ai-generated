@@ -30,7 +30,7 @@ real que reemplaza al mock— vive en
 | **Este `README.md`** | 📑 **Índice del curso** — empieza aquí |
 | [`0-plan-del-curso.md`](0-plan-del-curso.md) | 🗺️ Plan, alcance, stack unificado fijado, convenciones y autodiagnóstico inicial |
 | [`0-ESTRUCTURA-CURSO.md`](0-ESTRUCTURA-CURSO.md) | 🏛️ **Arquitectura**: qué es obligatorio, qué opcional, grafo de dependencias, reglas de exclusión, notas de producción |
-| [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio, un tag por fase, tags de ejercicio, y cómo volver a un estado sano cuando el ejercicio 22 te deje el proyecto irreconocible |
+| [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio, un tag por fase, tags de ejercicio, y cómo volver a un estado sano cuando el ejercicio 22 te deje el proyecto irreconocible |
 | [`../prompts/guia-de-estilo-y-convenciones.md`](../prompts/guia-de-estilo-y-convenciones.md) | ✍️ Guía editorial compartida con el Curso 02 |
 | [`forense-master.md`](forense-master.md) | 🕵️ **La puerta del track forense**: el método de cuatro preguntas y el 🩺 índice de síntomas. Se entra por lo que ves, no por la fase |
 | [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **13 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |

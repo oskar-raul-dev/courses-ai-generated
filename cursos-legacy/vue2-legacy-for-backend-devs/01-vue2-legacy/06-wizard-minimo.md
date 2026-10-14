@@ -1015,7 +1015,7 @@ La señal de que quedó bien:
 > número (`f06 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f06/17`, y un incidente resuelto en el par `inc/f06/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 📊 Fase 7 — Métricas mínimas: chart.js 2.x entra al
 proyecto y el dashboard aprende a contar historias con tickets por estado y

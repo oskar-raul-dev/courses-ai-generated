@@ -204,7 +204,7 @@ npm run mock:reset          # o regenera desde db.seed.json, y se los lleva
 ```
 
 La diferencia entre esos dos comandos está en
-[la convención de git §🧹](../prompts/convencion-de-git-y-tags.md).
+[la convención de git §🧹](../00-convencion-de-git-y-tags.md).
 
 ---
 

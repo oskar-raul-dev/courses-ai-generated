@@ -963,7 +963,7 @@ La señal de que quedó bien:
 > número (`f05 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/f05/17`, y un incidente resuelto en el par `inc/f05/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
 
 **Siguiente parada:** 🪜 Fase 6 — Wizard mínimo: la creación de tickets crece
 a 3 pasos (datos → clasificación → confirmación) y aparece la pregunta

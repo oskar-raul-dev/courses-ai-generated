@@ -829,4 +829,4 @@ Y los tests de VU0 son el árbitro.
 > número (`vu1 ej17: …`). Si un ejercicio merece su propio marcador va en
 > `ej/vu1/17`, y un incidente resuelto en el par `inc/vu1/<slug>-roto` /
 > `-fix`. Todo eso está en
-> [`../prompts/convencion-de-git-y-tags.md`](../prompts/convencion-de-git-y-tags.md).
+> [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md).
