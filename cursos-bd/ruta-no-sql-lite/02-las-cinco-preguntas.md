@@ -1,6 +1,6 @@
 # ❓ Fase 02 — Las cinco preguntas: el instrumento que decide antes que el motor
 
-> **Curso:** Ruta NoSQL Lite · Fase 02 de 25 · Bloque 0 — El instrumento · **3 h**
+> **Curso:** Ruta NoSQL Lite · Fase 02 de 26 · Bloque 0 — El instrumento · **3 h**
 > **Motor:** ninguno — esta fase se lee
 > **Entorno de ejecución:** ninguno
 > **Depende de:** Fase 01 · **Habilita:** Fase 03
@@ -43,7 +43,7 @@ se tomó mal y hay 400 GB en producción.
 
 - **Las respuestas por familia.** Cada minicurso trae las suyas en su fase B, con medición.
 - **La mecánica de la sincronización entre motores** —doble escritura, outbox, CDC—: aquí se
-  nombra, y se desarrolla y se mide en la Fase 24.
+  nombra, y se desarrolla y se mide en la [Fase 24](24-poliglota-la-costura.md).
 - **El caso de Cóndor.** Tiene exactamente el problema del triaje de la sección 4.7, y lo resuelve
   el boss del Bloque V.
 
@@ -175,7 +175,7 @@ sin una transacción que los una** es la forma más rápida de fabricar dos verd
 de las dos escrituras falle. Hay equipos que la usan igual, como Stripe (en las referencias), y la
 sostienen con lo que el paso 3 describe: comparan las dos lecturas todo el tiempo y alertan de cada
 diferencia. Sin esa comparación, no la uses. Las alternativas que no dependen de ella son el patrón
-*outbox* y la captura de cambios (CDC), que se miden en la Fase 24.
+*outbox* y la captura de cambios (CDC), que se miden en la [Fase 24](24-poliglota-la-costura.md).
 
 **3. Primero las lecturas, en sombra.** Antes de mover una sola escritura, el sistema nuevo recibe
 la copia y **se leen los dos a la vez**, comparando respuestas sin mostrárselas a nadie. Las

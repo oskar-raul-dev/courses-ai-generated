@@ -58,8 +58,9 @@ def bloques_de_codigo(texto):
 
 
 class VerificadorDelCurso(PerfilCoursesIA):
-    # Fases NN-…; la historia (00-historia-de-condor.md) no es una fase.
-    NO_CAPITULO = PerfilCoursesIA.NO_CAPITULO + ("historia",)
+    # Fases NN-…; la historia (00-historia-de-condor.md) y la convención de git del lector
+    # (00-convencion-de-git-y-tags.md) no son fases.
+    NO_CAPITULO = PerfilCoursesIA.NO_CAPITULO + ("historia", "convencion")
     # Callouts de la guía §7.3 y marcadores de §7.2, más 🏆 (boss global) y 📍 (dónde empezar,
     # en el README).
     CALLOUTS = PerfilCoursesIA.CALLOUTS | {"💥", "🏆", "📍", "💀", "⭐"}

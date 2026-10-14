@@ -146,7 +146,7 @@ clave de partición.
 
 Pero el puente que más vale es al revés, y conviene decirlo en la fase: **Cóndor todavía no
 está aquí, y ese es el punto.** Treinta aeronaves caben de sobra en Postgres particionado, y
-proponer esta familia hoy en Cóndor sería el anti-patrón que el propio curso declara. La
+proponer esta familia hoy en Cóndor sería el error que la [Fase 18](18-columnar-romper-y-medir.md) mide con números. La
 pregunta que el lector tiene que saber contestar al terminar no es *"¿cómo se modela en
 columnar ancha?"* sino **"¿a qué volumen me toca?"** — y eso se contesta con una medición, no
 con una intuición.

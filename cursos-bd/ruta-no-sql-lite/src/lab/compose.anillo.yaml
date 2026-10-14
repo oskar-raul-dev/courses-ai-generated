@@ -1,0 +1,43 @@
+# El anillo de Cassandra de las Fases 17–18: tres nodos en un solo datacenter, cada uno con el heap
+# fijado como el servicio `columnar` (a02). Es un proyecto aparte, para que su `down -v` no toque el
+# laboratorio, y no publica puertos: se entra con `docker compose exec`.
+#
+#   docker compose -f lab/compose.anillo.yaml up -d --wait      (desde src/; ~3,5 GiB, unos 3,5 min)
+#   docker compose -f lab/compose.anillo.yaml down -v
+#
+# Con el laboratorio detenido: los tres nodos ocupan lo que tres motores JVM juntos.
+name: condor-anillo
+
+x-nodo: &nodo
+  image: cassandra@sha256:8819d1b7877ee6621751a761cc163332e9c3eaf671c8ef672f7c77a7c5bff05f # 5.0 (5.0.9)
+  mem_limit: 1600m
+  environment: &env
+    MAX_HEAP_SIZE: 512M
+    HEAP_NEWSIZE: 128M
+    CASSANDRA_CLUSTER_NAME: condor-anillo
+    CASSANDRA_SEEDS: c1
+    CASSANDRA_DC: datacenter1
+    CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+  healthcheck:
+    test: ["CMD", "cqlsh", "-e", "SELECT release_version FROM system.local"]
+    interval: 5s
+    retries: 120
+
+services:
+  # los nodos entran de uno en uno: dos nodos que se unen a la vez al anillo pueden pedir los mismos tokens
+  c1:
+    <<: *nodo
+    volumes: ["c1-data:/var/lib/cassandra"]
+  c2:
+    <<: *nodo
+    volumes: ["c2-data:/var/lib/cassandra"]
+    depends_on: { c1: { condition: service_healthy } }
+  c3:
+    <<: *nodo
+    volumes: ["c3-data:/var/lib/cassandra"]
+    depends_on: { c2: { condition: service_healthy } }
+
+volumes:
+  c1-data:
+  c2-data:
+  c3-data:

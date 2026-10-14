@@ -1,6 +1,6 @@
 # ✈️ Fase 01 — El dominio de flota y el arnés: montar el instrumento antes de medir nada
 
-> **Curso:** Ruta NoSQL Lite · Fase 01 de 25 · Bloque 0 — El instrumento · **5 h**
+> **Curso:** Ruta NoSQL Lite · Fase 01 de 26 · Bloque 0 — El instrumento · **5 h**
 > **Motor:** solo PostgreSQL 18.6 `pgvector/pgvector@sha256:2ba9ca5f2e7d…` (la línea base)
 > **Entorno de ejecución:** TypeScript
 > **Volumen:** 10 k para los ejemplos, `workOrder-1m` para las mediciones
@@ -92,7 +92,7 @@ matices: **ganarle a una línea base mal puesta no demuestra nada**, y en la
 **La trazabilidad sale de una tabla, no de una columna.** `work_order_movement` guarda cada pieza
 que una orden retiró o instaló, con su posición y su destino. Qué pieza estuvo en qué aeronave y
 cuándo se reconstruye desde aquí, y es exactamente la pregunta de las
-Fases 13–14.
+Fases [13](13-grafos-levantar-y-modelar.md)–14.
 
 **Los nombres, en `snake_case`.** El dataset canónico viene en `camelCase` y el cargador lo
 traduce: `workOrderId` pasa a `work_order_id`. La incoherencia entre familias es deliberada y
@@ -531,7 +531,8 @@ Con `work_order_movement`, reconstruye las aeronaves por las que pasó un númer
 `LOT-2022-117` (su respuesta está en `answers.json`).
 
 **Objetivo:** que tu consulta devuelva las mismas aeronaves que `answers.json`, y medir sus filas
-examinadas. Guárdala: la Fase 14 la retoma.
+examinadas. Guárdala: la [Fase 13](13-grafos-levantar-y-modelar.md) la retoma con un grafo al lado, y la
+[Fase 14](14-grafos-romper-y-medir.md) la lleva a más saltos.
 
 #### 🟠 Ejercicio 19 — Un cargador fila a fila
 

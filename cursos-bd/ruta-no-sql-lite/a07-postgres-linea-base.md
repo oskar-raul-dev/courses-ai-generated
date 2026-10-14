@@ -68,7 +68,8 @@ operador de clase según las consultas, no según el tamaño.**
 ## 🔎 Full-text
 
 **Para qué:** buscar en el catálogo *"juntas toricas del tren"* y encontrar *"junta tórica del
-tren"*. Es el rival de OpenSearch en las Fases 11 y 12.
+tren"*. Es el rival de OpenSearch en las Fases [11](11-busqueda-levantar-y-modelar.md) y
+[12](12-busqueda-romper-y-medir.md), y en la 12 cubrió 19 de 20 búsquedas del almacén.
 
 ```sql
 ALTER TABLE part_catalog
@@ -98,7 +99,9 @@ palabras.
 > tilde. El diccionario `spanish` de Postgres 18 ya reduce a la misma raíz, con o sin tilde,
 > *tórica*, *hélice*, *cámara*, *hidráulica* y *altímetro*. Con una configuración que añadía
 > `unaccent`, **ningún resultado del catálogo cambió**. Un efecto secundario que conviene conocer:
-> *"cámara"* se reduce a `cam`, una raíz tan corta que puede coincidir con otras palabras.
+> *"cámara"* se reduce a `cam`, una raíz tan corta que puede coincidir con otras palabras. La [Fase 12](12-busqueda-romper-y-medir.md)
+> deja `unaccent` puesta en su configuración `es_unaccent` de todos modos, para que el analizador de Postgres sea el
+> equivalente del de OpenSearch, que sí quita tildes: la medición no cambia.
 
 ---
 
@@ -168,16 +171,38 @@ Desde la pieza que pasó por más aeronaves (`SN-0391969`, 18 aeronaves), sobre 
 | 3 | 766 | 15 934 | 4 222 |
 | 4 | 85 981 | 2 984 904 | 11 964 |
 
-**`WITH RECURSIVE` enumera caminos, no nodos.** A profundidad 4 genera casi tres millones de filas
-para llegar a 86 000 nodos, y sin `CYCLE` son 4 095 207. Hasta dónde aguanta esto contra un motor de
-grafos es la pregunta de la Fase 14.
+**Con `UNION ALL`, `WITH RECURSIVE` enumera caminos, no nodos.** A profundidad 4 genera casi tres
+millones de filas para llegar a 86 000 nodos, y sin `CYCLE` son 4 095 207.
+
+> ⚠️ **Corrección (Fase 14).** Esta sección publicó la versión de arriba como la bien escrita, y no lo es
+> para alcanzar nodos. Con `UNION` sin `ALL`, el motor descarta cada fila que ya está en el resultado y cada
+> nodo entra como mucho una vez por nivel; `CYCLE` sobra:
+>
+> ```sql
+> WITH RECURSIVE trace(node, depth) AS (
+>   SELECT 'part:' || :'serial', 0
+>   UNION
+>   SELECT e.dst, t.depth + 1 FROM trace t JOIN trace_edge e ON e.src = t.node WHERE t.depth < :depth
+> )
+> SELECT depth, count(DISTINCT node), count(*) FROM trace GROUP BY depth;
+> ```
+>
+> Sobre las aristas de la [Fase 14](14-grafos-romper-y-medir.md) (`stint_edge`, que cuenta las estadías y
+> no los movimientos, por eso los nodos no coinciden con la tabla de arriba), a profundidad 4 desde
+> `SN-0391969`: **100 640 filas con `UNION` contra 3 345 159 con `UNION ALL` y `CYCLE`**, para los mismos
+> 96 203 nodos. A profundidad 6, la de `CYCLE` no termina en dos minutos y la de `UNION` genera 196 882
+> filas. `UNION ALL` con `CYCLE` sigue siendo la herramienta cuando lo que se quiere son **los caminos**.
+
+Hasta dónde aguanta cada versión contra un motor de grafos es la pregunta de la
+[Fase 14](14-grafos-romper-y-medir.md).
 
 ---
 
 ## 🗓️ Particionado declarativo por rango
 
 **Para qué:** datos que llegan ordenados en el tiempo, se consultan por rango y se borran por
-antigüedad. Es el rival de TimescaleDB en las Fases 09 y 10.
+antigüedad. Es el rival de TimescaleDB en las Fases [09](09-series-levantar-y-modelar.md) y
+[10](10-series-romper-y-medir.md); en la 10, particionado por mes, borró un año con 0,5 MiB de WAL.
 
 ```sql
 CREATE TABLE reading_p (LIKE reading INCLUDING DEFAULTS) PARTITION BY RANGE (ts);
@@ -254,7 +279,7 @@ ROLLBACK;   -- las 111 filas siguen ahí
 | Agregar pocas columnas de muchas filas | columnas bien tipadas, índices; o una vista materializada | analítico embebido (F07–F08) |
 | Series por rango y borrado por antigüedad | particionado por rango | series temporales (F09–F10) |
 | Buscar texto con tolerancia | `tsvector` con el diccionario del idioma y GIN | búsqueda (F11–F12) |
-| Recorrer relaciones | `WITH RECURSIVE` con aristas indexadas y `CYCLE` | grafos (F13–F14) |
+| Recorrer relaciones | `WITH RECURSIVE` con aristas indexadas: `UNION` para nodos, `CYCLE` para caminos | grafos (F13–F14) |
 | Parecido | `pgvector` con HNSW | vectorial (F15–F16) |
 
 ---

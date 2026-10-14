@@ -154,8 +154,9 @@ usa la CockroachDB Software License. Según su documentación de licencias: **un
 (`start-single-node`) y `cockroach demo` no necesitan clave y no se limitan**; un clúster de varios
 nodos tiene 7 días de gracia y después queda **limitado a 5 transacciones concurrentes** sin clave. La
 clave *Enterprise Free* es gratuita por debajo de 10 millones de dólares de facturación anual, se
-renueva cada año y **exige telemetría**. El curso usa un nodo (F21) y `demo --global` (F22), y no
-necesita ninguna clave.
+renueva cada año y **exige telemetría**. El curso usa un nodo y `demo --global` (Fases 21 y 22), y no
+necesita ninguna clave: en la [Fase 21](21-newsql-levantar-y-modelar.md), las localidades por fila, la ubicación
+restringida y las super regiones corrieron en `demo` sin pedirla.
 
 **MongoDB con SSPL** no es un caso de la sesión, pero es el motor más usado del curso: para uso interno
 —el de Cóndor, y el de las Fases 03 y 04— la sección 13 no se activa. Se activaría si Cóndor ofreciera

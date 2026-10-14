@@ -108,6 +108,13 @@ una fuente de verdad.** Siempre al lado, siempre reconstruible desde otro sitio,
 de reconstrucción medido y escrito — porque el día que haga falta, nadie va a tener tiempo de
 averiguarlo.
 
+> 📐 **Los matices medidos que el veredicto tiene que resistir** (Fases 11 y 12, sobre Cóndor). El
+> full-text de Postgres bien montado cubrió 19 de 20 búsquedas del almacén; la que falló era de orden, y se
+> arregló normalizando `ts_rank` por largo, así que el "ajuste de relevancia" de Bengala puede empezar en
+> Postgres. Las facetas sí separan: una petición contra 34 169 páginas de un millón. Y dos cosas que el
+> encargo debe incluir: las facetas de OpenSearch **son aproximadas** si no se pide `shard_size` (salieron
+> mal con un margen declarado de 3521), y reconstruir sin alias deja el índice vacío mientras carga.
+
 ## 🧰 El stack
 
 | Pieza | Qué se usa | Nota |

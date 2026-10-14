@@ -113,7 +113,7 @@ esta familia vive ahí de verdad. El arnés y el generador siguen siendo TypeScr
 |---|---|---|
 | Entorno del pipeline | **Python** | Es donde vive Arrow y el resto del ecosistema columnar |
 | Entorno del arnés y el generador | **TypeScript** | Regla de `a06`, sin excepción |
-| Motor | **DuckDB** · perfil `analitico` | CLI `duckdb` para exploración, cliente de Python para el pipeline |
+| Motor | **DuckDB**, embebido: sin servicio en el compose | La base es un archivo dentro del proceso de Python; nada que levantar |
 | Formato de origen | CSV y **Parquet** | Las exportaciones de las plataformas, tal como llegan |
 | Formato del derivado | **Parquet** proyectado, ordenado y comprimido | El antes y el después en tamaño es media medición del miniproyecto |
 | Línea base | **PostgreSQL** · perfil `base` | La tabla ancha, cargada de verdad |
@@ -144,9 +144,15 @@ arma hoy igual que el tablero de Bengala, exportando y cruzando a mano, y se equ
 La diferencia es la consecuencia: en Bengala se pierde un cliente; en Cóndor, un contrato de
 Ala Continua nace perdiendo dinero y nadie se entera hasta el año tres.
 
-Y hay un puente conceptual que conviene señalar en la fase: **la reformulación retroactiva de
+Y un matiz medido que el veredicto tiene que resistir: en la Fase 07, cuatro conexiones que actualizan
+el mismo contador sobre DuckDB **perdieron entre 272 y 403 de 8000 escrituras** por conflicto, y la
+misma carga como eventos que solo se insertan no perdió ninguna. Si en Bengala el "marcar como
+revisado" se modela como un `UPDATE` concurrente, el tablero empieza a perder marcas antes de que
+aparezca el segundo proceso.
+
+Hay además un puente conceptual que conviene señalar en la fase: **la reformulación retroactiva de
 Bengala es el mejor ejemplo de consistencia eventual que tiene el curso**, y reaparece en la
-Fase 24, cuando toque medir la ventana de inconsistencia entre motores.
+[Fase 24](24-poliglota-la-costura.md), cuando toque medir la ventana de inconsistencia entre motores.
 
 ## 📋 Criterios de aceptación
 

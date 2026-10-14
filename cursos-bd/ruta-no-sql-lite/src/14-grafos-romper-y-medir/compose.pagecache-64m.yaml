@@ -1,0 +1,8 @@
+# El grafo que no cabe: el servicio grafos con 64 MB de caché de páginas en lugar de 256. Se usa encima del
+# compose del laboratorio y se quita al terminar (Fase 14, sección 4.6):
+#   docker compose -f lab/compose.yaml -f 14-grafos-romper-y-medir/compose.pagecache-64m.yaml up -d --wait grafos
+#   docker compose -f lab/compose.yaml up -d --wait grafos      # de vuelta a 256 MB
+services:
+  grafos:
+    environment:
+      NEO4J_server_memory_pagecache_size: 64m

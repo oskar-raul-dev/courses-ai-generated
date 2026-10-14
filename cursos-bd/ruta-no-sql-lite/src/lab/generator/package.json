@@ -6,6 +6,7 @@
   "type": "module",
   "engines": { "node": ">=24" },
   "scripts": {
-    "generate": "node src/generate.ts"
+    "generate": "node src/generate.ts",
+    "diverge": "node src/diverge.ts"
   }
 }

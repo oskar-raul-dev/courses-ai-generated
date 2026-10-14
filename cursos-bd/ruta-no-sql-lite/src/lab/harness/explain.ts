@@ -25,6 +25,8 @@ export interface ExplainResult {
   sharedRead: number;
   /** Cómo accedió a cada tabla: "Index Scan on work_order", "Seq Scan on part"… */
   access: string[];
+  /** Comprobaciones de clave foránea que disparó una escritura (los disparadores RI_ConstraintTrigger). */
+  fkChecks: number;
   plan: PlanNode;
 }
 
@@ -33,11 +35,14 @@ const SCAN = /Scan$/;
 export async function explain(client: pg.Client, sql: string, params: unknown[] = []): Promise<ExplainResult> {
   const { rows } = await client.query(`EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ${sql}`, params);
   const plan = rows[0]["QUERY PLAN"][0].Plan as PlanNode;
+  const triggers: { "Trigger Name": string; Calls: number }[] = rows[0]["QUERY PLAN"][0].Triggers ?? [];
   let examined = 0;
   const access: string[] = [];
   const walk = (node: PlanNode) => {
     // un nodo de acceso examina lo que devuelve más lo que su filtro descartó, en cada vuelta
-    if (SCAN.test(node["Node Type"]) && node["Node Type"] !== "Bitmap Index Scan") {
+    // "Custom Scan" es un nodo de extensión (el ChunkAppend o el DecompressChunk de TimescaleDB): sus
+    // filas son las de sus hijos, que ya se cuentan, o filas descomprimidas, no leídas
+    if (SCAN.test(node["Node Type"]) && node["Node Type"] !== "Bitmap Index Scan" && node["Node Type"] !== "Custom Scan") {
       const perLoop = node["Actual Rows"] + (node["Rows Removed by Filter"] ?? 0) + (node["Rows Removed by Index Recheck"] ?? 0);
       // Postgres 18 da "Actual Rows" como promedio por vuelta, con decimales: se redondea el total
       examined += Math.round(perLoop * node["Actual Loops"]);
@@ -52,6 +57,7 @@ export async function explain(client: pg.Client, sql: string, params: unknown[] 
     sharedHit: plan["Shared Hit Blocks"] ?? 0,
     sharedRead: plan["Shared Read Blocks"] ?? 0,
     access,
+    fkChecks: triggers.filter((t) => t["Trigger Name"].startsWith("RI_ConstraintTrigger")).reduce((n, t) => n + t.Calls, 0),
     plan,
   };
 }

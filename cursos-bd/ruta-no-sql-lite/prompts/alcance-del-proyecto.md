@@ -453,7 +453,7 @@ esta tabla dice cuál es cuál, y las que faltaban las cerró Oskar el 06/10/202
 | D-02 | Tipo de curso | Curso completo, con boss de bloque, boss global y miniproyectos de otras empresas | 8, 11 | ✅ |
 | D-03 | Autocontención | **Editorial, sin enlaces**: otros cursos del repositorio solo se nombran en prosa, como lectura sugerida y nunca como requisito; ningún enlace sale de la carpeta del curso, y nada publicado cita `prompts/` | §15 🔄 | ✅ 06/10/2026 |
 | D-04 | Promesa de esfuerzo | Horas por fase (252 h en total), sin peso ligera/media/densa | 13 | ✅ |
-| D-05 | Aparato de evaluación | 20–30 ejercicios por fase (12 en F00 y F02), con criterio `**Objetivo:**` o `**Pregunta:**` y **sin solución publicada**; los boss y los miniproyectos, con criterios de aceptación | 9 | ✅ (sin solución: por defecto, a revisar por Oskar) |
+| D-05 | Aparato de evaluación | 20–30 ejercicios por fase (12 en F00 y F02), con criterio `**Objetivo:**` o `**Pregunta:**` y **sin solución publicada**; los boss y los miniproyectos, con criterios de aceptación | 9 | ✅ (sin solución: confirmada por Oskar el 12/10/2026) |
 | D-06 | Plataformas | macOS, Linux y Windows 11 con WSL2; el autor verificó en macOS arm64 (T10); Linux y WSL2 quedan declarados sin verificar hasta la pasada en los equipos de Oskar | 16, `a01` | ✅ |
 | D-07 | Política de versiones | Imágenes fijadas por digest con fecha de verificación, en `a02`; no se persiguen versiones nuevas salvo por un fallo (Mongo 8.0.20) | 7 | ✅ |
 | D-08 | Ejecución | Nada se publica sin haberse ejecutado; lo no verificado se declara con esas palabras | 6 | ✅ |

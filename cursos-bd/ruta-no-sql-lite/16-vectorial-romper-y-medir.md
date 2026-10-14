@@ -1,12 +1,12 @@
 # 🧬 Fase 16 — Vectorial: un millón de reportes, Qdrant contra `pgvector`, y dónde de verdad se separan
 
-> **Curso:** Ruta NoSQL Lite · Fase 16 de 25 · Bloque III — Preguntas que no sabes escribir en SQL · **10 h**
+> **Curso:** Ruta NoSQL Lite · Fase 16 de 26 · Bloque III — Preguntas que no sabes escribir en SQL · **10 h**
 > **Familia:** vectorial · **Motor:** Qdrant 1.19.1 `qdrant/qdrant@sha256:12364fe851b9…`
 > **Línea base:** PostgreSQL 18.6 con pgvector 0.8.6 `pgvector/pgvector@sha256:2ba9ca5f2e7d…` (HNSW)
 > **Entorno de ejecución:** Python para los embeddings y la carga, TypeScript para la medición
 > **Volumen:** `pirep-1m` (`datasetSha256` `d8a956d0c85a…`): un millón de vectores de 384 dimensiones,
 > los mismos bytes en los dos motores (`pirep-e5-passage.f32`, `3a97c8b28f60…`)
-> **Depende de:** Fase 15 · **Habilita:** Fase 17 (en el orden canónico)
+> **Depende de:** Fase 15 · **Habilita:** [Fase 17](17-columnar-levantar-y-modelar.md) (en el orden canónico)
 > **Apéndices de apoyo:** [`a02`](a02-compose-de-la-ruta.md), [`a04`](a04-el-arnes-de-medida.md),
 > [`a07`](a07-postgres-linea-base.md), [`a09`](a09-catalogo-de-errores.md)
 > **Fecha de verificación ejecutada:** 30/09/2026, en macOS arm64
@@ -381,7 +381,7 @@ Cuando un sistema vectorial ya duele, la escalera se sube en orden de costo:
    reconstruible, porque **cambiar de modelo es reconstruir todo**: con los números de esta fase, 1662 s
    de embeber más 628–715 s de Qdrant, o más 157 s de `COPY` y 299 s de índice en Postgres. Unos cuarenta minutos para un
    millón de reportes en esta máquina, y cualquier vector guardado fuera del índice queda inválido
-   (Fase 24).
+   ([Fase 24](24-poliglota-la-costura.md)).
 
 ---
 
@@ -659,10 +659,10 @@ factura operativa al lado.
 
 - **pgvector** — https://github.com/pgvector/pgvector — HNSW, `ef_search`, `halfvec`, el recorrido
   iterativo y los índices parciales, en su README.
-- **Filtrado en Qdrant** — https://qdrant.tech/documentation/concepts/filtering/ y
-  https://qdrant.tech/articles/vector-search-filtering/ — cómo filtra dentro del grafo.
-- **Cuantización en Qdrant** — https://qdrant.tech/documentation/guides/quantization/
-- **Almacenamiento en Qdrant** — https://qdrant.tech/documentation/concepts/storage/ — memoria, mmap y
+- **Filtrado en Qdrant** — https://qdrant.tech/documentation/search/filtering/ y
+  https://qdrant.tech/documentation/search-patterns/vector-search-filtering/ — cómo filtra dentro del grafo.
+- **Cuantización en Qdrant** — https://qdrant.tech/documentation/manage-data/quantization/
+- **Almacenamiento en Qdrant** — https://qdrant.tech/documentation/manage-data/storage/ — memoria, mmap y
   `on_disk`.
 - **ANN-Benchmarks** — https://ann-benchmarks.com/ — recall contra velocidad para muchos índices, con
   otra metodología: útil para situar los números de esta fase, no para compararlos.
@@ -690,7 +690,64 @@ esta familia: *¿cuánto filtra tu filtro?*
 
 ### 💀 Boss del Bloque III — "Freddy ya vio esto"
 
-> 🚧 **Se publica con las Fases 13 y 14.** Lo pide Hernán Peñaloza, y cruza esta familia con la de
-> grafos: las cinco intervenciones más parecidas a un reporte nuevo **y** las piezas que la trazabilidad
-> dice que podrían estar implicadas. Necesita las dos familias escritas y medidas, y por eso llega
-> después, en este mismo lugar.
+> *"Freddy lleva once años en esto y se acuerda de cosas que no están en ningún lado. El otro día un piloto
+> del Twin Otter HC-10011 escribió 'ruido metalico al bajar tren, intermitente', y Freddy dijo que eso ya lo
+> había visto y que no era el tren. Tenía razón, y lo supimos porque estaba de turno. El día que no esté, o
+> que se vaya, esa memoria se va con él. No quiero un buscador: quiero que, con un reporte nuevo, el sistema
+> me diga **qué se hizo las otras veces** y **qué piezas de esta aeronave** tendría que mirar el técnico. Y
+> quiero saber por qué hacen falta dos bases para eso, porque yo firmo también lo que cuesta."*
+>
+> — Hernán Peñaloza, cofundador e inspector
+
+**El sistema, tal como está.** Los reportes de piloto de `pirep-1m`, un millón, embebidos con e5-small en la
+colección `pirep` de Qdrant ([Fase 15](15-vectorial-levantar-y-modelar.md)), y la trazabilidad del mismo
+dataset en Neo4j: las órdenes de trabajo con el reporte que atendieron (`pirepId`), las piezas que
+retiraron e instalaron y las estadías de cada pieza en cada aeronave
+([Fase 13](13-grafos-levantar-y-modelar.md)). El grafo de `pirep-1m` **reemplaza** al de `workOrder-1m` de las
+Fases 13 y 14: son 1 528 236 nodos y 3 579 352 relaciones, y la carga tarda unos 200 s.
+
+```bash
+node 13-grafos-levantar-y-modelar/load.ts --dataset lab/data/pirep-1m
+uv run python 15-vectorial-levantar-y-modelar/ingest.py --dataset lab/data/pirep-1m   # si la colección no está
+node 16-vectorial-romper-y-medir/boss/setup.ts
+```
+
+```text
+neo4j   · órdenes con reporte de piloto en el grafo: 201228 (esperadas para lab/data/pirep-1m: 201228)
+qdrant  · colección pirep: 1000000 puntos (reportes en lab/data/pirep-1m: 1000000)
+dataset · lab/data/pirep-1m · datasetSha256 d8a956d0c85a…
+encargo · aeronave HC-10011 · reporte nuevo: "ruido metalico al bajar tren, intermitente"
+```
+
+Los dos caben a la vez en la máquina de laboratorio: medidos juntos con `docker stats`, Neo4j usó 808 MiB de
+su límite de 1 GiB y Qdrant 493 MiB. Neo4j queda cerca de su techo; si tu solución le pide caminos sin
+límite, ya sabes lo que pasa ([Fase 14](14-grafos-romper-y-medir.md), sección 5).
+
+**Qué hay que entregar.** Un programa y una nota de una página para Hernán:
+
+1. **El programa**: dado un reporte nuevo y una matrícula, devuelve las **cinco intervenciones históricas
+   más parecidas** —el reporte, la orden que lo atendió y lo que se retiró— y **las piezas instaladas hoy en
+   esa aeronave** que la trazabilidad señala, cada una con su historia: de qué lote viene y por cuántas
+   aeronaves pasó.
+2. **La respuesta para `HC-10011`** con el reporte del encargo, y la de otros dos reportes que elijas.
+3. **Qué hace cada motor y por qué**, medido: viajes, *db hits* y lo que costaría la mitad que hace cada uno
+   en el otro motor —o en Postgres—, con la consulta que lo prueba.
+4. **Lo que el sistema no puede saber**: dónde se equivoca el parecido, y qué le diría Hernán al técnico que
+   lea la lista.
+
+**Criterios de aceptación.**
+
+```text
+[ ] El programa responde para un reporte que no está en la colección, con el mismo modelo y revisión de a06
+[ ] "Intervención" está definida antes del número: qué cuenta como una, y qué pasa con los reportes
+    parecidos que no tienen orden o cuya orden no retiró nada
+[ ] Las cinco intervenciones salen de los parecidos en orden de parecido, y se dice cuántos parecidos hubo
+    que mirar para llegar a cinco
+[ ] Las piezas propuestas están instaladas hoy en la aeronave del reporte, no en la de la intervención
+[ ] Cada motor tiene su medición: viajes y recorrido, y el costo de hacer su mitad en el otro
+[ ] La nota dice, con un ejemplo de los resultados, por qué el parecido del texto no basta para nombrar la pieza
+```
+
+**Pistas, si te atascas**, de la más suave a la más directa: la sección 6.6 de la Fase 15, sobre el filtro
+de payload; la propiedad `pirepId` que `load.ts` guarda en cada orden con reporte, y su índice; y mirar, para los diez reportes más
+parecidos, si alguno tiene una orden que haya retirado algo.

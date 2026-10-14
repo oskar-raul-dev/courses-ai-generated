@@ -166,8 +166,9 @@ Y tres cosas que las Fases 15 y 16 midieron sobre Cóndor y que este miniproyect
 cuenta desde el primer día:
 
 - **Con pocos datos, Qdrant no construye el índice.** Por debajo de `indexing_threshold` busca
-  recorriendo todo, y acierta siempre. Ciento doce mil notas pueden quedar cerca de ese umbral: mira
-  `indexed_vectors_count` antes de medir nada "del índice".
+  recorriendo todo, y acierta siempre. Ciento doce mil notas quedan muy por encima de ese umbral (unos
+  170 MB de vectores), pero mira `indexed_vectors_count` antes de medir nada "del índice": hay que comprobar que el
+  índice existe, no darlo por hecho.
 - **El filtro por metadatos es donde `pgvector` y Qdrant dejan de ser intercambiables.** Con un filtro
   del 8 % de un millón de reportes, `pgvector` devolvió 1 fila de 10 por defecto y acertó la mitad con su
   recorrido iterativo; Qdrant acertó 0,995. *"Solo lo que hay en bodega, de esta cosecha"* es justo un

@@ -1,6 +1,6 @@
 # 🧬 Fase 15 — Vectorial: "esto ya lo vimos", modelado como parecido y no como respuesta
 
-> **Curso:** Ruta NoSQL Lite · Fase 15 de 25 · Bloque III — Preguntas que no sabes escribir en SQL · **10 h**
+> **Curso:** Ruta NoSQL Lite · Fase 15 de 26 · Bloque III — Preguntas que no sabes escribir en SQL · **10 h**
 > **Familia:** vectorial · **Motor:** Qdrant 1.19.1 `qdrant/qdrant@sha256:12364fe851b9…`
 > **Línea base:** PostgreSQL 18.6 `pgvector/pgvector@sha256:2ba9ca5f2e7d…` (`ILIKE` e índice B-tree aquí;
 > `pgvector`, en la Fase 16)
@@ -70,7 +70,7 @@ Esta fase no compara Qdrant con `pgvector`: esa es la apuesta de la
   cerrada y fijada (`a06` fija el modelo y su revisión). El recorrido completo de RAG es materia del curso
   *Tutorial RAG*, del mismo autor.
 - **La búsqueda de texto completo de Postgres** (`tsvector`) y la de OpenSearch: son la familia de
-  búsqueda, Fases 11 y 12.
+  búsqueda, [Fases 11](11-busqueda-levantar-y-modelar.md) y [12](12-busqueda-romper-y-medir.md).
 
 ---
 
@@ -629,11 +629,11 @@ sin justificar.
 > `intfloat/multilingual-e5-small` en la revisión `614241f6…`.
 
 - **Colecciones, puntos y payload** — https://qdrant.tech/documentation/concepts/ — el modelo de datos.
-- **Indexación** — https://qdrant.tech/documentation/concepts/indexing/ — HNSW, índices de payload y
+- **Indexación** — https://qdrant.tech/documentation/manage-data/indexing/ — HNSW, índices de payload y
   los umbrales de la sección 6.5.
-- **Optimizador** — https://qdrant.tech/documentation/concepts/optimizer/ — segmentos e
+- **Optimizador** — https://qdrant.tech/documentation/operations/optimizer/ — segmentos e
   `indexing_threshold`.
-- **Filtrado** — https://qdrant.tech/documentation/concepts/filtering/
+- **Filtrado** — https://qdrant.tech/documentation/search/filtering/
 - **Tarjeta del modelo e5** — https://huggingface.co/intfloat/multilingual-e5-small — los prefijos
   `query:` y `passage:`, en la voz de sus autores.
 - **Yu. A. Malkov y D. A. Yashunin, *Efficient and robust approximate nearest neighbor search using

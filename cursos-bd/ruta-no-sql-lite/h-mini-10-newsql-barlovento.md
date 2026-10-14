@@ -102,7 +102,7 @@ el 14 de mayo**, y verlo ocurrir explica el problema mejor que cualquier párraf
 
 ## ⚖️ El veredicto que tiene que salir
 
-Y aquí está la lección que el curso lleva cinco meses construyendo, así que conviene no
+Y aquí está la lección que el curso viene construyendo desde su primera fase, así que conviene no
 apurarla.
 
 **No es cierto que Barlovento necesite una base distribuida.** Lo que necesita es que **una
@@ -130,13 +130,13 @@ que era local. La geografía tiene que estar en el esquema, y eso hay que diseñ
 | Pieza | Qué se usa | Nota |
 |---|---|---|
 | Entorno | **Node + TypeScript** | |
-| Motor | **CockroachDB** · perfil `newsql` | Tres nodos con **localidad declarada**: país A, país B y el tercero que da el quórum |
+| Motor | **CockroachDB** · perfil `newsql-global` | Nueve nodos en tres regiones con **localidad declarada**: dos hacen de país A y país B, y la tercera da el quórum |
 | CLI | `cockroach sql` | |
 | Driver | **`pg`, el mismo cliente de Postgres** | Habla el protocolo de Postgres, y eso es medio argumento comercial de la familia — **y también la fuente de su trampa** |
-| Línea base | **PostgreSQL de un nodo con réplica de lectura** · perfil `base` | Es lo que la mayoría haría. Hay que medirlo bien, no descartarlo de entrada |
+| Línea base | **PostgreSQL de un nodo con réplica de lectura** · `compose.replica.yaml` | El par de la [Fase 22](22-newsql-romper-y-medir.md): un primario y una réplica por *streaming*, cada uno en su red. Es lo que la mayoría haría. Hay que medirlo bien, no descartarlo de entrada |
 | Localidad | Particionamiento por región declarado **en el esquema** | `cockroach demo --nodes=9 --global`: tres regiones con latencia inyectada y `REGIONAL BY ROW`, sin licencia (`a10`). La geografía va en el esquema, no en la infraestructura |
-| Laboratorio de fallos | **Toxiproxy** | Latencia entre regiones inyectada y partición de red limpia. Sin esto el miniproyecto es teoría |
-| Medición | `EXPLAIN ANALYZE` (rangos tocados, saltos de red) · abortos y reintentos **contados en el cliente** · latencia de confirmación | **La única familia donde el tiempo es el argumento**, porque es física (`formato-bitacora-de-medicion.md` §2.4) |
+| Laboratorio de fallos | **Toxiproxy**, o redes de Docker que se desconectan | La partición de red limpia. Toxiproxy no está en el laboratorio del curso: se agrega al compose del miniproyecto. Cortar el enlace entre dos redes de Docker es lo que hace la [Fase 22](22-newsql-romper-y-medir.md) con el Postgres de réplica, y basta para la opción Postgres |
+| Medición | `EXPLAIN ANALYZE` (rangos tocados, saltos de red) · abortos y reintentos **contados en el cliente** · latencia de confirmación | **La única familia donde el tiempo es el argumento**, porque es física (la [Fase 22](22-newsql-romper-y-medir.md) lo declara) |
 | Datos | Generador del curso | Cargas en trasbordo entre los dos países, con contención provocada sobre las mismas |
 | Entregable | `src/h-mini-10-newsql-barlovento/` | |
 
@@ -157,7 +157,7 @@ programación**, que es la lección de la familia y no un detalle del cliente.
 
 ## 🔗 El puente con Cóndor
 
-Es la **Fase 21**, y el paralelo es casi literal. El expediente de una aeronave matriculada en
+Son las [Fases 21](21-newsql-levantar-y-modelar.md) y [22](22-newsql-romper-y-medir.md), y el paralelo es casi literal. El expediente de una aeronave matriculada en
 Ecuador que recibe rutina en el Coca y la inspección mayor en Bogotá es **el mismo trasbordo**:
 un objeto, un expediente, dos autoridades, y un contrato que dice que los registros del operador
 estatal no salen de su país.

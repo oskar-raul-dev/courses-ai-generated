@@ -110,7 +110,7 @@ defiéndela con el mismo cuidado.
 |---|---|---|---|---|---|
 | 01 | 🍃 Documental | TypeScript | MongoDB · `documental` | `mongodb` (sin ODM) | Postgres JSONB + GIN |
 | 02 | 🔑 Clave-valor | TypeScript + **Lua** | Valkey · `clave-valor` | `iovalkey` | Tabla `UNLOGGED` |
-| 03 | 🦆 Analítico | **Python** (arnés en TS) | DuckDB · `analitico` | cliente de Python + CLI | Postgres, tabla ancha |
+| 03 | 🦆 Analítico | **Python** (arnés en TS) | DuckDB · embebido, sin perfil | cliente de Python | Postgres, tabla ancha |
 | 04 | ⏱️ Series | TypeScript | TimescaleDB · `series` | `pg` — es una extensión | Postgres particionado |
 | 05 | 🔍 Búsqueda | TypeScript | OpenSearch · `busqueda` | HTTP + cliente de JS | Postgres `tsvector` + GIN |
 | 06 | 🕸️ Grafos | TypeScript | Neo4j · `grafos` | `neo4j-driver` · Cypher | `WITH RECURSIVE` con corte de ciclos |
@@ -126,10 +126,10 @@ Dos lecturas que esta tabla deja a la vista y que valen más que la tabla:
 consulta se hace en TypeScript a propósito: es la forma de desmontar el mito de que esa familia
 "es de Python".
 
-**Tres familias usan el driver de Postgres contra un motor que no es Postgres.** Series, porque
-es una extensión; NewSQL, porque habla su protocolo; y analítico embebido, porque habla SQL. Es
-la tesis del curso visible en una columna: **la etiqueta no decide nada, el modelo de acceso
-sí.**
+**Dos familias usan el driver de Postgres contra un motor que no es Postgres.** Series, porque
+es una extensión, y NewSQL, porque habla su protocolo. Una tercera habla SQL sin ser servidor, el
+analítico embebido, pero con su propio cliente. Es la tesis del curso visible en una columna: **la
+etiqueta no decide nada, el modelo de acceso sí.**
 
 ---
 

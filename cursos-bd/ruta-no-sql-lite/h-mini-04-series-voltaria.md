@@ -116,6 +116,13 @@ suponer que no pasa.
 > pregunta del Bloque IV. El miniproyecto debe terminar diciendo **a qué volumen** deja de
 > caber, no si dejará de caber.
 
+> 📐 **Un matiz medido que el veredicto tiene que resistir** (Fase 10, sobre Cóndor). El particionado
+> declarativo no solo resuelve la retención: la resuelve **mejor** que la hypertable (0,5 MiB de WAL para
+> borrar un año contra 3,5). Lo que la extensión gana es el tamaño comprimido (unos 100 MiB por año contra
+> 1500) y el resumen incremental (2420 lecturas contra 112 560 del mejor resumen a mano). Y cuidado con
+> la cardinalidad por fase: en Cóndor, comprimir por vuelo en vez de por aeronave dio siete veces más lotes,
+> y los chunks de 6 horas dejaron la tabla imposible de borrar de una vez.
+
 ## 🧰 El stack
 
 | Pieza | Qué se usa | Nota |

@@ -163,13 +163,25 @@ services:
     image: cockroachdb/cockroach@sha256:bc15746ef2c2493b2cfd46a76898a745587d068b1a259fff3c4447c3f3b36ea2 # v26.3.2
     # nueve nodos en tres regiones simuladas, con latencia entre regiones inyectada (F22).
     # Exento de licencia. Los datos viven en memoria: no hay volumen y se pierden al apagar.
-    command: ["demo", "--nodes=9", "--global", "--insecure", "--no-example-database"]
+    # los nueve nodos son un solo proceso de Go: sin tope, con dos bases de workOrder-10k el heap pasó de
+    # 5,9 GiB y lo mató el OOM de la VM (F21). GOMEMLIMIT hace que el recolector trabaje antes: con 4500MiB
+    # murieron dos corridas de once; con 3GiB, la fase entera pasó con 3,6 GiB de pico. La caché por nodo
+    # baja de 64 a 32 MiB. La memoria SQL no se toca: con 64 MiB, el backfill de un índice espera para siempre
+    # demo no acepta --disable-max-offset-check: una pausa larga del proceso o de la VM se lee como desfase de reloj y
+    # el demo se mata solo ("clock synchronization error", F22 y a09). Si pasa, se recrea y se vuelve a cargar
+    command: ["demo", "--nodes=9", "--global", "--insecure", "--no-example-database", "--cache=32MiB"]
+    environment:
+      GOMEMLIMIT: 3GiB
     # demo es un shell interactivo: sin terminal asignada, termina al arrancar
     tty: true
     stdin_open: true
-    # demo solo escucha en 127.0.0.1 y no tiene opción para cambiarlo: el puerto publicado es
-    # el de newsql-global-puerta, que comparte esta red y reenvía a 127.0.0.1:26257
-    ports: ["${NEWSQL_GLOBAL_PORT:-26259}:26300"]
+    # demo solo escucha en 127.0.0.1 y no tiene opción para cambiarlo: los puertos publicados son
+    # los de newsql-global-puerta, que comparte esta red y reenvía a un nodo de cada región (F21):
+    # n1 en us-east1 (26257), n4 en us-west1 (26260) y n7 en europe-west1 (26263)
+    ports:
+      - "${NEWSQL_GLOBAL_PORT:-26259}:26300"
+      - "${NEWSQL_GLOBAL_PORT_2:-26260}:26301"
+      - "${NEWSQL_GLOBAL_PORT_3:-26261}:26302"
     healthcheck:
       test: ["CMD", "cockroach", "sql", "--insecure", "--host=localhost:26257", "-e", "SELECT 1"]
       interval: 5s
@@ -179,7 +191,12 @@ services:
     profiles: [newsql-global]
     image: alpine/socat@sha256:5ffbd6ae916cbad86a58fabe0d6d5a6fd5c2b47ddf031e82996baac9300e732f # 1.8.1.3
     network_mode: "service:newsql-global"
-    command: ["TCP-LISTEN:26300,fork,reuseaddr", "TCP:127.0.0.1:26257"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        socat TCP-LISTEN:26300,fork,reuseaddr TCP:127.0.0.1:26257 &
+        socat TCP-LISTEN:26301,fork,reuseaddr TCP:127.0.0.1:26260 &
+        exec socat TCP-LISTEN:26302,fork,reuseaddr TCP:127.0.0.1:26263
     depends_on:
       newsql-global:
         condition: service_healthy

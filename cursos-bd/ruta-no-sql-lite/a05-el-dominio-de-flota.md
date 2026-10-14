@@ -152,12 +152,12 @@ paso 1—:
 |---|---|---|---|
 | documental | F03–F04 | `part` | la ficha de componente es la que nunca tiene los mismos campos |
 | clave-valor | F05–F06 | `workOrder` | las reservas y los candados son de órdenes |
-| analítico | F07–F08 | `workOrder` | el costo por hora volada sale de las órdenes |
+| analítico | F07–F08 | `reading`, a **5 M** | el costo por hora volada necesita horas, y las horas salen de las lecturas: `reading-5m` tiene 17 aeronaves con grabador (`reading-1m`, 3). Decidido en el paso 1 de F07 (07/10/2026) |
 | series | F09–F10 | `reading` | |
 | búsqueda | F11–F12 | `partCatalog` | |
 | grafos | F13–F14 | `workOrder` | el grafo se construye con sus instalaciones y retiros |
 | vectorial | F15–F16 | `pirep` | |
-| columnar | F17–F18 | `reading` | |
+| columnar | F17–F18 | `reading`, a **5 M** | el mismo de las series, con su ampliación ×10 a 50 M para medir contra Postgres particionado. Decidido en el paso 1 de F17 (10/10/2026) |
 | offline | F19–F20 | `workOrder` | lo que el técnico edita sin señal |
 | NewSQL | F21–F22 | `workOrder` | el expediente |
 
@@ -183,6 +183,7 @@ Lo que sale a cada volumen, medido el 29/09/2026:
 | `workOrder-1m` | 18,5 | 2 593 | 740 741 | 1 481 481 | **1 000 000** | 200 000 | 218 519 |
 | `reading-1m` | 0,11 | 16 | 4 566 | 9 132 | 6 164 | **1 000 000** | 1 347 |
 | `pirep-1m` | 25 | 3 500 | 1 000 000 | 2 000 000 | 1 350 000 | 200 000 | **1 000 000** |
+| `reading-5m` | 0,57 | 80 | 22 831 | 45 662 | 30 822 | **5 000 000** | 6 735 |
 
 **El volumen de rotura** no se fija aquí: cada fase B lo calibra con `--volume` y un entero hasta
 que el motor falla de verdad, y lo anota en su punto de rotura.
@@ -213,7 +214,8 @@ Además del NDJSON:
   para medir recall en F16. Tampoco se carga junto a los pireps.
 
 Los instantes van en UTC, al segundo (`2021-10-01T00:58:38Z`), dentro de la ventana
-**01/10/2021 – 29/09/2026**.
+**01/10/2021 – 29/09/2026**, salvo las lecturas de las aeronaves que entran tarde (ver
+[Lo que el generador simplifica](#-lo-que-el-generador-simplifica)).
 
 ---
 
@@ -242,6 +244,8 @@ encima dejará de ser comparable. Verificado el 29/09/2026:
 | `workOrder-1m` | `11a67c65fb22fdc9…` | no verificado | no verificado |
 | `reading-1m` | `5999b66c77ad8f3c…` | ✅ igual | ✅ igual |
 | `pirep-1m` | `d8a956d0c85a8217…` | no verificado | no verificado |
+| `reading-5m` | `8dc486dea089c12a…` | no verificado | no verificado |
+| `camilo-10k` (`diverge.ts`) | `59cf902287e9a729…` | no verificado | no verificado |
 
 (Linux en contenedor `node:24-slim`; amd64, emulado. Los 1 M de `part`, `partCatalog`,
 `workOrder` y `pirep` **no se verificaron en Linux**: generarlos emulados tardaría horas. Se
@@ -302,6 +306,19 @@ Lo que contiene cada caso depende del dataset: el de `workOrder-10k` no es el de
 `workOrder-1m`. Por eso las respuestas se leen siempre del `answers.json` **de ese mismo
 directorio**.
 
+**El dataset del boss del Bloque V** no sale de `generate.ts`, sino de `src/diverge.ts`, que lee un dataset ya
+generado y escribe al lado el sistema de componentes de Camilo **ya divergido de `SIGMA`**: un documento por pieza
+(`component.ndjson`), listo para cargar en MongoDB. Se agregó con la [Fase 24](24-poliglota-la-costura.md) y no toca
+el generador canónico, así que ningún hash de la tabla cambió:
+
+```bash
+node src/generate.ts --focus workOrder --volume 10k     # si no lo tienes
+node src/diverge.ts --from ../data/workOrder-10k | tail -1   # → ../data/camilo-10k/, datasetSha256 59cf9022…
+```
+
+Comprueba el hash del origen antes de leerlo, y su propio `answers.json` dice qué discrepancia hay en cada pieza y de
+dónde sale. **Ese archivo es la solución del boss: no se abre antes de entregarlo.**
+
 ---
 
 ## 🩹 Lo que el generador simplifica
@@ -320,6 +337,13 @@ Declarado, porque es la marca de la casa (§5.1 de la guía):
   son distintos el 99,9 %; **a 1 M, el 85,1 %**: un 15 % son duplicados exactos, y el más
   repetido aparece 214 veces. En reportes reales también hay duplicados, pero conviene saberlo
   antes de medir recall.
+- **Una aeronave que entra tarde a la flota recibe la misma cuota de lecturas que las demás**, y
+  sus vuelos siguen después del cierre de la ventana: el generador reparte la cuota por aeronave sin
+  mirar cuántos días estuvo activa. En `reading-1m`, **109 940 lecturas** son posteriores al
+  30/09/2026 (13 623 ya en 2027); en `reading-5m`, **70 108**, hasta el 07/12/2026. Es un defecto,
+  detectado al escribir F07 (07/10/2026), y **no se corrige**: arreglarlo cambiaría el hash de todos los
+  datasets, también los ya medidos. Las fases cortan por `ts < '2026-10-01'` y lo declaran; el
+  ejercicio 22 de F07 lo investiga.
 - **Las descripciones del catálogo son combinaciones** de un vocabulario de almacén, así que se
   repiten mucho a 1 M.
 
@@ -355,6 +379,7 @@ Declarado, porque es la marca de la casa (§5.1 de la guía):
   | `workOrder-1m` | 21,10 s | 2017 MiB | 1.3G |
   | `reading-1m` | 1,50 s | 188 MiB | 190M |
   | `pirep-1m` | 32,71 s | 2439 MiB | 1.9G |
+  | `reading-5m` | 6,81 s | 313 MiB | 899M |
 
   Con el laboratorio arriba en una máquina de 16 GB, genera antes de levantar las familias JVM.
 - **Un cambio en el generador cambia los hashes.** Si un día cambia, sube su versión en

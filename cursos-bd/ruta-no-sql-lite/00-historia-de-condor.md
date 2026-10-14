@@ -287,7 +287,7 @@ con cuarenta columnas anulables y una tabla de "atributos adicionales" que hoy t
 millones de filas.
 
 **🔑 El hangar que se reserva dos veces.** Hay tres puestos con foso en Villavicencio y dos
-grupos pidiendo el mismo el mismo día. Y la orden de trabajo que dos técnicos abren a la vez
+grupos pidiendo el mismo foso el mismo día. Y la orden de trabajo que dos técnicos abren a la vez
 desde dos terminales, que es como aparecen los duplicados que después nadie sabe cuándo
 entraron.
 

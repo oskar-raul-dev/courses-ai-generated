@@ -1,0 +1,46 @@
+# La mejor jugada de Postgres para el expediente (Fase 22): un primario en Bogotá y una réplica de lectura en
+# Quito, por streaming. Es un proyecto aparte, como el anillo de Cassandra, para que su `down -v` no toque el
+# laboratorio. Las dos redes son las dos ciudades y el enlace entre ellas: la réplica solo ve al primario por
+# `enlace`, y cortar el enlace es `docker network disconnect condor-replica_enlace condor-replica-primario-1`.
+#
+#   docker compose -f lab/compose.replica.yaml up -d --wait      (desde src/; dos Postgres de ~60 MiB)
+#   docker compose -f lab/compose.replica.yaml down -v
+name: condor-replica
+
+x-postgres: &postgres
+  image: pgvector/pgvector@sha256:2ba9ca5f2e7daa0f0e7723cba1ee9167bab54efd3640516a44ac1a928dd67e7a # 0.8.6-pg18
+  healthcheck:
+    test: ["CMD", "pg_isready", "-U", "postgres"]
+    interval: 2s
+    retries: 60
+
+services:
+  primario:
+    <<: *postgres
+    environment:
+      POSTGRES_PASSWORD: condor
+    networks: [bogota, enlace]
+    ports: ["${REPLICA_PRIMARIO_PORT:-15440}:5432"]
+    volumes:
+      - primario-data:/var/lib/postgresql
+      - ./replica/primario-replicacion.sh:/docker-entrypoint-initdb.d/10-replicacion.sh:ro
+
+  replica:
+    <<: *postgres
+    entrypoint: ["/replica.sh"]
+    networks: [quito, enlace]
+    ports: ["${REPLICA_LECTURA_PORT:-15441}:5432"]
+    volumes:
+      - replica-data:/var/lib/postgresql
+      - ./replica/replica.sh:/replica.sh:ro
+    depends_on:
+      primario: { condition: service_healthy }
+
+networks:
+  bogota:
+  quito:
+  enlace:
+
+volumes:
+  primario-data:
+  replica-data:

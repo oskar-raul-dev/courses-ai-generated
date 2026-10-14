@@ -1,0 +1,128 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "analysis": {
+      "char_filter": {
+        "part_number_strip": {
+          "type": "pattern_replace",
+          "pattern": "[^A-Za-z0-9]",
+          "replacement": ""
+        }
+      },
+      "filter": {
+        "spanish_stop": {
+          "type": "stop",
+          "stopwords": "_spanish_"
+        },
+        "spanish_light": {
+          "type": "stemmer",
+          "language": "light_spanish"
+        },
+        "warehouse_synonyms": {
+          "type": "synonym_graph",
+          "synonyms": [
+            "oring, o ring => junta torica",
+            "llanta, neumatico",
+            "empaque, sello"
+          ]
+        }
+      },
+      "analyzer": {
+        "description_es": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "spanish_stop",
+            "spanish_light"
+          ]
+        },
+        "description_es_search": {
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "asciifolding",
+            "warehouse_synonyms",
+            "spanish_stop",
+            "spanish_light"
+          ]
+        },
+        "part_number": {
+          "tokenizer": "keyword",
+          "char_filter": [
+            "part_number_strip"
+          ],
+          "filter": [
+            "lowercase"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "partNumber": {
+        "type": "keyword",
+        "fields": {
+          "normalized": {
+            "type": "text",
+            "analyzer": "part_number"
+          }
+        }
+      },
+      "alternates": {
+        "type": "keyword",
+        "fields": {
+          "normalized": {
+            "type": "text",
+            "analyzer": "part_number"
+          }
+        }
+      },
+      "alternateOf": {
+        "type": "keyword",
+        "fields": {
+          "normalized": {
+            "type": "text",
+            "analyzer": "part_number"
+          }
+        }
+      },
+      "supplierPartNumbers": {
+        "type": "text",
+        "analyzer": "part_number"
+      },
+      "description": {
+        "type": "text",
+        "analyzer": "description_es",
+        "search_analyzer": "description_es_search",
+        "fields": {
+          "raw": {
+            "type": "keyword"
+          }
+        }
+      },
+      "category": {
+        "type": "keyword"
+      },
+      "ataChapter": {
+        "type": "integer"
+      },
+      "serialized": {
+        "type": "boolean"
+      },
+      "compatibleModels": {
+        "type": "keyword"
+      },
+      "supplierIds": {
+        "type": "keyword"
+      },
+      "unitCostUsd": {
+        "type": "scaled_float",
+        "scaling_factor": 100
+      }
+    }
+  }
+}

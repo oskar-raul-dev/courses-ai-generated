@@ -1,6 +1,6 @@
 # 🍃 Fase 04 — Documental: romper la ficha, medirla contra JSONB y decidir cuándo no
 
-> **Curso:** Ruta NoSQL Lite · Fase 04 de 25 · Bloque I — Los dos que ya usas · **10 h**
+> **Curso:** Ruta NoSQL Lite · Fase 04 de 26 · Bloque I — Los dos que ya usas · **10 h**
 > **Familia:** documental · **Motor:** MongoDB 8.0.20 `mongo@sha256:098862b1339f…`
 > **Línea base:** PostgreSQL 18.6 `pgvector/pgvector@sha256:2ba9ca5f2e7d…` (JSONB con GIN)
 > **Entorno de ejecución:** TypeScript
@@ -256,8 +256,8 @@ de piezas, en disco:
 ocupa en disco una cuarta parte de lo que pesan sus documentos. Postgres no comprime las filas
 normales: solo los valores grandes que van a TOAST. Resultado: **la misma información ocupa la mitad
 en Mongo**. Los índices no son comparables uno a uno —en Mongo están el de `_id`, el de `aircraft`, el
-de `details.tboHours` y el comodín; en Postgres, la clave primaria, dos B-tree y el GIN—, pero el total
-queda parecido.
+de `details.tboHours` y el comodín; en Postgres, la clave primaria, dos B-tree y el GIN—, pero el total también
+va a favor de Mongo: 131 MB (datos e índices) contra 201 MB.
 
 No es un argumento para elegir Mongo —el espacio rara vez decide una familia—, pero es un número que
 el veredicto tiene que mencionar, porque **las pérdidas y las ganancias van con cifra**, también cuando
@@ -343,7 +343,7 @@ al más caro:
    Postgres las hace sin replica set y con conflictos por fila, no por documento. Si el polimorfismo
    era la razón, JSONB alcanzó en la sección 4.4.
 4. **Arquitectura.** Mongo al lado de Postgres, para la parte cuya unidad de lectura es de verdad el
-   documento, alimentado desde la fuente de verdad (Fase 24). Es el
+   documento, alimentado desde la fuente de verdad ([Fase 24](24-poliglota-la-costura.md)). Es el
    peldaño más caro, y el triaje de la [Fase 02](02-las-cinco-preguntas.md) dice cómo subirlo sin
    parar el negocio.
 
@@ -638,7 +638,7 @@ Escribe la autopsia de un equipo que eligió Mongo **por el polimorfismo**.
   documento.
 - **Índices comodín** — https://www.mongodb.com/docs/manual/core/indexes/index-types/index-wildcard/
 - **arrayFilters** — https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered/
-- **Patrón bucket** — https://www.mongodb.com/blog/post/building-with-patterns-the-bucket-pattern — el
+- **Patrón bucket** — https://www.mongodb.com/company/blog/building-with-patterns-the-bucket-pattern — el
   fabricante lo explica con series temporales.
 - **Indexación de JSONB en PostgreSQL** — https://www.postgresql.org/docs/current/datatype-json.html#JSON-INDEXING
 

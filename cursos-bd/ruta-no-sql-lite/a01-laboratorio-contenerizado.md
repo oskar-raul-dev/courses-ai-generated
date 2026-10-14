@@ -255,18 +255,18 @@ Cómo lo expone el `compose.yaml` de la ruta está en [`a02`](a02-compose-de-la-
 ## 🧠 Memoria: lo que decide qué cabe a la vez
 
 **RAM en reposo de cada familia**, medida en macOS arm64 el 29/09/2026 con la configuración de
-[`a02`](a02-compose-de-la-ruta.md), un minuto después de estar healthy:
+[`a02`](a02-compose-de-la-ruta.md), tras estabilizarse (medido el 14/10/2026 con `docker stats --no-stream`, de 3 a 8 muestras por familia):
 
 | Familia | En reposo | Nota |
 |---|---|---|
-| columnar (Cassandra) | 1,16 GiB | heap limitado a 512 MB; **sin límite, 4,63 GiB** |
-| búsqueda (OpenSearch) | 1020 MiB | heap de 512 MB |
-| grafos (Neo4j) | 529 MiB | heap de 512 MB |
-| NewSQL (CockroachDB, un nodo) | 318 MiB | el modo de nueve nodos de F22 ocupa 1,71 GiB |
-| documental, offline, series, vectorial, base, clave-valor | entre 12 y 115 MiB cada una | |
+| columnar (Cassandra) | 1,11 GiB | heap limitado a 512 MB; **sin límite, 4,63 GiB** |
+| búsqueda (OpenSearch) | 920 MiB | heap de 512 MB |
+| grafos (Neo4j) | 487 MiB | heap de 512 MB |
+| NewSQL (CockroachDB, un nodo) | 420 MiB | el modo de nueve nodos de F22 ocupa 1,71 GiB |
+| base, clave-valor, series, offline, vectorial, documental | 29, 10, 84, 97, 223 y 242 MiB | |
 
 Dos lecturas. **Las tres familias sobre JVM suman unos 2,7 GiB aun con el heap limitado.** Las otras
-seis de la tabla juntas ocupan unos 405 MiB, y con CockroachDB, unos 725 MiB. Y **en reposo no es bajo carga**: las fases B
+seis de la tabla juntas ocupan unos 685 MiB, y con CockroachDB, unos 1 GiB. Y **en reposo no es bajo carga**: las fases B
 cargan los motores a propósito, así que estos números son el piso, no el techo.
 
 **El límite por servicio no es un detalle.** Un heap que no cabe en el límite del contenedor no
@@ -399,7 +399,7 @@ pero la columna que importa es `RECLAIMABLE`.
   el grupo `docker` y lo que implica.
 - **Docker Desktop con WSL2** — https://docs.docker.com/desktop/features/wsl/ — backend WSL2 y
   buenas prácticas de sistema de archivos.
-- **Configuración de WSL** — https://learn.microsoft.com/windows/wsl/wsl-config — el archivo
+- **Configuración de WSL** — https://learn.microsoft.com/en-us/windows/wsl/wsl-config — el archivo
   `.wslconfig`.
 - **Referencia de `docker compose`** — https://docs.docker.com/reference/cli/docker/compose/ —
   `up --wait`, perfiles y `down -v`.

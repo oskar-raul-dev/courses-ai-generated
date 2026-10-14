@@ -92,7 +92,7 @@ Lite. Su único entregable es `00-la-decision-que-se-hereda.md`.
 
 ## Identidad de esta fase
 
-- Fase 00 de 25 · Bloque 0 — El instrumento · **4 h**
+- Fase 00 de 26 · Bloque 0 — El instrumento · **4 h**
 - Depende de: nada. Es la puerta de entrada del curso.
 - Habilita: F01
 - Apéndices de apoyo: ninguno todavía
@@ -156,7 +156,7 @@ El de F00. Añade a las fuentes: **F00 cerrada y aprobada**, y los apéndices `a
 
 ## Identidad
 
-- Fase 01 de 25 · Bloque 0 · **5 h** · Depende de F00 · Habilita F02
+- Fase 01 de 26 · Bloque 0 · **5 h** · Depende de F00 · Habilita F02
 - Apéndices de apoyo: a01, a02, a05, a06, a07
 - Entorno: TypeScript · Motor: solo PostgreSQL (línea base)
 
@@ -207,7 +207,7 @@ El de F00, más F01 cerrada.
 
 ## Identidad
 
-- Fase 02 de 25 · Bloque 0 · **3 h** · Depende de F01 · Habilita F03
+- Fase 02 de 26 · Bloque 0 · **3 h** · Depende de F01 · Habilita F03
 - Entorno: ninguno. Fase de criterio.
 
 ## Alcance
@@ -252,7 +252,7 @@ Plantilla: **fase {{A|B}}**, seguida literal.
 
 ## Identidad
 
-- Fase {{NN}} de 25 · Bloque I — Los dos que ya usas · **10 h**
+- Fase {{NN}} de 26 · Bloque I — Los dos que ya usas · **10 h**
 - Motor: MongoDB · Línea base: PostgreSQL JSONB · Entorno: TypeScript
 - Ejercicios: **{{26|28}}**
 

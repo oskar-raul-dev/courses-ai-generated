@@ -27,7 +27,10 @@ dentro está en el apéndice a10 del curso *Docker Legacy Node*.
 - [Puertos](#-puertos)
 - [Volúmenes y qué borra `down -v`](#-volúmenes-y-qué-borra-down--v)
 - [Memoria: límites y qué cabe a la vez](#-memoria-límites-y-qué-cabe-a-la-vez)
-- [`newsql-global`: nueve nodos para F22](#-newsql-global-nueve-nodos-para-f22)
+- [`newsql-global`: nueve nodos para F21 y F22](#-newsql-global-nueve-nodos-para-f21-y-f22)
+- [El anillo de Cassandra: tres nodos para F17–F18](#️-el-anillo-de-cassandra-tres-nodos-para-f17f18)
+- [Postgres con réplica: Bogotá y Quito para F22](#-postgres-con-réplica-bogotá-y-quito-para-f22)
+- [`base` con el WAL lógico: la costura de F24](#-base-con-el-wal-lógico-la-costura-de-f24)
 - [MongoDB 8.0.20 y el kernel](#-mongodb-8020-y-el-kernel)
 - [Cuándo usar qué](#-cuándo-usar-qué)
 - [Advertencias](#️-advertencias)
@@ -66,7 +69,7 @@ no por producto para que cambiar de motor no rompa ni un comando ya escrito en l
 | `columnar` | Cassandra | F17–F18 |
 | `offline` | CouchDB | F19–F20 |
 | `newsql` | CockroachDB, un nodo | F21 |
-| `newsql-global` | CockroachDB, nueve nodos en tres regiones | F22 y el boss del Bloque IV |
+| `newsql-global` | CockroachDB, nueve nodos en tres regiones | F21 (desde la sección 6.3), F22 y el boss del Bloque IV |
 
 El analítico embebido no tiene perfil: DuckDB corre dentro del proceso de Python, sin servidor
 ([`a06`](a06-lenguajes-y-drivers.md)). Para apagar todo de una vez está `--profile "*"`.
@@ -126,7 +129,8 @@ error literal está en [`a09`](a09-catalogo-de-errores.md).
 {database_does_not_exist,[{mem3_shards,load_from_db,[<<"_users">>],…
 ```
 
-No es cosmético: sin `_replicator` no hay replicaciones persistentes, que es lo que F19 enseña.
+No es cosmético: sin `_replicator` no hay replicaciones persistentes, que la
+[Fase 19](19-offline-levantar-y-modelar.md) usa en su sección 6.3.
 El healthcheck hace `PUT` de las dos bases —si ya existen, CouchDB responde 412 y sigue— y
 después comprueba `/_up`. La documentación de CouchDB nombra una tercera, `_global_changes`, que
 solo alimenta el feed de cambios de todo el servidor; el curso no la usa y no se crea. También
@@ -157,7 +161,8 @@ servicios usan su puerto de siempre; el desplazamiento solo afecta a lo que corr
 | `columnar` | 19042 | 9042 | `COLUMNAR_PORT` |
 | `offline` | 15984 | 5984 | `OFFLINE_PORT` |
 | `newsql` | 26258 (SQL), 18080 (consola) | 26257, 8080 | `NEWSQL_PORT`, `NEWSQL_UI_PORT` |
-| `newsql-global` | 26259 | 26257, a través del sidecar | `NEWSQL_GLOBAL_PORT` |
+| `newsql-global` | 26259 (n1, `us-east1`), 26260 (n4, `us-west1`), 26261 (n7, `europe-west1`) | 26257, 26260 y 26263, a través del sidecar | `NEWSQL_GLOBAL_PORT`, `NEWSQL_GLOBAL_PORT_2`, `NEWSQL_GLOBAL_PORT_3` |
+| `primario` y `replica` (`compose.replica.yaml`) | 15440, 15441 | 5432 | `REPLICA_PRIMARIO_PORT`, `REPLICA_LECTURA_PORT` |
 
 **Si aun así choca:** `cp .env.example .env` y cambia solo el número que moleste. El diagnóstico
 de un puerto ocupado está en [`a01`](a01-laboratorio-contenerizado.md).
@@ -188,8 +193,11 @@ WARN qdrant: There is a potential issue with the filesystem for storage path ./s
 `newsql-global` es la excepción: no tiene volumen, sus datos viven en memoria y **se pierden
 siempre al apagar**.
 
-La prueba es reproducible con
-[`prompts/verificacion-de-laboratorio/verificar-lab.sh`](prompts/verificacion-de-laboratorio/verificar-lab.sh).
+La prueba es reproducible con [`src/lab/check/verificar-lab.sh`](src/lab/check/verificar-lab.sh): para
+cada familia escribe un marcador, apaga sin `-v`, levanta y comprueba que el marcador sigue. **Corre en un
+proyecto de compose aparte (`condor-lab-check`)** con sus propios volúmenes, así que su `down -v` nunca
+toca los datos que cargaste en el laboratorio; como usa los mismos puertos, antes se detiene el
+laboratorio con `docker compose stop`. Deja su registro en `src/lab/data/`.
 
 ---
 
@@ -201,8 +209,8 @@ tumbar la máquina, y las tres llevan además el heap fijado:
 | Servicio | Heap | `mem_limit` | En reposo |
 |---|---|---|---|
 | `columnar` | 512 MB (`MAX_HEAP_SIZE`) | 1600 MB | 1,11 GiB |
-| `busqueda` | 512 MB (`OPENSEARCH_JAVA_OPTS`) | 1400 MB | 944 MiB |
-| `grafos` | 512 MB, más 256 MB de page cache | 1 GB | 429 MiB |
+| `busqueda` | 512 MB (`OPENSEARCH_JAVA_OPTS`) | 1400 MB | 920 MiB |
+| `grafos` | 512 MB, más 256 MB de page cache | 1 GB | 487 MiB |
 
 **El heap de Cassandra no es opcional.** Sin `MAX_HEAP_SIZE`, Cassandra calcula el heap a partir
 de la RAM de la máquina, y en reposo ocupó **4,63 GiB**. **El límite tampoco es un número
@@ -212,9 +220,11 @@ gasta memoria fuera del heap. Con 1200 MB arrancó al 88 %, y por eso el archivo
 Los límites están medidos en reposo. **Bajo la carga de las fases B pueden quedarse cortos**, y
 si una fase los sube, lo dice y lo justifica.
 
-**RAM en reposo de las familias sin límite**, con el compose definitivo y un dato escrito:
+**RAM en reposo de las familias sin límite**, con el compose definitivo y un dato escrito (las de la tabla
+de arriba y `newsql`, medidas de nuevo el 14/10/2026 tras estabilizarse; el resto, del 29/09/2026):
 `base` 29 MiB · `clave-valor` 10 MiB · `series` 84 MiB · `offline` 97 MiB · `vectorial`
-223 MiB · `documental` 242 MiB · `newsql` 344 MiB · `newsql-global` 1,1–1,4 GiB.
+223 MiB · `documental` 242 MiB · `newsql` 420 MiB · `newsql-global` 1,1–1,4 GiB vacío, y hasta 4,8 GiB con una
+base de `workOrder-10k` y las réplicas moviéndose ([Fase 21](21-newsql-levantar-y-modelar.md)).
 
 **Qué cabe a la vez en una VM de 8 GB**, medido el 29/09/2026 con otros contenedores ajenos al
 curso ocupando ~1,25 GiB al lado:
@@ -245,26 +255,38 @@ mientras se construye el índice.
 
 ---
 
-## 🌍 `newsql-global`: nueve nodos para F22
+## 🌍 `newsql-global`: nueve nodos para F21 y F22
 
-F22 mide latencia de commit entre regiones, y para eso hacen falta varias regiones. Este perfil
-levanta `cockroach demo --nodes=9 --global`: nueve nodos en tres regiones simuladas
-(`us-east1`, `us-west1` y `europe-west1`) **con latencia entre regiones inyectada**, y **exento
-de licencia** (por qué, en [`a10`](a10-licencias-y-riesgo.md)).
+F21 pone la geografía en el esquema y F22 mide la latencia de commit entre regiones, y para las dos hacen falta
+varias regiones. Este perfil levanta `cockroach demo --nodes=9 --global`: nueve nodos en tres regiones simuladas
+(`us-east1`, `us-west1` y `europe-west1`) **con latencia entre regiones inyectada**, y **exento de licencia** (por
+qué, en [`a10`](a10-licencias-y-riesgo.md)). Los nueve nodos son **un solo proceso**, y sus datos viven en memoria.
 
 ```bash
-docker compose --profile base --profile newsql-global up -d --wait
+docker compose --profile newsql-global up -d --wait
 ```
 
-Tiene dos piezas raras, y las dos son necesarias:
+Tiene tres piezas raras, y las tres son necesarias:
 
 - **`tty: true` y `stdin_open: true`**, porque `demo` es un shell interactivo y, sin terminal,
   termina en cuanto arranca.
 - **Un sidecar, `newsql-global-puerta`**, porque `demo` solo escucha en `127.0.0.1` y no tiene
   opción para cambiarlo. Publicar el puerto a secas no sirve: desde tu máquina, la conexión muere
   con `failed to receive message: unexpected EOF`. El sidecar es `socat`, comparte la red del
-  demo (`network_mode: "service:newsql-global"`) y reenvía el 26300 a `127.0.0.1:26257`. Ocupa
-  menos de 1 MiB.
+  demo (`network_mode: "service:newsql-global"`) y **publica un nodo de cada región**: el 26259 llega a n1
+  (`us-east1`), el 26260 a n4 (`us-west1`) y el 26261 a n7 (`europe-west1`). La
+  [Fase 21](21-newsql-levantar-y-modelar.md) le agregó las dos últimas, porque medir "desde dónde se escribe" exige
+  entrar por un nodo de esa región. Ocupa menos de 10 MiB.
+- **La memoria acotada.** Con los valores por defecto (caché de 64 MiB y memoria SQL de 256 MiB **por nodo**) y dos
+  bases de `workOrder-10k`, el demo pasó de 5,9 GiB y lo mató el OOM de la VM. El compose le baja la caché a 32 MiB
+  (`--cache=32MiB`) y le pone `GOMEMLIMIT: 3GiB`, que obliga al recolector de Go a trabajar antes. Llegar ahí costó
+  dos intentos que no sirvieron: **la memoria SQL a 64 MiB por nodo** dejó la creación de un índice en
+  `Backfilling index` para siempre, sin ningún error, y **`GOMEMLIMIT` en 4500 MiB** dejó morir por OOM dos corridas de
+  once, con picos de 4,8 GiB en las que sobrevivieron. Con 3 GiB, el camino completo de la
+  [Fase 21](21-newsql-levantar-y-modelar.md) —cargar una base, restringir la ubicación, medir las regiones y el
+  reloj— terminó en 674 s con un pico de 3,6 GiB. Una corrida no prueba que no vuelva a pasar: la Fase 21 trabaja con
+  **una base por demo recién creado**, y si una conexión se corta sola, `docker inspect condor-lab-newsql-global-1
+  --format '{{.State.OOMKilled}}'` dice si fue la memoria.
 
 La prueba de que funciona, desde tu máquina:
 
@@ -280,6 +302,81 @@ $ cockroach sql --insecure --host=localhost:26259 -e "SHOW REGIONS FROM CLUSTER"
 
 (En la verificación el cliente corrió en un contenedor, con `--host=host.docker.internal:26259`;
 desde un `cockroach` instalado en tu máquina, el host es `localhost`.)
+
+**El demo también se puede matar solo.** En la [Fase 22](22-newsql-romper-y-medir.md), dos demos terminaron con
+código 7, sin OOM, con `clock synchronization error: this node is more than 400ms away from at least half of the
+known nodes` (E-76 en [`a09`](a09-catalogo-de-errores.md)). Los nueve nodos comparten el reloj de tu máquina: lo que
+se atrasa es un latido, por una pausa del proceso o de la VM, y el nodo no lo distingue de un reloj desfasado.
+`demo` no acepta la opción que apaga ese chequeo. Si pasa, se recrea el demo y se vuelve a cargar.
+
+---
+
+## 🏛️ El anillo de Cassandra: tres nodos para F17–F18
+
+El servicio `columnar` es un nodo solo, y en un nodo la consistencia ajustable no tiene a quién referirse.
+Para ejecutarla, `src/lab/compose.anillo.yaml` levanta **tres nodos** de la misma imagen y con el mismo heap
+fijado, en un proyecto de compose aparte (`condor-anillo`):
+
+```bash
+docker compose -f lab/compose.anillo.yaml up -d --wait      # desde src/
+docker compose -f lab/compose.anillo.yaml exec c1 nodetool status
+docker compose -f lab/compose.anillo.yaml down -v
+```
+
+Tres decisiones, cada una por algo que pasa si no se toma:
+
+- **Proyecto aparte**, para que su `down -v` borre solo sus tres volúmenes y nunca los del laboratorio.
+- **Sin puertos publicados.** Cada nodo se anuncia con su dirección de la red de Docker, que desde tu máquina
+  no existe (el mismo problema de E-03 en [`a09`](a09-catalogo-de-errores.md)); se entra con `docker compose
+  exec … cqlsh`.
+- **Los nodos entran de uno en uno** (`depends_on` con `service_healthy`): Cassandra desaconseja que dos nodos
+  se unan al anillo a la vez.
+
+**Lo que cuesta**, medido el 10/10/2026: **207 s** hasta que el tercero está sano, y en reposo
+**1,22, 1,16 y 1,14 GiB**, unos 3,5 GiB. **Con el laboratorio detenido**: no cabe al lado de los otros
+motores JVM, y la [Fase 17](17-columnar-levantar-y-modelar.md) lo usa así.
+
+---
+
+## 🔁 Postgres con réplica: Bogotá y Quito para F22
+
+La línea base bien jugada de la [Fase 22](22-newsql-romper-y-medir.md) es un primario y una réplica de lectura por
+*streaming*. `src/lab/compose.replica.yaml` los levanta en un proyecto aparte (`condor-replica`), como el anillo, con
+la misma imagen de `base`:
+
+```bash
+docker compose -f lab/compose.replica.yaml up -d --wait      # desde src/
+docker compose -f lab/compose.replica.yaml exec primario psql -U postgres -c "SELECT client_addr, state FROM pg_stat_replication"
+docker compose -f lab/compose.replica.yaml down -v
+```
+
+Dos detalles. El primario agrega al crearse una línea a `pg_hba.conf` para dejar entrar a la réplica
+(`replica/primario-replicacion.sh`), y la réplica se copia la primera vez con `pg_basebackup -R`
+(`replica/replica.sh`). Y cada uno vive en su red —`bogota` y `quito`— con una tercera, `enlace`, entre los dos:
+cortar el enlace es `docker network disconnect condor-replica_enlace condor-replica-primario-1`, y reponerlo, **con su
+nombre**: `docker network connect --alias primario …`. Sin el alias, la réplica no vuelve a encontrar al primario
+(E-77). Con el expediente cargado, ocupan 54 y 64 MiB.
+
+---
+
+## 🧵 `base` con el WAL lógico: la costura de F24
+
+El CDC de la [Fase 24](24-poliglota-la-costura.md) lee el WAL con un slot lógico, y eso exige `wal_level=logical`.
+`base` corre con el nivel por defecto, `replica`. El cambio no va en `compose.yaml`: va en
+`src/lab/compose.costura.yaml`, que **se suma** al compose del laboratorio y cambia solo el comando de `base`. No es
+un proyecto aparte, como la réplica o el anillo: usa el mismo volumen y los mismos datos.
+
+```bash
+docker compose -f lab/compose.yaml -f lab/compose.costura.yaml --profile base --profile offline up -d --wait   # desde src/
+docker compose -f lab/compose.yaml exec base psql -U postgres -c "SHOW wal_level"                                     # logical
+```
+
+Va en su propio archivo por las mediciones de WAL de las fases [10](10-series-romper-y-medir.md) y
+[18](18-columnar-romper-y-medir.md), hechas con `replica`: el nivel lógico escribe algo más en algunos registros, y
+esas cifras tienen que seguir reproduciéndose con el compose de siempre. Cambiar de nivel reinicia `base`.
+
+**Antes de volver al compose de siempre, borra los slots lógicos** (`node 24-poliglota-la-costura/setup.ts --drop`).
+Con uno vivo y `wal_level=replica`, Postgres no arranca ([E-81](a09-catalogo-de-errores.md#e-81--un-slot-lógico-que-no-deja-arrancar)).
 
 ---
 
@@ -320,9 +417,9 @@ WSL2, el que instala `wsl --update`.
 | Situación | Perfiles | Nota |
 |---|---|---|
 | Una fase A o B de cualquier familia | `base` + la familia | lo normal |
-| F22 y el boss del Bloque IV | `base` + `newsql-global` | nada más arriba |
-| Boss de un bloque | `base` + las familias del bloque | el Bloque II junta dos JVM: vigila la RAM |
-| Capstone (F23–F25) | los que decida tu diseño, sin `newsql-global` | todo el laboratorio cabe en 8 GB |
+| F21 (desde la sección 6.3), F22 y el boss del Bloque IV | `newsql-global`, con `base` o el par de `compose.replica.yaml` si hace falta | nada más arriba, y **una base a la vez** en un demo recién creado |
+| Boss de un bloque | `base` + las familias del bloque | el Bloque II tiene una sola familia sobre JVM (búsqueda), pero el boss junta tres motores: vigila la RAM |
+| Capstone (F23–F25) | los que decida tu diseño, sin `newsql-global` | todo el laboratorio cabe en 8 GB; la F24, con `compose.costura.yaml` sumado |
 | Apagar todo | `--profile "*" down` | conserva los datos |
 | Empezar una familia de cero | `--profile <familia> down -v` | datos regenerables con [`a05`](a05-el-dominio-de-flota.md) |
 | Actualizar una imagen | digest, comentario y fecha, y `verificar-lab.sh` | un volumen mal montado no falla: pierde datos |
@@ -353,7 +450,7 @@ WSL2, el que instala `wsl --update`.
 - **OpenSearch en Docker** — https://docs.opensearch.org/latest/install-and-configure/install-opensearch/docker/
 - **Neo4j: configuración por variables de entorno** — https://neo4j.com/docs/operations-manual/current/docker/configuration/
 - **CouchDB en un nodo** y sus bases de sistema — https://docs.couchdb.org/en/stable/setup/single-node.html
-- **`cockroach demo`** — https://www.cockroachlabs.com/docs/stable/cockroach-demo
+- **`cockroach demo`** — https://docs.cockroachlabs.com/docs/stable/cockroach-demo
 - **SERVER-121912** y **SERVER-125742** — https://jira.mongodb.org/browse/SERVER-121912 ·
   https://jira.mongodb.org/browse/SERVER-125742
 
@@ -405,7 +502,7 @@ Después añade `newsql-global`.
 ### 🔴 Ejercicio 6 — Actualizar una imagen sin romper nada
 
 Elige un servicio, busca su tag vigente más reciente y cambia el digest. Ejecuta
-`prompts/verificacion-de-laboratorio/verificar-lab.sh` para ese servicio.
+`check/verificar-lab.sh <familia>` desde `src/lab` para ese servicio.
 
 **Objetivo:** decidir, con la prueba de persistencia y la RAM en reposo delante, si la
 actualización se queda. **Pregunta:** si eligieras `documental`, ¿qué versión podrías poner hoy en

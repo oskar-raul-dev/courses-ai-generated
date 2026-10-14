@@ -1,6 +1,6 @@
 # 🔑 Fase 05 — Clave-valor: el foso que se reserva una vez, modelado sin una sola consulta
 
-> **Curso:** Ruta NoSQL Lite · Fase 05 de 25 · Bloque I — Los dos que ya usas · **10 h**
+> **Curso:** Ruta NoSQL Lite · Fase 05 de 26 · Bloque I — Los dos que ya usas · **10 h**
 > **Familia:** clave-valor · **Motor:** Valkey 9.1.2 `valkey/valkey@sha256:418652cfb58e…`
 > **Línea base:** PostgreSQL 18.6 `pgvector/pgvector@sha256:2ba9ca5f2e7d…` (tabla `UNLOGGED`, en la Fase 06)
 > **Entorno de ejecución:** TypeScript
@@ -25,7 +25,7 @@ de acceso más puro del curso, y las familias que vienen después son, en el fon
 encima.
 
 Cóndor la necesita por el segundo dolor de su historia: **tres puestos con foso en Villavicencio y dos
-grupos pidiendo el mismo el mismo día**, y órdenes de trabajo que dos técnicos abren a la vez desde
+grupos pidiendo el mismo foso el mismo día**, y órdenes de trabajo que dos técnicos abren a la vez desde
 dos terminales. Las dos cosas tienen la misma forma: alguien gana, el otro se entera de que perdió, y
 la decisión dura lo justo.
 
@@ -66,7 +66,7 @@ base de la [Fase 06](06-clave-valor-romper-y-medir.md).
 - **Replicación, Sentinel y cluster.** Fuera del alcance del curso. El laboratorio es un
   nodo, y todo lo que se dice de atomicidad vale para un nodo.
 - **Módulos** (búsqueda, JSON, filtros de Bloom). La imagen del curso no trae ninguno: `MODULE LIST`
-  solo muestra `lua`. La búsqueda de texto es la Fase 11.
+  solo muestra `lua`. La búsqueda de texto es la [Fase 11](11-busqueda-levantar-y-modelar.md).
 - **Pub/Sub.** No entra al curso: no guarda nada, y el stream de la sección 6.8 cubre el caso de
   Cóndor.
 
@@ -497,7 +497,7 @@ su lugar.
 | | Dónde vive la orden | Tras `SIGKILL` antes del guardado | Tras `SIGKILL` después del guardado |
 |---|---|---|---|
 | antes: Valkey como almacén primario | un hash, sin AOF | **0 de 1 000 000** | 1 000 000 de 1 005 000 |
-| después: Postgres como fuente de verdad, Valkey para el candado | una fila | 1 000 000 (a07, tabla normal) | todas |
+| después: Postgres como fuente de verdad, Valkey para el candado | una fila | 100 000 (a07, tabla normal) | todas |
 
 La columna de Postgres sale de [`a07`](a07-postgres-linea-base.md), que midió la misma caída sobre una
 tabla normal y sobre una `UNLOGGED` con 100 000 filas: la normal las conserva todas. Qué cambia con

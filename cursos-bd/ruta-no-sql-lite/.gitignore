@@ -1,0 +1,29 @@
+# Repositorio público del curso: lo que no se publica ni se versiona.
+
+# Material de producción: el plan y los prompts que generaron el curso (no se publican)
+prompts/
+
+# Datos generados del laboratorio (se regeneran con src/lab/generator, a05)
+src/lab/data/
+
+# Dependencias, entornos y cachés (cualquier carpeta)
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+
+# Configuración local del laboratorio (puertos propios de cada máquina)
+src/lab/.env
+
+# Sistema operativo y editores
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp

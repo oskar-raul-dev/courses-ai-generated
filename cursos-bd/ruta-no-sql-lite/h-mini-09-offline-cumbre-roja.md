@@ -145,7 +145,7 @@ una librería de CRDT, para comparar convergencia automática contra resolución
 
 ## 🔗 El puente con Cóndor
 
-Es la **Fase 19**: Freddy Manrique subiéndose a una avioneta el lunes con una caja de
+Es la [**Fase 19**](19-offline-levantar-y-modelar.md): Freddy Manrique subiéndose a una avioneta el lunes con una caja de
 herramientas y volviendo el jueves con todo en papel es la misma escena, en otro oficio.
 
 Y el paralelo importante es el de la consecuencia, porque es lo que decide cuánta complejidad se

@@ -188,6 +188,10 @@ $ echo $?
 El 124 es de `timeout`: el proceso seguía vivo a los 15 segundos y hubo que matarlo. **El
 patrón que lo evita es `try` / `finally`**, que cierra también cuando la consulta falla:
 
+> 📝 La contraseña `condor` de estos ejemplos es la del laboratorio local: `POSTGRES_PASSWORD` en
+> [`a02`](a02-compose-de-la-ruta.md), solo para `localhost`. No es una credencial de producción ni debe
+> reutilizarse fuera del laboratorio.
+
 ```ts
 const client = new pg.Client({ host: "localhost", port: 15432, user: "postgres", password: "condor" });
 await client.connect();

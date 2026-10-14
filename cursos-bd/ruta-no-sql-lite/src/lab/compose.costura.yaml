@@ -1,0 +1,12 @@
+# La costura de la Fase 24: el mismo `base`, con el WAL en nivel lógico para que la captura de cambios (CDC) pueda
+# leerlo. No es un proyecto aparte: se suma al compose del laboratorio y cambia solo el comando de `base`. Va en su
+# propio archivo para que las mediciones de WAL de las fases 10 y 18, hechas con el nivel por defecto (replica),
+# sigan siendo reproducibles con el compose de siempre.
+#
+#   docker compose -f lab/compose.yaml -f lab/compose.costura.yaml --profile base --profile offline up -d --wait
+#
+# ⚠️ Antes de volver al compose de siempre, borra los slots lógicos: con uno vivo y wal_level=replica, Postgres no
+# arranca (a09, E-81). `node 24-poliglota-la-costura/setup.ts --drop` lo hace.
+services:
+  base:
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements", "-c", "wal_level=logical"]

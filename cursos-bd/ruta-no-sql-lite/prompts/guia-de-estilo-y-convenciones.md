@@ -317,7 +317,7 @@ Toda fase abre con el título y, debajo, un blockquote de metadatos:
 ```markdown
 # 🍃 Fase 03 — Documental: levantar y modelar la ficha que nunca tiene los mismos campos
 
-> **Curso:** Ruta NoSQL Lite · Fase 03 de 25 · Bloque I · **10 h**
+> **Curso:** Ruta NoSQL Lite · Fase 03 de 26 · Bloque I · **10 h**
 > **Familia:** documental · **Motor:** MongoDB `mongo@sha256:…`
 > **Línea base:** PostgreSQL `postgres@sha256:…` (JSONB)
 > **Entorno de ejecución:** TypeScript
@@ -685,8 +685,8 @@ práctica del curso; lo que faltaba era escribirlas:
 6. **Los ejercicios no traen solución publicada.** El `CLAUDE.md` pide una solución de referencia o
    una rúbrica por ejercicio; aquí cada ejercicio cierra con su `**Objetivo:**` o su
    `**Pregunta:**` verificable (§9), y los boss y los miniproyectos con criterios de aceptación. La
-   solución del boss se guarda fuera del repositorio publicado. **Decisión por defecto, a revisar
-   por Oskar** (alcance §12.1, D-05).
+   solución del boss se guarda fuera del repositorio publicado. **Confirmada por Oskar el 12/10/2026**
+   (alcance §12.1, D-05).
 7. **`0-ESTRUCTURA-CURSO.md` no se escribió antes de la primera fase**, sino al cerrar la Tanda 1, y
    desde el 30/09/2026 se actualiza una sola vez, en la Tanda 7, junto con el README. Antes de F00
    ese papel lo cumplieron el [alcance](alcance-del-proyecto.md) y la
@@ -775,9 +775,10 @@ python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el r
   de §15 y el aviso `DIAGRAMA` para un bloque `text` con forma de diagrama.
 - `--publicacion` agrega los errores de la etapa de publicación: enlaces a `prompts/` y menciones a
   material privado (`zz-code/`, desechables).
-- Al 06/10/2026, el modo normal sale en **0 errores y 0 avisos**. `--publicacion` deja un error a
-  propósito: `a02` enlaza `verificacion-de-laboratorio/verificar-lab.sh`, un script que el lector
-  necesita y que tiene que pasar a `src/lab/check/` y volver a correrse (deuda del plan, Tanda 3).
+- Al 07/10/2026, al cerrar la Tanda 3, los dos modos salen en **0 errores y 0 avisos**. `verificar-lab.sh`
+  ya está en `src/lab/check/` (adaptado a un proyecto de compose aparte, para que su `down -v` no borre el
+  laboratorio del lector) y `a02` lo enlaza ahí. El verificador no cuenta `00-convencion-de-git-y-tags.md`
+  como fase (`convencion` en `NO_CAPITULO`).
 - Lo que el verificador no ve y se revisa a mano: que las cifras citadas coincidan con la bitácora,
   que cada error de `a09` tenga su mensaje literal, y que cada bloque `mermaid` dibuje.
 
@@ -791,5 +792,6 @@ python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el r
   scratchpad ni al curso, y el plan las registra (§9 del plan). El curso no cita `zz-code/`.
 - **Excepción declarada:** los scripts de la verificación de laboratorio de T10
   (`verificacion-de-laboratorio/*.sh`, `comprobaciones/`, `compose.yaml`) son anteriores a esa regla
-  y se quedan en `prompts/`, porque los hallazgos H1–H13 los citan. Las verificaciones nuevas (Linux,
-  WSL2, Colima) van a `zz-code/`.
+  y se quedan en `prompts/`, porque los hallazgos H1–H13 los citan. `verificar-lab.sh` tiene además una
+  copia adaptada en `src/lab/check/`, que es la que usa el lector (Tanda 3, 07/10/2026). Las
+  verificaciones nuevas (Linux, WSL2, Colima) van a `zz-code/`.

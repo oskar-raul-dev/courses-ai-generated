@@ -1,6 +1,6 @@
 # ⚰️ Fase 00 — La decisión que se hereda: nadie eligió mal a propósito
 
-> **Curso:** Ruta NoSQL Lite · Fase 00 de 25 · Bloque 0 — El instrumento · **4 h**
+> **Curso:** Ruta NoSQL Lite · Fase 00 de 26 · Bloque 0 — El instrumento · **4 h**
 > **Motor:** ninguno — esta fase se lee
 > **Entorno de ejecución:** ninguno
 > **Depende de:** nada · **Habilita:** Fase 01
@@ -154,7 +154,7 @@ siendo el de un solo nodo, pero el modelo tenía **once tablas para cuatro consu
 columnar ancha cada consulta nueva es una tabla nueva más un *backfill*. Cada pedido de producto
 ("¿podemos filtrar también por región?") costaba una semana. Salir costó un trimestre de doble
 escritura. **La pregunta que faltó: ¿conoces tus consultas de antemano, y son estables?** Si la
-respuesta es no, esta familia es una trampa cara (Fases 17–18).
+respuesta es no, esta familia es una trampa cara (Fases [17](17-columnar-levantar-y-modelar.md)–18).
 
 **"Metimos el JSON completo y listo."** La API externa devolvía un JSON grande, y guardarlo tal
 cual era rápido de programar y no perdía nada. Era razonable: nadie sabía todavía qué campos iban a

@@ -1,6 +1,6 @@
 # 🍃 Fase 03 — Documental: la ficha que nunca tiene los mismos campos, modelada para leerse de una vez
 
-> **Curso:** Ruta NoSQL Lite · Fase 03 de 25 · Bloque I — Los dos que ya usas · **10 h**
+> **Curso:** Ruta NoSQL Lite · Fase 03 de 26 · Bloque I — Los dos que ya usas · **10 h**
 > **Familia:** documental · **Motor:** MongoDB 8.0.20 `mongo@sha256:098862b1339f…`
 > **Línea base:** PostgreSQL 18.6 `pgvector/pgvector@sha256:2ba9ca5f2e7d…` (JSONB)
 > **Entorno de ejecución:** TypeScript

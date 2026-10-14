@@ -33,7 +33,10 @@ Tres compromisos lo separan de los mil *"MongoDB en 20 minutos"* que ya existen:
 
 Y una honestidad que va dicha en la primera fase y no escondida al final: **la mayoría de
 las veces gana Postgres.** JSONB, full-text, `pgvector`, `WITH RECURSIVE`, particionado. El
-curso va a por los casos donde eso no alcanza, y lo demuestra con las dos bases montadas.
+curso va a por los casos donde eso no alcanza, y lo demuestra con las dos bases montadas. Al
+terminar, la cuenta es esta: **en siete de las diez familias, Postgres bien jugado hizo lo que el
+dominio necesitaba**, y en las tres restantes perdió por una forma de acceso, no por la moda
+([Fase 25](25-poliglota-la-factura.md)).
 
 ---
 
@@ -115,18 +118,18 @@ determinista: **la misma medición en tu máquina y en la mía**.
 **Orden de aprendizaje** — el de las fases, y el que conviene si vas a hacer el curso
 entero. El Bloque 0 no se salta: sin él, esto son diez tutoriales de producto.
 
-**Orden de publicación** — distinto a propósito. Documental abre por los dos criterios, y
-**vectorial se adelanta al tercer puesto** aunque pedagógicamente le tocara mucho más tarde.
-El curso puede permitírselo porque los minicursos son casi independientes.
+**Orden en que se escribió** — distinto a propósito. Los bloques 0 y I se escribieron primero, y
+**vectorial se adelantó al segundo puesto**, justo después del Bloque I, aunque pedagógicamente le
+tocara más tarde: sus dos fases solo necesitan el Bloque 0, y se puede seguir así.
 
 **Si solo vas a hacer un bloque, haz el 0 y el I.** Son 52 horas, cierran con su boss y
 salen con criterio utilizable, no con medio curso.
 
-> 📍 **Publicado hoy:** el Bloque 0 y el Bloque I completos —[F00](00-la-decision-que-se-hereda.md) a
-> [F06](06-clave-valor-romper-y-medir.md)—, con el boss *"La orden que entró dos veces"*, los
-> miniproyectos de Barlovento y Nodo Sur, y los diez apéndices en el estado que esas fases necesitan.
-> Qué está publicado y qué viene después, fase por fase, en
-> [`0-ESTRUCTURA-CURSO.md`](0-ESTRUCTURA-CURSO.md).
+> 📍 **El curso está completo:** las 26 fases, de [F00](00-la-decision-que-se-hereda.md) a
+> [F25](25-poliglota-la-factura.md), los cinco boss de bloque, el cierre de El Hangar, los diez
+> miniproyectos y los diez apéndices, escritos y ejecutados en macOS arm64. Linux y Windows 11 con
+> WSL2 están escritos y sin verificar ([`a01`](a01-laboratorio-contenerizado.md)). El estado fase por
+> fase y el orden en que se escribió, en [`0-ESTRUCTURA-CURSO.md`](0-ESTRUCTURA-CURSO.md).
 
 ---
 
@@ -152,7 +155,8 @@ salen con criterio utilizable, no con medio curso.
 - **`00-historia-de-condor.md`** — la empresa del curso. No es una fase: es de donde sale
   todo lo narrativo.
 - **`0-ESTRUCTURA-CURSO.md`** — el temario en una página: horas, ejercicios, estado de cada fase y
-  orden de publicación.
+  orden en que se escribió.
+- **`00-convencion-de-git-y-tags.md`** — cómo se commitea y se etiqueta cada fase.
 - **Fases** `00-…md` a `25-…md` — el curso. Dos por familia.
 - **Miniproyectos** `h-mini-01-…md` a `h-mini-10-…md` — uno por familia, de otra empresa.
 - **Apéndices** `a01-…md` a `a10-…md` — transversales a toda la ruta, de receta y no de
@@ -165,19 +169,18 @@ salen con criterio utilizable, no con medio curso.
   prueba).
 - **`src/`** — el código que se ejecuta: el laboratorio (`src/lab/compose.yaml`, de `a02`), el
   generador de datos (`src/lab/generator/`, de `a05`) y el entorno de TypeScript y Python con
-  sus versiones fijadas (`a06`). Cada fase deja el suyo en `src/NN-nombre/`.
-- **`prompts/`** — el aparato editorial: alcance, guía de estilo, propuestas de fases y
-  apéndices, plantillas y los prompts de redacción.
+  sus versiones fijadas (`a06`). Cada fase que ejecuta código deja el suyo en `src/NN-nombre/`, con el
+  mismo nombre que su documento, y `src/a07-postgres-linea-base/` guarda el de ese apéndice.
 
 ---
 
 ## 🗺️ Dónde encaja en el repositorio
 
-- **`docker-container-legacy/`** es la infraestructura de laboratorio. Aquí se dan recetas;
-  el mecanismo se explica allí. Este curso **no enseña Docker** a propósito.
-- **`ruta-no-sql/`** es la especificación de los cursos profundos por familia. Cada
+- **El curso de Docker del repositorio** es la infraestructura de laboratorio. Aquí se dan
+  recetas; el mecanismo se explica allí. Este curso **no enseña Docker** a propósito.
+- **Los cursos profundos de la ruta NoSQL**, uno por familia, son la continuación de esta. Cada
   minicurso de la Lite es el tráiler del suyo.
-- **`tutorial-rag/`** conecta con el minicurso vectorial.
+- **El tutorial de RAG del repositorio** conecta con el minicurso vectorial.
 
 ---
 
@@ -187,3 +190,9 @@ Que puedas entrar a un design review y **descartar motores con argumento**, en v
 proponerlos todos. Que sepas responder las cinco preguntas sobre tu propio sistema. Y que,
 cuando la respuesta honesta sea *"esto lo resuelve Postgres"*, lo digas sin que te duela el
 ego — con el número delante.
+
+---
+
+## 📜 Licencia
+
+Texto y código, bajo CC BY-SA 4.0. Detalles y enlaces en [`LICENSE.md`](LICENSE.md).

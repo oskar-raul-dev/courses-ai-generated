@@ -24,7 +24,7 @@ entregar.
 ````markdown
 # {{emoji}} Fase {{NN}} — {{Familia}}: {{la promesa concreta del documento}}
 
-> **Curso:** Ruta NoSQL Lite · Fase {{NN}} de 25 · Bloque {{romano}} · **{{X}} h**
+> **Curso:** Ruta NoSQL Lite · Fase {{NN}} de 26 · Bloque {{romano}} · **{{X}} h**
 > **Familia:** {{familia}} · **Motor:** {{producto}} `{{imagen}}@sha256:{{digest}}`
 > **Línea base:** PostgreSQL `postgres@sha256:{{digest}}`
 > **Entorno de ejecución:** {{TypeScript | TypeScript + Python}}
@@ -279,7 +279,7 @@ es la única que cambia de contenido según la fase.
 ````markdown
 # {{emoji}} Fase {{NN}} — {{la promesa concreta del documento}}
 
-> **Curso:** Ruta NoSQL Lite · Fase {{NN}} de 25 · Bloque 0 — El instrumento · **{{X}} h**
+> **Curso:** Ruta NoSQL Lite · Fase {{NN}} de 26 · Bloque 0 — El instrumento · **{{X}} h**
 > **Motor:** {{ninguno — esta fase se lee | solo PostgreSQL `postgres@sha256:{{digest}}`}}
 > **Entorno de ejecución:** {{ninguno | TypeScript}}
 > **Depende de:** {{nada | Fase NN-1}} · **Habilita:** Fase {{NN+1}}

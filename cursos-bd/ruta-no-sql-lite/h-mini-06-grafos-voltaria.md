@@ -77,8 +77,10 @@ las dos tecnologías:
   través de los enlaces normalmente abiertos, con su costo en maniobras y su efecto en carga.
   Profundidad desconocida, caminos múltiples, y un grafo con ciclos.
 
-Y las tres escritas también en `WITH RECURSIVE`, bien jugadas, con corte de ciclos y con los
-índices correctos. Sin eso, la comparación es propaganda.
+Y las tres escritas también en `WITH RECURSIVE`, bien jugadas: `UNION` sin `ALL` cuando la respuesta
+son tramos alcanzables, `CYCLE` solo cuando la respuesta son caminos, y los índices correctos. Sin eso, la
+comparación es propaganda: en la [Fase 14](14-grafos-romper-y-medir.md), esa sola palabra separó 100 640
+filas de 3 345 159 a cuatro saltos.
 
 ## 📐 Lo que se observa
 
@@ -115,7 +117,9 @@ instinto**.
 los caminos alternativos hasta un tramo, a través de una malla con ciclos, con profundidad
 desconocida y evaluando el costo de cada camino, no es un `WITH RECURSIVE` difícil — es una
 cosa que en SQL se convierte en escribir un motor de grafos dentro de la aplicación. Ahí está
-el argumento real de la familia y es el único que hace falta.
+el argumento real de la familia y es el único que hace falta. Es el mismo que encontró la Fase 14 en
+Cóndor: alcanzar nodos lo aguantó Postgres; devolver el camino más corto fueron 1061 accesos contra 1,7
+millones de filas.
 
 Y el veredicto honesto que cierra: **si Voltaria solo necesitara las dos primeras, no
 necesitaría un grafo.** Necesitaría dejar de precalcular una columna a las tres de la mañana.
@@ -128,7 +132,7 @@ Ese es el arreglo de escalón 1 y cuesta días, no trimestres — y decirlo es p
 | Entorno | **Node + TypeScript** | |
 | Motor | **Neo4j Community** · perfil `grafos` | `cypher-shell` para explorar, driver oficial para el servicio |
 | Lenguaje | **Cypher** | Lo justo para el dominio: patrones, travesía con límite, caminos |
-| Línea base | **PostgreSQL** · perfil `base` | `WITH RECURSIVE` con su índice y con **detección de ciclos declarada**, no a mano |
+| Línea base | **PostgreSQL** · perfil `base` | `WITH RECURSIVE` con su índice: `UNION` para alcanzar tramos y **`CYCLE` declarado**, no a mano, cuando se piden caminos |
 | Driver | `neo4j-driver` y `pg` | |
 | Modelado | El estado del interruptor como **propiedad de la relación** | Es lo que hace que la topología se calcule en tiempo de consulta y no de madrugada |
 | Medición | `PROFILE` y sus `db hits` · `EXPLAIN (ANALYZE, BUFFERS)` | Filas examinadas por profundidad, en las dos, sobre el mismo grafo |
@@ -153,7 +157,8 @@ ganarle a un `WITH RECURSIVE` mal hecho no demuestra nada.
 
 ## 🔗 El puente con Cóndor
 
-Es la **Fase 13**, y el paralelo es más profundo de lo que parece a primera vista.
+Son las **Fases [13](13-grafos-levantar-y-modelar.md) y [14](14-grafos-romper-y-medir.md)**, y el paralelo
+es más profundo de lo que parece a primera vista.
 
 La trazabilidad de Cóndor —*"¿en qué aeronaves estuvo instalada alguna vez una pieza de este
 lote?"*— y la reconfiguración de Voltaria son el mismo tipo de problema: **la estructura no es
