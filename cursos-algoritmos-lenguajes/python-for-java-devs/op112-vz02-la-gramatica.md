@@ -40,7 +40,7 @@ título, notas.
 | Great Tables | 1.0.0 | Tablas para publicar, con formato |
 | seaborn | 0.13.2 💤 | Gráficos estadísticos sobre Matplotlib; sin versiones desde enero de 2024 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java no hay una gramática de gráficos de uso común: se configura un objeto de gráfico propiedad por propiedad. El instinto lleva esa forma a
 Python y escribe Matplotlib para todo. Para un gráfico que cambia según lo que se quiere ver, la gramática no es azúcar sintáctico: es otra forma

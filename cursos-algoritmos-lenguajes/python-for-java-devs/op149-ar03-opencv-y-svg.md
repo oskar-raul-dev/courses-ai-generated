@@ -36,7 +36,7 @@ La otra mitad de la sección va en sentido contrario: **generar** imágenes en v
 | Escala | Sin perder | Fija al tamaño de la superficie |
 | Instalar | Python puro | Necesita la biblioteca de C del sistema |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, una imagen es un `BufferedImage` con su tipo declarado (`TYPE_INT_RGB`), y la biblioteca sabe qué tiene. El instinto espera que un arreglo de imagen
 también "sepa" su orden de canales. No sabe: es un `ndarray` de números. OpenCV supone BGR y scikit-image o Pillow suponen RGB, y un arreglo pasado de una a otra

@@ -51,7 +51,7 @@ sufre la auxiliar más desafortunada de cada cien), las **peticiones por segundo
 **tasa de errores**. Un servicio con p50 de 20 ms y p99 de 4 segundos tiene un problema que el promedio
 esconde.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En el mundo Java el reflejo es JMeter o Gatling, con escenarios en XML o en un DSL de Scala, ejecutados en
 la JVM, que no se satura fácil. El instinto es suponer que la herramienta de carga siempre puede más que el

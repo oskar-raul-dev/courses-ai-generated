@@ -4,6 +4,7 @@
 > Depende de: Fase 01 · Habilita: Fase 03
 > Registro de esta fase: **script** — un archivo, stdlib pura, sin clases
 > Proyecto que avanza: el CLI · **y nace el arnés de medición del curso**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -109,7 +110,7 @@ squares = map(lambda x: x * x, numbers)   # map: perezoso también, y casi nunca
 > ⚠️ **El paréntesis contra el corchete es la diferencia entre 291 MB y 0.15 MB**, y no hay nada
 > en el código que grite cuál es cuál. Es el detalle tipográfico más caro del lenguaje.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** materializar. Leer el archivo a una lista, filtrar a otra lista, transformar a una
 tercera, y después recorrer. Es lo que uno hace cuando viene de colecciones, y en Java suele ser
@@ -168,7 +169,7 @@ for row in rows_of(path): ...        # cada llamada, una pasada limpia
 > tu programa — pasa **funciones que los producen**. Un generador es un recurso de un solo uso; la
 > función que lo fabrica se puede llamar las veces que haga falta.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Tu instinto sobre no hacer dos pasadas cuando basta una** se transfiere entero, y aquí vale más
 porque las pasadas sobre un generador cuestan releer el archivo.
@@ -181,7 +182,7 @@ filtrar antes de transformar, siempre— y por la misma razón.
 tan ilegible como un `stream` con seis operaciones y dos lambdas de tres líneas. En los dos casos
 la respuesta es la misma: un `for` con nombres.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -918,24 +919,3 @@ cálculo más difícil del dominio y el que la Fase 08 blinda con pruebas.
 > lleva además su tag anotado `mini-02`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El archivo abierto por un generador no consumido** se nombra en §5.3 con su advertencia y no
-  se resuelve: la herramienta correcta —`contextlib.closing`, y el `try/finally` dentro del
-  generador— es de la Fase 04. Que la 04 lo retome citando esta fase, o el bucle queda abierto.
-- **`tracemalloc` mide lo que asigna Python, no lo que el sistema le da al proceso.** La
-  diferencia importa cuando el trabajo cruza a un proceso hijo, y eso llega en las Fases 14 y 16.
-  El arnés tendrá que ampliarse ahí —ampliarse, no reemplazarse.
-- **El ejercicio 24 abre la puerta a pandas** y la fase la cierra con la regla del Bloque A. Es una
-  respuesta honesta pero incompleta: el track de datos debería contestarla con una medición de
-  verdad sobre este mismo archivo, y citar este ejercicio.
-- **El generador de datos quedó separado del de la Fase 01**, contra lo que sugería el 📌 de esa
-  fase. La razón: producen archivos con esquemas distintos —pacientes contra citas— y unirlos
-  habría obligado a un generador con banderas que no aporta nada pedagógico. Queda anotado como
-  decisión, no como deuda.
-- La **Fase 06 necesita que el generador emita la columna `descripcion` con comas adentro** para
-  que la factura de la deuda 💸 sea visible. Este generador no la tiene todavía: agregarla al
-  escribir la 06, y decidir allí si el archivo del trimestre también la lleva.

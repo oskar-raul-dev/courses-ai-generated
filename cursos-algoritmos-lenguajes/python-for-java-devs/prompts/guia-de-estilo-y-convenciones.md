@@ -800,7 +800,9 @@ excepciones propias de la carta están en §14.2.
 - **Verificador:** [`verificar-corpus.py`](verificar-corpus.py), subclase del perfil `courses-ia`
   de [`verificador_base.py`](verificador_base.py) (copia idéntica a la de los lineamientos), con los
   chequeos `CARTA-*` de la carta. Se corre desde la raíz del curso con
-  `python3 prompts/verificar-corpus.py`. Con `--perfil=publicacion` todavía falla: emoji en `###`
-  (permitidos en este repositorio) y dos enlaces de `ia01` a `prompts/`, que se resuelven en la
-  etapa de publicación.
+  `python3 prompts/verificar-corpus.py`. Con `--perfil=publicacion` da 0 errores desde el
+  07/10/2026: se quitaron los emoji de los 292 encabezados `###` (la escala 🟢🟡🟠🔴🔥💀 se
+  conserva; los `##` conservan los suyos), los enlaces y menciones a `prompts/` desde material
+  publicado, y las fases del camino base llevan su fecha de verificación. Quedan avisos: los 🧭,
+  callout del repositorio que ese perfil no lista.
 

@@ -66,7 +66,7 @@ por una fila, o descartar filas en silencio.
 suma de valores— aunque no lo mande en el archivo. Si lo limpio más lo apartado no da ese total, el
 pipeline perdió algo, y eso se sabe **antes** de facturar.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es configurar el `CsvParser` con el encoding correcto y dejar que una excepción
 detenga el lote. Con un archivo de una contraparte que no controlas, **detener el lote es la

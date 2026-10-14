@@ -4,6 +4,7 @@
 > Depende de: Fase 15 · Habilita: Fase 17
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: **los cuatro**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -56,7 +57,7 @@ cualquiera que sepa optimizar código:
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Dos reflejos, y el segundo es específico de este dominio.
 
@@ -120,7 +121,7 @@ for documento, codigo, valor in filas:
 > el código Python no es el problema — y mejorarlo es trabajo que se siente productivo y no mueve
 > el número.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Y aquí transfiere casi todo, porque es la fase menos "de lenguaje" del curso:
 
@@ -141,7 +142,7 @@ vez, desconfiar de la microoptimización, y la ley de Amdahl. Lo que cambia son 
 —esto sí— **el orden de magnitud de lo que cuesta cada cosa**, que en un lenguaje interpretado es
 distinto.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -183,7 +184,7 @@ lugar donde los datos salen del sistema sin que nadie los audite.
 
 ### La seguridad que muerde en este ecosistema
 
-Cuatro cosas, y las cuatro son específicas de Python:
+Cinco cosas, y las cinco son específicas de Python:
 
 **`pickle` ejecuta código al deserializar.** No es un error: es su diseño. Un `pickle.loads` sobre
 datos que no controlas es equivalente a `eval` sobre datos que no controlas. Y aparece donde uno
@@ -202,6 +203,11 @@ primero, y un paquete que se llama casi igual que el que querías es un vector r
 defensas baratas: fijar versiones con hash en el lockfile (Fase 07), revisar el `uv.lock` en los
 cambios, y desconfiar de cualquier dependencia nueva que no conozcas — el procedimiento que el
 ejercicio 25 de la Fase 00 te hizo escribir.
+
+**`python -m http.server` olvidado.** El servidor de pruebas de la Fase 13 usa `http.server`, y la
+propia documentación dice que no es para producción: sirve el directorio donde se lanzó, sin
+autenticación ni límites. Está bien para probar; el problema es el que queda corriendo en una
+máquina de la sede porque "era un momento". `ss -ltnp` en las máquinas que operas lo encuentra.
 
 ---
 
@@ -276,6 +282,9 @@ async def add_request_context(request: Request, call_next):
   el proceso solo tiene que escribir.
 - **Y `format_exc_info`** para que la traza sea un campo del evento y no veinte líneas sueltas que
   se intercalan con las de otras peticiones.
+- **La versión va en cada evento.** Un `structlog.contextvars.bind_contextvars(version=aur.__version__)`
+  al arrancar responde la pregunta que la Fase 09 dejó abierta en su escenario 3 —qué versión
+  corre en cada máquina—: la respuesta está en el registro, sin preguntarle a nadie.
 
 ### 5.2 Métricas
 
@@ -432,6 +441,34 @@ exactamente esto.
 > puro que ya no se puede mejorar algorítmicamente, y el trabajo justifica mantener un artefacto
 > compilado, entonces Cython o Rust son la respuesta. En todo lo demás —y "todo lo demás" es el
 > 95% de los casos— la respuesta está en los pasos 3 y 4 de §5.6.
+
+### 5.8 Cuatro cabos que el curso dejó para la operación
+
+Cuatro fases anteriores dejaron un problema anotado con destino aquí. Ninguno merece una sección
+propia, y los cuatro aparecen en producción antes que en desarrollo.
+
+**El archivo que sobrevive al apagón** (Fase 04, ejercicio 23). `os.replace` es atómico: el
+archivo queda entero o no queda. Pero no garantiza que esté **en disco** si se corta la luz un
+segundo después. Para eso, antes del `replace`, `f.flush()` y `os.fsync(f.fileno())` sobre el
+temporal, y después un `fsync` del directorio (`os.open(dir, os.O_RDONLY)` y `os.fsync` sobre ese
+descriptor), que es lo que hace durable el cambio de nombre. En macOS, `fsync` no vacía la caché
+del disco; hace falta `fcntl.fcntl(fd, fcntl.F_FULLFSYNC)`.
+
+**Los nietos que sobreviven a un `timeout`** (Fases 05 y 14). `subprocess.run(..., timeout=)` mata
+al hijo, no a lo que el hijo lanzó. Se lanza el hijo en su propia sesión —`start_new_session=True`—
+y, al vencer el plazo, se mata el grupo entero con `os.killpg(proc.pid, signal.SIGTERM)`. En
+Windows el equivalente es un *job object*, que la biblioteca estándar no expone.
+
+**El primer `import` lento después de instalar con `uv`** (Fase 07). `uv` no compila el *bytecode*
+al instalar y `pip` sí, así que el primer arranque paga la compilación de todo lo que importa: 2.28
+segundos para `fastapi` en la medición de la Fase 07. En un servidor que arranca una vez no
+importa; en un contenedor que arranca muchas veces, se instala con `--compile-bytecode` (o
+`UV_COMPILE_BYTECODE=1`) y se paga una sola vez, al construir la imagen.
+
+**Las cadenas repetidas** (Fase 01, ejercicio 9). Medio millón de filas con el mismo código de sede
+crean medio millón de objetos `str` iguales cuando se leen de un archivo. `sys.intern(sede)` hace
+que todas apunten al mismo. Antes de usarlo, el arnés de la Fase 02 con `tracemalloc` dice si la
+memoria de esas columnas es la que importa: si no lo es, `intern` es complejidad sin pago.
 
 ---
 
@@ -865,25 +902,3 @@ vale nada.
 > lleva además su tag anotado `mini-16`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La fusión se sostiene, y conviene dejar dicho por qué**, porque la propuesta de fases obligaba
-  a declararlo: las dos mediciones están **separadas** (§6.1 y §6.2), con sus condiciones propias y
-  sus veredictos propios, y el perfilado **no** quedó como nota al pie — tiene su propio bloque, su
-  propio competidor y su propia regla. Lo que las une es el método: no se arregla lo que no se
-  mide. **No se propone deshacer la fusión.**
-- **`py-spy` se documenta y no se mide.** El ejercicio 18 lo traslada al lector; el curso debería
-  traer su propio número, incluida la distorsión que introduce `cProfile`, antes de consolidar
-  `BENCHMARKS.md`.
-- **El free-threading a 1.14× de la Fase 14** merecía un perfil que dijera por qué —¿`hashlib`,
-  `Decimal`, la asignación de objetos?— y esta fase tiene las herramientas para responderlo. Si se
-  amplía alguna vez, este es el sitio.
-- **`http.server` del servidor de pruebas de la Fase 13** queda nombrado allí como algo que no es
-  para producción. Esta fase habla de seguridad y **no lo retoma**; es el tipo de cosa que alguien
-  deja puesta, y una línea aquí lo cerraría.
-- **El volumen de registro proyectado depende de supuestos de tráfico** que Áurea no tiene
-  medidos. El número por evento es sólido; la proyección anual del ejercicio 7 es del lector, y
-  está dicho así a propósito.

@@ -30,7 +30,7 @@ el límite de archivos abiertos, y maneja un `SIGTERM` para terminar sin dejar e
 | Señales | Mensajes del sistema al proceso: `SIGTERM` (termina, por favor), `SIGKILL` (sin aviso), `SIGHUP` | `signal.signal(SIGTERM, handler)` |
 | Proceso zombi | Un hijo que terminó y cuyo padre no recogió el estado | `os.waitpid` lo recoge |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, un *shutdown hook* (`Runtime.addShutdownHook`) se ejecuta al recibir `SIGTERM` y el instinto busca lo mismo. Python tiene `atexit`, pero
 **`atexit` no corre con `SIGTERM`**: la señal, sin un manejador, termina el proceso sin ejecutar nada más. Para terminar en orden ante un

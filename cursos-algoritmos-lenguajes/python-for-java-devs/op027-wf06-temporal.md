@@ -63,7 +63,7 @@ guardada. Si el código, al reproducirse, toma otra decisión —porque leyó la
 aleatorio—, la historia y el código dejan de coincidir y Temporal lo detecta como un error. Por eso la
 hora se pide a `workflow.now()` y lo que tiene efectos va en actividades.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, un proceso así se modela como una máquina de estados en la base de datos: una tabla
 `liquidacion` con una columna `estado`, un `cron` que revisa cada hora qué venció, y una lógica

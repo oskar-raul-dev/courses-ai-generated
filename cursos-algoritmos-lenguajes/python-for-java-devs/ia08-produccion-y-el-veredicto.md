@@ -28,6 +28,9 @@ los dos proyectos no debió construirse.
 
 - [ ] La caché de prompt está colocada donde de verdad acierta, y lo demuestras con
       `cache_read_input_tokens` distinto de cero en peticiones repetidas.
+- [ ] Probaste la inyección desde el documento (el ejercicio 24 de `ia02`) contra Recepción
+      asistida, y ninguna instrucción escondida llega a confirmar una cita ni pasa la revisión de
+      salida de `ia07`.
 - [ ] `audit_prefix.py` detecta un invalidador silencioso comparando dos peticiones, y lo pruebas
       con los cuatro clásicos: reloj, identificador, JSON sin ordenar y lista de herramientas que
       cambia de orden.
@@ -61,7 +64,7 @@ Esta es la última sección del track, así que aquí no hay diferimientos: lo q
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo es sobre la caché, y es de los más arraigados porque llevas una década aplicándolo bien:
 **una caché es una clave y un valor**. `@Cacheable("coberturas")`, la clave sale de los argumentos,
@@ -151,7 +154,7 @@ defendible ante un abogado, y es el criterio 6 del miniproyecto.
 > el sistema impidió enviar; no es información del paciente y es la materia prima para mejorar el
 > prompt. Sin él solo sabes que algo se bloqueó, que es la peor de las dos situaciones.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **El presupuesto y el interruptor de circuito** son los patrones de siempre, con dólares en vez
   de errores por segundo.
@@ -160,7 +163,7 @@ defendible ante un abogado, y es el criterio 6 del miniproyecto.
 - **El despliegue** es el de los cuatro proyectos del camino base.
 - **La retención de datos** es una política, se escribe, y se implementa borrando.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | Track `ia` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -892,25 +895,3 @@ variables probablemente le gana a la red neuronal**, y hay que aceptarlo con la 
 > número (`ia 08 ej12: …`) y el miniproyecto el suyo (`ia 08 mini: …`), con **el costo mensual y tu
 > recomendación en cinco palabras** en el mensaje del tag `ia-mini-08`. La convención completa está
 > en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **Las dos mediciones de la sección 6 están en `⏳`**, y la 6.2 es la más cara de producir del
-  track: implementar la misma tarea en tres frameworks para poder compararla honestamente es
-  trabajo de días. Si solo se hace una, que sea la 6.1, que es barata y cambia decisiones.
-- **Se paga la deuda 💸 de `ia06`** (comparación por pares) y **se declara la última del track**:
-  el presupuesto en memoria, que se paga en el criterio 3 del miniproyecto.
-- **El veredicto de la §6.3 está escrito antes de que existan los números que lo sostienen**, y eso
-  está dicho en su texto. **Cuando se corran las mediciones de `ia04`, `ia05` y `ia07`, hay que
-  volver aquí** y reescribirlo con las cifras — o contradecirlo, que sería el mejor resultado
-  posible para el curso.
-- **La omisión declarada de `ia07` —que los mensajes de prueba los escribió el autor— se recoge
-  aquí** con el criterio 6 del miniproyecto, que es el procedimiento de revisión humana. Verificar
-  que quien escriba el track `ui` no lo convierta en un panel que exponga el texto del paciente.
-- **`BENCHMARKS.md` gana dos filas más y el resumen del track.** Y `INSTINTOS.md`, el reflejo de la
-  caché de prefijo, que es el más transferible de esta sección.
-- **El track `ds` hereda dos cosas de aquí:** el arnés de presupuesto —entrenar también cuesta— y
-  la disciplina del veredicto. Verificar que `ds09` cierra con la misma estructura y no con un
-  resumen.

@@ -93,7 +93,7 @@ conjunto, tu sistema está ajustado a esas cincuenta preguntas y no a las de Pat
 por otro modelo es un espejo: mide si tu sistema se parece a ese otro modelo, que es una pregunta
 que a nadie le interesa.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este es el reflejo más fuerte de todo el track, porque es una virtud profesional bien ganada:
 **una prueba que falla una de cada veinte veces es una prueba rota.** Has pasado años cazando
@@ -164,7 +164,7 @@ Y hay dos sesgos del juez que conviene conocer porque son reproducibles: **premi
 largas** y **prefiere lo que se parece a lo que él habría escrito**. La rúbrica escrita mitiga el
 primero; el segundo se mitiga usando un modelo distinto del que genera, y aun así no desaparece.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Es una suite de regresión.** Corre en CI, protege contra empeorar, y su valor está en que
   falle cuando debe.
@@ -175,7 +175,7 @@ primero; el segundo se mitiga usando un modelo distinto del que genera, y aun as
   agregas una columna de dólares.
 - **El intervalo de confianza** es estadística de primer curso, y es exactamente lo que hace falta.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | Track `ia` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -880,30 +880,3 @@ construir, y con una métrica nueva que es la que de verdad importa — no cuán
 > además su tag anotado `ia-mini-06`, con **el kappa, la tasa con su intervalo y el tamaño de
 > muestra necesario** en el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición de la sección 6 está en `⏳`**, y su resultado puede cambiar el track: si ningún
-  juez supera 0.6 de kappa, `ia07` y `ia08` tienen que apoyarse en juicio humano asistido en vez de
-  en evaluación automática, y hay que decirlo allá.
-- **Se pagan dos deudas 💸 y se declara una nueva:** la comparación por pares se paga en `ia08`,
-  donde hay dos versiones que comparar.
-- 🪦 **`evalset.jsonl` ya se genera** desde el manifiesto del corpus: cincuenta casos, quince de
-  abstención en dos sabores —aseguradora inexistente y, el difícil, código inexistente en una
-  aseguradora que sí está—. Las referencias se derivan del hecho que generó el documento, no las
-  escribe un modelo.
-- ⏳ **`juicios_humanos.jsonl` sigue pendiente, y va a seguirlo:** es el único insumo del track que
-  un script no puede producir. `preparar_juicios.py` deja la plantilla con el campo vacío y
-  `bench_judges.py` **se niega a correr** si encuentra alguno sin llenar. Son veinte minutos con la
-  rúbrica delante; fabricarlos con un modelo daría un kappa alto y vacío.
-- **El número del ejercicio 16 —cuántos casos hacen falta— debería subir a `BENCHMARKS.md`** aunque
-  no sea una medición de rendimiento: es el que limita todo lo que el track puede afirmar sobre
-  calidad.
-- **`INSTINTOS.md` gana el reflejo más difícil del track:** *"una prueba intermitente es una prueba
-  rota"* → aquí la variación es la propiedad; se acota con `n` corridas y un intervalo, y el
-  reintento es una alfombra.
-- **Verificar al escribir `ia08`** que la comparación de frameworks usa este conjunto de evaluación
-  y no uno nuevo. Comparar LangChain contra el bucle propio con conjuntos distintos no probaría
-  nada.

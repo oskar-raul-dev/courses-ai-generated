@@ -39,7 +39,7 @@ de verdad —un programa Java que produce un archivo Avro— y que Python lo lea
 | `LocalDate` | `int` + `date` | `datetime.date` |
 | `UUID` | `string` + `uuid` | `uuid.UUID` |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El esquema es el contrato, en los dos lados, igual que en Java: el `.avsc` o el `.proto` vive en un repositorio compartido y se
 versiona; las reglas de compatibilidad (agregar un campo con valor por defecto es compatible, quitar uno obligatorio no) son las

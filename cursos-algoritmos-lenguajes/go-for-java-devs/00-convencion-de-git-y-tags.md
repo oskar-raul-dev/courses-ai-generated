@@ -2,12 +2,19 @@
 
 > Go para desarrolladores Java senior · la plataforma Meridian
 > Documento transversal. Las dieciocho fases lo enlazan desde su bloque 🏷️.
+> **Cuándo se lee:** antes de la [Fase 00](00-instalacion-ambiente-y-tooling.md), y cada vez que el
+> bloque 🏷️ de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-07.
 
 Este documento fija cómo se organiza el historial del repositorio del curso. No es
 burocracia: el historial **es un entregable**. El `git diff` entre dos tags de este
 curso es material didáctico —el de la Fase 08 es, literalmente, el documento más
 instructivo que vas a escribir— y eso solo funciona si los tags y los commits
 significan algo.
+
+> 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa espacio, no agrega
+> overhead y se borra con `git tag -d`. La pregunta no es "¿vale la pena etiquetar esto?", es "¿por
+> qué no?".
 
 ---
 
@@ -30,6 +37,9 @@ meridian/
 
 **Una sola rama principal**, `main`. El curso es lineal y las ramas no aportan
 nada, con una excepción declarada en §5.
+
+No hace falta remoto. Si lo tienes, recuerda que **los tags no viajan solos**:
+`git push --tags`.
 
 ---
 
@@ -113,6 +123,11 @@ Eso convierte `git tag -n99 -l 'fase-*'` en el índice del curso:
 ```bash
 git tag -n99 -l 'fase-*'
 ```
+
+> ⚠️ **Volver a un tag te deja en `detached HEAD`.** Es normal: `git checkout fase-09`
+> te pone a mirar ese estado sin estar en ninguna rama. Para volver, `git switch main`;
+> y si necesitas escribir desde ahí, eso ya es el caso de §5: una rama con nombre
+> propio que no se fusiona.
 
 ### 3.2 Tags de proyecto
 
@@ -252,6 +267,18 @@ git log -S 'SKIP LOCKED' --oneline
 # El grafo completo, al terminar
 git log --oneline --graph --decorate --tags
 ```
+
+**El cierre de fase, en cinco líneas:**
+
+- [ ] El checklist de la sección 2 de la fase, en verde y verificado a mano.
+- [ ] `make ci` limpio (y, en el Bloque A, también con `go1.13`).
+- [ ] `git status` limpio: todo lo de la fase está commiteado.
+- [ ] `git tag -a fase-NN -m "…"` creado, con el checklist en el mensaje.
+- [ ] Los tags de proyecto (`<servicio>/v0.N`) de los servicios que avanzaron en la fase.
+
+> **La señal de que quedó bien:** "vuelvo después de tres semanas, corro
+> `git tag -n99 -l 'fase-*'`, y sé exactamente dónde me quedé y qué sigue — sin releer
+> una sola línea del curso".
 
 ---
 

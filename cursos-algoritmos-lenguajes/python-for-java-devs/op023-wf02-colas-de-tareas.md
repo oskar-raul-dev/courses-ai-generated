@@ -51,14 +51,14 @@ mismo que hacerla una.
 | **`arq`** (0.28.0) | Solo Redis/Valkey | Asíncrono de punta a punta | Código `async` |
 | **Huey** (3.4.0) | Redis **o SQLite** | Puede no necesitar ningún servicio extra | Un equipo de uno |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, el trabajo diferido suele ser JMS o un `@Async` con un `ThreadPoolTaskExecutor` dentro de la
 aplicación. El reflejo en Python es usar un hilo de fondo dentro del servidor web. **No sobrevive a un
 reinicio**: el servidor se reinicia en cada despliegue, y los PDF que estaba generando desaparecen sin
 dejar rastro. La cola existe precisamente para que el encargo viva **fuera** del proceso que lo creó.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|

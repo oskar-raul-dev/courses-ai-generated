@@ -38,7 +38,7 @@ flowchart LR
 | Excel existente (leer o editar) | `openpyxl` 3.1.5 💤 | XlsxWriter solo escribe; para abrir uno que ya existe, `openpyxl` |
 | Tabla para publicar | Great Tables 1.0.0 | Títulos, notas al pie, formatos por columna: la tabla de un informe, no la de un tablero |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, los reportes son JasperReports o BIRT: un diseñador visual, un formato propio y un motor. El instinto busca "el
 Jasper de Python" y no lo encuentra, porque la respuesta de Python es armar el reporte con piezas que este perfil ya

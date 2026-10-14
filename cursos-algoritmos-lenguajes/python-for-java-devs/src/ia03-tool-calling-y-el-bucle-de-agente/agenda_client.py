@@ -5,7 +5,7 @@ que las herramientas necesitan y una implementación en memoria para las pruebas
 lo que permite probar el 90% del agente sin red y sin modelo.
 
 ⚠️ `hold_slot` y la tabla de propuestas con vencimiento NO estaban en el camino base:
-son nuevos de esta sección. Está anotado en los 📌 de la lección.
+son nuevos de esta sección. La lección lo dice junto a `propose_booking`.
 """
 
 from __future__ import annotations

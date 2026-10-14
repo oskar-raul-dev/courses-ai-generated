@@ -46,7 +46,7 @@ flowchart LR
 | `nodata` | El valor que significa "sin dato" | Promediar con el `-9999` adentro |
 | Remuestreo | Cómo se calcula un píxel nuevo al cambiar de grilla | `nearest` en datos continuos deja escalones; `bilinear` en categorías inventa clases |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Un ráster es una matriz y una función de coordenadas, y quien hizo procesamiento de imágenes en Java con `BufferedImage` y `Raster` ya conoce el problema: el
 arreglo no sabe dónde está; hay un objeto aparte que sí. En GeoTools es `GridCoverage2D`; aquí es el par (arreglo, `transform`).

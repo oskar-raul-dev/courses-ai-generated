@@ -56,7 +56,7 @@ excepción el mismo día.
 | `lxml.html` | XPath sobre HTML | Cuando ya usas `lxml` y piensas en XPath |
 | **Scrapy** (2.19.0, del 2026-09-10) | Un framework de rastreo: colas, concurrencia, reintentos, *pipelines* | Rastrear miles de páginas, no leer una |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es Jsoup, y la API de `selectolax` se le parece mucho: `css()` es `select()`,
 `css_first()` es `selectFirst()`. Lo que cambia es la costumbre: en Python el scraper suele empezar

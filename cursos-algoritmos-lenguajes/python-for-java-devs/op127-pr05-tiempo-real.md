@@ -32,7 +32,7 @@ la agenda, que casi solo escucha, la respuesta suele ser la más simple.
 | En Python | `sse-starlette` 3.5.0 con FastAPI | `websockets` 17.2, o FastAPI | Cualquier framework |
 | Para | Tableros, notificaciones, progreso | Chat, edición colaborativa, juegos | Cuando nada de lo anterior está disponible |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Spring, el instinto para "tiempo real" es WebSocket con STOMP, y este perfil lo usó para cosas que solo necesitaban avisos del servidor. Un WebSocket es
 un canal bidireccional con su propio protocolo, su propia reconexión (que hay que escribir) y su propia configuración en cada *proxy*. Si el cliente no

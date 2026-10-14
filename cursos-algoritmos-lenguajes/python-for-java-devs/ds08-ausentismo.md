@@ -114,7 +114,7 @@ de la probabilidad, y el **ECE**, que es cuánto se desvía en promedio lo predi
 observado. Y por eso la tabla de fiabilidad —decil a decil, predicho contra observado— es lo
 que hay que mirar antes de usar una probabilidad para decidir plata.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto dice **"si el modelo más complejo gana, uso el modelo más complejo"**. Es el mismo
 criterio con el que eliges una estructura de datos, y ahí funciona: si el `HashMap` gana, usas
@@ -142,7 +142,7 @@ decide. El modelo produce una probabilidad; la decisión es la asimetría de cos
 pone la empresa. Un equipo que delega el umbral en el `argmax` de una métrica ha tomado una
 decisión de negocio sin enterarse.
 
-### ⚰️ Autopsia: el puntaje que ordena bien y decide pésimo
+### Autopsia: el puntaje que ordena bien y decide pésimo
 
 La regla de tres variables de `ds07` saca **0,672 de AUC**: no es un desastre, ordena
 razonablemente, y para llamar a los veinte de mayor riesgo sirve.
@@ -165,7 +165,7 @@ respecto a no hacer nada. Sobreagenda seis mil cupos porque su puntaje de 0,8 no
 > algo —plata, cupos, riesgo—, **no basta con que ordene**. Mide la calibración antes, o el
 > primer trimestre te lo explica.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Medir antes de optimizar.** La red entrena en dos segundos; la tentación de crecerla es
   la misma tentación de siempre, y se resuelve igual: midiendo.
@@ -176,7 +176,7 @@ respecto a no hacer nada. Sobreagenda seis mil cupos porque su puntaje de 0,8 no
 - **El criterio de parada es un criterio.** Entrenar hasta que deje de mejorar sobre datos que
   no ha visto es la misma disciplina de no sintonizar contra el conjunto de prueba.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Lo que sabes | Aquí | Dónde se rompe el paralelo |
 |---|---|---|
@@ -295,7 +295,7 @@ Sobre los datos de Áurea, con el modelo bien calibrado, la esperanza dice **−
 realizado **−3.579**: se parecen porque el ECE es de 0,01. Con la regla, la esperanza dice
 −2.584 y lo realizado **−12.938**: cinco veces peor de lo que el propio puntaje prometía.
 
-### 5.5 🧨 Lo que rompe de verdad al instalar PyTorch
+### 5.5 Lo que rompe de verdad al instalar PyTorch
 
 ```
 OMP: Error #15: Initializing libomp.dylib, but found libomp.dylib already initialized.
@@ -722,24 +722,3 @@ disfrazado de dato—, el reentrenamiento dentro del cierre nocturno de la Fase 
 > lleva además su tag anotado `ds-mini-08`, con **el ratio elegido y las consultas netas** en
 > el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El gradiente potenciado sigue sin medirse**, y es el competidor que de verdad importaba
-  para datos tabulares de este tamaño. Está como ejercicio 16 aquí y 24 en `ds07`. **Si alguien
-  lo corre y le gana a los cuatro, el veredicto de esta sección se reescribe**, y es
-  perfectamente posible.
-- **El ejercicio 23 —darle cuatro interacciones al generador— es el que convierte el veredicto
-  en un umbral.** Hoy la sección dice "aquí la red no compra nada"; con ese experimento podría
-  decir "a partir de N interacciones, sí". Es el pendiente más valioso.
-- **El `COLLISION_RATIO` es un número inventado y declarado.** Tres veces peor es un valor de
-  partida para poder hacer la cuenta, no una medición de Áurea. El ejercicio 19 pide diseñar
-  cómo estimarlo; mientras tanto, toda la sección 6.3 depende de él y la 6.3 lo dice.
-- **La sección 6.6 no tiene código que la haga cumplir.** El ejercicio 21 pide convertirla en
-  pruebas, y debería ser parte del cuerpo: una política ética que no se puede comprobar es una
-  declaración de intenciones.
-- `INSTINTOS.md` gana el reflejo de la sección: *"si el modelo más complejo gana, uso el
-  modelo más complejo"* → **la pregunta es por cuánto gana y qué le pasa a esa ventaja si le
-  escribes al competidor una columna que el dominio ya conocía**.

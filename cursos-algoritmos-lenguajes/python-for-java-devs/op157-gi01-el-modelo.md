@@ -47,13 +47,13 @@ Las tres ideas que ordenan el track:
   anteriores (la de Bogotá es EPSG:3116).
 - **`shapely` no sabe de CRS.** Opera sobre números en un plano cartesiano. Si le das grados, calcula áreas en "grados cuadrados" sin protestar.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 *"Un `Point` tiene `x` e `y`, y `x` es la longitud."* En JTS (la biblioteca de geometría de Java que GEOS clonó) sí, y en `shapely` también. Pero el **CRS** define
 su propio orden de ejes, y EPSG:4326 lo define como **(latitud, longitud)**. `pyproj` lo respeta salvo que le pidas `always_xy=True`. En Java, GeoTools tiene el
 mismo problema y la misma bandera (`org.geotools.referencing.forceXY`); quien vino de ahí ya se quemó una vez.
 
-### 📖 Diccionario
+### Diccionario
 
 ```text
 Java (JTS / GeoTools)                  Python

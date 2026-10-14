@@ -54,7 +54,7 @@ sequenceDiagram
     H-->>S: stdout, stderr, código de salida
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es JSch, y con JSch casi todos los ejemplos de internet empiezan con
 `config.put("StrictHostKeyChecking", "no")`. El equivalente en Paramiko es `AutoAddPolicy()`, y

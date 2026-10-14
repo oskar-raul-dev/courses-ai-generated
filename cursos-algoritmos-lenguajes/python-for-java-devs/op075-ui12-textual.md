@@ -32,7 +32,7 @@ autor que `rich`, y lo que dibuja `rich` en una línea, Textual lo convierte en 
 | `run_test()` y `Pilot` | Ejecutar la aplicación sin terminal y operarla desde una prueba | La prueba del ejemplo |
 | `textual serve` | Servir la misma aplicación en un navegador | Ejercicio 8 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Las TUI en Java fueron Lanterna o curses por JNI, y el instinto las asocia con interfaces de los ochenta, difíciles de escribir
 y de probar. Textual se escribe como una aplicación de escritorio moderna —componentes, eventos, estilos— y se prueba como

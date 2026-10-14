@@ -37,7 +37,7 @@ flowchart LR
 | Patrón | Identity map por `db_session` | Data Mapper | Active Record |
 | Riesgo | Lo que no puede traducir; versiones nuevas de Python | — | — |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El equivalente más cercano en Java sería JINQ, que traducía *lambdas* de *streams* a SQL leyendo el *bytecode*, y que nunca salió del nicho.
 El instinto supone que en Python tampoco puede funcionar en serio. Pony lleva más de diez años haciéndolo, con un costo honesto que la

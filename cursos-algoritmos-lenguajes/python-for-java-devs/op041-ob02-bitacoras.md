@@ -48,7 +48,7 @@ La pieza que une `logging` y `structlog` es `structlog.stdlib.ProcessorFormatter
 `logging` que pasa **cualquier** registro —el tuyo y el de `httpx`— por la misma cadena de procesadores de
 `structlog`, incluido el que agrega el contexto de la petición.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, SLF4J es la fachada y Logback la implementación, y todas las bibliotecas escriben en SLF4J; con un
 `logback.xml` todo sale con el mismo formato. El reflejo es pensar que `structlog` es "el Logback de

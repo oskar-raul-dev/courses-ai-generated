@@ -5,6 +5,14 @@ Documento de consulta. Todas las fases lo enlazan desde su bloque 🏷️ de cie
 reexplica. No enseña git: fija la convención de este curso y dice qué tiene de particular, que es
 tener **dos runtimes conviviendo en el mismo repositorio**.
 
+> **Cuándo se lee:** antes de la [fase 00](00-instalacion-ambiente-visual-studio-y-ecosistema.md), y
+> cada vez que el bloque 🏷️ de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-07.
+
+> 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa espacio, no agrega
+> overhead y se borra con `git tag -d`. La pregunta no es "¿vale la pena etiquetar esto?", es "¿por
+> qué no?".
+
 ---
 
 ## 📦 Un repositorio, dos soluciones
@@ -32,6 +40,8 @@ exactamente el error que el curso enseña a no cometer. La frontera entre genera
 El directorio de una fase se llama **igual que su `.md`**, sin extensión: la fase
 `09-acceso-a-datos-esquema-hostil.md` tiene su código en
 `src/fases/09-acceso-a-datos-esquema-hostil/`.
+
+No hace falta remoto. Si lo tienes, recuerda que **los tags no viajan solos**: `git push --tags`.
 
 ---
 
@@ -83,6 +93,11 @@ memoria. Por eso el número vive en el tag y no en un archivo que se edita.
 
 > 💡 `git tag -l 'fase-*'` es el índice del curso, y `git tag -l 'mini-*' -n99` es tu propio
 > `BENCHMARKS.md` en bruto.
+
+> ⚠️ **Volver a un tag te deja en `detached HEAD`.** Es normal: `git checkout fase-09` te pone a
+> mirar ese estado sin estar en ninguna rama. Si vas a escribir desde ahí, crea una rama primero
+> (`git switch -c wip/fase-09-intento-2`). Por eso las ramas llevan prefijo: una rama y un tag que se
+> llaman igual vuelven ambiguo cualquier `git checkout`.
 
 ---
 
@@ -138,3 +153,29 @@ Un `.gitignore` de .NET estándar, más tres cosas propias de este curso:
 - **Los datos generados.** El generador de datos sucios de la fase 07 tiene **semilla fija**: se
   versiona el generador, no los veinte megas que produce. Si dos lectores obtienen datos
   distintos con la misma semilla, eso es un bug del generador y se arregla ahí.
+
+---
+
+## 📈 Los comandos que hacen que esto sirva
+
+```bash
+git tag -l 'fase-*'                                      # ¿dónde estoy?
+git for-each-ref --sort=creatordate \
+  --format='%(creatordate:short)  %(refname:short)' 'refs/tags/fase-*'   # cuándo cerré cada fase
+git diff fase-08..fase-09 --stat                         # qué costó una fase
+git tag -l 'mini-*' -n99                                 # las mediciones de los miniproyectos
+git checkout fase-09 -- src/fases/09-acceso-a-datos-esquema-hostil/   # recuperar el código de una fase
+```
+
+---
+
+## ✅ Checklist de cierre de fase
+
+- [ ] El checklist de la sección 2 de la fase, en verde y verificado a mano.
+- [ ] El miniproyecto pasa sus criterios de aceptación, y `mini-NN` lleva su medición en el mensaje.
+- [ ] Si la fase es mixta: las dos soluciones compilan y las dos suites pasan.
+- [ ] `git status` limpio, y `git tag -a fase-NN -m "…"` creado con el checklist en el mensaje.
+- [ ] Si la fase cobra una deuda 💸, su bloque 🏷️ cita el `git diff` que la muestra pagada.
+
+> **La señal de que quedó bien:** "vuelvo después de tres semanas, corro `git tag -l 'fase-*'`, y sé
+> exactamente dónde me quedé y qué sigue — sin releer una sola línea del curso".

@@ -48,7 +48,7 @@ sequenceDiagram
     C->>C: span "conciliar"
 ```
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 OpenTelemetry es OpenTelemetry, y un *span* es un *span*: lo dice la Fase 16. Lo que conoces del agente de
 Java —tramos, atributos, propagadores, exportadores OTLP— se traslada entero. La diferencia es que en Python

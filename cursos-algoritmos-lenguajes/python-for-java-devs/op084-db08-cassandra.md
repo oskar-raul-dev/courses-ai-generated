@@ -44,7 +44,7 @@ flowchart LR
 | `cassandra-driver` | 3.30.1 |
 | `scylla-driver` | 3.29.12 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con el *driver* de Java de DataStax, este perfil quizás usó Spring Data Cassandra con `@Table` y repositorios, y esperó que
 `findByMotivo` funcionara como en JPA. Funciona en el código y falla en el servidor, porque `motivo` no es parte de la clave.

@@ -4,6 +4,7 @@
 > Depende de: Fase 02 · Habilita: Fase 04
 > Registro de esta fase: **script** — un archivo, stdlib pura
 > Proyecto que avanza: el CLI · **nace el motor de comisiones**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -55,7 +56,7 @@ estructura se gana, no se paga por adelantado.**
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Esta fase tiene **un solo reflejo**, y por eso funciones y objetos van juntos: **la ceremonia**.
 La creencia, perfectamente razonable donde te la enseñaron, de que el código serio necesita
@@ -172,7 +173,7 @@ biblioteca que nunca oyó hablar de tu código, también. **No hace falta que na
 > es el orden correcto. Es exactamente la misma idea de la Fase 07 —el archivo antes que el
 > proyecto— aplicada un nivel más abajo.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Y en esta fase importa mucho decirlo, porque lo anterior suena a que tu oficio sobra. No sobra:
 
@@ -194,7 +195,7 @@ con más de un método cada una. Una conexión, un cliente HTTP con su sesión, 
 reglas. Ahí se escribe una clase sin pedir perdón. La regla no es "no uses clases": es "no uses
 una clase donde una función alcanza".
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -332,6 +333,11 @@ es correcta y no hay nada que discutir.
 
 En la Fase 01 las filas eran tuplas y `row[AMOUNT]` se leía gracias a una constante. Con seis
 columnas todavía funciona; con la séptima que llega en la Fase 06, deja de funcionar.
+
+Es también la respuesta al ejercicio 24 de la Fase 01, que preguntaba cuál era la señal concreta
+para darle una clase a la fila. No era el gusto por los tipos: era que **el registro cambie de
+forma** —una columna nueva desplaza cada `row[N]` sin un solo error— y que **se lea por nombre en
+más de un sitio**. Las dos cosas pasan ahora; antes, la tupla era la decisión correcta.
 
 ```python
 from dataclasses import dataclass
@@ -1033,26 +1039,3 @@ los errores de un lote en vez del primero, y que no tiene equivalente en tu mund
 > lleva además su tag anotado `mini-03`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La fusión cabe, y conviene dejar dicho por qué**, porque la propuesta de fases obligaba a
-  declararlo: funciones y objetos comparten un solo 🪞 —la ceremonia—, un solo miniproyecto que lo
-  ataca entero, y una medición que **necesita las dos mitades** para existir (la comparación de
-  estilos no se puede hacer sin clases, y la de representaciones no se puede hacer sin
-  `dataclass`). Separarlas produciría dos fases con media lección cada una. **No se propone
-  deshacer la fusión.**
-- **El orden importa en el tope mensual** (§5.3 y ejercicio 23) y esta fase solo lo declara. La
-  Fase 15 tiene que resolverlo de verdad cuando el proceso nocturno sea reanudable: un cálculo
-  cuyo resultado depende del orden de procesamiento no puede reanudarse a la mitad sin decidirlo.
-- **El formato de `Decimal` en la salida** —`150000.00` contra `150000`— se nombra en la prueba de
-  fuego y no se resuelve. Destino: Fase 06, donde se genera el XML de la DIAN y el formato pasa a
-  ser un requisito, con `Decimal.quantize` como herramienta.
-- **`SPECIAL_RULES` no declara la firma de lo que contiene**, que es la pérdida real frente a la
-  clase base abstracta y está dicha en el veredicto de §6.1. La Fase 08 tiene que cerrar ese bucle
-  con un `Protocol` verificado, citando esta fase.
-- **Las tasas de los aliados son código hoy y deberían ser datos.** §5.3 anuncia que la Fase 06 las
-  mueve a un TOML. Si la 06 no lo hace, la promesa de "0 sitios de código" de la tabla de §6.1
-  queda sin cumplir.

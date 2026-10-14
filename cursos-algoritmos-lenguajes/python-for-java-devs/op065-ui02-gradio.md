@@ -35,7 +35,7 @@ una API**. La pantalla de Patricia es, a la vez, un *endpoint* que cualquiera co
 | `launch(auth=…)` | Usuario y contraseña simples | Lo mínimo para una red interna |
 | `launch(share=True)` | **Un túnel público** a través de los servidores de Gradio | Mostrar una demo; **nunca** con datos reales |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, una pantalla y una API son dos cosas que se construyen aparte, y la API se expone a propósito. En Gradio son la
 misma cosa: al publicar la pantalla se publica la API, documentada en el pie de la página ("Use via API"). El instinto de

@@ -33,7 +33,7 @@ y Protobuf y Avro ganan además lo que no es velocidad: un esquema que evolucion
 | Protobuf | `protobuf` | 7.36.2 | Sí, IDL | `Timestamp` | Contratos entre servicios |
 | Avro | `fastavro` | 1.12.2 | Sí, IDL | `timestamp-millis` | Kafka, lagos de datos (`jv01`) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, Jackson es rápido y el instinto dice que "JSON es lento" es un mito de otros lenguajes. En Python, el `json` de la biblioteca estándar sí
 es lento comparado con las alternativas en C o Rust, y el instinto que viene de Java aplica: antes de cambiar el formato del contrato, se cambia la

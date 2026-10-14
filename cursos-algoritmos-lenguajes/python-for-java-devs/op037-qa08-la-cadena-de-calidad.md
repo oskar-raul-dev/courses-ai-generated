@@ -49,7 +49,7 @@ flowchart LR
     C --> N["CI con nox<br/>todo + pip-audit + deptry<br/>en 3.13 y 3.14"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, buena parte de esta cadena la hace el **compilador** —tipos, imports que sobran, código
 inalcanzable— y el resto vive en el *build* (SpotBugs, OWASP Dependency-Check, Checkstyle) con Maven o

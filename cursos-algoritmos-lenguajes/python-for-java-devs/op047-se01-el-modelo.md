@@ -45,7 +45,7 @@ La columna que decide es **"qué necesita"**. HMAC y cifrado necesitan un secret
 conocen, y por eso cualquiera de las dos pudo haber producido el mensaje: no hay no repudio. La firma usa una
 clave que solo tiene el aliado, y por eso Áurea puede mostrarle a un tercero que el mensaje vino de él.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, el reflejo es buscar en la JCA (`MessageDigest`, `Mac`, `Cipher`, `Signature`) el algoritmo que
 alguien recomendó, y configurarlo con su cadena de transformación (`"AES/GCM/NoPadding"`). La API invita a

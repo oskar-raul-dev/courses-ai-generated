@@ -45,7 +45,7 @@ los correos, y el programa los mueve a una carpeta cuando terminó con ellos.
 secuencia, en cambio, cambia cuando se borra o se mueve otro mensaje, y es la fuente clásica de
 procesar el mensaje equivocado.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, Jakarta Mail con `Folder` y `Message` es la forma de leer un buzón, y la API trae los
 encabezados ya decodificados. En Python, `imaplib` es un cliente IMAP **literal**: le mandas comandos

@@ -61,7 +61,7 @@ flowchart LR
     E --> V{"Verificar: ¿el resumen<br/>coincide y la cadena<br/>llega a una CA confiable?"}
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java la firma XML viene en el JDK (`javax.xml.crypto.dsig`) y el reflejo es que en Python no
 hay nada comparable, así que "mejor sigue con el binario". Python no trae XMLDSig en la biblioteca
@@ -70,7 +70,7 @@ estándar, es cierto, pero **`signxml` (5.1.0, del 2026-07-05) implementa XMLDSi
 PDF de código abierto más completo que existe en cualquier lenguaje. La pregunta no es si se puede:
 es si tu certificado y tu política de firma están dentro de lo que esas bibliotecas soportan.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo de certificados es el mismo que en Java: X.509, cadenas, PKCS#12 (el `.p12` o `.pfx`
 que entrega la entidad certificadora). Un `.p12` que abres con `KeyStore.getInstance("PKCS12")`

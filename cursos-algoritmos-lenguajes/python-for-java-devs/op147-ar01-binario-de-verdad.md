@@ -30,7 +30,7 @@ escribir fuera de la carpeta de destino. Esta sección mide la primera y prueba 
 | `bytes.decode("utf-8")` | Bytes a texto, con la codificación dicha en voz alta | `new String(bytes, UTF_8)` |
 | `zipfile`, `tarfile` | Contenedores de archivos, con compresión | `java.util.zip`, Commons Compress |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo es el de `ByteBuffer`: un formato declarado (orden de bytes, tamaño de cada campo) y lecturas en posiciones calculadas. `<` en el formato de `struct` es
 `ByteOrder.LITTLE_ENDIAN`; sin él, `struct` usa el orden y la alineación de la máquina, como un `ByteBuffer` sin `order`, y el archivo deja de ser portable.

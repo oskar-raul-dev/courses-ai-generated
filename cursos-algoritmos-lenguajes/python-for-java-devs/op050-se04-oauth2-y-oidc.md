@@ -57,7 +57,7 @@ La distinción que más se confunde: el **ID token** dice *quién es* la persona
 **access token** sirve para llamar a una API *en nombre de* la persona y es para esa API. El back-office no debe
 autenticar a nadie con un access token.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Spring Security, `oauth2Login()` hace todo esto con tres líneas de configuración y valida el ID token por
 dentro. En Python no hay un equivalente con ese nivel de opinión: `authlib` hace el flujo y valida lo

@@ -48,7 +48,7 @@ flowchart TD
     M -- "reproducirlo aparte" --> R["memray run<br/>en una copia"]
 ```
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo del muestreo es el de async-profiler: no instrumenta, mira la pila cada pocos milisegundos y
 cuenta. Las gráficas de llamas (*flame graphs*) que produce `py-spy record` se leen exactamente igual que

@@ -29,7 +29,7 @@ estándar, y mide lo que importa al elegir: velocidad, costo por llamada, tiempo
 | Lo que lo distingue | Seguridad de memoria del compilador | El más usado, el más documentado | Del autor de pybind11: ruedas más chicas, menos costo |
 | Lo usan | `uv`, `ruff`, `pydantic-core`, `polars`, `orjson` | SciPy, PyTorch (partes), muchos científicos | Proyectos nuevos de C++ |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Para quien hizo JNI, código nativo significa archivos de encabezado generados, funciones con nombres de veinte segmentos y referencias locales que se escapan.
 El instinto espera lo mismo. Con estas tres, el pegamento es un atributo o una macro (`#[pyfunction]`, `m.def`), y la conversión de tipos la escribe la biblioteca.

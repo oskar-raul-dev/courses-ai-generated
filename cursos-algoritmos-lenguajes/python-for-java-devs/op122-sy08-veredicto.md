@@ -35,7 +35,7 @@ archivo que llegan en la vida real.
 | Pruebas | Nadie las va a escribir | Hacen falta |
 | Quién lo mantiene | Quien sabe bash | El equipo, que sabe Python |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de quien viene de Java es desconfiar del shell y escribir todo en el lenguaje "de verdad". Para pegar tres comandos en un cron, el shell es más
 corto, más claro y no tiene dependencias; el error es el contrario —dejar que el script de diez líneas crezca hasta cuatrocientas sin darse cuenta—. La

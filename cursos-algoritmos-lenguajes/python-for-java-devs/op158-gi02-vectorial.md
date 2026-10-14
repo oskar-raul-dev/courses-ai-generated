@@ -45,7 +45,7 @@ flowchart LR
 | `gpd.overlay(a, b, how="intersection")` | `ST_Intersection` sobre todos los pares | Polígonos nuevos, recortados |
 | `gdf.to_crs(epsg)` | `ST_Transform(geom, srid)` | La misma tabla, reproyectada |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Un *join* espacial es un *join*: hay tabla izquierda y derecha, `how="left"` conserva las filas sin pareja, y la cardinalidad se razona igual que en SQL. Si sabes
 por qué un `JOIN` contra una tabla con duplicados multiplica filas, ya sabes por qué el conteo del radio de 5 km sale inflado.

@@ -4,6 +4,7 @@
 > Depende de: Fase 14 · Habilita: Fase 16
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: **nace Cartera**, el cierre nocturno · **y el batch importa el CLI**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -52,7 +53,7 @@ hiciste bien en la Fase 07.
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** *el job que arranca de cero cuando falla*.
 
@@ -175,7 +176,7 @@ class SettlementLine:
 > la tabla de tarifas sea **histórica**, con vigencias, y no se actualice nunca. La segunda es más
 > elegante; la primera es la que sobrevive a que alguien haga un `UPDATE` a mano un viernes.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Todo lo que sabes de procesamiento por lotes se transfiere entero**: puntos de control, ventanas
 de ejecución, reintentos, cola de mensajes fallidos, particionar el trabajo, y la disciplina de
@@ -192,7 +193,7 @@ Lo que cambia es que **aquí no hay un Spring Batch**. No existe un framework de
 lectores, procesadores, escritores, puntos de control y reintentos ya resueltos. Se arma con
 piezas, y eso es más trabajo y más control.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -490,6 +491,12 @@ hacerlo:
 > visibilidad depende de lo que la Fase 16 construya.** Es una decisión de tamaño de empresa, no
 > de calidad de herramienta.
 
+> 📝 **La reconciliación contra el socio que miente** (Fase 13, §5.4) tiene aquí su sitio: sería un
+> cuarto trabajo nocturno, con la misma forma que los otros tres —lote reanudable, idempotente por
+> día y socio, con líneas de auditoría de cada diferencia— y sin dependencia con ellos, así que
+> no cambia la elección de `cron`. Esta fase no lo construye; el ejercicio 25 de la Fase 13 es su
+> diseño.
+
 ---
 
 ## 📏 6. Medición — el fallo de la hora cinco
@@ -587,6 +594,9 @@ Y las reglas del dominio, que son las de Áurea y no son simples:
 1. **Regalía de franquicia**: un porcentaje sobre la facturación del mes de la sede.
 2. **Comisión de contratista**: por procedimiento ejecutado, según su especialidad.
 3. **Comisión por derivación a aliado**: el motor de la Fase 03, con sus tres reglas especiales.
+   El tope mensual hace que el resultado dependa del orden (la Fase 03 lo dejó anotado), así que
+   el lote se procesa **por (aliado, mes) completo y en orden de fecha**: nunca se corta a la mitad
+   de un aliado-mes, o la reanudación cambia la comisión.
 4. **Y la que hace daño**: cuando un plan integral se reparte entre dos sedes —Édgar hace la fase 1
    en Suba y deriva la 3 al Centro— **la regalía de ese caso se reparte**, y la regla nunca se
    escribió. Tú la vas a escribir, y por eso tiene que quedar versionada.
@@ -687,6 +697,11 @@ git add src/cartera migrations/ tests/
 git commit -m "fase 15 mini: liquidación reanudable, idempotente y auditable"
 git tag -a mini-15 -m "Mini F15: liquidación · cierre <N> s, sobrecosto <P>%, perdidas 0 filas ante fallo al 80%"
 ```
+
+> 📝 **La regla de la Fase 12 vale aquí:** una sola aplicación es dueña de cada tabla. Las del
+> cierre —liquidaciones, líneas de auditoría, *outbox*— van en su propio esquema de Postgres, y
+> `alembic upgrade head` migra solo ese esquema. Las tablas de Consultorio las sigue migrando Django;
+> el cierre las lee sin generarlas, y si necesita un cambio en ellas, el cambio se hace allá.
 
 <details><summary>💡 Solución de referencia — las tres decisiones</summary>
 
@@ -873,26 +888,3 @@ condición que no se negocia: **no se aprueba si optimizas antes de perfilar**.
 > lleva además su tag anotado `mini-15`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El hallazgo del punto de control cuadrático** —guardar el número de filas en vez del
-  desplazamiento dispara el sobrecosto del 9% al 319%— salió de un error al escribir la medición, y
-  es material de `INSTINTOS.md`: *"reanudar no es guardar por dónde vas, es guardar por dónde vas
-  de forma que retomar sea constante"*.
-- **El orden del tope mensual**, que la Fase 03 dejó anotado y que el ejercicio 23 de esa fase
-  cuantificó, **llega aquí a su destino**: un cálculo cuyo resultado depende del orden de
-  procesamiento no se puede reanudar a la mitad sin decidirlo. La solución de referencia lo
-  resuelve procesando por (aliado, mes) completo, pero **conviene que el enunciado lo diga
-  explícitamente** si esta fase se revisa.
-- **La reconciliación contra el socio mentiroso**, que la Fase 13 dejó sin destino, encaja aquí
-  como un cuarto trabajo nocturno. Esta fase no la construye; si se decide construirla, este es su
-  sitio y hay que anotarlo en el enunciado del miniproyecto.
-- **La medición es con `sqlite3` local.** Con el punto de control en Postgres remoto, cada
-  confirmación es una ida y vuelta por red y el sobrecosto sube. El ejercicio 18 lo traslada al
-  lector; el curso debería traer su propio número.
-- **`cron` no tiene panel**, y el veredicto de §5.6 lo declara como costo aceptado. La Fase 16 es
-  la que tiene que hacerlo llevadero: si al escribirla la visibilidad del cierre no queda
-  resuelta, este veredicto queda sin respaldo.

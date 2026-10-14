@@ -56,7 +56,7 @@ entre un proceso lento y un proceso caído una hora.
 generador que puede **enviar peticiones propias** —pedir el token— antes de la petición del usuario,
 y repetirla si el servidor responde `401`. Es el lugar exacto para el token que vence.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Spring, todo esto sería configuración: un `OAuth2AuthorizedClientManager` para el token, un
 `RateLimiter` de Resilience4j y un `Pageable` del lado del servidor. El reflejo es buscar la misma
@@ -64,7 +64,7 @@ configuración en Python y, al no encontrarla, concluir que hay que escribir "un
 **tres piezas de veinte líneas** que se componen con el `Client` de `httpx`; escribirlas es más
 corto que configurar sus equivalentes, y cada una se lee entera.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Spring / Java | Python con `httpx` | Dónde se rompe el paralelo |
 |---|---|---|

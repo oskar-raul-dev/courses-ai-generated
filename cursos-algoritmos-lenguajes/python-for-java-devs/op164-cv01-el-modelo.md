@@ -46,7 +46,7 @@ flowchart LR
 **OpenCV** tiene los tres: las operaciones de píxeles de siempre, los clasificadores clásicos, y un módulo `dnn` que corre redes ya entrenadas (ONNX) sin PyTorch.
 Por eso es el punto de partida del track; MediaPipe, InsightFace o `ultralytics` aparecen cuando el problema pide su red.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 *"Es un problema de reglas: si escribo bien las condiciones, funciona."* Es el instinto correcto para validar un formulario y el equivocado para una imagen. La
 regla de color de abajo encuentra los cinco rostros… y veintitrés cosas más. Un sistema de visión no se especifica con condiciones; se **mide** con un conjunto de

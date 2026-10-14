@@ -38,7 +38,7 @@ Los tres usan `paramstyle = "format"`: el marcador es `%s` (`db01`).
 | Colación por defecto | **Insensible a tildes y mayúsculas** (`_ai_ci`): `'Muñoz' = 'munoz'` | Sensible: hace falta `unaccent` o `ILIKE` |
 | Dato que no cabe | En modo estricto, error; **sin él, se trunca con un aviso** | Siempre error |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con JDBC y MySQL, el instinto pone `characterEncoding=UTF-8` en la URL y da el tema por cerrado. En el *driver* de Python el
 equivalente es `charset="utf8mb4"`, y ni el uno ni el otro arreglan una **tabla** creada hace años con `CHARACTER SET utf8`:

@@ -67,7 +67,7 @@ flowchart LR
     V2 -. "mapeo v2 → FHIR<br/>(lo hace alguien, siempre)" .-> FH
 ```
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Si integraste alguna vez un hospital desde Java con HAPI, el modelo es exactamente el mismo: HAPI
 tiene una biblioteca para v2 y otra para FHIR, y Python tiene el equivalente de cada una. Lo que

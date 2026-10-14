@@ -51,7 +51,7 @@ flowchart LR
 en una semana el canal de alertas tiene doscientos avisos y alguien lo silencia. Las alertas van por
 **problema nuevo** o por **regresión** (un problema cerrado que vuelve), no por evento.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Si integraste Sentry en Java, configuraste el `SentryAppender` de Logback y listo. El reflejo es hacer lo
 mismo en Python con `sentry_sdk.init(dsn=...)` y nada más. La diferencia que importa es un valor por defecto

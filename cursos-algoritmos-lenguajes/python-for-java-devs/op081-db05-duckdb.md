@@ -34,7 +34,7 @@ la carpeta, sin cargar nada antes. Es la respuesta a la pregunta de Patricia en 
 La regla de la fila "para qué está hecho" es la sección entera: DuckDB no reemplaza a Postgres como base de la aplicación;
 reemplaza al *script* de pandas, a la hoja de Excel gigante y a la carga a Postgres solo para consultar.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, consultar archivos con SQL es Spark, Drill o Presto: un clúster, o al menos una JVM grande y una configuración. El
 instinto supone que leer tres años de exportes con SQL requiere esa infraestructura. DuckDB lo hace en el portátil, con un

@@ -36,7 +36,7 @@ editar una migración que ya se aplicó.
 `yoyo-migrations` lleva desde agosto de 2024 sin versiones nuevas (💤). Hace poco, lo hace bien, y su formato es SQL plano: si el proyecto
 se detuviera, las migraciones siguen siendo archivos `.sql` que cualquier otra herramienta puede aplicar.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo de Flyway sobrevive intacto: migraciones versionadas, aplicadas en orden, registradas en una tabla de la base, nunca editadas
 después de aplicadas. Quien sabe usar Flyway sabe usar `yoyo` en diez minutos; y si la casa ya tiene Flyway, nada impide seguir usándolo

@@ -33,7 +33,7 @@ llama al mismo código Java de las dos formas y mide lo que cuesta cada llamada.
 | Conversión de tipos | Automática para los básicos | Automática para los básicos; colecciones por proxy |
 | Quién lo usa | Herramientas científicas que envuelven bibliotecas Java | **PySpark** (por eso existe) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de quien viene de Java es exponer la liquidación como un servicio REST y llamarla por HTTP. Es correcto cuando el
 servicio ya existe y otros lo usan (`jv04`); para un análisis que va a llamar al cálculo un millón de veces con distintos escenarios,

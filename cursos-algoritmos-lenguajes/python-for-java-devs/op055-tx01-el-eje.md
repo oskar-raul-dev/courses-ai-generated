@@ -48,7 +48,7 @@ Y el mismo eje, fuera del HTML. Cada lenguaje tiene su "árbol", y casi siempre 
 | JSON | `'{"nombre": "' + nombre + '"}'` | `json.dumps({"nombre": nombre})` |
 | Python | Cadenas con código | `ast` y `ast.unparse` (`tx07`) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, los *text blocks* y `String.formatted` son recientes y la plantilla (Thymeleaf, FreeMarker) es lo
 normal en cuanto hay HTML. En Python, la f-string es tan cómoda que se usa para todo, incluido el HTML. El instinto

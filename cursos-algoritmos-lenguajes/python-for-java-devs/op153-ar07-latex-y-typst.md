@@ -31,7 +31,7 @@ rompe con el primer `&` o `%` que trae un concepto de gasto. Y Typst permite no 
 | Errores | Mensajes famosamente crípticos | Mensajes con línea y explicación |
 | Ecosistema | Enorme: plantillas de revistas, paquetes para todo | Joven, creciendo rápido |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de quien llena plantillas (JSP, Thymeleaf, Jasper) es que el motor escapa por uno: en HTML, Thymeleaf convierte `<` en `&lt;` solo. Una plantilla de LaTeX
 armada con `%` de Python o con Jinja **no escapa nada**, porque esos motores no saben que la salida es LaTeX. Es el mismo error que la inyección de SQL, con un

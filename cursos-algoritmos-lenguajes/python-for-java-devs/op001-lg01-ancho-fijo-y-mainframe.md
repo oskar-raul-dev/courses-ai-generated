@@ -75,7 +75,7 @@ medios bytes: 0 0 | 0 0 | 1 2 | 3 4 | 5 6 | 7 8 | 9 D
 bytes:        0x00 0x00 0x12 0x34 0x56 0x78 0x9D
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo es buscar el equivalente de JRecord o de `cb2java`: una biblioteca que lea el copybook
 y genere las clases. En Java tiene sentido, porque cortar un `byte[]` a mano con `ByteBuffer` y
@@ -86,7 +86,7 @@ En Python el corte es una línea por campo, el códec EBCDIC viene en la bibliot
 cuesta más de mantener que el código que te ahorra**, y además oculta la única parte que
 importa: qué posición tiene cada campo y qué pasa cuando la aseguradora la cambia.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|

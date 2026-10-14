@@ -31,7 +31,7 @@ equivoca. Esto último es una experiencia nueva para quien viene de la JVM: no h
 | Si la firma está mal | Corrupción o *segfault* | Corrupción o *segfault* |
 | Costo por llamada (medido abajo) | El más alto | Unas tres veces menos |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En la JVM, un error del código nativo de JNI también tumba el proceso, pero casi nadie escribe JNI: la JVM es un mundo cerrado y seguro, y una
 `NullPointerException` se atrapa. El instinto traslada esa seguridad a Python. Con `ctypes` y `cffi`, una firma mal declarada o un puntero nulo no lanzan una

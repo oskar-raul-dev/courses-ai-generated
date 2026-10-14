@@ -44,7 +44,7 @@ Cuando ya ninguna fila usa la vieja, la vieja se retira.
 Áurea descifra. Ni siquiera el franquiciado puede volver a abrir lo que cifró, y el mensaje no dice quién lo
 mandó: si hace falta probar el remitente, se firma además (ver `se01`).
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, cifrar una columna suele ser un `AttributeConverter` de JPA con `Cipher.getInstance("AES/…")` y una
 clave en el `application.yml`. El reflejo es escribir lo mismo en Python con la capa `hazmat` de

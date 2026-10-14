@@ -28,7 +28,7 @@ Ninguna de ellas **es** Office: escriben y leen el XML, pero no calculan fórmul
 | **python-docx** | Sí | Sí | Párrafos, *runs*, tablas, estilos | POI XWPF, docx4j |
 | **python-pptx** | Sí | Sí | Diapositivas, formas, **gráficos nativos** editables | POI XSLF |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Es Apache POI: el mismo modelo de libro, hoja y celda; de párrafo y *run*. Las trampas también son las mismas: POI tampoco calcula fórmulas al escribir sin
 `FormulaEvaluator`, y los *runs* de Word parten el texto igual en Java que en Python.

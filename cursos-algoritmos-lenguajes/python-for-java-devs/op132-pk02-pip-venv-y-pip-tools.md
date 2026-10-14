@@ -43,7 +43,7 @@ flowchart LR
 | Quitar lo que sobra del entorno | No (`pip uninstall` a mano) | `pip-sync` |
 | Instalar el intérprete | No | No |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Maven, las versiones del `pom.xml` son exactas y las transitivas se resuelven igual cada vez, así que el instinto asume que `requirements.txt` con `httpx`
 es "una dependencia declarada". Sin versión, es una invitación a instalar lo último; con `httpx==0.28.1`, las dependencias de `httpx` siguen sueltas. Lo que da

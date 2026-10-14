@@ -38,7 +38,7 @@ escritos desde el consumidor.
 | Quitar o renombrar un campo de la respuesta | **Sí** |
 | Restringir un valor permitido (un `enum` más chico, un mínimo más alto) | **Sí** |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Spring Cloud Contract o Pact en Java, el instinto asocia "pruebas de contrato" con una infraestructura de *brokers* y *stubs* que no vale la pena para
 un equipo chico. La forma más barata de prueba de contrato no necesita nada de eso: `schemathesis` contra el OpenAPI que FastAPI ya genera, en el CI. Una

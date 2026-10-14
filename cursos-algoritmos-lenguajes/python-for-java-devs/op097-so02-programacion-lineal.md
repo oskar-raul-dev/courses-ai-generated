@@ -41,7 +41,7 @@ muestra que puede mantenerse muy poco—.
 | Pyomo | 6.10.1 | Modelos grandes y no lineales, muchos solucionadores |
 | `mip` | 2.0.0 | MIP con CBC, enfocado en enteros |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto mira un problema con enteros y concluye que hay que probar combinaciones. Para cuatro procedimientos, sí; para cuarenta, la
 explosión combinatoria lo hace imposible. El solucionador entero no prueba combinaciones: resuelve versiones continuas, ramifica donde

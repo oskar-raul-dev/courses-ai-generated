@@ -49,7 +49,7 @@ flowchart LR
     E --> Q3["¿Por qué rechazó Suba?"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es registrar a cada paso —"empezó", "leyó el archivo", "validó", "terminó"— con niveles
 `INFO` y `DEBUG`, y definir las métricas de Micrometer por adelantado. Cuando llega una pregunta que nadie

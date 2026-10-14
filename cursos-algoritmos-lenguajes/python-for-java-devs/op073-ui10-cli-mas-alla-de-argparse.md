@@ -42,7 +42,7 @@ Y la ergonomía que hace a una herramienta de terminal buena ciudadana, venga de
 | Leer de `stdin` si no se da un archivo | Para encadenarla con `|` |
 | Configuración en capas: valor por defecto < archivo < variable de entorno < argumento | El cron usa variables; la persona, argumentos |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, una CLI es picocli o JCommander, y el arranque de la JVM hace que nadie se preocupe por cien milisegundos más. En
 Python el arranque es corto, y por eso **el tiempo de importación de la biblioteca de CLI se nota**: una herramienta que el

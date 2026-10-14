@@ -45,7 +45,7 @@ servidor de la segunda.
 > MailHog lleva sin versión desde agosto de 2020 (v1.0.1); su sucesor activo es **Mailpit**
 > (v1.31.4, del 2026-10-03), con la misma idea y una API para las pruebas.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es GreenMail en las pruebas de integración, o un `JavaMailSender` simulado con
 Mockito. En Python, simular `smtplib.SMTP` con `unittest.mock.patch` es tentador y casi siempre un

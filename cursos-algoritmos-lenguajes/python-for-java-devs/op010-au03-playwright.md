@@ -43,7 +43,7 @@ despliegue; la etiqueta "Usuario" y el botón "Radicar" cambian mucho menos, por
 habilitado y deje de moverse, hasta un tiempo límite. El `sleep(3)` "para que cargue", que es la
 causa número uno de automatizaciones frágiles, desaparece.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Si automatizaste navegadores en Java, fue con Selenium y `WebDriverWait`, con selectores XPath
 copiados de las herramientas del navegador. El reflejo es traer ese estilo: XPath largos y esperas
@@ -51,7 +51,7 @@ explícitas en cada paso. Playwright existe también para Java, con la misma API
 es el contrario en los dos lenguajes: **localizadores por rol y etiqueta, y ninguna espera escrita a
 mano** salvo la de un evento concreto (una descarga, una navegación).
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo de página es el mismo de cualquier prueba de interfaz: el patrón *Page Object* —una clase
 por pantalla con métodos que dicen lo que hace la persona— se traslada sin cambios, y es lo que

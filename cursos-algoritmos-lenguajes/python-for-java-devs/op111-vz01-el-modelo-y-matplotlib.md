@@ -40,7 +40,7 @@ aparece justamente en un proceso nocturno: **sus dos API**, una de las cuales gu
 | Hilos | No es segura | Una figura por hilo funciona |
 | Para qué | Notebooks, exploración | **Procesos, servidores, todo lo que corre solo** |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, un gráfico es un objeto (JFreeChart, XChart) y el instinto espera lo mismo. Los tutoriales de Python enseñan `plt.plot(...)`, que
 parece una función pura y no lo es: agrega la línea a la figura "actual" que `pyplot` guarda en un registro global, y esa figura vive hasta que

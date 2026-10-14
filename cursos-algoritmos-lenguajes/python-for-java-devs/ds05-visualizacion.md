@@ -95,7 +95,7 @@ go.Bar(x=points, y=channels, error_x={...})                 # plotly: objeto →
 alt.Chart(rows).mark_bar().encode(x="lineal:Q", y="canal:N")  # altair: mapeo → spec
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto dice **"esto es la capa de presentación, va al final y es lo fácil"**. Es
 razonable: en once años de backend, el gráfico lo hizo siempre otro, en el frontend, con una
@@ -157,7 +157,7 @@ blanco:
 > contra el 4,5 que exige la norma— y ahí va el carbón, que es 14,16."* Nadie discute un
 > número, y la marca sigue en el gráfico.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Separar el cálculo de la presentación.** Es la misma disciplina de siempre, y aquí paga
   doble: la tabla y las tres figuras consumen exactamente el mismo diccionario.
@@ -168,7 +168,7 @@ blanco:
 - **Los valores por defecto no son decisiones.** El backend, la paleta y el DPI vienen
   puestos por alguien que no conocía tu caso.
 
-### ⚰️ Autopsia: el gráfico que se ve mejor y dice menos
+### Autopsia: el gráfico que se ve mejor y dice menos
 
 El tablero que Marcela habría pedido es una barra por canal con su cifra. Sobre los datos de
 `ds04`, ese gráfico dice que TikTok cuesta 1,93 millones y Google 2,01: **prácticamente lo
@@ -182,7 +182,7 @@ El "antes y después" no es de milisegundos: es de decisión. La versión bonita
 al comité a repartir el presupuesto a partes iguales con confianza; la versión con banda
 lleva a la conversación correcta, que es que hace falta un experimento.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Lo que sabes | Aquí | Dónde se rompe el paralelo |
 |---|---|---|
@@ -290,7 +290,7 @@ Con `"cdn"`, el archivo pesa **9,4 KB** y necesita internet para dibujarse. Con 
 **4,10 MB** y funciona en un avión. **435 veces**, por un argumento. No hay respuesta
 correcta: hay que saber a quién se lo mandas.
 
-### 5.5 🧨 El experimento que rompe a propósito: imprime el tablero
+### 5.5 El experimento que rompe a propósito: imprime el tablero
 
 Marcela lleva el tablero impreso al comité, en blanco y negro, porque la impresora de la sede
 de Suba es así. Esto es lo que le queda de la paleta:
@@ -388,7 +388,7 @@ uv run --with matplotlib==3.11.2 python bench_render.py --opcion matplotlib
 > veintisiete meses, la tabla pierde y no está cerca — y ese es el tablero que `ds04` no
 > pidió y que el ejercicio 21 sí construye.
 
-### 6.2 ⏳ Tiempo hasta la primera decisión correcta
+### 6.2 Tiempo hasta la primera decisión correcta
 
 **Esta es la medición que de verdad importa y no está hecha**, porque necesita personas.
 Queda especificada entera para que alguien la corra:
@@ -640,21 +640,3 @@ cuadernos que acabas de producir, ¿cuántos vuelven a correr?**
 > lleva además su tag anotado `ds-mini-05`, con **la biblioteca elegida y el rango fijo de las
 > escalas** en el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición 6.2 está en `⏳` y es la única del track que necesita personas.** El
-  protocolo está completo; lo que falta son cinco voluntarios y media hora. Es el ejercicio
-  22 y también una entrada pendiente de `BENCHMARKS.md`.
-- **Falta la celda de Polars en la tabla de `ds03`** y falta aquí la de `pandas.plot()`
-  (ejercicio 11). Las dos son celdas que la gente va a buscar.
-- **La paleta de Áurea no está en la historia de la empresa**, se definió aquí. Si alguna vez
-  se agrega a `00-historia-de-aurea.md`, los cinco colores tienen que salir de allí y esta
-  sección citarlos, no definirlos.
-- **El tablero de estacionalidad del ejercicio 21 es el contraejemplo de esta sección** —el
-  caso donde el gráfico gana claro— y merecería estar en el cuerpo y no en un ejercicio. Si
-  alguien lo escribe, considerar moverlo a la sección 6 como segunda comparación.
-- `INSTINTOS.md` gana el reflejo de la sección: *"la presentación es la capa final"* → **es
-  donde se pierde la información**, y elegir el gráfico simple es tirar el hallazgo.

@@ -55,7 +55,7 @@ flowchart TD
     E --> D["Marca la ejecución<br/>como terminada"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es una transacción grande: `@Transactional` alrededor de toda la liquidación, y si
 algo falla, *rollback* y se reintenta desde cero. Funciona mientras todo vive en una sola base de datos.

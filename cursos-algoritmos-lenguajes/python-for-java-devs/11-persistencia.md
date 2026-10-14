@@ -4,6 +4,7 @@
 > Depende de: Fase 10 · Habilita: Fase 12
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: AgendaAPI · **y entra el dominio duro de Áurea**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -55,7 +56,7 @@ corriendo en paralelo.
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** *"cargo la entidad y navego las relaciones"*.
 
@@ -145,7 +146,7 @@ SQL directo.
 Y las dos conviven en el mismo proyecto y en la misma sesión, sin ceremonia. No hay que elegir una
 para todo.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Aquí transfiere prácticamente todo, y es la fase donde tu experiencia más rinde:
 
@@ -165,7 +166,7 @@ ordenadas, `upgrade` y `downgrade`, y la misma disciplina de no editar una migra
 **Y el *pool* de conexiones existe y por la misma razón**, que la sección 6 mide: abrir una
 conexión a Postgres cuesta 3.4 ms y la consulta 0.06 ms. Cincuenta y seis veces más.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -288,12 +289,24 @@ class PlanPhase(Base):
 - **`Numeric(14, 2)` y no `Float`.** Es la misma decisión de la Fase 01 llevada a la columna, y
   aquí importa más: `psycopg` devuelve `Decimal` desde `Numeric` y `float` desde `Double`. Un
   `Float` en la columna del total arruina el invariante del reparto que la Fase 08 blindó.
+  En `sqlite3` la Fase 06 guardó el dinero como `TEXT`, porque SQLite no tiene `DECIMAL`; es la
+  misma decisión con otra herramienta, y las dos convierten a `Decimal` al leer.
+- **`Numeric` redondea distinto que `Decimal`.** Si llega un valor con más decimales de los que
+  la columna admite, Postgres lo redondea **alejándose del cero**, y el `quantize` de Python, por
+  defecto, **al par** (`ROUND_HALF_EVEN`). Comprobado con Postgres 18.6: `150000.005` se guarda
+  como `150000.01`, y `Decimal("150000.005").quantize(Decimal("0.01"))` da `150000.00`. Es la
+  diferencia que la Fase 08 dejó anotada entre `ROUND_HALF_UP` y `ROUND_HALF_EVEN`, y vale plata:
+  el redondeo se hace en Python, con la regla escrita —`quantize(..., rounding=ROUND_HALF_UP)` si
+  es la que pide la liquidación—, y a la columna llega el valor ya redondeado.
 - **`dentist_id` nulable con su significado escrito.** `None` significa *"esta fase la hace un
   aliado externo"*, que es un estado real del dominio. Es la regla de la Fase 08: un `| None` que
   no se puede explicar en una frase del negocio es un caso sin decidir.
 - **La restricción de unicidad está en la tabla**, no solo en el código. Es más barata y más
   confiable — y sigue funcionando cuando alguien inserte por otra puerta, que es la lección de la
   Fase 10.
+  Es el mismo invariante que la regla 6 del miniproyecto de la Fase 04 —el procedimiento
+  duplicado— detectaba en Python, mirando el lote entero: allá costaba un diccionario y una pasada;
+  aquí lo impone la base, siempre, y la detección en el código queda para reportar bien el error.
 - **`cascade="all, delete-orphan"`** para las fases: no existen sin su plan. Es una decisión de
   dominio y por eso está declarada.
 
@@ -345,6 +358,11 @@ def create_booking(
 
 - **Una sesión por petición.** Es el alcance correcto para una API y el que evita el 90% de los
   problemas: la sesión es la unidad de trabajo, y la petición es la unidad de trabajo del sistema.
+- **Dos `with`, dos trabajos.** El de afuera cierra la sesión y devuelve la conexión al *pool*; el
+  de adentro confirma o deshace. Es la trampa de la Fase 06 al revés: allá `with connection:`
+  confirmaba y **no** cerraba. Aquí, una sesión que no se cierra se queda con una de las quince
+  conexiones del *pool* (`pool_size=5` más `max_overflow=10`), y la petición dieciséis espera
+  `pool_timeout` —30 segundos por defecto— antes de fallar.
 - **`expire_on_commit=False`.** Por defecto, después de un `commit` SQLAlchemy marca los objetos
   como caducados y **vuelve a consultarlos** al tocar cualquier atributo — lo cual, después de que
   la sesión se cerró, es un `DetachedInstanceError`. Desactivarlo es lo correcto en una API que
@@ -974,24 +992,3 @@ sino un requisito legal.
 > lleva además su tag anotado `mini-11`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La regla 9 de la Fase 10** —un paciente no puede tener dos citas el mismo día en dos sedes—
-  queda ahora respondible en una consulta con índice, y esta fase debería mostrarlo explícitamente
-  al reemplazar el almacén en memoria. Si al implementarlo hubo que tocar los endpoints de la Fase
-  10, esa fase tiene un problema de separación y hay que corregirla **allí**.
-- **`ROUND_HALF_UP` contra `ROUND_HALF_EVEN`**, que la Fase 08 dejó anotado, sigue sin sitio: aquí
-  el dinero se persiste con `Numeric` y el redondeo ocurre en el cálculo. Destino sugerido: una
-  📝 en esta fase, junto a la decisión de `Numeric`, o en la 15 cuando se liquide.
-- **Las restricciones de exclusión de Postgres** son la respuesta correcta al solapamiento parcial
-  de citas y quedan en un ejercicio 🟡 y uno 🔥. Si la Fase 14 no las usa, el curso deja el
-  problema del solapamiento resuelto solo a medias — conviene decidirlo al escribirla.
-- **La medición es sobre socket Unix local.** Con la base en otra máquina, el castigo del N+1
-  crece y la diferencia Core/ORM se vuelve aún más irrelevante. El ejercicio 18 lo traslada al
-  lector; el curso debería traer su propio número antes de consolidar `BENCHMARKS.md`.
-- **No se midió el ORM contra Hibernate**, que sería la comparación que este perfil quiere de
-  verdad. No cabe aquí —haría falta un proyecto Java equivalente— y la Fase 17 solo compara el
-  endpoint completo. Queda declarado como lo que el curso **no** responde.

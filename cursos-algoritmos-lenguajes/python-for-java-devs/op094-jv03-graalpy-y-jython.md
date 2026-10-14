@@ -34,7 +34,7 @@ casi todo el ecosistema de datos.
 | Código Python puro, ya caliente | La referencia | **Mucho más rápido** (el ejemplo lo mide) | Más lento |
 | Para qué sirve hoy | Todo | Incrustar Python en una aplicación Java; código Python puro de larga duración | Mantener *scripts* heredados de Python 2 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de la JVM dice que "un JIT siempre gana a un intérprete". Es cierto **después del calentamiento**, y el ejemplo lo
 mide. Pero el trabajo típico de Python en Áurea —un *script* que arranca, procesa un archivo y termina; un proceso que pasa el 90 %

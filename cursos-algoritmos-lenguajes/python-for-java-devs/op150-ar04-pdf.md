@@ -18,6 +18,9 @@ imagen escaneada.
 La sección recorre el ciclo completo con un documento de muestra —una relación de gastos de tres sedes—: lo genera, extrae su texto y su tabla, lo firma, lo
 altera para ver qué dice la verificación, y lo lee con OCR. La verificación tiene una trampa en su API que vale la sección entera.
 
+El OCR es el paso que le falta a NormaRAG, el proyecto del track `ia` ([`ia05`](ia05-normarag.md)): su ingesta detecta y cuenta los PDF escaneados que no
+tienen capa de texto y los deja fuera, como un agujero medido. Lo que aquí se aprende es cómo cerrarlo.
+
 ---
 
 ## 🧠 2. El modelo
@@ -31,7 +34,7 @@ altera para ver qué dice la verificación, y lo lee con OCR. La verificación t
 | **pyHanko** | Firmar (PAdES) y validar firmas | MIT | iText con firma, DSS |
 | **Tesseract** (`pytesseract`, `ocrmypdf`) | OCR: texto desde imágenes | Apache | Tess4J |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Un PDF parece un documento con texto y tablas. No lo es: es una lista de instrucciones de dibujo ("pon este glifo en esta coordenada"). No hay filas ni celdas, solo
 caracteres en posiciones. Por eso extraer el texto da cada celda en su propia línea, y por eso extraer la tabla necesita una biblioteca que **reconstruya** las filas a

@@ -32,7 +32,7 @@ Esta sección se escribe alrededor de una decisión, no de una biblioteca: **env
 | `-c copy` | Copia los paquetes comprimidos, sin decodificar | Rapidísimo; solo puede empezar en un *keyframe* |
 | Recodificar | Decodifica y vuelve a comprimir | Lento; empieza exactamente donde se pidió |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de Java es buscar la biblioteca: JavaCV, Xuggler, JCodec. Para vídeo, la biblioteca que envuelve FFmpeg siempre va atrás de FFmpeg, y su superficie es
 una fracción de la del binario. Xuggler no publica una versión desde hace más de diez años. En Python pasa igual: los envoltorios que no tienen financiamiento se quedan atrás, y la ruta que

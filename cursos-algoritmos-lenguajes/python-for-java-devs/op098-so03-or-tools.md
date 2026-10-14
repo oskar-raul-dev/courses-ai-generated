@@ -39,7 +39,7 @@ programación lineal.
 | Restricciones | Lineales | Lineales **y lógicas**: implicaciones, `AllDifferent`, intervalos sin solape |
 | Fuerte en | Mezclas, flujos, presupuestos | **Horarios, turnos, secuenciación, empaquetado** |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto ante los turnos es *backtracking* escrito a mano, o una hoja con macros. Con nueve personas y 48 turnos en la semana (cuatro
 sedes, seis días, mañana y tarde), las asignaciones posibles son del orden de 9⁴⁸: más que átomos en la Tierra. CP-SAT no las recorre; propaga

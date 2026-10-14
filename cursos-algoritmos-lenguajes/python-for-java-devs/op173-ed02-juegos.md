@@ -40,7 +40,7 @@ flowchart LR
 | Por segundo | `x += 300 * dt` | Igual a cualquier tasa, si la física es lineal |
 | Paso fijo | La física avanza de a 1/120 s, con un acumulador | Igual a cualquier tasa, y reproducible |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El bucle de juego es un bucle de eventos con un temporizador, como el de Swing (`javax.swing.Timer` disparando `repaint()`) o el `AnimationTimer` de JavaFX, que
 también entrega el tiempo transcurrido en cada cuadro. Quien hizo animaciones en Java ya se encontró con el `dt`.

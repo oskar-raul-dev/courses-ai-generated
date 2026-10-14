@@ -29,7 +29,7 @@ paralelizar con `prange`, y qué código de Python perfectamente válido numba s
 | Qué acepta | Todo Java | Un subconjunto: números, arreglos de NumPy, tuplas, algunas estructuras |
 | Caché entre ejecuciones | No (salvo CDS/AOT) | `cache=True`, en `__pycache__` |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de la JVM es que el JIT acelera "el programa". numba acelera **una función**, y solo si todo lo que esa función toca está en su subconjunto. Un
 `Decimal`, un `dict` de objetos o una expresión generadora bastan para que no compile. No hay calentamiento ni desoptimización: o la función entra completa en

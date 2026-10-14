@@ -36,7 +36,7 @@ problema crece o tiene ventanas de horario, con el módulo de rutas de **OR-Tool
 El grafo es la representación: cada sede es un nodo, cada par de sedes una arista con su distancia. Con el grafo construido, la misma
 estructura sirve para la ruta, el camino más corto entre dos sedes (Dijkstra) o la sede más central.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto escribe el vecino más cercano: es intuitivo, rápido y "suficientemente bueno". Lo que el instinto no mide es cuánto
 queda arriba del óptimo, y en una ruta diaria ese porcentaje se paga trescientos días al año. Medir contra el óptimo —que con diez

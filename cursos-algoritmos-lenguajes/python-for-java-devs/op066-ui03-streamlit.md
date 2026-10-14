@@ -41,7 +41,7 @@ flowchart TB
 | Agrupar controles sin re-ejecutar cada uno | `st.form` | Diez controles que disparan diez ejecuciones |
 | Re-ejecutar solo una parte | `@st.fragment` | Re-ejecutar la página para actualizar un número |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Swing, JSF o Angular, la pantalla es un objeto que vive, y un clic llama a un manejador que cambia una parte. El
 instinto escribe `contador += 1` dentro del `if st.button(...)` y espera que el contador crezca. En Streamlit no hay

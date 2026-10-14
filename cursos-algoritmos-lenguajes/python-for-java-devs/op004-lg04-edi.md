@@ -58,7 +58,7 @@ repite, como cada línea de servicio de una reclamación. El estándar no marca 
 termina un bucle; lo deduce quien lee, por el segmento que lo abre. Por eso un parser genérico te
 da segmentos, y la **guía de implementación** de cada transacción te dice cómo agruparlos.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo es buscar el producto comercial —un traductor EDI con su mapeador gráfico— porque en el
 mundo Java el EDI suele vivir dentro de una suite de integración. Para **leer** EDI no hace falta:

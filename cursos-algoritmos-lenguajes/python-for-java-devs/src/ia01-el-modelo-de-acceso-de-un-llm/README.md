@@ -18,8 +18,8 @@ export ANTHROPIC_API_KEY=...     # o `ant auth login`
 ollama pull gemma3               # solo si vas a correr local.py
 ```
 
-Las versiones exactas están fijadas en
-[`prompts/alcance-del-proyecto.md`](../../prompts/alcance-del-proyecto.md) §9. **La tarifa de
+Las versiones exactas son las que fija la sección
+[`ia01`](../../ia01-el-modelo-de-acceso-de-un-llm.md), con su fecha. **La tarifa de
 `pricing.py` se reverifica antes de repetir cualquier medición de costo**: es el dato que más
 rápido envejece del curso.
 

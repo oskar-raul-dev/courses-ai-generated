@@ -39,7 +39,7 @@ flowchart LR
 | MQTT | `paho-mqtt` | 2.1.0 💤 | Dispositivos (sensores, equipos de sede); sin versiones desde abril de 2024 |
 | NATS | `nats-py` | 2.16.0 | Mensajería liviana (`db14`) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Spring AMQP, el instinto confía en el `MessageConverter` y en las clases compartidas entre productor y consumidor para "tener contrato". Eso funciona
 mientras los dos lados sean Java y compartan el *jar*. Con un consumidor en Python, el contrato tiene que estar fuera del código de los dos: un documento

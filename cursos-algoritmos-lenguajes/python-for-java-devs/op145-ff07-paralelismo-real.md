@@ -29,7 +29,7 @@ pone las cuatro formas lado a lado con la misma carga de Python puro, en los dos
 | Procesos | Sí | No: serializa | Alto (un intérprete por proceso) | `if __name__ == "__main__"` |
 | **Subintérpretes** | **Sí**, un GIL por intérprete | No: serializa o comparte *buffers* | Medio | Extensiones que soporten varios intérpretes |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de la JVM es que hilos y paralelismo son lo mismo, y con `3.14t` por fin lo son también en Python. Lo que el instinto no ve es que el ecosistema de
 Python se escribió durante treinta años **suponiendo** el GIL: una extensión de C que no declara que funciona sin él vuelve a encender el GIL al importarse, para

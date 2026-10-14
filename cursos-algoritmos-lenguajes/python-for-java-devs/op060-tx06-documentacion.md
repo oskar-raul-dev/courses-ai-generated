@@ -43,7 +43,7 @@ Y las herramientas, de la más liviana a la más completa:
 | Sphinx 9.1.0 | El estándar de Python: reStructuredText o MyST, referencias cruzadas, PDF | Proyectos grandes; la documentación de Python misma |
 | `griffe` 2.3.0 | Extrae la API como datos, sin importar el código | Detectar cambios que rompen la API entre versiones |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, Javadoc es una herramienta y un formato, y no hay discusión. En Python, el formato de los *docstrings* no está
 fijado —Google, NumPy, reStructuredText— y el generador tampoco. El instinto busca "el Javadoc de Python" y encuentra

@@ -35,7 +35,7 @@ solos), y **SVG programático** con `drawsvg` para lo que no es un diagrama de c
 La regla que ordena la tabla: **una sola fuente de verdad**. La estructura (los pasos y sus dependencias) vive en un lugar del código; el DOT y
 el Mermaid se generan de ahí.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este perfil probablemente dibuja la arquitectura en draw.io o PlantUML, a mano, y la actualiza cuando se acuerda. El instinto trata el diagrama como
 documentación aparte. En Python el diagrama puede ser una salida más del sistema: el mismo dato que el orquestador usa para correr los pasos, impreso

@@ -39,7 +39,7 @@ fábricas de datos que se parecen a la realidad.
 La frase de la Fase 08 sigue mandando: **el doble no prueba nada si reemplaza lo que querías probar**.
 Por eso se simula en los bordes —la red, el reloj— y no en el medio del dominio.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, Mockito con `@Mock` es el reflejo para todo, y un `mock(Clase.class)` ya tiene la forma de la
 clase porque el compilador lo exige. En Python, `MagicMock()` **no tiene forma**: acepta cualquier

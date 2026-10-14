@@ -39,7 +39,7 @@ flowchart TD
     H -->|"sí"| I["agregar y suprimir (gi06)<br/>GeoPackage con CRS (gi02)"]
 ```
 
-### 📖 Diccionario de cierre
+### Diccionario de cierre
 
 ```text
 Lo que el track enseñó                         Dónde

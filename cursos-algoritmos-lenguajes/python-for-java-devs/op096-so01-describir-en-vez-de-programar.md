@@ -39,7 +39,7 @@ flowchart LR
     S --> R["Reparto óptimo<br/>y la prueba de que lo es"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto dice: "lo programo yo, un algoritmo voraz bien pensado basta". El voraz es rápido y da una respuesta razonable; lo que
 no da es **la mejor**, ni la certeza de cuánto se aleja de ella. Y el día que llega una regla nueva —"la ortodoncista 3 no puede ir a

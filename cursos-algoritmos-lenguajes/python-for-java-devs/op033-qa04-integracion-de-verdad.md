@@ -43,14 +43,14 @@ flowchart TD
     T3 --> F["Fin de sesión:<br/>el contenedor se borra"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo de la prueba de datos es H2 en memoria en "modo PostgreSQL". Es el mismo error que
 SQLite en Python, con un nombre que promete compatibilidad: el modo de compatibilidad imita la sintaxis,
 no la semántica. Testcontainers existe en los dos lenguajes precisamente porque los dos ecosistemas
 llegaron a la misma conclusión.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo de Testcontainers de Java se traslada entero: un contenedor por tipo de servicio, puerto
 asignado al azar, espera a que el servicio esté listo, y limpieza al terminar. Si ya lo usaste con

@@ -159,7 +159,7 @@ def mature_leads(created, cutoff, maturity=MATURITY):
 > TikTok en vez de mejorarlo — lo contrario de lo que el texto decía. Lo encontró la
 > medición, no la revisión del código.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto viene de sistemas transaccionales, donde **cada hecho tiene un dueño**: una venta
 tiene un vendedor, un pedido tiene un cliente, una fila tiene una llave foránea. Aplicado
@@ -195,7 +195,7 @@ Una campaña de ortodoncia lanzada en diciembre va a "funcionar" en enero **aunq
 nada**: enero trae 1,77 veces el promedio todos los años. Y una campaña de estética evaluada
 en febrero va a parecer un fracaso por la misma razón, al revés.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Los `join` y las llaves.** Todo lo de `ds02` sigue vigente: aquí se unen cuatro fuentes
   que no comparten llave y `validate=` sigue siendo la red de seguridad.
@@ -206,7 +206,7 @@ en febrero va a parecer un fracaso por la misma razón, al revés.
 - **Nombrar los supuestos.** Un informe que no dice su modelo es como una medición que no
   dice su hardware.
 
-### ⚰️ Autopsia: sumar los tableros de las tres plataformas
+### Autopsia: sumar los tableros de las tres plataformas
 
 Es el error más caro del marketing digital y se comete todos los meses. Cada plataforma
 reporta las conversiones que **ella** considera suyas, con su propia ventana y su propio
@@ -227,7 +227,7 @@ está contado hasta tres veces, y sobran 2.460 conversiones que no existieron.
 > entraron de verdad. Si la suma es mayor, alguien está contando dos veces, y el informe no
 > se discute hasta que eso se explique.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Lo que sabes | Aquí | Dónde se rompe el paralelo |
 |---|---|---|
@@ -732,27 +732,3 @@ exactamente el gráfico bonito con el que se cuenta la mentira que acabas de des
 > lleva además su tag anotado `ds-mini-04`, con **la banda entre modelos** en el mensaje. La
 > convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El ejercicio 24 —el experimento de incrementalidad— es el único que resolvería la
-  pregunta de la sección**, y cuesta plata de pauta real. Si alguna vez se diseña completo,
-  merece ser una sección propia y no un ejercicio: es donde el curso pasaría de describir a
-  intervenir.
-- **El costo de la valoración gratuita no está en el conjunto** y es el hueco más grande del
-  informe: silla y tiempo de dos especialistas por cada lead que llega a `valoracion_asistida`
-  —11.114 de ellos—. Agregarlo al generador cambiaría todos los CAC hacia arriba y de forma
-  desigual entre canales. **Decisión pendiente:** si se agrega, se agrega en el generador y se
-  vuelve a correr esta sección entera.
-- 🪦 **La zona y la especialidad de los aliados ya no son la misma partición.** Nacieron las
-  dos del índice del aliado —`i % 5` y `(i * 3) % 5`— y sobre veintitrés aliados partían el
-  conjunto igual, así que agrupar por una o por otra daba la misma tabla y la pregunta de la
-  §6.1 no se podía hacer. La zona ahora se sortea, y hay una prueba en el generador.
-- **El intervalo bootstrap tarda 12 segundos** con 200 remuestreos, casi todo en recalcular
-  créditos. El ejercicio 10 pide bajarlo; si alguien lo logra, sube a 2.000 remuestreos y se
-  reescriben los intervalos de la sección 6.
-- `INSTINTOS.md` gana el reflejo de la sección: *"cada hecho tiene un dueño"* → **la
-  conversión no tiene dueño**, y el `GROUP BY` que se lo asigna toma una decisión de negocio
-  sin avisar.

@@ -32,7 +32,7 @@ sin tocar nada, cuánto cada anotación, y cuál de ellas no da nada aunque los 
 `cython -a` genera un HTML que pinta cada línea según cuántas llamadas a la API de C de CPython produce: blanco es C puro, amarillo es intérprete. Es la
 herramienta para saber qué anotar.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 La idea es la de un compilador AOT con tipos opcionales: donde hay tipos, el código es rápido; donde no, se comporta como el dinámico. Quien conoce cómo un JIT de la
 JVM especializa por tipos reconoce lo que pasa, con una diferencia: aquí los tipos los escribe uno, y se compila antes de correr.

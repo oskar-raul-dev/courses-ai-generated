@@ -35,7 +35,7 @@ flowchart LR
 | Constructor | Expresiones de Python que arman SQL | Filas | Consultas armadas con condiciones; portabilidad entre motores | Una sintaxis más que aprender |
 | ORM | Clases y relaciones | **Objetos con relaciones navegables** | Productividad en CRUD; identidad y unidad de trabajo | El SQL que se manda queda oculto: N+1 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este perfil viene de JPA y Hibernate, donde el ORM es el punto de partida y el SQL nativo la excepción. En Python el centro de gravedad
 está más cerca del SQL: Django lo trae de fábrica, pero fuera de Django buena parte de los equipos escribe SQL o usa un constructor, y

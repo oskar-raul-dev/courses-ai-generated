@@ -44,7 +44,7 @@ Si el consolidado cambia, Dagster sabe que las regalías quedaron desactualizada
 pedido. Para un sistema cuyo producto es **datos** —el cierre de Áurea lo es—, esa es la pregunta
 correcta.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo es elegir la herramienta como se elige un framework en Java: la más completa, la que más se
 usa, la que trae más integraciones —que es Airflow—. Para un equipo pequeño con un grafo modesto, lo que

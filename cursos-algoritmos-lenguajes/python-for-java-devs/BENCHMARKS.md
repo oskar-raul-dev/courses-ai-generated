@@ -84,7 +84,7 @@ la elección es de si necesitas el valor asociado.
 
 ---
 
-### 02 ⭐ · Lista intermedia contra tubería perezosa
+### 02 · Lista intermedia contra tubería perezosa
 
 **Afirmaba:** memoria constante contra memoria lineal. El tiempo era secundario — y resultó no
 serlo.
@@ -161,7 +161,7 @@ es **con qué frecuencia falla esto de verdad**.
 
 ---
 
-### 05 ⭐ · El costo de crear un proceso
+### 05 · El costo de crear un proceso
 
 **Condiciones:** 200 facturas con semilla `2026`, de las cuales **166 medibles** (se excluyen las
 que el simulador hace fallar o colgarse). El firmador tarda 40–120 ms por factura, determinado por
@@ -204,7 +204,7 @@ consulta que no sea "recórrelo todo", el CSV pierde aunque sea pequeño. Cuesta
 
 ## 🅱️ Bloque B — la frontera
 
-### 07 ⭐ · Los tres gestores de entorno
+### 07 · Los tres gestores de entorno
 
 **Condiciones:** el mismo encargo —FastAPI, SQLAlchemy, httpx, pytest y uvicorn sobre 3.14—, con
 **caché aislada y vacía** para cada herramienta y una segunda pasada en caliente.
@@ -247,7 +247,7 @@ y se enciende por módulo.
 
 ---
 
-### 09 ⭐ · Las cuatro formas de entregar
+### 09 · Las cuatro formas de entregar
 
 **Condiciones:** el paquete `aur` **sin dependencias de terceros** —dato que favorece a las
 opciones basadas en archivo y hay que declararlo—. Arranque: mediana de 10 ejecuciones.
@@ -381,7 +381,7 @@ es una buena práctica: **es la condición para que reintentar sea legítimo**.
 
 ---
 
-### 14 ⭐ · El GIL, las dos cargas
+### 14 · El GIL, las dos cargas
 
 **Condiciones:** 4 trabajadores, 8 núcleos; CPython **3.14.7** y su compilación *free-threading*;
 CPU: conciliar 1.200.000 filas; E/S: 100 esperas de 10 ms.
@@ -475,7 +475,7 @@ velocidad de todo el Python mejoraría el total un 6.5%. **Primero SQL, después
 
 ---
 
-### 17 🏁 ⭐ · El duelo: FastAPI contra Spring Boot 3
+### 17 · El duelo: FastAPI contra Spring Boot 3
 
 **Condiciones:** Spring Boot **3.5.16** sobre Java 21 (Zulu 21.0.8), JAR ejecutable, sin ajustes de
 JVM · FastAPI 0.141.1 con Uvicorn 0.52.4 sobre CPython 3.14.5 · las dos respuestas verificadas
@@ -943,7 +943,7 @@ Cuando escribas una medición nueva —tuya, o de un track opcional— sigue la 
 documento: **fase de origen, hipótesis en una línea, condiciones resumidas, resultado, y veredicto
 con su umbral**, más el enlace a la sección 📏 donde está el detalle.
 
-Y las reglas de honestidad de `prompts/formato-de-mediciones.md` §3, que aquí valen igual:
+Y las reglas de honestidad de las mediciones del curso, que aquí valen igual:
 
 - Se publica lo que salió, no lo que esperabas.
 - **El empate se llama empate** — hay cinco en este documento y son de lo más valioso que tiene.

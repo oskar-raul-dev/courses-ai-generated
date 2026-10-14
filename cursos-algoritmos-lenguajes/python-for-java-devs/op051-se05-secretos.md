@@ -38,7 +38,7 @@ Y la regla que ataja la mayoría de los escapes, sin importar dónde viva el sec
 secreto viaja envuelto en un tipo que no se imprime**. Un `SecretStr` de Pydantic se registra como
 `'**********'`; el valor solo sale cuando se pide explícitamente, en el único lugar que lo necesita.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Spring, `application.properties` con `${DB_PASSWORD}` y el valor en la variable de entorno es lo normal, y
 Spring Cloud Vault resuelve el resto. El instinto trae la idea de que la variable de entorno es "el lugar seguro".

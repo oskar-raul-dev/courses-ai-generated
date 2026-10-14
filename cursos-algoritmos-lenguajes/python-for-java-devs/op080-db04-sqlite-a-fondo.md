@@ -31,7 +31,7 @@ Postgres, y que en Python se heredan sin aviso: los **tipos son sugerencias**, l
 | Un solo escritor | La segunda escritura espera o falla con `database is locked` | `timeout=` al conectar; diseño con un escritor |
 | Transacciones del módulo `sqlite3` | Modo heredado, anterior al DB-API estricto | `autocommit=False` (Python 3.12+) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, H2 o Derby en memoria son la base de pruebas, y se comportan casi como la de producción. El instinto usa SQLite igual:
 como Postgres de bolsillo. Las pruebas pasan con SQLite y fallan en Postgres —o al revés, pasan cosas en producción que la

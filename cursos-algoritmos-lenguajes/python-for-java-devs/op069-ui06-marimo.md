@@ -43,7 +43,7 @@ flowchart LR
 | Correr sin interfaz | `nbconvert --execute` | `python notebook.py` |
 | Publicar como aplicación | Voilà, con otro servidor | `marimo run notebook.py` |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este perfil probablemente desconfía de los notebooks por buenas razones: estado global, sin pruebas, imposible de revisar
 en un *pull request*. El instinto concluye que el análisis serio va en un script. marimo ataca exactamente esas tres

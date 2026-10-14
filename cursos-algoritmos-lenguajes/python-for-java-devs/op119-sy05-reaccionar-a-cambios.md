@@ -37,7 +37,7 @@ muestra las dos salidas correctas.
 | **Escribir con nombre temporal y renombrar** | El emisor | **Cualquier sistema**; es el contrato que se le pide a la aseguradora |
 | Esperar a que el tamaño deje de cambiar | El receptor | Cualquiera; es una heurística, con un retraso |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Java tiene `WatchService`, y este perfil quizás lo usó con `ENTRY_CREATE`. La trampa es la misma en los dos lenguajes, y el instinto la resuelve con un
 `Thread.sleep(1000)` antes de leer, "para darle tiempo". Un segundo alcanza para un archivo de diez filas y no para uno de cien mil copiado por una red

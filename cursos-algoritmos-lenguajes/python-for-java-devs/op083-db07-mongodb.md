@@ -38,7 +38,7 @@ de los montos.
 | `pymongo` | 4.18.2 | El *driver*: síncrono y asíncrono (`AsyncMongoClient`) |
 | Beanie | 2.2.0 | ODM con Pydantic, asíncrono; modelos con validación |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Spring Data MongoDB, los `@Document` se mapean solos y `BigDecimal` se guarda como `Decimal128` o como texto según la
 configuración. El instinto espera que `pymongo` haga lo mismo con `Decimal`. No lo hace: `pymongo` no tiene mapeo de objetos

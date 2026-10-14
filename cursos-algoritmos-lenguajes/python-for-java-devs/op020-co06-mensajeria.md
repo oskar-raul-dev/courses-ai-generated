@@ -49,7 +49,7 @@ Y la regla que pone Áurea, por la historia clínica: **el mensaje no lleva dato
 recordamos su cita de mañana a las 3:40 p. m. en la sede Centro"* sí; *"su control de periodoncia"*,
 no. Quien ve la pantalla bloqueada del teléfono de un paciente no tiene por qué saber su tratamiento.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo es instalar el SDK de cada servicio —`slack-sdk`, `python-telegram-bot`, `twilio`— y
 llamar a cada uno donde haga falta. Para mandar un mensaje, cada SDK trae decenas de dependencias y

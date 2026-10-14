@@ -53,7 +53,7 @@ trabajo idempotente**. Si radicar dos veces la misma factura es un problema, lo 
 con Temporal. Los orquestadores te dan reintentos; que reintentar sea seguro sigue siendo tuyo, y por
 eso la sección que sostiene el track es `wf07`.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En el mundo Java el reflejo es Spring Batch más un planificador como Quartz o el de la plataforma, y
 la tentación es buscar "el Spring Batch de Python". No existe uno, y no hace falta: lo que Spring Batch

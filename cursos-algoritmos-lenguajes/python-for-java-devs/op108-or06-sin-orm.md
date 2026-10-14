@@ -33,7 +33,7 @@ scripts. Esta sección arma el reporte con `aiosql` y usa `sqlglot` para lo que 
 | `dataset` | 2.0.0 | Tablas como listas de diccionarios | Scripts rápidos de carga |
 | `records` | 0.6.0 💤 | SQL que devuelve filas cómodas | Scripts; sin versiones desde 2024 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java existe este estilo —MyBatis con sus *mappers* XML, jOOQ con SQL tipado— y es una elección consciente contra JPA. El instinto lo asocia a
 mucha configuración. En Python, `aiosql` es un archivo `.sql` con comentarios `-- name:` y dos líneas de Python; no hay XML ni generación de

@@ -39,7 +39,7 @@ Y lo que resuelve un gestor, de lo más básico a lo más ambicioso:
 | Instalar el intérprete | No | No | `uv` sí; Poetry y PDM no | **Sí** |
 | Paquetes que no son de Python (compiladores, CUDA, GDAL) | No | No | No | **Sí** |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto busca el equivalente al `~/.m2`: un repositorio compartido del que cada proyecto toma lo que necesita. En Python, cada entorno tiene **sus propias
 copias** instaladas; el caché de descargas se comparte (y `uv` comparte además los archivos con enlaces), pero lo que importa el intérprete vive en la carpeta

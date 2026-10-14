@@ -31,7 +31,7 @@ resuelve las dependencias la primera vez que corre, con lo que eso implica para 
 | *Script* PEP 723 con `uv run` | Las resuelve al correr | No (`uv`) | No | **Descarga e instala** |
 | Congelado (PyInstaller) | Sí, y el intérprete | **No** | Sí | `--onefile` desempaqueta cada vez (§09: 3 s) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, un *fat jar* lleva todas las dependencias y corre en cualquier plataforma con una JVM, porque todo es *bytecode*. El instinto espera lo mismo de un `.pyz`:
 un archivo, todas las dependencias, cualquier máquina. Con dependencias en Python puro, casi; con una sola extensión compilada (`orjson`, `psycopg`, `numpy`), el

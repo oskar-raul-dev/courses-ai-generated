@@ -36,7 +36,7 @@ importante: **¿hacía falta asíncrono?**
 **Lo que compra el asíncrono**: atender muchas peticiones concurrentes que pasan el tiempo esperando a la base o a la red, con un solo
 proceso. **Lo que no compra**: que una consulta sea más rápida. Una consulta tarda lo mismo con `await` que sin él.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, lo reactivo (R2DBC, Spring WebFlux) es una decisión grande y explícita, y Hibernate Reactive es un producto aparte. El instinto espera
 que en Python el asíncrono sea igual de pesado, o al revés, que sea "el mismo ORM con `await`". Está en el medio: es el mismo SQLAlchemy, con

@@ -40,7 +40,7 @@ flowchart LR
 | Desde Python | `confluent-kafka` 2.15.1 | `nats-py` 2.16.0 | `nats-py` 2.16.0 |
 | Operarlo | Un clúster (sin ZooKeeper desde la 4.0) | Un binario de 20 MB | El mismo binario con `-js` |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Spring Kafka, el `@KafkaListener` confirma los *offsets* solo y el instinto los olvida. `confluent-kafka` también los confirma
 solo por defecto (`enable.auto.commit`), **cada cinco segundos y antes de que el código termine de procesar**: si el proceso muere

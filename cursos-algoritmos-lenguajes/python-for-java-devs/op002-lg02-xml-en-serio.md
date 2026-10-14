@@ -55,7 +55,7 @@ hostil puede pedirle a tu parser que lea `/etc/passwd` y lo meta en un campo (XX
 una entidad que contiene diez copias de otra que contiene diez copias de otra, hasta agotar la
 memoria (la *bomba de entidades*, o *billion laughs*).
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es JAXB: generar clases desde el XSD con `xjc` y deserializar. En Python ese
 camino existe (`xsdata` genera dataclasses desde un XSD), pero para un documento que **solo
@@ -63,7 +63,7 @@ lees en partes** —el CUFE, el total, la respuesta de la DIAN— generar tresci
 desproporcionado. **XPath sobre el árbol** es la herramienta: cinco consultas con nombre
 reemplazan el modelo de objetos entero, y no se rompen cuando la DIAN agrega un elemento opcional.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python con `lxml` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -243,7 +243,7 @@ línea 6: /*/cbc:IssueDate: Element '{urn:oasis:names:specification:ubl:schema:x
 - **El dígito de verificación se valida en Python, no en el XSD.** XSD 1.0 no puede calcular un
   módulo 11; lo que no expresa el esquema va en código, y los dos juntos son el contrato.
 
-### 🧨 La bomba, a propósito
+### La bomba, a propósito
 
 Guarda esto como `bomba.xml` y léelo con los dos parsers:
 

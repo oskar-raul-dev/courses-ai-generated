@@ -128,7 +128,7 @@ assert b"builtins" not in onnx_bytes
 
 Ese es el argumento entero, y es de seguridad antes que de rendimiento.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto dice **"serializar es serializar"**, y viene con una cicatriz: en la JVM ya
 aprendiste que `ObjectInputStream` sobre datos ajenos es una vulnerabilidad de libro, y por
@@ -154,7 +154,7 @@ No lo es. Es el único componente del sistema **que se degrada solo, sin que nad
 código**: los datos cambian, el mundo cambia, y la función que ayer acertaba hoy no. Ningún
 otro artefacto de tu stack tiene esa propiedad.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Medir sobre HTTP, no en proceso.** Lo enseñó la Fase 10 y vuelve a valer: el costo que
   parece grande medido adentro se lo come el servidor.
@@ -164,7 +164,7 @@ otro artefacto de tu stack tiene esa propiedad.
   de la Fase 10; que lo que entre sea una predicción no lo hace especial.
 - **Una dependencia menos en la imagen es una imagen más chica y una superficie menor.**
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Lo que sabes | Aquí | Dónde se rompe el paralelo |
 |---|---|---|
@@ -257,7 +257,7 @@ El backend por defecto es ONNX, y eso no es una preferencia: es la decisión de 
 escrita en el código. `pickle` sigue ahí para poder medirlo y para el día en que un modelo no
 se deje convertir.
 
-### 5.4 🧨 El experimento que rompe a propósito
+### 5.4 El experimento que rompe a propósito
 
 ```bash
 python pickle_danger.py
@@ -677,27 +677,3 @@ medidos, y de cada uno se puede decir qué ganó y qué costó.
 >
 > La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La detección de deriva no se puede medir con este conjunto** —`ds07` §6.2 lo demostró— y
-  es lo que falta para que el ciclo de la sección 5.5 esté completo. El ejercicio 17 pide
-  diseñarla simulando la deriva; el ejercicio 23 de `ds08` pide el generador que la produce.
-  **Los dos juntos son una sección propia**, y probablemente la décima del track si alguna vez
-  se amplía.
-- **El backend "a mano" del ejercicio 10** —seis multiplicaciones y una sigmoide, sin
-  dependencias— debería estar en la tabla de la sección 6. Es el espíritu del track y su
-  ausencia le regala a ONNX una comparación cómoda, igual que la ausencia del gradiente
-  potenciado se la regaló a la red en `ds08`.
-- **La medición no incluye concurrencia.** 500 peticiones secuenciales contestan una pregunta
-  y no la otra; el arnés de la Fase 17 existe y podría cerrarla.
-- 🪦 **`shared.py` de esta sección tuvo que llamarse `upstream.py`.** `ds08` ya tenía un
-  módulo con ese nombre, el directorio del script va primero en `sys.path`, y el de aquí
-  tapaba al de allá con un `ImportError` que no menciona el archivo culpable. Es el costo real
-  del atajo de `sys.path` —**el espacio de nombres pasa a ser plano entre las tres carpetas**—
-  y quedó documentado en el módulo.
-- `INSTINTOS.md` gana el reflejo de la sección: *"serializar es serializar"* → **un artefacto
-  de modelo es un ejecutable disfrazado de dato**, y el reflejo que sí tienes de la JVM no se
-  dispara porque el `.pkl` no se siente como código.

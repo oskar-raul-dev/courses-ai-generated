@@ -38,7 +38,7 @@ códigos de estado**, que reemplazan a los de HTTP.
 | `protobuf` | 7.36.2 | Los mensajes |
 | `betterproto` | 1.2.5 💤 | Generador alternativo con *dataclasses*; la versión estable es de 2020 y la 2.0 sigue en beta |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El `.proto` es el mismo archivo para Java y Python; los números de campo, las reglas de compatibilidad (`pr01`), los códigos de estado
 (`DEADLINE_EXCEEDED`, `UNAVAILABLE`, `NOT_FOUND`) y la semántica de los plazos son del protocolo. Un cliente Python habla con un servidor Java

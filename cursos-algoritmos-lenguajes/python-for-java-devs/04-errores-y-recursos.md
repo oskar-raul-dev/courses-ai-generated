@@ -4,6 +4,7 @@
 > Depende de: Fase 03 · Habilita: Fase 05
 > Registro de esta fase: **script** — un archivo, stdlib pura
 > Proyecto que avanza: el CLI · **gana sus errores de dominio y su validación**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -51,7 +52,7 @@ Y trae una herramienta que en tu mundo no existe y que resuelve un problema que 
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** *"si no está declarada, no puede lanzarse"*.
 
@@ -287,6 +288,12 @@ El asterisco cambia la semántica de una forma que conviene tener clara: **`exce
 ejecutar más de una rama**. Si el grupo trae `InvalidRow` y `UnknownPartner`, corren las dos, cada
 una con su subgrupo. Un `except` normal habría corrido una sola.
 
+> ⚠️ **Dentro de un `except*` no se puede `return`, `break` ni `continue`**: es un `SyntaxError`,
+> porque saldría de la función con otros subgrupos todavía sin manejar. Por eso el CLI de §5.3
+> termina con `sys.exit(1)` en esa posición. La Fase 08 lo encontró al pasar `mypy` por el Bloque
+> A: cualquier `except*` dentro de una función que retorna tiene que guardar el resultado y
+> devolverlo después del bloque.
+
 > 📝 **Nota de ecosistema.** `ExceptionGroup` y `except*` llegaron en 3.11 (PEP 654) y nacieron
 > para otra cosa: los `TaskGroup` de `asyncio`, donde varias tareas concurrentes pueden fallar a
 > la vez y no hay forma de elegir cuál excepción "es" el error. Que sirvan tan bien para validar
@@ -294,7 +301,7 @@ una con su subgrupo. Un `except` normal habría corrido una sola.
 > acumuladas a mano, y en bibliotecas de validación vas a ver objetos de error propios que hacen
 > lo mismo; ninguno está roto, y ahora hay una forma del lenguaje.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Diseñar excepciones es la misma habilidad.** Qué merece ser un tipo propio, qué información
 tiene que llevar el error para que alguien pueda actuar, dónde se atrapa y dónde se deja pasar:
@@ -312,7 +319,7 @@ occurred"*. Nunca pierdes la causa por descuido.
 matiz: `StopIteration` es exactamente eso y es el mecanismo del `for`. La regla real es que no las
 uses para flujo **frecuente**, y la sección 6 pone el número.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -549,6 +556,12 @@ def atomic_write(target: Path, encoding: str = "utf-8"):
 - **`os.replace` y no `Path.rename`**: el segundo falla en Windows si el destino existe. Es
   exactamente el tipo de detalle que hace que media fase se caiga en una plataforma, y es el tema
   de la Fase 05.
+- **El archivo que abre un generador** es el caso que la Fase 02 dejó anotado: si el `for` que lo
+  consume se corta antes —un `break`, una excepción—, el `with` de adentro del generador no se
+  cierra hasta que el recolector lo encuentre. Se cierra a tiempo envolviendo el generador en
+  `contextlib.closing(...)` en el sitio que lo consume, o llamando a su `.close()`: eso lanza
+  `GeneratorExit` adentro y ejecuta el `finally` y el `with`. Es el mismo context manager de esta
+  sección, aplicado al que no se ve.
 
 ---
 
@@ -985,26 +998,3 @@ y que devuelve un "éxito" con código distinto de cero.
 > lleva además su tag anotado `mini-04`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El archivo abierto por un generador no consumido**, que la Fase 02 dejó anotado, se cierra
-  aquí a medias: `contextlib.closing` aparece en las referencias y en un ejercicio 🔥, pero no en
-  el cuerpo. Si al revisar el Bloque A parece poco, la sección 5.4 es el sitio natural para
-  dedicarle un párrafo.
-- **`assert` desaparece con `-O`** se dice en el diccionario y se deja ahí. La Fase 08 lo vuelve a
-  necesitar —`pytest` usa `assert` a propósito, y ahí sí es correcto— y conviene que cierre el
-  bucle explícitamente en vez de dar la impresión de contradecir a esta fase.
-- **El ejercicio 23 apunta a un problema real que esta fase no puede resolver**: `os.replace` es
-  atómico pero no garantiza que los datos estén en disco si se corta la luz. La respuesta es
-  `os.fsync`, y su sitio natural es la Fase 16, donde la operación es el tema.
-- **La regla 6 del miniproyecto —el duplicado— es en realidad una regla de negocio de la
-  aseguradora**, y en la Fase 11 va a reaparecer como una restricción de unicidad en la base de
-  datos. Conviene citarla desde allá: es el mismo invariante en dos registros distintos, y es un
-  buen ejemplo de cómo cambia el costo de imponerlo.
-- El generador `generar_lote_febrero.py` siembra **106 problemas de siete clases** —105 de fila
-  más el duplicado—, verificado al escribir la fase, y el número está en su docstring y en los
-  criterios de aceptación. Si alguna fase posterior cambia el generador, ese número hay que
-  recalcularlo en los tres sitios o el enunciado pasa a mentir.

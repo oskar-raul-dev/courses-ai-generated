@@ -37,7 +37,7 @@ La diferencia entre `cookiecutter` y `copier` es la que importa en una empresa c
 de la casa cambia —una versión nueva de `ruff`, un paso más en el CI—, los proyectos hechos con `copier` la reciben con
 un comando, y los hechos con `cookiecutter` no.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, generar código es JavaPoet o un procesador de anotaciones: siempre un modelo del código, nunca cadenas. El
 instinto es el correcto, y lo que confunde es que en Python **parece** innecesario, porque el lenguaje es tan simple de

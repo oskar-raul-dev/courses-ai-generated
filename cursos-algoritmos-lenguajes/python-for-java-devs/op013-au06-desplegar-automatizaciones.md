@@ -55,7 +55,7 @@ El latido es la pieza que cambia todo: el monitor no espera un error, espera una
 avisa cuando falta. Así se atrapan los fallos que no producen ningún error: la máquina apagada, el
 timer deshabilitado, el disco lleno que impidió arrancar.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, desplegar es construir un JAR y ponerlo bajo un servidor de aplicaciones o un planificador
 como Quartz, dentro del proceso. El reflejo es buscar el equivalente: un proceso Python de larga vida

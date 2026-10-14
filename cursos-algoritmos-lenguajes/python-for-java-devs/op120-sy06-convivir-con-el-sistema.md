@@ -39,7 +39,7 @@ para que lleguen al **journal**; avisar con **`sd_notify`** cuando el servicio e
 variable de entorno `NOTIFY_SOCKET`. Los paquetes que lo envuelven (`sdnotify` 0.3.2, sin versiones desde 2017, 💤; `systemd-python` 235,
 desde 2023, 💤) están detenidos; escribirlo es más simple que depender de ellos.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de quien viene de servidores Java es que el programa maneje sus propios archivos de bitácora con rotación (Logback, `RollingFileAppender`)
 y su propio reinicio. Con systemd, las dos cosas sobran y estorban: el programa escribe en la salida estándar y el journal guarda, rota y consulta

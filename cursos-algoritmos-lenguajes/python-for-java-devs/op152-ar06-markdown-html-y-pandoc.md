@@ -41,7 +41,7 @@ flowchart LR
     W --> O3["EPUB, PDF, LaTeX…"]
 ```
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Es el modelo de un compilador: un lector por formato, una representación intermedia común y un escritor por formato. En Java, Flexmark o Apache Tika siguen la
 misma idea en un solo sentido; pandoc la hace en todas las direcciones.

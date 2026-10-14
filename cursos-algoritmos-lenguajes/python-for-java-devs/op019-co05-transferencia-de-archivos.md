@@ -50,7 +50,7 @@ Una transferencia confiable tiene cuatro reglas, válidas para cualquier protoco
 | Renombrar atómico | `posix_rename` si el servidor lo soporta | `RNFR`/`RNTO` | `RNFR`/`RNTO` |
 | En Python | Paramiko | `ftplib.FTP_TLS` | `ftplib.FTP` |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java el reflejo es JSch o Apache Commons Net, y con ellos una clase de utilidad que "baja la
 carpeta". En Python el reflejo equivalente es buscar `pysftp`, que aparece primero en todas las

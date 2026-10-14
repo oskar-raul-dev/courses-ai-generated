@@ -44,7 +44,7 @@ flowchart LR
 | **Soltar el GIL** | El código nativo lo libera mientras trabaja con sus propios datos | — |
 | **Compilación sin GIL** (PEP 703) | Un CPython distinto, `3.14t`, sin el candado (`ff07`) | El modelo normal de la JVM |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto dice que el GIL impide el paralelismo con hilos, y en general es cierto: dos hilos que ejecutan Python puro no corren a la vez. Pero el GIL protege al
 **intérprete**, no al proceso: el código nativo que no toca objetos de Python puede soltarlo, y entonces los hilos sí corren en paralelo. `hashlib`, la compresión,

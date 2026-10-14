@@ -35,7 +35,7 @@ sube la escalera de herramientas hasta escribir esa regla en treinta líneas.
 Colorear necesita saber que `0.0` es un número. Entender necesita saber que `0.0` es el valor que se le asigna a
 `saldo`. Lo primero lo da una ficha; lo segundo, un árbol.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, analizar código es territorio de herramientas pesadas —JavaParser, el compilador con un *annotation
 processor*, Error Prone— y escribir una regla propia es un proyecto. En Python, `ast` viene con el lenguaje, y una regla

@@ -91,7 +91,7 @@ curso ni siquiera aceptan `temperature`—, y la respuesta correcta de ayer pued
 cambió el modelo. Todo el track `ia` está organizado alrededor de esa propiedad: `ia02` la
 contiene con contratos, `ia06` la mide con evaluación, `ia07` la acota con guardrails.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Once años de integrar servicios REST te dejaron un reflejo bueno y automático: **si la llamada
 falla o se pasa del timeout, reintenta.** Idempotencia por `GET`, backoff exponencial, tres
@@ -153,7 +153,7 @@ determinismo en la infraestructura, el modelo cambia de versión bajo tus pies, 
 importa— *determinista* no significa *correcto*. Una función que devuelve siempre la misma
 respuesta equivocada es peor que una que varía, porque no la vas a descubrir con una prueba.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Casi toda tu experiencia de integración se transfiere intacta, y conviene decirlo porque el ruido
 alrededor de la IA sugiere lo contrario:
@@ -170,7 +170,7 @@ alrededor de la IA sugiere lo contrario:
 - **El presupuesto y el circuit breaker** son los patrones de siempre. Un servicio que puede
   gastar sin techo es un incidente esperando fecha.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | Track `ia` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -182,8 +182,7 @@ alrededor de la IA sugiere lo contrario:
 | Coste de infraestructura mensual, fijo | Costo por token, variable | Escala con el uso y **con la longitud de la conversación**, que es la variable que nadie modela al principio |
 | `@Transactional` / reintento idempotente | Reintento de una petición al modelo | No es idempotente ni gratis: el reintento genera texto nuevo y lo cobra |
 
-> 📝 **Nota de ecosistema.** El SDK `anthropic` **1.5.0** que fija
-> [`prompts/alcance-del-proyecto.md`](prompts/alcance-del-proyecto.md) §9 está construido sobre
+> 📝 **Nota de ecosistema.** El SDK `anthropic` **1.5.0** que fija el curso está construido sobre
 > `httpx2`, no sobre `httpx`: si importas la biblioteca HTTP por tu cuenta, es `import httpx2 as
 > httpx`, y un objeto del paquete `httpx` de toda la vida se rechaza en tiempo de petición. Dos
 > cosas más que vas a encontrar en material de internet escrito hace un año y que ya no aplican:
@@ -836,7 +835,7 @@ ese número va a ser la mitad o el doble, y vas a poder ver cuál con un `git sh
   esta sección.
 - `https://docs.claude.com/en/docs/about-claude/models/overview` — identificadores de modelo,
   ventanas de contexto y capacidades. Verifica siempre contra esta página: los identificadores
-  del curso están fijados en `alcance-del-proyecto.md` §9 con su fecha, y esa fecha envejece.
+  del curso están fijados con su fecha, y esa fecha envejece.
 - `https://docs.claude.com/en/docs/about-claude/pricing` — las tarifas. **Es el enlace que hay que
   reabrir antes de repetir la medición de la sección 6.**
 - `https://github.com/anthropics/anthropic-sdk-python` — el SDK. El `MIGRATION.md` del repositorio
@@ -892,21 +891,3 @@ Fase 10— del mismo lado que siempre, y qué hacer cuando el contrato no se cum
 > además su tag anotado `ia-mini-01`, y **en el mensaje de ese tag va el presupuesto mensual que
 > arrojó tu herramienta**, con la fecha de la tarifa. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición de la sección 6 está en `⏳`.** Cuando se corra, su fila entra a `BENCHMARKS.md`
-  con la fecha de la tarifa al lado del costo, y el umbral del veredicto reemplaza la expectativa.
-  Hasta entonces, ninguna sección del track cita un número de aquí.
-- 🪦 **El banco de veinte preguntas ya existe:** `src/ia01-…/generar_preguntas.py`, semilla fija,
-  sin un solo dato clínico. Se regenera; el `.jsonl` no se versiona.
-- **La deuda 💸 del `Protocol` de proveedores se paga en `ia06`.** Anotado allí para que no se
-  pierda; el ejercicio 9 la anticipa a propósito.
-- **`INSTINTOS.md` gana un reflejo nuevo:** *"reintento cualquier fallo de red"* → en un servicio
-  con tarifa por token, el reintento es una compra. Va con el número del ejercicio 16 cuando
-  alguien lo corra.
-- **La caché de prompt se nombra dos veces aquí y no se explica.** Es correcto —es de `ia08`—,
-  pero hay que verificar al escribir `ia08` que la promesa se cumple y que la medición usa
-  `cache_read_input_tokens` como evidencia, no como adorno.

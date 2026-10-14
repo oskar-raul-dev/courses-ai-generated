@@ -32,7 +32,7 @@ comparación sea en la misma máquina.
 | Publicar a PyPI | `poetry publish` | `pdm publish` | `uv publish` |
 | Lo que lo distingue | La más usada en proyectos heredados | Estándares estrictos, *plugins* | Velocidad y alcance |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo es el de Maven o Gradle con su *lock*: un archivo que declara qué quiere el proyecto, otro que fija qué se resolvió, y una herramienta que instala desde
 el segundo. Quien entiende `pom.xml` y el `gradle.lockfile` entiende Poetry en una tarde.

@@ -37,7 +37,7 @@ la trampa clásica: `pyodbc`, el *driver* más usado, necesita **un *driver* ODB
 | La cadena vacía | Oracle | **`''` es `NULL`**: `WHERE campo = ''` no encuentra nada |
 | `NUMBER` | Oracle | Llega como `float` por defecto, también los montos |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con JDBC, el *driver* de SQL Server es `mssql-jdbc`, un `.jar` sin dependencias del sistema, y el instinto espera lo mismo de
 `pip install pyodbc`. Pero `pyodbc` es un puente a ODBC, la API de C de Microsoft de los años noventa, y el *driver* de verdad

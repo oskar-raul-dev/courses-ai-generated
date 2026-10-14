@@ -130,7 +130,7 @@ Yuli tiene media mañana: el 20% de la agenda. Ese número no es un hiperparáme
 de la operación, y elegir el umbral a partir de él es lo que convierte un modelo en algo que
 alguien usa. Maximizar F1 habría dado otro umbral y ninguna conversación con nadie.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto dice **"esto es una función: entra un caso, sale una predicción, y la pruebo con
 una aserción"**. Once años de código determinista dejan esa expectativa intacta, y aquí falla
@@ -163,7 +163,7 @@ positiva del 20%, el umbral de 0,5 que usa `predict` marca el **9,8%** de las ci
 fuera a la mitad de los que van a faltar, y ese número no lo eligió nadie. Por eso el código
 usa `predict_proba` y el umbral sale de la capacidad de Yuli.
 
-### ⚰️ Autopsia: la columna que conoce el futuro
+### Autopsia: la columna que conoce el futuro
 
 El conjunto trae `inasistencias_totales_paciente`: cuántas veces faltó ese paciente **en todo
 el histórico**. Es una columna real, existe en cualquier base de datos y sale de un `GROUP BY`
@@ -193,7 +193,7 @@ excepción, no hay advertencia, y la métrica que reportas es mejor.
 > cuándo se llena cada campo, que es una pregunta de negocio y no de estadística — y por eso
 > la contesta alguien que conoce la operación, no el modelo.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Separar lo que se aprende de lo que se aplica.** El `Pipeline` es inyección de
   dependencias con otro nombre: todo lo que se ajusta con datos de entrenamiento vive dentro
@@ -204,7 +204,7 @@ excepción, no hay advertencia, y la métrica que reportas es mejor.
   modelo entrenado con una y cargado con otra es una fuente de sorpresas conocida.
 - **El costo de una dependencia se paga en cada invocación.** Importar sklearn cuesta 857 ms.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Lo que sabes | Aquí | Dónde se rompe el paralelo |
 |---|---|---|
@@ -312,7 +312,7 @@ equivalente que enseñar.
 > mundo tiene cero o uno. Que la lluvia "pese más" no significa que llover sea más importante
 > que faltar antes: significa que la lluvia varía más.
 
-### 5.4 🧨 El experimento que rompe a propósito
+### 5.4 El experimento que rompe a propósito
 
 ```bash
 # Las cinco honestas
@@ -664,23 +664,3 @@ que alguien la cruce sin darse cuenta.
 > lleva además su tag anotado `ds-mini-07`, con **la precisión a cupo 20 y cuántos nombres
 > coincide con la regla** en el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El ejercicio 16 es el experimento que esta sección no pudo hacer**: introducir deriva en el
-  generador y volver a correr la tabla 6.2. Si alguien lo hace, **el resultado cambia el
-  veredicto 4** y hay que reescribirlo. Es el pendiente más importante de la sección.
-- **El ejercicio 24 —el gradiente potenciado— debería estar en el cuerpo.** Es el competidor
-  real de `ds08`, no la red neuronal, y dejarlo fuera le regala a la red una comparación
-  cómoda. Si alguien lo mide, entra a la tabla 6.1 y `ds08` tiene que reaccionar.
-- **La calibración no está medida** y `ds08` la necesita para la discusión del
-  sobreagendamiento: sin saber si un 0,3 significa 30%, no se puede decidir cuántos pacientes
-  de más caben en el jueves.
-- **El paciente sin historial recibe el mismo puntaje que el paciente perfecto** (ejercicio
-  21). Es una decisión de diseño que la sección no toma y que el miniproyecto obliga a
-  defender. Merece una variable propia —"primera cita"— y medirla.
-- `INSTINTOS.md` gana el reflejo de la sección: *"es una función: entra un caso, sale una
-  predicción"* → **no hay correcto, hay mejor o peor que una línea base**, y la línea base se
-  escribe primero.

@@ -4,6 +4,7 @@
 > Depende de: Fase 11 · Habilita: Fase 13
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: **nace Consultorio**, el back-office
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -53,7 +54,7 @@ auditoría de accesos que en Áurea no es una mejora: es un requisito legal.
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** elegir el framework por rendimiento.
 
@@ -100,7 +101,7 @@ CSRF, paginación, mensajes, internacionalización, y el admin.
 **El error no es elegir mal: es no darse cuenta de que son dos preguntas distintas.** Áurea
 necesita los dos, y por eso el curso construye los dos.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Django es el framework más parecido a lo que ya conoces**, y conviene decirlo porque quita
 ansiedad: proyecto con configuración central, aplicaciones que se registran, un ORM con
@@ -118,7 +119,7 @@ estado anterior. Es Alembic integrado y con menos ceremonia.
 Lo que Áurea necesita —permisos **por fila**— no viene incluido en ningún framework, aquí tampoco,
 y es exactamente el trabajo del miniproyecto.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / Spring | Python / Django | Dónde se rompe el paralelo |
 |---|---|---|
@@ -822,25 +823,3 @@ en un error propio ni, mucho peor, en un cobro duplicado. La idea que la ordena 
 > lleva además su tag anotado `mini-12`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El hash de contraseñas con `sha256`** apareció al escribir la implementación de FastAPI para
-  la medición de §6, y es un error de seguridad real que el curso convierte en argumento (§5.4).
-  **Conviene que quede claro que esa implementación es de comparación y no de referencia**: si
-  alguien la copia, copia el error. Está dicho, y vale la pena verificarlo al revisar la fase.
-- **La versión de FastAPI de §6 no tiene CSRF ni paginación**, y está declarado en la tabla. Si
-  alguna vez se completa para hacerla "justa", el conteo de líneas cambia **a favor de Django**,
-  no en contra: conviene decirlo si alguien propone rehacer la medición.
-- **El N+1 vuelve con el ORM de Django**, que sí tiene carga perezosa automática, justo después de
-  que la Fase 11 celebrara que SQLAlchemy no la tiene. **No es una contradicción y hay que
-  escribirlo así**: son dos decisiones de diseño distintas con costos distintos, y el lector que
-  no lo vea explicado va a creer que el curso cambió de opinión.
-- **La convivencia de dos frameworks sobre una base** (§5.5) se resuelve con una regla y no se
-  mide. Es una decisión de arquitectura con consecuencias reales en las Fases 15 y 16: conviene
-  que alguna de las dos la cite y diga si aguantó.
-- **El ejercicio 25 termina en "esto lo revisa un abogado"**, y es deliberado: la frontera del
-  curso está ahí. Si el track de datos toca alguna vez el habeas data, este ejercicio es su
-  entrada natural.

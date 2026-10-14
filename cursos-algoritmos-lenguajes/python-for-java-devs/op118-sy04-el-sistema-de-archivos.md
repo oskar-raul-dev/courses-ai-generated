@@ -44,7 +44,7 @@ flowchart LR
 |---|---|---|
 | `filelock` | 4.0.12 | Un bloqueo entre procesos con un archivo `.lock`; multiplataforma |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, `Files.write` con `StandardOpenOption.TRUNCATE_EXISTING` tiene el mismo problema, y `Files.move` con `ATOMIC_MOVE` es la solución, pero casi
 nadie la escribe porque el estado vive en una base de datos. El instinto da por hecho que escribir un archivo pequeño "es instantáneo". No lo es: entre

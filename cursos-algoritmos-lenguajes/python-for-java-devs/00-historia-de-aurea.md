@@ -18,6 +18,8 @@
 > quedó como nombre del producto insignia de la casa, **Arquitectura de Sonrisa** (§1.1), que
 > es el protocolo que se franquicia y el objeto de negocio contra el que chocan casi todos los
 > proyectos del curso.
+>
+> **Vigencia:** 13/09/2026, fecha de cierre del camino base.
 
 ---
 
@@ -82,7 +84,7 @@ estéticos al año. Cerca de **3.900 citas al mes** en toda la red.
 Julián y Marcela siguen atendiendo pacientes tres días a la semana. Los otros dos los pasan
 apagando incendios que no aprendieron a apagar en la facultad.
 
-### 1.1 🏛️ Arquitectura de Sonrisa, el producto que construyeron entre los dos
+### 1.1 Arquitectura de Sonrisa, el producto que construyeron entre los dos
 
 Lo que Áurea franquicia no es el letrero: es un **protocolo**. Se llama **Arquitectura de
 Sonrisa**, lo escribieron Julián y Marcela entre 2015 y 2017 corrigiéndose el uno al otro, y es
@@ -289,7 +291,7 @@ Ese origen no es color narrativo. **Define las tres condiciones del curso:**
 Esa tercera condición es la que hace honesto el veredicto final del curso, y es la que un
 escenario corporativo no puede dar.
 
-### 4.1 🪞 Por qué Python, si llevas once años escribiendo Java
+### 4.1 Por qué Python, si llevas once años escribiendo Java
 
 Hay que decirlo de entrada, porque el curso se desacredita si finge lo contrario: **Java habría
 funcionado**. Spring Boot habría resuelto AgendaAPI, Consultorio y Cartera sin despeinarse, y tú
@@ -373,7 +375,7 @@ en vez de a un CRUD de juguete.
 
 ## 6. Los cuatro proyectos empresariales
 
-### 💼 `aur` — la caja de herramientas de Patricia · *el cierre de mes*
+### `aur` — la caja de herramientas de Patricia · *el cierre de mes*
 
 Todos los meses, Patricia arma la facturación de la red. Seis sedes le mandan un export de
 Odontovía; dos, un CSV de otro software con las columnas en otro orden; una, un Google Sheet
@@ -412,7 +414,7 @@ binario del proveedor tecnológico.
 imputar la cuota del mes a las fases ya ejecutadas y no a las que faltan, y dejar el rastro que
 permita reconstruir, dos años después, por qué ese paciente pagó lo que pagó.
 
-### 🌐 AgendaAPI — la agenda de la red · *el hueco de las 3:40*
+### AgendaAPI — la agenda de la red · *el hueco de las 3:40*
 
 La ortodoncia vive de la cita de control mensual. Con 2.800 pacientes activos eso son casi tres
 mil controles al mes que hay que agendar, recordar, reagendar y cobrar. Hoy cada sede tiene su
@@ -452,7 +454,7 @@ conversación honesta sobre por qué tu reflejo de `synchronized` no te sirve cu
 vive en Postgres y no en la memoria de un proceso. Es también el servicio que se implementa
 **dos veces** para el duelo contra Spring Boot.
 
-### 🏛️ Consultorio — el back-office · *lo que el franquiciado no debe ver*
+### Consultorio — el back-office · *lo que el franquiciado no debe ver*
 
 Alrededor de la historia clínica hay una capa administrativa que hoy vive en el aire: los planes
 de tratamiento y sus cuotas, los consentimientos informados firmados, los **pedidos al
@@ -499,7 +501,7 @@ migraciones, los formularios, los permisos y el admin, y el admin es literalment
 Este proyecto existe para que la comparación FastAPI ⇄ Django sea una decisión vivida y no un
 párrafo teórico. Son dos registros distintos, no dos calidades.
 
-### 🌙 Cartera — el proceso nocturno · *las glosas que vencen*
+### Cartera — el proceso nocturno · *las glosas que vencen*
 
 El 40% de la facturación de Áurea va contra prepagadas y pólizas, y ahí es donde se pierde plata
 sin que nadie se dé cuenta. La aseguradora recibe la factura y **glosa**: objeta un ítem por

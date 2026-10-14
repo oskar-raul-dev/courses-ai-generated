@@ -36,7 +36,7 @@ La regla que ordena la tabla: **`rich` detecta si la salida es una terminal y se
 interacción no pueden, porque sin una persona no hay a quién preguntar. La herramienta seria pregunta solo si
 `sys.stdin.isatty()`, y si no, exige el argumento.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, los colores en la terminal son códigos ANSI escritos a mano o una biblioteca como Jansi, y casi nadie los usa en
 herramientas de servidor porque terminan como basura en los archivos de bitácora. El instinto evita los colores. Con `rich`

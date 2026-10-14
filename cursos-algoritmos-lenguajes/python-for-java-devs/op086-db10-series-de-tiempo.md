@@ -36,7 +36,7 @@ Lo que las dos convierten en primitivas —y en Postgres a secas habría que pro
 La fila de abajo es la que suele decidir: si las mediciones se cruzan con datos de negocio, TimescaleDB los tiene en la misma
 base.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este perfil probablemente ya tiene métricas en Prometheus (`ob03`) y el instinto es mandar todo ahí. Prometheus es para métricas
 operativas de corto plazo, con su propio lenguaje y retención; los minutos de espera por sede son **datos de negocio** que

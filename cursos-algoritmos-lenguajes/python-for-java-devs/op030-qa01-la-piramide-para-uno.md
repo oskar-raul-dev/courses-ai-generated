@@ -47,7 +47,7 @@ flowchart LR
     C --> E["Antes de cada entrega<br/>&lt; 10 min<br/>+ integración + humo"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En un equipo Java el reflejo es apuntar a un porcentaje de cobertura —80% es el número de moda— y
 escribir pruebas hasta llegar. Para uno solo, perseguir la cobertura reparte el esfuerzo por igual

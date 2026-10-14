@@ -56,7 +56,7 @@ pasas el mensaje y él se encarga de entregarlo. Dos modos de seguridad, según 
 | 465 | Cifrada desde el primer byte (TLS implícito) | `smtplib.SMTP_SSL` |
 | 25 | Entre servidores; casi siempre bloqueado para clientes | No se usa desde una aplicación |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, JavaMail (hoy Jakarta Mail) es una API pesada —`Session`, `Properties`, `MimeMultipart`,
 `MimeBodyPart`— y el reflejo es buscar en Python una biblioteca que la esconda. `yagmail` (0.16.0) es

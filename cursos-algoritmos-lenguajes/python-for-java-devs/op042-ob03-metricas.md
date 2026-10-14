@@ -53,7 +53,7 @@ flowchart LR
     A -- sí --> X["Alerta: el cierre no corrió"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Micrometer, el reflejo es instrumentar el *job* de Spring Batch y dejar que el *endpoint* de Actuator
 exponga las métricas, como en cualquier servicio. Funciona porque el proceso de Spring suele quedar vivo. Un

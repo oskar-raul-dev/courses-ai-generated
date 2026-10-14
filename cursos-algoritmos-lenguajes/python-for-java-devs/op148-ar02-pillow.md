@@ -30,7 +30,7 @@ escapa el GPS.
 | `img.thumbnail((800, 800))` | Reduce en el lugar, conservando la proporción | — |
 | `img.save(..., exif=...)` | Guarda; **sin** `exif=`, no copia los metadatos | Con `exif=` del original, el GPS viaja |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Es `ImageIO.read` y `Graphics2D.drawImage` con un `AffineTransform`, o Thumbnailator en Java: abrir, transformar, escribir. La orientación EXIF tampoco la aplica
 `ImageIO` sola; quien vino de Java ya pasó por la foto acostada.

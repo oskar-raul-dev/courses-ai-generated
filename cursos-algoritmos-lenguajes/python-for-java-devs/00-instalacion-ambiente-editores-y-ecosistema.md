@@ -4,6 +4,7 @@
 > Depende de: ninguna · Habilita: Fase 01
 > Registro de esta fase: — (todavía no escribimos software; montamos el taller)
 > Proyecto que avanza: ninguno
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -86,7 +87,7 @@ De ahí sale la regla que vale para todo lo que sigue:
 binario es**, que es la que importa cuando `pip install` puso el paquete en un sitio y tu script
 lo busca en otro.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** *"El IDE me resuelve el entorno."*
 
@@ -128,7 +129,7 @@ ningún archivo**: instala en el entorno activo y se acabó. Si no lo anotas tú
 esa dependencia solo existe en tu máquina. Toda la miseria del empaquetado de Python de la
 última década sale de esa frase, y la Fase 07 es donde la resolvemos de verdad.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Vale la pena decirlo porque el párrafo anterior deja mal sabor: **casi todo tu oficio se
 transfiere intacto**, y lo que estás aprendiendo hoy es un dialecto, no una profesión nueva.
@@ -152,7 +153,7 @@ Y el hábito de fijar versiones, de no depender del estado de tu máquina y de q
 otro produzca el mismo resultado es exactamente el mismo hábito. Lo que cambia es que Python te
 da menos ayuda para cumplirlo, y por eso el curso lo insiste más.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -1222,24 +1223,3 @@ cuarenta líneas —y nace deliberadamente mal, con una deuda 💸 declarada que
 > lleva además su tag anotado `mini-00`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- 🪦 **`PyCharm Community` ya no existe como producto**, y las fuentes de verdad ya no lo
-  nombran: `alcance-del-proyecto.md` §9 y `propuesta-fases-y-alcance.md` §2 quedaron actualizados
-  a *PyCharm 2026.2.2, capa gratuita*, con la nota 🪦 que explica la unificación de 2025.3. Esta
-  fase es la única que describe qué queda del lado Pro.
-- **La medición es de una sola plataforma.** Faltan los números de Windows 11 y de Linux amd64,
-  que el alcance pide cubrir sin nota al pie. El ejercicio 22 traslada el trabajo al lector, que
-  es honesto pero no es lo mismo. Destino sugerido: producirlos antes de consolidar
-  `BENCHMARKS.md` en la Fase 17, porque en Windows la diferencia puede invertir el veredicto.
-- **`aur_cli.py` aparece nombrado aquí** en `launch.json`, antes de que la Fase 01 lo cree. Es
-  deliberado, y la Fase 01 tiene que usar exactamente ese nombre.
-- **El escenario del `sys.path` con `''` al principio** (ejercicio 7) toca el modelo de
-  importación, que ninguna fase cubre de frente. Destino sugerido: una sección de la Fase 07,
-  cuando el layout `src/` haga que la pregunta *"¿desde dónde se está importando esto?"* pase a
-  importar de verdad.
-- Verificar, al cerrar el curso, si `ruff` sigue en 0.16.x. Es la única herramienta de esta fase
-  que se mueve rápido, y la versión está fijada en `alcance-del-proyecto.md` §9.

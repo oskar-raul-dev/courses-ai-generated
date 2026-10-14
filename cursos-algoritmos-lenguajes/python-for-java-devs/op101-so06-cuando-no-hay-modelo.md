@@ -33,7 +33,7 @@ cuándo "bueno y rápido" le gana a "óptimo y tarde".
 | Optuna (TPE) | No; aprende de las evaluaciones anteriores | Decenas | **Evaluaciones caras**: hiperparámetros, simulaciones lentas |
 | `deap` (algoritmos genéticos) | No | Miles | Espacios raros: permutaciones, estructuras |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto prueba todas las combinaciones con dos `for` anidados. Con dos parámetros y una evaluación de milisegundos, está bien, y el
 ejemplo lo usa como vara. Con cinco parámetros, o con una simulación que tarda un minuto, la rejilla deja de ser posible, y la pregunta

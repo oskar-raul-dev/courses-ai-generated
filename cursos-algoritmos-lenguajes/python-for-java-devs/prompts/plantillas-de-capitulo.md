@@ -75,16 +75,16 @@ problema antes que la herramienta.}}
 
 {{Aquí viven las secciones narrativas que la fase pida:}}
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 {{El reflejo concreto, el código que produce, por qué falla aquí, y qué se escribe en su
 lugar. Con el contraejemplo al lado, porque la lección está en la comparación.}}
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 {{Lo que se transfiere sin cambios. Importa tanto como lo anterior.}}
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -221,11 +221,10 @@ esta fase para existir.}}
 
 ---
 
-## 📌 Pendientes sugeridos
-
-{{Material de autoría, no de lectura. Lo que apareció al escribir la fase y no cabía adentro,
-con destino explícito: otra fase, un ejercicio 🔥, una medición que falta o una decisión de
-proyecto. **Nunca "un apéndice": no existen.**}}
+{{📌 Los pendientes —lo que apareció al escribir la fase y no cabía adentro, con destino explícito:
+otra fase, un ejercicio 🔥, una medición que falta o una decisión de proyecto— **no van en el
+documento publicado** desde el 07/10/2026: van a `prompts/pendientes-a-futuro.md`, en la sección
+del documento que los generó. **Nunca "un apéndice": no existen.**}}
 ````
 
 ---
@@ -252,7 +251,7 @@ proyecto. **Nunca "un apéndice": no existen.**}}
 # 🍽️ Plantilla de sección de la carta
 
 Agregada el 05/10/2026 (guía §14). Es **guía y no molde**: las ocho secciones van en este orden,
-pero una sección puede fundir dos si el tema lo pide, y 🪞, 🩻 y 📖 aparecen solo cuando hay un
+pero una sección puede fundir dos si el tema lo pide, y las secciones «Tu instinto de Java dice…», «Esto sí funciona igual» y el diccionario (sin emoji en el `###` desde el 07/10/2026) aparecen solo cuando hay un
 reflejo de Java que recalibrar. Unas 400 líneas.
 
 ````markdown

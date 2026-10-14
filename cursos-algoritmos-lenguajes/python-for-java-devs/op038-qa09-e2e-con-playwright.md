@@ -42,7 +42,7 @@ La diferencia con `au03` es de propósito. Allá, si el portal cambia, el robot 
 cambia y la prueba falla, **la prueba tiene razón** hasta que alguien decida lo contrario: es la
 especificación de lo que el paciente puede hacer.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo de Selenium en Java es escribir una prueba e2e por cada historia de usuario, con su `PageObject`
 y sus esperas, hasta tener cientos. Esas suites tardan una hora y fallan por razones de tiempo un 5% de las

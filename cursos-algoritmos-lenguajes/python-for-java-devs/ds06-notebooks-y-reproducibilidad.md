@@ -95,7 +95,7 @@ cinco traen su defecto:
 El quinto es el peor y por eso la medición tiene dos columnas: **correr y ser reproducible no
 son lo mismo**, y la mayoría de las auditorías solo miden lo primero.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca a medias
+### Tu instinto de Java dice… y esta vez se equivoca a medias
 
 Tu instinto dice **"un cuaderno no es código de verdad"**, y hay que decirlo entero: en lo
 que se refiere a *entregar* algo, **tienes razón**. Un `.ipynb` no se revisa en un pull
@@ -120,7 +120,7 @@ python analisis.py   # 4 s de carga · 0,2 s de cuenta · repetido cuarenta vece
 es para entregar.** Lo que se descubre en el cuaderno se muda a un `.py` con su prueba
 **antes** de que alguien dependa de ello. El error no es usar cuadernos: es entregarlos.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Un artefacto que no reconstruyes desde cero no es tuyo.** Es la misma disciplina del
   build reproducible que aplicas desde siempre.
@@ -131,7 +131,7 @@ es para entregar.** Lo que se descubre en el cuaderno se muda a un `.py` con su 
 - **Los datos no van en el repositorio.** Todos los generadores del track escriben a `data/`
   y nada de eso se versiona.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Lo que sabes | Aquí | Dónde se rompe el paralelo |
 |---|---|---|
@@ -575,26 +575,3 @@ neuronal no le gana a eso, la red neuronal no entra.
 > lleva además su tag anotado `ds-mini-06`, con **cuántos hallazgos encontró sobre los ocho
 > cuadernos** en el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El "1 de 6" es una demostración, no una estadística.** El ejercicio 22 pide el número
-  sobre un repositorio real; si alguien lo trae, entra a `BENCHMARKS.md` **con sus
-  condiciones** y esta sección lo cita en vez de su propio número.
-- 🪦 **La detección de estado oculto sin ejecutar ya la hace `ruff`**, con `F821`, y se
-  descubrió al linterar la carpeta generada. Está en la sección 5.4 como 💡 y cambió el
-  ejercicio 7, que ahora pide comparar la versión propia con la de la herramienta en vez de
-  escribirla a ciegas. Lo que sigue abierto es cuánto de los otros cuatro defectos se puede
-  detectar estáticamente.
-- **marimo resuelve uno de los cinco defectos** y el texto lo dice. Falta medir el otro lado
-  de esa moneda: cuánto ecosistema se pierde. El ejercicio 20 lo pide y nadie lo ha hecho.
-- 🪦 **El `temporary_kernel` que esta sección tuvo en su primera versión no existe más.**
-  Instalaba una especificación de kernel en un directorio temporal para "no ensuciar la
-  máquina", y resultó que `nbclient` **ignora** el argumento con que se le pasaba —lo avisa
-  con un `DeprecationWarning` de `traitlets` que es fácil no leer— y que el kernel venía
-  desde el principio de `ipykernel`. Treinta líneas de maquinaria inútil con una explicación
-  convincente y falsa: se reemplazó por `require_kernel`, que son ocho y dicen la verdad.
-- `INSTINTOS.md` gana el reflejo de la sección: *"los cuadernos son un desastre"* → **medio
-  correcto**, y la mitad buena es el bucle de exploración que estás dejando sobre la mesa.

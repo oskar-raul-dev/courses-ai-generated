@@ -44,7 +44,7 @@ compatible; el código de Python es el mismo para cualquiera.
 | `s3fs` / `fsspec` | 2026.9.0 | `s3://` como sistema de archivos; lo usan pandas, Polars y DuckDB |
 | `minio` | 7.2.20 | El cliente de MinIO; habla con cualquier S3 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con el SDK de Java, `listObjectsV2` también devuelve mil, y el instinto lo sabe; lo que confunde en Python es que `boto3` no lo
 oculta ni avisa: el diccionario de respuesta trae `IsTruncated: True` y `NextContinuationToken`, y si nadie los mira, el bucle

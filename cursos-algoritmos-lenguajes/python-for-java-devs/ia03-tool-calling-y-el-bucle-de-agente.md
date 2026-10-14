@@ -163,7 +163,7 @@ lista vacía como "no hay cupo" y le dice al paciente que no hay citas en todo e
 > `description` como escribirías el mensaje de error de un `IllegalArgumentException` — para quien
 > se va a equivocar, no para quien ya sabe.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo es exponer las operaciones que el usuario quiere hacer. Yuli quiere reservar, así que
 la herramienta se llama `create_appointment` y escribe en la base de datos. Es lo correcto en una
@@ -216,7 +216,13 @@ el reflejo es generar un identificador nuevo por llamada, que es justo lo que **
 nada. Y el vencimiento de quince minutos resuelve el caso que nadie modela: el agente aparta un
 espacio, el paciente deja de contestar, y el espacio no puede quedar bloqueado hasta el jueves.
 
-### 🩻 Esto sí funciona igual
+> 📝 **`hold_slot` y la tabla de propuestas con vencimiento son nuevos de esta sección**: el cliente
+> de AgendaAPI de la Fase 13 no los tenía. En la base de datos son una tabla de propuestas con
+> `expires_at` y una restricción única por sede e inicio —la que lanza `SlotTaken` cuando dos
+> pedidos llegan a la vez—, y se agrega con una migración de Alembic como las de la Fase 11. El
+> cliente en memoria de `src/ia03-…/agenda_client.py` la imita para las pruebas; `ia07` la usa tal cual.
+
+### Esto sí funciona igual
 
 - **Diseñar la superficie de una API.** Pocas operaciones, ortogonales, con nombres honestos. Un
   agente con veinte herramientas se comporta como un equipo con veinte microservicios: mal.
@@ -229,7 +235,7 @@ espacio, el paciente deja de contestar, y el espacio no puede quedar bloqueado h
 - **Las pruebas de las herramientas** son pruebas normales: entran argumentos, sale un resultado.
   El 90% de lo que hay que probar en un agente **no necesita el modelo**.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | Track `ia` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -962,23 +968,3 @@ la búsqueda de texto completo que Postgres ya tenía instalada desde la Fase 11
 > (`ia 03 ej12: …`) y el miniproyecto el suyo (`ia 03 mini: …`). El miniproyecto terminado lleva
 > además su tag anotado `ia-mini-03`, con **los turnos medianos y el costo** en el mensaje. La
 > convención completa está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición de la sección 6 está en `⏳`**, y su fila 4 —formulario más SQL— puede cambiar el
-  alcance de `ia07`. Hay que correrla **antes** de escribir Recepción asistida, no después.
-- 🪦 **`solicitudes_whatsapp.jsonl` ya se genera:** `src/ia03-…/generar_solicitudes.py`, treinta
-  solicitudes con faltas y sin fecha explícita, **cada una etiquetada con la clase de dificultad
-  que aporta** —fecha relativa, sede sin agenda, dos peticiones, urgencia…— para poder leer la
-  medición por clase en vez de en agregado. Lo reusa `ia07`.
-- **`agenda_client.py` se da por existente** porque viene de la Fase 13, pero `hold_slot` y la
-  tabla de propuestas con vencimiento **son nuevos**: no estaban en el camino base. Hay que
-  verificar al escribir `ia07` que la migración quedó documentada donde corresponde, o el lector
-  se encuentra un método que nadie creó.
-- **El ejercicio 25 —caché de prompt sobre la lista de herramientas— es material de `ia08`** y
-  aquí solo se anticipa. Verificar que `ia08` lo recoge con su número.
-- **`INSTINTOS.md` gana dos reflejos:** *"expongo la operación que el usuario quiere"* → la
-  herramienta que muta necesita clave de idempotencia derivada y una persona en el medio; y *"la
-  firma es el contrato"* → aquí el contrato es la prosa, y cada frase que falta cuesta un turno.

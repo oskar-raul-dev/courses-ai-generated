@@ -31,7 +31,7 @@ pydub no publica una versión desde 2021, y en Python 3.14 **ya no importa** sin
 | **pydub** | Edición simple: cortar, unir, normalizar | `audioop` y FFmpeg | **Dormida desde 2021** |
 | **FFmpeg** (binario) | Codificar MP3, Opus, AAC | C | La ruta que no se rompe (`ar08`) |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El audio es un arreglo de muestras con una frecuencia de muestreo, como en `javax.sound.sampled` con su `AudioFormat`. Lo que cambia es que en Python ese arreglo es de
 NumPy, y todo el ecosistema científico lo procesa sin copiarlo.

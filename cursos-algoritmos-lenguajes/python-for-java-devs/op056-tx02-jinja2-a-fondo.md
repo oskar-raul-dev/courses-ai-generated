@@ -40,7 +40,7 @@ flowchart TB
 | Variable inexistente | `StrictUndefined`: error | Error por defecto | Atrapar errores de nombre |
 | Cargador | `FileSystemLoader`, `PackageLoader`, `DictLoader` | *Template resolver* | De dónde salen las plantillas |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Thymeleaf falla si la plantilla usa una variable que no existe. **Jinja2 no**: por defecto, una variable
 inexistente es una cadena vacía, sin aviso. `{{ sede.nombr }}` con un error de tipeo produce un reporte con un

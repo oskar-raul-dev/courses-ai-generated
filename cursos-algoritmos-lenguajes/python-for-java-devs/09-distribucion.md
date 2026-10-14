@@ -4,6 +4,7 @@
 > Depende de: Fase 08 · Habilita: Fase 10
 > Registro de esta fase: **herramienta**
 > Proyecto que avanza: **el CLI se entrega** — cierra el arco del proyecto 1
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -68,7 +69,7 @@ un Python de origen desconocido instalado hace dos años, una persona que nunca 
 terminal, y un viernes a las siete de la tarde con el cierre sin terminar. Cualquier respuesta que
 funcione solo cuando todo sale bien, no sirve.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo, en dos tiempos.** El primero es *"que clone el repositorio y cree un entorno"*, y es
 exactamente lo que responderías si te preguntaran ahora mismo. Es la respuesta que hace que
@@ -93,7 +94,7 @@ sabiendo qué asume cada una. Y la pregunta que ordena la elección no es técni
 > opciones baratas. Si no puedes asumir nada, pagas el precio de llevarlo contigo — en tamaño, en
 > arranque, y en discusiones con el antivirus.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Tu criterio sobre versionado y compatibilidad se transfiere entero.** La disciplina de que la
 versión signifique algo, de que un cambio incompatible se anuncie, y de que el usuario pueda
@@ -108,7 +109,7 @@ aquí lo resuelves tú, y la buena noticia es que el criterio ya lo tienes.
 te hizo desconfiar de "en mi máquina funciona". El layout `src/` de la Fase 07 existía por esto,
 y hoy se cobra.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -683,7 +684,7 @@ esté mal, es que mueve el costo de sitio.**
 que se entiende mucho mejor cuando ya mediste los tres segundos tú mismo.
 
 > ⚠️ URLs y contenidos cambian. PyInstaller y `uv` publican seguido; verifica contra las versiones
-> fijadas en `alcance-del-proyecto.md` §9.
+> fijadas en esta fase.
 
 ---
 
@@ -733,24 +734,3 @@ la que tu instinto de Java te va a sugerir.
 > lleva además su tag anotado `mini-09`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **Ninguna medición en Windows**, que es justamente la plataforma de Patricia y donde dos
-  columnas de la tabla cambian: el antivirus con el congelado, y la asociación del doble clic del
-  `.pyz`. Es el hueco más grande de esta fase. Destino: producirlas antes de consolidar
-  `BENCHMARKS.md`, y si el resultado cambia el veredicto, reescribir §6.
-- **`aur` no tiene dependencias de terceros**, lo que favorece al `.pyz` de una forma que deja de
-  ser cierta en cuanto el proyecto tenga una sola dependencia compilada. La tabla debería
-  repetirse con el paquete de la Fase 10 — el ejercicio 19 lo pide al lector, pero el curso
-  debería traer su propio número.
-- **El escenario 3 —saber qué versión corre en cada máquina— se plantea y no se resuelve** para
-  tres de las cuatro opciones. El ejercicio 24 lo traslada al lector. Si al escribir la Fase 16 la
-  observabilidad ofrece una respuesta natural, conviene cerrar el bucle explícitamente allí.
-- **El `if __name__ == "__main__":` de `cli.py`**, que la Fase 07 dejó pendiente de decisión:
-  esta fase lo necesita para el `.pyz` y para el congelado, así que **se queda**. Anotarlo en el
-  contrato del CLI para que ninguna fase posterior lo borre por limpieza.
-- **La firma de código** queda fuera con su razón, y es la mitad del problema del congelado en
-  Windows. Destino sugerido: track `pk`, junto con la publicación en índices.

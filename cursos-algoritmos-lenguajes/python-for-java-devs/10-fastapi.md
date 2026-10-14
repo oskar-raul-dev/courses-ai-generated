@@ -4,6 +4,7 @@
 > Depende de: Fase 09 · Habilita: Fase 11
 > Registro de esta fase: **aplicación** — y es el primer cambio de registro desde la Fase 07
 > Proyecto que avanza: **nace AgendaAPI**, la agenda de la red
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -52,7 +53,7 @@ que arreglar.
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** el DTO con su *mapper* escrito a mano, y la validación repartida por los
 servicios.
@@ -198,7 +199,13 @@ La distinción práctica, para llevar:
 > 🧭 **Si la regla necesita mirar algo que no está en la petición, no es validación de entrada.**
 > Va en el dominio, donde la ven todas las puertas.
 
-### 🩻 Esto sí funciona igual
+Y la heurística del separador de miles de la Fase 06 —`890.000` es ochocientos noventa mil— **no
+cruza esta frontera**. Aquí el monto llega como número JSON o no llega: un texto ambiguo se
+rechaza con un 422 en vez de adivinarse. La heurística sigue siendo necesaria para los CSV que
+mandan las sedes, que no pasan por esta puerta, y la decisión de qué hacer con el valor ambiguo
+sigue siendo de negocio.
+
+### Esto sí funciona igual
 
 **HTTP es HTTP.** Los verbos, los códigos, la idempotencia de `GET` y `PUT`, los encabezados, la
 negociación de contenido. Nada de eso cambia y todo lo que sabes vale.
@@ -216,7 +223,7 @@ la sesión de base de datos, que es exactamente el caso donde brilla.
 ceremonia sin contenido, no la separación. En el Bloque C hay frontera, dominio y almacén, y eso
 es correcto.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / Spring | Python / FastAPI | Dónde se rompe el paralelo |
 |---|---|---|
@@ -915,7 +922,7 @@ validadores. Después: la parte del tutorial sobre dependencias, que se entiende
 Fase 11 encima.
 
 > ⚠️ URLs y contenidos cambian, y en FastAPI y Pydantic más que en la biblioteca estándar. Fija
-> las versiones de `alcance-del-proyecto.md` §9, y desconfía de cualquier ejemplo de Pydantic que
+> las versiones que da esta fase, y desconfía de cualquier ejemplo de Pydantic que
 > use `.dict()` o `@validator`: es de la v1.
 
 ---
@@ -961,23 +968,3 @@ que la Fase 14 resuelve: dos auxiliares reservando el mismo espacio de las 3:40.
 > lleva además su tag anotado `mini-10`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **`StrEnum` entra aquí y cierra el 📌 que dejó la Fase 05**, donde `Enum` aparecía en una pista
-  sin que ninguna fase lo introdujera. Si se decide moverlo a la Fase 03, esta sección tiene que
-  dejar de presentarlo.
-- **La medición en proceso contra la medición sobre HTTP** dio resultados distintos (33% contra
-  0%), y la fase lo declara como nota de método. **Es material de `INSTINTOS.md`**: la lección
-  —lo que mides cambia la respuesta— es transferible y vale más que el número.
-- **`HTTP_422_UNPROCESSABLE_ENTITY` está obsoleto** en Starlette 0.5x y emite advertencia. Está
-  dicho en §5.3; conviene verificarlo otra vez antes de publicar, porque es el tipo de detalle que
-  cambia entre versiones menores.
-- **El almacén en memoria de esta fase es deliberadamente insuficiente** y la Fase 11 lo reemplaza.
-  Si al escribir la 11 el reemplazo obliga a cambiar los endpoints, la separación dominio/frontera
-  de §5.1 no estaba bien hecha y hay que corregir **esta** fase, no la siguiente.
-- **La regla 9 del miniproyecto —sin dos citas el mismo día en dos sedes— se plantea y no se
-  resuelve bien** sin base de datos. El ejercicio 25 lo traslada al lector; la Fase 11 tiene que
-  retomarlo explícitamente y decir si la solución propuesta aguanta.

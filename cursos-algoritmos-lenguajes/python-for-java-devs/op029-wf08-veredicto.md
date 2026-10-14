@@ -111,7 +111,7 @@ Salida esperada, sin correr (la forma; el número es el de tu máquina):
 celery: procesos ⏳ MB · contenedores ⏳ MB
 ```
 
-### 📏 La medición
+### La medición
 
 **Hipótesis.** Para la noche de Áurea —seis trabajos, una dependencia de profundidad tres, una vez al
 día—, `cron` con tabla de avance es el escalón con menos costo total, y cada escalón superior agrega más

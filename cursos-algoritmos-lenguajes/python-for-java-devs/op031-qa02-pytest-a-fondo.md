@@ -42,7 +42,7 @@ Los ganchos son el punto donde `pytest` deja de ser una biblioteca y pasa a ser 
 propio `pytest` está escrito como un conjunto de *plugins* que implementan esos ganchos, y los tuyos se
 cargan igual.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En JUnit, compartir estado caro entre pruebas es un `@BeforeAll` estático, y el reflejo es buscar el
 equivalente y poner ahí todo lo que se repite. En `pytest`, el alcance es una propiedad **de la

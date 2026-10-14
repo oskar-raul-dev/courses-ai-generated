@@ -52,7 +52,7 @@ flowchart LR
     P --> X["Cada paciente<br/>recibe dos"]
 ```
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Spring, `@Scheduled` es la forma natural de cualquier trabajo periódico, y con varias instancias
 se agrega ShedLock para que solo una lo ejecute. El reflejo en Python es buscar el `@Scheduled` de

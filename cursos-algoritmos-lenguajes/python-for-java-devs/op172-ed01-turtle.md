@@ -43,7 +43,7 @@ flowchart LR
 - **Corre sobre Tk.** `turtle` usa `tkinter`, que viene con Python en macOS y en la mayoría de las distribuciones (en Debian y Ubuntu, el paquete `python3-tk`). Sin
   pantalla, no arranca: para probarlo en un servidor hace falta una pantalla virtual (Xvfb).
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 *"Esto es un juguete; para enseñar de verdad, un IDE y un `main`."* El `main` con su clase, su firma y su compilación es una ceremonia de cinco conceptos antes del
 primer resultado. Con `turtle`, la primera línea ya dibuja. Para alguien que empieza, la distancia entre escribir y ver es lo que decide si sigue.

@@ -36,7 +36,7 @@ La línea entre ellos es cuánta lógica dejan meter. Mustache no deja casi nada
 eso la misma plantilla sirve en JavaScript, Java y Python. Mako deja todo, y por eso una plantilla de Mako puede
 ser un programa entero.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Mustache es Mustache en todos los lenguajes: la plantilla que usa el frontend de JavaScript o un servicio Java con
 `mustache.java` la renderiza `chevron` sin cambios. Si este perfil ya tiene plantillas Mustache, se traen tal cual.

@@ -39,7 +39,7 @@ es parte del dato y no de la aplicación, y hay un comando, **`KEYS`**, que en p
 Valkey ejecuta los comandos **de a uno**, en un solo hilo de ejecución de comandos. Es lo que lo hace rápido y predecible, y es
 lo que convierte a un comando lento en un bloqueo de todos los demás clientes.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Jedis o Lettuce y Spring Data Redis, la serialización la configura el `RedisTemplate`, y el instinto espera recibir el
 `String` o el objeto que guardó. `redis-py` devuelve los **`bytes`** que hay en el servidor, y ni siquiera con

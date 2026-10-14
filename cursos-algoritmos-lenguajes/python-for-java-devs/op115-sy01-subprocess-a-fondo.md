@@ -28,7 +28,7 @@ Python. La sección provoca las tres, con números, y muestra la corrección de 
 | **El nieto huérfano** | `timeout` mata al hijo; **todos** los procesos que el hijo lanzó siguen vivos | Un grupo de procesos propio (`start_new_session=True`) y matar el grupo |
 | **La inyección de shell** | Con `shell=True`, un dato con `;` o `$(...)` se ejecuta como comando | Lista de argumentos, sin shell |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 La tubería llena es exactamente el mismo problema que en Java con `Process.getInputStream()` sin consumir: el mismo búfer del sistema operativo, el
 mismo interbloqueo. Quien lo sufrió con `ProcessBuilder` ya sabe la regla —leer mientras se espera— y en Python la aplica `communicate()`.

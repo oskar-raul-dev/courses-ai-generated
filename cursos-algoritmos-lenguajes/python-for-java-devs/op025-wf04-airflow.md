@@ -53,7 +53,7 @@ Tres conceptos de Airflow cambian cómo se escribe el código de las tareas:
   correr las treinta noches pendientes. Es potentísimo para reconstruir historia y es un desastre si
   nadie lo esperaba.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Viniendo de Spring Batch, el reflejo es meter la lógica dentro de las tareas de Airflow, como si cada
 `@task` fuera un `Step` con su `ItemProcessor`. En Airflow la tarea tiene que ser **delgada**: llama a

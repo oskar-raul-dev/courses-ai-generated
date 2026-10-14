@@ -4,6 +4,7 @@
 > Depende de: Fase 12 · Habilita: Fase 14
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: AgendaAPI · **sale a hablar con el mundo**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -52,7 +53,7 @@ operación que no es idempotente es exactamente cómo se le cobra dos veces a un
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** *"si falló, reintento"*.
 
@@ -133,7 +134,7 @@ Y el número que lo justifica, de §6: **60 notificaciones enviadas con reintent
 idempotencia produjeron 89 operaciones del otro lado. Veintinueve duplicados.** Con clave, 60 y
 60.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Todo tu criterio sobre integraciones se transfiere entero**, y es mucho: timeouts, reintentos,
 *backoff* exponencial con *jitter*, cortacircuitos, colas de mensajes muertos, degradación
@@ -151,7 +152,7 @@ no hay un Resilience4j de referencia en este ecosistema. Hay bibliotecas buenas 
 `stamina`), pero la configuración declarativa con anotaciones que tienes en Spring no tiene
 equivalente directo. Se escribe más a mano.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -981,20 +982,3 @@ también el caso que la Fase 11 dejó plantado: las dos auxiliares reservando la
 > lleva además su tag anotado `mini-13`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El socio mentiroso no tiene solución en esta fase**, y está declarado. La reconciliación que
-  §5.4 propone **es** el proyecto 4 de la Fase 15: conviene que esa fase la cite explícitamente y
-  cierre el bucle, o el lector se queda con un problema abierto y sin destino.
-- **El patrón *outbox* se nombra en un ejercicio 🔥** y es de la Fase 15. Si esa fase no explica
-  por qué el reintento no sustituye a la transacción, este ejercicio queda sin respuesta.
-- **El envío es en serie a propósito**, y el ejercicio 12 pide la versión concurrente como adelanto
-  de la Fase 14. Si la 14 no retoma ese número, el ejercicio queda huérfano.
-- **El servidor de pruebas usa `http.server`**, que la propia documentación desaconseja para
-  producción. Está bien para el curso y conviene que la Fase 16 lo mencione al hablar de
-  seguridad: es el tipo de cosa que alguien deja puesta sin darse cuenta.
-- **La automatización de portales sin API** —el track `au`— es trabajo real y frecuente de Áurea, y
-  esta fase solo lo nombra. Si ese track se escribe alguna vez, esta es su entrada natural.

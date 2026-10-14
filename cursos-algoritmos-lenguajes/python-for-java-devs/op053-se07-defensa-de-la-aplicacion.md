@@ -37,14 +37,14 @@ línea de YAML basta.
 | Dependencias | Versiones sin fijar y sin auditar | Archivo de bloqueo + `pip-audit` en CI | `pip-audit` |
 | El propio código | `subprocess(shell=True)`, `eval`, SQL armado con f-strings | Listas de argumentos, consultas con parámetros | `bandit`, `ruff` (reglas `S`) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, la deserialización insegura necesita una cadena de *gadgets* en el classpath —por eso hubo años de
 parches a Commons Collections—. En Python no hace falta ninguna cadena: el formato de `pickle` incluye la
 instrucción "llama a esta función con estos argumentos", y `yaml.Loader` también. **No hay versión segura de
 `pickle` con datos externos**, igual que no la hay de `eval`.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Las consultas con parámetros. `cursor.execute("… WHERE cedula = %s", (cedula,))` en Python es el
 `PreparedStatement` de Java, con la misma regla y por la misma razón.

@@ -111,7 +111,7 @@ largo que las dos entradas, y sigue adelante.
 > pandas te devuelve más filas de las que tenían los dos, no tienes un resultado: tienes un bug
 > con forma de tabla.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto es **pensar en filas**, y es razonable: llevas once años recorriendo `ResultSet`,
 iterando listas de entidades y escribiendo la lógica de negocio dentro del bucle. Aplicado a
@@ -137,7 +137,7 @@ prohibido —existe para lo que de verdad no es vectorizable—, es que casi nun
 falta. La pregunta correcta antes de escribirlo es *"¿esto es una condición sobre columnas?"*, y
 la respuesta es que sí nueve de cada diez veces.
 
-### ⚰️ Autopsia de anti-patrón: unir primero, agregar después
+### Autopsia de anti-patrón: unir primero, agregar después
 
 Es el más caro de los dos errores de esta sección y el más difícil de ver, porque el código está
 bien y el resultado también.
@@ -172,7 +172,7 @@ sesenta bytes por fila son unos **21 GB**. El proceso muere, y lo que hay que sa
 **murió por una línea que se lee perfectamente bien**. La cuenta se hace antes de correr nada:
 por cada valor de la llave, filas de la izquierda por filas de la derecha.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **El álgebra relacional.** `merge` es `JOIN`, `groupby().agg()` es `GROUP BY`, `query()` es
   `WHERE`, y si sabes cuándo un `LEFT JOIN` te duplica filas, ya sabes cuándo `merge` te las
@@ -184,7 +184,7 @@ por cada valor de la llave, filas de la izquierda por filas de la derecha.
 - **Los tipos importan y cuestan.** Lo de `ds01` sigue vigente un nivel más arriba: cada columna
   tiene su dtype y eso es memoria.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / SQL | pandas | Dónde se rompe el paralelo |
 |---|---|---|
@@ -316,7 +316,7 @@ que sin esa línea **la misma tabla sale en dos órdenes según cómo se leyó e
 que cambia de orden entre corridas es un informe que nadie puede comparar con el del mes pasado,
 y `diff` deja de servir.
 
-### 5.4 🧨 La medición mide el proceso, no el asignador
+### 5.4 La medición mide el proceso, no el asignador
 
 El arnés de la Fase 02 mide memoria con `tracemalloc`, y aquí **no sirve**: `tracemalloc` solo
 ve lo que asigna el asignador de Python, y pandas guarda buena parte de sus datos en búferes
@@ -652,23 +652,3 @@ está anunciada: **a la escala de Áurea, puede que ninguno de los tres valga la
 > además su tag anotado `ds-mini-02`, con **el tiempo y el pico de memoria en el mensaje**. La
 > convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El ejercicio 24 —la misma pregunta contra Postgres— es la primera fila de la tabla de
-  `ds03`.** Si alguien lo corre antes, ese número entra a `ds03` §6 y hay que reconciliar las
-  condiciones: la medición de aquí excluye la lectura de disco y la de `ds03` no puede.
-- 🪦 **`ds03` mantuvo la costumbre:** sus cuatro tamaños chicos son recortes reales del conjunto
-  —un mes, un trimestre, un año y la historia completa— y solo los dos grandes son sintéticos, y
-  lo declaran. Esta medición sigue siendo la única que no necesita **ningún** tamaño inventado
-  para tener algo que medir.
-- **La columna de RSS varía unos ±4 MB entre corridas.** La tabla publica una corrida, y eso es
-  suficiente para una relación de 2× pero no lo sería para una de 10%. Si alguna vez la
-  diferencia entre dos variantes baja de ese margen, hay que repetir y reportar dispersión.
-- `INSTINTOS.md` gana el reflejo de la sección: *"recorro las filas y decido"* → **la decisión es
-  una máscara sobre la columna**, y `apply(axis=1)` es el bucle disfrazado que cuesta 24×.
-- **El `SettingWithCopyWarning` ya no existe y medio internet todavía lo explica.** Vale la pena
-  un ejercicio 🔥 en la carta (`track db` o similar) sobre migrar código de pandas 1.x que
-  dependía de las vistas.

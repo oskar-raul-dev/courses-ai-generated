@@ -166,7 +166,7 @@ cada par de dimensiones es igual o una de las dos es 1. Es todo. Y donde te va a
 **no falla**: dos arrays de 1.000 y de 1 se combinan sin protestar aunque tu intención fuera que
 el segundo tuviera 1.000 y se te haya quedado en uno por un filtro anterior.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto **no** es escribir un bucle malo. Ese es el instinto de otro perfil. El tuyo es
 escribir un bucle **correcto, legible y defendible**:
@@ -208,7 +208,7 @@ todo el bucle. La sección 6 lo mide, y el resultado es incómodo.
 > 82% más lenta**. "Más pythónico" no es una unidad de medida, y esta es la demostración más
 > barata que tiene el curso.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Pensar en layout de memoria.** Si ya razonabas sobre `long[]` contra `List<Long>`, cache
   lines y localidad, ese músculo sirve tal cual. Es más: es exactamente el músculo que hace falta,
@@ -220,7 +220,7 @@ todo el bucle. La sección 6 lo mide, y el resultado es incómodo.
   constante deje de alcanzar, el problema va a ser el mismo que sería en Java.
 - **Medir antes de optimizar.** El arnés de la Fase 02 se usa aquí sin cambiarle una línea.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | NumPy | Dónde se rompe el paralelo |
 |---|---|---|
@@ -397,7 +397,7 @@ preguntarlo es `array.base`, que es `None` cuando el array es dueño de su memor
 > no se libera**, porque tu vista lo mantiene vivo. Cien elementos que retienen cuarenta megas.
 > Ahí `copy()` no es paranoia, es lo correcto.
 
-### 5.5 🧨 El experimento que rompe a propósito
+### 5.5 El experimento que rompe a propósito
 
 ```python
 def total_spend_with_dtype(spend, dtype):
@@ -746,24 +746,3 @@ sospechas.
 > además su tag anotado `ds-mini-01`, con **los dos tiempos —vectorizado y línea base— en el
 > mensaje**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- 🪦 **El ejercicio 16 ya tiene su archivo:** `src/ds01-…/ejercicio_16_lento.py`, con sus dos
-  defectos sembrados —una comparación de cadenas por fila dentro de lo que dice ser vectorizado, y
-  un `astype` dentro del bucle— y sin una sola pista en los comentarios.
-- **El ejercicio 24 —la comparación contra Java— es material de `BENCHMARKS.md`**, no solo un
-  ejercicio. Si alguien lo corre, la entrada entra al consolidado con sus condiciones.
-- **La conversión de la sección 6 se puede bajar mucho** (ejercicio 15) y eso cambiaría el
-  veredicto del umbral de reúso. Si alguien lo hace, **se corrige la sección 6 y se anota el
-  porqué**, no se deja la cifra vieja.
-- `INSTINTOS.md` gana el reflejo de la sección: *"vectorizar siempre gana"* → **gana el cálculo,
-  y muchas veces pierde el programa**, porque la conversión se paga cada vez.
-- 🪦 **La pauta de Áurea está revisada contra el resto de la ficción y cuadra.** Son 6.059
-  millones de pesos en 27 meses —unos 224 al mes, que parecían muchos— contra **83.378 millones de
-  valor contratado**: un **7,3%**, que para una compra electiva y cara es una cifra sana. El costo
-  de adquisición global es de **999.059 COP sobre un plan medio de 13,7 millones**. Lo que se ve
-  feo en la tabla de la sección 4 no es el negocio: es la atribución al último toque, que le carga
-  a TikTok un tercio del gasto y le acredita 215 pacientes.

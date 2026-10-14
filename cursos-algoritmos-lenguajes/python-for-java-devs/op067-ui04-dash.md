@@ -42,7 +42,7 @@ sequenceDiagram
 | Probar | `AppTest` | Llamar al *callback* como función, o al *endpoint* HTTP |
 | Costo | Muy poco código | Declarar entradas y salidas de cada *callback* |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 El modelo de Dash es el de una API REST sin estado, que este perfil conoce de memoria: cada petición trae todo lo que
 necesita, el servidor no recuerda nada entre peticiones, y por eso cualquier réplica la atiende. Los *callbacks* son

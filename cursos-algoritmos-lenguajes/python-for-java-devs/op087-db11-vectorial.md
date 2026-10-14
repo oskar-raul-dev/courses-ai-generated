@@ -38,7 +38,7 @@ más cercanos, no siempre; cuántas veces acierta (el *recall*) es un parámetro
 significa que, en promedio, uno de los diez resultados no es de los diez mejores. Para sugerir respuestas a una recepcionista,
 es más que suficiente; para una búsqueda donde faltar uno es grave, se sube el parámetro o se busca exacto.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Un índice B-tree de Postgres, o el de cualquier base que este perfil conozca, es exacto: el `WHERE` con índice devuelve las mismas
 filas que sin índice, más rápido. El instinto supone lo mismo del índice vectorial, y no es así: **con el índice HNSW, la consulta
@@ -203,6 +203,9 @@ texto. Los procedimientos y las respuestas aprobadas, sí; los mensajes de los p
 **Qdrant, si ya hay Postgres y son miles de vectores.** Doscientas respuestas, o doscientas mil, caben en pgvector, con *joins* y
 transacciones. Un motor vectorial se justifica con decenas de millones de vectores o necesidades de filtrado y escala que Postgres no
 cubre.
+
+Es la misma decisión que tomó el track `ia` para NormaRAG ([`ia04`](ia04-embeddings-y-busqueda-semantica.md)): decenas de miles de fragmentos sobre
+el Postgres que Áurea ya opera. Esta sección no la contradice; la mide desde el otro lado, con Qdrant al lado.
 
 **Un índice aproximado con pocos datos.** Con doscientas respuestas, la búsqueda exacta tarda microsegundos y acierta siempre.
 

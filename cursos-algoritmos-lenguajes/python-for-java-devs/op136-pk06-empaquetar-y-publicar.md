@@ -46,7 +46,7 @@ flowchart LR
 | `twine` | 7.0.0 | Subir a un índice |
 | `pypiserver` | 2.4.2 | Un índice privado mínimo |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Maven, el número de versión vive en el `pom.xml` y la versión `-SNAPSHOT` se reemplaza en el repositorio. En PyPI y en la mayoría de los índices, **una versión
 publicada no se puede reemplazar**: subir `1.2.0` dos veces falla. El instinto de "vuelvo a subir la misma versión con el arreglo" no funciona; se publica `1.2.1`.

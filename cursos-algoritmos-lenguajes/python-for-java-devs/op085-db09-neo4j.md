@@ -45,7 +45,7 @@ flowchart LR
 | `neo4j` | 6.4.0 | El oficial |
 | `py2neo` | 2021.2.4 💤 | Abandonado; aparece en tutoriales viejos |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con el *driver* de Java o Spring Data Neo4j, los resultados se mapean a entidades. El instinto de Python espera diccionarios con
 tipos de Python, y casi lo consigue: los nodos se comportan como diccionarios, pero las fechas llegan como `neo4j.time.DateTime`,

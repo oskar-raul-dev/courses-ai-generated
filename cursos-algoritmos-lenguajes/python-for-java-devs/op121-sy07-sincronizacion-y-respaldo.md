@@ -40,7 +40,7 @@ flowchart LR
 | `hashlib` | `sha256` de cada archivo | El manifiesto que prueba que lo restaurado es lo respaldado |
 | Instantáneas del sistema de archivos (ZFS, btrfs, LVM) | Copias instantáneas del disco entero | Cuando el servidor las tiene |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto delega el respaldo en "la infraestructura" y lo da por hecho si el trabajo termina en verde. Un respaldo sin restauración probada no es un
 respaldo: es una copia de la que no se sabe nada. La verificación con *hash* es barata, se programa en veinte líneas de Python, y es la única forma

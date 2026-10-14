@@ -37,7 +37,7 @@ flowchart TB
 | Ariadne | 1.1.0 | El esquema en SDL (texto) y *resolvers* aparte |
 | Graphene | 3.4.3 | Clases propias; sin versiones desde noviembre de 2024 |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Con Spring for GraphQL, los `@SchemaMapping` resuelven cada campo y el instinto espera que la biblioteca se encargue del rendimiento. No lo hace en ninguna de
 las dos plataformas: cada *resolver* es una función independiente, y si cada una consulta la base, la cuenta de consultas crece con la forma de la consulta

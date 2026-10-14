@@ -50,7 +50,7 @@ mostrar el documento.
 - **La evaluación sistemática de la calidad de la respuesta** → `ia06`. Aquí se mide lo que se
   puede verificar mecánicamente —si la cita existe, si el fragmento estaba entre los recuperados,
   si la cláusula estaba vigente—, que no es lo mismo que si la respuesta es correcta.
-- **OCR de los PDF escaneados** → fuera del curso; vive en el track `ar` a la carta. Aquí los
+- **OCR de los PDF escaneados** → fuera del camino; está en `ar04`, a la carta. Aquí los
   escaneados **se declaran y se cuentan**, que es la decisión honesta: un corpus con un agujero
   medido es utilizable; uno con un agujero silencioso, no.
 - **La interfaz que usa Patricia** → track `ui`. Aquí la salida es de línea de comandos y de API.
@@ -78,7 +78,7 @@ formas distintas:
 
 Lo que hace defendible a NormaRAG no es que falle poco: es que **las tres se detectan en código**.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo aquí es de eficiencia mal dirigida, y lo dispara un dato real: el modelo tiene una
 ventana de contexto de un millón de tokens. El corpus documental completo de Áurea —contratos,
@@ -154,7 +154,7 @@ cláusula es un fragmento, con su encabezado repetido dentro del texto del fragm
 documento y su vigencia como metadatos. Cuesta más escribirlo que partir cada mil caracteres, y
 es la diferencia entre citable y no citable.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Es una tubería de ingesta.** Extraer, normalizar, particionar, cargar, validar. Lo has hecho
   veinte veces y las decisiones son las mismas.
@@ -165,7 +165,7 @@ es la diferencia entre citable y no citable.
 - **La trazabilidad.** Cada respuesta guarda qué recuperó, qué le pasó al modelo y qué contestó.
   Es el mismo registro de auditoría de siempre, con un campo de costo.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | NormaRAG | Dónde se rompe el paralelo |
 |---|---|---|
@@ -180,8 +180,8 @@ es la diferencia entre citable y no citable.
 > escaneados de Áurea —y son varios— son imágenes dentro de un PDF, y de ahí `pypdf` extrae cadena
 > vacía sin lanzar nada. Ese silencio es el problema: un corpus al que le faltan doce documentos y
 > nadie lo sabe produce abstenciones que parecen fallos del modelo. La ingesta de esta sección
-> **los detecta y los cuenta**; el OCR es del track `ar`, y hasta que exista, esos documentos son
-> un agujero medido y declarado.
+> **los detecta y los cuenta**; el OCR está en `ar04`, a la carta, y mientras no se aplique, esos
+> documentos son un agujero medido y declarado.
 
 ---
 
@@ -907,22 +907,3 @@ mejora de NormaRAG va a ser una corazonada.
 > además su tag anotado `ia-mini-05`, con **la cobertura del corpus y la tasa de cita verificada**
 > en el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición de la sección 6 está en `⏳`**, y su fila 3 —devolver la cláusula sin generar—
-  puede recortar la mitad del proyecto. Correrla antes de conectar NormaRAG a nada.
-- **La deuda 💸 de la vigencia se paga en el miniproyecto de esta misma sección**, criterio 5. Es
-  la única del track que se paga dentro de su sección y está hecho a propósito.
-- **El OCR queda fuera y con su agujero medido.** Cuando el track `ar` exista, su sección de PDF
-  tiene que citar el informe de cobertura de aquí en vez de repetir el problema.
-- **La detección mecánica de contradicción (ejercicio 17 y criterio 4)** puede no ser viable con
-  falsos positivos aceptables. Si al escribir la solución de referencia se confirma, hay que
-  suavizar el criterio 4 y decirlo, en vez de dejar un miniproyecto que no se puede aprobar.
-- **`INSTINTOS.md` gana el reflejo de la sección:** *"cabe en el contexto, luego lo mando"* → el
-  contexto grande no reemplaza la recuperación, y sobre todo no permite verificar la procedencia.
-- **Verificar al escribir `ia07`** si Recepción asistida debe llamar a NormaRAG como herramienta.
-  La respuesta probablemente sea que no para preguntas de cobertura de un paciente concreto —ahí
-  hay datos que no deben viajar—, y esa decisión hay que tomarla explícitamente.

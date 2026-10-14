@@ -42,7 +42,7 @@ Y lo que cuesta después de escribirla, que es lo que decide:
 | Distribuir | Un enlace | Un instalador en cada computador de cada sede |
 | Actualizar | Desplegar una vez | Que cada computador se actualice, o visitar cada uno |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, el escritorio se distribuía con el JRE instalado una vez y un `.jar`, o con Java Web Start, y el instinto supone
 que Python tiene un equivalente. No lo tiene: no hay un "Python instalado en las sedes" en el que confiar, así que cada

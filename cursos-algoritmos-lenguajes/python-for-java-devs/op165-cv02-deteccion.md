@@ -45,7 +45,7 @@ flowchart LR
 | BlazeFace *short range* | CNN de MediaPipe, entrada 128×128 | Apache 2.0 | Una cara a menos de 2 m de la cámara del teléfono |
 | YOLO (`ultralytics`) | Detector general, 80 clases de COCO | **AGPL-3.0** o licencia comercial | Objetos; segmentación y pose en sus variantes |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Un detector es una función `imagen → lista de (caja, confianza)`, y elegir el umbral de confianza es elegir entre falsos positivos y falsos negativos, como el
 umbral de cualquier clasificador. Quien ajustó un filtro de fraude o un antispam ya sabe la parte difícil: no hay umbral correcto, hay un costo por cada tipo de error.

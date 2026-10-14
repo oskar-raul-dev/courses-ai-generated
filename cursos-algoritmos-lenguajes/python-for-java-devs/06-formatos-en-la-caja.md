@@ -4,6 +4,7 @@
 > Depende de: Fase 05 · Habilita: Fase 07
 > Registro de esta fase: **script** — un archivo, stdlib pura · **cierra el Bloque A**
 > Proyecto que avanza: el CLI · **y se paga la deuda 💸 de la Fase 01**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -53,7 +54,7 @@ se paga hoy, con los dos números delante.
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo, y es el que el Bloque A entero viene atacando:** *"busco una biblioteca para esto"*.
 
@@ -123,7 +124,7 @@ aseguradora rechaza el registro por no coincidir con la cédula. **Si vas a usar
 decisión escrita en un comentario con su razón.** `replace` es casi siempre mejor: el `�` se puede
 buscar.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **SQL es SQL.** Todo lo que sabes de modelado, índices, transacciones, claves y planes de
 ejecución vale exactamente igual con `sqlite3`. Es la parte del curso donde tu experiencia
@@ -136,7 +137,7 @@ dónde ponen los límites.
 cambio de lecturas más rápidas. La sección 6 lo mide, y el resultado no te va a sorprender — lo
 que sorprende es cuánto.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -194,7 +195,7 @@ with path.open(encoding="latin-1", newline="") as file:
 
 ## 💻 5. Código mínimo con comentarios
 
-### 5.1 💸 La deuda, pagada
+### 5.1 La deuda, pagada
 
 Esto es lo que decía `read_rows` en la Fase 01:
 
@@ -342,6 +343,14 @@ def parse_amount(raw: str) -> Decimal:
 - **La nota se borra, no se ignora.** El ejercicio 9 pregunta si borrarla es correcto: una nota que
   dice *"pendiente confirmar"* es información de negocio, y tirarla es una decisión que alguien
   debería tomar a conciencia.
+- **Y a la salida, el dinero con dos decimales siempre.** `Decimal("150000")` se escribe
+  `150000`, y el mismo monto calculado se escribe `150000.00`: dos archivos con el mismo valor que no
+  se comparan como texto. Se fija con `quantize(Decimal("0.01"))` antes de escribir. El formato
+  colombiano para una persona —`1.234.567,50`— no sale de `locale`, que depende de la máquina
+  (Fase 01, ejercicio 13), sino de `f"{monto:,.2f}".translate(str.maketrans(",.", ".,"))`.
+- **El archivo del trimestre de la Fase 02 no tiene la columna `descripcion`**, y es a propósito:
+  aquel generador produce citas y este, procedimientos facturables. Son dos esquemas distintos y
+  no se cruzan.
 
 ### 5.3 La configuración deja de ser código
 
@@ -964,26 +973,3 @@ paquete, moviendo lo que ya funciona.
 > lleva además su tag anotado `mini-06`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El XML de la DIAN queda fuera con su razón escrita** (§3). Es la exclusión más discutible del
-  Bloque A, porque Áurea lo genera de verdad. Si alguna vez se abre un track de integración
-  tributaria colombiana, es su primer capítulo; mientras tanto, el curso lo trata como texto que se
-  firma con el binario del proveedor.
-- **La heurística del separador de miles** (§5.2) cubre el caso de Áurea y falla con decimales
-  reales. Está declarada, y la solución honesta —rechazar el valor ambiguo— es una decisión de
-  negocio que el curso no puede tomar. La Fase 10 la retoma desde la validación en la frontera.
-- **El dinero como `TEXT` en SQLite** (§5.4) es una decisión defendible y no es la única; el
-  ejercicio 24 pide compararla con enteros en centavos. Si al escribir la Fase 11 se decide otra
-  cosa para Postgres, **las dos decisiones tienen que citarse entre sí** o el lector va a creer que
-  el curso se contradice.
-- **`with connection:` no cierra la conexión** es una trampa que esta fase nombra y que la Fase 11
-  va a encontrar otra vez con un *pool* de por medio, donde las consecuencias son peores. Conviene
-  citarla desde allá.
-- **El archivo del trimestre de la Fase 02 no tiene la columna `descripcion`** que esta fase
-  agregó a los exports. Los dos generadores conviven y producen esquemas distintos a propósito
-  —uno es de citas y otro de procedimientos facturables— pero conviene decirlo en algún sitio del
-  material antes de que alguien intente cruzarlos.

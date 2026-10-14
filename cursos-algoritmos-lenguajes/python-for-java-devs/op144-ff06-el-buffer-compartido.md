@@ -39,7 +39,7 @@ flowchart LR
 | `mmap`, `pa.memory_map` | Un archivo, como memoria | Cualquier proceso que lo abra; el sistema operativo carga las páginas al leerlas |
 | Arrow (formato IPC) | Columnas con un formato fijo en memoria | Procesos y lenguajes (Java, Rust, C++) sin convertir |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Es `ByteBuffer.slice()`, `asReadOnlyBuffer()` y `FileChannel.map()` de Java NIO: una vista sobre memoria que no se copia, y un archivo mapeado que el sistema operativo
 pagina. Arrow es el mismo formato en Java y en Python; un archivo escrito por uno se mapea desde el otro.

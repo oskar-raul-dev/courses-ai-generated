@@ -45,7 +45,7 @@ Con cien mutantes y una suite de un segundo, son dos minutos; con una suite de u
 media. Por eso la mutación se corre **sobre lo que el mapa de riesgo de `qa01` marca en rojo**, no sobre
 todo el sistema.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, si alguna vez mediste mutación fue con PIT, y probablemente en un pipeline que reportaba un
 porcentaje. El reflejo es traer el porcentaje como meta, igual que la cobertura. El valor de la mutación

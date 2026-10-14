@@ -38,7 +38,7 @@ SQLAlchemy 2.1, la versión que salió este año.
 | `TypeDecorator` | Convertir al entrar y al salir de la base (montos, fechas, cifrado) |
 | Eventos (`before_flush`, `before_update`…) | Validar o completar datos al guardar |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Hibernate, la estrategia de carga se fija en la anotación (`FetchType.LAZY`) y se corrige con `JOIN FETCH` o *entity graphs* en la
 consulta. En SQLAlchemy se puede fijar en la relación, pero la costumbre buena es decidirla **en cada consulta** con `options(...)`,

@@ -34,7 +34,7 @@ La diferencia que más se nota con un documento real: python-markdown exige **cu
 anidar una lista; CommonMark acepta los dos que escribe casi todo el mundo. La lista anidada del procedimiento se
 aplana en uno y no en los otros.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, `commonmark-java` o `flexmark` siguen CommonMark, y el instinto asume que "Markdown" en Python también. El
 paquete que se instala con el nombre más obvio, `Markdown`, es el que **no** lo sigue. Se elige por especificación,

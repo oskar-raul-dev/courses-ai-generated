@@ -181,7 +181,7 @@ cada fase se cierra en git con `fase-NN`, y cada miniproyecto con `mini-NN`, cuy
 el número que arrojó su medición. La convención completa está en
 [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
 
-### 💸 Las deudas, y por qué el curso las declara
+### Las deudas, y por qué el curso las declara
 
 Vas a ver el marcador 💸 por todo el material. Marca una **deuda técnica intencional**: un
 atajo que el curso toma a propósito, con dos partes escritas siempre juntas —qué sería lo
@@ -322,7 +322,7 @@ checklist de la sección 2 se verifica ejecutando, no leyendo.
 fase. No es burocracia: es lo que permite volver a un punto, leer la factura de cada deuda con
 un `git diff` entre dos tags, y comparar tu número de la Fase 15 con el de la Fase 02.
 
-### ⏱️ Cuánto toma
+### Cuánto toma
 
 El curso publica **bandas de dedicación por bloque**, no horas por fase. Una tabla de horas por
 fase que nadie puede cumplir desprestigia al resto del documento, y aquí el tiempo real lo

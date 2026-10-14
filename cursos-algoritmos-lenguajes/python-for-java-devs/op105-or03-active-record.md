@@ -37,7 +37,7 @@ segundo comportamiento; la sección muestra lo que pasa con el primero.
 | Peewee | 4.5.2 | Pequeño y estable; SQLite, Postgres, MySQL |
 | Piccolo | 1.36.0 | Asíncrono, constructor de consultas y ORM; migraciones propias |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Hibernate, cargar la misma entidad dos veces en una sesión da el mismo objeto, y el *flush* actualiza solo las columnas sucias (o todas,
 según la configuración, pero dentro de una unidad de trabajo). El instinto da por hecho ese contrato en cualquier ORM. En *Active Record* no

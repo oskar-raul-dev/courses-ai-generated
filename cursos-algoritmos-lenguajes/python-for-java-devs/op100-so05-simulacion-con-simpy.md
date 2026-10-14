@@ -43,7 +43,7 @@ flowchart LR
 **Lo que se mide** no es un número, es una distribución: la espera promedio dice poco, el percentil 90 (la espera que sufre uno de cada
 diez pacientes) dice más. Y se corre muchas veces (**réplicas**) con distintas semillas, porque una sola jornada simulada es una anécdota.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto hace la cuenta promedio: si llegan 12 pacientes por hora y cada atención dura 20 minutos, dos sillas atienden 6 por hora…
 y la cuenta dice que no alcanza, o que alcanza justo. Lo que la cuenta promedio no ve es la **variabilidad**: con un sistema al 90 % de

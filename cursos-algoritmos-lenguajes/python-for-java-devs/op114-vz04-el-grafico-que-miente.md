@@ -32,7 +32,7 @@ para cada una, para que la regla no sea una opinión de diseño sino una prueba 
 | **Mapa de color no uniforme** (`jet`, `rainbow`) | La luminosidad (L\* de CIELAB) no crece de forma monótona | Mapas perceptualmente uniformes: `viridis`, `cividis` |
 | **Paleta que un daltónico no distingue** | Diferencia de color (ΔE) entre los colores **simulados** para deuteranopía | ΔE alto también simulado; forma o texto además del color |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de quien programa es que el gráfico es una consecuencia de los datos: si los datos son correctos, el gráfico también. No es así: el
 eje, la escala y el color son decisiones, y cuando el código no las toma explícitamente, las toma la biblioteca con sus valores por defecto. Un

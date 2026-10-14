@@ -4,6 +4,7 @@
 > Depende de: Fase 13 · Habilita: Fase 15
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: **los tres** — el CLI, la API y el back-office
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -74,7 +75,7 @@ ellos. Todo lo que sabes de sincronización sigue haciendo falta.
 > 🧭 **La regla corta:** el GIL decide **qué te compra un hilo**, no si necesitas candados.
 > Necesitas candados igual.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** `synchronized`, `ConcurrentHashMap`, un pool de hilos bien dimensionado. Es el
 kit completo, lo tienes afinado, y para el problema de Áurea **no sirve ninguno de los tres**.
@@ -134,7 +135,7 @@ def reservar(paciente: str) -> str:
 Con la restricción puesta, el mismo experimento da: `['reservado', 'conflicto detectado']`, **una
 fila**. Es de la Fase 11 —la restricción se plantó allí— y esto es cobrarla.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Y aquí transfiere más de lo que el párrafo anterior sugiere:
 
@@ -153,7 +154,7 @@ seguridad para hilos.
 **Y `ThreadPoolExecutor` / `ProcessPoolExecutor` son `ExecutorService`**, con `submit`, `map` y
 futuros que se esperan. La API se lee sola.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -840,25 +841,3 @@ ese es el día en que se cobra, en uso real, todo lo que hiciste bien en la Fase
 > lleva además su tag anotado `mini-14`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **Todas las mediciones son de un portátil de ocho núcleos**, y el dominio de Áurea tiene una
-  máquina virtual de dos. Está declarado en §6 y el miniproyecto lo traslada al lector, pero **el
-  curso debería traer su propia tabla de dos núcleos** antes de consolidar `BENCHMARKS.md`: es la
-  medición que de verdad decide.
-- **El free-threading da 1.14× sobre la carga real y 2.27× sobre aritmética pura.** La diferencia
-  merece más investigación de la que cabe aquí —¿es `hashlib`, es `Decimal`, es la asignación de
-  objetos?— y sería un material excelente para la Fase 16, con el perfilador delante.
-- **El solapamiento parcial de citas sigue sin resolverse** (§5.4): la restricción de unicidad
-  cubre el mismo minuto y no el rango. Las restricciones de exclusión de Postgres son la
-  respuesta, quedaron en un ejercicio de la Fase 11 y en uno de esta. **Si el curso cierra sin
-  usarlas, deja el problema resuelto a medias** — conviene decidirlo antes de la Fase 17.
-- **Los procesos huérfanos tras un `Ctrl-C`**, que la Fase 05 dejó anotado, vuelven aquí como
-  criterio de aceptación del miniproyecto. Si al escribir la 16 aparece un sitio natural para
-  cerrarlo del todo, es el momento.
-- **El ejercicio 12 de la Fase 13** —notificar a los tres socios en paralelo— se retoma en §5.3 y
-  en el ejercicio 25. El bucle queda cerrado; conviene verificar que los números coinciden si
-  alguien hace los dos.

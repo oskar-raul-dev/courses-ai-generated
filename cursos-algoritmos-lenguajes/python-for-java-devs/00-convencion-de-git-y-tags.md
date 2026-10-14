@@ -4,6 +4,14 @@
 Dos páginas, una sola vez. Las dieciocho fases enlazan aquí y ninguna vuelve a explicar nada de
 esto.
 
+> **Cuándo se lee:** antes de la [Fase 00](00-instalacion-ambiente-editores-y-ecosistema.md), y cada
+> vez que el bloque 🏷️ de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-07.
+
+> 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa espacio, no agrega
+> overhead y se borra con `git tag -d`. La pregunta no es "¿vale la pena etiquetar esto?", es "¿por
+> qué no?".
+
 ---
 
 ## 📌 Por qué hay un repositorio
@@ -139,27 +147,31 @@ git tag -a mini-06 -m "Mini F6: consolidador de las diez sedes · 8.400 filas en
 Tres fases después, cuando la 15 te pida comparar el cierre nocturno contra lo que hacía tu
 herramienta a mano, ese número ya está escrito y no tienes que volver a medir el pasado.
 
-### Y los complementos: `ia-fase-NN` y `ds-fase-NN`
+### Y los complementos y la carta: `ia-`, `ds-` y `op-`
 
 Después de la Fase 17, el curso sigue con dos tracks complementarios —`ia01`–`ia08` y
 `ds01`–`ds09`— que construyen los cuatro proyectos de IA y de datos de Áurea. **Cierran igual,
 con su propio espacio de nombres:**
 
-| | Camino base | Track `ia` | Track `ds` |
-|---|---|---|---|
-| Tag de sección | `fase-NN` | `ia-fase-NN` | `ds-fase-NN` |
-| Tag de miniproyecto | `mini-NN` | `ia-mini-NN` | `ds-mini-NN` |
-| Prefijo de commit | `fase NN: …` | `ia NN: …` | `ds NN: …` |
-| Ejercicio | `fase NN ejMM: …` | `ia NN ejMM: …` | `ds NN ejMM: …` |
+| | Camino base | Track `ia` | Track `ds` | Carta opcional (`opNNN-<tt>NN-…`) |
+|---|---|---|---|---|
+| Tag de sección | `fase-NN` | `ia-fase-NN` | `ds-fase-NN` | `op-<tt>-fase-NN` |
+| Tag de miniproyecto | `mini-NN` | `ia-mini-NN` | `ds-mini-NN` | `op-<tt>-mini-NN` |
+| Prefijo de commit | `fase NN: …` | `ia NN: …` | `ds NN: …` | `op <tt>NN: …` |
+| Ejercicio | `fase NN ejMM: …` | `ia NN ejMM: …` | `ds NN ejMM: …` | `op <tt>NN ejMM: …` |
+
+Las secciones de la carta son opcionales y se toman sueltas, así que cada una se etiqueta solo si
+la hiciste: `git tag -a op-lg-fase-01 -m "op lg01 cerrada: …"`. El curso no tiene apéndices, y por
+eso no hay tags de apéndice.
 
 ```bash
 git tag -a ds-fase-07 -m "ds07 cerrada: <el checklist, una línea por ítem>"
 git tag -a ds-mini-07 -m "Mini ds07: lista de Yuli · precisión 0.53 a cupo 20"
 ```
 
-> 🧭 **Tres espacios de nombres y no uno, por una razón que se cobra el día que los uses:**
+> 🧭 **Varios espacios de nombres y no uno, por una razón que se cobra el día que los uses:**
 > `git tag -l 'fase-*'` devuelve exactamente el camino base, `'ia-*'` y `'ds-*'` cada
-> complemento. Con un solo prefijo, esa consulta mezclaría treinta y cinco tags y dejaría de
+> complemento, y `'op-*'` lo que hiciste de la carta. Con un solo prefijo, esa consulta mezclaría treinta y cinco tags y dejaría de
 > servir para orientarse.
 
 La regla del `mini-NN` vale igual en los tres: **en el mensaje va el número que arrojó la
@@ -178,6 +190,13 @@ Con prefijo, para que no choquen con los tags ni entre ellas: `wip/` para trabaj
 no quieres perder, `spike/` para probar algo que probablemente se borre. El trabajo normal del
 curso va en la rama principal — eres una sola persona y un flujo de ramas aquí es ceremonia sin
 pago.
+
+> ⚠️ **Volver a un tag te deja en `detached HEAD`.** `git checkout fase-06` te pone a mirar ese
+> estado sin estar en ninguna rama; por eso el comando de abajo crea una (`git switch -c`). Y por
+> eso las ramas llevan prefijo: una rama y un tag que se llaman igual vuelven ambiguo cualquier
+> `git checkout`.
+
+No hace falta remoto. Si lo tienes, recuerda que **los tags no viajan solos**: `git push --tags`.
 
 ---
 
@@ -218,5 +237,6 @@ git status                               # limpio, o no cierras
 git tag -a fase-NN -m "..."
 ```
 
-Si algo de eso falla, la fase no está cerrada. El tag no es un trofeo: es la afirmación de que
+Antes del tag, el checklist de la sección 2 de la fase en verde y el miniproyecto corriendo, con su
+`mini-NN` y la medición en el mensaje. Si algo de eso falla, la fase no está cerrada. El tag no es un trofeo: es la afirmación de que
 ese punto de la historia compila, corre y se puede volver a él.

@@ -55,7 +55,7 @@ flowchart LR
 sino "en cualquier estado al que se llegue, esto se cumple". Encontrarlo obliga a decir qué significa que
 la agenda esté bien.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Si viniste de jqwik en Java, el modelo es el mismo y sus *stateful properties* también existen. El
 reflejo, en cambio, suele ser el de JUnit: escribir los escenarios que se te ocurren —"reservar y

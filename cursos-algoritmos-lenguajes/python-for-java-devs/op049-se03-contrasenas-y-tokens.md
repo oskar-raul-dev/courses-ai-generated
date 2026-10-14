@@ -50,7 +50,7 @@ horas sigue entrando al back-office, con acceso a historias clínicas.
 Para un back-office de una empresa con diez sedes, la tabla de sesiones no es un problema de escala: son unas
 decenas de filas. Lo que sí es un problema es no poder echar a alguien.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En el mundo Spring de los últimos años, el reflejo es Spring Security con JWT para todo, "porque es sin
 estado". Para APIs entre servicios, con tokens de minutos, está bien. Para la sesión de una persona en un

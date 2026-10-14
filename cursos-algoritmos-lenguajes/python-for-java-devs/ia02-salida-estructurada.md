@@ -82,7 +82,7 @@ que te conteste; eso es `ia03`.
 > equivocado no falla: simplemente no hace nada, y el esquema deja de estar garantizado sin que
 > nadie se entere.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo no es sobre el parseo —eso lo tienes resuelto desde hace una década— sino sobre **cómo
 se declara un contrato**. Un DTO de Java se escribe así, y está bien escrito:
@@ -135,7 +135,7 @@ devuelves al modelo el error —el mensaje de Pydantic, literal— y en la mayor
 segundo intento pasa. Un `except ValidationError: raise` desperdicia lo único que hace manejable
 al no determinismo.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Pydantic es el mismo Pydantic de la Fase 10.** Los mismos validadores, los mismos tipos, el
   mismo `model_validate`. No hay una biblioteca especial para IA, y desconfía del material que
@@ -146,7 +146,7 @@ al no determinismo.
 - **La separación entre el modelo de transporte y el del dominio** es la de siempre, y aquí gana
   importancia: lo que el modelo devuelve no es tu entidad, es un DTO que hay que convertir.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | Track `ia` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -731,23 +731,3 @@ reintentar. Es el problema de idempotencia de la Fase 13, con un cliente que no 
 > (`ia 02 ej12: …`) y el miniproyecto el suyo (`ia 02 mini: …`). El miniproyecto terminado lleva
 > además su tag anotado `ia-mini-02`, con **las tres cifras de su medición** en el mensaje. La
 > convención completa está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición de la sección 6 sigue en `⏳`**, pero ya tiene sus dos insumos: 🪦
-  `src/ia02-…/generar_circulares.py` produce las cien circulares y sus **197 reglas esperadas**,
-  derivadas del texto que escribe —así el corpus y su anotación no pueden discrepar— con un 22% de
-  reglas que exigen `no_dice`. Las 197 citas esperadas se verifican contra el texto generado y las
-  197 pasan por `_normalize`, comillas tipográficas incluidas.
-- **La deuda 💸 del costo por intento se paga en `ia08`.** Anotada allí.
-- **La inyección desde el documento (ejercicio 24) merece más que un ejercicio.** Es el vector de
-  ataque propio de este track y aquí solo se roza. **Destino: sección de guardrails en `ia07`, y
-  una comprobación en el checklist de `ia08`.** No es un apéndice: es contenido de dos secciones
-  que ya existen.
-- **`INSTINTOS.md` gana el reflejo más valioso de la sección:** *"todo campo va `@NotNull`"* → en
-  un contrato con un modelo, cada campo obligatorio es una invitación a inventar. Va con el número
-  del ejercicio 2 cuando alguien lo corra.
-- **Verificar al escribir `ia05`** que el índice de la cita del ejercicio 9 se usa de verdad para
-  la atribución, o el ejercicio queda huérfano.

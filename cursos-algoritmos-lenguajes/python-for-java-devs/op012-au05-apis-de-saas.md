@@ -57,7 +57,7 @@ Tres cosas de ese diagrama deciden si la integración funciona en el mes tres:
   hora, no sirve. La biblioteca renueva antes de la llamada y te avisa del token nuevo para que lo
   guardes.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java (Spring Security OAuth2 Client) | Python | Dónde se rompe el paralelo |
 |---|---|---|

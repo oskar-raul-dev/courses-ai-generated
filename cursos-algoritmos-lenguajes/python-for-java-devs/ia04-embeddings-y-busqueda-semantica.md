@@ -83,7 +83,7 @@ cercano: garantiza devolver uno muy cercano, muy rápido. Se puede pedir más ex
 latencia. Que un índice tenga ese perilla no es un defecto — es la única forma de que la búsqueda
 por similitud escale.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El reflejo no es sobre vectores: es sobre **qué significa que un índice no encuentre nada**.
 
@@ -133,7 +133,7 @@ de **esta** aseguradora". Con un servicio aparte, ese filtro se vuelve dos consu
 intersección hecha a mano. La base de datos vectorial dedicada gana cuando el volumen o el
 rendimiento la obligan, y ese día se migra; ese día no es hoy y no hay que fingir que lo es.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **Es un índice.** Se crea, ocupa disco, hay que reconstruirlo cuando cambian los datos, y tiene
   parámetros que cambian el equilibrio entre exactitud y velocidad. Todo tu criterio sobre índices
@@ -146,7 +146,7 @@ rendimiento la obligan, y ese día se migra; ese día no es hoy y no hay que fin
 - **La medición de recuperación es una métrica de sistema de información clásica.** Recall,
   precisión y MRR llevan décadas definidos y no los inventó nadie de este ecosistema.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / tu stack | Track `ia` | Dónde se rompe el paralelo |
 |---|---|---|
@@ -779,25 +779,3 @@ bien recuperado que esté**.
 > además su tag anotado `ia-mini-04`, con **el recall del enrutador y el de la mejor estrategia
 > fija** en el mensaje. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La medición de la sección 6 está en `⏳` y es la que más puede cambiar el track.** Si la
-  híbrida no le saca ventaja a la léxica, `ia05` tiene que reescribirse alrededor de ese
-  resultado. **Correrla antes de empezar `ia05`.**
-- 🪦 **El corpus y las preguntas anotadas ya se generan:** `src/ia04-…/generar_corpus.py` produce
-  24 documentos con estructura de cláusulas, su manifiesto y las cincuenta preguntas con su
-  fragmento correcto y su etiqueta. La etiqueta se asigna **por construcción** —cada plantilla sabe
-  qué clase de consulta produce—, que es legítimo con un corpus generado y **no lo sería** con uno
-  real. Un tercio de los documentos son versiones derogadas casi idénticas, para el miniproyecto de
-  `ia05`. Los 24 pasan por el troceador de `ia05` sin que ninguno quede sin estructura.
-- **La deuda 💸 del umbral único y global se paga en `ia06`.**
-- **El troceado se da por hecho aquí y se construye en `ia05`.** El ejercicio 12 mide su efecto y
-  probablemente descubra que es la variable dominante; si es así, `ia05` tiene que darle una
-  sección propia y no un párrafo.
-- **`INSTINTOS.md` gana el reflejo de la sección:** *"si no encuentra, devuelve vacío"* → una
-  búsqueda por similitud nunca devuelve vacío, y sin umbral el sistema no puede decir "no sé".
-- **Verificar al escribir el track `db`** que la sección de vectoriales dedicadas no contradice la
-  decisión de `pgvector` de aquí, y que cita esta medición en vez de repetirla.

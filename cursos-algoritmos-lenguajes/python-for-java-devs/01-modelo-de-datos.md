@@ -4,6 +4,7 @@
 > Depende de: Fase 00 · Habilita: Fase 02
 > Registro de esta fase: **script** — un archivo, stdlib pura, sin clases
 > Proyecto que avanza: **nace el CLI de Patricia** (`aur_cli.py`)
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -103,7 +104,7 @@ gratis: **la llave compuesta es una tupla**, sin `Pair`, sin `record` y sin `equ
 escritos a mano. `by_branch[("Chapinero", "2026-03")]` es idiomático y es lo que vas a usar todo
 el curso.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Esta fase tiene dos reflejos, y los dos cuestan dinero real en Áurea.
 
@@ -216,7 +217,7 @@ def add_appointment(appointment, batch=None):
 `ruff` lo marca con la regla `B006` si configuraste `B` en la Fase 00 — compruébalo, porque es la
 primera vez que el linter te va a salvar de algo serio.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Mucho más de lo que este arranque sugiere.
 
@@ -238,7 +239,7 @@ inserción y garantizado por el lenguaje desde 3.7—, `set` es `HashSet`, `tupl
 parecido a un `record` sin nombres. Las complejidades son las que esperas, y la medición de la
 sección 6 lo confirma con números.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -952,23 +953,3 @@ curso pueda afirmar cosas en vez de opinarlas.
 > lleva además su tag anotado `mini-01`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El formato de moneda colombiano** (ejercicio 13) queda sin resolver de verdad: `locale`
-  depende de la máquina y el curso no puede asumirla. Destino sugerido: una sección corta de la
-  Fase 06, donde el formato de salida ya importa de verdad porque se genera el XML de la DIAN.
-- **`sys.intern` y el costo en memoria de las cadenas repetidas** (ejercicio 9) es material que
-  se roza aquí y se aprovecharía mejor en la Fase 16, con el perfilado delante. Anotado allí.
-- **La pregunta del ejercicio 24 —¿cuándo merece una clase?— queda deliberadamente abierta**, y
-  la Fase 03 tiene que contestarla de frente, citando este ejercicio. Si no lo hace, el bucle
-  queda sin cerrar.
-- **El generador de datos `generar_datos_f01.py`** produce los archivos de marzo. La Fase 02
-  necesita el archivo de citas del trimestre —500.000 filas— y conviene que sea **el mismo
-  generador extendido**, no uno nuevo: un solo script de datos para todo el curso envejece mejor
-  que seis. Decidirlo al escribir la Fase 02.
-- El export de Odontovía de esta fase tiene seis columnas y ninguna descripción de texto libre.
-  **La Fase 06 necesita una columna con comas adentro** para que la factura de la deuda sea
-  visible; conviene que el generador la agregue desde ya, aunque el Bloque A no la use.

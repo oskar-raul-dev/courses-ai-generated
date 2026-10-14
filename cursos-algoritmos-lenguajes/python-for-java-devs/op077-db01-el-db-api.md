@@ -44,7 +44,7 @@ Los cinco `paramstyle` que permite la PEP 249, y quién usa cuál:
 | `format` | `%s` | `PyMySQL`, `mysqlclient` |
 | `pyformat` | `%(sede)s` y `%s` | `psycopg`, `pymssql` |
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 La regla de oro de JDBC sobrevive intacta: **los valores van como parámetros, nunca dentro del texto del SQL**. Cambia el
 dibujo del marcador; la razón —que el *driver* separe el dato de la sintaxis— es la misma, y la inyección SQL se evita

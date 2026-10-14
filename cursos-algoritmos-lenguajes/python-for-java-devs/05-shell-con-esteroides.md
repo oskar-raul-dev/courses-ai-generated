@@ -4,6 +4,7 @@
 > Depende de: Fase 04 · Habilita: Fase 06
 > Registro de esta fase: **script** — un archivo, stdlib pura
 > Proyecto que avanza: el CLI · **gana `argparse`, `pathlib` y el firmador**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -51,7 +52,7 @@ puede seguir**. Que es exactamente lo que el cierre de mes de Áurea necesita.
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Esta fase tiene dos reflejos y los dos son caros. El primero rompe tu script en una plataforma;
 el segundo hace que reporte éxito sobre trabajo que no se hizo.
@@ -139,7 +140,7 @@ porque no arranca un shell.
 > una redirección, existen sin shell: `stdin=`, `stdout=`, y conectar dos procesos pasando el
 > `stdout` del primero al `stdin` del segundo. El ejercicio 12 lo pide.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **Los procesos son los procesos.** Un proceso hijo, su entrada, su salida, su salida de error, y
 un código de retorno que el padre recoge. Nada de eso cambia, y todo lo que sabes de
@@ -154,7 +155,7 @@ para uso incorrecto— valen aquí igual.
 un entorno modificado a un hijo es un parámetro (`env=`). La disciplina de no meter secretos en
 la línea de comandos —porque los ve cualquiera con `ps`— vale idéntico.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -929,25 +930,3 @@ sus propios atajos.
 > lleva además su tag anotado `mini-05`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **Los procesos nietos que sobreviven a un `timeout`** se nombran en §5.2 con su advertencia y se
-  trasladan al ejercicio 22, porque la solución completa —grupos de procesos— depende del sistema
-  operativo y no cabe en el camino base. Si la Fase 16 toca la operación de procesos de larga
-  duración, es el sitio para cerrarlo.
-- **`Enum` aparece por primera vez en la pista 3 del miniproyecto** y no en el cuerpo de ninguna
-  fase. Es de la biblioteca estándar, es trivial de usar, y quedó huérfano: conviene que la Fase
-  06 o la 10 le dediquen un párrafo, o que la Fase 03 lo absorba en su sección de `dataclass`.
-- **La medición no cubre Windows**, donde crear un proceso es más caro y el antivirus lo
-  inspecciona. Es la plataforma de Patricia y la diferencia sería mayor: producirlo antes de
-  consolidar `BENCHMARKS.md`.
-- **El ejercicio 24 compara contra un script de shell** y esa comparación merecería ser una
-  medición del curso, no solo un ejercicio: es la comparación más honesta que se le puede pedir al
-  Bloque A. Destino sugerido: un bloque 📏 adicional en esta fase si se decide ampliarla, o una
-  entrada propia en `BENCHMARKS.md`.
-- **El simulador del firmador tiene una semilla por NIT** para que la medición compare lo que dice
-  comparar. Si alguna fase posterior reutiliza el simulador, ese detalle no se puede cambiar sin
-  invalidar la tabla de §6.

@@ -35,7 +35,7 @@ La diferencia del tercer escalón no es solo "hay un esquema": es que el formato
 un **número**, y es el número lo que viaja; el nombre es para el código. Cambiar el nombre no rompe a nadie; agregar un campo nuevo tampoco
 (los lectores viejos lo ignoran); reutilizar un número, sí.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Este perfil conoce los tres escalones desde Java: un `Map<String, Object>` deserializado de JSON, un DTO con Bean Validation, y las clases que
 genera `protoc` o el plugin de Avro de Maven. Las reglas de compatibilidad de Protobuf y Avro son las mismas en los dos lenguajes, porque son del

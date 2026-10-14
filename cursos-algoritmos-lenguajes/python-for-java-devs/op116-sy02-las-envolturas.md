@@ -30,7 +30,7 @@ programa falla—.
 | sh | 2.4.0 | `sh.gzip("-c", f)` | Lanza `ErrorReturnCode_N` |
 | invoke | 3.0.3 | `c.run("gzip -c x \| wc -c")` dentro de una `@task` | Lanza `UnexpectedExit` (y usa un shell) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java no hay un equivalente común (Apache Commons Exec es lo más cercano, y casi nadie lo usa), y el instinto supone que las envolturas son
 cosméticas. No lo son en un punto: **cambian el comportamiento ante un error**. Un script que pasa de `subprocess.run` a `sh` empieza a lanzar

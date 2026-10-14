@@ -40,7 +40,7 @@ flowchart LR
 | Cuándo se ve un documento nuevo | Tras el *refresh* (≈ 1 s por defecto) | Cuando termina la **tarea** asíncrona | Al confirmar la transacción |
 | Operarlo | Pesado: JVM, memoria, clúster | Liviano: un binario | Ya está |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este perfil probablemente usó Elasticsearch desde Spring Data y lo trató como un repositorio más: `save` y luego `findBy`. El
 instinto espera que lo guardado se encuentre en la siguiente línea. En un motor de búsqueda, la escritura y la visibilidad están

@@ -186,7 +186,7 @@ Lo que dicen los números:
   `Assertion failed (depth == CV_32F || depth == CV_32S)` en `boundingRect`.
 - **Ocho puntos en el borde** de la imagen: sin ellos, la triangulación cubre solo el casco convexo de la cara y el fondo no se deforma.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Una transformación afín es `AffineTransform` de `java.awt.geom`: la misma matriz de 2×3, la misma composición. Lo que Java no trae es la deformación por piezas, y
 ese bucle de veinte líneas es todo lo que falta.

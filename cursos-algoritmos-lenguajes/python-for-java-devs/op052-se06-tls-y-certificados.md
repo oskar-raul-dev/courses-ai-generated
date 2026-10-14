@@ -44,7 +44,7 @@ Verificar un certificado son dos comprobaciones distintas, y fallan por separado
 | `httpx` y `requests` | **`certifi`**: una copia de las CA de Mozilla dentro del paquete, que ignora el sistema |
 | Con `truststore` | El del sistema operativo, incluido el llavero de macOS y el almacén de Windows |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java hay un `cacerts` por JDK, y se agrega la CA con `keytool -importcert`. El instinto busca el `cacerts` de
 Python y no lo encuentra, porque `httpx` usa `certifi` y `certifi` es un archivo dentro de un paquete: editarlo

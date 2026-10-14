@@ -4,6 +4,7 @@
 > Depende de: Fase 16 · Habilita: — · Cierra el curso
 > Registro de esta fase: **aplicación**
 > Proyecto que avanza: **AgendaAPI, implementada dos veces**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -55,7 +56,7 @@ Y esta vez es definitivo, porque el curso se acaba:
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo:** comparar contra un competidor de paja.
 
@@ -83,7 +84,7 @@ conviene exigirle a cualquier comparación que leas:
 > 🧭 **La regla, y vale para leer cualquier *benchmark* del mundo:** antes de mirar los números,
 > mira la configuración del que pierde. Si no la publican, los números no significan nada.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Y en esta fase es lo más importante que se puede decir, porque es el resumen del curso:
 
@@ -265,8 +266,8 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 Dos imágenes mínimas y comparables: una base *slim* o *alpine*, una capa de dependencias, una capa
 de código. **No hay más contenedor en este curso**, y la razón está en `0-ESTRUCTURA-CURSO.md`:
-hay un curso entero de contenedores en el repositorio y duplicarlo sería regalarle espacio a un
-tema que ya está cubierto.
+los contenedores y su orquestación quedan fuera del alcance, y el duelo usa uno solo porque lo
+necesita para medir.
 
 Lo único que el duelo necesita de ellos es el arranque en frío y el tamaño — y los dos están en
 §6, con una sorpresa.
@@ -375,6 +376,12 @@ acierto.
 - **GraalVM native-image y la compilación anticipada de Spring Boot**, que reducen el arranque en
   frío de la JVM a decenas de milisegundos y cambiarían esa columna por completo. Se declara
   porque sin esta línea, la comparación de arranque favorece a Python más de lo debido.
+- **El *bytecode* de Python compilado en la imagen.** La imagen instala con `uv` sin
+  `--compile-bytecode`, así que cada arranque en frío incluye compilar el *bytecode* de FastAPI y
+  Pydantic: el costo que la Fase 07 midió en 2.28 s para el primer `import fastapi`. Con
+  `--compile-bytecode` la compilación se paga al construir la imagen y el arranque de Python baja;
+  cuánto, queda sin medir (⏳). Se declara porque, a diferencia de GraalVM, este ajuste favorece a
+  Python.
 - **Ajustes de JVM** —tamaño del *heap*, recolector, `-XX:TieredStopAtLevel`—. Los valores por
   defecto son lo que despliega la mayoría, y lo contrario habría que justificarlo para los dos
   lados.
@@ -742,26 +749,3 @@ tú eres quien pide el número antes de opinar — el curso funcionó.
 >
 > git tag -n9 -l 'mini-*'    # tus dieciocho números, juntos por primera vez
 > ```
-
----
-
-## 📌 Pendientes sugeridos
-
-- **La fusión se sostiene, y conviene dejarlo dicho** porque la propuesta de fases obligaba a
-  declararlo: **el miniproyecto es la defensa** y **el veredicto general tiene su propia sección
-  numerada (§6.b)**, con sus tres partes —dónde ganó Python, dónde habría ganado Java, y las dos
-  decisiones equivocadas—. No quedó como párrafo de cortesía al pie de la tabla. **No se propone
-  deshacer la fusión.**
-- **GraalVM native-image es el hueco más importante de §6**, porque cambiaría por completo la
-  columna del arranque en frío y es la respuesta obvia de cualquier lector que sepa de Spring
-  moderno. El ejercicio 17 lo traslada; **el curso debería traer su propio número**.
-- **La confesión del generador de carga** —390 req/s falsos contra 13.834 reales— es material de
-  `INSTINTOS.md` y probablemente la lección metodológica más transferible de las dieciocho fases.
-- **Todo el duelo es en un portátil de ocho núcleos**, y §6.b lo reconoce como la debilidad
-  metodológica mayor del curso. La tabla de dos núcleos (ejercicio 18) debería producirse antes de
-  dar el material por publicado.
-- **La decisión de que el histórico del CLI fuera `sqlite3`** queda reconocida como equivocada en
-  §6.b. Si alguna vez se revisa el curso, la corrección no es cambiar la Fase 06 —donde `sqlite3`
-  es correcto y está bien medido— sino que **la Fase 11 migre el histórico explícitamente**, y que
-  esa migración sea material: es exactamente el tipo de decisión que un sistema real tiene que
-  revisar.

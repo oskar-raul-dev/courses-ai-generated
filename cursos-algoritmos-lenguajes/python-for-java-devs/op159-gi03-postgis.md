@@ -46,7 +46,7 @@ flowchart TB
 | Costo | Barato | Más caro por operación |
 | Cuándo | Datos de un país, proyectados a su CRS local | Datos de todo el planeta, o cuando nadie quiere pensar en proyecciones |
 
-### 📖 Diccionario
+### Diccionario
 
 ```text
 Java                                         Python

@@ -35,7 +35,7 @@ navegador.
 `.pptx` editables, el formato no cambia rápido y la biblioteca sigue funcionando; es una dependencia que se fija y se
 vigila, no una que se evita.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, Apache POI escribe `.pptx` (XSLF) y este perfil quizás lo usó para Excel y sufrió su API. El instinto espera lo
 mismo de `python-pptx`. La API es más corta, y la idea que cambia todo es otra: **no se diseña la diapositiva en código**,

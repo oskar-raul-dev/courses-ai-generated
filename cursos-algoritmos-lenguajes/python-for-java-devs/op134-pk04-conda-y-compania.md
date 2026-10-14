@@ -39,7 +39,7 @@ compiladas para la plataforma. El camino base midió que para el stack de una AP
 | Instala el intérprete | `uv` sí | Sí |
 | Velocidad y tamaño | Rápido, liviano | Más lento, más pesado (medido en el camino base) |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, las dependencias nativas son raras: casi todo es *bytecode*, y cuando no, viene dentro del *jar*. El instinto supone que un paquete de PyPI "trae todo".
 Muchos sí (ruedas compiladas), pero los que envuelven bibliotecas grandes de C o C++ a veces solo publican el código fuente y esperan que la biblioteca ya esté en

@@ -4,6 +4,7 @@
 > Depende de: Fase 07 · Habilita: Fase 09
 > Registro de esta fase: **herramienta** — `src/`, tipado estricto, pruebas
 > Proyecto que avanza: el CLI · **queda blindado el motor de comisiones**
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -53,7 +54,7 @@ Y esta fase tiene la medición más convincente del curso, por una razón que no
 
 ## 🧠 4. Concepto mínimo
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Dos reflejos, uno por cada red.
 
@@ -129,6 +130,11 @@ lados y la diferencia — que es exactamente lo que `assertEqual` venía a dar:
 E       AssertionError: assert Decimal('160000') == Decimal('150000')
 ```
 
+> 📝 **Esto no contradice a la Fase 04**, que advirtió que `assert` desaparece con `python -O`.
+> Las pruebas corren sin `-O` a propósito, y en ellas `assert` es la forma correcta de afirmar.
+> Lo que sigue mal es usar `assert` para validar entradas en el código de producción: ahí va un
+> `if` con su excepción, porque `-O` lo borraría.
+
 **La diferencia de fondo no es la sintaxis: es el `setUp`.** En JUnit, la preparación es una fase
 del ciclo de vida que corre siempre, para todos los métodos de la clase, y el estado vive en
 campos. En `pytest`, la preparación son **fixtures**: funciones que declaran lo que producen, que
@@ -157,7 +163,7 @@ Lo que eso compra, y es concreto: **una prueba que no pide una fixture no paga s
 suite con una fixture cara —una base de datos, un archivo grande— eso es la diferencia entre una
 suite de dos segundos y una de dos minutos.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Y aquí es mucho, más que en ninguna otra fase del curso:
 
@@ -176,7 +182,7 @@ para elegir entre ellos también.
 `test_el_tope_mensual_corta_en_el_segundo_caso` le sirve a quien lo lea en dos años;
 `test_monthly_cap_2`, no.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -961,7 +967,7 @@ las pruebas. Eso es la Fase 11, y es más fuerte que cualquier suite.
 que más cambia respecto a JUnit. Durante: `typing` y `mypy`, consultados. Después: el PEP 484 en
 la parte donde explica qué **no** promete — se lee distinto cuando ya viste los 43 errores.
 
-> ⚠️ URLs y contenidos cambian; fija las versiones de `alcance-del-proyecto.md` §9.
+> ⚠️ URLs y contenidos cambian; fija las versiones que usa esta fase.
 
 ---
 
@@ -1005,26 +1011,3 @@ las dos cosas.
 > lleva además su tag anotado `mini-08`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El `return` dentro de `except*` era un error real del propio material del curso**, encontrado
-  al ejecutar `mypy` sobre el código del Bloque A mientras se escribía esta fase. La Fase 04 usa
-  `sys.exit(1)` en esa posición y por eso no lo tiene; **cualquier fase que en el futuro escriba un
-  `except*` dentro de una función que retorne tiene que saberlo.** Conviene que la Fase 04 lo
-  mencione en una línea, porque es el sitio donde el lector aprende `except*`.
-- **La fusión de tipado y pruebas se sostiene**, y la prueba es que el miniproyecto es uno solo y
-  las dos mitades se tocan: el `Protocol` de §5.2 es lo que hace falso el registro equivocado, y la
-  prueba de propiedades es lo que hace falso el reparto. Si alguna vez se separan, el miniproyecto
-  se parte en dos ejercicios más débiles.
-- **`assert` con `-O`**: la Fase 04 advirtió que `assert` desaparece con la bandera de
-  optimización, y esta fase lo usa como mecanismo central de `pytest`. **No hay contradicción y
-  conviene decirlo explícitamente en alguna de las dos**: `pytest` corre sin `-O` a propósito, y
-  usar `assert` para validar entradas de producción sigue estando mal.
-- **`ROUND_HALF_UP` contra `ROUND_HALF_EVEN`** aparece en una pista y merece más: el valor por
-  defecto de Python no es el de la contabilidad colombiana, y eso vale dinero. Destino sugerido:
-  una nota 📝 en la Fase 11, donde el dinero se persiste.
-- **No se midió `pyright`** (ejercicio 19), y el alcance lo declara como alternativa. Si alguna vez
-  se produce ese número, esta sección debería citarlo.

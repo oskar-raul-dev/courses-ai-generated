@@ -33,7 +33,7 @@ Python, y eso tiene un precio que también se puede medir.
 | `uv tool install ruff` | Herramienta aislada en su propio entorno | `pipx` |
 | `uv export` | El *lock* como `requirements.txt` con *hashes* | — |
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 El instinto de quien viene de Maven y Gradle desconfía de una herramienta de dos años que reemplaza todo: en la JVM, la herramienta de construcción es una
 decisión de diez años. Es un buen instinto, y la sección lo mide en vez de descartarlo; lo que se equivoca es en suponer que la alternativa es más estable: el

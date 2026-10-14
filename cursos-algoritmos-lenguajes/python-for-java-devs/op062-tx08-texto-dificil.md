@@ -36,7 +36,7 @@ herramientas para eso, más la otra mitad del tema: mostrar números, plata y fe
 La regla que ataja la mitad: **normalizar a NFC en la frontera**, en el momento en que el texto entra al sistema
 (formulario, importación, API), igual que se valida cualquier otro dato.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 En Java, `String.length()` cuenta unidades UTF-16, y este perfil aprendió a desconfiar de ella con los emojis. En Python,
 `len()` cuenta puntos de código, que es mejor, y el instinto concluye que ya está bien. No está: `len("👍🏽")` es 2 (el

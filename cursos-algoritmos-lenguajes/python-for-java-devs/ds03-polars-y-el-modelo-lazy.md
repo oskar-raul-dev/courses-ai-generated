@@ -134,7 +134,7 @@ está intercalada con fechas y números, que es exactamente lo que hace un CSV.
 > de perder la partida antes de empezar. Parquet paga cuando se escribe una vez y se lee
 > muchas — que es, otra vez, la pregunta de `ds01` con otro disfraz.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Tu instinto dice **"esto ya lo tengo: `Stream` es perezoso y yo escribo *streams* desde
 Java 8"**. Y la parte que se transfiere es real: la operación terminal, el no materializar
@@ -159,7 +159,7 @@ cuando se toque, y eso produce el desastre que ya conoces. Aquí es lo contrario
 significa **acumular la consulta completa para ir al disco una sola vez y mejor**. Si
 traduces "lazy" por lo que significa en tu ORM, vas a desconfiar de lo que deberías usar.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 - **El SQL.** El de DuckDB es SQL de verdad: CTEs, `FULL JOIN ... USING`, funciones de
   ventana. Lo que sabes se aplica sin traducción, y esa es su mayor ventaja para este
@@ -172,7 +172,7 @@ traduces "lazy" por lo que significa en tu ORM, vas a desconfiar de lo que deber
   —cuatro `import` de la biblioteca estándar costaban 6,6 ms— cobrada a otra escala: pandas
   cuesta 317 ms de arranque.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java / SQL | Polars · DuckDB | Dónde se rompe el paralelo |
 |---|---|---|
@@ -305,7 +305,7 @@ justo lo que en Polars había que pedir a mano.
   de lectura. Eso es lo que hace legítimo comparar los dos formatos — si el SQL fuera
   distinto, estaríamos midiendo dos consultas y llamándolo formato.
 
-### 5.5 🧨 El experimento que rompe a propósito
+### 5.5 El experimento que rompe a propósito
 
 Este no rompe el programa: rompe la **medición**, que es peor porque no se nota.
 
@@ -698,21 +698,3 @@ es del último toque**.
 > lleva además su tag anotado `ds-mini-03`, con **el motor elegido y su tiempo** en el mensaje.
 > La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **Falta la celda Polars sobre Parquet** en la tabla 6.1 (ejercicio 12). Se dejó fuera para
-  que la comparación de formatos tuviera un solo motor y no dos variables a la vez, pero es la
-  celda que más gente va a querer. Si alguien la corre, entra a la tabla **con esa nota**.
-- **El ejercicio 22 —el consolidado contra Postgres— es una entrada de `BENCHMARKS.md`**, no
-  solo un ejercicio. Necesita declarar si cuenta el costo de cargar los datos, y esa decisión
-  cambia el resultado.
-- **La sección 5.5 encontró algo que vale para todo el curso**: una medición puede depender de
-  qué **otras** dependencias hay instaladas. Está en `INSTINTOS.md` con los reflejos de método.
-- **El umbral de 30.000–115.000 filas se estrechó hasta donde alcanzaban los datos reales.**
-  Afinarlo más exigiría tamaños intermedios sintéticos, y el curso prefirió un rango honesto
-  sobre un punto inventado. Si alguien quiere el punto exacto, que lo mida y diga cómo.
-- `INSTINTOS.md` gana el reflejo de la sección: *"lazy es lazy loading"* → **aquí perezoso
-  significa planear antes de leer**, que es lo contrario del N+1 que te enseñó a temerle.

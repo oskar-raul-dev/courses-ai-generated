@@ -4,6 +4,7 @@
 > Depende de: Fase 06 · Habilita: Fase 08
 > Registro de esta fase: **script → herramienta** (la frontera, cruzándose)
 > Proyecto que avanza: **el CLI migra** — `aur_cli.py` se vuelve el paquete `aur`
+> Fecha de verificación de las versiones: 12/09/2026
 
 ---
 
@@ -95,7 +96,7 @@ no falla con un mensaje útil: falla con un `SyntaxError` en una línea cualquie
 
 Cuéntalas sobre `aur`: se cumplen las cinco. Por eso esta fase es aquí y no en la 03.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 **El reflejo, y es el más caro del curso entero:** *empezar por el proyecto*.
 
@@ -143,7 +144,7 @@ lockfile.
 > La diferencia real es que allá lo reproducible es lo normal y aquí hay que pedirlo
 > explícitamente.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 **La idea de un artefacto con nombre, versión y metadatos** es la misma, y `pyproject.toml` se lee
 como un `pom.xml` sin las ochenta líneas de plugins. Nombre, versión, descripción, dependencias,
@@ -160,7 +161,7 @@ menor te esperan aquí.
 cambiar, y no dividir por dividir. Lo único que cambia es que aquí un módulo es un archivo y no
 hace falta una clase para justificarlo.
 
-### 📖 Diccionario de traducción
+### Diccionario de traducción
 
 | Java | Python | Dónde se rompe el paralelo |
 |---|---|---|
@@ -551,7 +552,7 @@ wheel—, porque el camino base no tiene ninguna: eso lo mide el track de datos,
 el veredicto de arriba vale **solo para este stack** y así está escrito.
 
 > ⚠️ **`uv` es joven y se mueve rápido.** Versión fijada: **0.12.13**, verificada el **12 de
-> septiembre de 2026**, y así consta en `alcance-del-proyecto.md` §9. El curso no finge lo
+> septiembre de 2026**, y así queda fijada en todo el curso. El curso no finge lo
 > contrario, y la mitigación ya está puesta desde la Fase 00: sabes hacer esto a mano con `pip` y
 > `venv`. Si `uv` desaparece mañana, pierdes velocidad, no el oficio.
 
@@ -864,7 +865,7 @@ lo que no uses hoy. Durante: la documentación de `uv` sobre proyectos y lockfil
 más cuando ya montaste el archivo a mano.
 
 > ⚠️ URLs, títulos y contenidos cambian, y en esta fase más que en ninguna: `uv` publica versiones
-> cada pocas semanas. Verifica contra la versión fijada en `alcance-del-proyecto.md` §9 antes de
+> cada pocas semanas. Verifica contra la versión fijada en esta fase antes de
 > dar nada por bueno.
 
 ---
@@ -910,25 +911,3 @@ hace posible probar mañana.
 > lleva además su tag anotado `mini-07`, y **en el mensaje de ese tag va el número que arrojó su
 > medición**. La convención completa está en
 > [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
-
----
-
-## 📌 Pendientes sugeridos
-
-- **El primer `import` de 2.28 s con `uv`** es un hallazgo que merece más de lo que cabe aquí.
-  Destino sugerido: la Fase 16, en el bloque 📏 de rendimiento, donde el bytecode y el arranque
-  ya son tema; y la Fase 17, porque afecta directamente el arranque en frío del contenedor que se
-  mide en el duelo.
-- **La medición es de una sola plataforma y de una sola corrida por caso.** Las diferencias son de
-  un orden de magnitud y aguantan, pero Windows falta y es donde `uv` tendría **más** ventaja.
-  Destino: producirla antes de consolidar `BENCHMARKS.md`.
-- **El `if __name__ == "__main__":` de `cli.py`** se conserva durante la migración y la Fase 09
-  tiene que decidir si se queda. Si no lo decide, queda código muerto en el entregable final.
-- **El ejercicio 25 puede descubrir un error en el corte de módulos de §5.2** — algo que el batch
-  de la Fase 15 necesite y que hoy viva en `cli.py`. Si aparece, el contrato del CLI se corrige
-  **antes** de escribir la Fase 15, no después.
-- **`uv tool install` se nombra aquí de pasada** y es el mecanismo central de la Fase 09. Que la
-  09 no lo introduzca como si fuera nuevo: enlázalo a esta fase.
-- Al escribir el **track de datos e IA**, la tabla de la sección 6 se invierte y conda gana. La
-  medición de aquí debería citarse allá explícitamente, para que el lector vea que el curso
-  cambia de opinión con datos y no por capricho.

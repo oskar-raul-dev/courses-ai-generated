@@ -41,7 +41,7 @@ Y las preguntas que deciden, en orden:
    simple.
 3. **¿Tiene que ser síncrono?** Si no, una bitácora o un archivo desacoplan del todo.
 
-### 🩻 Esto sí funciona igual
+### Esto sí funciona igual
 
 Todo lo que este perfil sabe de microservicios vale entre Java y Python sin cambios: contratos versionados, *timeouts*, reintentos con
 idempotencia, llamadas gruesas en vez de conversadoras. El lenguaje de cada lado no cambia ninguna de esas reglas.

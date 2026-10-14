@@ -53,7 +53,7 @@ sequenceDiagram
 Cada clic es un viaje al servidor; el estado de cada sesión ocupa memoria del proceso; y la pantalla es la que la
 biblioteca sabe dibujar. Es lo que permite no escribir JavaScript, y es lo que se paga.
 
-### 🧠 Qué se le puede pedir a alguien que no programa
+### Qué se le puede pedir a alguien que no programa
 
 Esta es la parte del track que no trata de bibliotecas. A Patricia se le puede pedir que **abra un enlace o un archivo,
 elija de una lista, escriba un número, descargue un Excel y lea una tabla**. No se le puede pedir que instale Python,
@@ -61,7 +61,7 @@ que abra una terminal, que edite un YAML, que entienda un mensaje de error con u
 de pasos que la herramienta no le muestra. La prueba es concreta: **si Patricia necesita al ingeniero para usarlo, no
 está entregado**.
 
-### 🪞 Tu instinto de Java dice… y esta vez se equivoca
+### Tu instinto de Java dice… y esta vez se equivoca
 
 Este perfil viene de proyectos con un frontend aparte —Angular, React— y una API. El instinto es que "una interfaz" es
 eso, y que lo demás es un juguete. Para una usuaria interna, en una empresa sin equipo de frontend, el juguete suele ser
