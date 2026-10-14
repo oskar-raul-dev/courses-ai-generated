@@ -1,9 +1,11 @@
 # ⚖️ El Árbitro — Capstone Políglota
 
-Enseña **arquitectura políglota completa**: cómo combinar 3+ motores sin criterio (el antipatrón) y cómo combinan correctamente.
+Enseña la **persistencia políglota** a fondo: cuántos motores necesita un sistema, cuál es la verdad de cada dato, cómo viaja cada cambio (bandeja de salida y captura de cambios), cómo se restaura todo junto y cuánto cuesta cada motor cada semana.
 
-**Proyecto:** Sistema con múltiples motores (documentos + clave-valor + búsqueda + grafos + series temporales) y su costo operacional real.
+**Proyecto:** La plataforma de una boletería de tres países, en tres arquitecturas: todo en PostgreSQL, la reducida y la de seis motores
 
-**Rivales:** No es comparación de productos; es una decisión arquitectónica.
+**Rivales:** No es una comparación de productos; es una decisión de arquitectura, medida con su factura.
 
-**Veredicto:** El curso cierra la ruta mostrando que cada motor gana en su caso, pierde en todos los otros. Politécnicas sin criterio = infierno operativo.
+**Veredicto:** Cada motor que sumas se gana su lugar con un número y se paga cada semana. Ni un motor para todo, ni un motor por patrón.
+
+> 📝 Curso en preparación; cierra la Ruta NoSQL; este README se reescribe al final (sus lineamientos están en `prompts/`).

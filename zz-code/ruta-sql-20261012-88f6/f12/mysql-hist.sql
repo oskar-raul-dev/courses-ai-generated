@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS staging.protocol_hist;
+CREATE TABLE staging.protocol_hist LIKE legacy.Protocolos;
+INSERT INTO staging.protocol_hist SELECT * FROM legacy.Protocolos;
+ANALYZE TABLE staging.protocol_hist;
+SELECT 'sin histograma' AS etapa;
+EXPLAIN FORMAT=TREE SELECT p.Sede, count(*) FROM staging.protocol_hist p JOIN legacy.Pacientes c ON c.IdPaciente = p.IdPaciente WHERE p.Fecha >= '2015-03-10' AND p.Fecha < '2015-03-11' GROUP BY p.Sede;
+EXPLAIN ANALYZE SELECT p.Sede, count(*) FROM staging.protocol_hist p JOIN legacy.Pacientes c ON c.IdPaciente = p.IdPaciente WHERE p.Fecha >= '2015-03-10' AND p.Fecha < '2015-03-11' GROUP BY p.Sede;
+EXPLAIN ANALYZE SELECT count(*) FROM staging.protocol_hist p JOIN legacy.ResultadoItem r ON r.IdProtocolo = p.IdProtocolo WHERE p.Fecha >= '2015-03-10' AND p.Fecha < '2015-03-11' AND r.CodDeterminacion = 'GLU';
+ANALYZE TABLE staging.protocol_hist UPDATE HISTOGRAM ON Fecha, Sede WITH 100 BUCKETS;
+SELECT 'con histograma' AS etapa;
+EXPLAIN ANALYZE SELECT p.Sede, count(*) FROM staging.protocol_hist p JOIN legacy.Pacientes c ON c.IdPaciente = p.IdPaciente WHERE p.Fecha >= '2015-03-10' AND p.Fecha < '2015-03-11' GROUP BY p.Sede;
+EXPLAIN ANALYZE SELECT count(*) FROM staging.protocol_hist p JOIN legacy.ResultadoItem r ON r.IdProtocolo = p.IdProtocolo WHERE p.Fecha >= '2015-03-10' AND p.Fecha < '2015-03-11' AND r.CodDeterminacion = 'GLU';

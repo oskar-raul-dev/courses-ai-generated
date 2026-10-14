@@ -1,0 +1,38 @@
+== a05/F01
+m|3e59292e9918|242427|1327622|12134453
+18936
+   Buffers: shared hit=15696
+== F03
+-- fixed_presentation.sql
+
+ nulos | vacios 
+-------+--------
+    39 |     20
+(1 row)
+
+-- ruben_presentation.sql
+ filas | practicas |   total    
+-------+-----------+------------
+  1314 |      1203 | 26524.1700
+(1 row)
+
+== F04
+10903
+32252
+                    Regla                    | Filas rechazadas | % de legacy | Contra la verdad 
+---------------------------------------------+------------------+-------------+------------------
+ facturacion.practica_sin_precio_vigente     |           109496 |        6.27 |                 
+ obras_sociales.sin_sigla                    |                1 |        4.17 |                 
+ pacientes.dni_con_formato_invalido          |             5408 |        2.23 |             5137
+ pacientes.documento_de_otro_paciente        |             9049 |        3.73 |                 
+ pacientes.documento_en_nombre               |            25574 |       10.55 |            25575
+ pacientes.nacimiento_posterior_al_alta      |              442 |        0.18 |              442
+ pacientes.numero_fuera_de_formato           |                9 |        0.00 |                 
+ pacientes.pasaporte_sin_pais                |             5137 |        2.12 |             5137
+ pacientes.recien_nacido_con_documento_ajeno |             5397 |        2.23 |             5408
+ precios.pegado_dos_veces                    |              187 |        0.91 |                 
+ precios.vigencia_duplicada                  |              380 |        5.52 |                 
+ protocolos.obra_social_sin_resolver         |             5167 |        4.92 |             5167
+ resultados.protocolo_inexistente            |             2150 |        0.02 |                 
+(13 rows)
+

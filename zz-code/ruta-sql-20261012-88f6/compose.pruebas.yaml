@@ -1,0 +1,7 @@
+# Override de las pruebas de la sesión (regla 9 del plan): puertos aleatorios en 127.0.0.1.
+services:
+  postgres: {ports: !override ["127.0.0.1::5432"]}
+  mysql: {ports: !override ["127.0.0.1::3306"]}
+  oracle: {ports: !override ["127.0.0.1::1521"]}
+  mongo: {ports: !override ["127.0.0.1::27017"]}
+  sqlserver: {ports: !override ["127.0.0.1::1433"]}

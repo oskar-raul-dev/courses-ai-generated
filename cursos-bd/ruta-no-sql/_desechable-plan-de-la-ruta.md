@@ -16,7 +16,7 @@
 | ID | Decisión | Valor | Fecha |
 |---|---|---|---|
 | R-01 | Relación con Ruta NoSQL Lite | **Lite es prerrequisito.** Cada curso da por sabido lo que lite enseñó de su familia (las dos fases de la familia, el Bloque 0, el arnés, las cinco preguntas) y recorta ese alcance. Ningún curso repite el minicurso de lite: lo profundiza. | 06/10/2026 |
-| R-02 | Historia | **Una empresa y un proyecto distintos por curso**, con su propio `00-historia-de-<empresa>.md`. Ninguno sigue con Cóndor, y ninguno usa las empresas que lite ya gastó: Cóndor, Voltaria, Cumbre Roja, Bengala, Barlovento, Nodo Sur, Rueda Viva. Usadas en la ruta: Mercado Ceibo (Proteo), Liga Pixel (Portalón), Pasaje (Cristalería), Valdivieso Abogados (Oráculo de Bolsillo), Quetzal Pay (Telaraña). | 06/10/2026 |
+| R-02 | Historia | **Una empresa y un proyecto distintos por curso**, con su propio `00-historia-de-<empresa>.md`. Ninguno sigue con Cóndor, y ninguno usa las empresas que lite ya gastó: Cóndor, Voltaria, Cumbre Roja, Bengala, Barlovento, Nodo Sur, Rueda Viva. Usadas en la ruta: Mercado Ceibo (Proteo), Liga Pixel (Portalón), Pasaje (Cristalería), Valdivieso Abogados (Oráculo de Bolsillo), Quetzal Pay (Telaraña), Encomienda 305 (Rastro), Vacantia (Buscafino), La Cazuela (Comanda), Timbra (El Vigía), Kambio (Libro Mayor), Palco (El Árbitro). | 06/10/2026 |
 | R-03 | Guía de estilo | **Una guía completa por curso**, desde la plantilla de `zz-instrucciones/` y la guía de lite como modelo; no una guía base con derivadas. | 06/10/2026 |
 | R-04 | Documentos de agosto | Pasan al `prompts/` de su curso como `_desechable-semilla.md`, `_desechable-alcance-v1.md`, `_desechable-guia-de-estilo-v1.md` y `_desechable-prompts-v1.md`. **La semilla manda** como fuente de temario hasta que la propuesta de fases (E2) del curso se cierre; los otros tres son de consulta. | 06/10/2026 |
 | R-05 | Orden de trabajo | Un curso por sesión, en el orden de §3. En cada uno: ficha de arranque (E0), alcance (E1) con **todas sus decisiones cerradas**, historia (primera versión) y guía, `prompts/README.md`. **Las propuestas de fases (E2) se discuten cuando los once tengan su `prompts/`**, curso por curso; con ellas se cierra la historia. | 06/10/2026 |
@@ -68,17 +68,18 @@
 | 02 | Cristalería | Analítico embebido | Pasaje | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
 | 03 | Oráculo de Bolsillo | Vectorial | Valdivieso Abogados | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
 | 04 | Telaraña | Grafos | Quetzal Pay | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
-| 05 | Centinela de Flota | Columnar ancha | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 06 | Buscafino | Búsqueda | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 07 | Bitácora de Campo | Offline-first | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 08 | El Vigía | Series temporales | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 09 | Libro Mayor | NewSQL distribuido | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 10 | El Árbitro | Políglota (cierre) | — | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 05 | Rastro (antes Centinela de Flota) | Columnar ancha | Encomienda 305 | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
+| 06 | Buscafino | Búsqueda | Vacantia | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
+| 07 | Comanda (antes Bitácora de Campo) | Offline-first | La Cazuela | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
+| 08 | El Vigía | Series temporales | Timbra | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
+| 09 | Libro Mayor | NewSQL distribuido | Kambio | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
+| 10 | El Árbitro | Políglota (cierre) | Palco | ✅ | 🟡 | ✅ | ✅ | ✅ | ⬜ |
 
 > ⚠️ **Nombres que chocan con lite o con otros cursos y hay que mirar al llegar:** «Centinela de Flota»
-> (lite es de flota aeronáutica: el nombre sugiere continuidad que R-02 niega) y «Libro Mayor» (la
-> empresa de NewSQL no puede ser Barlovento, que lite ya usó para ese miniproyecto). El Árbitro cierra la
-> ruta y quizá no lleve empresa propia, sino las de los otros diez: decidir en su E0.
+> ya se resolvió: el curso pasó a llamarse **Rastro** el 07/10/2026 (`05-rastro/`). «Bitácora de Campo» pasó a
+> **Comanda** (`07-comanda/`) el mismo día, al cambiar el dominio a restaurantes (a confirmar por el autor).
+> «Libro Mayor» se mantiene: su empresa es Kambio, no Barlovento. El Árbitro lleva empresa propia, Palco.
+> **Todos resueltos.**
 
 ---
 
@@ -163,16 +164,96 @@ Se copia al empezar cada curso; se marca aquí mismo.
 [ ] E2 a E6, como en Proteo
 ```
 
-### Los otros seis
+### 05 · Rastro (antes Centinela de Flota)
 
 ```text
-[ ] prompts/ creado y los cuatro documentos de agosto movidos como _desechable
-[ ] E0: ficha de arranque confirmada
-[ ] Empresa elegida (fuera de las de R-02)
-[ ] 00-historia-de-<empresa>.md, primera versión
-[ ] prompts/alcance-del-proyecto.md, primera versión
-[ ] prompts/guia-de-estilo-y-convenciones.md, primera versión
-[ ] prompts/README.md
+[x] prompts/ creado y los cuatro documentos de agosto movidos como _desechable (07/10/2026)
+[x] Directorio renombrado de 05-centinela-de-flota/ a 05-rastro/ (07/10/2026)
+[x] E0: ficha de arranque confirmada (07/10/2026)
+[x] Empresa elegida: Encomienda 305 (07/10/2026; dominio del autor, nombre propuesto por la sesión)
+[x] 00-historia-de-encomienda-305.md, primera versión (07/10/2026)
+[x] prompts/alcance-del-proyecto.md: 36 decisiones cerradas (07/10/2026)
+[x] prompts/guia-de-estilo-y-convenciones.md, cerrada salvo lo que depende de las fases (07/10/2026)
+[x] prompts/README.md (07/10/2026)
+[ ] Historia: versión final, con cada dolor atado a su fase (con E2); confirmar el nombre de la empresa
+[ ] Antes de E2: revisar el recorte contra las fases 17 y 18 de lite, y la frontera con El Vigía
+[ ] E2 a E6, como en Proteo
+```
+
+### 06 · Buscafino
+
+```text
+[x] prompts/ creado y los cuatro documentos de agosto movidos como _desechable (07/10/2026)
+[x] E0: ficha de arranque confirmada (07/10/2026)
+[x] Empresa elegida: Vacantia (07/10/2026; dominio del autor, nombre y sede propuestos por la sesión)
+[x] 00-historia-de-vacantia.md, primera versión (07/10/2026)
+[x] prompts/alcance-del-proyecto.md: 36 decisiones cerradas (07/10/2026)
+[x] prompts/guia-de-estilo-y-convenciones.md, cerrada salvo lo que depende de las fases (07/10/2026)
+[x] prompts/README.md (07/10/2026)
+[ ] Historia: versión final, con cada dolor atado a su fase (con E2); confirmar nombre y sede de la empresa
+[ ] Antes de E2: revisar el recorte contra las fases 11 y 12 de lite, si ya están escritas
+[ ] E2 a E6, como en Proteo
+```
+
+### 07 · Comanda (antes Bitácora de Campo)
+
+```text
+[x] prompts/ creado y los cuatro documentos de agosto movidos como _desechable (07/10/2026)
+[x] Directorio renombrado de 07-bitacora-de-campo/ a 07-comanda/ (07/10/2026), a confirmar por el autor
+[x] E0: ficha de arranque confirmada (07/10/2026)
+[x] Empresa elegida: La Cazuela (07/10/2026; dominio del autor, nombre y gente propuestos por la sesión)
+[x] 00-historia-de-la-cazuela.md, primera versión (07/10/2026)
+[x] prompts/alcance-del-proyecto.md: 36 decisiones cerradas (07/10/2026)
+[x] prompts/guia-de-estilo-y-convenciones.md, cerrada salvo lo que depende de las fases (07/10/2026)
+[x] prompts/README.md (07/10/2026)
+[ ] Historia: versión final, con cada dolor atado a su fase (con E2); confirmar el nombre de la empresa
+[ ] Antes de E2: revisar el recorte contra las fases 19 y 20 de lite, si ya están escritas
+[ ] E2 a E6, como en Proteo
+```
+
+### 08 · El Vigía
+
+```text
+[x] prompts/ creado y los cuatro documentos de agosto movidos como _desechable (07/10/2026)
+[x] E0: ficha de arranque confirmada (07/10/2026)
+[x] Empresa elegida: Timbra (07/10/2026; dominio del autor, nombre y gente propuestos por la sesión)
+[x] 00-historia-de-timbra.md, primera versión (07/10/2026)
+[x] prompts/alcance-del-proyecto.md: 36 decisiones cerradas (07/10/2026)
+[x] prompts/guia-de-estilo-y-convenciones.md, cerrada salvo lo que depende de las fases (07/10/2026)
+[x] prompts/README.md (07/10/2026)
+[ ] Historia: versión final, con cada dolor atado a su fase (con E2); confirmar el nombre de la empresa
+[ ] Antes de E2: revisar el recorte contra las fases 09 y 10 de lite, si ya están escritas
+[ ] E2 a E6, como en Proteo
+```
+
+### 09 · Libro Mayor
+
+```text
+[x] prompts/ creado y los cuatro documentos de agosto movidos como _desechable (07/10/2026)
+[x] E0: ficha de arranque confirmada (07/10/2026)
+[x] Empresa elegida: Kambio (07/10/2026; dominio del autor, nombre y gente propuestos por la sesión)
+[x] 00-historia-de-kambio.md, primera versión (07/10/2026)
+[x] prompts/alcance-del-proyecto.md: 36 decisiones cerradas (07/10/2026)
+[x] prompts/guia-de-estilo-y-convenciones.md, cerrada salvo lo que depende de las fases (07/10/2026)
+[x] prompts/README.md (07/10/2026)
+[ ] Historia: versión final, con cada dolor atado a su fase (con E2); confirmar el nombre de la empresa
+[ ] Antes de E2: revisar el recorte contra las fases 21 y 22 de lite, si ya están escritas
+[ ] E2 a E6, como en Proteo
+```
+
+### 10 · El Árbitro
+
+```text
+[x] prompts/ creado y los cuatro documentos de agosto movidos como _desechable (07/10/2026)
+[x] E0: ficha de arranque confirmada (07/10/2026)
+[x] Empresa elegida: Palco (07/10/2026; dominio del autor, nombre y gente propuestos por la sesión)
+[x] 00-historia-de-palco.md, primera versión (07/10/2026)
+[x] prompts/alcance-del-proyecto.md: 36 decisiones cerradas (07/10/2026)
+[x] prompts/guia-de-estilo-y-convenciones.md, cerrada salvo lo que depende de las fases (07/10/2026)
+[x] prompts/README.md (07/10/2026)
+[ ] Historia: versión final, con cada dolor atado a su fase (con E2); confirmar el nombre de la empresa
+[ ] Antes de E2: revisar el recorte contra las fases 23 a 25 de lite, si ya están escritas
+[ ] E2 a E6, como en Proteo
 ```
 
 ---
@@ -231,3 +312,57 @@ en Kotlin**. Decididas por defecto y listadas al autor: edición comunitaria de 
 y MAGE como plugins, conector simulado sin Kafka, el modelo de aristas decidido por medición, y la verdad
 sembrada como primera medida. El recorte se hizo contra la propuesta de las F13–F14 de lite, aún sin
 escribir. **Siguiente:** Centinela de Flota (columnar ancha); mirar antes el aviso de nombre de §3.
+
+**07/10/2026 · Rastro (antes Centinela de Flota).** El autor dio el dominio: un courier de Miami con casilleros
+virtuales que recibe compras de Estados Unidos, China y Europa y entrega en México, Panamá, Venezuela,
+Colombia, Ecuador, Perú y Chile; y pidió renombrar el curso según el dominio. La sesión propuso **Rastro** y la
+empresa **Encomienda 305** (el código de área de Miami), a confirmar con la historia final; el directorio pasó a
+`05-rastro/`. Se dejó la telemetría de la semilla porque se pisa con la flota de lite y con El Vigía. Villano: la
+plataforma de marca blanca entera en el mismo Cassandra que el rastreo (tarifas en seis tablas con lote sin
+registro, saldo con contadores, consecutivo con transacción ligera, reportes con `ALLOW FILTERING`); incidente:
+el Black Friday de 2025, con el rastreo sobreviviendo a cuarenta minutos sin enlace entre Doral y Bogotá.
+Full geek, ~100 h; Cassandra, ScyllaDB (licencia por verificar) y PostgreSQL particionado; Bigtable, Keyspaces
+y Astra ☁️. Decididas por defecto y listadas al autor: dos centros de datos simulados en la misma máquina,
+compactaciones medidas, Accord solo si la versión estable lo trae, vistas materializadas solo en la fase de
+tarifas, el reporte de Diana a una copia en PostgreSQL, sin PostgreSQL distribuido y sin codas.
+
+**07/10/2026 · Buscafino.** El autor dio el dominio —un portal de empleo con ofertas por país y trabajo remoto de
+otros países, al estilo de LinkedIn o Indeed— y eligió **OpenSearch como titular**. La sesión propuso
+**Vacantia** (San José de Costa Rica, nueve países), a confirmar con la historia final. Se dejó el marketplace de
+la semilla porque se pisa con Mercado Ceibo, con el catálogo de partes de lite y con Bengala. Villano: las
+ofertas remotas de los feeds escritas directo al índice, y los destacados y el contador de postulaciones como
+campos del documento; incidente: la cuesta de enero de 2026, con la reconstrucción "desde PostgreSQL" que pierde
+lo que nunca estuvo ahí y una instantánea restaurada que devuelve currículos suprimidos. Full geek, ~100 h;
+Elasticsearch solo donde difiere, Meilisearch y Typesense, PostgreSQL con ParadeDB; gestionados ☁️. Decididas
+por defecto y listadas al autor: relevancia medida con juicios sembrados (nDCG@10, exhaustividad@100, MRR),
+tres idiomas, búsqueda semántica y vectorial fuera, seguridad solo en la fase de currículos, supresión medida
+hasta las instantáneas. Como lite ya cierra con "índice, no fuente de verdad", Buscafino lo da por sabido y mide
+lo que viene después. **Pendiente de ruta:** `01-ruta-nosql.md` y `02-ruta-nosql-fundamentos.md` todavía dicen
+«Centinela de Flota» y describen los dominios de agosto; se resuelve con la abierta de los documentos de la
+raíz. **Siguiente:** Bitácora de Campo (offline-first), que en la sesión siguiente pasó a ser Comanda.
+
+**07/10/2026 · Comanda (antes Bitácora de Campo), El Vigía, Libro Mayor y El Árbitro.** El autor eligió los
+cuatro dominios en una sola ronda; la sesión propuso nombres, ciudades y gente, a confirmar con las historias
+finales, y cerró el resto de las decisiones por defecto (36 por curso).
+**Comanda:** restaurantes y comandas en lugar de las inspecciones de la semilla, que se pisaban con el técnico de
+Cóndor y con los extensionistas de Cumbre Roja. La Cazuela (cadena costeña de Barranquilla, 38 locales); villano: la
+cola de cada tablet con el reloj de la tablet como árbitro y la cuenta reescrita entera; incidente: el sábado de
+Carnaval de 2026. CouchDB y PouchDB, Automerge (agregado), Firestore en su emulador y ElectricSQL. **El curso se
+renombró a Comanda** con el precedente de Rastro: lo confirma el autor.
+**El Vigía:** observabilidad, como la semilla, en Timbra (facturación electrónica de Guadalajara, cinco países);
+villano: una fila por petición en PostgreSQL, escrita dentro de la petición; incidente: el cierre de marzo de 2026.
+InfluxDB 3 Core como principal si la verificación lo permite (si no, TimescaleDB), TimescaleDB, **Prometheus
+agregado** por el dominio y MongoDB; el percentil del mes contra el exacto como medida central.
+**Libro Mayor:** cuentas multimoneda para freelancers en Kambio (Montevideo; EE. UU., UE y Brasil con residencia);
+villano: el falso dilema con sus dos caras construidas (PostgreSQL con réplica asíncrona y tres libros con sagas);
+incidente: la caída de Virginia del 4 de junio de 2026. CockroachDB, YugabyteDB, TiDB; API con Express 5 en lugar del
+Fastify de la semilla.
+**El Árbitro:** empresa propia, Palco (boletería de Santiago; Chile, Perú y Colombia), en lugar de reutilizar las de
+la ruta; villano: la arquitectura de seis motores de 2022; incidente: la preventa de Los Tiburones del Sur del 21 de
+abril de 2026. El "vs" es de tres arquitecturas; la profundidad vive en la costura (captura de cambios real, tubería,
+restore coherente, factura con método) y no en cada motor, porque el bloque V de lite ya es un cierre políglota. Lo
+publicado puede decir que cierra la Ruta NoSQL sin citar los otros cursos (D-34).
+**Con esto los once cursos tienen su `prompts/`**: según R-05, ya se pueden discutir las propuestas de fases (E2),
+curso por curso. **Pendientes de ruta:** la abierta de los documentos de la raíz (`01-ruta-nosql.md` y
+`02-ruta-nosql-fundamentos.md` todavía describen los nombres y los dominios de agosto), el orden de las E2, y
+confirmar los dos renombres (Rastro y Comanda) y los nombres de empresa que propuso la sesión.

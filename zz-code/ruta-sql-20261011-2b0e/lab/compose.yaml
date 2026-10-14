@@ -1,0 +1,131 @@
+# Test lab for P8 (not the course's compose: that one is written in T1, appendix a02).
+# Every container and volume carries the label curso=ruta-sql; ports are random and bound to 127.0.0.1.
+name: ruta-sql-p8
+
+x-labels: &labels
+  labels:
+    curso: ruta-sql
+
+services:
+  postgres:
+    <<: *labels
+    image: ${PG_IMAGE:-pgvector/pgvector:0.8.7-pg18}
+    profiles: [base]
+    environment:
+      POSTGRES_PASSWORD: lab
+      POSTGRES_DB: alameda
+    command: ["postgres", "-c", "shared_preload_libraries=pg_stat_statements", "-c", "shared_buffers=512MB"]
+    volumes: [pgdata:/var/lib/postgresql, ../salidas/caja:/caja:ro]
+    ports: ["127.0.0.1::5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d alameda"]
+      interval: 2s
+      retries: 60
+
+  mysql:
+    <<: *labels
+    image: ${MYSQL_IMAGE:-mysql:9.7.2}
+    profiles: [contraste]
+    environment:
+      MYSQL_ROOT_PASSWORD: lab
+      MYSQL_DATABASE: alameda
+    command: ["--secure-file-priv=", "--local-infile=${MYSQL_LOCAL_INFILE:-0}", "--innodb-buffer-pool-size=512M"]
+    volumes: [mysqldata:/var/lib/mysql, ../salidas/caja:/caja:ro]
+    ports: ["127.0.0.1::3306"]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -plab --silent"]
+      interval: 2s
+      retries: 90
+
+  oracle:
+    <<: *labels
+    image: ${ORACLE_IMAGE:-gvenzl/oracle-free:23.26.3-slim-faststart}
+    profiles: [oracle]
+    environment:
+      ORACLE_PASSWORD: lab
+      APP_USER: alameda
+      APP_USER_PASSWORD: lab
+    volumes: [oradata:/opt/oracle/oradata, ../salidas/caja:/caja:ro]
+    ports: ["127.0.0.1::1521"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 5s
+      retries: 120
+
+  oracle-oficial:
+    <<: *labels
+    image: container-registry.oracle.com/database/free:latest
+    profiles: [oracle-oficial]
+    environment:
+      ORACLE_PWD: lab
+    volumes: [oradata-oficial:/opt/oracle/oradata]
+    ports: ["127.0.0.1::1521"]
+    healthcheck:   # the image's own check runs every 60 s; same script, shorter interval
+      test: ["CMD-SHELL", "$$SCRIPT_BASE_DIR/$$CHECK_DB_FILE >/dev/null || exit 1"]
+      interval: 5s
+      start_period: 600s
+
+  mongo:
+    <<: *labels
+    image: ${MONGO_IMAGE:-mongo:9.0.2}
+    profiles: [mongo]
+    ports: ["127.0.0.1::27017"]
+    volumes: [mongodata:/data/db]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 2s
+      retries: 60
+
+  api:
+    <<: *labels
+    image: postgrest/postgrest:v16.4
+    profiles: [api]
+    environment:
+      PGRST_DB_URI: postgres://postgres:lab@postgres:5432/alameda
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_ANON_ROLE: postgres
+      PGRST_ADMIN_SERVER_PORT: "3001"
+      PGRST_ADMIN_SERVER_HOST: "localhost"
+    ports: ["127.0.0.1::3000"]
+    healthcheck:
+      test: ["CMD", "postgrest", "--ready"]
+      interval: 2s
+      retries: 30
+
+  broker:
+    <<: *labels
+    image: apache/artemis:2.57.0
+    profiles: [puente]
+    environment:
+      ARTEMIS_USER: lab
+      ARTEMIS_PASSWORD: lab
+      EXTRA_ARGS: ${ARTEMIS_EXTRA_ARGS:---http-host 0.0.0.0 --relax-jolokia --no-autotune}
+    ports: ["127.0.0.1::61616", "127.0.0.1::8161"]
+
+  sqlserver:
+    <<: *labels
+    image: mcr.microsoft.com/mssql/server:2025-CU9-ubuntu-24.04
+    platform: linux/amd64
+    profiles: [sqlserver]
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: "Lab-2026-pass"
+    volumes: [mssqldata:/var/opt/mssql]
+    ports: ["127.0.0.1::1433"]
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'Lab-2026-pass' -Q 'select 1' -b -o /dev/null"]
+      interval: 5s
+      retries: 60
+
+volumes:
+  pgdata: {labels: {curso: ruta-sql}}
+  mysqldata: {labels: {curso: ruta-sql}}
+  oradata: {labels: {curso: ruta-sql}}
+  oradata-oficial: {labels: {curso: ruta-sql}}
+  mongodata: {labels: {curso: ruta-sql}}
+  mssqldata: {labels: {curso: ruta-sql}}
+
+networks:
+  default:
+    labels: {curso: ruta-sql}

@@ -1,0 +1,530 @@
+######## f05/medir.sql
+Timing is off.
+SELECT 47533
+CREATE INDEX
+== 1 duplicados según la verdad
+ filas  | personas | sobrantes | pct  
+--------+----------+-----------+------
+ 242427 |   200002 |     42425 | 17.5
+(1 row)
+
+ pares_verdaderos 
+------------------
+            47533
+(1 row)
+
+== 2 cobertura del bloqueo
+ misma_fecha | fecha_o_documento | total 
+-------------+-------------------+-------
+       46414 |             47120 | 47533
+(1 row)
+
+ candidatos 
+------------
+    1144780
+(1 row)
+
+== 3 solo trigramas, por umbral
+ umbral | aceptados | falsos | pct_falsos | exhaustividad 
+--------+-----------+--------+------------+---------------
+    0.4 |     45787 |   4128 |       9.02 |          87.6
+    0.5 |     41747 |   1020 |       2.44 |          85.7
+    0.6 |     39884 |    364 |       0.91 |          83.1
+    0.7 |     34504 |    163 |       0.47 |          72.2
+    0.8 |     30850 |     89 |       0.29 |          64.7
+(5 rows)
+
+== 4 regla combinada: (mismo documento y misma fecha) o trigramas >= t
+ umbral | aceptados | falsos | pct_falsos | exhaustividad 
+--------+-----------+--------+------------+---------------
+    0.5 |     41960 |   1020 |       2.43 |          86.1
+    0.6 |     41112 |    364 |       0.89 |          85.7
+    0.7 |     40469 |    163 |       0.40 |          84.8
+(3 rows)
+
+ doc_y_fecha | falsos 
+-------------+--------
+       28822 |      0
+(1 row)
+
+== 5 niveles
+       nivel       |  pares  | misma_persona | personas_distintas 
+-------------------+---------+---------------+--------------------
+ 1 automático      |   19620 |         19620 |                  0
+ 2 revisión humana |   26187 |         22059 |               4128
+ 3 descartado      | 1098973 |          5441 |            1093532
+(3 rows)
+
+ pares_verdaderos_fuera_del_bloqueo 
+------------------------------------
+                                413
+(1 row)
+
+== 6 fusión contra la verdad
+ pacientes_vivos | personas | grupos_con_dos_personas 
+-----------------+----------+-------------------------
+          223889 |   200002 |                       0
+(1 row)
+
+ fusionados | con_firma 
+------------+-----------
+      18538 |     18538
+(1 row)
+
+== 7 informe
+                    Regla                    | Filas rechazadas | % de legacy | Contra la verdad 
+---------------------------------------------+------------------+-------------+------------------
+ facturacion.practica_sin_precio_vigente     |           109496 |        6.27 |                 
+ obras_sociales.sin_sigla                    |                1 |        4.17 |                 
+ pacientes.dni_con_formato_invalido          |             5408 |        2.23 |             5137
+ pacientes.documento_de_otro_paciente        |             9049 |        3.73 |                 
+ pacientes.documento_en_nombre               |            25574 |       10.55 |            25575
+ pacientes.nacimiento_posterior_al_alta      |              442 |        0.18 |              442
+ pacientes.numero_fuera_de_formato           |                9 |        0.00 |                 
+ pacientes.pasaporte_sin_pais                |             5137 |        2.12 |             5137
+ pacientes.recien_nacido_con_documento_ajeno |             5397 |        2.23 |             5408
+ precios.pegado_dos_veces                    |              187 |        0.91 |                 
+ precios.vigencia_duplicada                  |              380 |        5.52 |                 
+ protocolos.obra_social_sin_resolver         |             5167 |        4.92 |             5167
+ resultados.protocolo_inexistente            |             2150 |        0.02 |                 
+(13 rows)
+
+== 8 documento de otro paciente: misma persona o no
+ total | misma_persona | otra_persona 
+-------+---------------+--------------
+  9049 |          9049 |            0
+(1 row)
+
+== 9 madres
+ recien_nacidos 
+----------------
+           5408
+(1 row)
+
+ enlazados | correctos | incorrectos 
+-----------+-----------+-------------
+      4389 |      4389 |           0
+(1 row)
+
+== 10 documentos
+ document_type | count  
+---------------+--------
+ DNI           | 194094
+ LC            |    797
+ LE            |    718
+ OTRO          |     72
+(4 rows)
+
+ vivos_sin_documento 
+---------------------
+               28434
+(1 row)
+
+== 11 el DNI como clave
+ERROR:  could not create unique index "patient_clean_document_digits_key"
+DETAIL:  Key (document_digits)=(44511816) is duplicated.
+CONTEXT:  parallel worker
+ sin_documento | documentos | filas  
+---------------+------------+--------
+          9871 |     200090 | 242427
+(1 row)
+
+ documentos_de_varias_personas | personas_afectadas 
+-------------------------------+--------------------
+                          4608 |               9462
+(1 row)
+
+ por_recien_nacido | por_pasaporte_sin_letra 
+-------------------+-------------------------
+              4558 |                     118
+(1 row)
+
+ personas_con_varios_documentos 
+--------------------------------
+                           5347
+(1 row)
+
+== 12 el LIS
+ filas_lis | filas_de_origen | personas 
+-----------+-----------------+----------
+      4737 |            4737 |     4720
+(1 row)
+
+== 13 la fusión nunca borra
+ERROR:  a patient is never deleted: merge 1 into another patient instead
+CONTEXT:  PL/pgSQL function alameda.patient_forbid_delete() line 3 at RAISE
+######## f06/medir.sql
+== 4FN
+ telefonos | medicos | combinada 
+-----------+---------+-----------
+    247226 | 1229411 |   1254558
+(1 row)
+
+ pacientes | con_varios_telefonos | con_varios_medicos | con_ambos 
+-----------+----------------------+--------------------+-----------
+    238819 |                 4738 |             187671 |      3758
+(1 row)
+
+  tel  |  med  |  comb  
+-------+-------+--------
+ 19 MB | 69 MB | 100 MB
+(1 row)
+
+ reconstruida 
+--------------
+      1254558
+(1 row)
+
+ legacy_patient_id | telefonos | medicos | filas 
+-------------------+-----------+---------+-------
+                33 |         2 |      43 |    86
+               104 |         2 |      35 |    70
+               109 |         2 |      21 |    42
+(3 rows)
+
+== 5FN cíclica
+ ternaria | pp  | ps  | ys | vista 
+----------+-----+-----+----+-------
+     1422 | 556 | 241 | 38 |  1422
+(1 row)
+
+ espurias 
+----------
+        0
+(1 row)
+
+ perdidas 
+----------
+        0
+(1 row)
+
+ dos_binarias | espurias 
+--------------+----------
+         1783 |      361
+(1 row)
+
+== 5FN no cíclica
+ ternaria | pp  | ps  | ys | rejoin | espurias | perdidas 
+----------+-----+-----+----+--------+----------+----------
+     1305 | 548 | 241 | 38 |   1412 |      107 |        0
+(1 row)
+
+######## f07/apuesta.sql
+SELECT 20792
+SELECT 20792
+== la unión de las 280 tablas, consultada por mes
+     resultado     | pares | meses 
+-------------------+-------+-------
+ dos filas         |   187 |   131
+ sin fila          |   425 |   219
+ una fila correcta | 20180 |   280
+(3 rows)
+
+== as-of sobre alameda.practice_price
+     resultado     | pares | meses 
+-------------------+-------+-------
+ sin fila          |   425 |   219
+ una fila correcta | 20367 |   280
+(2 rows)
+
+== meses con algún problema
+ meses_con_dos | meses_con_faltante | meses_con_algo 
+---------------+--------------------+----------------
+           131 |                219 |            248
+(1 row)
+
+== as-of con la reconstrucción por la UB
+ pares | correctos 
+-------+-----------
+ 20792 |     20792
+(1 row)
+
+== marzo de 2002
+ count 
+-------
+     0
+(1 row)
+
+ count 
+-------
+     0
+(1 row)
+
+######## f08/clinica-conteo.sql
+== tipado
+ count 
+-------
+ 31083
+(1 row)
+
+== eav
+ count 
+-------
+ 31083
+(1 row)
+
+== ancha
+ count 
+-------
+ 31083
+(1 row)
+
+== jsonb
+ count 
+-------
+ 31083
+(1 row)
+
+######## f08/clinica.sql
+== tipado
+                                                                   QUERY PLAN                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=425471.19..425471.20 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=2255 read=174646, temp read=2009 written=2009
+   CTE o
+     ->  Bitmap Heap Scan on lab_order  (cost=2423.81..13742.06 rows=175550 width=8) (actual rows=180220.00 loops=1)
+           Recheck Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+           Heap Blocks: exact=1183
+           Buffers: shared hit=1345
+           ->  Bitmap Index Scan on lab_order_ordered_on_idx  (cost=0.00..2379.93 rows=175550 width=0) (actual rows=180220.00 loops=1)
+                 Index Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+                 Index Searches: 1
+                 Buffers: shared hit=162
+   ->  Hash Join  (cost=219879.83..411402.81 rows=130529 width=0) (actual rows=31083.00 loops=1)
+         Hash Cond: (o.patient_id = o_1.patient_id)
+         Buffers: shared hit=2255 read=174646, temp read=2009 written=2009
+         ->  Hash Join  (cost=7391.38..198571.70 rows=130529 width=4) (actual rows=68659.00 loops=1)
+               Hash Cond: (r.lab_order_id = o.lab_order_id)
+               Buffers: shared hit=1394 read=87728, temp read=938 written=1333
+               ->  Gather  (cost=1000.00..187537.10 rows=229316 width=4) (actual rows=428014.00 loops=1)
+                     Workers Planned: 2
+                     Workers Launched: 2
+                     Buffers: shared hit=49 read=87728
+                     ->  Parallel Seq Scan on result r  (cost=0.00..163605.50 rows=95548 width=4) (actual rows=142671.33 loops=3)
+                           Filter: ((qualifier IS NULL) AND (value_numeric > '126'::numeric) AND ((analyte_code)::text = 'GLU'::text))
+                           Rows Removed by Filter: 3901430
+                           Buffers: shared hit=49 read=87728
+               ->  Hash  (cost=3511.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                     Buckets: 262144  Batches: 2  Memory Usage: 5563kB
+                     Buffers: shared hit=1345, temp written=703
+                     ->  CTE Scan on o  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                           Storage: Disk  Maximum Storage: 4096kB
+                           Buffers: shared hit=1345, temp written=395
+         ->  Hash  (cost=211045.31..211045.31 rows=115452 width=4) (actual rows=28832.00 loops=1)
+               Buckets: 131072  Batches: 1  Memory Usage: 2038kB
+               Buffers: shared hit=861 read=86918, temp read=1071 written=676
+               ->  HashAggregate  (cost=209890.79..211045.31 rows=115452 width=4) (actual rows=28832.00 loops=1)
+                     Group Key: o_1.patient_id
+                     Batches: 1  Memory Usage: 2841kB
+                     Buffers: shared hit=861 read=86918, temp read=1071 written=676
+                     ->  Hash Join  (cost=7391.38..209432.66 rows=183251 width=4) (actual rows=39913.00 loops=1)
+                           Hash Cond: (r_1.lab_order_id = o_1.lab_order_id)
+                           Buffers: shared hit=861 read=86918, temp read=1071 written=676
+                           ->  Gather  (cost=1000.00..196799.50 rows=321940 width=4) (actual rows=249161.00 loops=1)
+                                 Workers Planned: 2
+                                 Workers Launched: 2
+                                 Buffers: shared hit=861 read=86918
+                                 ->  Parallel Seq Scan on result r_1  (cost=0.00..163605.50 rows=134142 width=4) (actual rows=83053.67 loops=3)
+                                       Filter: ((qualifier IS NULL) AND (value_numeric > 6.5) AND ((analyte_code)::text = 'HBA1C'::text))
+                                       Rows Removed by Filter: 3961047
+                                       Buffers: shared hit=861 read=86918
+                           ->  Hash  (cost=3511.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                 Buckets: 262144  Batches: 2  Memory Usage: 5563kB
+                                 Buffers: temp read=396 written=309
+                                 ->  CTE Scan on o o_1  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                       Storage: Disk  Maximum Storage: 4096kB
+                                       Buffers: temp read=396 written=1
+ Planning:
+   Buffers: shared hit=199 read=5
+ Planning Time: 1.956 ms
+ JIT:
+   Functions: 74
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 1140.703 ms
+(62 rows)
+
+== eav
+                                                                                                                          QUERY PLAN                                                                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=598433.95..598433.96 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=2740 read=267021, temp read=1797 written=1797
+   CTE o
+     ->  Bitmap Heap Scan on lab_order  (cost=2423.81..13742.06 rows=175550 width=8) (actual rows=180220.00 loops=1)
+           Recheck Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+           Heap Blocks: exact=1183
+           Buffers: shared hit=1345
+           ->  Bitmap Index Scan on lab_order_ordered_on_idx  (cost=0.00..2379.93 rows=175550 width=0) (actual rows=180220.00 loops=1)
+                 Index Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+                 Index Searches: 1
+                 Buffers: shared hit=162
+   ->  Hash Join  (cost=295073.21..584210.30 rows=192632 width=0) (actual rows=31083.00 loops=1)
+         Hash Cond: (r.lab_order_id = o.lab_order_id)
+         Buffers: shared hit=2740 read=267021, temp read=1797 written=1797
+         ->  Gather  (cost=1000.00..284853.26 rows=232671 width=4) (actual rows=428014.00 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               Buffers: shared hit=464 read=133744
+               ->  Parallel Seq Scan on result_eav r  (cost=0.00..260586.16 rows=96946 width=4) (actual rows=142671.33 loops=3)
+                     Filter: (((analyte_code)::text = 'GLU'::text) AND (CASE WHEN ((value)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((value)::text, ','::text, '.'::text))::numeric ELSE NULL::numeric END > '126'::numeric))
+                     Rows Removed by Filter: 3901430
+                     Buffers: shared hit=464 read=133744
+         ->  Hash  (cost=291272.56..291272.56 rows=170692 width=4) (actual rows=65794.00 loops=1)
+               Buckets: 262144  Batches: 2  Memory Usage: 3209kB
+               Buffers: shared hit=2276 read=133277, temp read=1071 written=1167
+               ->  Hash Join  (cost=287300.72..291272.56 rows=170692 width=4) (actual rows=65794.00 loops=1)
+                     Hash Cond: (o.patient_id = o_1.patient_id)
+                     Buffers: shared hit=2276 read=133277, temp read=1071 written=1071
+                     ->  CTE Scan on o  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                           Storage: Disk  Maximum Storage: 4096kB
+                           Buffers: shared hit=164, temp read=396 written=1
+                     ->  Hash  (cost=285897.51..285897.51 rows=112257 width=4) (actual rows=28832.00 loops=1)
+                           Buckets: 131072  Batches: 1  Memory Usage: 2038kB
+                           Buffers: shared hit=2112 read=133277, temp read=675 written=1070
+                           ->  HashAggregate  (cost=284774.94..285897.51 rows=112257 width=4) (actual rows=28832.00 loops=1)
+                                 Group Key: o_1.patient_id
+                                 Batches: 1  Memory Usage: 2841kB
+                                 Buffers: shared hit=2112 read=133277, temp read=675 written=1070
+                                 ->  Hash Join  (cost=7391.38..284494.29 rows=112257 width=4) (actual rows=39913.00 loops=1)
+                                       Hash Cond: (r_1.lab_order_id = o_1.lab_order_id)
+                                       Buffers: shared hit=2112 read=133277, temp read=675 written=1070
+                                       ->  Gather  (cost=1000.00..274769.96 rows=131838 width=4) (actual rows=249161.00 loops=1)
+                                             Workers Planned: 2
+                                             Workers Launched: 2
+                                             Buffers: shared hit=931 read=133277
+                                             ->  Parallel Seq Scan on result_eav r_1  (cost=0.00..260586.16 rows=54932 width=4) (actual rows=83053.67 loops=3)
+                                                   Filter: (((analyte_code)::text = 'HBA1C'::text) AND (CASE WHEN ((value)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((value)::text, ','::text, '.'::text))::numeric ELSE NULL::numeric END > 6.5))
+                                                   Rows Removed by Filter: 3961047
+                                                   Buffers: shared hit=931 read=133277
+                                       ->  Hash  (cost=3511.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                             Buckets: 262144  Batches: 2  Memory Usage: 5563kB
+                                             Buffers: shared hit=1181, temp written=703
+                                             ->  CTE Scan on o o_1  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                                   Storage: Disk  Maximum Storage: 4096kB
+                                                   Buffers: shared hit=1181, temp written=395
+ Planning:
+   Buffers: shared hit=59
+ Planning Time: 0.519 ms
+ JIT:
+   Functions: 74
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+ Execution Time: 1167.521 ms
+(62 rows)
+
+== ancha
+                                                                                                QUERY PLAN                                                                                                 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=120219.28..120219.29 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=29305, temp read=1071 written=1071
+   CTE o
+     ->  Bitmap Heap Scan on lab_order  (cost=2423.81..13742.06 rows=175550 width=8) (actual rows=180220.00 loops=1)
+           Recheck Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+           Heap Blocks: exact=1183
+           Buffers: shared hit=1345
+           ->  Bitmap Index Scan on lab_order_ordered_on_idx  (cost=0.00..2379.93 rows=175550 width=0) (actual rows=180220.00 loops=1)
+                 Index Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+                 Index Searches: 1
+                 Buffers: shared hit=162
+   ->  Hash Join  (cost=61820.01..106403.07 rows=29659 width=0) (actual rows=31083.00 loops=1)
+         Hash Cond: (w.lab_order_id = o.lab_order_id)
+         Buffers: shared hit=29305, temp read=1071 written=1071
+         ->  Seq Scan on result_wide w  (cost=0.00..42691.40 rows=425354 width=4) (actual rows=428014.00 loops=1)
+               Filter: (CASE WHEN ((glu)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((glu)::text, ','::text, '.'::text))::numeric ELSE NULL::numeric END > '126'::numeric)
+               Rows Removed by Filter: 848048
+               Buffers: shared hit=13980
+         ->  Hash  (cost=60707.78..60707.78 rows=88978 width=4) (actual rows=65794.00 loops=1)
+               Buckets: 131072  Batches: 1  Memory Usage: 3338kB
+               Buffers: shared hit=15325, temp read=1071 written=1071
+               ->  Hash Join  (cost=56735.94..60707.78 rows=88978 width=4) (actual rows=65794.00 loops=1)
+                     Hash Cond: (o.patient_id = o_1.patient_id)
+                     Buffers: shared hit=15325, temp read=1071 written=1071
+                     ->  CTE Scan on o  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                           Storage: Disk  Maximum Storage: 4096kB
+                           Buffers: shared hit=164, temp read=396 written=1
+                     ->  Hash  (cost=56004.48..56004.48 rows=58517 width=4) (actual rows=28832.00 loops=1)
+                           Buckets: 65536  Batches: 1  Memory Usage: 1526kB
+                           Buffers: shared hit=15161, temp read=675 written=1070
+                           ->  HashAggregate  (cost=55419.31..56004.48 rows=58517 width=4) (actual rows=28832.00 loops=1)
+                                 Group Key: o_1.patient_id
+                                 Batches: 1  Memory Usage: 1817kB
+                                 Buffers: shared hit=15161, temp read=675 written=1070
+                                 ->  Hash Join  (cost=6391.38..55273.02 rows=58517 width=4) (actual rows=39913.00 loops=1)
+                                       Hash Cond: (w_1.lab_order_id = o_1.lab_order_id)
+                                       Buffers: shared hit=15161, temp read=675 written=1070
+                                       ->  Seq Scan on result_wide w_1  (cost=0.00..42691.40 rows=425354 width=4) (actual rows=249161.00 loops=1)
+                                             Filter: (CASE WHEN ((hba1c)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((hba1c)::text, ','::text, '.'::text))::numeric ELSE NULL::numeric END > 6.5)
+                                             Rows Removed by Filter: 1026901
+                                             Buffers: shared hit=13980
+                                       ->  Hash  (cost=3511.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                             Buckets: 262144  Batches: 2  Memory Usage: 5563kB
+                                             Buffers: shared hit=1181, temp written=703
+                                             ->  CTE Scan on o o_1  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                                   Storage: Disk  Maximum Storage: 4096kB
+                                                   Buffers: shared hit=1181, temp written=395
+ Planning:
+   Buffers: shared hit=37 read=1
+ Planning Time: 0.482 ms
+ JIT:
+   Functions: 42
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 859.717 ms
+(54 rows)
+
+== jsonb
+                                                                                              QUERY PLAN                                                                                              
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=180909.12..180909.13 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=36134 read=41115, temp read=1071 written=1071
+   CTE o
+     ->  Bitmap Heap Scan on lab_order  (cost=2423.81..13742.06 rows=175550 width=8) (actual rows=180220.00 loops=1)
+           Recheck Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+           Heap Blocks: exact=1183
+           Buffers: shared hit=1345
+           ->  Bitmap Index Scan on lab_order_ordered_on_idx  (cost=0.00..2379.93 rows=175550 width=0) (actual rows=180220.00 loops=1)
+                 Index Cond: ((ordered_on >= '2024-01-01'::date) AND (ordered_on < '2025-01-01'::date))
+                 Index Searches: 1
+                 Buffers: shared hit=162
+   ->  Hash Join  (cost=92164.93..167092.91 rows=29659 width=0) (actual rows=31083.00 loops=1)
+         Hash Cond: (j.lab_order_id = o.lab_order_id)
+         Buffers: shared hit=36134 read=41115, temp read=1071 written=1071
+         ->  Seq Scan on result_document j  (cost=0.00..73036.64 rows=425268 width=4) (actual rows=428014.00 loops=1)
+               Filter: (CASE WHEN (jsonb_typeof((results -> 'glu'::text)) = 'number'::text) THEN ((results ->> 'glu'::text))::numeric ELSE NULL::numeric END > '126'::numeric)
+               Rows Removed by Filter: 848048
+               Buffers: shared hit=17537 read=20415
+         ->  Hash  (cost=91052.70..91052.70 rows=88978 width=4) (actual rows=65794.00 loops=1)
+               Buckets: 131072  Batches: 1  Memory Usage: 3338kB
+               Buffers: shared hit=18597 read=20700, temp read=1071 written=1071
+               ->  Hash Join  (cost=87080.86..91052.70 rows=88978 width=4) (actual rows=65794.00 loops=1)
+                     Hash Cond: (o.patient_id = o_1.patient_id)
+                     Buffers: shared hit=18597 read=20700, temp read=1071 written=1071
+                     ->  CTE Scan on o  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                           Storage: Disk  Maximum Storage: 4096kB
+                           Buffers: shared hit=164, temp read=396 written=1
+                     ->  Hash  (cost=86349.40..86349.40 rows=58517 width=4) (actual rows=28832.00 loops=1)
+                           Buckets: 65536  Batches: 1  Memory Usage: 1526kB
+                           Buffers: shared hit=18433 read=20700, temp read=675 written=1070
+                           ->  HashAggregate  (cost=85764.23..86349.40 rows=58517 width=4) (actual rows=28832.00 loops=1)
+                                 Group Key: o_1.patient_id
+                                 Batches: 1  Memory Usage: 1817kB
+                                 Buffers: shared hit=18433 read=20700, temp read=675 written=1070
+                                 ->  Hash Join  (cost=6391.38..85617.94 rows=58517 width=4) (actual rows=39913.00 loops=1)
+                                       Hash Cond: (j_1.lab_order_id = o_1.lab_order_id)
+                                       Buffers: shared hit=18433 read=20700, temp read=675 written=1070
+                                       ->  Seq Scan on result_document j_1  (cost=0.00..73036.64 rows=425268 width=4) (actual rows=249161.00 loops=1)
+                                             Filter: (CASE WHEN (jsonb_typeof((results -> 'hba1c'::text)) = 'number'::text) THEN ((results ->> 'hba1c'::text))::numeric ELSE NULL::numeric END > 6.5)
+                                             Rows Removed by Filter: 1026901
+                                             Buffers: shared hit=17252 read=20700
+                                       ->  Hash  (cost=3511.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                             Buckets: 262144  Batches: 2  Memory Usage: 5563kB
+                                             Buffers: shared hit=1181, temp written=703
+                                             ->  CTE Scan on o o_1  (cost=0.00..3511.00 rows=175550 width=8) (actual rows=180220.00 loops=1)
+                                                   Storage: Disk  Maximum Storage: 4096kB
+                                                   Buffers: shared hit=1181, temp written=395
+ Planning:
+   Buffers: shared hit=38
+ Planning Time: 0.317 ms
+ JIT:
+   Functions: 42
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 970.283 ms
+(54 rows)
+

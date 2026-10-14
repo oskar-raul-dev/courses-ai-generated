@@ -1,9 +1,11 @@
 # 🔍 Buscafino — Modelo de Búsqueda
 
-Enseña el **modelo de acceso de búsqueda**: cuándo usar motores de búsqueda especializados (Elasticsearch, OpenSearch, Meilisearch, Typesense) para full-text y facetas.
+Enseña el **modelo de acceso de búsqueda** a fondo: relevancia, analizadores, facetas y tolerancia a errores sobre Lucene (OpenSearch), con el índice siempre derivado y reconstruible desde PostgreSQL.
 
-**Proyecto:** Búsqueda facetada como servicio (e-commerce)
+**Proyecto:** El buscador de un portal de empleo multipaís con ofertas locales y trabajo remoto, en español, portugués e inglés
 
-**Rivales:** Elasticsearch vs OpenSearch vs Meilisearch/Typesense
+**Rivales:** OpenSearch vs Elasticsearch vs Meilisearch vs Typesense vs PostgreSQL (full-text y BM25 con ParadeDB)
 
-**Veredicto:** Usa búsqueda cuando necesitas full-text, typo-tolerance, y facetas. Evítalo como base primaria; es un índice, no una fuente de verdad.
+**Veredicto:** Usa un motor de búsqueda cuando la relevancia multiseñal, los idiomas, las facetas a escala y el error de tecleo importan. Nunca como fuente de verdad: si no puedes tirarlo y reconstruirlo, no es un índice.
+
+> 📝 Curso en preparación; este README se reescribe al final (sus lineamientos están en `prompts/`).
