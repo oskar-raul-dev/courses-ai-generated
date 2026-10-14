@@ -239,9 +239,10 @@ el prompt desactualizado.
 
 Lo que se comprueba una sola vez para no repetirlo en cada tanda: versiones de todo lo que el curso
 instala o nombra (con fecha), edición y año de los libros base, URL de la documentación oficial por
-concepto, y —si hay laboratorio— un prototipo que demuestre que el método funciona antes de escribir
+concepto, los recursos para seguir estudiando si `D-14` los pide, y —si hay laboratorio— un prototipo que demuestre que el método funciona antes de escribir
 el primer capítulo. Cada hallazgo lleva un ID (`H1`, `H2`…) y una fecha, y **se traslada** al
-documento que lo cita (versiones a su apéndice o a la guía, libros a la guía §10). En un curso sin
+documento que lo cita (versiones a su apéndice o a la guía, libros a la guía §10, recursos a la
+guía §10.4 hasta que la fase, el bloque o el apéndice que los lleva exista). En un curso sin
 laboratorio esta etapa es corta, pero no se salta: los libros y las URL también envejecen.
 
 ### E7 — Escritura por tandas

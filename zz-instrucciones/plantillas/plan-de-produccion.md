@@ -293,6 +293,7 @@ están. **En cursos con laboratorio, cada documento ejecutable lleva dos casilla
 - [ ] P11 · Versiones según la política de la guía, con fecha y fuente (H-{{n}})
 - [ ] P11 · Edición y año de los libros base (H-{{n}})
 - [ ] P11 · URL de documentación oficial por concepto, por código de estado (H-{{n}})
+- [ ] P11 · {{Recursos para seguir estudiando (D-14): lista inicial con su ficha y fecha}} (H-{{n}})
 - [ ] P11 · {{Laboratorio levantado y prototipo del método pasando de punta a punta}} (H-{{n}})
 - [ ] P12 · Lo decidido y lo verificado trasladado; ningún ⏳ resuelto sin cerrar; §4 limpia sobre `prompts/`
 

@@ -1,0 +1,5 @@
+# Comandos de la sección TimescaleDB de a03, tal como corrieron (desde src/).
+docker compose -f lab/compose.yaml exec -T series psql -U postgres -d condor -c "SELECT hypertable_name, num_chunks, compression_enabled FROM timescaledb_information.hypertables"
+docker compose -f lab/compose.yaml exec -T series psql -U postgres -d condor -c "SELECT chunk_name, range_start, range_end, is_compressed FROM timescaledb_information.chunks WHERE hypertable_name = 'reading' ORDER BY range_start LIMIT 2"
+docker compose -f lab/compose.yaml exec -T series psql -U postgres -d condor -c "INSERT INTO reading VALUES ('HK-4207', 'FL-PRUEBA', '2026-09-29 10:00', 16000, 220, 700, 88, 100, 80, 420)" -c "SELECT count(*) FROM reading WHERE aircraft = 'HK-4207' AND ts >= '2026-09-29'" -c "DELETE FROM reading WHERE flight_id = 'FL-PRUEBA'"
+docker compose -f lab/compose.yaml exec -T series psql -U postgres -d condor -c "EXPLAIN (COSTS off) SELECT avg(egt_c) FROM reading WHERE ts >= '2025-03-01' AND ts < '2025-03-15'"

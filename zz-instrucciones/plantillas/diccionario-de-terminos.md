@@ -77,7 +77,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 |---|---|---|---|
 | software, hardware | software, hardware | EN | |
 | framework | framework | EN | "marco de trabajo" no se usa en el oficio |
-| library | librería ⚖️ | ES | ver §6; fijar una por curso |
+| library | biblioteca ⚖️ | ES | defecto del repositorio; "librería" si el curso lo fija (§6) |
 | dependency | dependencia | ES | |
 | package | paquete | ES | `package` en Java, en código |
 | build | build ⚖️ | EN | "compilación" cuando es solo compilar; build es el proceso completo |
@@ -107,7 +107,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 | path | ruta | ES | `PATH` la variable, en código |
 | environment variable | variable de entorno | ES | |
 | config file | archivo de configuración | ES | |
-| hardcoded | fijo en el código, *hardcodeado* ⚖️ | ES | |
+| hardcoded | fijo en el código, *hardcodeado* ⚖️ | ES | defecto: fijo en el código (§6) |
 | open source | código abierto | ES | |
 | vendor lock-in | dependencia del proveedor, *lock-in* | ES (EN) | |
 
@@ -222,7 +222,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 | table / row / column | tabla / fila / columna | ES | |
 | schema | esquema | ES | |
 | index | índice | ES | |
-| primary key / foreign key | llave primaria / llave foránea ⚖️ | ES | "clave" también; fijar una |
+| primary key / foreign key | clave primaria / clave foránea ⚖️ | ES | defecto del repositorio; "llave" si el curso lo fija (§6) |
 | query | consulta | ES | *query* solo en nombres de API |
 | query plan | plan de ejecución | ES | |
 | transaction | transacción | ES | |
@@ -236,7 +236,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 | ORM | ORM | EN | |
 | N+1 problem | problema N+1 | ES | |
 | stored procedure | procedimiento almacenado | ES | |
-| trigger | *trigger*, disparador ⚖️ | EN·c | |
+| trigger | disparador, *trigger* ⚖️ | ES | defecto: disparador en prosa, `TRIGGER` en el SQL (§6) |
 | view / materialized view | vista / vista materializada | ES | |
 | normalization | normalización | ES | |
 | replication | replicación | ES | |
@@ -342,7 +342,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 | multi-stage build | build multietapa | ES | |
 | volume / bind mount | volumen / *bind mount* | ES | |
 | orchestrator | orquestador | ES | |
-| cluster | cluster ⚖️ | EN | "clúster" con tilde también se usa; fijar uno |
+| cluster | cluster ⚖️ | EN | defecto del repositorio; "clúster" si el curso lo fija (§6) |
 | node | nodo | ES | |
 | pod | pod | EN | `Pod` el objeto |
 | namespace | namespace | EN | o "espacio de nombres", uno solo por documento |
@@ -385,7 +385,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 | invocation | invocación | ES | |
 | teardown | *teardown*, limpieza | EN·c | |
 | landing zone | *landing zone* | EN·c | |
-| multi-tenant | multiinquilino, *multi-tenant* ⚖️ | ES (EN) | |
+| multi-tenant | *multi-tenant*, multiinquilino ⚖️ | EN·c | defecto: *multi-tenant* (§6) |
 | shared responsibility | responsabilidad compartida | ES | |
 
 ### 3.9 Seguridad
@@ -447,7 +447,7 @@ mismo documento, o españolizar un verbo inglés cuando hay uno español corrien
 | pipeline | pipeline | EN | |
 | stage / job / step | etapa / *job* / paso | ES | |
 | artifact | artefacto | ES | |
-| environment (dev, staging, prod) | ambiente ⚖️ | ES | "entorno" también; fijar uno |
+| environment (dev, staging, prod) | entorno ⚖️ | ES | defecto del repositorio; "ambiente" si el curso lo fija (§6) |
 | production | producción | ES | |
 | staging | *staging*, preproducción | EN·c | |
 | commit | commit | EN | "hacer commit"; nunca "commitear" |
@@ -562,7 +562,7 @@ Lo que no se escribe, y qué va en su lugar.
 | commitear, pushear, mergear | hacer commit, hacer push, hacer merge | el sustantivo inglés se queda; el verbo españolizado no |
 | encriptar | cifrar | |
 | randomizar | aleatorizar | |
-| librería (si el curso fija biblioteca) | biblioteca | §6 |
+| librería | biblioteca | defecto del repositorio (§6), salvo que el curso fije librería |
 | en base a | con base en, a partir de | |
 | a nivel de | en | "a nivel de base de datos" → "en la base de datos" |
 | implementar (abuso) | escribir, construir, aplicar | "implementar" vale para un patrón o una interfaz, no para todo |
@@ -637,26 +637,30 @@ Lo que no se escribe, y qué va en su lugar.
 
 ## 6. ⚖️ Decisiones del curso
 
-Las dos formas conviven en el repositorio; cada curso fija una, aquí, y no la alterna.
+Las dos formas conviven en el repositorio; cada curso fija una, aquí, y no la alterna. **Si el curso no
+decide otra cosa, hereda el valor por defecto del repositorio** (fijado el 2026-10-07 con el uso real
+de `repaso-entrevistas/` y `preguntas-entrevista/`). Donde el uso y la norma chocan, gana la norma: lo
+que §4 trata como calco no es defecto aunque sea lo más escrito. Un curso que se aparta lo dice en esta
+tabla y en el encabezado de su guía, como cualquier divergencia.
 
-| Término | Opciones | Uso en el repositorio (oct. 2026) | Valor de este curso |
-|---|---|---|---|
-| *library* | librería · biblioteca | 761 · 604 apariciones | {{…}} |
-| *cluster* | cluster · clúster | 184 · 98 | {{…}} |
-| *cache* | caché · cache | 1.775 · 1.268 (la segunda incluye código) | {{caché en prosa, `cache` en código}} |
-| *environment* | ambiente · entorno | — | {{…}} |
-| *key* (BD) | llave · clave | — | {{…}} |
-| *build* | build · compilación | — | {{…}} |
-| *registry* | registro · *registry* | — | {{…}} |
-| *dashboard* | tablero · *dashboard* | — | {{…}} |
-| *throughput* | *throughput* · caudal · rendimiento | — | {{…}} |
-| *reliability* | fiabilidad · confiabilidad | — | {{…}} |
-| *request* | petición · solicitud | 1.754 · 165 | {{…}} |
-| nombres de patrón GoF | inglés (*Strategy*) · español (Estrategia) | — | {{…}} |
-| *assume* | asumir · suponer | — | {{…}} |
-| *trigger* (BD) | *trigger* · disparador | — | {{…}} |
-| *multi-tenant* | multiinquilino · *multi-tenant* | — | {{…}} |
-| *hardcoded* | fijo en el código · *hardcodeado* | — | {{…}} |
+| Término | Opciones | Uso (oct. 2026) | Defecto del repositorio | Valor de este curso |
+|---|---|---|---|---|
+| *library* | librería · biblioteca | 913 · 663 | biblioteca (§4: "librería" es calco) | {{biblioteca, o la divergencia}} |
+| *cluster* | cluster · clúster | ~133 · 130 | cluster, sin tilde: término del stack | {{…}} |
+| *cache* | caché · cache | 1.775 · 1.268 (la segunda incluye código) | caché en prosa, `cache` en código | {{…}} |
+| *environment* | ambiente · entorno | 65 · 956 | entorno | {{…}} |
+| *key* (BD) | llave · clave | 6 · 373 | clave (primaria, foránea) | {{…}} |
+| *build* | build · compilación | 96 · 299 | compilación; *build* solo para el paso de CI o el artefacto | {{…}} |
+| *registry* | registro · *registry* | 2 · 333 | *registry* | {{…}} |
+| *dashboard* | tablero · *dashboard* | 199 · 41 | tablero | {{…}} |
+| *throughput* | *throughput* · caudal · rendimiento | 142 · 5 · — | *throughput* | {{…}} |
+| *reliability* | fiabilidad · confiabilidad | 21 · 5 | fiabilidad | {{…}} |
+| *request* | petición · solicitud | 2.500 · 130 | petición; "solicitud" solo al citar un RFC | {{…}} |
+| nombres de patrón GoF | inglés (*Strategy*) · español (Estrategia) | `bases/03`: 269 · 0 | inglés | {{…}} |
+| *assume* | asumir · suponer | 870 · 105 | suponer, dar por hecho; se admite "se asume leído" (§4) | {{…}} |
+| *trigger* (BD) | *trigger* · disparador | `bases/05`: 39 · 207 | disparador; `TRIGGER` en el SQL | {{…}} |
+| *multi-tenant* | multiinquilino · *multi-tenant* | 7 · 57 | *multi-tenant* | {{…}} |
+| *hardcoded* | fijo en el código · *hardcodeado* | 7 · 18 | fijo en el código | {{…}} |
 
 ---
 

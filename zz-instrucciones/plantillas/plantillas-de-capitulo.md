@@ -1,7 +1,7 @@
 # 🧩 Plantillas de capítulo
 ## {{Nombre del curso}}
 
-> ✏️ **Plantilla:** se escribe en la etapa E4 (tanda P8). Trae siete esqueletos; **se conservan solo
+> ✏️ **Plantilla:** se escribe en la etapa E4 (tanda P8). Trae ocho esqueletos; **se conservan solo
 > los del tipo de curso** y se borran los demás. Las de fase, capítulo y taller son **rígidas**: se
 > siguen literales, sin secciones extra ni reordenadas. La de apéndice es **laxa** a propósito.
 
@@ -13,7 +13,7 @@ Los esqueletos que se copian al abrir una sesión nueva. Se copia el bloque, se 
 > primero** y aquí después. Las longitudes son las de la [guía](guia-de-estilo-y-convenciones.md) §9;
 > los nombres técnicos, los del [contrato de nombres](contrato-de-nombres.md).
 
-**Salto rápido:** [A · Fase](#a--fase-de-curso-completo) · [B · Capítulo](#b--capítulo-de-repaso) · [C · Lab o taller](#c--lab-o-taller) · [D · Apéndice](#d--apéndice) · [E · Simulación](#e--simulación-de-entrevista) · [F · Solucionario](#f--solucionario) · [G · README](#g--readme-del-curso-o-del-bloque)
+**Salto rápido:** [A · Fase](#a--fase-de-curso-completo) · [B · Capítulo](#b--capítulo-de-repaso) · [C · Lab o taller](#c--lab-o-taller) · [D · Apéndice](#d--apéndice) · [E · Simulación](#e--simulación-de-entrevista) · [F · Solucionario](#f--solucionario) · [G · README](#g--readme-del-curso-o-del-bloque) · [H · Bibliografía](#h--bibliografía-y-recursos)
 
 Cuál se usa:
 
@@ -27,6 +27,7 @@ flowchart TD
     Q -- "simulación de un bloque" --> E["E"]
     Q -- "solucionario" --> F["F"]
     Q -- "README, al final" --> G["G"]
+    Q -- "bibliografía final (D-14)" --> H["H"]
 ```
 
 ---
@@ -124,6 +125,9 @@ síntoma literal y lo que costó salir. Se dice si la apuesta se ganó o se perd
 
 {{Por autoridad, con orden de lectura sugerido y la advertencia de que las URL cambian.}}
 
+{{Solo si D-14 = cada documento: **Para seguir estudiando** (comprobado {{AAAA-MM-DD}}), con la ficha
+de la guía §10.4.}}
+
 ## 🏁 14. Resultado de la fase
 
 {{Qué quedó funcionando, y la señal de que quedó bien.}}
@@ -207,6 +211,9 @@ síntoma literal y lo que costó salir. Se dice si la apuesta se ganó o se perd
 ## {{N}}. 📚 Para profundizar
 
 1. {{Fuente oficial, URL completa y específica.}}
+
+{{Solo si D-14 = cada documento: **Para seguir estudiando** (comprobado {{AAAA-MM-DD}}), con la ficha
+de la guía §10.4.}}
 
 ## 🧠 Preguntas
 
@@ -404,4 +411,63 @@ cómo se levanta.}}
 ## {{Sugerencias de estudio | Relacionado}} *(solo si D-03 = editorial)*
 
 {{Qué añade cada curso sugerido, nunca "antes de leer esto, lee…".}}
+
+## 📚 Para seguir estudiando *(solo si D-14 = cada bloque)*
+
+> Comprobado: {{AAAA-MM-DD}}. Las URL cambian: si una no abre, busca el título.
+
+1. {{Ficha de la guía §10.4}} `[{{ES|EN}}]` — {{por qué este}}.
+````
+
+---
+
+## H · Bibliografía y recursos
+
+El último apéndice, **solo si D-14 = el curso**. Se escribe en la tanda de README, cuando todas las
+fases existen, para poder decir qué recurso acompaña a qué fase. Las secciones de tipos que D-14 no
+pide se borran; las que quedan siguen este orden. Las fichas, los criterios y la vigencia son los de la
+guía §10.4.
+
+````markdown
+# 📚 {{aNN}} — Bibliografía y recursos
+
+> **Para qué:** dónde seguir cuando termines, o cuando una fase te dejó con ganas · **Comprobado:**
+> {{AAAA-MM-DD}} · Los precios no se escriben y las URL cambian: si una no abre, busca el título.
+
+**Salto rápido:** [Por dónde empezar](#{{ancla}}) · [Libros](#{{ancla}}) · [Papers](#{{ancla}}) · [Blogs](#{{ancla}}) · [Cursos gratis](#{{ancla}}) · [Cursos de pago](#{{ancla}}) · [Tutoriales](#{{ancla}})
+
+---
+
+## 🧭 Por dónde empezar
+
+{{Los tres recursos que recomendarías si el lector solo va a usar tres, en orden, con una frase cada
+uno.}}
+
+## 📖 Libros
+
+1. {{Autor}}, *{{Título}}*, {{N.ª}} ed., {{Editorial}}, {{año}}. `[{{ES|EN}}]` — {{por qué este}} ·
+   Acompaña: {{fases o bloques}}.
+
+## 📄 Papers y especificaciones
+
+1. {{Autores}}, «{{Título}}», {{revista o congreso}}, {{año}}. {{DOI o arXiv}} — {{por qué este}}.
+
+## 📰 Blogs y artículos
+
+1. {{Autor}}, «{{Título}}», {{sitio}}, {{fecha}}. `[{{ES|EN}}]` <{{URL}}> — {{por qué este}}.
+
+## 🎥 Cursos gratis
+
+1. **{{Título}}** — {{autor o canal}} · {{plataforma}} · `[{{ES|EN}}]` · {{duración}} · <{{URL}}> —
+   {{por qué este}} · Acompaña: {{fases}}.
+
+## 🎓 Cursos de pago
+
+1. **{{Título}}** — {{autor}} · {{plataforma}} · {{pago único | suscripción}} · `[{{ES|EN}}]` ·
+   {{duración}} · <{{URL}}> — {{por qué este, y qué tiene que no tenga el gratis}}.
+
+## 🌐 Sitios de tutoriales
+
+1. **{{Título de la página o serie}}** — {{sitio}} · versión {{X}} · `[{{ES|EN}}]` · <{{URL}}> —
+   {{por qué este}}.
 ````

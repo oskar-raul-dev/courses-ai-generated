@@ -319,7 +319,8 @@ pasa del techo, se poda o se parte; no se estira para llegar al piso.
   no verificado no se escribe. Se comprueban **por código de estado**; aterrizar en la portada cuenta
   como roto.
 - **{{Máximo N entradas}}** en `📚 Para profundizar`, ordenadas por autoridad, con al menos un libro
-  con capítulo concreto. Se advierte cuando un enlace apunta a otra versión.
+  con capítulo concreto. Se advierte cuando un enlace apunta a otra versión. Los recursos para seguir
+  estudiando (§10.4) no cuentan en ese máximo y van después.
 - **{{Fuentes citadas por título sin URL: …}}**
 
 **Libros base** (edición y año comprobados el {{fecha}}, en la verificación previa):
@@ -341,6 +342,57 @@ pasa del techo, se poda o se parte; no se estira para llegar al piso.
 
 Todo documento lleva `Vigencia:` o fecha de verificación en su encabezado, y la cambia cuando se
 revisa.
+
+### 10.4 Recursos para seguir estudiando *(opcional, `D-14`)*
+
+{{Si `D-14` es "solo las citas", esta sección se borra.}}
+
+Una **cita** respalda lo que el documento afirma y va a la fuente oficial (§10.1). Una
+**recomendación** es para el lector que quiere más: otro ángulo, más práctica, otro formato. La
+recomendación nunca reemplaza a la cita: si una afirmación solo está respaldada por un tutorial, falta
+la cita.
+
+**Qué entra en este curso:** {{bibliografía · blogs y artículos · cursos gratis · cursos de pago ·
+sitios de tutoriales}}. **Dónde va:**
+
+| `D-14` | Lugar | Tope |
+|---|---|---|
+| {{cada documento}} | sublista **Para seguir estudiando** al final de la sección 📚 de su plantilla, después de las fuentes oficiales | {{3}} |
+| {{cada bloque o parte}} | `## 📚 Para seguir estudiando` en el README del bloque (plantilla G) | {{8}} |
+| {{el curso}} | apéndice `{{aNN}}-bibliografia-y-recursos.md` (plantilla H), el último | {{sin tope; agrupado por tipo}} |
+
+**La ficha de cada tipo**, siempre con una línea de **por qué este**: qué añade que el curso no da,
+para qué nivel, y qué fase o bloque acompaña.
+
+| Tipo | Ficha |
+|---|---|
+| Libro | Autor, *Título*, N.ª edición, Editorial, año; capítulos concretos si no se recomienda entero |
+| Paper | Autores, «Título», revista o congreso, año; enlace al DOI o a arXiv, nunca a una copia en un sitio de terceros |
+| Especificación | Organismo, número y título (RFC 9110, JSR 380…); enlace a la versión normativa |
+| Blog o artículo | Autor, «Título», sitio, fecha de publicación; URL del artículo, no del blog |
+| Curso gratis | Título, autor o canal, plataforma, idioma, duración aproximada; URL del curso o de la lista de reproducción |
+| Curso de pago | Lo mismo, más **de pago** y el modelo (pago único o suscripción); **sin precio**, que cambia por semana y por país |
+| Tutorial | Título, sitio, versión que cubre; URL de la página concreta |
+
+**Criterios de selección:**
+
+- **Autor reconocible y versión vigente**: un tutorial de una versión vieja se advierte o no entra.
+- **Idioma marcado** con `[ES]` o `[EN]`. {{Si la audiencia lo pide: lo que está en español va
+  primero, con la misma calidad.}}
+- **A igual calidad, el gratis antes que el de pago**, y nunca solo de pago si hay uno gratis
+  equivalente.
+- **Sin enlaces de afiliado, cupones ni parámetros de seguimiento** (`?couponCode=`, `?utm_…`,
+  `?referralCode=`): la URL limpia.
+- **Nunca copias no autorizadas**: ni PDF de libros, ni cursos de pago resubidos a YouTube, ni papers
+  en sitios espejo.
+- **No se recomienda lo que nadie revisó**: por lo menos el temario, el autor y la fecha de la última
+  actualización. Un curso de vídeo que no se vio se recomienda por su temario y se dice así.
+
+**Vigencia:** cada lista lleva `Comprobado: AAAA-MM-DD`. Las URL se verifican por código de estado
+como las de §10.1, con dos trampas: **YouTube responde `200` a un video que no existe**, así que se
+comprueba por su oEmbed (`https://www.youtube.com/oembed?format=json&url=<URL del video>`, que da
+`400` o `404` si no está); y los sitios que devuelven `403` a un cliente automático (Baeldung, por
+ejemplo) los comprueba el autor en el navegador, y la entrada lo dice: *comprobado a mano*.
 
 ---
 
@@ -403,6 +455,8 @@ Evaluación
 
 Referencias y coherencia
 [ ] Todas las URL verificadas por código de estado en esta edición
+[ ] Recursos de §10.4 (si D-14 los pide): ficha completa, por qué este, idioma, fecha de
+    comprobación, sin afiliados ni copias no autorizadas, ninguno haciendo de cita
 [ ] Ningún enlace interno roto ni a un documento que no existe
 [ ] No contradice nada publicado; ningún bucle abierto
 [ ] Ningún otro curso nombrado fuera de lo que permite §1.2; ningún _desechable-* citado
@@ -471,3 +525,4 @@ Todo lo demás del `CLAUDE.md` aplica tal cual. {{Si `D-03` = total: este curso 
 
 - {{⏳ Versiones: se fijan en la verificación previa.}}
 - {{⏳ Libros base: edición y año, en la verificación previa.}}
+- {{⏳ Recursos para seguir estudiando (`D-14`): lista inicial comprobada en la verificación previa.}}

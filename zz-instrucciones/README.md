@@ -157,7 +157,7 @@ todo lo demás. Las preguntas y a qué decisión del alcance llevan:
 | 1 · Título tentativo | texto, más la frase y el porqué | §1 del alcance; el porqué es el *disparador* de E0 |
 | 2 · Tipo de curso | completo · legacy · repaso · banco de entrevista · banco de examen · mezcla | `D-02`, y qué plantillas se copian ([`01-tipos-de-curso.md`](01-tipos-de-curso.md)) |
 | 3 · Audiencia | dummie · con conocimientos · senior | el lector del alcance; si no es gente de IT, la guía declara la excepción al `CLAUDE.md` |
-| 4 · Profundidad | lo básico · medio · full geek · súper saiyajin | una decisión propia del curso (`D-14`); mueve los pesos de `D-04` |
+| 4 · Profundidad | lo básico · medio · full geek · súper saiyajin | una decisión propia del curso (`D-15`); mueve los pesos de `D-04` |
 | 5 · Ejercicios | sí · no; y su dificultad: equilibrados de punta a punta · hasta medio · solo fáciles · solo de medio a difícil · aleatorio | `D-05`: cantidad y reparto 🟢🟡🟠🔴🔥 |
 | 6 · Taller | no · uno global · por sección · boss por sección + boss final | `D-09` y, si hay bosses, el formato de miniproyectos |
 | 7 · Respuestas | documento separado · en cada ejercicio | `D-05` (solucionario o `<details>`) |
@@ -168,7 +168,8 @@ todo lo demás. Las preguntas y a qué decisión del alcance llevan:
 | 12 · `zz-code/` documentado | sí · no | las reglas 7–10 de `zz-code/README.md`; "no" se declara como excepción |
 | 13 · Historia | no · sí con idea · sí, que proponga la IA | `D-11` y la plantilla de historia |
 | 14 · Organización | una sola secuencia · en bloques · en pistas paralelas | `D-02` (tipo y organización), alcance §9 y propuesta §3.0 ([`01-tipos-de-curso.md` §10](01-tipos-de-curso.md#10--cursos-extensos-bloques-y-pistas)) |
-| 15 · Lo demás | lo que no se quiere, tamaño, notas | fuera de alcance y `D-04` |
+| 15 · Referencias | qué material (ninguno extra · bibliografía · blogs · cursos gratis · cursos de pago · tutoriales) y dónde (cada documento · cada bloque · apéndice final) | `D-14` y la guía §10.4; en blanco, ninguno extra |
+| 16 · Lo demás | lo que no se quiere, tamaño, notas | fuera de alcance y `D-04` |
 
 ### Un ejemplo lleno: Python desde cero para el taller
 
@@ -242,7 +243,13 @@ para talleres: la primera versión, local, en la laptop de la oficina.
 ## 14. 🧱 Organización
 - [x] **Una sola secuencia**
 
-## 15. 📝 Lo demás
+## 15. 📚 Referencias
+- [x] **Cursos gratis**
+- [x] **Sitios de tutoriales**
+- [x] **Al final del curso** — un apéndice de bibliografía y recursos
+**Explica:** en español siempre que exista uno bueno; nada de pago.
+
+## 16. 📝 Lo demás
 - **Lo que NO quiero:** frameworks web, programación orientada a objetos avanzada, nada en la nube.
 - **Tamaño o tiempo disponible:** unas 15 fases.
 ```
@@ -270,7 +277,12 @@ Lo que la sesión debería devolver en el paso 2, entre otras cosas:
   en 5 🟢, 4 🟡 y 3 🟠, distinto en fases vecinas.
 - **Las decisiones** que ya puede escribir: `D-02` curso completo en una sola secuencia · `D-04` peso ligero en casi todas
   las fases · `D-05` 12 ejercicios hasta 🟠 con solución plegada · `D-09` un proyecto que crece con tags por
-  boss · `D-11` con historia · `D-12` y `D-14` abiertas hasta que el autor elija.
+  boss · `D-11` con historia · `D-14` recursos gratis en un apéndice final · `D-12` y `D-15`
+  (profundidad) abiertas hasta que el autor elija.
+- **Lo que piden las referencias**: para un lector dummie que se asusta con el inglés, cada recurso
+  lleva su idioma marcado y el apéndice ordena primero lo que está en español; un canal de YouTube
+  cambia o borra videos, así que cada entrada lleva su fecha de comprobación. La sesión pregunta si
+  quiere también una lista corta al final de cada sección, para no esperar al final del curso.
 - **La historia, en dos o tres versiones de un párrafo** para elegir el énfasis (Lorena como
   protagonista que aprende, Pipe como mentor con su piloto, o Wilfrido como el que desconfía del
   computador), y después el documento completo, como el de
@@ -458,8 +470,19 @@ Esta es la primera versión. Lo que está escrito como valor por defecto puede c
 decisiones que más pesan:
 
 - **El diccionario de términos crece**: hoy trae una semilla de unas 390 entradas en quince áreas.
-  Falta agrandarlo y cerrar los ⚖️ marcados (por ejemplo, *librería* contra *biblioteca*, que en el
-  repositorio están casi empatadas).
+  Falta agrandarlo. Los 16 pares ⚖️ más disputados ya tienen un valor por defecto del repositorio
+  (§6 de la plantilla, fijado el 2026-10-07 con el uso real: *biblioteca*, *entorno*, *clave*…), que
+  cada curso hereda salvo que declare otra cosa.
+- **Falta un piloto de punta a punta.** Ningún curso ha recorrido todavía E0–E9 con estas plantillas:
+  los existentes las adoptaron a mitad de camino. Lo no probado es el banco de examen, el plan que
+  nace en E3 y todo lo de la segunda versión: la ficha de
+  [`plantillas/prompt-de-arranque.md`](plantillas/prompt-de-arranque.md) en E0, el tipo **curso
+  legacy**, la división en bloques o pistas
+  ([`01-tipos-de-curso.md` §10](01-tipos-de-curso.md#10--cursos-extensos-bloques-y-pistas)) con el
+  `PISTA_RE` del verificador, y la convención de git
+  ([`plantillas/convencion-de-git-y-tags.md`](plantillas/convencion-de-git-y-tags.md)) con su
+  `TAG_DE_FASE`. **El primer curso nuevo que arranque con la ficha hace de piloto**, y lo que enseñe su
+  bitácora se sube a [`03-lecciones-de-produccion.md`](03-lecciones-de-produccion.md).
 - **El tipo "banco de examen"** es el menos probado: ningún curso existente lo usa todavía, y su
   plantilla está escrita desde cero.
 - **Dónde vive el plan de producción**: aquí nace justo después de la propuesta (etapa E3), para que

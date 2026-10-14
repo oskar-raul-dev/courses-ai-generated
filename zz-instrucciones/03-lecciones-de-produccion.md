@@ -231,6 +231,11 @@ flowchart LR
 - **Libros con edición y año comprobados**; si hay segunda edición reciente, los capítulos se citan de
   esa edición, y la numeración se comprueba en la tanda que los cita. Nunca desde copias no
   autorizadas: si no hay acceso legítimo, la ficha nombra el tema en palabras, no el número de sección.
+- **Recomendar no es citar** (`D-14`, guía §10.4): un tutorial o un curso en vídeo acompaña, no
+  respalda. Los cursos de pago se nombran sin precio y sin cupón. Por código de estado (comprobado el
+  2026-10-07): Udemy, Coursera y GeeksforGeeks responden `404` a una página que no existe;
+  **YouTube responde `200` a un video que no existe** (se verifica por su oEmbed, que da `400`), y
+  Baeldung responde `403` a todo cliente automático, exista la página o no.
 - **Todo ejemplo numérico se calcula antes de escribirlo** (con Python), no de cabeza.
 - **Las APIs de precios se consultan con pausa**: responden `429` si se consultan seguido.
 - **Las pruebas mecánicas se corren, no se suponen** (densidad, longitud, conteos): más de una vez se
@@ -296,6 +301,10 @@ flowchart LR
   `courses-ia-generated`. El verificador base usa la tabla exacta de `github-slugger` (comparada contra
   22.935 encabezados de los dos repositorios, sin una sola diferencia) y reporta `ANCLA-FE0F` con el
   ancla correcta.
+- **Un enlace cuyo texto cruza un salto de línea** (`[Errores⏎frecuentes](#-errores-frecuentes)`) no lo
+  ve un verificador que busca `[texto](destino)` línea por línea, y GitHub lo enlaza igual. En
+  `bases/05-bases-datos` escondía 41 `ANCLA-FE0F` reales. El verificador base valida también el cierre
+  `](destino)` que queda sin su `[` en la línea, y `--corregir-fe0f` lo repara igual que a los demás.
 - **Los superíndices desaparecen del ancla.** `²`, `⁸` o `⁶¹` son «otro número», no dígitos decimales, y
   GitHub los borra: `## 4. LIS en O(n²)` → `#4-lis-en-on`. Un verificador con `isalnum()` de Python los da
   por buenos (y tampoco conserva el U+FE0F). En `bases/02-algoritmos` salieron 9 enlaces así al cerrar el

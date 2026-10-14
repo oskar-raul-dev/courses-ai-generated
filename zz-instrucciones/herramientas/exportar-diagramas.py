@@ -20,7 +20,8 @@ import shutil
 import subprocess
 import sys
 
-BLOCK = re.compile(r"^```mermaid[ \t]*\n(.*?)^```[ \t]*$", re.S | re.M)
+# el bloque puede ir sangrado dentro de una viñeta: la sangría de la apertura se repite en el cierre
+BLOCK = re.compile(r"^([ \t]*)```mermaid[ \t]*\n(.*?)^\1```[ \t]*$", re.S | re.M)
 DOCKER_IMAGE = "minlag/mermaid-cli"
 
 
@@ -64,7 +65,10 @@ def main():
     total = fails = 0
     for md in find_markdown(a.ruta):
         blocks = BLOCK.findall(md.read_text(encoding="utf-8"))
-        for n, body in enumerate(blocks, 1):
+        for n, (indent, body) in enumerate(blocks, 1):
+            if indent:  # se quita la sangría de la viñeta, línea por línea
+                body = "".join(l[len(indent):] if l.startswith(indent) else l.lstrip(" \t")
+                               for l in body.splitlines(keepends=True))
             src = out_dir / f"{md.stem}-{n:02d}.mmd"
             dst = src.with_suffix(f".{a.formato}")
             src.write_text(body, encoding="utf-8")

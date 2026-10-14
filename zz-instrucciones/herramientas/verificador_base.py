@@ -51,6 +51,9 @@ import unicodedata
 
 FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+IMAGEN_RE = re.compile(r"!\[[^\]]*\]\([^)]*\)")
+# el cierre `](destino)` de un enlace cuyo texto empezó en una línea anterior: LINK_RE no lo ve
+CIERRE_RE = re.compile(r"\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MARCA_PLANTILLA_RE = re.compile(r"✏️\s*\*\*Plantilla")   # la nota de plantilla; ✏️ suelto es contenido
 PLACEHOLDER_RE = re.compile(r"\{\{(?![\s.$]|json\b|range\b|if\b|end\b|with\b)")   # no plantillas de Go
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
@@ -315,9 +318,16 @@ class Verificador:
         return None
 
     # --- validaciones de todo documento
+    def destinos(self, linea):
+        """Los destinos de los enlaces de una línea, incluido el cierre de uno cuyo texto cruza un salto
+        de línea (`[Errores⏎frecuentes](#-errores-frecuentes)`), que GitHub enlaza igual."""
+        limpia = sin_inline(linea)
+        resto = IMAGEN_RE.sub("", LINK_RE.sub("", limpia))
+        return LINK_RE.findall(limpia) + CIERRE_RE.findall(resto)
+
     def verificar_enlaces(self, ruta, lineas):
         for n, linea in lineas:
-            for destino in LINK_RE.findall(sin_inline(linea)):
+            for destino in self.destinos(linea):
                 if re.match(r"^[a-z][a-z0-9+.-]*:", destino) or destino.startswith("{{"):
                     continue
                 camino, _, ancla = destino.partition("#")
@@ -460,7 +470,11 @@ class Verificador:
         if re.search(r"\bpendiente\b", texto, re.I):
             self.aviso("PENDIENTE", f"{self.rel(ruta)} dice «pendiente»")
         if self.CAPAS:
-            for bloque in re.split(r"\n(?=\*\*\d{2} → |#)", texto):
+            # se corta por entrada o por encabezado fuera de los bloques de código: un comentario
+            # `# …` de Python o de bash dentro de una respuesta no es un encabezado
+            visibles = dict(lineas_sin_codigo(texto))
+            sin_codigo = "\n".join(visibles.get(n, "") for n in range(1, texto.count("\n") + 2))
+            for bloque in re.split(r"\n(?=\*\*\d{2} → |#)", sin_codigo):
                 if not re.match(r"\*\*\d{2} → \d+\.", bloque):
                     continue                # simulaciones y ejercicios tienen otro formato
                 if not all(c in bloque for c in self.CAPAS):

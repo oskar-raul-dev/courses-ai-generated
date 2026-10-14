@@ -184,8 +184,8 @@ Se declara y el texto se detiene: **no se dice dónde estaría ese material.**
 Si una sesión futura quiere cambiar una, primero la cambia aquí y después en todo lo demás, nunca al
 revés. ✅ cerrada · ⏳ abierta · 🔄 reabierta.
 
-> ✏️ **Plantilla:** las trece primeras son las que todo curso termina decidiendo; vienen con su valor
-> por defecto. Agrega las propias del curso a partir de `D-14`.
+> ✏️ **Plantilla:** las catorce primeras son las que todo curso termina decidiendo; vienen con su valor
+> por defecto. Agrega las propias del curso a partir de `D-15`.
 
 | ID | Decisión | Valor | Estado |
 |---|---|---|---|
@@ -202,7 +202,8 @@ revés. ✅ cerrada · ⏳ abierta · 🔄 reabierta.
 | D-11 | Historia | {{sin historia: sistema de ejemplo neutro / con historia: una empresa ficticia en `00-historia-de-….md`, que ancla cada fase y sirve de base para contenido en video}} | ⏳ |
 | D-12 | Diagramas | {{a criterio de quien escribe: diagrama ASCII en `text` o Mermaid, ninguno obligatorio / Mermaid obligatorio, porque se pidió explícitamente al crear el curso}} | ⏳ |
 | D-13 | Publicación | Repositorio público propio del curso, con la carpeta del curso sin `prompts/`; enlaces a otros cursos convertidos al publicar (etapa E9) | ⏳ |
-| D-14 | {{…}} | {{…}} | ⏳ |
+| D-14 | Referencias | {{solo las citas: documentación oficial y libros base en la sección 📚 de cada documento / además, recursos para seguir estudiando ({{bibliografía · blogs · cursos gratis · cursos de pago · tutoriales}}) al final de {{cada documento / cada bloque / el curso, en un apéndice}}}}; reglas en la guía §10.4 | ⏳ |
+| D-15 | {{…}} | {{…}} | ⏳ |
 
 **Excepciones declaradas al `CLAUDE.md` del repositorio**, con su porqué (el detalle en la guía §13):
 

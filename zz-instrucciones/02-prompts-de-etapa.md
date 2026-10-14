@@ -365,6 +365,10 @@ necesite}}. No se escribe ninguna fase.
   tal.
 - **URL de documentación oficial**, una por concepto, por código de estado; las que redirigen a la
   portada cuentan como rotas.
+- {{Si `D-14` pide recursos para seguir estudiando: la lista inicial, con la ficha de la guía §10.4 —
+  que la URL responda (o *comprobado a mano* si la plataforma devuelve `403`), autor, plataforma,
+  idioma, gratis o de pago y fecha de la última actualización—, sin afiliados ni copias no
+  autorizadas.}}
 - {{Laboratorio: que el entorno levanta en la plataforma del autor, cuánta memoria pide, y un
   prototipo del método (un servicio, una sesión, un taller) que pase de punta a punta.}}
 - {{Cifras y hechos de la historia o del dominio que una fase va a citar.}}

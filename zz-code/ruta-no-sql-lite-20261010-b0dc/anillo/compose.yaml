@@ -1,0 +1,39 @@
+# Sondeo de T5 (paso 1 de F17): ¿cabe un anillo de tres nodos de Cassandra en la VM de 7,75 GiB?
+# Misma imagen y heap que el servicio `columnar` del laboratorio; sin puertos publicados.
+name: condor-anillo-sondeo
+
+x-nodo: &nodo
+  image: cassandra@sha256:8819d1b7877ee6621751a761cc163332e9c3eaf671c8ef672f7c77a7c5bff05f # 5.0 (5.0.9)
+  labels: { curso: ruta-no-sql-lite }
+  mem_limit: 1600m
+  healthcheck:
+    test: ["CMD", "cqlsh", "-e", "SELECT release_version FROM system.local"]
+    interval: 5s
+    retries: 120
+
+services:
+  c1:
+    <<: *nodo
+    environment: &env
+      MAX_HEAP_SIZE: 512M
+      HEAP_NEWSIZE: 128M
+      CASSANDRA_SEEDS: c1
+      CASSANDRA_CLUSTER_NAME: condor-anillo
+      CASSANDRA_DC: datacenter1
+      CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch
+    volumes: ["c1-data:/var/lib/cassandra"]
+  c2:
+    <<: *nodo
+    environment: *env
+    volumes: ["c2-data:/var/lib/cassandra"]
+    depends_on: { c1: { condition: service_healthy } }
+  c3:
+    <<: *nodo
+    environment: *env
+    volumes: ["c3-data:/var/lib/cassandra"]
+    depends_on: { c2: { condition: service_healthy } }
+
+volumes:
+  c1-data: { labels: { curso: ruta-no-sql-lite } }
+  c2-data: { labels: { curso: ruta-no-sql-lite } }
+  c3-data: { labels: { curso: ruta-no-sql-lite } }

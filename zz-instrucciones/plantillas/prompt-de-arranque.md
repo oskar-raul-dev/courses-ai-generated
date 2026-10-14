@@ -144,7 +144,33 @@ Si el tema es bastante extenso, el curso se puede dividir en bloques o pistas
 
 **Explica** (los bloques o pistas que ya ves, cuál es el troncal, cuáles serían opcionales): {{…}}
 
-## 15. 📝 Lo demás
+## 15. 📚 Referencias
+
+Todo documento cita la documentación oficial y los libros base que respaldan lo que afirma; eso no se
+pregunta. Esto es lo **otro**: el material externo que el curso le recomienda al lector para seguir
+estudiando (guía §10.4). Marca **varias** si aplica.
+
+**Qué material:**
+
+- [ ] **Ninguno extra** — solo las citas oficiales y los libros base
+- [ ] **Bibliografía** — libros, papers, especificaciones
+- [ ] **Blogs y artículos** de autor reconocido
+- [ ] **Cursos gratis** — YouTube, cursos abiertos de universidades o del fabricante
+- [ ] **Cursos de pago** — Udemy, Coursera, Pluralsight, O'Reilly…
+- [ ] **Sitios de tutoriales** — Baeldung, GeeksforGeeks, Real Python, MDN…
+- [ ] **Me lo sugieres tú en la sesión** — no lo tengo claro: propónmelo y lo discutimos
+
+**Dónde van:**
+
+- [ ] **Al final de cada documento** — en la sección 📚 de su plantilla, después de las fuentes oficiales
+- [ ] **Al final de cada bloque o parte** — una lista curada en el README del bloque
+- [ ] **Al final del curso** — un apéndice de bibliografía y recursos
+- [ ] **Me lo sugieres tú en la sesión** — no lo tengo claro: propónmelo y lo discutimos
+
+**Explica** (recursos que ya conoces y quieres que estén, idioma —¿solo en español, o también en
+inglés?—, si prefieres solo gratis): {{…}}
+
+## 16. 📝 Lo demás
 
 - **Lo que NO quiero:** {{…}}
 - **Tamaño o tiempo disponible:** {{horas, número de fases o de bloques, "lo que pida el tema"}}
