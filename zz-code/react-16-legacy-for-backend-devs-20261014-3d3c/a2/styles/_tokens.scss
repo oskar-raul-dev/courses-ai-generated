@@ -1,0 +1,22 @@
+// Tokens del mini design system de La Esclusa.
+// Valores crudos, sin lógica. Los consume Bootstrap (vía overrides),
+// las functions, los mixins y los componentes.
+
+// --- Color de marca ---
+$primary: #0066cc;   // azul de acción principal
+$success: #28a745;   // verde "en vivo / disponible"
+$danger:  #dc3545;   // rojo "terminada / agotado"
+$warning: #f0ad4e;   // ámbar "programada / por vencer"
+$muted:   #6c757d;   // gris "conciliada / inactivo"
+
+// --- Espaciado (múltiplos de una unidad base) ---
+$spacing: 0.5rem;          // unidad base (heredada de Fase 0)
+$spacing-lg: $spacing * 3; // separaciones grandes
+
+// --- Tipografía ---
+$font-base: 1rem;
+$font-mono: "SFMono-Regular", "Consolas", monospace; // para pesos, contadores y IDs
+
+// --- Radios y bordes ---
+$radius: 0.25rem;
+$border-accent: 4px;  // el filete de color arriba de las cards

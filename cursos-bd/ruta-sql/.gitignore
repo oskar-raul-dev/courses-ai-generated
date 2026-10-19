@@ -1,0 +1,14 @@
+# La raíz del repositorio público del curso: solo el sistema operativo y los editores.
+# Lo del curso (el entorno de Python, la caja generada, lo que bajan los proyectos de Java)
+# lo ignora src/.gitignore, que se sostiene solo.
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~

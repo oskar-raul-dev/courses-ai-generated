@@ -1,0 +1,16 @@
+-- ss02 · el formulario de hemograma abierto a la hora del almuerzo, en SQL Server.
+-- a corrige el hemograma y no confirma; b es el reporte que lo lee; c mira quién espera a quién.
+-- Con la base como la dejó SSMS (READ COMMITTED con bloqueos) y después con RCSI:
+--   uv run --extra sqlserver lab race -f ss02-pesimista-contra-rcsi/lunch_form_reader.race
+--   uv run --extra sqlserver lab race -f ss02-pesimista-contra-rcsi/lunch_form_reader_rcsi.race
+-- @engine sqlserver
+-- @database ss02
+-- @setup ALTER DATABASE ss02 SET READ_COMMITTED_SNAPSHOT OFF WITH ROLLBACK IMMEDIATE
+-- @setup UPDATE dbo.hemogram SET hematocrit = N'41', version = 1 WHERE hemogram_id = 1
+-- @check SELECT hematocrit, version FROM dbo.hemogram WHERE hemogram_id = 1
+a1: BEGIN TRAN;
+a2: UPDATE dbo.hemogram SET hematocrit = N'40' WHERE hemogram_id = 1;
+b1: SELECT hematocrit FROM dbo.hemogram WHERE hemogram_id = 1;
+c1: SELECT r.session_id, r.blocking_session_id, r.wait_type, r.command FROM sys.dm_exec_requests AS r
+    WHERE r.blocking_session_id <> 0;
+a3: COMMIT;

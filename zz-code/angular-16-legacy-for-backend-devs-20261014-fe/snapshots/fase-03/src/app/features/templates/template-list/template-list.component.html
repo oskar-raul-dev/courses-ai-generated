@@ -1,0 +1,21 @@
+<h2>Plantillas de checklist</h2>
+
+<mat-progress-spinner *ngIf="loading" mode="indeterminate" diameter="32"></mat-progress-spinner>
+
+<p class="template-error" *ngIf="errorMessage !== null">{{ errorMessage }}</p>
+
+<mat-nav-list *ngIf="!loading && errorMessage === null">
+  <a mat-list-item *ngFor="let template of templates">
+    <span matListItemTitle>{{ template.templateId }} · v{{ template.version }}</span>
+    <span matListItemLine>
+      Vigente desde {{ template.validFrom }}
+      <ng-container *ngIf="template.validUntil !== null">
+        hasta {{ template.validUntil }}
+      </ng-container>
+      <ng-container *ngIf="template.validUntil === null">
+        · sin fecha de fin
+      </ng-container>
+      · {{ template.items.length }} ítems
+    </span>
+  </a>
+</mat-nav-list>

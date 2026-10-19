@@ -1,0 +1,245 @@
+-[ RECORD 1 ]---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+n_distinct | 7629
+bounds     | {"< 0,05","0,34","0,61","0,75","0,90","10,0","10,3","10,6",10964,11236,115,118,<12.0,122,125,128,>1300,13.4,13.8,14.0,14.5,14.9,150562,153,156,"1,6",161,"1,65",16.9,17.2,"1,76",179,"1,83",187,"1,91",195,"2,0",201777,206943,21,214,219,223,228,233,239,"2,43",249,252,259648,268,275,282,290703,3,302534,"3,1",318,32.5,3306650,339,34.6,35.3,360,"3,69",375,3830,39.1,"< 4,0",40.2,41.1,419,426,43.4,442737,>450,"45,7",466006,47.5,483,4905445,"5,0",5121435,"52,7",5405080,5554,5707949,"5,9",6069,"6,56","7,0",7493,78,8031,"8,4",8.7,>90,"9,2",9.4,9629,9993}
+
+ mayor_que_126_como_texto 
+--------------------------
+                   605229
+(1 row)
+
+ mayor_que_126_como_numero 
+---------------------------
+                    442426
+(1 row)
+
+NOTICE:  table "protocol_stats" does not exist, skipping
+DROP TABLE
+SELECT 1327622
+ALTER TABLE
+ANALYZE
+ site_code | prefix | count  
+-----------+--------+--------
+ C         | C-     | 599711
+ A         | A-     | 166540
+ R         | R-     | 161170
+ J         | J-     | 152593
+ V         | V-     | 145010
+ E         | E-     |  80918
+ C         | 00     |   9999
+ C         | 01     |   9524
+(8 rows)
+
+== sin estadísticas extendidas
+                                                          QUERY PLAN                                                          
+------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=19193.22..19193.23 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=8512
+   ->  Gather  (cost=19193.00..19193.21 rows=2 width=8) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=8512
+         ->  Partial Aggregate  (cost=18193.00..18193.01 rows=1 width=8) (actual rows=1.00 loops=3)
+               Buffers: shared hit=8512
+               ->  Parallel Seq Scan on protocol_stats  (cost=0.00..18192.58 rows=170 width=0) (actual rows=26972.67 loops=3)
+                     Filter: (((site_code)::text = 'E'::text) AND ("left"((visible_number)::text, 2) = 'E-'::text))
+                     Rows Removed by Filter: 415568
+                     Buffers: shared hit=8512
+ Planning Time: 0.069 ms
+ Execution Time: 39.089 ms
+(14 rows)
+
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=56964.92..56986.74 rows=33 width=11) (actual rows=1.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=313557 read=18647
+   ->  Gather Merge  (cost=56964.92..56986.01 rows=79 width=11) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=313557 read=18647
+         ->  Partial GroupAggregate  (cost=55964.89..55976.87 rows=33 width=11) (actual rows=1.00 loops=3)
+               Group Key: r.analyte_code
+               Buffers: shared hit=313557 read=18647
+               ->  Sort  (cost=55964.89..55968.78 rows=1553 width=3) (actual rows=26972.67 loops=3)
+                     Sort Key: r.analyte_code
+                     Sort Method: quicksort  Memory: 769kB
+                     Buffers: shared hit=313557 read=18647
+                     Worker 0:  Sort Method: quicksort  Memory: 769kB
+                     Worker 1:  Sort Method: quicksort  Memory: 769kB
+                     ->  Nested Loop  (cost=0.43..55882.58 rows=1553 width=3) (actual rows=26972.67 loops=3)
+                           Buffers: shared hit=313539 read=18647
+                           ->  Parallel Seq Scan on protocol_stats s  (cost=0.00..18192.58 rows=170 width=4) (actual rows=26972.67 loops=3)
+                                 Filter: (((site_code)::text = 'E'::text) AND ("left"((visible_number)::text, 2) = 'E-'::text))
+                                 Rows Removed by Filter: 415568
+                                 Buffers: shared hit=8512
+                           ->  Index Scan using result_eav_lab_order_id_idx on result_eav r  (cost=0.43..221.12 rows=59 width=7) (actual rows=1.00 loops=80918)
+                                 Index Cond: (lab_order_id = s.lab_order_id)
+                                 Index Searches: 80918
+                                 Buffers: shared hit=305027 read=18647
+ Planning:
+   Buffers: shared hit=53 read=15 dirtied=1
+ Planning Time: 2.061 ms
+ Execution Time: 160.314 ms
+(30 rows)
+
+                                                                    QUERY PLAN                                                                    
+--------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=170917.68..170939.51 rows=33 width=11) (actual rows=1.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=8530 read=87808
+   ->  Gather Merge  (cost=170917.68..170938.78 rows=79 width=11) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=8530 read=87808
+         ->  Partial GroupAggregate  (cost=169917.65..169929.64 rows=33 width=11) (actual rows=1.00 loops=3)
+               Group Key: r.analyte_code
+               Buffers: shared hit=8530 read=87808
+               ->  Sort  (cost=169917.65..169921.54 rows=1554 width=3) (actual rows=26972.67 loops=3)
+                     Sort Key: r.analyte_code
+                     Sort Method: quicksort  Memory: 769kB
+                     Buffers: shared hit=8530 read=87808
+                     Worker 0:  Sort Method: quicksort  Memory: 769kB
+                     Worker 1:  Sort Method: quicksort  Memory: 769kB
+                     ->  Parallel Hash Join  (cost=18194.70..169835.28 rows=1554 width=3) (actual rows=26972.67 loops=3)
+                           Hash Cond: (r.lab_order_id = s.lab_order_id)
+                           Buffers: shared hit=8512 read=87808
+                           ->  Parallel Seq Scan on result_as_is r  (cost=0.00..138368.42 rows=5056042 width=7) (actual rows=4044101.00 loops=3)
+                                 Buffers: shared read=87808
+                           ->  Parallel Hash  (cost=18192.58..18192.58 rows=170 width=4) (actual rows=26972.67 loops=3)
+                                 Buckets: 131072 (originally 1024)  Batches: 1 (originally 1)  Memory Usage: 5272kB
+                                 Buffers: shared hit=8512
+                                 ->  Parallel Seq Scan on protocol_stats s  (cost=0.00..18192.58 rows=170 width=4) (actual rows=26972.67 loops=3)
+                                       Filter: (((site_code)::text = 'E'::text) AND ("left"((visible_number)::text, 2) = 'E-'::text))
+                                       Rows Removed by Filter: 415568
+                                       Buffers: shared hit=8512
+ Planning:
+   Buffers: shared hit=16 read=1 dirtied=1
+ Planning Time: 0.232 ms
+ JIT:
+   Functions: 51
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 600.056 ms
+(35 rows)
+
+CREATE STATISTICS
+ANALYZE
+== con estadísticas extendidas
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=19277.15..19277.16 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=8512
+   ->  Gather  (cost=19276.94..19277.15 rows=2 width=8) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=8512
+         ->  Partial Aggregate  (cost=18276.94..18276.95 rows=1 width=8) (actual rows=1.00 loops=3)
+               Buffers: shared hit=8512
+               ->  Parallel Seq Scan on protocol_stats  (cost=0.00..18192.58 rows=33744 width=0) (actual rows=26972.67 loops=3)
+                     Filter: (((site_code)::text = 'E'::text) AND ("left"((visible_number)::text, 2) = 'E-'::text))
+                     Rows Removed by Filter: 415568
+                     Buffers: shared hit=8512
+ Planning:
+   Buffers: shared hit=10
+ Planning Time: 0.158 ms
+ Execution Time: 38.605 ms
+(16 rows)
+
+                                                                     QUERY PLAN                                                                     
+----------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=219186.09..219196.02 rows=33 width=11) (actual rows=1.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=44566 read=98172
+   ->  Gather Merge  (cost=219186.09..219195.29 rows=79 width=11) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=44566 read=98172
+         ->  Sort  (cost=218186.07..218186.15 rows=33 width=11) (actual rows=1.00 loops=3)
+               Sort Key: r.analyte_code
+               Sort Method: quicksort  Memory: 25kB
+               Buffers: shared hit=44566 read=98172
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Partial HashAggregate  (cost=218184.91..218185.24 rows=33 width=11) (actual rows=1.00 loops=3)
+                     Group Key: r.analyte_code
+                     Batches: 1  Memory Usage: 32kB
+                     Buffers: shared hit=44548 read=98172
+                     Worker 0:  Batches: 1  Memory Usage: 32kB
+                     Worker 1:  Batches: 1  Memory Usage: 32kB
+                     ->  Parallel Hash Join  (cost=18614.38..216643.10 rows=308362 width=3) (actual rows=26972.67 loops=3)
+                           Hash Cond: (r.lab_order_id = s.lab_order_id)
+                           Buffers: shared hit=44548 read=98172
+                           ->  Parallel Seq Scan on result_eav r  (cost=0.00..184759.03 rows=5055103 width=7) (actual rows=4044101.00 loops=3)
+                                 Buffers: shared hit=36036 read=98172
+                           ->  Parallel Hash  (cost=18192.58..18192.58 rows=33744 width=4) (actual rows=26972.67 loops=3)
+                                 Buckets: 131072  Batches: 1  Memory Usage: 4224kB
+                                 Buffers: shared hit=8512
+                                 ->  Parallel Seq Scan on protocol_stats s  (cost=0.00..18192.58 rows=33744 width=4) (actual rows=26972.67 loops=3)
+                                       Filter: (((site_code)::text = 'E'::text) AND ("left"((visible_number)::text, 2) = 'E-'::text))
+                                       Rows Removed by Filter: 415568
+                                       Buffers: shared hit=8512
+ Planning:
+   Buffers: shared hit=25
+ Planning Time: 0.273 ms
+ JIT:
+   Functions: 60
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 554.983 ms
+(38 rows)
+
+                                                                     QUERY PLAN                                                                     
+----------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=172798.23..172808.16 rows=33 width=11) (actual rows=1.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=9394 read=86944
+   ->  Gather Merge  (cost=172798.23..172807.43 rows=79 width=11) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=9394 read=86944
+         ->  Sort  (cost=171798.21..171798.29 rows=33 width=11) (actual rows=1.00 loops=3)
+               Sort Key: r.analyte_code
+               Sort Method: quicksort  Memory: 25kB
+               Buffers: shared hit=9394 read=86944
+               Worker 0:  Sort Method: quicksort  Memory: 25kB
+               Worker 1:  Sort Method: quicksort  Memory: 25kB
+               ->  Partial HashAggregate  (cost=171797.05..171797.38 rows=33 width=11) (actual rows=1.00 loops=3)
+                     Group Key: r.analyte_code
+                     Batches: 1  Memory Usage: 32kB
+                     Buffers: shared hit=9376 read=86944
+                     Worker 0:  Batches: 1  Memory Usage: 32kB
+                     Worker 1:  Batches: 1  Memory Usage: 32kB
+                     ->  Parallel Hash Join  (cost=18614.38..170254.95 rows=308419 width=3) (actual rows=26972.67 loops=3)
+                           Hash Cond: (r.lab_order_id = s.lab_order_id)
+                           Buffers: shared hit=9376 read=86944
+                           ->  Parallel Seq Scan on result_as_is r  (cost=0.00..138368.42 rows=5056042 width=7) (actual rows=4044101.00 loops=3)
+                                 Buffers: shared hit=864 read=86944
+                           ->  Parallel Hash  (cost=18192.58..18192.58 rows=33744 width=4) (actual rows=26972.67 loops=3)
+                                 Buckets: 131072  Batches: 1  Memory Usage: 4224kB
+                                 Buffers: shared hit=8512
+                                 ->  Parallel Seq Scan on protocol_stats s  (cost=0.00..18192.58 rows=33744 width=4) (actual rows=26972.67 loops=3)
+                                       Filter: (((site_code)::text = 'E'::text) AND ("left"((visible_number)::text, 2) = 'E-'::text))
+                                       Rows Removed by Filter: 415568
+                                       Buffers: shared hit=8512
+ Planning:
+   Buffers: shared hit=8
+ Planning Time: 0.180 ms
+ JIT:
+   Functions: 60
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 529.038 ms
+(38 rows)
+
+                                               QUERY PLAN                                               
+--------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=17809.92..17809.93 rows=1 width=8)
+   ->  Gather  (cost=17809.70..17809.91 rows=2 width=8)
+         Workers Planned: 2
+         ->  Partial Aggregate  (cost=16809.70..16809.71 rows=1 width=8)
+               ->  Parallel Seq Scan on protocol_stats  (cost=0.00..16809.64 rows=26 width=0)
+                     Filter: ((ordered_on >= '2015-03-10'::date) AND (ordered_on < '2015-03-11'::date))
+(6 rows)
+
+ count 
+-------
+    65
+(1 row)
+

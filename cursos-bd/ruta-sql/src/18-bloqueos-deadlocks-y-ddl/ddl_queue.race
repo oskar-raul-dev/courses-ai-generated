@@ -1,0 +1,12 @@
+-- Fase 18 · la cola detrás del ALTER (Postgres): a lee y no termina; b quiere agregar una columna; c solo quiere leer.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/ddl_queue.race
+-- @engine postgres
+-- @setup ALTER TABLE staging.hemogram DROP COLUMN IF EXISTS reviewed_by
+-- @teardown ALTER TABLE staging.hemogram DROP COLUMN IF EXISTS reviewed_by
+a1: BEGIN;
+a2: SELECT count(*) FROM staging.hemogram;
+b1: ALTER TABLE staging.hemogram ADD COLUMN reviewed_by text;
+c1: SELECT hematocrit FROM staging.hemogram WHERE hemogram_id = 1;
+d1: SELECT l.pid, l.mode, l.granted, pg_blocking_pids(l.pid) AS blocked_by FROM pg_locks l
+    WHERE l.relation = 'staging.hemogram'::regclass ORDER BY l.granted DESC, l.pid;
+a3: COMMIT;

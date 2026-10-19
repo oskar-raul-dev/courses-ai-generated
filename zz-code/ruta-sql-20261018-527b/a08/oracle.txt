@@ -1,0 +1,21 @@
+
+Table created.
+
+INSERT INTO a08_presentacion VALUES (11233733, '')
+                                               *
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SYSTEM"."A08_PRESENTACION"."OBRA_SOCIAL")
+Help: https://docs.oracle.com/error-help/db/ora-01400/
+
+
+
+1 row created.
+
+
+ PROTOCOLO OBRA_SOCIAL
+---------- --------------------------------------------------------------
+  11233732 [ ]
+
+
+Table dropped.
+

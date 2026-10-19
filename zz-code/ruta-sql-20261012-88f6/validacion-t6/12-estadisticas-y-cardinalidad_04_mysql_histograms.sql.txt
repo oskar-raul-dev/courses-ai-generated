@@ -1,0 +1,52 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Table	Op	Msg_type	Msg_text
+staging.protocol_hist	analyze	status	OK
+etapa
+sin histograma
+EXPLAIN
+-> Aggregate: count(0)  (cost=167514 rows=1)
+    -> Filter: ((staging.protocol_hist.Fecha >= TIMESTAMP'2015-03-10 00:00:00') and (staging.protocol_hist.Fecha < TIMESTAMP'2015-03-11 00:00:00'))  (cost=133690 rows=146797)
+        -> Table scan on protocol_hist  (cost=133690 rows=1.32e+6)
+
+Table	Op	Msg_type	Msg_text
+staging.protocol_hist	histogram	status	Histogram statistics created for column 'Fecha'.
+staging.protocol_hist	histogram	status	Histogram statistics created for column 'Sede'.
+etapa
+con histograma
+COLUMN_NAME	kind	buckets	sampling_rate
+Fecha	equi-height	100	0.059121110303910894
+Sede	singleton	6	0.059121110303910894
+EXPLAIN
+-> Aggregate: count(0)  (cost=409321 rows=1)
+    -> Filter: (staging.protocol_hist.Fecha >= TIMESTAMP'2015-03-10 00:00:00')  (cost=133690 rows=1.2e+6)
+        -> Table scan on protocol_hist  (cost=133690 rows=1.32e+6)
+
+EXPLAIN
+-> Aggregate: count(0)  (cost=162549 rows=1)
+    -> Filter: (staging.protocol_hist.Fecha < TIMESTAMP'2015-03-11 00:00:00')  (cost=133690 rows=125248)
+        -> Table scan on protocol_hist  (cost=133690 rows=1.32e+6)
+
+EXPLAIN
+-> Aggregate: count(0)  (cost=159815 rows=1)
+    -> Filter: ((staging.protocol_hist.Fecha >= TIMESTAMP'2015-03-10 00:00:00') and (staging.protocol_hist.Fecha < TIMESTAMP'2015-03-11 00:00:00'))  (cost=133690 rows=113381)
+        -> Table scan on protocol_hist  (cost=133690 rows=1.32e+6)
+
+EXPLAIN
+-> Aggregate: count(0)  (cost=133994 rows=1)
+    -> Filter: (staging.protocol_hist.Fecha = TIMESTAMP'2015-03-10 00:00:00')  (cost=133690 rows=1321)
+        -> Table scan on protocol_hist  (cost=133690 rows=1.32e+6)
+
+desde	hasta	el_dia	total
+1152979	174708	65	1327622
+EXPLAIN
+-> Aggregate: count(0)  (cost=153451 rows=1)
+    -> Filter: (staging.protocol_hist.Sede = 'E')  (cost=133690 rows=85761)
+        -> Table scan on protocol_hist  (cost=133690 rows=1.32e+6)
+
+count(*)
+80918
+Table	Op	Msg_type	Msg_text
+staging.protocol_hist	histogram	status	Histogram statistics created for column 'Fecha'.
+COLUMN_NAME	auto_update	last_updated
+Fecha	true	2026-10-14 08:16:03.854296
+Sede	false	2026-10-14 08:15:58.912878

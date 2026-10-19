@@ -1,0 +1,25 @@
+// Se importa ANTES que Bootstrap (ver index.scss). Redefine los !default
+// de BS4 con nuestros tokens. Bootstrap, al importarse después, los toma.
+//
+// Ojo: este archivo NO puede usar @use tokens porque necesita que estas
+// variables queden en scope GLOBAL para que Bootstrap las vea. Por eso
+// duplicamos los valores clave acá o los traemos con un @import de tokens.
+@import "./tokens";
+
+// Mapa de colores de tema de Bootstrap: la clave del asunto.
+// BS4 genera .btn-primary, .badge-success, .text-danger, etc. a partir
+// de este mapa. Al inyectar nuestros valores, TODAS las utilidades de
+// Bootstrap quedan alineadas con la marca sin escribir CSS a mano.
+$theme-colors: (
+  "primary": $primary,
+  "success": $success,
+  "danger":  $danger,
+  "warning": $warning,
+  "muted":   $muted
+);
+
+// Escala de espaciado de Bootstrap (.mt-3, .p-2...) anclada a nuestra unidad.
+$spacer: $spacing * 2;  // BS4 deriva .m-1..5 de $spacer
+
+// Radio global de botones, cards, inputs.
+$border-radius: $radius;

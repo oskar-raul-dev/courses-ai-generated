@@ -1,0 +1,11 @@
+-- Fase 18 · dos correcciones de dos hemogramas, en orden contrario (Postgres).
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/deadlock.race
+-- @engine postgres
+a1: BEGIN;
+b1: BEGIN;
+a2: UPDATE staging.hemogram SET notes = 'a' WHERE hemogram_id = 1;
+b2: UPDATE staging.hemogram SET notes = 'b' WHERE hemogram_id = 2;
+a3: UPDATE staging.hemogram SET notes = 'a' WHERE hemogram_id = 2;
+b3: UPDATE staging.hemogram SET notes = 'b' WHERE hemogram_id = 1;
+a4: ROLLBACK;
+b4: ROLLBACK;

@@ -1,0 +1,11 @@
+-- a08 · ejercicio 7: la espera que lock_timeout corta (E-46)
+-- @engine postgres
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: BEGIN;
+a2: SELECT balance FROM staging.debtor WHERE debtor_id = 1 FOR UPDATE;
+b1: BEGIN; SET LOCAL lock_timeout = '1s';
+b2: UPDATE staging.debtor SET balance = 23.00 WHERE debtor_id = 1;
+a3: COMMIT;
+b3: ROLLBACK;
+-- @permutation a1 a2 b1 b2 b3 a3

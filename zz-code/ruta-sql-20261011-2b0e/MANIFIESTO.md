@@ -4,7 +4,7 @@
 - **Tanda:** P8, P9 y P11
 - **Creado:** 2026-10-11
 - **Propósito:** verificación de laboratorio de la Ruta SQL: versiones, digests, RAM, emulación, drivers, prototipo del generador y funciones de Postgres; fuentes de P9
-- **Estado:** vigente hasta T1 (el generador y el `compose.yaml` de prueba son el punto de partida de `a02` y `a05`)
+- **Estado:** archivado (18/10/2026, T16): T1 lo reemplazó; queda como registro de P8 y P9
 - **Cómo regenerar lo que limpiar.py borra:** `salidas/` se rehace corriendo el README §4 (la caja, con `./comandos-generador.sh s` y `m`)
 
 ## Qué hay

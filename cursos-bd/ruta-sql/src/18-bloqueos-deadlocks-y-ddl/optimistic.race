@@ -1,0 +1,9 @@
+-- Fase 18 · el formulario sin bloqueo: cada uno lee la versión, edita sin tener nada tomado, y guarda solo si nadie guardó antes.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/optimistic.race
+-- @engine postgres
+-- @setup UPDATE staging.hemogram SET hematocrit = '41', version = 1 WHERE hemogram_id = 1
+-- @check SELECT hematocrit, version FROM staging.hemogram WHERE hemogram_id = 1
+a1: SELECT hematocrit, version FROM staging.hemogram WHERE hemogram_id = 1;
+b1: SELECT hematocrit, version FROM staging.hemogram WHERE hemogram_id = 1;
+b2: UPDATE staging.hemogram SET hematocrit = '42', version = version + 1 WHERE hemogram_id = 1 AND version = 1;
+a2: UPDATE staging.hemogram SET hematocrit = '40', version = version + 1 WHERE hemogram_id = 1 AND version = 1;

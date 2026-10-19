@@ -1,0 +1,21 @@
+-- Fase 15 · la muestra asignada dos veces (Postgres).
+-- Dos técnicos miran la planilla a la vez: los dos ven libre la misma muestra y los dos la toman.
+-- uv run lab race -f 15-aislamiento-comparado/write_skew.race --isolation serializable
+-- @engine postgres
+-- @isolation repeatable read
+-- @setup TRUNCATE staging.specimen_take
+-- @check SELECT count(*) AS takes, count(DISTINCT technician) AS technicians FROM staging.specimen_take
+-- @teardown TRUNCATE staging.specimen_take
+a1: BEGIN ISOLATION LEVEL {isolation};
+b1: BEGIN ISOLATION LEVEL {isolation};
+a2: SELECT specimen_id FROM staging.specimen s
+    WHERE NOT EXISTS (SELECT 1 FROM staging.specimen_take t WHERE t.specimen_id = s.specimen_id)
+    ORDER BY collected_at, specimen_id LIMIT 1;
+b2: SELECT specimen_id FROM staging.specimen s
+    WHERE NOT EXISTS (SELECT 1 FROM staging.specimen_take t WHERE t.specimen_id = s.specimen_id)
+    ORDER BY collected_at, specimen_id LIMIT 1;
+a3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_a');
+b3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_b');
+a4: COMMIT;
+b4: COMMIT;
+-- @permutation a1 b1 a2 b2 a3 b3 a4 b4

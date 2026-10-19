@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "salidas/src-extraido/src/app/core/time/business-day.ts",
+    "salidas/src-extraido/src/app/core/pdf/certificate-document.ts"
+  ]
+}

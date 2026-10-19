@@ -9,7 +9,9 @@ esa ficha no dice. El apéndice del track está en
 **Una sesión, un archivo.**
 
 > ⚠️ **El orden importa.** `a01`, `a02`, `a05` y `a06` se escriben **antes de F01**, y los cuatro
-> dependen de la verificación de laboratorio (P8). `a03`, `a04`, `a07` y `a08` se abren con su
+> dependen de la verificación de laboratorio (P8, hecha el 11/10/2026: lee
+> [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) antes de
+> empezar). `a03`, `a04`, `a07` y `a08` se abren con su
 > esqueleto y **crecen con el curso**. `a09` va antes de F03, porque la regla de publicación se usa
 > desde ahí. `a10` va al final y es opcional.
 
@@ -74,9 +76,11 @@ tres plataformas: hereda lo que sirve y reescribe solo lo que cambia.
 
 ## Qué vigilar
 - **La tabla de emulación es lo nuevo** respecto de la Lite: qué corre nativo en arm64 y qué no,
-  medido en P8. Si P8 no está hecha, para y dímelo.
+  medido en P8 (`hallazgos.md` §H3 y §H4). Todo es nativo salvo SQL Server, que solo arranca en
+  Docker Desktop.
 - **Oracle y la memoria.** El límite por servicio decide si los tres motores entran a la vez en
-  16 GB; el número sale de P8.
+  16 GB; P8 midió que entran con margen (tabla de RAM de `hallazgos.md`), y con dos Oracle a la vez
+  la VM se llena: es el ejercicio de abajo.
 - Uno de los ejercicios: el contenedor de Oracle que no llega a *healthy* por falta de memoria,
   reconocerlo por sus logs y salir.
 
@@ -97,7 +101,10 @@ Esta es la sesión del **Apéndice a02 — 🧩 El `compose.yaml` de la ruta**. 
 La ficha a02, completa.
 
 ## Qué vigilar
-- **Bloqueado por P8.** Los digests y la tabla de RAM salen de ejecutar.
+- **Parte de P8** (`hallazgos.md`): digests, tiempos de arranque, tabla de RAM y los arreglos de
+  §H5 (MySQL), §H8 (PostgREST) y §H9 (Artemis). Vuelve a resolver los digests el día de la sesión y
+  anota lo que cambió. `wal_level=logical` y `pg_stat_statements` van en el `command` de `postgres`
+  (§H10).
 - **Este es el único sitio del curso donde vive una versión.** Todo lo demás apunta aquí.
 - **Los *healthchecks* de Oracle** tardan: el apéndice dice cuánto, medido, para que nadie crea
   que se colgó.
@@ -171,7 +178,10 @@ La ficha a05, completa.
   producir la suciedad con las proporciones de la historia **y guardar la verdad** de forma
   consultable. Diseña en el paso 1 cómo se guarda esa verdad (un esquema `truth` aparte, con qué
   tablas) y muéstramelo.
-- **Los perfiles S, M y L** se calibran en P8 y aquí se fijan (D4). `lab load` usa **S por
+- **Los perfiles S, M y L** se calibraron en P8 con un prototipo (`hallazgos.md` §H12: M, unos
+  250.000 pacientes y 17 M de resultados) y aquí se fijan (D4); T1 los fijó en 242.427 pacientes y
+  12,1 M de resultados, con la semilla 1996 (contrato §8). Las proporciones que la historia no
+  fija se confirman en el paso 1. `lab load` usa **S por
   defecto**; M se pide explícitamente para medir; L nunca es obligatorio. **M tiene que entrar en
   16 GB con los tres motores**: si no entra, se achica M.
 - **`legacy` se carga donde hace falta** (D13): en Postgres entero; en MySQL y Oracle, por tablas
@@ -200,9 +210,8 @@ La ficha a06, completa.
 ## Qué vigilar
 - **Transacciones y *autocommit*** en cada driver, con un ejemplo que muestre la diferencia: el
   Bloque III depende de que el lector sepa en qué transacción está.
-- **El driver de MySQL** se elige en P8 (propuesta de apéndices §14): documenta la elección y su
-  porqué.
-- **Java es mínimo**: Java 21, lo justo para correr el boss del puente y el museo de `a10`.
+- **El driver de MySQL es PyMySQL** (D22, `hallazgos.md` §H11): documenta la elección y su porqué.
+- **Java es mínimo**: Java 25 (D19), lo justo para correr el boss del puente y el museo de `a10`.
 
 {{protocolo}}
 ```
@@ -272,7 +281,11 @@ La ficha a09, completa.
 
 ## Qué vigilar
 - **El texto de la cláusula** se cita de la licencia vigente de Oracle Database Free y de SQL
-  Server, con enlace y fecha de consulta. **No de memoria, y no de un blog.**
+  Server, con enlace y fecha de consulta. **No de memoria, y no de un blog.** P9 ya lo encontró
+  (`hallazgos.md` §F2): SQL Server 2025 Developer la trae (§5), y los *Free Use Terms* de Oracle Free
+  **no**. El apéndice lo dice así, explica por qué el curso igual no publica números de Oracle (D20)
+  y trata como riesgo la frase sobre *third party training*. Vuelve a comprobar los dos textos el día
+  de la sesión.
 - **No es asesoramiento legal**, y se dice en la primera línea.
 - **El riesgo de MySQL** se escribe con fuentes fechadas y sin dramatismo: la pregunta no es si el
   motor está bien, es quién lo mantiene dentro de cinco años.

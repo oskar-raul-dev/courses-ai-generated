@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Boss del puente · solo sirve para bajar las dependencias a lib/ (el servicio se corre con `java Puente.java`).
+     mvn -q dependency:copy-dependencies -DoutputDirectory=lib  (dentro del contenedor de Maven, ver la Fase 23) -->
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>curso.rutasql</groupId>
+  <artifactId>puente</artifactId>
+  <version>1</version>
+  <dependencies>
+    <!-- Apache Artemis 2.57.0: el groupId nuevo desde la separación de ActiveMQ (hallazgos §H9). -->
+    <dependency>
+      <groupId>org.apache.artemis</groupId>
+      <artifactId>artemis-jakarta-client-all</artifactId>
+      <version>2.57.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.7</version>
+    </dependency>
+  </dependencies>
+</project>

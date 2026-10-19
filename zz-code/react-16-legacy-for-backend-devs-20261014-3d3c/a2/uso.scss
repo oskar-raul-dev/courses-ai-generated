@@ -1,0 +1,21 @@
+@use "./styles/mixins" as *;
+@use "./styles/functions" as *;
+@import "bootstrap/scss/bootstrap";
+.segment-cell--soldout { background: status-color("soldout"); }
+
+.wheel-card {
+  @include wheel-accent("live");
+}
+
+.segment-cell {
+  &--available { @include segment-state("available"); }
+  &--limited   { @include segment-state("limited"); }
+  &--soldout   { @include segment-state("soldout"); }
+}
+
+.grant-status { @include status-badge("sent"); }
+
+.segment-grid {
+  grid-template-columns: repeat(10, 1fr);
+  @include above("md") { grid-template-columns: repeat(20, 1fr); }
+}

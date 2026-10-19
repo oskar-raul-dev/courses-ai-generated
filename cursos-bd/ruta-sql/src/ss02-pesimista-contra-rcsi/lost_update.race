@@ -1,0 +1,19 @@
+-- ss02 · la actualización perdida (Fase 15), en SQL Server: dos cajas cobran al mismo deudor (28,00) y cada una
+-- escribe el saldo que calculó la aplicación: 18,00 (pagó 10) y 23,00 (pagó 5). El correcto es 13,00.
+--   uv run --extra sqlserver lab race -f ss02-pesimista-contra-rcsi/lost_update.race --isolation read-committed
+--   … --isolation repeatable-read · … --isolation snapshot (después de 02_snapshot.sql)
+-- @engine sqlserver
+-- @database ss02
+-- @setup ALTER DATABASE ss02 SET READ_COMMITTED_SNAPSHOT OFF WITH ROLLBACK IMMEDIATE
+-- @isolation read committed
+-- @setup UPDATE dbo.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM dbo.debtor WHERE debtor_id = 1
+a1: SET TRANSACTION ISOLATION LEVEL {isolation}; BEGIN TRAN;
+a2: SELECT balance FROM dbo.debtor WHERE debtor_id = 1;
+b1: SET TRANSACTION ISOLATION LEVEL {isolation}; BEGIN TRAN;
+b2: SELECT balance FROM dbo.debtor WHERE debtor_id = 1;
+a3: UPDATE dbo.debtor SET balance = 18.00 WHERE debtor_id = 1;
+b3: UPDATE dbo.debtor SET balance = 23.00 WHERE debtor_id = 1;
+a4: COMMIT;
+b4: IF @@TRANCOUNT > 0 COMMIT;
+-- @permutation a1 a2 b1 b2 a3 b3 a4 b4

@@ -1,0 +1,30 @@
+// src/styles/_tokens.scss
+// Paleta de marca de La Esclusa (ya viene de la Fase 0).
+$esclusa-primary: #0066cc;  // azul de marca
+$esclusa-success: #28a745;  // "rueda en vivo"
+$esclusa-danger:  #dc3545;  // "terminada / agotado"
+$esclusa-spacing: 0.5rem;   // unidad base de espaciado
+
+// Mapeamos NUESTROS tokens a las variables que Bootstrap espera.
+// Estas líneas van ANTES del @import de Bootstrap en index.scss,
+// por eso Bootstrap las lee al construir sus clases.
+$primary: $esclusa-primary;
+$success: $esclusa-success;
+$danger:  $esclusa-danger;
+
+// _tokens.scss — sigue ANTES del @import de Bootstrap.
+// Bootstrap define $theme-colors en su propio @import; declararlo aquí
+// con !default evita que la variable no exista, y Bootstrap mezcla sus
+// colores encima de los nuestros.
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  $theme-colors,
+  (
+    "wheel":   $esclusa-primary,
+    "soldout": $esclusa-danger,
+    "available": $esclusa-success,
+  )
+);
+
+@import "bootstrap/scss/bootstrap";
+.wheel-card { border-top: 4px solid $esclusa-primary; margin-bottom: $esclusa-spacing * 2; }

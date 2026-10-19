@@ -2,12 +2,17 @@
 """Libera disco en zz-code/ borrando SOLO lo regenerable: dependencias, salidas de build y salidas/ de las pruebas.
 
 Uso:
-    python3 zz-code/limpiar.py                      # vista previa de todo zz-code/: lista y tamaños
-    python3 zz-code/limpiar.py <id> [<id> …]        # vista previa de esos directorios
-    python3 zz-code/limpiar.py <id> --borrar        # borra lo listado, y nada más
+    python3 zz-code/limpiar.py                                  # vista previa de todo zz-code/: lista y tamaños
+    python3 zz-code/limpiar.py --solo a,b,c                     # vista previa solo de esos directorios
+    python3 zz-code/limpiar.py --solo ruta-x/prueba-1 --borrar  # borra lo listado, y nada más
+    python3 zz-code/limpiar.py <id> [<id> …]                    # igual que --solo, con los ids como argumentos
+
+<id> es el nombre de un directorio de zz-code/ o una ruta relativa a zz-code/ (p. ej. `curso/subdirectorio`).
 
 Reglas, que el script hace cumplir:
-  - solo actúa dentro de zz-code/, y solo sobre los <id> que existen ahí;
+  - solo actúa dentro de zz-code/, y solo sobre los <id> que existen ahí (zz-code/ entero no se
+    acepta como <id>: para recorrerlo, sin --solo);
+  - sin --solo ni <id>, recorre todo zz-code/;
   - solo borra directorios cuyo nombre está en REGENERABLE (node_modules, target, .venv…);
   - no sigue enlaces simbólicos ni entra en lo que va a borrar;
   - sin --borrar no toca nada.
@@ -62,20 +67,27 @@ def candidatos(directorio):
 
 def main():
     p = argparse.ArgumentParser(description="Borra solo lo regenerable dentro de zz-code/.")
-    p.add_argument("ids", nargs="*", help="directorios de zz-code/ (por defecto, todos)")
+    p.add_argument("ids", nargs="*", help="directorios o rutas relativas de zz-code/ (por defecto, todos)")
+    p.add_argument("--solo", default="", metavar="A,B,C",
+                   help="lista separada por comas de directorios o rutas relativas de zz-code/")
     p.add_argument("--borrar", action="store_true", help="borra de verdad; sin esto, solo lista")
     p.add_argument("--raiz", default=RAIZ, help="otra raíz (solo para pruebas)")
     a = p.parse_args()
 
     raiz = os.path.realpath(a.raiz)
-    ids = a.ids or sorted(d for d in os.listdir(raiz)
-                          if os.path.isdir(os.path.join(raiz, d)) and not d.startswith("."))
+    pedidos = a.ids + [x.strip() for x in a.solo.split(",") if x.strip()]
+    ids = pedidos or sorted(d for d in os.listdir(raiz)
+                            if os.path.isdir(os.path.join(raiz, d)) and not d.startswith("."))
     objetivos = []
     for ident in ids:
         ruta = os.path.realpath(os.path.join(raiz, ident))
-        if os.path.dirname(ruta) != raiz or not os.path.isdir(ruta):
+        dentro = os.path.commonpath([raiz, ruta]) == raiz and ruta != raiz
+        if not dentro or not os.path.isdir(ruta):
             sys.exit(f"No es un directorio de zz-code/: {ident}")
         objetivos.extend(candidatos(ruta))
+
+    # sin repetir: dos pedidos que se solapan (un padre y un hijo) dan el mismo directorio dos veces
+    objetivos = list(dict.fromkeys(os.path.realpath(r) for r in objetivos))
 
     total = 0
     for ruta in objetivos:

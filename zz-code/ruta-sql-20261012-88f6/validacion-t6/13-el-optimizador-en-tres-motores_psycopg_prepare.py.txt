@@ -1,0 +1,14 @@
+prepare_threshold = 5
+ 1 C   343.5 ms  preparadas=0 genéricos=0 personalizados=0
+ 2 C   245.4 ms  preparadas=0 genéricos=0 personalizados=0
+ 3 C   241.4 ms  preparadas=0 genéricos=0 personalizados=0
+ 4 C   239.6 ms  preparadas=0 genéricos=0 personalizados=0
+ 5 C   238.8 ms  preparadas=0 genéricos=0 personalizados=0
+ 6 C   248.2 ms  preparadas=1 genéricos=0 personalizados=1
+ 7 C   247.9 ms  preparadas=1 genéricos=0 personalizados=2
+ 8 C   241.0 ms  preparadas=1 genéricos=0 personalizados=3
+ 9 C   239.0 ms  preparadas=1 genéricos=0 personalizados=4
+10 C   237.1 ms  preparadas=1 genéricos=0 personalizados=5
+11 V   226.9 ms  preparadas=1 genéricos=1 personalizados=5
+12 V   222.8 ms  preparadas=1 genéricos=2 personalizados=5
+13 V   223.2 ms  preparadas=1 genéricos=3 personalizados=5

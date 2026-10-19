@@ -1,0 +1,313 @@
+Pager usage is off.
+== F10 Postgres
+           relname           | pg_size_pretty 
+-----------------------------+----------------
+ order_bigint_patient_id_idx | 18 MB
+ order_bigint_pkey           | 28 MB
+ order_uuid4_patient_id_idx  | 18 MB
+ order_uuid4_pkey            | 52 MB
+ order_uuid7_patient_id_idx  | 18 MB
+ order_uuid7_pkey            | 40 MB
+(6 rows)
+
+    max     | al_techo 
+------------+----------
+ 2147413574 |    70073
+(1 row)
+
+== F11 compuesto
+BEGIN
+DROP INDEX
+DROP INDEX
+                                                                                            QUERY PLAN                                                                                             
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared read=37
+   ->  Index Only Scan using result_recent_analyte_code_recorded_at_idx on result_recent (actual rows=9671.00 loops=1)
+         Index Cond: ((analyte_code = 'GLU'::text) AND (recorded_at >= '2024-10-01 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-11-01 00:00:00'::timestamp without time zone))
+         Heap Fetches: 0
+         Index Searches: 1
+         Buffers: shared read=37
+ Planning:
+   Buffers: shared hit=103 read=5 dirtied=1
+ Planning Time: 2.159 ms
+ Execution Time: 2.363 ms
+(11 rows)
+
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=85 read=154
+   ->  Index Only Scan using result_recent_analyte_code_recorded_at_idx on result_recent (actual rows=5397.00 loops=1)
+         Index Cond: ((recorded_at >= '2024-10-15 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-10-16 00:00:00'::timestamp without time zone))
+         Heap Fetches: 0
+         Index Searches: 65
+         Buffers: shared hit=85 read=154
+ Planning Time: 0.054 ms
+ Execution Time: 25.451 ms
+(9 rows)
+
+ROLLBACK
+BEGIN
+DROP INDEX
+DROP INDEX
+DROP INDEX
+                                                                                            QUERY PLAN                                                                                             
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=16 read=577
+   ->  Index Only Scan using result_recent_recorded_at_analyte_code_idx on result_recent (actual rows=9671.00 loops=1)
+         Index Cond: ((recorded_at >= '2024-10-01 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-11-01 00:00:00'::timestamp without time zone) AND (analyte_code = 'GLU'::text))
+         Heap Fetches: 0
+         Index Searches: 1
+         Buffers: shared hit=16 read=577
+ Planning:
+   Buffers: shared hit=22 read=1
+ Planning Time: 0.410 ms
+ Execution Time: 8.286 ms
+(11 rows)
+
+ROLLBACK
+== F11 tamaños
+                  relname                   | pg_size_pretty 
+--------------------------------------------+----------------
+ result_recent                              | 225 MB
+ result_recent_analyte_code_recorded_at_idx | 110 MB
+ result_recent_glu_value_idx                | 5232 kB
+ result_recent_lab_order_id_incl_idx        | 121 MB
+ result_recent_pkey                         | 85 MB
+ result_recent_recorded_at_analyte_code_idx | 110 MB
+ result_recent_recorded_at_brin             | 24 kB
+(7 rows)
+
+== F11 parcial
+                                            QUERY PLAN                                             
+---------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared read=11733
+   ->  Bitmap Heap Scan on result_recent (actual rows=10137.00 loops=1)
+         Recheck Cond: ((value_numeric > '250'::numeric) AND ((analyte_code)::text = 'GLU'::text))
+         Filter: (qualifier IS NULL)
+         Rows Removed by Filter: 4729
+         Heap Blocks: exact=11690
+         Buffers: shared read=11733
+         ->  Bitmap Index Scan on result_recent_glu_value_idx (actual rows=14866.00 loops=1)
+               Index Cond: (value_numeric > '250'::numeric)
+               Index Searches: 1
+               Buffers: shared read=43
+ Planning:
+   Buffers: shared hit=17
+ Planning Time: 0.086 ms
+ Execution Time: 481.228 ms
+(16 rows)
+
+BEGIN
+DROP INDEX
+                                                       QUERY PLAN                                                        
+-------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=11770 read=17783
+   ->  Gather (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=11770 read=17783
+         ->  Partial Aggregate (actual rows=1.00 loops=3)
+               Buffers: shared hit=11770 read=17783
+               ->  Parallel Bitmap Heap Scan on result_recent (actual rows=3379.00 loops=3)
+                     Recheck Cond: ((analyte_code)::text = 'GLU'::text)
+                     Filter: ((qualifier IS NULL) AND (value_numeric > '250'::numeric))
+                     Rows Removed by Filter: 75573
+                     Heap Blocks: exact=9301
+                     Buffers: shared hit=11770 read=17783
+                     Worker 0:  Heap Blocks: exact=9620
+                     Worker 1:  Heap Blocks: exact=9789
+                     ->  Bitmap Index Scan on result_recent_analyte_code_recorded_at_idx (actual rows=236857.00 loops=1)
+                           Index Cond: ((analyte_code)::text = 'GLU'::text)
+                           Index Searches: 1
+                           Buffers: shared hit=38 read=763
+ Planning:
+   Buffers: shared hit=4
+ Planning Time: 0.301 ms
+ Execution Time: 214.488 ms
+(24 rows)
+
+ROLLBACK
+== F11 expresión
+                                                                                                                  QUERY PLAN                                                                                                                   
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=42 read=27781 written=7
+   ->  Gather (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=42 read=27781 written=7
+         ->  Partial Aggregate (actual rows=1.00 loops=3)
+               Buffers: shared hit=42 read=27781 written=7
+               ->  Parallel Bitmap Heap Scan on result_eav (actual rows=10222.00 loops=3)
+                     Recheck Cond: ((CASE WHEN ((value)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((value)::text, ','::text, '.'::text))::numeric ELSE NULL::numeric END > '250'::numeric) AND ((analyte_code)::text = 'GLU'::text))
+                     Heap Blocks: exact=9222
+                     Buffers: shared hit=42 read=27781 written=7
+                     Worker 0:  Heap Blocks: exact=9214
+                     Worker 1:  Heap Blocks: exact=9258
+                     ->  Bitmap Index Scan on result_eav_glu_parsed_idx (actual rows=30666.00 loops=1)
+                           Index Cond: (CASE WHEN ((value)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((value)::text, ','::text, '.'::text))::numeric ELSE NULL::numeric END > '250'::numeric)
+                           Index Searches: 1
+                           Buffers: shared read=87
+ Planning:
+   Buffers: shared hit=51 read=4
+ Planning Time: 1.786 ms
+ Execution Time: 1687.697 ms
+(22 rows)
+
+                                                                                             QUERY PLAN                                                                                             
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=2494 read=133686 written=183
+   ->  Gather (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=2494 read=133686 written=183
+         ->  Partial Aggregate (actual rows=1.00 loops=3)
+               Buffers: shared hit=2494 read=133686 written=183
+               ->  Parallel Bitmap Heap Scan on result_eav (actual rows=10222.00 loops=3)
+                     Recheck Cond: ((analyte_code)::text = 'GLU'::text)
+                     Rows Removed by Index Recheck: 2806889
+                     Filter: (CASE WHEN ((value)::text ~ '^[0-9]+([.,][0-9]+)?$'::text) THEN (replace((value)::text, ','::text, '.'::text))::numeric(10,2) ELSE NULL::numeric END > '250'::numeric)
+                     Rows Removed by Filter: 227563
+                     Heap Blocks: exact=11921 lossy=33439
+                     Buffers: shared hit=2494 read=133686 written=183
+                     Worker 0:  Heap Blocks: exact=11351 lossy=32097
+                     Worker 1:  Heap Blocks: exact=11818 lossy=33560
+                     ->  Bitmap Index Scan on result_eav_glu_parsed_idx (actual rows=713354.00 loops=1)
+                           Index Searches: 1
+                           Buffers: shared hit=86 read=1866
+ Planning Time: 0.151 ms
+ Execution Time: 934.086 ms
+(22 rows)
+
+== F11 BRIN
+                                                                            QUERY PLAN                                                                            
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared read=23
+   ->  Index Only Scan using result_recent_recorded_at_analyte_code_idx on result_recent (actual rows=5397.00 loops=1)
+         Index Cond: ((recorded_at >= '2024-10-15 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-10-16 00:00:00'::timestamp without time zone))
+         Heap Fetches: 0
+         Index Searches: 1
+         Buffers: shared read=23
+ Planning:
+   Buffers: shared hit=13 read=8
+ Planning Time: 3.196 ms
+ Execution Time: 1.141 ms
+(11 rows)
+
+BEGIN
+DROP INDEX
+CREATE INDEX
+                                                                                     QUERY PLAN                                                                                     
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=49 read=3968
+   ->  Gather (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=49 read=3968
+         ->  Partial Aggregate (actual rows=1.00 loops=3)
+               Buffers: shared hit=49 read=3968
+               ->  Parallel Bitmap Heap Scan on result_as_is (actual rows=1799.00 loops=3)
+                     Recheck Cond: ((recorded_at >= '2024-10-15 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-10-16 00:00:00'::timestamp without time zone))
+                     Rows Removed by Index Recheck: 181362
+                     Heap Blocks: lossy=2227
+                     Buffers: shared hit=49 read=3968
+                     Worker 0:  Heap Blocks: lossy=954
+                     Worker 1:  Heap Blocks: lossy=787
+                     ->  Bitmap Index Scan on result_as_is_recorded_at_brin (actual rows=39680.00 loops=1)
+                           Index Cond: ((recorded_at >= '2024-10-15 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-10-16 00:00:00'::timestamp without time zone))
+                           Index Searches: 1
+                           Buffers: shared hit=7
+ Planning:
+   Buffers: shared hit=6 read=3
+ Planning Time: 0.605 ms
+ Execution Time: 38.738 ms
+(23 rows)
+
+ROLLBACK
+== F11 GIN
+                                          QUERY PLAN                                           
+-----------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=31 read=61
+   ->  Bitmap Heap Scan on patient_clean (actual rows=12.00 loops=1)
+         Recheck Cond: (norm_name ~~ '%SOSA GUTIERREZ%'::text)
+         Rows Removed by Index Recheck: 6
+         Heap Blocks: exact=18
+         Buffers: shared hit=31 read=61
+         ->  Bitmap Index Scan on patient_clean_norm_name_trgm_idx (actual rows=18.00 loops=1)
+               Index Cond: (norm_name ~~ '%SOSA GUTIERREZ%'::text)
+               Index Searches: 1
+               Buffers: shared hit=31 read=43
+ Planning:
+   Buffers: shared hit=88 read=18 dirtied=3
+ Planning Time: 4.381 ms
+ Execution Time: 12.054 ms
+(15 rows)
+
+                                           QUERY PLAN                                            
+-------------------------------------------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=24 read=1871
+   ->  Bitmap Heap Scan on patient_clean (actual rows=4662.00 loops=1)
+         Recheck Cond: (norm_name ~~ '%BUSTOS%'::text)
+         Heap Blocks: exact=1877
+         Buffers: shared hit=24 read=1871
+         ->  Bitmap Index Scan on patient_clean_norm_name_trgm_idx (actual rows=4662.00 loops=1)
+               Index Cond: (norm_name ~~ '%BUSTOS%'::text)
+               Index Searches: 1
+               Buffers: shared hit=10 read=8
+ Planning:
+   Buffers: shared hit=1
+ Planning Time: 0.087 ms
+ Execution Time: 9.930 ms
+(14 rows)
+
+== F11 index-only
+VACUUM
+                                                QUERY PLAN                                                 
+-----------------------------------------------------------------------------------------------------------
+ Index Only Scan using result_recent_lab_order_id_incl_idx on result_recent (actual rows=10412.00 loops=1)
+   Index Cond: ((lab_order_id >= 10800000) AND (lab_order_id <= 10801000))
+   Heap Fetches: 0
+   Index Searches: 1
+   Buffers: shared hit=1 read=43
+ Planning:
+   Buffers: shared hit=19 read=5 dirtied=1
+ Planning Time: 1.230 ms
+ Execution Time: 1.737 ms
+(9 rows)
+
+UPDATE 5203
+                                                QUERY PLAN                                                 
+-----------------------------------------------------------------------------------------------------------
+ Index Only Scan using result_recent_lab_order_id_incl_idx on result_recent (actual rows=10412.00 loops=1)
+   Index Cond: ((lab_order_id >= 10800000) AND (lab_order_id <= 10801000))
+   Heap Fetches: 10560
+   Index Searches: 1
+   Buffers: shared hit=1149
+ Planning Time: 0.069 ms
+ Execution Time: 1.572 ms
+(7 rows)
+
+VACUUM
+                                                QUERY PLAN                                                 
+-----------------------------------------------------------------------------------------------------------
+ Index Only Scan using result_recent_lab_order_id_incl_idx on result_recent (actual rows=10412.00 loops=1)
+   Index Cond: ((lab_order_id >= 10800000) AND (lab_order_id <= 10801000))
+   Heap Fetches: 170
+   Index Searches: 1
+   Buffers: shared hit=84
+ Planning:
+   Buffers: shared hit=4
+ Planning Time: 0.087 ms
+ Execution Time: 0.855 ms
+(9 rows)
+

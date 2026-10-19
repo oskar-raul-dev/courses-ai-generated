@@ -1,0 +1,17 @@
+== e1
+== e2
+Did not find any tables named "legacy.Pac*".
+ERROR:  invalid input syntax for type numeric: "40.021.044"
+== e4
+BEGIN
+CREATE TABLE
+ERROR:  cannot insert a non-DEFAULT value into column "id"
+DETAIL:  Column "id" is an identity column defined as GENERATED ALWAYS.
+HINT:  Use OVERRIDING SYSTEM VALUE to override.
+ROLLBACK
+== e5
+BEGIN
+ERROR:  could not create unique index "a08_dni_unico"
+DETAIL:  Key ("DNI")=(28210797) is duplicated.
+CONTEXT:  parallel worker
+ROLLBACK

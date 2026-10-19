@@ -1,0 +1,17 @@
+-- Fase 18 · el tiempo de espera de MySQL deshace la sentencia, no la transacción.
+-- b anota un pago, intenta tocar el deudor que a tiene bloqueado, se rinde, y confirma: el pago queda.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/lock_wait_timeout_mysql.race
+-- @engine mysql
+-- @setup DROP TABLE IF EXISTS staging.payment
+-- @setup CREATE TABLE staging.payment (debtor_id int NOT NULL, amount decimal(12,2) NOT NULL)
+-- @check SELECT count(*) AS payments FROM staging.payment
+a1: START TRANSACTION;
+a2: SELECT balance FROM staging.debtor WHERE debtor_id = 1 FOR UPDATE;
+b1: SET SESSION innodb_lock_wait_timeout = 1;
+b2: START TRANSACTION;
+b3: INSERT INTO staging.payment VALUES (1, 10.00);
+b4: UPDATE staging.debtor SET balance = balance - 10 WHERE debtor_id = 1;
+b5: SELECT count(*) FROM staging.payment;
+b6: COMMIT;
+a3: ROLLBACK;
+-- @permutation a1 a2 b1 b2 b3 b4 b5 b6 a3

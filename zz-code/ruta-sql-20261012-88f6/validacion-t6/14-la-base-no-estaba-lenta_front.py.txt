@@ -1,0 +1,7 @@
+pantalla                            viajes      filas  muestra  filas/muestra        bytes        ms
+formulario, como Access                  7    1327682       60        22128.0     17337090    1865.0
+formulario, 60 filas                     1         60       60            1.0         5692       0.7
+resultados, uno por protocolo           61        429      429            1.0        73612      14.5
+resultados, una consulta                 2        429      429            1.0        34613       3.3
+turnos, join en el cliente               1     242427      249          973.6     33065042    2049.6
+turnos, join en el servidor              1        249      249            1.0        34475       3.5

@@ -1,0 +1,22 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+EXPLAIN
+-> Aggregate: count(0)  (cost=8176 rows=1)
+    -> Filter: ((staging.protocolos_en_orden.Sede = 'C') and (staging.protocolos_en_orden.Fecha >= TIMESTAMP'2026-09-01 00:00:00'))  (cost=3823 rows=18892)
+        -> Covering index range scan on protocolos_en_orden using protocolos_en_orden_sede_fecha_idx over (Sede = 'C' AND '2026-09-01 00:00:00.000' <= Fecha)  (cost=3823 rows=18892)
+
+EXPLAIN
+-> Aggregate: count(0)  (cost=1137 rows=1)
+    -> Filter: ((staging.protocolos_en_orden.Sede = 'V') and (staging.protocolos_en_orden.Fecha >= TIMESTAMP'2026-09-01 00:00:00'))  (cost=532 rows=2626)
+        -> Covering index range scan on protocolos_en_orden using protocolos_en_orden_sede_fecha_idx over (Sede = 'V' AND '2026-09-01 00:00:00.000' <= Fecha)  (cost=532 rows=2626)
+
+EXPLAIN
+-> Aggregate: count(0)  (cost=1.44 rows=1)
+    -> Filter: ((staging.protocolos_en_orden.Sede = 'E') and (staging.protocolos_en_orden.Fecha >= TIMESTAMP'2026-09-01 00:00:00'))  (cost=1.21 rows=1)
+        -> Covering index range scan on protocolos_en_orden using protocolos_en_orden_sede_fecha_idx over (Sede = 'E' AND '2026-09-01 00:00:00.000' <= Fecha)  (cost=1.21 rows=1)
+
+Sede	count(*)
+A	2823
+C	10255
+J	2674
+R	2784
+V	2626

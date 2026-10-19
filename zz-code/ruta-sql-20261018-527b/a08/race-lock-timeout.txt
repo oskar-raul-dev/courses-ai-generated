@@ -1,0 +1,10 @@
+🏁 lab race · postgres · permutación a1 a2 b1 b2 b3 a3
+ a1  BEGIN
+ a2  1 fila  (28.00)
+ b1  BEGIN
+ b2  ⏳ espera un bloqueo
+   ↳ b2  ✗ 55P03 canceling statement due to lock timeout
+ b3  ROLLBACK
+ a3  COMMIT
+resultado: a sin errores · b con error 55P03 en b2
+comprobación: 1 fila  (28.00)

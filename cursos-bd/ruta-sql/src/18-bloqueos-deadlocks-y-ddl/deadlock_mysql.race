@@ -1,0 +1,11 @@
+-- Fase 18 · el mismo cruce en MySQL, sobre dos deudores.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/deadlock_mysql.race
+-- @engine mysql
+a1: START TRANSACTION;
+b1: START TRANSACTION;
+a2: UPDATE staging.debtor SET balance = balance + 1 WHERE debtor_id = 1;
+b2: UPDATE staging.debtor SET balance = balance + 1 WHERE debtor_id = 2;
+a3: UPDATE staging.debtor SET balance = balance + 1 WHERE debtor_id = 2;
+b3: UPDATE staging.debtor SET balance = balance + 1 WHERE debtor_id = 1;
+a4: ROLLBACK;
+b4: ROLLBACK;

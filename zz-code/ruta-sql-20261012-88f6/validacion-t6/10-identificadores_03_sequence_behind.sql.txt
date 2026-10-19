@@ -1,0 +1,6 @@
+NOTICE:  table "lab_order_new" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 1291312
+ERROR:  duplicate key value violates unique constraint "lab_order_new_pkey"
+DETAIL:  Key (lab_order_id)=(1) already exists.

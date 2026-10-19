@@ -1,0 +1,181 @@
+# El laboratorio de la Ruta SQL. Las versiones del curso viven aquí y en ningún otro sitio:
+# cada imagen va fijada por digest, con su tag y la fecha de verificación en el comentario.
+# Se maneja con `uv run lab up`, `uv run lab down` y compañía (apéndice a02).
+name: alameda-lab
+
+x-curso: &curso
+  labels:
+    curso: ruta-sql
+
+services:
+  postgres:
+    <<: *curso
+    # pgvector/pgvector:0.8.7-pg18 (PostgreSQL 18.6 con pgvector 0.8.7) · verificado el 12/10/2026
+    image: pgvector/pgvector@sha256:2358fcba361ed2233a5ed81b5fe4ca779ccb304120ce531a3bf51c0ed7e2bc11
+    profiles: [base]
+    environment:
+      POSTGRES_PASSWORD: ${LAB_PASSWORD:-lab}
+      POSTGRES_DB: alameda
+    command: ["postgres",
+              "-c", "shared_preload_libraries=pg_stat_statements",
+              "-c", "wal_level=logical",
+              "-c", "shared_buffers=512MB"]
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - ${LAB_CAJA:-./caja}:/caja:ro
+    ports: ["127.0.0.1:${POSTGRES_PORT:-25432}:5432"]
+    mem_limit: ${POSTGRES_MEMORY:-2g}
+    # Los 64 MB de /dev/shm que Docker da por defecto no alcanzan a un hash join en paralelo (a08, E-69).
+    # Lo que se usa de aquí cuenta dentro del mem_limit.
+    shm_size: ${POSTGRES_SHM:-512m}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d alameda"]
+      interval: 2s
+      retries: 60
+
+  mysql:
+    <<: *curso
+    # mysql:9.7.2 (9.7 LTS) · verificado el 12/10/2026
+    image: mysql@sha256:e2bde46db6563855d7177adb5f0b57b9dc663f5a20927a90f4259d3312068497
+    profiles: [contraste]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${LAB_PASSWORD:-lab}
+    # --secure-file-priv vacío: con un directorio, el entrypoint intenta un chown de la caja,
+    # que está montada en solo lectura, y el contenedor no arranca.
+    command: ["--secure-file-priv=", "--innodb-buffer-pool-size=512M"]
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ${LAB_CAJA:-./caja}:/caja:ro
+    ports: ["127.0.0.1:${MYSQL_PORT:-23306}:3306"]
+    mem_limit: ${MYSQL_MEMORY:-2g}
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 2s
+      retries: 90
+
+  oracle:
+    <<: *curso
+    # gvenzl/oracle-free:23.26.3-slim-faststart (Oracle AI Database 26ai Free 23.26.3) · verificado el 12/10/2026
+    image: gvenzl/oracle-free@sha256:f5ff19033860d662c821cb04eb10483fa94f14f78eae252d054291ea07028093
+    profiles: [oracle]
+    environment:
+      ORACLE_PASSWORD: ${LAB_PASSWORD:-lab}
+      APP_USER: alameda
+      APP_USER_PASSWORD: ${LAB_PASSWORD:-lab}
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ${LAB_CAJA:-./caja}:/caja:ro
+    ports: ["127.0.0.1:${ORACLE_PORT:-21521}:1521"]
+    mem_limit: ${ORACLE_MEMORY:-3g}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 5s
+      retries: 120
+
+  mongo:
+    <<: *curso
+    # mongo:8.0.20 · verificado el 12/10/2026. No es la última: las 8.0.21+ y la 9 no arrancan con el
+    # kernel de Docker Desktop (https://jira.mongodb.org/browse/SERVER-121912). Ver el apéndice a02.
+    image: mongo@sha256:098862b1339f031900ca66cf8fef799e616d6324fa41b9a263f2ec899552c1ef
+    profiles: [mongo]
+    volumes:
+      - mongo-data:/data/db
+    ports: ["127.0.0.1:${MONGO_PORT:-27027}:27017"]
+    mem_limit: ${MONGO_MEMORY:-1g}
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 2s
+      retries: 60
+
+  sqlserver:
+    <<: *curso
+    # mcr.microsoft.com/mssql/server:2025-CU9-ubuntu-24.04 (17.0.5005.3) · verificado el 12/10/2026
+    # Solo amd64: en Apple Silicon corre con la emulación de Docker Desktop; en Podman no arranca.
+    image: mcr.microsoft.com/mssql/server@sha256:2b5b581621126574f3d1f75e78d3eebe8d05aedb59ad0cfdf9aa42cb0634d726
+    platform: linux/amd64
+    profiles: [sqlserver]
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${SQLSERVER_PASSWORD:-Lab-2026-pass}
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ${LAB_CAJA:-./caja}:/caja:ro          # el track carga la caja con bcp (ss01)
+    ports: ["127.0.0.1:${SQLSERVER_PORT:-21433}:1433"]
+    mem_limit: ${SQLSERVER_MEMORY:-2g}
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -Q 'select 1' -b -o /dev/null"]
+      interval: 5s
+      retries: 60
+
+  dab:
+    <<: *curso
+    # mcr.microsoft.com/azure-databases/data-api-builder:2.1.5 · verificado el 18/10/2026 (track, ss05).
+    # Solo amd64, como SQL Server: en Apple Silicon corre con la emulación de Docker Desktop.
+    image: mcr.microsoft.com/azure-databases/data-api-builder@sha256:d07e3e1ce53bdf84d3a4a0a4ce12e44f0b902e7316c782a3d682fbe074509c0b
+    platform: linux/amd64
+    profiles: [dab]
+    environment:
+      ASPNETCORE_URLS: http://+:5000
+      # El login de 02_api.sql, no sa: DAB solo lee el esquema api.
+      DAB_CONNSTR: Server=sqlserver,1433;Database=ss05;User ID=dab_api;Password=${DAB_PASSWORD:-Dab-API-2026-lab};TrustServerCertificate=true
+    volumes:
+      - ../ss05-data-api-builder-y-json/dab-config.json:/App/dab-config.json:ro
+    ports: ["127.0.0.1:${DAB_PORT:-25000}:5000"]
+    mem_limit: ${DAB_MEMORY:-512m}
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/5000'"]
+      interval: 5s
+      retries: 60
+
+  api:
+    <<: *curso
+    # postgrest/postgrest:v16.4 · verificado el 11/10/2026 (P8, hallazgos §H8) y en uso desde T11 (14/10/2026)
+    image: postgrest/postgrest@sha256:d155c6718ed9a9f990d159a2ab7c0a3f16944dbb6d0a0344557421042acfe0df
+    profiles: [api]
+    environment:
+      PGRST_DB_URI: postgres://authenticator:${LAB_PASSWORD:-lab}@postgres:5432/alameda
+      PGRST_DB_SCHEMAS: api
+      PGRST_DB_ANON_ROLE: web_anon
+      # Secreto de LABORATORIO, publicado a propósito: firma los JWT de las pruebas de F23. No es para producción.
+      PGRST_JWT_SECRET: ${API_JWT_SECRET:-ruta-sql-laboratorio-secreto-jwt-de-prueba-2026}
+      # §H8: `--ready` no acepta el host por defecto; el servidor de administración escucha en localhost.
+      PGRST_ADMIN_SERVER_HOST: localhost
+      PGRST_ADMIN_SERVER_PORT: "3001"
+    ports: ["127.0.0.1:${API_PORT:-23000}:3000"]
+    mem_limit: ${API_MEMORY:-256m}
+    healthcheck:
+      test: ["CMD", "postgrest", "--ready"]
+      interval: 2s
+      retries: 60
+
+  artemis:
+    <<: *curso
+    # apache/artemis:2.57.0 · verificado el 11/10/2026 (P8, hallazgos §H9). El proyecto se separó de ActiveMQ en 2025.
+    image: apache/artemis@sha256:0f32b054e1f4adc45fc64824ebb0586579ffd563ce37d75b5a10d27db19a3889
+    profiles: [puente]
+    environment:
+      ARTEMIS_USER: lab
+      ARTEMIS_PASSWORD: ${LAB_PASSWORD:-lab}
+      # §H9: sin --no-autotune, la primera creación de la instancia mide el disco durante unos ocho minutos.
+      EXTRA_ARGS: "--http-host 0.0.0.0 --relax-jolokia --no-autotune"
+    volumes:
+      - artemis-data:/var/lib/artemis-instance
+    ports: ["127.0.0.1:${ARTEMIS_PORT:-26161}:61616", "127.0.0.1:${ARTEMIS_CONSOLE_PORT:-28161}:8161"]
+    mem_limit: ${ARTEMIS_MEMORY:-1g}
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/61616'"]
+      interval: 2s
+      retries: 90
+
+volumes:
+  postgres-data: {labels: {curso: ruta-sql}}
+  mysql-data: {labels: {curso: ruta-sql}}
+  oracle-data: {labels: {curso: ruta-sql}}
+  mongo-data: {labels: {curso: ruta-sql}}
+  sqlserver-data: {labels: {curso: ruta-sql}}
+  artemis-data: {labels: {curso: ruta-sql}}
+
+networks:
+  default:
+    labels: {curso: ruta-sql}

@@ -5,9 +5,9 @@ Este directorio no es material del curso: es **lo que se usa para escribirlo**. 
 abre, y no viaja al repositorio público del curso. Quien escribe una fase lo lee antes de teclear la
 primera línea.
 
-> **Estado:** en preparación. P1–P7 y P10 cerradas (decisiones D1–D16 del 30/09/2026, D-01–D-13 del
-> 06/10/2026); faltan P8 (verificación de laboratorio), P9 (fuentes) y P11 (traslado). T0 puede
-> empezar; T1 espera a P8 y P11, y T2 a P9. El detalle, en el plan de producción.
+> **Estado:** preparación cerrada el 11/10/2026 (P1–P12: decisiones D1–D16 del 30/09/2026,
+> D-01–D-13 y D18 del 06/10/2026, D19–D22 del 11/10/2026; laboratorio y fuentes verificados). Las
+> tandas de escritura pueden empezar por T0. El detalle, en el plan de producción.
 
 ---
 
@@ -23,8 +23,9 @@ primera línea.
 | [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md) | la ficha de cada apéndice | en cada sesión de apéndice |
 | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md) | los esqueletos de fase de tema, Bloque 0, árbitro, track, apéndice y solucionario | al empezar y al cerrar cada documento |
 | [`prompts-de-fase.md`](prompts-de-fase.md), [`prompts-de-apendice.md`](prompts-de-apendice.md) y [`prompts-sqlserver-fase.md`](prompts-sqlserver-fase.md) | el marco común y un bloque por documento; el del track, aparte | al abrir cada sesión |
-| `_desechable-plan-de-produccion.md` | tandas, estado, deuda de enlaces, bitácora, checklist y `zz-code/` | al empezar y al cerrar cada sesión |
-| `_desechable-propuesta-ruta.md` | la propuesta de diseño original | como registro; no se cita |
+| ~~`_desechable-plan-de-produccion.md`~~ | tandas, estado, bitácora y checklist; borrado al dejar el curso listo para copiar (19/10/2026), con copia en `zz-code/ruta-sql-20261018-527b/t16/plan-de-produccion-al-cerrar.md` | para saber cómo se hizo |
+| [`pendientes-a-futuro.md`](pendientes-a-futuro.md) | lo que quedó abierto al cerrar | antes de reabrir el curso |
+| [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) | lo que midió P8 (versiones, digests, RAM, emulación, drivers, el prototipo del generador) y lo que comprobó P9 (libros y licencias) | antes de `a01`, `a02`, `a05`, `a06`, `a09` y del track |
 | `verificar-corpus.py` y `verificador_base.py` | las validaciones base y las propias del curso | al cerrar cada tanda |
 
 **Orden de autoridad**, cuando dos se contradicen: (1) el alcance, (2) la guía, (3) el contrato y el

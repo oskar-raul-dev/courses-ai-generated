@@ -1,0 +1,32 @@
+{
+  "$schema": "https://github.com/Azure/data-api-builder/releases/download/v2.1.5/dab.draft.schema.json",
+  "data-source": {
+    "database-type": "mssql",
+    "connection-string": "@env('DAB_CONNSTR')",
+    "options": { "set-session-context": true }
+  },
+  "runtime": {
+    "rest": { "enabled": true, "path": "/api" },
+    "graphql": { "enabled": true, "path": "/graphql" },
+    "host": {
+      "mode": "development",
+      "authentication": { "provider": "AppService" }
+    }
+  },
+  "entities": {
+    "resultados": {
+      "source": { "object": "api.resultados", "type": "view", "key-fields": [ "result_id" ] },
+      "permissions": [
+        { "role": "paciente", "actions": [ "read" ] },
+        { "role": "medico", "actions": [ "read" ] }
+      ]
+    },
+    "protocolos": {
+      "source": { "object": "api.protocolos", "type": "view", "key-fields": [ "lab_order_id" ] },
+      "permissions": [
+        { "role": "paciente", "actions": [ "read" ] },
+        { "role": "medico", "actions": [ "read" ] }
+      ]
+    }
+  }
+}

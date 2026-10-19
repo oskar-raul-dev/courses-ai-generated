@@ -1,0 +1,13 @@
+-- Fase 15 · la lectura sucia: b lee el pago que a todavía no confirmó, y a se arrepiente.
+-- uv run lab race -f 15-aislamiento-comparado/dirty_read.race --isolation read-committed
+-- @engine postgres
+-- @isolation read committed
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: BEGIN ISOLATION LEVEL {isolation};
+a2: UPDATE staging.debtor SET balance = balance - 10 WHERE debtor_id = 1;
+b1: BEGIN ISOLATION LEVEL {isolation};
+b2: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+a3: ROLLBACK;
+b3: COMMIT;
+-- @permutation a1 a2 b1 b2 a3 b3

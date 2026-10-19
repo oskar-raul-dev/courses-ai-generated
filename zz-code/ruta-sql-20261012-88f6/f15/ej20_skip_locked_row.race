@@ -1,0 +1,18 @@
+-- Ejercicio 20 · la muestra con el estado en su fila, en READ COMMITTED.
+-- @engine postgres
+-- @isolation read committed
+-- @setup UPDATE staging.specimen SET taken_by = NULL WHERE taken_by IS NOT NULL
+-- @check SELECT specimen_id, taken_by FROM staging.specimen WHERE taken_by IS NOT NULL ORDER BY specimen_id
+-- @teardown UPDATE staging.specimen SET taken_by = NULL WHERE taken_by IS NOT NULL
+a1: BEGIN ISOLATION LEVEL {isolation};
+b1: BEGIN ISOLATION LEVEL {isolation};
+a2: UPDATE staging.specimen SET taken_by = 'tecnico_a'
+    WHERE specimen_id = (SELECT specimen_id FROM staging.specimen WHERE taken_by IS NULL
+                         ORDER BY collected_at, specimen_id LIMIT 1 FOR UPDATE SKIP LOCKED)
+    RETURNING specimen_id;
+b2: UPDATE staging.specimen SET taken_by = 'tecnico_b'
+    WHERE specimen_id = (SELECT specimen_id FROM staging.specimen WHERE taken_by IS NULL
+                         ORDER BY collected_at, specimen_id LIMIT 1 FOR UPDATE SKIP LOCKED)
+    RETURNING specimen_id;
+a3: COMMIT;
+b3: COMMIT;

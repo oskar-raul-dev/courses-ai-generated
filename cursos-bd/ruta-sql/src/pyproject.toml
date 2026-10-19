@@ -1,0 +1,28 @@
+[project]
+name = "alameda-lab"
+version = "1.0.0"
+description = "El laboratorio de la Ruta SQL: la caja de Alameda, su carga en tres motores y la medición de la forma"
+requires-python = ">=3.13,<3.14"   # el hash de la caja depende de la versión de random (a05)
+dependencies = [
+    "psycopg[binary]>=3.3.6",
+    "pymysql>=1.2.3",
+    "oracledb>=26.0.1",
+]
+
+[project.optional-dependencies]
+# El track de SQL Server, aparte: el camino base no lo instala. `uv run --extra sqlserver lab …`.
+# El driver oficial de Microsoft, con su ODBC adentro; tope en 1.15 hasta que la 1.16 (13/10/2026) tenga rodaje.
+sqlserver = ["mssql-python>=1.15.0,<1.16"]
+
+[project.scripts]
+lab = "lab.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.11.14,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "lab"
+module-root = ""
+source-exclude = ["lab/caja"]
+wheel-exclude = ["lab/caja"]

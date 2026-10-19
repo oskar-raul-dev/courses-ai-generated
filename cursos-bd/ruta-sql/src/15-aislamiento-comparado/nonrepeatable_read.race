@@ -1,0 +1,14 @@
+-- Fase 15 · la lectura no repetible: a lee el saldo dos veces y b lo cambia en el medio.
+-- uv run lab race -f 15-aislamiento-comparado/nonrepeatable_read.race --isolation read-committed
+-- @engine postgres
+-- @isolation read committed
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: BEGIN ISOLATION LEVEL {isolation};
+a2: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+b1: BEGIN ISOLATION LEVEL {isolation};
+b2: UPDATE staging.debtor SET balance = balance - 10 WHERE debtor_id = 1;
+b3: COMMIT;
+a3: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+a4: COMMIT;
+-- @permutation a1 a2 b1 b2 b3 a3 a4

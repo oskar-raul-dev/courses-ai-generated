@@ -1,0 +1,125 @@
+ii  mdbtools       1.0.1-0.1    arm64        JET / MS Access database (MDB) tools
+ACE14
+pacientes
+-- ----------------------------------------------------------
+-- MDB Tools - A library for reading MS Access database files
+-- Copyright (C) 2000-2011 Brian Bruns and others.
+-- Files in libmdb are licensed under LGPL and the utilities under
+-- the GPL, see COPYING.LIB and COPYING files respectively.
+-- Check out http://mdbtools.sourceforge.net
+-- ----------------------------------------------------------
+
+SET client_encoding = 'UTF-8';
+
+CREATE TABLE IF NOT EXISTS "pacientes"
+ (
+	"id"			SERIAL, 
+	"nombre"			VARCHAR (255), 
+	"dni"			VARCHAR (50), 
+	"fecha_nac"			VARCHAR (50), 
+	"direccion"			VARCHAR (255)
+);
+
+-- CREATE INDEXES ...
+ALTER TABLE "pacientes" ADD CONSTRAINT "pacientes_pkey" PRIMARY KEY ("id");
+
+
+-- CREATE Relationships ...
+-- relationships are not implemented for postgres
+No MSysRelationships
+id,nombre,dni,fecha_nac,direccion
+1,"DI PIETRO PEDRO","21927645","24/05/1954","OBISPO TREJO 3161"
+2,"COLOMBO CARLOS ALBERTO","14079625","23/12/1935","LA RIOJA 2078"
+3,"RODRIGUEZ OSVALDO","26459499","17/09/1966","DEAN FUNES 2266"
+4,"PEREZ MIRTA","15875694","14/06/1939","LA RIOJA 3125"
+5,"RN CASTELLANI NORMA DNI 12156374 22/05/01",,,
+120
+option parsing failed: Unknown option -p
+Usage:
+  mdb-sql [OPTION…] <file> - Run SQL
+
+Help Options:
+  -h, --help                Show help options
+
+Application Options:
+  -d, --delim=char          Use this delimiter.
+  -P, --no-pretty-print     Don't pretty print
+  -H, --no-header           Don't print header
+  -F, --no-footer           Don't print footer
+  -i, --input=file          Read SQL from specified file
+  -o, --output=file         Write result to specified file
+  --version                 Show mdbtools version and exit
+
+IGUAL
+bash: line 2:     7 Done                    echo "SELECT COUNT(*) FROM pacientes WHERE dni IS NULL"
+         8 Segmentation fault      | mdb-sql -P out/alameda_1998.accdb
+Error at Line : syntax error
+syntax error
+Got no result for 'SELECT id, dni FROM pacientes WHERE dni LIKE "%VER%"
+' command
+
+No MSysRelationships
+INSERT INTO "pacientes" ("id", "nombre", "dni", "fecha_nac", "direccion") VALUES (1,'DI PIETRO PEDRO','21927645','24/05/1954','OBISPO TREJO 3161'), (2,'COLOMBO CARLOS ALBERTO','14079625','23/12/1935','LA RIOJA 2078'), (3,'RODRIGUEZ OSVALDO','26459499','17/09/1966','DEAN FUNES 2266'), (4,'PEREZ MIRTA','15875694','14/06/1939','LA RIOJA 3125'), (5,'RN CASTELLANI NORMA DNI 12156374 22/05/01',NULL,NULL,NULL), (6,'VARGAS MAMANI JUANA PASAP BOL 4873781 21/12/88 RUTA 20 KM 11',NULL,NULL,NULL), (7,'GONZALEZ SERGIO','37688451','17/07/1994','RUTA 20 KM 14'), (8,'BIANCHI PEDRO','41325984','23/03/2003','AV VELEZ SARSFIELD 1982'), (9,'AGUIRRE DANIEL DNI 32154665 24/05/80 AV VELEZ SARSFIELD 3317',NULL,NULL,NULL), (10,'QUIROGA SILVIA DNI 31109679 17/06/77 DEAN FUNES 2340',NULL,NULL,NULL), (11,'BERTOLOTTI NORMA DNI 34856828 25/07/1987 RUTA 20 KM 26',NULL,NULL,NULL), (12,'MARCHETTI FLORENCIA DNI 22702005',NULL,'07/07/1956','DEAN FUNES 1417'), (13,'MOYANO ROSA DNI 33294351',NULL,'03/11/1983','B° ALTA CORDOBA MZA 10 LOTE 2'), (14,'BIANCHI JUAN CARLOS DNI 35956501 TEL 4262181',NULL,'22/10/1989','DEAN FUNES 646'), (15,'BIANCHI JUAN CARLOS DNI 38455891 7/06/96 B° ALTA CORDOBA MZA 11 LOTE 6',NULL,NULL,NULL), (16,'BUSTOS SERGIO DNI 30272302 TEL 4280290',NULL,'17/04/1975','BV SAN JUAN 2453'), (17,'MARCHETTI PEDRO DNI 20628427 2/04/51 RUTA 20 KM 25',NULL,NULL,NULL), (18,'GONZALEZ MIRTA DEAN FUNES 3427',NULL,NULL,NULL), (19,'CASTELLANI NORMA DNI 40318167',NULL,'08/10/2000','DEAN FUNES 455'), (20,'COLOMBO MARIA ESTHER','21854310','10/08/1954','LA RIOJA 1287'), (21,'BERTOLOTTI MIRTA DNI 29508237 10/03/1973 ITUZAINGO 3900',NULL,NULL,NULL), (22,'MARCHETTI RAUL DNI 30922900',NULL,'25/03/1977','AV COLON 2773'), (23,'AGUIRRE RAUL 31.099.729 AV VELEZ SARSFIELD 3677',NULL,NULL,NULL), (24,'COLOMBO LUCIA','37926485','03/03/1994','RUTA 20 KM 32'), (25,'MARCHETTI BEATRIZ DNI 33345334',NULL,'13/02/1983','SAN MARTIN 2934'), (26,'BERTOLOTTI NORMA DNI 37266046',NULL,'01/07/1993','DEAN FUNES 2678'), (27,'AGUIRRE MIRTA DNI 35938857',NULL,'07/07/1989','B° ALTA CORDOBA MZA 7 LOTE 22'), (28,'ROMERO JORGE','40560111','10/10/2001','OBISPO TREJO 1246'), (29,'QUIROGA MATIAS 25 DE MAYO 258',NULL,NULL,NULL), (30,'QUIROGA GRACIELA','16879924','12/01/1942','SAN MARTIN 2543'), (31,'BERTOLOTTI MATIAS','26450128','07/03/1966','AV COLON 1888'), (32,'AGUIRRE OSVALDO','29236104','01/05/1973','25 DE MAYO 1166'), (33,'FERREYRA PEDRO DNI 21392055 17/03/1953 BV SAN JUAN 3164',NULL,NULL,NULL), (34,'BIANCHI CARLOS ALBERTO','39576295','26/09/1998','SAN MARTIN 612'), (35,'RINALDI CARLOS ALBERTO','26030347','03/10/1965','LA RIOJA 366'), (36,'QUIROGA OSVALDO','33924646','02/02/1984','OBISPO TREJO 865'), (37,'AGUIRRE DANIEL DNI 16797082',NULL,'11/08/1941','RUTA 20 KM 32'), (38,'FERRARO CARLOS ALBERTO DNI 31881666 7/08/79 BV SAN JUAN 2160',NULL,NULL,NULL), (39,'LEDESMA LUCIA','18444797','27/03/1946','DEAN FUNES 1585'), (40,'ROMERO OSVALDO','18421224','25/04/1946','DEAN FUNES 3560'), (41,'QUIROGA ROSA','18433429','23/01/1946','ITUZAINGO 3322'), (42,'RODRIGUEZ ANA MARIA','22708694','21/10/1956','AV COLON 449'), (43,'BUSTOS HECTOR','NO TRAE','13/08/1961','LA RIOJA 3185'), (44,'BUSTOS PEDRO DNI 32324984',NULL,'28/08/1980','SAN MARTIN 3903'), (45,'RODRIGUEZ ANA MARIA','29485944','27/08/1973','OBISPO TREJO 375'), (46,'RODRIGUEZ PEDRO DNI 41038992 06/11/2002 DEAN FUNES 2995',NULL,NULL,NULL), (47,'BUSTOS LUCIA','30215333','22/10/1975','B° ALTA CORDOBA MZA 1 LOTE 30'), (48,'CASTELLANI SERGIO','9496233','15/11/1923','BV SAN JUAN 2726'), (49,'QUIROGA PEDRO','38078441','08/08/1995','ITUZAINGO 2126'), (50,'SOSA SILVIA','33196806','25/11/1982','AV VELEZ SARSFIELD 1436'), (51,'BUSTOS FLORENCIA DNI 34184649',NULL,'18/10/1985','OBISPO TREJO 1716'), (52,'PEREZ CARLOS ALBERTO DNI 20975798',NULL,'21/08/1952','25 DE MAYO 896'), (53,'PEREZ DANIEL DNI 15982996',NULL,'27/06/1939','BV SAN JUAN 187'), (54,'RINALDI BEATRIZ','36060672','10/06/1990','LA RIOJA 2856'), (55,'SOSA PEDRO','15519835 (VER)','08/02/1938','DEAN FUNES 2220'), (56,'ROMERO OSVALDO','35474018','01/04/1988','SAN MARTIN 3119'), (57,'PEREZ MATIAS DNI 26584290 20/04/66 B° ALTA CORDOBA MZA 2 LOTE 7',NULL,NULL,NULL), (58,'GONZALEZ ROSA AV VELEZ SARSFIELD 2950',NULL,NULL,NULL), (59,'MARCHETTI BEATRIZ','26180605','18/02/1965','RUTA 20 KM 15'), (60,'LOPEZ SERGIO','28059727','05/05/1970','DEAN FUNES 2572'), (61,'PEREZ PEDRO DNI 17814484 25/05/44 SAN MARTIN 651',NULL,NULL,NULL), (62,'CASTELLANI ANA MARIA','26630361','23/11/1966','SAN MARTIN 304'), (63,'PEREZ MIRTA DNI 40505570',NULL,'26/01/2001','AV COLON 1033'), (64,'RINALDI MATIAS DNI 36137024',NULL,'11/02/1990','9 DE JULIO 922'), (65,'BUSTOS PEDRO 41.577.463 RUTA 20 KM 18',NULL,NULL,NULL), (66,'BIANCHI SERGIO DNI 13314729 19/11/1933 AV VELEZ SARSFIELD 3029',NULL,NULL,NULL), (67,'SOSA MIRTA','NO TRAE','06/05/2000','9 DE JULIO 312'), (68,'QUIROGA SILVIA','12176023','17/10/1930','B° ALTA CORDOBA MZA 9 LOTE 22'), (69,'BUSTOS BEATRIZ','17753210','02/10/1944','BV SAN JUAN 388'), (70,'QUIROGA JUAN CARLOS','41448132','24/09/2003','9 DE JULIO 2866'), (71,'ROMERO ROSA','29636813','10/09/1974','AV VELEZ SARSFIELD 2421'), (72,'RN AGUIRRE JORGE DNI 28537182 17/06/00',NULL,NULL,NULL), (73,'RODRIGUEZ MARIA ESTHER DNI 21282989 20/06/1953 LA RIOJA 106',NULL,NULL,NULL), (74,'MARCHETTI FLORENCIA','30991166','09/11/1977','AV COLON 1334'), (75,'FERREYRA PEDRO','15387807','22/05/1938','SAN MARTIN 1729'), (76,'MOYANO HECTOR','28449276','10/09/1971','9 DE JULIO 239'), (77,'QUIROGA LUCIA DNI 41528382',NULL,'03/04/2003','OBISPO TREJO 422'), (78,'MARCHETTI LUCIA','37932418','24/05/1994','RUTA 20 KM 11'), (79,'DI PIETRO GRACIELA','17309854','22/06/1943','RUTA 20 KM 18'), (80,'RINALDI ANA MARIA DNI 16302015',NULL,'03/08/1940','OBISPO TREJO 3597'), (81,'ROMERO NORMA DNI 11154535 12/11/27 OBISPO TREJO 3517',NULL,NULL,NULL), (82,'ROMERO RAUL 13.282.764 SAN MARTIN 1055',NULL,NULL,NULL), (83,'LEDESMA SERGIO DNI 23314234 25/10/1958 OBISPO TREJO 489',NULL,NULL,NULL), (84,'BERTOLOTTI RAUL DNI 9337949 23/05/23 DEAN FUNES 3300',NULL,NULL,NULL), (85,'MARCHETTI FLORENCIA DNI 23397735 25/11/1958 25 DE MAYO 3217',NULL,NULL,NULL), (86,'QUIROGA DANIEL','20729800','24/09/1951','AV COLON 2012'), (87,'ROMERO SERGIO DNI 27024194 2/09/67 RUTA 20 KM 7',NULL,NULL,NULL), (88,'RODRIGUEZ MARIA ESTHER BV SAN JUAN 1641',NULL,NULL,NULL), (89,'SOSA JUAN CARLOS DNI 26950054 28/12/67 RUTA 20 KM 12',NULL,NULL,NULL), (90,'DI PIETRO HECTOR','27777669','22/04/1969','9 DE JULIO 2030'), (91,'GONZALEZ ANA MARIA DNI 11733618',NULL,'25/01/1929','25 DE MAYO 2817'), (92,'ROMERO DANIEL DNI 18839697 25/03/47 B° ALTA CORDOBA MZA 17 LOTE 30',NULL,NULL,NULL), (93,'GONZALEZ JUAN CARLOS DNI 34650854',NULL,'11/09/1986','AV VELEZ SARSFIELD 812'), (94,'RODRIGUEZ GRACIELA','11381622','18/05/1928','OBISPO TREJO 3098'), (95,'RODRIGUEZ SILVIA DNI 15383460 02/11/1938 AV VELEZ SARSFIELD 305',NULL,NULL,NULL), (96,'CASTELLANI JORGE DNI 15171098',NULL,'18/09/1937','DEAN FUNES 2905'), (97,'FERREYRA BEATRIZ','17098232','06/11/1942','BV SAN JUAN 2682'), (98,'QUIROGA CARLOS ALBERTO DNI 27226459 7/04/68 B° ALTA CORDOBA MZA 10 LOTE 24',NULL,NULL,NULL), (99,'MARCHETTI FLORENCIA','NO TRAE','02/01/1989','SAN MARTIN 830'), (100,'SOSA MARIA ESTHER DNI 10924310',NULL,'10/02/1927','AV VELEZ SARSFIELD 1726'), (101,'BUSTOS DANIEL DNI 17155789 08/02/1942 RUTA 20 KM 29',NULL,NULL,NULL), (102,'FERREYRA JORGE','10334535','26/07/1925','AV COLON 1325'), (103,'AGUIRRE MARIA ESTHER DNI 20838202',NULL,'14/02/1952','BV SAN JUAN 698'), (104,'COLOMBO DANIEL','36633751 (VER)','24/08/1991','AV VELEZ SARSFIELD 1107'), (105,'BIANCHI NORMA','35387806','07/08/1988','RUTA 20 KM 13'), (106,'RODRIGUEZ JORGE','22626016','10/05/1956','AV COLON 3344'), (107,'LEDESMA PEDRO DNI 29355299',NULL,'12/12/1973','ITUZAINGO 1676'), (108,'BUSTOS MATIAS BV SAN JUAN 1351',NULL,NULL,NULL), (109,'RODRIGUEZ JUAN CARLOS DNI 23844211',NULL,'12/07/1959','OBISPO TREJO 1684'), (110,'BERTOLOTTI CARLOS ALBERTO','15509337','18/09/1938','DEAN FUNES 3713'), (111,'BIANCHI RAUL','17454679','22/09/1943','DEAN FUNES 2291'), (112,'VARGAS MAMANI JUANA PASAP BOL 4757291 21/10/88 RUTA 20 KM 22',NULL,NULL,NULL), (113,'AGUIRRE CARLOS ALBERTO','40164220','08/03/2000','RUTA 20 KM 7'), (114,'CASTELLANI GRACIELA DNI 17336974',NULL,'06/01/1943','25 DE MAYO 3944'), (115,'LOPEZ ROSA','34782235','23/04/1986','DEAN FUNES 3916'), (116,'SOSA BEATRIZ','9570851','08/09/1923','BV SAN JUAN 2806'), (117,'VARGAS MAMANI JUANA PASAP BOL 4500154 3/09/88 BV SAN JUAN 3821',NULL,NULL,NULL), (118,'LOPEZ GRACIELA DNI 29694374 20/07/1974 RUTA 20 KM 10',NULL,NULL,NULL), (119,'FERREYRA ANA MARIA DNI 38112676 14/01/95 OBISPO TREJO 3836',NULL,NULL,NULL), (120,'MOYANO RAUL','23223615','27/03/1958','OBISPO TREJO 1420');
+## SELECT COUNT(*) FROM pacientes
+
++------------------------------+
+|count                         |
++------------------------------+
+|120                           |
++------------------------------+
+exit 0
+## SELECT id, dni FROM pacientes WHERE id < 4
+|id         |dni                                                                                                 |
++-----------+----------------------------------------------------------------------------------------------------+
+|1          |21927645                                                                                            |
+|2          |14079625                                                                                            |
+|3          |26459499                                                                                            |
++-----------+----------------------------------------------------------------------------------------------------+
+exit 0
+## SELECT id FROM pacientes WHERE dni IS NULL
+Calling mdb_test_sarg on unknown operator.  Add code to mdb_test_string() for operator 10
+Calling mdb_test_sarg on unknown operator.  Add code to mdb_test_string() for operator 10
+Calling mdb_test_sarg on unknown operator.  Add code to mdb_test_string() for operator 10
+Calling mdb_test_sarg on unknown operator.  Add code to mdb_test_string() for operator 10
+Calling mdb_test_sarg on unknown operator.  Add code to mdb_test_string() for operator 10
++-----------+
+exit 0
+## SELECT id, dni FROM pacientes WHERE dni LIKE '%VER%'
++-----------+----------------------------------------------------------------------------------------------------+
+|id         |dni                                                                                                 |
++-----------+----------------------------------------------------------------------------------------------------+
+|55         |15519835 (VER)                                                                                      |
+|104        |36633751 (VER)                                                                                      |
++-----------+----------------------------------------------------------------------------------------------------+
+exit 0
+filas con IS NULL en mdb-sql: 0
+ filas | sin_dni | dni_no_numerico 
+-------+---------+-----------------
+   120 |      64 |               5
+(1 row)
+
+                                     Table "public.pacientes"
+  Column   |          Type          | Collation | Nullable |                Default                
+-----------+------------------------+-----------+----------+---------------------------------------
+ id        | integer                |           | not null | nextval('pacientes_id_seq'::regclass)
+ nombre    | character varying(255) |           |          | 
+ dni       | character varying(50)  |           |          | 
+ fecha_nac | character varying(50)  |           |          | 
+ direccion | character varying(255) |           |          | 
+Indexes:
+    "pacientes_pkey" PRIMARY KEY, btree (id)
+
+## la secuencia después de cargar con id explícito
+ERROR:  duplicate key value violates unique constraint "pacientes_pkey"
+DETAIL:  Key (id)=(1) already exists.
+ setval 
+--------
+    120
+(1 row)
+
+ id  
+-----
+ 121
+(1 row)
+
+INSERT 0 1

@@ -1,0 +1,30 @@
+<!-- Textos literales en español: CertCore es monolingüe (guía §5.1). -->
+<h2>Solicitar una inspección</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label for="assetId">Activo</label>
+  <input id="assetId" formControlName="assetId" placeholder="ASC-CENTRAL-03" />
+  <!-- Acceso tipado al control. Nada de form.get('assetId'), que devolvería
+       AbstractControl | null y obligaría a lidiar con un null que no existe. -->
+  <p *ngIf="form.controls.assetId.touched && form.controls.assetId.invalid">
+    Indica el activo que se va a inspeccionar.
+  </p>
+
+  <label for="requestedFor">Fecha deseada</label>
+  <input id="requestedFor" type="date" formControlName="requestedFor" />
+
+  <label for="note">Nota (opcional)</label>
+  <textarea id="note" formControlName="note"></textarea>
+
+  <button type="submit" [disabled]="status === 'sending'">
+    {{ status === 'sending' ? 'Enviando…' : 'Solicitar inspección' }}
+  </button>
+</form>
+
+<p *ngIf="status === 'sent' && createdId !== null">
+  Solicitud registrada con el número {{ createdId }}.
+</p>
+
+<p *ngIf="status === 'failed'">
+  No se pudo registrar la solicitud. Revisa la consola y la pestaña Network.
+</p>

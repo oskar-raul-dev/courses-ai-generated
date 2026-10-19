@@ -1,0 +1,6 @@
+== e3
+ERROR 1046 (3D000) at line 1: No database selected
+== e6
+ERROR 1170 (42000) at line 2: BLOB/TEXT column 'note' used in key specification without a key length
+== e3 (con USE legacy)
+ERROR 1305 (42000) at line 2: FUNCTION legacy.similarity does not exist

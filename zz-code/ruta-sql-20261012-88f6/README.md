@@ -1,6 +1,6 @@
 # 🧪 ruta-sql-20261012-88f6 · cómo correr estas pruebas
 
-> **Curso:** ruta-sql · **Tanda:** T0 a T4 · **Creado:** 2026-10-12
+> **Curso:** ruta-sql · **Tanda:** T0 a T6 · **Creado:** 2026-10-12
 > **Propósito:** el laboratorio de la Ruta SQL (T1): generar la caja con el generador de `a05`,
 > levantar y cargar los tres motores con el CLI `lab`, medir arranque, memoria y disco para `a01` y
 > `a02`, y ejecutar todo lo que publican `a01`, `a02`, `a04`, `a05`, `a06` y `a08`, con sus
@@ -33,6 +33,12 @@
 | T4 · El boss I | `src/08-…/boss/01_what_norma_sees.sql` y `boss1/solucion.sql` | F08 §16 (la solución no se publica) |
 | T4 · `ub_value()` arreglada: S y M regenerados, M recargado, F01 recapturado | `generar.py`, `lab-en-contenedor.sh load --profile m --model` | contrato §8 (T4), los hashes de `a04`, `a05` y F01 |
 | T3 · La numeración única: S y M regenerados, M recargado | `generar.py`, `lab-en-contenedor.sh load` | contrato §8 (T3), los hashes de `a04`, `a05` y F01 |
+| T5 · Tamaño, TOAST, particiones y compresión; claves bigint, UUIDv4 y UUIDv7; tipos de índice, WAL por índice y HOT | los scripts de `src/09-…` a `src/11-…`, `f09/` a `f11/` | F09 a F11 y sus solucionarios, M-14 a M-18, `a08` E-29 a E-37 |
+| T6 · Estadísticas, el precipicio del plan y el informe de la pandemia | `src/12-…/*.sql`, `f12/` | F12 y su solucionario, M-19, M-20 |
+| T6 · Métodos de join, planes genéricos, psycopg que prepara, hints; `pg_hint_plan` en una imagen derivada | `src/13-…`, `f13/` (`f13/hint-image/Dockerfile`) | F13 y su solucionario, M-21, M-22, `a08` E-39 y E-40 |
+| T6 · El frontal de 2011 simulado, `OFFSET` contra *keyset* con `pgbench`, `pg_stat_statements` | `src/14-…`, `f14/` | F14 y su solucionario, M-23, M-24, `a08` E-38 |
+| T6 · El boss II | `src/14-…/boss/01_portal_2018.sql` y `boss2/solucion.sql` | F14 §16 (la solución no se publica) |
+| T6 · Validación del cierre de los Bloques I y II sobre una carga nueva | `validacion-t4/validar-a.sh`, `validacion-t6/bloque2.sh` | la bitácora del plan |
 
 ## 2. 🛠️ Prerrequisitos
 
@@ -59,6 +65,12 @@ Desde este directorio:
 ```bash
 # desde T4: la caja y el modelo de las fases 04 a 08 en un comando (o ./rehacer-modelo.sh sobre una carga hecha)
 ./lab-en-contenedor.sh load --profile m --model
+./validacion-t6/bloque2.sh                        # desde T6: F09–F14 en orden, salidas en validacion-t6/
+./validacion-t8/bloque3.sh > validacion-t8/bloque3.out 2>&1   # desde T8: F15–F18 y el boss III en orden (unos 15 min)
+./lab-en-contenedor.sh race -f 15-aislamiento-comparado/write_skew.race --isolation serializable
+./correr-src.sh 16-el-folio-sin-huecos/cajas.py --design counter --invoices 10000   # un script de src/ con argumentos
+./correr-src.sh /sesion/f17/ejercicios.py ej08 ej15                                 # los experimentos de las soluciones
+./boss3/correr.sh                                  # la tarde de julio con la solución de referencia (D42)
 docker exec -i alameda-lab-postgres-1 psql -U postgres -d alameda < f05/medir.sql
 python3 -I generar.py s 1996 salidas/caja        # y m; la caja va a salidas/caja/<perfil>
 python3 -I proporciones.py salidas/caja/m         # proporciones contra la historia y D30
@@ -129,7 +141,9 @@ apéndices; ningún archivo de aquí se cita desde el curso.
 -p alameda-oom -f ../../cursos-bd/ruta-sql/src/lab/compose.yaml down -v`. Comprobación:
 `docker ps -a --filter label=curso=ruta-sql`, `docker volume ls --filter label=curso=ruta-sql` y
 `docker network ls --filter label=curso=ruta-sql` vacíos (lo estaban al cerrar T1). La imagen de Maven
-se dejó, porque T11 la usa.
+se dejó, porque T11 la usa. Desde T6 también queda la imagen `ruta-sql/postgres-hint-plan:f13` (etiqueta `curso=ruta-sql`), del 🔥 de F13;
+se borra con `docker image rm ruta-sql/postgres-hint-plan:f13` cuando ya no haga falta. Desde T8, el contenedor `alameda-lab-oracle-1` quedó **parado** (no borrado), con su volumen: se levantó para obtener los
+mensajes de E-51 a E-53 y se dejó como estaba (*undo* `UNDOTBS1`, retención 900).
 
 ## 10. 🚫 Qué se dejó fuera
 

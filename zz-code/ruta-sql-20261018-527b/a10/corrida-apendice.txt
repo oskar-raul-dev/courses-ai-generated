@@ -1,0 +1,36 @@
+## comandos tal cual del apéndice
+ACE14
+pacientes
+idénticos
+
++-----------+----------------------------------------------------------------------------------------------------+
+|id         |dni                                                                                                 |
++-----------+----------------------------------------------------------------------------------------------------+
+|55         |15519835 (VER)                                                                                      |
+|104        |36633751 (VER)                                                                                      |
++-----------+----------------------------------------------------------------------------------------------------+
+        0  02-21-2025 11:32   io/github/
+        0  02-21-2025 11:32   io/github/spannm/
+## ej1
+sin_dni
+-------
+5      
+(1 filas)
+id  | dni           
+--------------------
+43  | NO TRAE       
+55  | 15519835 (VER)
+67  | NO TRAE       
+99  | NO TRAE       
+104 | 36633751 (VER)
+(5 filas)
+## ej2
+exported 120 rows to out/parseado_jackcess.csv
+idénticos
+out/parseado_jackcess.csv out/pacientes_parseado.csv differ: char 1, line 1
+id,nombre,dni,fecha_nac,direccion
+1,"DI PIETRO PEDRO","21927645","24/05/1954","OBISPO TREJO 3161"
+2,"COLOMBO CARLOS ALBERTO","14079625","23/12/1935","LA RIOJA 2078"
+"id","nombre","dni","fecha_nac","direccion"
+"1","DI PIETRO PEDRO","21927645","24/05/1954","OBISPO TREJO 3161"
+"2","COLOMBO CARLOS ALBERTO","14079625","23/12/1935","LA RIOJA 2078"

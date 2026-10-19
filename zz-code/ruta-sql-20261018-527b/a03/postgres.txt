@@ -1,0 +1,56 @@
+## pg ON_ERROR_STOP sin -1
+CREATE TABLE
+INSERT 0 1
+ERROR:  division by zero
+exit=3
+ id 
+----
+  1
+(1 row)
+
+DROP TABLE
+## pg ON_ERROR_STOP con -1
+CREATE TABLE
+INSERT 0 1
+ERROR:  division by zero
+exit=3
+ tabla 
+-------
+ 
+(1 row)
+
+## pg timing dos veces
+Timing is on.
+  count  
+---------
+ 1327622
+(1 row)
+
+Time: 55.450 ms
+  count  
+---------
+ 1327622
+(1 row)
+
+Time: 22.751 ms
+## pg dt
+                 List of tables
+ Schema |        Name        | Type  |  Owner   
+--------+--------------------+-------+----------
+ legacy | Prolactina         | table | postgres
+ legacy | ProteinaCReactiva  | table | postgres
+ legacy | Proteinograma      | table | postgres
+ legacy | ProtocoloPracticas | table | postgres
+ legacy | Protocolos         | table | postgres
+ legacy | Protocolos_2010    | table | postgres
+ legacy | Proveedores        | table | postgres
+(7 rows)
+
+## pg q con transacción abierta
+BEGIN
+CREATE TABLE
+ tabla 
+-------
+ 
+(1 row)
+

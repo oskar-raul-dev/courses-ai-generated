@@ -1,0 +1,19 @@
+-- Fase 15 · la muestra con lectura bloqueante: cada técnico pregunta con FOR UPDATE si alguien ya la tomó.
+-- En MySQL la pregunta bloquea el hueco del índice donde iría la toma (gap lock); en Postgres no hay
+-- fila que bloquear, y no bloquea nada.
+-- uv run lab race -f 15-aislamiento-comparado/locking_check_mysql.race
+-- @engine mysql
+-- @isolation repeatable read
+-- @setup TRUNCATE staging.specimen_take
+-- @check SELECT count(*) AS takes FROM staging.specimen_take
+a0: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+b0: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+a1: START TRANSACTION;
+b1: START TRANSACTION;
+a2: SELECT count(*) FROM (SELECT 1 FROM staging.specimen_take WHERE specimen_id = 11231555 FOR UPDATE) AS taken;
+b2: SELECT count(*) FROM (SELECT 1 FROM staging.specimen_take WHERE specimen_id = 11231555 FOR UPDATE) AS taken;
+a3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_a');
+b3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_b');
+a4: COMMIT;
+b4: COMMIT;
+-- @permutation a0 b0 a1 b1 a2 b2 a3 b3 a4 b4

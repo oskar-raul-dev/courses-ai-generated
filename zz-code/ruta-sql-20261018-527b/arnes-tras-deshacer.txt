@@ -1,0 +1,8 @@
+   OSPRERA         12,048,653.63         0.00   5,072,198.21         0.00         0.00       0.00     6,976,455.42    252,868.74     6,723,586.68
+   PAMI           134,339,644.83 17,961,870.11  54,970,615.79         0.00   174,721.69       0.00    61,232,437.24  3,008,285.23    58,224,152.01
+   SANCOR          40,505,756.90         0.00  22,910,775.94         0.00         0.00       0.00    17,594,980.96    836,188.39    16,758,792.57
+   SWISS           18,295,785.59 1,525,020.39   3,594,400.49         0.00         0.00       0.00    13,176,364.71    407,278.72    12,769,085.99
+   UOM             20,003,678.97         0.00  16,110,036.29         0.00         0.00       0.00     3,893,642.68    321,221.37     3,572,421.31
+❌ C4 · la reconciliación cierra al centavo: 330 prácticas de la semana sin destino; totales distintos en ['DASPU', 'SWISS', 'PAMI', 'OSDE', 'APROSS', 'GALENO', 'SANCOR', 'OSECAC', 'OSPRERA', 'UOM']
+❌ C5 · legacy sigue viva: de la mañana faltan 0 de 4; corregida con cantidad 1; borrada afuera; de la tarde en la presentación 2 de 2; volver a emitir cambió la presentación
+0 de 5

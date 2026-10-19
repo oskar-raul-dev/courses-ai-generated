@@ -3,17 +3,20 @@
 
 > **Qué es este documento:** la fuente de verdad de **qué** enseña el curso, a quién y con
 > qué límites. Lo que no esté aquí no está en el curso.
-> **Fecha de esta versión:** 30 de septiembre de 2026. Sale de la propuesta de diseño, que queda
-> como registro en `_desechable-propuesta-ruta.md` y no se cita.
+> **Fecha de esta versión:** 30 de septiembre de 2026, con lo verificado en P8 y P9 trasladado el
+> 11/10/2026. Sale de la propuesta de diseño del 29/09/2026,
+> que se borró al cerrar el curso (18/10/2026).
 > **Precedencia:** manda este documento. Después viene
 > [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md), que decide **cómo** se
 > escribe, y después las dos propuestas de alcance. Las plantillas y los prompts se actualizan
 > siempre al final. Por encima de todos está el `CLAUDE.md` del repositorio, en lo que este curso
 > no haya declarado como excepción (§12).
-> **Estado de las decisiones:** todas cerradas por Oskar el 30/09/2026 (§12). Su registro vive en
-> [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §12. Lo que depende de la
-> verificación de laboratorio (versiones, digests y conteos de los perfiles) se fija en `a02` y
-> `a05` cuando esa verificación esté hecha.
+> **Estado de las decisiones:** todas cerradas por Oskar el 30/09/2026 (§12), más D19–D22, que
+> cerró el 11/10/2026 al verificar el laboratorio. Su registro vive en
+> [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) §12. Lo verificado en el
+> laboratorio (versiones, digests, memoria y conteos de los perfiles) está en
+> [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) desde el
+> 11/10/2026, y lo fijan `a02` y `a05` en T1.
 
 ---
 
@@ -101,9 +104,10 @@ un UUIDv4 los provoca.
 > lector sabe qué es un índice; el curso le enseña qué le cuesta. Si una frase obliga al lector a
 > suponer algo, está mal escrita.
 
-**Requisitos de entrada:** Docker o Podman funcionando, **16 GB de RAM** (Oracle Free no entra en
-menos junto a los otros dos motores; el número exacto sale de la verificación de laboratorio), y
-soltura leyendo Python. Java 21 aparece solo en el 💀 boss del puente y en el apéndice opcional
+**Requisitos de entrada:** Docker o Podman funcionando, **16 GB de RAM** (medido el 11/10/2026: con
+M cargado y todos los perfiles arriba, el laboratorio pide unos 5,3 GiB en su pico, y entra en la VM
+de 8 GB que Docker Desktop da por defecto en un Mac de 16 GB), y soltura leyendo Python. El track de
+SQL Server, en Apple Silicon, exige Docker Desktop (§8). Java 25 aparece solo en el 💀 boss del puente y en el apéndice opcional
 del Access de museo, los dos fuera de las 252 h.
 
 ---
@@ -160,9 +164,13 @@ Los tiempos se anotan **como contexto, nunca como argumento**, con la máquina y
 
 ### 6.1 Qué no se publica, y por qué aquí es obligación
 
-**Las licencias de Oracle y de SQL Server prohíben divulgar resultados de benchmark sin permiso
-del fabricante** (la llamada cláusula DeWitt). Ejecutarlos en privado está permitido; publicarlos
-no. Eso convierte el principio de la forma en una regla con tres niveles:
+**La licencia de SQL Server prohíbe divulgar resultados de benchmark sin permiso del fabricante**
+(la llamada cláusula DeWitt), también la de Developer, y **los contratos de empresa de Oracle
+Database (OMA, OLSA) llevan la misma cláusula**: son los que corre el lector en su trabajo. Oracle AI
+Database Free, la del laboratorio, se licencia con los *Free Use Terms*, que no la tienen (comprobado
+el 11/10/2026), y **el curso igual no publica sus números** (D20): un número medido en Free invita a
+extrapolarlo a la edición que el lector sí tiene bajo cláusula. Ejecutarlos en privado está
+permitido; publicarlos, no. `a09` cita los dos textos. Eso convierte el principio de la forma en una regla con tres niveles:
 
 | Motor | Qué se publica |
 |---|---|
@@ -271,10 +279,12 @@ curso.
   volumen, la fase publica lo que salió con M y deja L como ejercicio 🔥.
 
 La historia habla de 1,9 millones de pacientes y 140 millones de `ResultadoItem`, y eso no entra
-en un laboratorio de 16 GB junto a Oracle. El perfil M apunta a unos 200.000 pacientes y unos
-15 millones de filas de resultados, con una condición que manda sobre el número: **M tiene que
-entrar en 16 GB con los tres motores arriba**. Si en la verificación de laboratorio no entra, se
-achica M; no se sube el requisito de memoria. Los conteos finales se fijan en `a05`. Las
+en un laboratorio de 16 GB junto a Oracle. El perfil M, calibrado en la verificación de laboratorio,
+tiene 242.427 pacientes (200.002 personas) y 12,1 millones de filas de resultados con la semilla
+1996 (fijado en T1, el 12/10/2026; el prototipo de P8 daba unos 250.000 y 17 millones), con una
+condición que manda sobre el número: **M tiene que entrar en 16 GB con los tres motores arriba**.
+Entró con margen; si un cambio posterior lo rompe, se achica M y no se sube el requisito de memoria.
+Los conteos finales se fijan en `a05`. Las
 proporciones de la historia se conservan: el porcentaje de duplicados, de pacientes nacidos en el
 futuro, de valores no numéricos.
 
@@ -289,7 +299,7 @@ su mecanismo interno **cambia la decisión**.
 |---|---|---|
 | 🐘 **PostgreSQL** | laboratorio principal e hilo conductor | abierto, arm64 nativo, `jsonb`, SSI real, restricciones de exclusión, PostgREST |
 | 🏛️ **Oracle** (edición Free) | caso de estudio | *undo*, el `SERIALIZABLE` que es *snapshot isolation*, hints y *baselines*, JSON Relational Duality Views, ORDS; y el SIH de la red |
-| 🐬 **MySQL** (8.4 LTS) | contraste recurrente | InnoDB *clustered* (el caso UUID sin emulación y sin cláusula DeWitt), *gap locks*, JSON sin GIN, DDL online, el portal de 2013 |
+| 🐬 **MySQL** (9.7 LTS) | contraste recurrente | InnoDB *clustered* (el caso UUID sin emulación y sin cláusula DeWitt), *gap locks*, JSON sin GIN, DDL online, el portal de 2013 |
 | 🪟 **SQL Server** | **track opcional** | concurrencia pesimista por defecto contra RCSI, Query Store, Data API builder; es "la base" en su motor original |
 | 🍃 **MongoDB** | invitado de F20 | la propuesta de Florencia, medida en su terreno |
 
@@ -297,11 +307,13 @@ su mecanismo interno **cambia la decisión**.
 como alias de `LONGTEXT`, GTID incompatible) como para no representarlo, y lo que tiene de
 atractivo lo cubren Oracle y SQL Server.
 
-**Ninguna versión de esta tabla está verificada.** Las versiones y los digests se fijan
-ejecutando, en la verificación de laboratorio (tanda P8), y quedan escritos en `a02` con su fecha.
-Hasta entonces ningún documento del curso publica un número de versión. Dos riesgos declarados:
-que la imagen de Oracle Free funcione en arm64 sin emulación, y que la de SQL Server arranque con
-Rosetta en Docker Desktop **y** en Podman.
+**Las versiones se verificaron ejecutando el 11/10/2026** (tanda P8, en
+[`hallazgos.md`](verificacion-de-laboratorio/hallazgos.md)) y las fija `a02` por digest, con su fecha;
+ningún otro documento del curso publica un número de versión. De los dos riesgos declarados, uno no
+se materializó: **Oracle Free corre nativo en arm64**. El otro, a medias: SQL Server arranca con
+Rosetta en Docker Desktop, pero **no en Podman**, ni con QEMU ni con Rosetta, así que en Apple
+Silicon el track exige Docker Desktop. Y uno nuevo: MongoDB queda fijado en 8.0.20, como en la NoSQL
+Lite, porque las versiones posteriores no arrancan con el kernel de Docker Desktop.
 
 ---
 
@@ -314,9 +326,9 @@ Rosetta en Docker Desktop **y** en Podman.
 - **Python para todo lo demás**: el generador y la carga de la caja, la lectura de los Excel, el
   port del parser, el arnés de medición y las simulaciones de concurrencia (dos recepcionistas
   pidiendo folio a la vez son dos hilos). Se gestiona con `uv` y un `uv.lock`, como en la Lite.
-- **Java 21 solo donde la narrativa lo pide**, y en dos lugares, los dos opcionales: el 💀 **boss
+- **Java 25 solo donde la narrativa lo pide**, y en dos lugares, los dos opcionales: el 💀 **boss
   del puente** (§13), que es el mundo de la red (un servicio chico, hecho sin demasiada ingeniería,
-  con ActiveMQ Artemis y mensajes que imitan HL7 v2), y el **Access de museo** (`a10`), porque
+  con Apache Artemis y mensajes que imitan HL7 v2), y el **Access de museo** (`a10`), porque
   Jackcess es Java. Nunca como segunda vía para lo mismo.
 - **PostgREST reemplaza el código de aplicación** en F23. El cliente de la app se simula con `curl`
   o con un script corto de Python.
@@ -396,7 +408,7 @@ al revés. De la 13 en adelante son las que cerró Oskar el 30/09/2026 (registro
 7. **Imágenes fijadas por digest**, con fecha de verificación visible y en un solo sitio (`a02`).
 8. **Punto de partida: la caja en CSV** (§7.1). Sin Access, sin Windows y sin SQL Server como
    requisito.
-9. **Stack: SQL + Python con `uv`**; Java 21 solo en el boss del puente y en `a10` (§9).
+9. **Stack: SQL + Python con `uv`**; Java 25 solo en el boss del puente y en `a10` (§9).
 10. **Carga horaria: 252 h ≈ 21 semanas a 12 h semanales**, la misma de la NoSQL Lite.
 11. **Ejercicios: 20–30 por fase**, con la exención de F00 y F02 (12) por ser fases de criterio, y
     **cada uno con su solución en archivo separado** (D-05, §12.1; guía §10.3).
@@ -420,7 +432,7 @@ al revés. De la 13 en adelante son las que cerró Oskar el 30/09/2026 (registro
 22. **D10 · Nombres:** en inglés, con la convención habitual del mundo SQL (`snake_case`, tablas en
     singular) y **palabras completas**, sin abreviar, mientras quepan en el límite del motor más
     restrictivo (guía §5). El esquema `legacy` conserva los nombres originales de la caja.
-23. **D11 · Java 21 LTS**, solo en el boss del puente y en `a10`.
+23. **D11 · Java LTS**, solo en el boss del puente y en `a10`: Java 25 desde el 11/10/2026 (D19).
 24. **D12 · Versiones:** la última estable de cada motor, o la última LTS donde el fabricante
     publica una línea LTS, **a la fecha de la verificación de laboratorio**. Se fijan por digest
     en `a02` y no se persiguen después.
@@ -429,6 +441,10 @@ al revés. De la 13 en adelante son las que cerró Oskar el 30/09/2026 (registro
 26. **D14 a D16:** el arnés de carreras determinista (`lab race`), el Access de museo como `a10`
     opcional y el punto de rotura de las fases de plan como precipicio del plan, con la línea que
     cambió.
+27. **D19 a D22, cerradas el 11/10/2026 al verificar el laboratorio y las licencias:** Java 25 LTS en
+    lugar de 21 (D19); ningún número de Oracle se publica aunque Oracle Free no lleve la cláusula
+    DeWitt (D20, §6.1); la imagen de Oracle es la de gvenzl en su variante `slim-faststart` (D21); el
+    driver de MySQL para Python es PyMySQL (D22).
 
 **Excepciones declaradas al `CLAUDE.md` del repositorio**, con su porqué:
 
@@ -460,7 +476,7 @@ esta tabla dice cuál es cuál, y las que faltaban las cerró Oskar el 06/10/202
 | D-04 | Promesa de esfuerzo | Horas por fase (252 h en el camino base, unas 40 h el track), sin peso ligera/media/densa | 10, D8 | ✅ |
 | D-05 | Aparato de evaluación | 20–30 ejercicios por fase (12 en F00 y F02), con criterio `**Objetivo:**` o `**Pregunta:**`; **cada uno con su solución en archivo separado**, `soluciones/<documento>.md` (completa en 🟢🟡, de referencia y con rúbrica en 🟠🔴; guía §10.3); los boss, con criterios de aceptación y la solución fuera del repositorio publicado | 11 | ✅ 06/10/2026 |
 | D-06 | Plataformas | macOS, Linux y Windows 11 con WSL2; obligatoria solo la verificación en macOS arm64 (P8); Linux y WSL2 quedan como pendiente transversal, declarados sin verificar | — | ✅ |
-| D-07 | Política de versiones | La última estable de cada motor, o la última LTS donde la haya, a la fecha de la verificación de laboratorio; fijadas por digest en `a02` | D12, 7 | ✅ |
+| D-07 | Política de versiones | La última estable de cada motor, o la última LTS donde la haya, a la fecha de la verificación de laboratorio (11/10/2026); fijadas por digest en `a02` | D12, 7 | ✅ |
 | D-08 | Ejecución | Nada se publica sin haberse ejecutado; ningún número de Oracle ni de SQL Server se publica (§6.1) | 5, 6 | ✅ |
 | D-09 | Código | `src/` con una carpeta por fase o apéndice que deja código, con el nombre exacto del documento, más `src/lab/` para lo compartido | — | ✅ |
 | D-10 | README y temario | El README, los de `src/` y `0-ESTRUCTURA-CURSO.md` se escriben al final, en una tanda propia (T15) | — | ✅ |
@@ -487,7 +503,7 @@ esta tabla dice cuál es cuál, y las que faltaban las cerró Oskar el 06/10/202
 | III | **Una tarde de julio**: tres cajas, un web service fiscal que rechaza y una muestra asignada dos veces | Matías Ledesma |
 | IV | **El informe en la app**: servir el informe como documento sin perder la fuente relacional | Florencia Marchetti |
 | V | **Las 9:40**: la exportación nocturna y la notificación de doce horas pasadas a flujo, y el portal servido por la API con seguridad por fila | Verónica Colombo |
-| V ☕ | **El puente**: la interfaz con el SIH en Java 21 y ActiveMQ Artemis, con mensajes que imitan HL7 v2, duplicados, fuera de orden y un mensaje veneno. Cierra con **¿hacía falta un broker?**, medido contra la cola en Postgres de F22 | Matías Ledesma |
+| V ☕ | **El puente**: la interfaz con el SIH en Java 25 y Apache Artemis, con mensajes que imitan HL7 v2, duplicados, fuera de orden y un mensaje veneno. Cierra con **¿hacía falta un broker?**, medido contra la cola en Postgres de F22 | Matías Ledesma |
 
 El Bloque V lleva dos boss: el del bloque, en SQL y Python, y el del puente, **el único lugar del
 camino base donde se escribe Java**. Los dos van al cierre de F23. El Bloque 0 no lleva boss, y el

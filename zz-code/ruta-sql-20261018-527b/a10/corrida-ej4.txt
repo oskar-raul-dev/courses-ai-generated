@@ -1,0 +1,21 @@
+## ej4, comandos del solucionario (con los .sql regenerados)
+No MSysRelationships
+ filas | sin_dni 
+-------+---------
+   120 |      64
+(1 row)
+
+ERROR:  duplicate key value violates unique constraint "pacientes_pkey"
+DETAIL:  Key (id)=(1) already exists.
+ setval 
+--------
+    120
+(1 row)
+
+ id  
+-----
+ 121
+(1 row)
+
+INSERT 0 1
+contenedores a10-museo:        0

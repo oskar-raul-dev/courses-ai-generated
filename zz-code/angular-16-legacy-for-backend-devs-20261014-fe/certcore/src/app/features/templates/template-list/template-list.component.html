@@ -1,0 +1,31 @@
+<!-- src/app/features/templates/template-list/template-list.component.html -->
+<h2>Plantillas de checklist</h2>
+
+<!-- UN solo async pipe para las tres cosas que la vista necesita. Con
+     `loading$ | async`, `error$ | async` y `templates$ | async` por separado
+     tendrías tres suscripciones a la misma fuente. No es incorrecto —un
+     BehaviorSubject es multicast y las tres emiten en el mismo tick— pero son
+     tres tuberías donde basta una, y la plantilla se lee peor. -->
+<ng-container *ngIf="state$ | async as state">
+  <mat-progress-spinner
+    *ngIf="state.loading"
+    mode="indeterminate"
+    diameter="32"
+  ></mat-progress-spinner>
+
+  <p class="template-error" *ngIf="state.error !== null">{{ state.error }}</p>
+
+  <mat-nav-list *ngIf="!state.loading && state.error === null">
+    <a mat-list-item *ngFor="let template of state.items">
+      <span matListItemTitle>{{ template.templateId }} · v{{ template.version }}</span>
+      <span matListItemLine>
+        Vigente desde {{ template.validFrom }}
+        <ng-container *ngIf="template.validUntil !== null">
+          hasta {{ template.validUntil }}
+        </ng-container>
+        <ng-container *ngIf="template.validUntil === null">· sin fecha de fin</ng-container>
+        · {{ template.items.length }} ítems
+      </span>
+    </a>
+  </mat-nav-list>
+</ng-container>

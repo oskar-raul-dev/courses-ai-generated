@@ -1,0 +1,26 @@
+-- Fase 15 · la anomalía de solo lectura: a cobra en el lote abierto, b cierra el lote y c, que solo lee, informa
+-- el total del lote cerrado antes de que llegue el cobro de a. El informe dice 1000,00 y el lote
+-- termina en 2500,00.
+-- uv run lab race -f 15-aislamiento-comparado/read_only_mysql.race --isolation read-committed
+-- @engine mysql
+-- @isolation read committed
+-- @setup TRUNCATE staging.cash_receipt
+-- @setup DELETE FROM staging.cash_batch
+-- @setup INSERT INTO staging.cash_batch VALUES (1, 1)
+-- @setup INSERT INTO staging.cash_receipt VALUES (1, 1000.00)
+-- @check SELECT sum(amount) FROM staging.cash_receipt WHERE batch = 1
+a1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+a2: START TRANSACTION;
+a3: SELECT current_batch FROM staging.cash_batch WHERE id = 1;
+b1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+b2: START TRANSACTION;
+b3: UPDATE staging.cash_batch SET current_batch = current_batch + 1 WHERE id = 1;
+b4: COMMIT;
+c1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+c2: START TRANSACTION;
+c3: SELECT current_batch FROM staging.cash_batch WHERE id = 1;
+c4: SELECT sum(amount) FROM staging.cash_receipt WHERE batch = 1;
+c5: COMMIT;
+a4: INSERT INTO staging.cash_receipt VALUES (1, 1500.00);
+a5: COMMIT;
+-- @permutation a1 a2 a3 b1 b2 b3 b4 c1 c2 c3 c4 c5 a4 a5

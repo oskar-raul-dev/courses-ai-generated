@@ -1,0 +1,11 @@
+-- Fase 18 · la cola detrás del metadata lock (MySQL): un ALTER INSTANT también espera, y los que vienen detrás también.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/ddl_queue_mysql.race
+-- @engine mysql
+-- @setup DROP TABLE IF EXISTS staging.ddl_target
+-- @setup CREATE TABLE staging.ddl_target (debtor_id int PRIMARY KEY, balance decimal(12,2)) AS SELECT debtor_id, balance FROM staging.debtor
+a1: START TRANSACTION;
+a2: SELECT count(*) FROM staging.ddl_target;
+b1: ALTER TABLE staging.ddl_target ADD COLUMN reviewed_by varchar(30), ALGORITHM=INSTANT;
+c1: SELECT balance FROM staging.ddl_target WHERE debtor_id = 1;
+d1: SELECT id, state, left(info, 50) FROM information_schema.processlist WHERE state LIKE 'Waiting for table metadata lock' ORDER BY id;
+a3: COMMIT;

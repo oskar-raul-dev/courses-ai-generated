@@ -1,0 +1,19 @@
+@use "./tokens" as tokens;
+
+// Devuelve el color asociado a un estado del dominio.
+// Los estados van en INGLÉS (son valores de código, no UI): ver A5 / guía.
+@function status-color($status) {
+  @if $status == "available" or $status == "live" or $status == "sent" {
+    @return tokens.$success;
+  } @else if $status == "limited" or $status == "scheduled" or $status == "queued" {
+    @return tokens.$warning;
+  } @else if $status == "sending" {
+    @return tokens.$primary;
+  } @else if $status == "soldout" or $status == "failed" or $status == "ended" {
+    @return tokens.$danger;
+  } @else if $status == "reverted" or $status == "reconciled" or $status == "draft" {
+    @return tokens.$muted;
+  }
+  @warn "status-color: estado no reconocido '#{$status}'";
+  @return tokens.$muted; // fallback seguro
+}

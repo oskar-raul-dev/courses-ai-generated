@@ -1,0 +1,13 @@
+-- ss02 · dos correcciones de dos hemogramas, en orden contrario (Fase 18), en SQL Server.
+--   uv run --extra sqlserver lab race -f ss02-pesimista-contra-rcsi/deadlock.race
+-- @engine sqlserver
+-- @database ss02
+-- @setup ALTER DATABASE ss02 SET READ_COMMITTED_SNAPSHOT OFF WITH ROLLBACK IMMEDIATE
+a1: BEGIN TRAN;
+b1: BEGIN TRAN;
+a2: UPDATE dbo.hemogram SET notes = N'a' WHERE hemogram_id = 1;
+b2: UPDATE dbo.hemogram SET notes = N'b' WHERE hemogram_id = 2;
+a3: UPDATE dbo.hemogram SET notes = N'a' WHERE hemogram_id = 2;
+b3: UPDATE dbo.hemogram SET notes = N'b' WHERE hemogram_id = 1;
+a4: IF @@TRANCOUNT > 0 ROLLBACK;
+b4: IF @@TRANCOUNT > 0 ROLLBACK;

@@ -15,8 +15,10 @@ antes. Así, si la ficha cambia, el prompt no queda desactualizado.
 > `prompts/plantillas-de-capitulo.md` y `00-historia-de-alameda.md`.
 > **No se usa** ningún archivo `_desechable-*`: el curso no los cita.
 
-> ⚠️ **Antes de F01.** Tienen que estar escritos y verificados `a01`, `a02`, `a05` y `a06`, y hecha
-> la verificación de laboratorio (P8). Sin digests fijados, ninguna fase publica una versión.
+> ⚠️ **Antes de F01.** Tienen que estar escritos y verificados `a01`, `a02`, `a05` y `a06`. La
+> verificación de laboratorio (P8) está hecha desde el 11/10/2026, en
+> [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md); sin
+> digests fijados en `a02`, ninguna fase publica una versión.
 
 ---
 
@@ -99,7 +101,7 @@ entregable es `00-la-base-que-nadie-diseno.md`.
 
 ## Identidad
 
-- Fase 00 de 26 · Bloque 0 · **4 h** · 12 ejercicios · plantilla del Bloque 0
+- Fase 00 de 27 · Bloque 0 · **4 h** · 12 ejercicios · plantilla del Bloque 0
 - Depende de: nada · Habilita: F01 · **Esta fase se lee.**
 
 ## Alcance
@@ -131,7 +133,7 @@ Esta es la sesión de la **Fase 01 — 📦 La caja y el arnés**. Entregable: `
 El de F00, más F00 cerrada y `a01`, `a02`, `a05`, `a06` escritos y verificados.
 
 ## Identidad
-- Fase 01 de 26 · Bloque 0 · **5 h** · 22 ejercicios · plantilla del Bloque 0
+- Fase 01 de 27 · Bloque 0 · **5 h** · 22 ejercicios · plantilla del Bloque 0
 - Motores: PostgreSQL, MySQL y Oracle · Entorno: SQL + Python
 - Apéndices: a01, a02, a03, a04, a05, a06
 
@@ -163,10 +165,10 @@ Esta es la sesión de la **Fase 02 — ❓ Las cinco preguntas, desde el otro la
 
 ## Marco
 El de F00, más F01 cerrada. Lee también `cursos-bd/ruta-no-sql-lite/02-las-cinco-preguntas.md`:
-esta fase es su contrapeso y la enlaza, pero no la repite.
+esta fase es su contrapeso y la nombra en prosa (D-03), pero no la repite.
 
 ## Identidad
-- Fase 02 de 26 · Bloque 0 · **3 h** · 12 ejercicios · plantilla del Bloque 0 · se lee
+- Fase 02 de 27 · Bloque 0 · **3 h** · 12 ejercicios · plantilla del Bloque 0 · se lee
 
 ## Alcance
 El de la ficha F02, completo, con las respuestas del alcance §5.
@@ -192,7 +194,7 @@ Esta es la sesión de la **Fase 03 — 🧮 Lo que SQL le hace al modelo relacio
 El de F00, más el Bloque 0 cerrado y `a07` con su esqueleto.
 
 ## Identidad
-- Fase 03 de 26 · Bloque I · **8 h** · 22 ejercicios · plantilla de tema
+- Fase 03 de 27 · Bloque I · **8 h** · 22 ejercicios · plantilla de tema
 - Motores: Postgres, contraste MySQL y Oracle · Entorno: SQL + Python
 
 ## Alcance
@@ -222,7 +224,7 @@ El de F00, más F03 cerrada. Lee `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` (
 si ya se extrajo): `ModParser.bas`, `parse_patients.py` y los resultados de `run_bas_tests.py`.
 
 ## Identidad
-- Fase 04 de 26 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
+- Fase 04 de 27 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F04, completo.
@@ -252,7 +254,7 @@ Esta es la sesión de la **Fase 05 — 🪪 Una persona no es su documento**. En
 El de F00, más F04 cerrada.
 
 ## Identidad
-- Fase 05 de 26 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
+- Fase 05 de 27 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F05, completo.
@@ -283,7 +285,7 @@ Entregable: `06-cuarta-y-quinta-forma-normal.md`.
 El de F00, más F05 cerrada.
 
 ## Identidad
-- Fase 06 de 26 · Bloque I · **8 h** · 20 ejercicios · plantilla de tema
+- Fase 06 de 27 · Bloque I · **8 h** · 20 ejercicios · plantilla de tema
 - Contraste: probablemente ninguno cambia la decisión. Si es así, la §6 lo dice en un párrafo.
 
 ## Alcance
@@ -310,14 +312,15 @@ Esta es la sesión de la **Fase 07 — ⏳ El tiempo en el modelo**. Entregable:
 El de F00, más F06 cerrada.
 
 ## Identidad
-- Fase 07 de 26 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
+- Fase 07 de 27 · Bloque I · **8 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F07, completo.
 
 ## Qué vigilar
-- **`WITHOUT OVERLAPS` y las claves foráneas con período** solo se usan si la versión del curso las
-  trae y se ejecutaron. Si no, la restricción de exclusión con `gist` es el camino, y se dice.
+- **`WITHOUT OVERLAPS` y las claves foráneas con período** existen en la versión del curso
+  (`hallazgos.md` §H10). Se usan después de ejecutarlos en la sesión, y la restricción de exclusión
+  con `gist` va primero, como el mecanismo que hay debajo.
 - **La 6FN y el *anchor modeling*** llevan su costo medido: cuántos joins y qué le pasa a la
   estimación de filas. La fase no los vende.
 - **La pregunta de Norma** se contesta con una consulta, y la consulta se publica con su salida.
@@ -337,7 +340,7 @@ Esta es la sesión de la **Fase 08 — ⚖️ Los dos extremos del mismo error**
 El de F00, más F07 cerrada.
 
 ## Identidad
-- Fase 08 de 26 · Bloque I · **8 h** · 26 ejercicios · plantilla de tema
+- Fase 08 de 27 · Bloque I · **8 h** · 26 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F08, completo, más:
@@ -369,7 +372,7 @@ Esta es la sesión de la **Fase 09 — 📦 El tamaño de las cosas**. Entregabl
 El de F00, más el Bloque I cerrado y el modelo nuevo cargado en el perfil M.
 
 ## Identidad
-- Fase 09 de 26 · Bloque II · **10 h** · 24 ejercicios · plantilla de tema
+- Fase 09 de 27 · Bloque II · **10 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F09, completo.
@@ -394,7 +397,7 @@ Esta es la sesión de la **Fase 10 — 🔑 Identificadores**. Entregable: `10-i
 El de F00, más F09 cerrada.
 
 ## Identidad
-- Fase 10 de 26 · Bloque II · **10 h** · 26 ejercicios · plantilla de tema
+- Fase 10 de 27 · Bloque II · **10 h** · 26 ejercicios · plantilla de tema
 - **MySQL es el caso central**, y es publicable.
 
 ## Alcance
@@ -405,7 +408,7 @@ El de la ficha F10, completo.
   prometida para F23 (deuda 💸 con destino).
 - **Qué filtra cada identificador** se demuestra: con el MD5, precalculando los hashes del rango de
   protocolos del perfil S; con el v7, extrayendo la fecha.
-- **`uuidv7()`** solo si la versión del curso lo trae y se ejecutó.
+- **`uuidv7()`** existe en la versión del curso (`hallazgos.md` §H10); se usa después de ejecutarlo.
 
 {{protocolo}}
 ```
@@ -422,7 +425,7 @@ Esta es la sesión de la **Fase 11 — 🗂️ Índices y lo que cuestan**. Entr
 El de F00, más F10 cerrada.
 
 ## Identidad
-- Fase 11 de 26 · Bloque II · **10 h** · **28 ejercicios**, la fase con más mecanismos
+- Fase 11 de 27 · Bloque II · **10 h** · **28 ejercicios**, la fase con más mecanismos
   independientes · plantilla de tema
 
 ## Alcance
@@ -433,7 +436,8 @@ El de la ficha F11, completo.
   no la encuentras, dilo y escríbelo como "el comportamiento por defecto que describe la
   documentación de Access", sin la lista exacta.
 - **El costo de escritura se mide en bytes de WAL**, no en tiempo.
-- **El *skip scan*** solo si la versión lo trae y se ejecutó.
+- **El *skip scan*** existe en la versión del curso: se reconoce por `Index Searches` en el `EXPLAIN
+  ANALYZE` (`hallazgos.md` §H10).
 
 {{protocolo}}
 ```
@@ -450,7 +454,7 @@ Esta es la sesión de la **Fase 12 — 📊 Estadísticas y cardinalidad**. Entr
 El de F00, más F11 cerrada.
 
 ## Identidad
-- Fase 12 de 26 · Bloque II · **10 h** · 24 ejercicios · plantilla de tema
+- Fase 12 de 27 · Bloque II · **10 h** · 24 ejercicios · plantilla de tema
 - **El punto de rotura es un precipicio del plan** (D16).
 
 ## Alcance
@@ -478,7 +482,7 @@ Esta es la sesión de la **Fase 13 — 🧠 El optimizador en tres motores**. En
 El de F00, más F12 cerrada.
 
 ## Identidad
-- Fase 13 de 26 · Bloque II · **10 h** · 24 ejercicios · plantilla de tema
+- Fase 13 de 27 · Bloque II · **10 h** · 24 ejercicios · plantilla de tema
 - **Es la fase con más Oracle del curso**, y por eso la más expuesta a la regla de publicación.
 
 ## Alcance
@@ -487,8 +491,9 @@ El de la ficha F13, completo.
 ## Qué vigilar
 - **De Oracle se publica la estructura del plan, nunca sus estadísticas** (D6). *Bind peeking* y
   *baselines* se explican con la documentación oficial y se proponen como apuestas sin resolver.
-- **`pg_hint_plan`** solo si está disponible en la imagen del curso; si no, la fase lo nombra y
-  explica por qué Postgres no trae hints de serie.
+- **`pg_hint_plan`** no viene en la imagen del curso (`hallazgos.md` §H10): la fase explica por qué
+  Postgres no trae hints de serie y deja `pg_hint_plan` como ejercicio 🔥, con una imagen derivada
+  que instala `postgresql-18-pg-hint-plan` de PGDG. El `compose.yaml` no cambia.
 - **El umbral de cinco ejecuciones** del plan genérico es comportamiento documentado de Postgres:
   verifícalo en la versión del curso antes de escribirlo.
 
@@ -507,7 +512,7 @@ Esta es la sesión de la **Fase 14 — 🐢 La base no estaba lenta**. Entregabl
 El de F00, más F13 cerrada.
 
 ## Identidad
-- Fase 14 de 26 · Bloque II · **10 h** · 26 ejercicios · plantilla de tema
+- Fase 14 de 27 · Bloque II · **10 h** · 26 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F14, completo, más:
@@ -537,7 +542,7 @@ Esta es la sesión de la **Fase 15 — 🔀 Aislamiento comparado**. Entregable:
 El de F00, más el Bloque II cerrado y `lab race` descrito en `a04`.
 
 ## Identidad
-- Fase 15 de 26 · Bloque III · **10 h** · 26 ejercicios · plantilla de tema
+- Fase 15 de 27 · Bloque III · **10 h** · 26 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F15, completo.
@@ -563,7 +568,7 @@ Esta es la sesión de la **Fase 16 — 🔢 El folio sin huecos**. Entregable: `
 El de F00, más F15 cerrada.
 
 ## Identidad
-- Fase 16 de 26 · Bloque III · **10 h** · 26 ejercicios · plantilla de tema
+- Fase 16 de 27 · Bloque III · **10 h** · 26 ejercicios · plantilla de tema
 - **La fase estrella del curso.** Se escribe pensando en que será el primer vídeo.
 
 ## Alcance
@@ -591,7 +596,7 @@ Esta es la sesión de la **Fase 17 — ♻️ MVCC y su factura**. Entregable: `
 El de F00, más F16 cerrada.
 
 ## Identidad
-- Fase 17 de 26 · Bloque III · **10 h** · 24 ejercicios · plantilla de tema
+- Fase 17 de 27 · Bloque III · **10 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F17, completo.
@@ -618,7 +623,7 @@ Esta es la sesión de la **Fase 18 — 🔐 Bloqueos, deadlocks y DDL**. Entrega
 El de F00, más F17 cerrada.
 
 ## Identidad
-- Fase 18 de 26 · Bloque III · **10 h** · 26 ejercicios · plantilla de tema
+- Fase 18 de 27 · Bloque III · **10 h** · 26 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F18, completo, más:
@@ -647,7 +652,7 @@ Esta es la sesión de la **Fase 19 — 🧾 JSON en los motores**. Entregable: `
 El de F00, más el Bloque III cerrado.
 
 ## Identidad
-- Fase 19 de 26 · Bloque IV · **10 h** · 24 ejercicios · plantilla de tema
+- Fase 19 de 27 · Bloque IV · **10 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F19, completo.
@@ -676,7 +681,7 @@ El de F00, más F19 cerrada. Lee también las fases documentales de la NoSQL Lit
 imagen de MongoDB debería ser la misma (D12).
 
 ## Identidad
-- Fase 20 de 26 · Bloque IV · **10 h** · 26 ejercicios · plantilla de tema
+- Fase 20 de 27 · Bloque IV · **10 h** · 26 ejercicios · plantilla de tema
 - Motores: Postgres, **MongoDB** (publicable), Oracle Duality Views (sin resolver)
 
 ## Alcance
@@ -705,7 +710,7 @@ El de F00, más F20 cerrada. Ten a mano las fases de búsqueda, grafos y vectori
 que esta fase enlaza en lugar de repetir.
 
 ## Identidad
-- Fase 21 de 26 · Bloque IV · **10 h** · 24 ejercicios · plantilla de tema
+- Fase 21 de 27 · Bloque IV · **10 h** · 24 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F21, completo, más:
@@ -736,7 +741,7 @@ Esta es la sesión de la **Fase 22 — 🌙 La exportación de las 9:40**. Entre
 El de F00, más el Bloque IV cerrado.
 
 ## Identidad
-- Fase 22 de 26 · Bloque V · **15 h** · 28 ejercicios · plantilla de tema
+- Fase 22 de 27 · Bloque V · **15 h** · 28 ejercicios · plantilla de tema
 - Entorno: **SQL + Python**. El puente Java es el boss del bloque (D3), no esta fase.
 
 ## Alcance
@@ -764,11 +769,11 @@ Esta es la sesión de la **Fase 23 — 🔌 La base como producto**. Entregable:
 `23-la-base-como-producto.md`. **Cierra el Bloque V: lleva el boss.**
 
 ## Marco
-El de F00, más F22 cerrada. Perfiles `api` (PostgREST) y `puente` (Artemis y Java 21) del compose
-verificados.
+El de F00, más F22 cerrada. Perfiles `api` (PostgREST) y `puente` (Apache Artemis y Java 25) del compose
+verificados; P8 dejó los arreglos de los dos en `hallazgos.md` §H8 y §H9.
 
 ## Identidad
-- Fase 23 de 26 · Bloque V · **15 h** · 26 ejercicios · plantilla de tema
+- Fase 23 de 27 · Bloque V · **15 h** · 26 ejercicios · plantilla de tema
 
 ## Alcance
 El de la ficha F23, completo, más:
@@ -776,8 +781,8 @@ El de la ficha F23, completo, más:
   exportación nocturna y la notificación de doce horas pasadas a flujo, y el portal que tiene que
   dejar de ser un volcado nocturno. Se entrega: el flujo nuevo, la API con RLS y la medición de que
   ninguna fila se pierde ni se publica dos veces. Cruza F22 y F23.
-- 💀☕ **Boss del puente — "El puente"**, pedido por Matías Ledesma, en **Java 21** con ActiveMQ
-  Artemis (D3, D11). La interfaz con el SIH: órdenes que entran y resultados que vuelven, con
+- 💀☕ **Boss del puente — "El puente"**, pedido por Matías Ledesma, en **Java 25** con Apache
+  Artemis (D3, D11, D19). La interfaz con el SIH: órdenes que entran y resultados que vuelven, con
   mensajes que imitan HL7 v2 (`ORM` y `ORU`), duplicados, fuera de orden y un mensaje veneno. Se
   entrega: el servicio, la idempotencia hecha cumplir por la base y **la respuesta medida a
   "¿hacía falta un broker?"**, contra la cola de F22. Puede contestarse que sí.
@@ -807,7 +812,7 @@ Esta es la sesión de la **Fase {{24|25|26}}**, del Bloque VI — El árbitro. E
 El de F00, más el Bloque V cerrado y **la bitácora completa**, que es la evidencia de este bloque.
 
 ## Identidad
-- Fase {{NN}} de 26 · Bloque VI · **{{12|10|10}} h** · **{{22|24|20}} ejercicios** · plantilla del
+- Fase {{NN}} de 27 · Bloque VI · **{{12|10|10}} h** · **{{22|24|20}} ejercicios** · plantilla del
   árbitro
 
 ## Alcance

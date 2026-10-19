@@ -1,0 +1,16 @@
+-- Ejercicio 13 · la muestra con una restricción UNIQUE, en READ COMMITTED.
+-- @engine postgres
+-- @isolation read committed
+-- @setup TRUNCATE staging.specimen_take
+-- @setup CREATE UNIQUE INDEX specimen_take_unique ON staging.specimen_take (specimen_id)
+-- @check SELECT count(*), string_agg(technician, ',') FROM staging.specimen_take
+-- @teardown DROP INDEX staging.specimen_take_unique
+-- @teardown TRUNCATE staging.specimen_take
+a1: BEGIN ISOLATION LEVEL {isolation};
+b1: BEGIN ISOLATION LEVEL {isolation};
+a2: SELECT count(*) FROM staging.specimen_take WHERE specimen_id = 11231555;
+b2: SELECT count(*) FROM staging.specimen_take WHERE specimen_id = 11231555;
+a3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_a');
+b3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_b');
+a4: COMMIT;
+b4: COMMIT;

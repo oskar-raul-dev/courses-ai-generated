@@ -1,0 +1,10 @@
+-- Fase 16 · GET_LOCK es de la sesión, no de la transacción: el COMMIT no lo suelta.
+-- uv run lab race -f 16-el-folio-sin-huecos/get_lock_mysql.race
+-- @engine mysql
+a1: START TRANSACTION;
+a2: SELECT GET_LOCK('pos_1_B', 10);
+a3: COMMIT;
+b1: SELECT GET_LOCK('pos_1_B', 0);
+a4: SELECT RELEASE_LOCK('pos_1_B');
+b2: SELECT GET_LOCK('pos_1_B', 0);
+b3: SELECT RELEASE_LOCK('pos_1_B');

@@ -1,0 +1,14 @@
+/* Estilo mínimo del bloque vacío: la lección 05 no lo da. */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  opacity: 0.7;
+}
+
+.empty-state-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+}

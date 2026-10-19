@@ -1,0 +1,35 @@
+== pg checks
+BEGIN
+CREATE TABLE
+ERROR:  new row for relation "a08_p" violates check constraint "a08_p_obra_social_check"
+DETAIL:  Failing row contains ().
+ROLLBACK
+BEGIN
+CREATE TABLE
+ERROR:  new row for relation "a08_p" violates check constraint "a08_p_obra_social_check"
+DETAIL:  Failing row contains ( ).
+ROLLBACK
+BEGIN
+CREATE TABLE
+INSERT 0 2
+ count 
+-------
+     2
+(1 row)
+
+ROLLBACK
+== mysql prefijo
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+a08_nota	1	a08_nota_idx	1	note	A	0	100	NULL	YES	BTREE			YES	NULL
+== oracle trim
+
+R
+------------
+trim es NULL
+INSERT INTO a08_p VALUES (' ')
+*
+ERROR at line 1:
+ORA-02290: check constraint (SYSTEM.SYS_C008733) violated
+Help: https://docs.oracle.com/error-help/db/ora-02290/
+
+

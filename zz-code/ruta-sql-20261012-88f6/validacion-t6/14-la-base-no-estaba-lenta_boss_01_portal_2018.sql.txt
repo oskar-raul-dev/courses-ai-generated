@@ -1,0 +1,93 @@
+DROP TABLE
+NOTICE:  table "portal_2018" does not exist, skipping
+SELECT 1327622
+ALTER TABLE
+ANALYZE
+== 1. un informe, por su enlace
+                              QUERY PLAN                               
+-----------------------------------------------------------------------
+ Gather (actual rows=1.00 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   Buffers: shared hit=3168 read=14688
+   ->  Parallel Seq Scan on portal_2018 (actual rows=0.33 loops=3)
+         Filter: (url_hash = 'fcd86271e2acb9a912faa7b287f8efcb'::text)
+         Rows Removed by Filter: 442540
+         Buffers: shared hit=3168 read=14688
+ Planning:
+   Buffers: shared hit=35 read=1
+ Planning Time: 0.199 ms
+ Execution Time: 29.255 ms
+(12 rows)
+
+== 2. el script del estudiante, con MD5: los cien protocolos que siguen a uno conocido
+ informes_alcanzados 
+---------------------
+                 100
+(1 row)
+
+== 3. la página del médico derivante 144: la primera y la última, con su count(*)
+                                   QUERY PLAN                                    
+---------------------------------------------------------------------------------
+ Limit (actual rows=20.00 loops=1)
+   Buffers: shared hit=4976 read=12960
+   ->  Gather Merge (actual rows=20.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=4976 read=12960
+         ->  Sort (actual rows=16.33 loops=3)
+               Sort Key: ordered_on DESC
+               Sort Method: top-N heapsort  Memory: 27kB
+               Buffers: shared hit=4976 read=12960
+               Worker 0:  Sort Method: top-N heapsort  Memory: 28kB
+               Worker 1:  Sort Method: top-N heapsort  Memory: 27kB
+               ->  Parallel Seq Scan on portal_2018 (actual rows=371.33 loops=3)
+                     Filter: (doctor_id = 144)
+                     Rows Removed by Filter: 442169
+                     Buffers: shared hit=4896 read=12960
+ Planning:
+   Buffers: shared hit=15
+ Planning Time: 0.092 ms
+ Execution Time: 31.421 ms
+(20 rows)
+
+                                   QUERY PLAN                                    
+---------------------------------------------------------------------------------
+ Limit (actual rows=14.00 loops=1)
+   Buffers: shared hit=5840 read=12096
+   ->  Gather Merge (actual rows=1114.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=5840 read=12096
+         ->  Sort (actual rows=371.33 loops=3)
+               Sort Key: ordered_on DESC
+               Sort Method: quicksort  Memory: 54kB
+               Buffers: shared hit=5840 read=12096
+               Worker 0:  Sort Method: quicksort  Memory: 53kB
+               Worker 1:  Sort Method: quicksort  Memory: 52kB
+               ->  Parallel Seq Scan on portal_2018 (actual rows=371.33 loops=3)
+                     Filter: (doctor_id = 144)
+                     Rows Removed by Filter: 442169
+                     Buffers: shared hit=5760 read=12096
+ Planning Time: 0.069 ms
+ Execution Time: 27.766 ms
+(18 rows)
+
+                                   QUERY PLAN                                    
+---------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=6624 read=11232
+   ->  Gather (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=6624 read=11232
+         ->  Partial Aggregate (actual rows=1.00 loops=3)
+               Buffers: shared hit=6624 read=11232
+               ->  Parallel Seq Scan on portal_2018 (actual rows=371.33 loops=3)
+                     Filter: (doctor_id = 144)
+                     Rows Removed by Filter: 442169
+                     Buffers: shared hit=6624 read=11232
+ Planning Time: 0.061 ms
+ Execution Time: 26.933 ms
+(14 rows)
+

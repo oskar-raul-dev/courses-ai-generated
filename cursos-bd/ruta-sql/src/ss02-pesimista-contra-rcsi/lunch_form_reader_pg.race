@@ -1,0 +1,11 @@
+-- ss02 · el mismo formulario en Postgres, para el contraste: a corrige y no confirma, b es el reporte que lee.
+-- Sobre staging.hemogram de la Fase 18 (src/18-bloqueos-deadlocks-y-ddl/01_setup.sql).
+--   uv run lab race -f ss02-pesimista-contra-rcsi/lunch_form_reader_pg.race
+-- @engine postgres
+-- @setup UPDATE staging.hemogram SET hematocrit = '41', version = 1 WHERE hemogram_id = 1
+-- @check SELECT hematocrit, version FROM staging.hemogram WHERE hemogram_id = 1
+a1: BEGIN;
+a2: UPDATE staging.hemogram SET hematocrit = '40' WHERE hemogram_id = 1;
+b1: SELECT hematocrit FROM staging.hemogram WHERE hemogram_id = 1;
+c1: SELECT count(*) AS waiting FROM pg_stat_activity WHERE wait_event_type = 'Lock';
+a3: COMMIT;

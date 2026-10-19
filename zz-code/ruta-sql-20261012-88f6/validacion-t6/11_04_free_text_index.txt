@@ -1,0 +1,9 @@
+psql:04_free_text_index.sql:5: NOTICE:  table "order_note" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 529
+INSERT 0 1
+psql:04_free_text_index.sql:12: ERROR:  index row size 2984 exceeds btree version 4 maximum 2704 for index "order_note_note_idx"
+DETAIL:  Index row references tuple (3,59) in relation "order_note".
+HINT:  Values larger than 1/3 of a buffer page cannot be indexed.
+Consider a function index of an MD5 hash of the value, or use full text indexing.

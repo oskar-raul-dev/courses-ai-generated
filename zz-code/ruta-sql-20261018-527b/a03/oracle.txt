@@ -1,0 +1,46 @@
+## oracle robusto (WHENEVER … EXIT FAILURE ROLLBACK)
+
+Table created.
+
+
+1 row created.
+
+SELECT 1/0 FROM dual
+        *
+ERROR at line 1:
+ORA-01476: divisor is equal to zero
+Help: https://docs.oracle.com/error-help/db/ora-01476/
+
+
+exit=1
+
+     FILAS
+----------
+	 0
+## oracle EXIT con transacción abierta
+
+Table created.
+
+
+1 row created.
+
+
+     FILAS
+----------
+	 1
+## oracle EXIT ROLLBACK
+
+1 row created.
+
+
+     FILAS
+----------
+	 1
+## oracle all_tables
+
+TABLE_NAME
+--------------------------------------------------------------------------------
+Pacientes
+Practicas
+Protocolos
+ResultadoItem

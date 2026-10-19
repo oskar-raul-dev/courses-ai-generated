@@ -1,0 +1,22 @@
+# El .gitignore de la Ruta SQL (guía §19.5): se sostiene sin el de la raíz del repositorio, que solo
+# ignora archivos del sistema operativo y de los editores.
+
+# Python y uv
+.venv/
+__pycache__/
+*.pyc
+
+# La caja la regenera el generador desde su semilla (apéndice a05); no se versiona.
+lab/caja/
+
+# Configuración local del laboratorio (puertos, contraseñas, memoria)
+.env
+lab/compose.override.yaml
+
+# El servicio Java del boss del puente, y las bibliotecas que baja su pom.xml
+target/
+23-la-base-como-producto/puente/lib/
+
+# El Access de museo regenera sus bibliotecas y su salida (apéndice a10)
+a10-el-access-de-museo/lib/
+a10-el-access-de-museo/out/

@@ -1,0 +1,116 @@
+DROP TABLE
+psql:02_hot_updates.sql:5: NOTICE:  table "hot_result" does not exist, skipping
+psql:02_hot_updates.sql:6: NOTICE:  table "hot_report" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+DROP TABLE
+psql:hot_round.sql:3: NOTICE:  table "hot_result" does not exist, skipping
+CREATE TABLE
+INSERT 0 200000
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+VACUUM
+ pg_stat_reset_single_table_counters 
+-------------------------------------
+ 
+(1 row)
+
+CHECKPOINT
+UPDATE 9488
+ pg_stat_force_next_flush 
+--------------------------
+ 
+(1 row)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+
+INSERT 0 1
+DROP TABLE
+CREATE TABLE
+INSERT 0 200000
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+VACUUM
+ pg_stat_reset_single_table_counters 
+-------------------------------------
+ 
+(1 row)
+
+CHECKPOINT
+UPDATE 9488
+ pg_stat_force_next_flush 
+--------------------------
+ 
+(1 row)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+
+INSERT 0 1
+DROP TABLE
+CREATE TABLE
+INSERT 0 200000
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+VACUUM
+ pg_stat_reset_single_table_counters 
+-------------------------------------
+ 
+(1 row)
+
+CHECKPOINT
+UPDATE 9488
+ pg_stat_force_next_flush 
+--------------------------
+ 
+(1 row)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+
+INSERT 0 1
+DROP TABLE
+CREATE TABLE
+INSERT 0 200000
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+VACUUM
+ pg_stat_reset_single_table_counters 
+-------------------------------------
+ 
+(1 row)
+
+CHECKPOINT
+UPDATE 9488
+ pg_stat_force_next_flush 
+--------------------------
+ 
+(1 row)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+
+INSERT 0 1
+                       variant                       | updates | hot  | pct_hot |  wal  | wal_per_update 
+-----------------------------------------------------+---------+------+---------+-------+----------------
+ 1. tres índices, fillfactor 100                     |    9488 |   98 |       1 | 21 MB |           2272
+ 2. tres índices, fillfactor 90                      |    9488 | 9488 |     100 | 12 MB |           1364
+ 3. cuarto índice sobre recorded_at, fillfactor 90   |    9488 | 9488 |     100 | 12 MB |           1364
+ 4. cuarto índice sobre value_numeric, fillfactor 90 |    9488 |    0 |       0 | 25 MB |           2763
+(4 rows)
+

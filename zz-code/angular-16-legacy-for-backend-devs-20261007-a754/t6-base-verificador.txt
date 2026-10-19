@@ -1,0 +1,219 @@
+ERROR FUERA     README.md:229 → ../angular-8-legacy-for-backend-devs
+aviso CALLOUT   00-convencion-de-git-y-tags.md:15 → 🔑
+aviso EMOJI     00-convencion-de-git-y-tags.md:478 → ### ⚠️ El incidente que no tiene commit
+aviso EMOJI     00-historia-del-sistema.md:52 → ### 🛗 Qué hace Plomada, en un párrafo
+aviso EMOJI     00-historia-del-sistema.md:70 → ### 📜 Un mercado que nació de un acuerdo del Concejo
+aviso EMOJI     00-historia-del-sistema.md:103 → ### 🗂️ Los años del Word y la carpeta de red
+aviso EMOJI     00-historia-del-sistema.md:118 → ### 🌎 Por qué tres países: un cliente que no quería tres proveedores
+aviso EMOJI     00-historia-del-sistema.md:171 → ### 🏝️ El piloto de Galápagos (2024)
+aviso EMOJI     00-historia-del-sistema.md:241 → ### 🗄️ Era 0 (2016-2018) — `certcore-api`, la que ya estaba
+aviso EMOJI     00-historia-del-sistema.md:357 → ### 🪨 Era 1 (2021) — "que salga el piloto con dos clientes"
+aviso EMOJI     00-historia-del-sistema.md:412 → ### 🏢 Entre eras (2022) — "esto ya no es una oficina, es una empresa"
+aviso EMOJI     00-historia-del-sistema.md:472 → ### 🧱 Era 2 (2022-2023) — "cambió la norma, y va a volver a cambiar"
+aviso EMOJI     00-historia-del-sistema.md:514 → ### 🔀 Era 3 (2024) — "hay que migrar antes de que se nos caiga"
+aviso EMOJI     00-historia-del-sistema.md:551 → ### 🧊 Hoy — mantenimiento, en tres países
+aviso EMOJI     00-setup-hola-mundo.md:56 → ### 🧬 ¿Nuevo o heredado?
+aviso EMOJI     01-estructura-base-ngmodules.md:71 → ### 🧬 ¿Nuevo o heredado?
+aviso EMOJI     01-estructura-base-ngmodules.md:116 → ### 5.1 Primero, el retiro 🪦
+aviso EMOJI     01-estructura-base-ngmodules.md:386 → ### 5.8 `SharedModule`, y la deuda 💸
+aviso EMOJI     02-autenticacion.md:52 → ### 🧬 ¿Nuevo o heredado? Guards e interceptors
+aviso EMOJI     02-autenticacion.md:101 → ### 5.1 El stub de la Fase 0 se retira 🪦
+aviso EMOJI     02-autenticacion.md:654 → ### 5.9 🧬 `CoreModule` — el punto de contacto
+aviso EMOJI     03-mock-api-caos.md:388 → ### 5.4 `mock/chaos.js` — el inyector, en cuatro pasos ⭐
+aviso EMOJI     04-estado-servicios.md:316 → ### 5.4 El pago de la 💸 de la Fase 3
+aviso EMOJI     04-estado-servicios.md:409 → ### 5.5 El pago de la 💸 de la Fase 2
+aviso EMOJI     05-standalone-convivencia.md:74 → ### ¿Nuevo o heredado? 🧬
+aviso EMOJI     05-standalone-convivencia.md:327 → ### 5.4 🧬 El punto de contacto: un router heredado apuntando a código nuevo
+aviso EMOJI     05-standalone-convivencia.md:356 → ### 5.5 🧬 El otro sentido: un standalone dentro de un `NgModule` vivo
+aviso EMOJI     05-standalone-convivencia.md:436 → ### 5.6 💸 La deuda del `SharedModule`, con factura
+aviso EMOJI     06-clientes-activos.md:151 → ### 5.2 💸 El pago: el estado deja de ser mutable
+aviso EMOJI     06-clientes-activos.md:219 → ### 5.3 🧬 El daño colateral del pago
+aviso EMOJI     06-clientes-activos.md:1060 → ### 5.10 🧬 Activos: pantalla nueva dentro de un módulo de 2021
+aviso EMOJI     07-plantillas-versionadas.md:275 → ### 5.3 ⭐ `resolveTemplateVersion`: la función que citan cuatro incidentes
+aviso EMOJI     07-plantillas-versionadas.md:640 → ### 5.6 🧬 Las dos costuras con el módulo heredado
+aviso EMOJI     08-formulario-dinamico.md:102 → ### 5.1 `InspectionApiService`, y la 💸 del guardado completo
+aviso EMOJI     08-formulario-dinamico.md:237 → ### 5.3 ⭐ El formulario construido desde datos
+aviso EMOJI     08-formulario-dinamico.md:612 → ### 5.6 ⭐ El autosave, y por qué después de guardar no se toca nada
+aviso EMOJI     08-formulario-dinamico.md:1022 → ### 5.10 🧬 Las dos costuras con el módulo heredado
+aviso EMOJI     09-hallazgos-severidad.md:221 → ### 5.2 ⭐ De respuestas a hallazgos, con lo que no se puede derivar aparte
+aviso EMOJI     09-hallazgos-severidad.md:522 → ### 5.4 💸 El pago, primera mitad: las reglas se escriben puras
+aviso EMOJI     09-hallazgos-severidad.md:629 → ### 5.5 💸 El pago, segunda mitad: alguien las hace cumplir
+aviso EMOJI     09-hallazgos-severidad.md:1057 → ### 5.8 🧬 La costura, y el candado de sólo lectura
+aviso EMOJI     10-certificados-vigencia.md:78 → ### ¿Nuevo o heredado? 🧬 — llenar un placeholder no es tocar código heredado
+aviso EMOJI     10-certificados-vigencia.md:296 → ### 5.3 ⭐ El estado, que deja de estar guardado
+aviso EMOJI     10-certificados-vigencia.md:845 → ### 5.7 💸 El PDF que lee la pantalla, que es el incidente 14
+aviso EMOJI     10-certificados-vigencia.md:884 → ### 5.8 💸 El pago: el documento se arma desde la fuente
+aviso EMOJI     10-certificados-vigencia.md:1089 → ### 5.9 🧬 La costura, y los 300 KB que no viajan en el arranque
+aviso EMOJI     11-dashboard-alertas.md:55 → ### 🩻 Esto sí funciona igual que en tu backend
+aviso EMOJI     11-dashboard-alertas.md:534 → ### 5.3 ⭐ Dos peticiones en vez de cuatrocientas
+aviso EMOJI     11-dashboard-alertas.md:898 → ### 5.6 🧬 El heredado que esta vez es el padre
+aviso EMOJI     12-testing-coverage.md:93 → ### 🧬 ¿Nuevo o heredado? Las dos configuraciones de `TestBed`
+aviso EMOJI     12-testing-coverage.md:898 → ### 5.8 🧬 Los dos `TestBed`, uno por generación
+aviso EMOJI     13-build-despliegue.md:67 → ### 🩻 Esto sí funciona igual que en tu backend
+aviso EMOJI     13-build-despliegue.md:237 → ### 5.2 🧬 El `APP_INITIALIZER`, en un `AppModule` de 2021
+aviso EMOJI     13-build-despliegue.md:572 → ### 5.7 ⭐ La misma imagen, dos veces, comportándose distinto
+aviso EMOJI     14-casi-prod-kind.md:71 → ### 🩻 Esto sí funciona igual: el ConfigMap **es** el `-e`
+aviso EMOJI     14-casi-prod-kind.md:199 → ### 5.3 ⭐ Cargar la imagen al nodo: el tropiezo de todo el mundo
+aviso EMOJI     14-casi-prod-kind.md:344 → ### 5.5 ⭐ El ConfigMap, que es el `-e` con nombre
+aviso EMOJI     README.md:180 → ### 📓 Cuaderno de incidentes del track
+aviso CALLOUT   a04-inject-vs-constructor.md:186 → 🧬
+aviso EMOJI     be01-lumen-y-la-familiaridad-falsa.md:186 → ### 5.3 `bootstrap/app.php`, el archivo que no es de Laravel ⭐
+aviso EMOJI     be01-lumen-y-la-familiaridad-falsa.md:642 → ### 5.7 Los cuatro bugs de la familiaridad falsa ⭐
+aviso EMOJI     be01-lumen-y-la-familiaridad-falsa.md:811 → ### 5.9 El experimento de los diez minutos ⭐
+aviso EMOJI     be04-el-salto-de-version-que-nadie-corrio.md:209 → ### 5.5 La cicatriz de las fechas (💸 4)
+aviso EMOJI     be04-el-salto-de-version-que-nadie-corrio.md:274 → ### Pieza forense de esta fase ⭐
+aviso EMOJI     cuaderno-incidentes-be.md:174 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:181 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:185 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:227 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:359 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:366 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:370 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:405 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:527 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:534 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:538 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:579 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:687 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:694 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:698 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:737 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:815 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:822 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:826 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:870 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:985 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:992 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:996 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:1042 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:1167 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:1174 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:1178 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:1217 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:1333 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:1340 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:1344 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:1386 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:1500 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:1507 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:1511 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:1552 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:1680 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:1687 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:1691 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:1730 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:1857 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:1864 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:1868 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:1911 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes-be.md:2037 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes-be.md:2044 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes-be.md:2050 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes-be.md:2105 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:153 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:160 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:164 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:201 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:331 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:338 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:342 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:375 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:479 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:486 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:490 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:525 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:653 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:660 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:664 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:695 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:816 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:823 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:827 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:860 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:981 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:988 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:992 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:1025 → ### 📝 Tu investigación
+aviso CALLOUT   cuaderno-incidentes.md:1061 → 🧬
+aviso EMOJI     cuaderno-incidentes.md:1139 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:1146 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:1150 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:1183 → ### 📝 Tu investigación
+aviso CALLOUT   cuaderno-incidentes.md:1225 → 🧬
+aviso EMOJI     cuaderno-incidentes.md:1319 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:1326 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:1330 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:1364 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:1499 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:1506 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:1510 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:1553 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:1698 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:1705 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:1709 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:1749 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:1892 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:1899 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:1903 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:1937 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:2090 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:2097 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:2101 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:2143 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:2284 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:2291 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:2295 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:2332 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:2482 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:2489 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:2493 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:2534 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:2671 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:2678 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:2682 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:2722 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:2881 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:2888 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:2892 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:2926 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:3069 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:3076 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:3080 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:3113 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:3267 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:3274 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:3278 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:3315 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:3444 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:3451 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:3455 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:3495 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:3664 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:3671 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:3675 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:3708 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:3875 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:3886 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:3890 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:3930 → ### 📝 Tu investigación
+aviso EMOJI     cuaderno-incidentes.md:4333 → ### 🎫 El ticket
+aviso EMOJI     cuaderno-incidentes.md:4340 → ### 🎯 Qué se te pide
+aviso EMOJI     cuaderno-incidentes.md:4344 → ### 🔧 Preparación
+aviso EMOJI     cuaderno-incidentes.md:4381 → ### 📝 Tu investigación
+aviso EMOJI     forense-fase-07.md:58 → ### Paso 2 — ⭐ La URL de la petición contesta antes que el código
+aviso ENCAB     00-setup-hola-mundo.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     01-estructura-base-ngmodules.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     02-autenticacion.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     03-mock-api-caos.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     04-estado-servicios.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     05-standalone-convivencia.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     06-clientes-activos.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     07-plantillas-versionadas.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     08-formulario-dinamico.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     09-hallazgos-severidad.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     10-certificados-vigencia.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     11-dashboard-alertas.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     12-testing-coverage.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     13-build-despliegue.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+aviso ENCAB     14-casi-prod-kind.md: el encabezado no dice «Vigencia » o «Fecha de verificación»
+— 1 errores, 217 avisos

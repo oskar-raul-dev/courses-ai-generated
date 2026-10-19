@@ -39,7 +39,7 @@ from verificador_base import FENCE_RE, PerfilCoursesIA, PerfilPublicacion, leer,
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROPUESTA = os.path.join(RAIZ, "prompts", "propuesta-fases-y-alcance.md")
-ESCRITOS_LOS_README = False          # True desde T15
+ESCRITOS_LOS_README = True           # True desde T15 (18/10/2026)
 
 # Resumen §11: | 03 | `03-lo-que-sql-le-hace-al-modelo.md` | I | 8 | 22 |
 FILA_BASE_RE = re.compile(r"^\| (\d{2}) \| `[^`]+` \| [^|]+\| (\d+) \| (\d+) \|\s*$")
@@ -72,12 +72,13 @@ def bloques_de_codigo(texto):
 
 
 class VerificadorDelCurso(PerfilCoursesIA):
-    # Fases del camino base (NN-) y del track (ssNN-); la historia no es una fase.
+    # Fases del camino base (NN-) y del track (ssNN-); la historia y la convención de git del lector
+    # (00-convencion-de-git-y-tags.md, del 07/10/2026) no son fases.
     CAPITULO_RE = re.compile(r"^(?:ss)?(\d{2})-.*\.md$")
-    NO_CAPITULO = PerfilCoursesIA.NO_CAPITULO + ("historia", "estructura")
+    NO_CAPITULO = PerfilCoursesIA.NO_CAPITULO + ("historia", "estructura", "convencion")
     # Callouts y marcadores de la guía §8: 🔒 y 🪞🔒 (lo no publicable de Oracle y SQL Server), 🏚️
     # (la caja), 💀 y 🏆 (los boss).
-    CALLOUTS = PerfilCoursesIA.CALLOUTS | {"💥", "🏆", "💀", "🔒", "🪞🔒", "⭐", "🏚️", "🏚"}
+    CALLOUTS = PerfilCoursesIA.CALLOUTS | {"💥", "🏆", "💀", "🔒", "🪞🔒", "⭐", "🏚️", "🏚", "🔑"}
 
     def es_capitulo(self, ruta):
         # soluciones/NN-slug.md lleva el nombre de su fase, pero no es una fase.

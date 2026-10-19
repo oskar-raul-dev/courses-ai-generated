@@ -1,0 +1,60 @@
+# T3 · resultados de correr-t3.sh, 2026-10-07
+node v18.18.2 · icu 73.2 · tz 2023c
+Pacific/Galapagos  offsets 2016-2026: GMT-06:00
+America/Guayaquil  offsets 2016-2026: GMT-05:00
+America/Lima       offsets 2016-2026: GMT-05:00
+America/Bogota     offsets 2016-2026: GMT-05:00
+new Date('2026-03-12T23:59:59-05:00').toLocaleString('es-EC', { timeZone: 'Pacific/Galapagos' })  →  "12/3/2026, 22:59:59"
+new Date('2026-03-12T23:59:59-05:00').toLocaleString('es-EC', { timeZone: 'America/Guayaquil' })  →  "12/3/2026, 23:59:59"
+## jasmine-fix21
+Randomized with seed 95507
+Started
+...............
+
+
+15 specs, 0 failures
+Finished in 0.037 seconds
+Randomized with seed 95507 (jasmine --random=true --seed=95507)
+## jasmine-base
+Randomized with seed 57453
+Started
+FFF...
+
+Failures:
+1) incidente 21: el certificado vence en la hora del activo lo que se emite desde ahora ya lleva la hora de la isla
+  Message:
+    Expected '2026-03-12T23:59:59-05:00' to be '2026-03-12T23:59:59-06:00'.
+  Stack:
+
+2) incidente 21: el certificado vence en la hora del activo sigue vigente a las 23:15 de Puerto Ayora del último día
+  Message:
+    Expected 'expired' to be 'expiring'.
+  Stack:
+
+3) incidente 21: el certificado vence en la hora del activo vence a la medianoche de la isla, ni una hora antes ni una después
+  Message:
+    Expected 'expired' to be 'expiring'.
+  Stack:
+
+6 specs, 3 failures
+Finished in 0.006 seconds
+Randomized with seed 57453 (jasmine --random=true --seed=57453)
+## jasmine-roto15
+Randomized with seed 88768
+Started
+FF
+
+Failures:
+1) incidente 15: el vencimiento no depende del huso de nadie vence al terminar el día del negocio, no antes
+  Message:
+    Expected 'expired' to be 'expiring'.
+  Stack:
+
+2) incidente 15: el vencimiento no depende del huso de nadie sigue vigente a las 20:00 de Bogotá del día en que vence
+  Message:
+    Expected 'expired' to be 'expiring'.
+  Stack:
+
+2 specs, 2 failures
+Finished in 0.004 seconds
+Randomized with seed 88768 (jasmine --random=true --seed=88768)

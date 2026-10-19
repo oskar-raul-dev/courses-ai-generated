@@ -1,0 +1,3 @@
+ERROR FUERA     README.md:229 → ../angular-8-legacy-for-backend-devs
+ERROR RESTO     prompts/README.md:4 → > ✏️ **Plantilla adaptada:** el manual de operación del `prompts/` de este curso
+— 2 errores, 0 avisos

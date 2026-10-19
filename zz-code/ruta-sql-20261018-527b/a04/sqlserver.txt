@@ -1,0 +1,32 @@
+## measure sqlserver
+📐 lab measure · sqlserver · perfil m · caja 258082ddb7fa · mcr.microsoft.com/mssql/server:2025-CU9-ubuntu-24.04@sha256:2b5b58162112…
+🔒 solo la estructura del plan: de SQL Server el curso no publica números (apéndice a09)
+  Compute Scalar
+    Stream Aggregate (Aggregate)
+      Clustered Index Scan on Pacientes.PK_Pacientes
+## race sqlserver snapshot
+🏁 lab race · sqlserver · permutación a1 a2 b1 b2 a3 b3 a4 b4 · snapshot
+ a1  SET
+ a2  1 fila  (28.00)
+ b1  SET
+ b2  1 fila  (28.00)
+ a3  UPDATE 1
+ b3  ⏳ espera un bloqueo
+ a4  COMMIT
+   ↳ b3  ✗ 3960 Snapshot isolation transaction aborted due to update conflict. You cannot use snapshot isolation to access table 'dbo.debtor' directly or indirectly in database 'ss02' to update, delete, or insert the row that has been modified or deleted by another transaction. Retry the transaction or change the isolation level for the update/delete statement.
+ b4  IF
+resultado: a sin errores · b con error 3960 en b3
+comprobación: 1 fila  (18.00)
+## race sqlserver read committed
+🏁 lab race · sqlserver · permutación a1 a2 b1 b2 a3 b3 a4 b4 · read committed
+ a1  SET
+ a2  1 fila  (28.00)
+ b1  SET
+ b2  1 fila  (28.00)
+ a3  UPDATE 1
+ b3  ⏳ espera un bloqueo
+ a4  COMMIT
+   ↳ b3  UPDATE 1
+ b4  IF
+resultado: a sin errores · b sin errores
+comprobación: 1 fila  (23.00)

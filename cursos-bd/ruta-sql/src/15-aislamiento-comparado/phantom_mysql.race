@@ -1,0 +1,16 @@
+-- Fase 15 · el fantasma: a cuenta las tomas del turno dos veces y b agrega una en el medio.
+-- uv run lab race -f 15-aislamiento-comparado/phantom_mysql.race --isolation read-committed
+-- @engine mysql
+-- @isolation read committed
+-- @setup TRUNCATE staging.specimen_take
+-- @check SELECT count(*) FROM staging.specimen_take
+a1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+a2: START TRANSACTION;
+a3: SELECT count(*) FROM staging.specimen_take;
+b1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+b2: START TRANSACTION;
+b3: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_b');
+b4: COMMIT;
+a4: SELECT count(*) FROM staging.specimen_take;
+a5: COMMIT;
+-- @permutation a1 a2 a3 b1 b2 b3 b4 a4 a5

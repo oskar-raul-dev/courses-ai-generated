@@ -1,0 +1,16 @@
+name: backend
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: lab
+        ports: ["5432:5432"]
+    container: golang:1.19.13
+    steps:
+      - uses: actions/checkout@v3
+      - run: go test ./... -race
+        working-directory: server

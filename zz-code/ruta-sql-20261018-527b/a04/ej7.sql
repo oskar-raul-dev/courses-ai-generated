@@ -1,0 +1,11 @@
+CREATE TABLE lab.a04_muertas AS SELECT * FROM legacy."Pacientes";
+ALTER TABLE lab.a04_muertas SET (autovacuum_enabled = off);
+SELECT pg_relation_size('lab.a04_muertas') / 8192 AS bloques_antes;
+UPDATE lab.a04_muertas SET "Telefono" = "Telefono" WHERE "IdPaciente" % 2 = 0;
+SELECT pg_relation_size('lab.a04_muertas') / 8192 AS bloques_despues;
+SELECT tuple_count, dead_tuple_count, round(dead_tuple_percent::numeric, 1) AS muertas_pct, round(free_percent::numeric, 1) AS libre_pct FROM pgstattuple('lab.a04_muertas');
+SELECT pg_sleep(1); SELECT n_live_tup, n_dead_tup FROM pg_stat_user_tables WHERE relid = 'lab.a04_muertas'::regclass;
+VACUUM lab.a04_muertas;
+SELECT pg_relation_size('lab.a04_muertas') / 8192 AS bloques_tras_vacuum;
+SELECT tuple_count, dead_tuple_count, round(free_percent::numeric, 1) AS libre_pct FROM pgstattuple('lab.a04_muertas');
+DROP TABLE lab.a04_muertas;

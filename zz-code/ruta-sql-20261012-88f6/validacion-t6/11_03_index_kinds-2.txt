@@ -1,0 +1,15 @@
+DROP TABLE
+SELECT 3975626
+ALTER TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+VACUUM
+psql:03_index_kinds.sql:23: NOTICE:  relation "result_eav_glu_parsed_idx" already exists, skipping
+CREATE INDEX
+ANALYZE
+CREATE INDEX
+psql:03_index_kinds.sql:27: NOTICE:  relation "patient_clean_norm_name_trgm_idx" already exists, skipping
+ANALYZE

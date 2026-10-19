@@ -5,7 +5,7 @@
 > gente, su sistema, sus cifras y sus dolores. Ninguna fase inventa un dato; si lo necesita y no
 > está aquí, se agrega aquí primero. Lo marcado con 🔍 en §8 no se usa como material hasta que se
 > verifique.
-> **Vigencia:** 2026-10-06.
+> **Vigencia:** 2026-10-14.
 
 Laboratorio Alameda es ficticio, igual que la clínica y la red que lo absorbieron, y conviene
 decirlo una vez. Ninguno de sus dolores está inventado para que el curso quede bonito. Todas las
@@ -165,7 +165,9 @@ boliviana con pasaporte y sin DNI. El parser le asigna el número del pasaporte 
 `PASAP BOL` pegado al nombre. Rubén agrega la regla: si viene `P` o `PASAP`, lo siguiente es el
 **país en tres letras** y después el número. Guarda el número en el campo `dni`, porque no hay otro
 campo, y el país en el nombre, entre paréntesis. Funciona hasta que la recepción escribe `BO`,
-`BOLIVIA` o `PASAPORTE`, o hasta que el pasaporte trae letras.
+`BOLIVIA` o `PASAPORTE`, o hasta que el pasaporte trae letras. Y en los datos dura poco: la recepción
+aprende a cargar el número directo en el campo `dni`, y el parser solo toca las fichas sin DNI. En 2026
+ninguna ficha conserva el país.
 
 **2005 · las libretas (Rubén).** Aparecen los jubilados con **Libreta de Enrolamiento** y **Libreta
 Cívica**, los documentos que existían antes del DNI. Rubén acepta `LE` y `LC` como si fueran `DNI`.
@@ -196,7 +198,7 @@ documento que se entrega mientras se tramita un pedido de refugio. No es DNI, no
 tiene un formato que nadie en el laboratorio había visto. El parche es `OTRO` más lo que venga, y
 es el primero que ya ni intenta entender.
 
-En 2026 el parser de VBA tiene unas **cuatrocientas líneas**, y Matías lo resume en una frase que el
+En 2026 el parser de VBA tiene casi **trescientas líneas**, y Matías lo resume en una frase que el
 curso va a citar: *"nadie sabe qué hace con un pasaporte chileno"*.
 
 🧠 **Lo que el parser intentaba decir y el esquema nunca pudo:**
@@ -425,6 +427,9 @@ del SISA, con modalidad inmediata: dentro de las doce horas.
 - la exportación nocturna al portal, que empieza a las 22:00 y **termina a las 9:40 del día
   siguiente**, con miles de pacientes llamando para saber su resultado;
 - la tabla `ParaLlamar` con cuatro personas llamando en turnos;
+- la planilla de pendientes del laboratorio, de la que cada técnico toma la próxima PCR: dos
+  técnicos miran a la vez, ven la misma muestra libre y la procesan los dos, mientras otra queda
+  sin tomar hasta que se vencen las doce horas de la notificación;
 - la notificación obligatoria, que se hace **copiando y pegando desde una consulta de Access a una
   planilla**, que a su vez se carga en el sistema oficial.
 
@@ -443,7 +448,9 @@ reunión: los sistemas comprados no se adaptan a sus convenios, a sus reglas de 
 auditorías. Desde 2010, **Horizonte construye; no compra**. Eso le dio control y un sistema que hace
 exactamente lo que la red necesita. También le dio veinte años de reglas ad hoc por clínica,
 tablas con el nombre de la clínica en el nombre y un equipo de DBA muy bueno que vive saturado,
-porque cada clínica nueva son seis meses de integración.
+porque cada clínica nueva son seis meses de integración. El SIH corre en **dos servidores Xeon de
+16 núcleos**, el primario y un *standby* con Data Guard, los dos con licencia Enterprise Edition, y
+en los picos de internación de la mañana el primario pasa del 70 % de CPU.
 
 La primera exigencia para Alameda es la **integración**: las órdenes de laboratorio de las catorce
 clínicas tienen que entrar a "la base" y los resultados tienen que volver al SIH. Se hace con una
@@ -501,7 +508,7 @@ oficiales. En el laboratorio, todo el mundo le sigue diciendo **"la base"**.
 
 Este inventario es el material didáctico del curso. Cada punto tiene una fase que lo ataca.
 
-- **Una instancia de SQL Server Standard** con la base `ALAMEDA`: **214 tablas**, de las cuales
+- **Una instancia de SQL Server Standard** con la base `ALAMEDA`: **unas 420 tablas**, de las cuales
   unas 60 nadie sabe si se usan. Entre ellas, `MIG_LIS_PACIENTES`.
 - **`Pacientes.Nombre`** con el DNI, la obra social y a veces el parentesco adentro, en unos 1,9
   millones de filas. El parser de Rubén, `ExtraerDNI()`, **sigue en producción** y ahora también
@@ -628,6 +635,7 @@ mediciones y con el veredicto honesto de dónde pierde.
 | `-1847263541` y el portal enumerado | identificadores: secuencias, UUIDv4/v7, qué filtra cada uno, por qué el MD5 no corrige nada | II · La física |
 | 1,1 TB de imágenes y PDF en la base | qué va en la base y qué no, crecimiento, particionado, el respaldo que no entra | II · La física |
 | `DMax + 1` y `UltimoNumero` contra el web service fiscal | aislamiento, carreras, folios correlativos sin huecos | III · La concurrencia |
+| La PCR que procesaron dos técnicos | aislamiento: dos lecturas que ven la misma muestra libre | III · La concurrencia |
 | El formulario abierto a la hora del almuerzo | bloqueos, MVCC y su factura en cada motor | III · La concurrencia |
 | La exportación que termina a las 9:40 y la notificación en doce horas | lote contra flujo, la ventana nocturna que se acaba | III / IV |
 | La propuesta de Florencia | JSON en el motor relacional, Duality Views, el duelo medido contra Mongo | IV · Lo NoSQL dentro del SQL |
@@ -648,9 +656,9 @@ verificado** y no se usa como material hasta que lo esté.
 | Software sin licencia en PYME | tasas de piratería muy altas en la Argentina de fines de los 90 | ✅ coherente; 🔍 buscar una cifra con fuente si el curso la cita |
 | Año de dos dígitos: del 00 al 29 es 20xx | regla de Windows (ventana 1930–2029) | ✅ exacta |
 | SQL Server con otro corte para el año de dos dígitos | la opción *two digit year cutoff* vale 2049 por defecto | ✅ exacta |
-| Libreta de Enrolamiento y Libreta Cívica | documentos anteriores al DNI; al pasar a DNI se conservaba el número | ✅ coherente; 🔍 confirmar lo del número si un episodio depende de eso |
-| DNI de residentes extranjeros en una numeración alta | se asignan en un rango propio muy por encima del de los nativos | 🔍 confirmar el rango antes de citar cifras |
-| Certificado de residencia precaria para solicitantes de refugio | documento provisorio mientras se tramita la solicitud | 🔍 confirmar denominación |
+| Libreta de Enrolamiento y Libreta Cívica | documentos anteriores al DNI; al canjearlos por el DNI se conserva el número (trámite oficial de canje) | ✅ exacta (verificado el 13/10/2026) |
+| DNI de residentes extranjeros en una numeración alta | se asignan en un rango propio muy por encima del de los nativos | 🔍 sin fuente oficial para el rango al 12/10/2026: el curso modela el tipo y no cita cifras |
+| Certificado de residencia precaria para solicitantes de refugio | en 2019 la Comisión Nacional para los Refugiados la llamaba "residencia precaria" (Resolución 14/2019, por el art. 42 de la Ley 26.165); hoy el documento se llama "certificado de permanencia provisoria" (art. 51) | ✅ coherente en 2019 (verificado el 12/10/2026) |
 | Límite de 2 GB del `.mdb` | desde Access 2000; en Access 97 el límite era 1 GB | ✅ coherente (el techo llega con Access 2003) |
 | Objetos OLE que inflan el `.mdb` | las imágenes incrustadas como OLE se guardan sin comprimir | ✅ comportamiento conocido |
 | Replicación de Jet con autonuméricos aleatorios | los autonuméricos pasan a aleatorios en bases replicadas | ✅ exacta |
@@ -684,7 +692,7 @@ puede mirarla a los ojos sin burlarse.
   del interior. Además, el NBU nació allí.
 - **Access solo existe en la historia.** El lector no recibe el `.mdb`: recibe **la caja**, el
   volcado en CSV que Matías armó en un fin de semana (§3, 2026), y la carga en Postgres. El
-  Access de Rubén vuelve como pieza de museo en el apéndice `a10`, opcional.
+  Access de Rubén vuelve como pieza de museo en el apéndice [`a10`](a10-el-access-de-museo.md), opcional.
 - **Los 1,9 millones de pacientes y los 140 millones de `ResultadoItem` no entran en un
   laboratorio de 16 GB.** Los datos son sintéticos, con semilla determinista, en tres perfiles de
   volumen (S, M y L); se conservan las proporciones de la historia —duplicados, nacidos en el
@@ -700,7 +708,6 @@ puede mirarla a los ojos sin burlarse.
 ## 📚 Fuentes de la verificación
 
 - NBU: [Ley 27.232 en el Boletín Oficial](https://www.boletinoficial.gob.ar/detalleAviso/primera/139391/20160104) ·
-  [Bioanálisis, "Nomenclador Bioquímico Único"](https://revistabioanalisis.com/images/flippingbook/Rev19%20n/Nota6.pdf) ·
   [CUBRA, NBU versión 2012](https://cubra.org.ar/wp-content/uploads/2024/07/NBU-Version-2012-Act.-2016.pdf)
 - Débitos: [COBITUC, causales de débitos por obra social](http://www.cobituc.org.ar/2021/07/12/causales-de-debitos-por-obra-social/)
 - Factura electrónica: [RG AFIP 3749/2015](https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-3749-2015-244572) ·
@@ -711,3 +718,7 @@ puede mirarla a los ojos sin burlarse.
 - COVID-19: [Ministerio de Salud, notificación y diagnóstico](https://www.argentina.gob.ar/salud/coronavirus/notificacion) ·
   [COFyBCF, notificación obligatoria](https://www.cofybcf.org.ar/noticia.php?n=2626)
 - Año de dos dígitos: [Microsoft, cómo Excel trata los años de dos dígitos](https://learn.microsoft.com/en-us/troubleshoot/microsoft-365-apps/excel/two-digit-year-numbers)
+- Refugio: [Ley 26.165 en Infoleg](https://servicios.infoleg.gob.ar/infolegInternet/anexos/120000-124999/122609/texact.htm) ·
+  [Resolución 14/2019 de la CONARE](https://ar.vlex.com/vid/resolucion-14-resfc-2019-763815369) ·
+  [CONARE, certificado de permanencia provisoria](https://www.argentina.gob.ar/node/140419)
+- Libretas: [Canjear LE o LC por DNI, argentina.gob.ar](https://www.argentina.gob.ar/node/37308)

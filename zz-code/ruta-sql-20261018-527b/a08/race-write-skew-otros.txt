@@ -1,0 +1,57 @@
+== e10 mysql
+🏁 lab race · mysql · permutación a1 b1 a2 b2 a3 b3 a4 b4 a5 b5 · serializable
+ a1  SET
+ b1  SET
+ a2  START
+ b2  START
+ a3  1 fila  (11231555)
+ b3  1 fila  (11231555)
+ a4  ⏳ espera un bloqueo
+ b4  ✗ 1213 Deadlock found when trying to get lock; try restarting transaction
+   ↳ a4  INSERT 1
+ a5  COMMIT
+ b5  COMMIT
+resultado: a sin errores · b con error 1213 en b4
+comprobación: 1 fila  (1, 1)
+== e10 sqlserver
+🏁 lab race · sqlserver · permutación a1 b1 a2 b2 a3 b3 a4 b4 · serializable
+ a1  SET
+ b1  SET
+ a2  1 fila  (11231555)
+ b2  1 fila  (11231555)
+ a3  ⏳ espera un bloqueo
+ b3  ⏳ espera un bloqueo
+ a4  ✗ imposible a4 le toca a a, que espera un bloqueo desde a3: el motor no deja ocurrir este orden
+   ↳ a3  ✗ ? Driver Error: General error; DDBC Error: [Microsoft]Unspecified error occurred on SQL Server. Connection may have been terminated by the server.
+   ↳ b3  ✗ ? Driver Error: General error; DDBC Error: [Microsoft]Unspecified error occurred on SQL Server. Connection may have been terminated by the server.
+resultado: a con error imposible en a4, ? en a3 · b con error ? en b3
+comprobación: 1 fila  (0, 0)
+🏁 lab race · sqlserver · permutación a1 b1 a2 b2 a3 b3 a4 b4 · serializable
+ a1  SET
+ b1  SET
+ a2  1 fila  (11231555)
+ b2  1 fila  (11231555)
+ a3  ⏳ espera un bloqueo
+ b3  ⏳ espera un bloqueo
+   ↳ a3  ✗ 1205 Transaction (Process ID 72) was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction.
+   ↳ b3  INSERT 1
+ a4  ✗ 3902 The COMMIT TRANSACTION request has no corresponding BEGIN TRANSACTION.
+ b4  COMMIT
+resultado: a con error 1205 en a3, 3902 en a4 · b sin errores
+comprobación: 1 fila  (1, 1)
+🏁 lab race · sqlserver · permutación a1 b1 a2 b2 a3 b3 a4 b4 · serializable
+ a1  SET
+ b1  SET
+ a2  1 fila  (11231555)
+ b2  1 fila  (11231555)
+ a3  ⏳ espera un bloqueo
+ b3  ⏳ espera un bloqueo
+   ↳ a3  INSERT 1
+   ↳ b3  ✗ 1205 Transaction (Process ID 73) was deadlocked on lock resources with another process and has been chosen as the deadlock victim. Rerun the transaction.
+ a4  COMMIT
+ b4  ✗ 3902 The COMMIT TRANSACTION request has no corresponding BEGIN TRANSACTION.
+resultado: a sin errores · b con error 1205 en b3, 3902 en b4
+comprobación: 1 fila  (1, 1)
+ b4  ✗ 3902 The COMMIT TRANSACTION request has no corresponding BEGIN TRANSACTION.
+resultado: a sin errores · b con error 1205 en b3, 3902 en b4
+comprobación: 1 fila  (1, 1)

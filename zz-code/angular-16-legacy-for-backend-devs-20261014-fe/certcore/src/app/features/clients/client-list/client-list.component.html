@@ -1,0 +1,35 @@
+<!-- src/app/features/clients/client-list/client-list.component.html -->
+<h2>Clientes</h2>
+
+<!-- El botón está deshabilitado porque el alta es de la Fase 6. Deshabilitado
+     y visible se lee mejor que ausente: la pantalla ya cuenta lo que va a
+     hacer. -->
+<button mat-raised-button color="primary" [disabled]="true">
+  <mat-icon>add</mat-icon>
+  Nuevo cliente
+</button>
+
+<table mat-table [dataSource]="clients" *ngIf="clients.length > 0">
+  <ng-container matColumnDef="legalName">
+    <th mat-header-cell *matHeaderCellDef>Razón social</th>
+    <td mat-cell *matCellDef="let client">{{ client.legalName }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="taxId">
+    <th mat-header-cell *matHeaderCellDef>NIT</th>
+    <td mat-cell *matCellDef="let client">{{ client.taxId }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<!-- Un componente standalone consumido por otro componente standalone: se
+     importó arriba y se usa aquí. Sin módulo de por medio. -->
+<cc-empty-state
+  *ngIf="clients.length === 0"
+  icon="business"
+  message="Todavía no hay clientes cargados."
+></cc-empty-state>
+
+<p class="client-list-hint">Se mostrarán {{ pageSize }} clientes por página.</p>

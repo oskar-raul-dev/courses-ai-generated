@@ -1,0 +1,14 @@
+-- Ejercicio 10 · leer con FOR UPDATE antes de calcular, en READ COMMITTED.
+-- @engine postgres
+-- @isolation read committed
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: BEGIN ISOLATION LEVEL {isolation};
+b1: BEGIN ISOLATION LEVEL {isolation};
+a2: SELECT balance FROM staging.debtor WHERE debtor_id = 1 FOR UPDATE;
+b2: SELECT balance FROM staging.debtor WHERE debtor_id = 1 FOR UPDATE;
+a3: UPDATE staging.debtor SET balance = 18.00 WHERE debtor_id = 1;
+a4: COMMIT;
+b3: UPDATE staging.debtor SET balance = 13.00 WHERE debtor_id = 1;
+b4: COMMIT;
+-- @permutation a1 b1 a2 b2 a3 a4 b3 b4

@@ -1,0 +1,12 @@
+-- Fase 18 · la misma escena con lock_timeout en b, y con NOWAIT.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/lunch_form_timeout.race
+-- @engine postgres
+-- @setup UPDATE staging.hemogram SET hematocrit = '41', version = 1 WHERE hemogram_id = 1
+-- @check SELECT hematocrit, version FROM staging.hemogram WHERE hemogram_id = 1
+a1: BEGIN;
+a2: SELECT hematocrit FROM staging.hemogram WHERE hemogram_id = 1 FOR UPDATE;
+b1: SET lock_timeout = '1s';
+b2: UPDATE staging.hemogram SET hematocrit = '42' WHERE hemogram_id = 1;
+b3: SELECT hematocrit FROM staging.hemogram WHERE hemogram_id = 1 FOR UPDATE NOWAIT;
+a3: COMMIT;
+-- @permutation a1 a2 b1 b2 b3 a3

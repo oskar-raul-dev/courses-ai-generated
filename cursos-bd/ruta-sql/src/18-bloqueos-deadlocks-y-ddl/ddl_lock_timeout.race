@@ -1,0 +1,13 @@
+-- Fase 18 · el mismo ALTER con lock_timeout: se rinde rápido y deja pasar a los demás.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/ddl_lock_timeout.race
+-- @engine postgres
+-- @setup ALTER TABLE staging.hemogram DROP COLUMN IF EXISTS reviewed_by
+-- @teardown ALTER TABLE staging.hemogram DROP COLUMN IF EXISTS reviewed_by
+a1: BEGIN;
+a2: SELECT count(*) FROM staging.hemogram;
+b1: SET lock_timeout = '1s';
+b2: ALTER TABLE staging.hemogram ADD COLUMN reviewed_by text;
+c1: SELECT hematocrit FROM staging.hemogram WHERE hemogram_id = 1;
+b3: SELECT 'b se rindió';
+a3: COMMIT;
+-- @permutation a1 a2 b1 b2 c1 b3 a3

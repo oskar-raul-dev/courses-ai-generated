@@ -1,0 +1,2 @@
+{ "extends": "./tsconfig.json", "compilerOptions": { "experimentalDecorators": true, "types": ["jasmine"] },
+  "include": ["salidas/t3/fix21/**/*.ts"] }

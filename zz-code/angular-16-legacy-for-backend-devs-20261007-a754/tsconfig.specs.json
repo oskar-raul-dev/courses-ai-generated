@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": ["jasmine"] },
+  "include": ["salidas/src-con-specs/**/*.ts"]
+}

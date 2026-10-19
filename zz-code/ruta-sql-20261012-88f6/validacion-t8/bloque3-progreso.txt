@@ -1,0 +1,47 @@
+== F15
+== race 15-aislamiento-comparado/write_skew.race --isolation read-committed
+== race 15-aislamiento-comparado/write_skew_mysql.race --isolation read-committed
+== race 15-aislamiento-comparado/write_skew.race --isolation repeatable-read
+== race 15-aislamiento-comparado/write_skew_mysql.race --isolation repeatable-read
+== race 15-aislamiento-comparado/write_skew.race --isolation serializable
+== race 15-aislamiento-comparado/write_skew_mysql.race --isolation serializable
+== race 15-aislamiento-comparado/lost_update.race --isolation repeatable-read
+== race 15-aislamiento-comparado/lost_update_mysql.race --isolation repeatable-read
+== race 15-aislamiento-comparado/current_read_mysql.race
+== race 15-aislamiento-comparado/locking_check.race --isolation repeatable-read
+== race 15-aislamiento-comparado/locking_check_mysql.race
+== race 15-aislamiento-comparado/read_only.race --isolation serializable
+== py 15-aislamiento-comparado/matrix.py
+== py 15-aislamiento-comparado/technicians.py
+== F16
+== py 16-el-folio-sin-huecos/races.py dmax
+== py 16-el-folio-sin-huecos/races.py ultimo_numero
+== py 16-el-folio-sin-huecos/races.py sequence
+== py 16-el-folio-sin-huecos/races.py counter
+== py 16-el-folio-sin-huecos/races.py lost_response
+== py 16-el-folio-sin-huecos/races.py reconcile
+== race 16-el-folio-sin-huecos/counter_mysql.race
+== race 16-el-folio-sin-huecos/get_lock_mysql.race
+== py 16-el-folio-sin-huecos/cajas.py --design counter --invoices 10000
+== py 16-el-folio-sin-huecos/cajas.py --design counter --invoices 1500 --hold 0.010
+== py 16-el-folio-sin-huecos/cajas.py --design at_authorization --invoices 1500 --hold 0.010
+== F17
+== py 17-mvcc-y-su-factura/mvcc.py counter
+== py 17-mvcc-y-su-factura/mvcc.py results
+== py 17-mvcc-y-su-factura/mvcc.py para_llamar
+== py 17-mvcc-y-su-factura/mysql_history.py
+== F18
+== race 18-bloqueos-deadlocks-y-ddl/lunch_form.race
+== race 18-bloqueos-deadlocks-y-ddl/lunch_form_timeout.race
+== race 18-bloqueos-deadlocks-y-ddl/optimistic.race
+== race 18-bloqueos-deadlocks-y-ddl/deadlock.race
+== race 18-bloqueos-deadlocks-y-ddl/ddl_queue.race
+== race 18-bloqueos-deadlocks-y-ddl/ddl_lock_timeout.race
+== race 18-bloqueos-deadlocks-y-ddl/deadlock_mysql.race
+== race 18-bloqueos-deadlocks-y-ddl/lock_wait_timeout_mysql.race
+== race 18-bloqueos-deadlocks-y-ddl/ddl_queue_mysql.race
+== race 18-bloqueos-deadlocks-y-ddl/ddl_lock_timeout_mysql.race
+== py 18-bloqueos-deadlocks-y-ddl/ddl_rewrite.py
+== py 18-bloqueos-deadlocks-y-ddl/ten_am.py
+== py 18-bloqueos-deadlocks-y-ddl/boss/afternoon.py
+== listo

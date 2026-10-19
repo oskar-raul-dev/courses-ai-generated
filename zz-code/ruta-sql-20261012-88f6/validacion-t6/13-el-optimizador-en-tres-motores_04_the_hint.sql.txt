@@ -1,0 +1,39 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Table	Op	Msg_type	Msg_text
+staging.protocol_hint	analyze	status	OK
+caso
+con el hint
+EXPLAIN
+-> Limit: 50 row(s)  (cost=8.25 rows=5) (actual time=0.368..0.655 rows=50 loops=1)
+    -> Filter: (staging.protocol_hint.Sede = 'V')  (cost=8.25 rows=5) (actual time=0.316..0.599 rows=50 loops=1)
+        -> Index scan on protocol_hint using protocol_hint_fecha_idx (reverse)  (cost=8.25 rows=50) (actual time=0.243..0.514 rows=367 loops=1)
+
+EXPLAIN
+-> Limit: 50 row(s)  (cost=8.25 rows=5) (actual time=610..610 rows=50 loops=1)
+    -> Filter: (staging.protocol_hint.Sede = 'E')  (cost=8.25 rows=5) (actual time=610..610 rows=50 loops=1)
+        -> Index scan on protocol_hint using protocol_hint_fecha_idx (reverse)  (cost=8.25 rows=50) (actual time=0.0353..579 rows=691136 loops=1)
+
+caso
+sin el hint
+EXPLAIN
+-> Limit: 50 row(s)  (cost=33692 rows=50) (actual time=1.22..1.23 rows=50 loops=1)
+    -> Index lookup on protocol_hint using protocol_hint_sede_fecha_idx (Sede = 'V') (reverse)  (cost=33692 rows=290536) (actual time=1.21..1.22 rows=50 loops=1)
+
+EXPLAIN
+-> Limit: 50 row(s)  (cost=19407 rows=50) (actual time=1.13..1.13 rows=50 loops=1)
+    -> Index lookup on protocol_hint using protocol_hint_sede_fecha_idx (Sede = 'E') (reverse)  (cost=19407 rows=147692) (actual time=1.13..1.13 rows=50 loops=1)
+
+caso
+el mismo hint, en la sintaxis de los hints del optimizador
+EXPLAIN
+-> Limit: 50 row(s)  (cost=8.25 rows=5) (actual time=578..579 rows=50 loops=1)
+    -> Filter: (p.Sede = 'E')  (cost=8.25 rows=5) (actual time=578..579 rows=50 loops=1)
+        -> Index scan on p using protocol_hint_fecha_idx (reverse)  (cost=8.25 rows=50) (actual time=0.0349..548 rows=691136 loops=1)
+
+caso
+un hint que nombra un índice que ya no existe
+IdProtocolo
+10542818
+Level	Code	Message
+Warning	3128	Unresolved name `p`@`select#1` `protocol_hint_gone_idx` for INDEX hint
+ERROR 1176 (42000) at line 36: Key 'protocol_hint_fecha_idx' doesn't exist in table 'protocol_hint'

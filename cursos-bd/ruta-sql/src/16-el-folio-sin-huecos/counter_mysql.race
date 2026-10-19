@@ -1,0 +1,18 @@
+-- Fase 16 · la fila contador en MySQL: sin UPDATE … RETURNING, el número vuelve por LAST_INSERT_ID(expr),
+-- que guarda el valor para esta conexión y nadie más.
+-- uv run lab race -f 16-el-folio-sin-huecos/counter_mysql.race
+-- @engine mysql
+-- @setup UPDATE staging.invoice_counter SET last_number = 247581 WHERE point_of_sale = 1 AND kind = 'B'
+-- @setup TRUNCATE staging.invoice
+-- @check SELECT last_number FROM staging.invoice_counter WHERE point_of_sale = 1 AND kind = 'B'
+-- @check SELECT invoice_id, number, till FROM staging.invoice ORDER BY invoice_id
+a1: START TRANSACTION;
+a2: UPDATE staging.invoice_counter SET last_number = LAST_INSERT_ID(last_number + 1) WHERE point_of_sale = 1 AND kind = 'B';
+b1: START TRANSACTION;
+b2: UPDATE staging.invoice_counter SET last_number = LAST_INSERT_ID(last_number + 1) WHERE point_of_sale = 1 AND kind = 'B';
+a3: SELECT LAST_INSERT_ID();
+a4: INSERT INTO staging.invoice (point_of_sale, kind, number, till) VALUES (1, 'B', LAST_INSERT_ID(), 'a');
+a5: ROLLBACK;
+b3: SELECT LAST_INSERT_ID();
+b4: INSERT INTO staging.invoice (point_of_sale, kind, number, till) VALUES (1, 'B', LAST_INSERT_ID(), 'b');
+b5: COMMIT;

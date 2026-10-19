@@ -1,0 +1,119 @@
+Pager usage is off.
+== tamaños
+ archivos |  pdf   | ordenes 
+----------+--------+---------
+ 484 GB   | 106 GB | 378 GB
+(1 row)
+
+ legacy  
+---------
+ 2058 MB
+(1 row)
+
+== orden de columnas
+ como_esta | reordenada | align_bad | align_good 
+-----------+------------+-----------+------------
+     87835 |      87835 |     12415 |       9768
+(1 row)
+
+== pdf
+ bytea  | objeto_grande | ruta_y_hash 
+--------+---------------+-------------
+ 189 MB | 482 MB        | 320 kB
+(1 row)
+
+                        QUERY PLAN                         
+-----------------------------------------------------------
+ Seq Scan on report_pdf_bytea (actual rows=531.00 loops=1)
+   Filter: (created_on = '2026-10-02'::date)
+   Rows Removed by Filter: 1469
+   Buffers: shared read=15
+ Planning:
+   Buffers: shared hit=13 read=2
+ Planning Time: 0.673 ms
+ Execution Time: 1.717 ms
+(8 rows)
+
+                           QUERY PLAN                            
+-----------------------------------------------------------------
+ Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=1409 read=6431
+   ->  Seq Scan on report_pdf_bytea (actual rows=531.00 loops=1)
+         Filter: (created_on = '2026-10-02'::date)
+         Rows Removed by Filter: 1469
+         Buffers: shared hit=15
+ Planning:
+   Buffers: shared hit=6
+ Planning Time: 0.028 ms
+ Execution Time: 131.971 ms
+(10 rows)
+
+== pruning
+                                                                                     QUERY PLAN                                                                                     
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared hit=42 read=1360
+   ->  Gather (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=42 read=1360
+         ->  Partial Aggregate (actual rows=1.00 loops=3)
+               Buffers: shared hit=42 read=1360
+               ->  Parallel Bitmap Heap Scan on result_as_is (actual rows=3223.67 loops=3)
+                     Recheck Cond: ((recorded_at >= '2024-10-01 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-11-01 00:00:00'::timestamp without time zone))
+                     Filter: ((analyte_code)::text = 'GLU'::text)
+                     Rows Removed by Filter: 50906
+                     Heap Blocks: exact=1179
+                     Buffers: shared hit=42 read=1360
+                     Worker 0:  Heap Blocks: exact=7
+                     Worker 1:  Heap Blocks: exact=7
+                     ->  Bitmap Index Scan on result_as_is_recorded_at_idx (actual rows=162388.00 loops=1)
+                           Index Cond: ((recorded_at >= '2024-10-01 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-11-01 00:00:00'::timestamp without time zone))
+                           Index Searches: 1
+                           Buffers: shared read=167
+ Planning:
+   Buffers: shared hit=51 read=3 dirtied=1
+ Planning Time: 1.236 ms
+ Execution Time: 140.983 ms
+(24 rows)
+
+                                                                                                    QUERY PLAN                                                                                                     
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate (actual rows=1.00 loops=1)
+   Buffers: shared read=1173
+   ->  Gather (actual rows=2.00 loops=1)
+         Workers Planned: 1
+         Workers Launched: 1
+         Buffers: shared read=1173
+         ->  Partial Aggregate (actual rows=1.00 loops=2)
+               Buffers: shared read=1173
+               ->  Parallel Seq Scan on result_2024_10 result_by_month (actual rows=4835.50 loops=2)
+                     Filter: ((recorded_at >= '2024-10-01 00:00:00'::timestamp without time zone) AND (recorded_at < '2024-11-01 00:00:00'::timestamp without time zone) AND ((analyte_code)::text = 'GLU'::text))
+                     Rows Removed by Filter: 76358
+                     Buffers: shared read=1173
+ Planning:
+   Buffers: shared hit=748 read=13
+ Planning Time: 5.665 ms
+ Execution Time: 28.725 ms
+(16 rows)
+
+== sacar un mes, dentro de transacciones que se deshacen
+CHECKPOINT
+BEGIN
+DELETE 174933
+ wal_delete 
+------------
+ 11 MB
+(1 row)
+
+ROLLBACK
+CHECKPOINT
+BEGIN
+ALTER TABLE
+DROP TABLE
+ wal_detach 
+------------
+ 0 bytes
+(1 row)
+
+ROLLBACK

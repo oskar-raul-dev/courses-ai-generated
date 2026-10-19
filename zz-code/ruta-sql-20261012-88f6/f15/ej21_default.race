@@ -1,0 +1,9 @@
+-- Ejercicio 21 · el nivel por defecto de la sesión, sin decirlo en BEGIN.
+-- @engine postgres
+a1: SET default_transaction_isolation = 'serializable';
+a2: BEGIN;
+a3: SHOW transaction_isolation;
+a4: COMMIT;
+b1: BEGIN;
+b2: SHOW transaction_isolation;
+b3: COMMIT;

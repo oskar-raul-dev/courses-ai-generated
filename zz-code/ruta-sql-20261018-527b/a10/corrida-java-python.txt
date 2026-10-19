@@ -1,0 +1,85 @@
+jars:       11
+created out/alameda_1998.accdb with 120 rows in table pacientes
+exported 120 rows to out/pacientes.csv
+120 pacientes, 59 separados por el parser, 17 sospechosos
+
+  id   5  DNI 12156374 no cuadra con nacer en 2001; recién nacido con el DNI de la madre
+  id   6  nombre con datos adentro: 'VARGAS MAMANI JUANA PASAP BOL'
+  id  18  dni no es un DNI: ''; nombre con datos adentro: 'GONZALEZ MIRTA DEAN FUNES 3427'
+  id  29  dni no es un DNI: ''; nombre con datos adentro: 'QUIROGA MATIAS 25 DE MAYO 258'
+  id  43  dni no es un DNI: 'NO TRAE'
+  id  55  dni no es un DNI: '15519835 (VER)'
+  id  58  dni no es un DNI: ''; nombre con datos adentro: 'GONZALEZ ROSA AV VELEZ SARSFIELD 2950'
+  id  67  dni no es un DNI: 'NO TRAE'
+  id  72  recién nacido con el DNI de la madre
+  id  81  nació en el futuro: 12/11/2027
+  id  84  DNI 9337949 no cuadra con nacer en 2023
+  id  88  dni no es un DNI: ''; nombre con datos adentro: 'RODRIGUEZ MARIA ESTHER BV SAN JUAN 1641'
+  id  99  dni no es un DNI: 'NO TRAE'
+  id 104  dni no es un DNI: '36633751 (VER)'
+  id 108  dni no es un DNI: ''; nombre con datos adentro: 'BUSTOS MATIAS BV SAN JUAN 1351'
+  id 112  nombre con datos adentro: 'VARGAS MAMANI JUANA PASAP BOL'
+  id 117  nombre con datos adentro: 'VARGAS MAMANI JUANA PASAP BOL'
+updated 59 rows in out/alameda_1998_parseado.accdb
+
+== 1. Lo que ve la recepción: pacientes sin DNI cargado
+
+id | nombre                                                       | dni  | fecha_nac 
+-------------------------------------------------------------------------------------
+5  | RN CASTELLANI NORMA DNI 12156374 22/05/01                    | NULL | NULL      
+6  | VARGAS MAMANI JUANA PASAP BOL 4873781 21/12/88 RUTA 20 KM 11 | NULL | NULL      
+9  | AGUIRRE DANIEL DNI 32154665 24/05/80 AV VELEZ SARSFIELD 3317 | NULL | NULL      
+10 | QUIROGA SILVIA DNI 31109679 17/06/77 DEAN FUNES 2340         | NULL | NULL      
+11 | BERTOLOTTI NORMA DNI 34856828 25/07/1987 RUTA 20 KM 26       | NULL | NULL      
+12 | MARCHETTI FLORENCIA DNI 22702005                             | NULL | 07/07/1956
+13 | MOYANO ROSA DNI 33294351                                     | NULL | 03/11/1983
+14 | BIANCHI JUAN CARLOS DNI 35956501 TEL 4262181                 | NULL | 22/10/1989
+(64 filas, mostrando 8)
+
+== 2. El parser en SQL puro: solo sabe buscar 'DNI ' y cortar 8 caracteres
+
+id | nombre                                                       | dni_con_sql
+-------------------------------------------------------------------------------
+5  | RN CASTELLANI NORMA DNI 12156374 22/05/01                    | 12156374   
+6  | VARGAS MAMANI JUANA PASAP BOL 4873781 21/12/88 RUTA 20 KM 11 | NULL       
+9  | AGUIRRE DANIEL DNI 32154665 24/05/80 AV VELEZ SARSFIELD 3317 | 32154665   
+10 | QUIROGA SILVIA DNI 31109679 17/06/77 DEAN FUNES 2340         | 31109679   
+11 | BERTOLOTTI NORMA DNI 34856828 25/07/1987 RUTA 20 KM 26       | 34856828   
+12 | MARCHETTI FLORENCIA DNI 22702005                             | 22702005   
+13 | MOYANO ROSA DNI 33294351                                     | 33294351   
+14 | BIANCHI JUAN CARLOS DNI 35956501 TEL 4262181                 | 35956501   
+(64 filas, mostrando 8)
+
+== 3. El parser de Rubén aplicado a lo que devuelve el SQL
+
+id | nombre                                                       | dni_con_parser
+----------------------------------------------------------------------------------
+5  | RN CASTELLANI NORMA DNI 12156374 22/05/01                    | 12156374      
+6  | VARGAS MAMANI JUANA PASAP BOL 4873781 21/12/88 RUTA 20 KM 11 | 4873781       
+9  | AGUIRRE DANIEL DNI 32154665 24/05/80 AV VELEZ SARSFIELD 3317 | 32154665      
+10 | QUIROGA SILVIA DNI 31109679 17/06/77 DEAN FUNES 2340         | 31109679      
+11 | BERTOLOTTI NORMA DNI 34856828 25/07/1987 RUTA 20 KM 26       | 34856828      
+12 | MARCHETTI FLORENCIA DNI 22702005                             | 22702005      
+13 | MOYANO ROSA DNI 33294351                                     | 33294351      
+14 | BIANCHI JUAN CARLOS DNI 35956501 TEL 4262181                 | 35956501      
+(64 filas, mostrando 8)
+
+== 4. Lo que el parser no ve: aciertos que no son un DNI de esa persona
+
+id  | nombre                                                       | dni_con_parser | problema             
+-----------------------------------------------------------------------------------------------------------
+5   | RN CASTELLANI NORMA DNI 12156374 22/05/01                    | 12156374       | es el DNI de la madre
+6   | VARGAS MAMANI JUANA PASAP BOL 4873781 21/12/88 RUTA 20 KM 11 | 4873781        | es un pasaporte      
+18  | GONZALEZ MIRTA DEAN FUNES 3427                               |                | no encontró nada     
+29  | QUIROGA MATIAS 25 DE MAYO 258                                |                | no encontró nada     
+58  | GONZALEZ ROSA AV VELEZ SARSFIELD 2950                        |                | no encontró nada     
+72  | RN AGUIRRE JORGE DNI 28537182 17/06/00                       | 28537182       | es el DNI de la madre
+88  | RODRIGUEZ MARIA ESTHER BV SAN JUAN 1641                      |                | no encontró nada     
+108 | BUSTOS MATIAS BV SAN JUAN 1351                               |                | no encontró nada     
+112 | VARGAS MAMANI JUANA PASAP BOL 4757291 21/10/88 RUTA 20 KM 22 | 4757291        | es un pasaporte      
+117 | VARGAS MAMANI JUANA PASAP BOL 4500154 3/09/88 BV SAN JUAN... | 4500154        | es un pasaporte      
+(10 filas)
+c1
+--
+64
+(1 filas)

@@ -1,0 +1,12 @@
+order_bigint: 1327622 filas en 25 s
+order_uuid4: 1327622 filas en 35 s
+order_uuid7: 1327622 filas en 23 s
+order_bigint  PRIMARY                         3109 páginas    48.6 MB
+order_bigint  order_bigint_patient_id_idx     2405 páginas    37.6 MB
+order_note    PRIMARY                            1 páginas     0.0 MB
+order_note_text PRIMARY                            1 páginas     0.0 MB
+order_note_text order_note_text_note_idx           1 páginas     0.0 MB
+order_uuid4   PRIMARY                         6129 páginas    95.8 MB
+order_uuid4   order_uuid4_patient_id_idx      3497 páginas    54.6 MB
+order_uuid7   PRIMARY                         3816 páginas    59.6 MB
+order_uuid7   order_uuid7_patient_id_idx      3497 páginas    54.6 MB

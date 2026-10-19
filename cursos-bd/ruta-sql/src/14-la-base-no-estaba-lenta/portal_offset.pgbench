@@ -1,0 +1,3 @@
+-- una página al azar del portal, con OFFSET (pgbench)
+\set page random(1, 66381)
+SELECT * FROM staging.portal_order ORDER BY ordered_on DESC, lab_order_id DESC OFFSET 20 * (:page - 1) LIMIT 20;

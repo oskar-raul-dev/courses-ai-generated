@@ -1,0 +1,134 @@
+NOTICE:  table "result_2020" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 166374
+CREATE INDEX
+CREATE INDEX
+ANALYZE
+INSERT 0 1220393
+== con las estadísticas de febrero
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ GroupAggregate  (cost=17.34..17.36 rows=1 width=18)
+   Group Key: o.site_code
+   ->  Sort  (cost=17.34..17.34 rows=1 width=120)
+         Sort Key: o.site_code
+         ->  Nested Loop  (cost=1.27..17.33 rows=1 width=120)
+               ->  Nested Loop  (cost=0.85..16.89 rows=1 width=124)
+                     ->  Index Scan using result_2020_analyte_recorded_idx on result_2020 r  (cost=0.43..8.45 rows=1 width=122)
+                           Index Cond: ((analyte_code)::text = 'COVPCR'::text)
+                     ->  Index Scan using lab_order_pkey on lab_order o  (cost=0.43..8.45 rows=1 width=10)
+                           Index Cond: (lab_order_id = r.lab_order_id)
+               ->  Index Only Scan using patient_pkey on patient p  (cost=0.42..0.44 rows=1 width=4)
+                     Index Cond: (patient_id = o.patient_id)
+(12 rows)
+
+Timing is on.
+Time: 548.453 ms
+Time: 259.787 ms
+Time: 211.689 ms
+Time: 219.534 ms
+Time: 293.439 ms
+Timing is off.
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=26.19..26.20 rows=1 width=8)
+   ->  Sort  (cost=26.18..26.19 rows=1 width=4)
+         Sort Key: oa.patient_id
+         ->  Nested Loop  (cost=1.71..26.17 rows=1 width=4)
+               Join Filter: (ob.lab_order_id = b.lab_order_id)
+               ->  Nested Loop  (cost=1.28..25.35 rows=1 width=8)
+                     Join Filter: ((b.recorded_at > a.recorded_at) AND (b.recorded_at < (a.recorded_at + '14 days'::interval)))
+                     ->  Nested Loop  (cost=0.85..16.89 rows=1 width=12)
+                           ->  Index Scan using result_2020_analyte_recorded_idx on result_2020 a  (cost=0.43..8.45 rows=1 width=12)
+                                 Index Cond: ((analyte_code)::text = 'COVPCR'::text)
+                           ->  Index Scan using lab_order_pkey on lab_order oa  (cost=0.43..8.45 rows=1 width=8)
+                                 Index Cond: (lab_order_id = a.lab_order_id)
+                     ->  Index Scan using result_2020_analyte_recorded_idx on result_2020 b  (cost=0.43..8.45 rows=1 width=12)
+                           Index Cond: ((analyte_code)::text = 'COVPCR'::text)
+               ->  Index Scan using lab_order_patient_id_idx on lab_order ob  (cost=0.43..0.67 rows=12 width=8)
+                     Index Cond: (patient_id = oa.patient_id)
+(16 rows)
+
+SET
+Timing is on.
+ERROR:  canceling statement due to statement timeout
+Time: 300003.988 ms (05:00.004)
+Timing is off.
+RESET
+ANALYZE
+== después del ANALYZE
+                                                                   QUERY PLAN                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=41163.21..41165.01 rows=6 width=18)
+   Group Key: o.site_code
+   ->  Gather Merge  (cost=41163.21..41164.84 rows=14 width=18)
+         Workers Planned: 2
+         ->  Sort  (cost=40163.19..40163.20 rows=6 width=18)
+               Sort Key: o.site_code
+               ->  Partial HashAggregate  (cost=40163.05..40163.11 rows=6 width=18)
+                     Group Key: o.site_code
+                     ->  Parallel Hash Join  (cost=19765.43..39776.49 rows=38656 width=15)
+                           Hash Cond: (o.patient_id = p.patient_id)
+                           ->  Parallel Hash Join  (cost=14146.84..34056.43 rows=38656 width=19)
+                                 Hash Cond: (o.lab_order_id = r.lab_order_id)
+                                 ->  Parallel Seq Scan on lab_order o  (cost=0.00..14216.76 rows=553176 width=10)
+                                 ->  Parallel Hash  (cost=13663.64..13663.64 rows=38656 width=17)
+                                       ->  Parallel Bitmap Heap Scan on result_2020 r  (cost=3063.43..13663.64 rows=38656 width=17)
+                                             Recheck Cond: ((analyte_code)::text = 'COVPCR'::text)
+                                             ->  Bitmap Index Scan on result_2020_analyte_recorded_idx  (cost=0.00..3040.24 rows=92775 width=0)
+                                                   Index Cond: ((analyte_code)::text = 'COVPCR'::text)
+                           ->  Parallel Hash  (cost=3836.04..3836.04 rows=142604 width=4)
+                                 ->  Parallel Seq Scan on patient p  (cost=0.00..3836.04 rows=142604 width=4)
+(20 rows)
+
+Timing is on.
+Time: 142.701 ms
+Time: 114.387 ms
+Time: 115.351 ms
+Time: 110.140 ms
+Time: 100.500 ms
+Timing is off.
+                                                                   QUERY PLAN                                                                   
+------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=71661.88..71661.89 rows=1 width=8)
+   ->  Gather Merge  (cost=70627.71..71640.15 rows=8693 width=4)
+         Workers Planned: 2
+         ->  Sort  (cost=69627.68..69636.74 rows=3622 width=4)
+               Sort Key: oa.patient_id
+               ->  Parallel Hash Join  (cost=48686.46..69413.58 rows=3622 width=4)
+                     Hash Cond: (oa.patient_id = ob.patient_id)
+                     Join Filter: ((b.recorded_at > a.recorded_at) AND (b.recorded_at < (a.recorded_at + '14 days'::interval)))
+                     ->  Parallel Hash Join  (cost=14146.84..34056.43 rows=38656 width=12)
+                           Hash Cond: (oa.lab_order_id = a.lab_order_id)
+                           ->  Parallel Seq Scan on lab_order oa  (cost=0.00..14216.76 rows=553176 width=8)
+                           ->  Parallel Hash  (cost=13663.64..13663.64 rows=38656 width=12)
+                                 ->  Parallel Bitmap Heap Scan on result_2020 a  (cost=3063.43..13663.64 rows=38656 width=12)
+                                       Recheck Cond: ((analyte_code)::text = 'COVPCR'::text)
+                                       ->  Bitmap Index Scan on result_2020_analyte_recorded_idx  (cost=0.00..3040.24 rows=92775 width=0)
+                                             Index Cond: ((analyte_code)::text = 'COVPCR'::text)
+                     ->  Parallel Hash  (cost=34056.43..34056.43 rows=38656 width=12)
+                           ->  Parallel Hash Join  (cost=14146.84..34056.43 rows=38656 width=12)
+                                 Hash Cond: (ob.lab_order_id = b.lab_order_id)
+                                 ->  Parallel Seq Scan on lab_order ob  (cost=0.00..14216.76 rows=553176 width=8)
+                                 ->  Parallel Hash  (cost=13663.64..13663.64 rows=38656 width=12)
+                                       ->  Parallel Bitmap Heap Scan on result_2020 b  (cost=3063.43..13663.64 rows=38656 width=12)
+                                             Recheck Cond: ((analyte_code)::text = 'COVPCR'::text)
+                                             ->  Bitmap Index Scan on result_2020_analyte_recorded_idx  (cost=0.00..3040.24 rows=92775 width=0)
+                                                   Index Cond: ((analyte_code)::text = 'COVPCR'::text)
+(25 rows)
+
+Timing is on.
+ count 
+-------
+  2494
+(1 row)
+
+Time: 148.648 ms
+ count 
+-------
+  2494
+(1 row)
+
+Time: 137.572 ms
+Timing is off.

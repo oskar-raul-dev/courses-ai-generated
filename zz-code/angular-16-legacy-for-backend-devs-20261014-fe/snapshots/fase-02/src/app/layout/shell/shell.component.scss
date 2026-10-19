@@ -1,0 +1,21 @@
+/* Estilo mínimo del shell: la lección 01 no lo da. Sólo lo que la pantalla necesita. */
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+mat-sidenav-content {
+  padding: 16px;
+}
+
+.shell-spacer {
+  flex: 1 1 auto;
+}
+
+.shell-environment {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.active-link {
+  font-weight: 500;
+}

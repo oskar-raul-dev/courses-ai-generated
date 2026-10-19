@@ -1,0 +1,48 @@
+@use "./tokens" as tokens;
+@use "./functions" as fn;
+
+// --- 1) Filete de color arriba de una card, según estado de la rueda ---
+// El patrón visual "card con borde superior de color" se repite en el
+// listado de ruedas, el detalle y el dashboard. Un mixin lo centraliza.
+@mixin wheel-accent($status) {
+  border-top: tokens.$border-accent solid fn.status-color($status);
+  border-radius: tokens.$radius;
+}
+
+// --- 2) Celda de segmento según su stock (disponible/limitado/agotado) ---
+// La tabla de segmentos pinta una celda por segmento y por estado. Este es
+// EL mixin más usado de la consola en el listado de segmentos.
+@mixin segment-state($status) {
+  font-family: tokens.$font-mono;   // pesos alineados
+  background: fn.status-color($status);
+  color: #fff;
+  @if $status == "available" {
+    cursor: pointer;                // solo lo disponible es clickeable
+  } @else {
+    cursor: not-allowed;
+    opacity: 0.85;
+  }
+}
+
+// --- 3) Badge de estado de envío o de rueda (texto + color de fondo) ---
+// El mismo badge sirve al estado de un envío (queued, sent…) y al de una rueda.
+@mixin status-badge($status) {
+  display: inline-block;
+  padding: (tokens.$spacing * 0.5) tokens.$spacing;
+  border-radius: tokens.$radius;
+  background: fn.status-color($status);
+  color: #fff;
+  font-size: 0.85 * tokens.$font-base;
+}
+
+// --- 4) Responsive: helper de breakpoint sobre los de Bootstrap 4 ---
+// BS4 define sus breakpoints (sm 576, md 768, lg 992, xl 1200). En vez de
+// hardcodear píxeles, exponemos un mixin legible. Valores alineados a BS4.
+@mixin above($bp) {
+  $breakpoints: ("sm": 576px, "md": 768px, "lg": 992px, "xl": 1200px);
+  @if map-has-key($breakpoints, $bp) {
+    @media (min-width: map-get($breakpoints, $bp)) { @content; }
+  } @else {
+    @warn "above: breakpoint desconocido '#{$bp}'";
+  }
+}

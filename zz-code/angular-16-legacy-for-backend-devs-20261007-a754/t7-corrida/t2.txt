@@ -1,0 +1,27 @@
+src/app/core/domain/asset-rules.ts  ←  09-hallazgos-severidad.md:531
+src/app/core/domain/certificate-status.ts  ←  10-certificados-vigencia.md:299
+src/app/core/domain/certificate-validity.ts  ←  10-certificados-vigencia.md:201
+src/app/core/domain/criterion-label.ts  ←  08-formulario-dinamico.md:898
+src/app/core/domain/dashboard-metrics.ts  ←  11-dashboard-alertas.md:263
+src/app/core/domain/derive-all-findings.ts  ←  11-dashboard-alertas.md:537
+src/app/core/domain/finding-severity.ts  ←  09-hallazgos-severidad.md:114
+src/app/core/domain/inspection-findings.ts  ←  09-hallazgos-severidad.md:224
+src/app/core/domain/inspection-form.ts  ←  08-formulario-dinamico.md:242
+src/app/core/domain/inspection-progress.ts  ←  08-formulario-dinamico.md:380
+src/app/core/domain/inspection-rules.ts  ←  09-hallazgos-severidad.md:571
+src/app/core/domain/resolve-template-version.ts  ←  07-plantillas-versionadas.md:278
+src/app/core/domain/template-family.ts  ←  07-plantillas-versionadas.md:221
+src/app/core/models/asset.model.ts  ←  03-mock-api-caos.md:610
+src/app/core/models/auth.model.ts  ←  02-autenticacion.md:217
+src/app/core/models/certificate.model.ts  ←  03-mock-api-caos.md:710
+src/app/core/models/checklist-template.model.ts  ←  03-mock-api-caos.md:625
+src/app/core/models/client.model.ts  ←  03-mock-api-caos.md:600
+src/app/core/models/finding.model.ts  ←  03-mock-api-caos.md:695
+src/app/core/models/inspection.model.ts  ←  03-mock-api-caos.md:658
+src/app/core/pdf/certificate-document.ts  ←  10-certificados-vigencia.md:887
+src/app/core/time/business-day.ts  ←  07-plantillas-versionadas.md:116 + 10-certificados-vigencia.md:108
+22 archivos en /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/src-extraido
+tsc tocados: OK
+tsc core completo: con errores (ver salidas/tsc-core-completo.txt)
+línea base: salidas/linea-base.json
+bash correr-t2.sh  0.09s user 0.08s system 2% cpu 5.699 total

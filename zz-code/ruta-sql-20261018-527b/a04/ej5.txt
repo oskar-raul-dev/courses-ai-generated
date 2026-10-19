@@ -1,0 +1,7 @@
+SELECT 1000
+   WAL: records=200 bytes=15995
+   WAL: records=174 fpi=1 bytes=22754
+         WAL: records=1 bytes=254
+   WAL: records=102 bytes=10161
+         WAL: records=2 bytes=366
+DROP TABLE

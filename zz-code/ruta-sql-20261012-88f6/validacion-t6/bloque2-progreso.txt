@@ -1,0 +1,33 @@
+== 09-el-tamano-de-las-cosas/01_file_listing.sql
+== 09-el-tamano-de-las-cosas/02_report_files.sql
+== 09-el-tamano-de-las-cosas/03_alignment.sql
+== 09-el-tamano-de-las-cosas/04_result_by_month.sql
+== 09-el-tamano-de-las-cosas/05_compression.sql
+== 10-identificadores/01_postgres_keys.sql
+== 10-identificadores/02_load_keys.sql
+== 10-identificadores/03_sequence_behind.sql
+== 10-identificadores/04_what_ids_leak.sql
+== 10-identificadores/mysql_keys.py
+== 11/01_write_cost
+== 11/02_hot_updates
+== 11/03_index_kinds
+== 11/04_free_text_index
+== 12-estadisticas-y-cardinalidad/01_text_and_correlation.sql
+== 12-estadisticas-y-cardinalidad/02_stale_statistics.sql
+== 12-estadisticas-y-cardinalidad/03_plan_cliff.sql
+== 12-estadisticas-y-cardinalidad/04_mysql_histograms.sql
+== 13-el-optimizador-en-tres-motores/01_generic_plans.sql
+== 13-el-optimizador-en-tres-motores/02_join_methods.sql
+== 13-el-optimizador-en-tres-motores/05_fixed_plan_over_time.sql
+== 13-el-optimizador-en-tres-motores/03_mysql_prepared.sql
+== 13-el-optimizador-en-tres-motores/04_the_hint.sql
+== 13-el-optimizador-en-tres-motores/psycopg_prepare.py
+== 14-la-base-no-estaba-lenta/01_autoindex_copy.sql
+== 14-la-base-no-estaba-lenta/front.py
+== 14-la-base-no-estaba-lenta/02_portal_paging.sql
+== 14-la-base-no-estaba-lenta/03_stat_statements.sql
+== pgbench offset
+== pgbench keyset
+== 14-la-base-no-estaba-lenta/boss/01_portal_2018.sql
+== listo
+./validacion-t6/bloque2.sh  0.60s user 0.53s system 0% cpu 12:52.94 total

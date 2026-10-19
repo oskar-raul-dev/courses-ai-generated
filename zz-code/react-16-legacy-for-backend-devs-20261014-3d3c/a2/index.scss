@@ -1,0 +1,19 @@
+// 1) Los @use van PRIMERO: Sass exige que todas las reglas @use estén
+//    antes de cualquier @import o regla de estilo.
+@use "./styles/mixins" as mx;
+@use "./styles/tokens" as tokens;
+
+// 2) Overrides de Bootstrap. Redefinen los !default de BS4, así que
+//    tienen que estar en scope global ANTES de importar Bootstrap.
+//    Por eso este archivo entra con @import (globalidad).
+@import "./styles/bootstrap-overrides";
+
+// 3) Bootstrap completo. Ahora lee nuestros overrides como si fueran suyos.
+//    💸 Deuda: importamos todo BS. Achicar a solo-lo-usado se ve en A1.
+@import "bootstrap/scss/bootstrap";
+
+// 4) Nuestros estilos propios, con el módulo de mixins.
+.wheel-card {
+  border-top: 4px solid tokens.$primary;
+  margin-bottom: tokens.$spacing * 2;
+}

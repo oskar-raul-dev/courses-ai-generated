@@ -1,0 +1,9 @@
+stateDiagram-v2
+    [*] --> draft
+    draft --> scheduled
+    scheduled --> live
+    live --> ended
+    ended --> reconciled
+    reconciled --> [*]
+    note right of live : los pesos no cambian
+    note right of ended : no se giran ni se envían premios

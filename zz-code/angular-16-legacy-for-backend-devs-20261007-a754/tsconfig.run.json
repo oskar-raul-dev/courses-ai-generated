@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "module": "commonjs",
+    "outDir": "salidas/js",
+    "rootDir": "."
+  },
+  "files": ["pruebas/linea-base.ts"]
+}

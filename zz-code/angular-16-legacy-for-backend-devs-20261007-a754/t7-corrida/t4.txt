@@ -1,0 +1,15 @@
+bloque «// src/app/core/api/api-error.ts» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t4/base/src/app/core/api/api-error.ts
+bloque «// src/app/features/clients/client-form/client-form.component.ts» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t4/base/src/app/features/clients/client-form/client-form.component.ts
+bloque «<!-- src/app/features/clients/client-form/client-form.component.html -» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t4/base/src/app/features/clients/client-form/client-form.component.html
+bloque «// src/app/features/clients/unique-tax-id.validator.ts» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t4/base/src/app/features/clients/unique-tax-id.validator.ts
+nuevo          src/app/features/clients/tax-id.validator.ts
+diff aplicado  src/app/features/clients/client-form/client-form.component.ts (2 trozos)
+diff aplicado  src/app/features/clients/client-form/client-form.component.html (2 trozos)
+spec escrito   src/app/features/clients/tax-id.validator.incidente-22.spec.ts
+base: validators = [Validators.required, Validators.pattern(/^\d{9,10}$/)]
+fix22: validators = [Validators.required, taxIdValidator]
+tsc base: OK
+tsc fix22: OK
+jasmine base: FALLA — 14 specs, 4 failures
+jasmine fix22: OK — 17 specs, 0 failures
+bash correr-t4.sh  0.31s user 0.25s system 4% cpu 12.439 total

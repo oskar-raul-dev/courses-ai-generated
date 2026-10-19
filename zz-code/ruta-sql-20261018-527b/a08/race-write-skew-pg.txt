@@ -1,0 +1,11 @@
+🏁 lab race · postgres · permutación a1 b1 a2 b2 a3 b3 a4 b4 · serializable
+ a1  BEGIN
+ b1  BEGIN
+ a2  1 fila  (11231555)
+ b2  1 fila  (11231555)
+ a3  INSERT 1
+ b3  INSERT 1
+ a4  COMMIT
+ b4  ✗ 40001 could not serialize access due to read/write dependencies among transactions
+resultado: a sin errores · b con error 40001 en b4
+comprobación: 1 fila  (1, 1)

@@ -1,0 +1,63 @@
+psql:01_write_cost.sql:5: NOTICE:  table "write_cost" does not exist, skipping
+psql:01_write_cost.sql:5: NOTICE:  table "write_source" does not exist, skipping
+DROP TABLE
+SELECT 200000
+CREATE TABLE
+CREATE TABLE
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+ALTER TABLE
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+CREATE INDEX
+TRUNCATE TABLE
+CHECKPOINT
+INSERT 0 200000
+INSERT 0 1
+ indexes |          index_added          |  wal   | bytes_per_row | added_per_row 
+---------+-------------------------------+--------+---------------+---------------
+       0 | (ninguno)                     | 28 MB  |         146.7 |              
+       1 | PRIMARY KEY (result_id)       | 31 MB  |         162.6 |          15.9
+       2 | (lab_order_id)                | 44 MB  |         233.2 |          70.6
+       3 | (analyte_code)                | 57 MB  |         298.8 |          65.6
+       4 | (recorded_at)                 | 70 MB  |         365.0 |          66.2
+       5 | (analyte_code, value_numeric) | 87 MB  |         454.3 |          89.3
+       6 | (value_numeric)               | 101 MB |         528.9 |          74.6
+       7 | (lab_order_id, analyte_code)  | 127 MB |         667.3 |         138.4
+       8 | (value_text)                  | 128 MB |         672.4 |           5.1
+(9 rows)
+

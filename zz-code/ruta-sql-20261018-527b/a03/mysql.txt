@@ -1,0 +1,25 @@
+## mysql robusto
+ERROR 1146 (42S02) at line 3: Table 'lab.no_existe' doesn't exist
+id
+1
+## mysql robusto envuelto en transacción
+ERROR 1146 (42S02) at line 4: Table 'lab.no_existe' doesn't exist
+id
+1
+## mysql -B
+IdPaciente	DNI
+1	19056268
+2	40.021.044
+3	25024554
+## mysql show tables
+Tables_in_legacy (Pro%)
+Protocolos
+## mysql exit con transacción abierta
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exit' at line 1
+filas
+0
+## mysql exit (stdin) con transacción abierta
+ERROR 1064 (42000) at line 4: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'exit' at line 1
+exit=0
+filas
+0

@@ -1,0 +1,23 @@
+-- Fase 22 · la fila que la marca de agua pierde, con el intercalado determinista de `lab race`.
+-- uv run lab race -f 22-la-exportacion-de-las-9-40/04_marca_de_agua.race
+--
+-- Un protocolo registrado a las 10:00 confirma tarde (la sesión a). Un protocolo registrado a las 10:05 confirma
+-- antes (la sesión b). El exportador (la sesión c) avanza la marca a las 10:05 mientras el primero sigue abierto.
+-- Cuando el primero confirma, su `recorded_at` está detrás de la marca, y la consulta incremental ya no lo ve.
+-- @engine postgres
+-- @setup TRUNCATE staging.f22_result, staging.f22_exported; DELETE FROM staging.f22_watermark WHERE name = 'exp'; INSERT INTO staging.f22_watermark VALUES ('exp', '2025-12-25 23:59:59')
+-- @check SELECT count(*) FROM staging.f22_result r WHERE NOT EXISTS (SELECT 1 FROM staging.f22_exported x WHERE x.result_id = r.result_id)
+a1: BEGIN;
+a2: INSERT INTO staging.f22_result VALUES (1, 1, 'GLU', 110, '2025-12-26 10:00:00');
+b1: BEGIN;
+b2: INSERT INTO staging.f22_result VALUES (2, 2, 'GLU', 96, '2025-12-26 10:05:00');
+b3: COMMIT;
+c1: BEGIN;
+c2: INSERT INTO staging.f22_exported SELECT result_id FROM staging.f22_result WHERE recorded_at > (SELECT mark FROM staging.f22_watermark WHERE name = 'exp');
+c3: UPDATE staging.f22_watermark SET mark = (SELECT max(recorded_at) FROM staging.f22_result) WHERE name = 'exp';
+c4: COMMIT;
+a3: COMMIT;
+c5: BEGIN;
+c6: INSERT INTO staging.f22_exported SELECT result_id FROM staging.f22_result WHERE recorded_at > (SELECT mark FROM staging.f22_watermark WHERE name = 'exp') ON CONFLICT DO NOTHING;
+c7: COMMIT;
+-- @permutation a1 a2 b1 b2 b3 c1 c2 c3 c4 a3 c5 c6 c7

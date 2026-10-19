@@ -1,0 +1,215 @@
+NOTICE:  table "order_site" does not exist, skipping
+DROP TABLE
+SELECT 1327622
+ALTER TABLE
+CREATE INDEX
+ANALYZE
+== 1. el día empieza en los centros chicos
+PREPARE
+                                                                            QUERY PLAN                                                                             
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=162202.44..162212.37 rows=33 width=11) (actual rows=32.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=4108 read=83845
+   ->  Gather Merge  (cost=162202.44..162211.64 rows=79 width=11) (actual rows=96.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=4108 read=83845
+         ->  Sort  (cost=161202.42..161202.50 rows=33 width=11) (actual rows=32.00 loops=3)
+               Sort Key: r.analyte_code
+               Sort Method: quicksort  Memory: 26kB
+               Buffers: shared hit=4108 read=83845
+               Worker 0:  Sort Method: quicksort  Memory: 26kB
+               Worker 1:  Sort Method: quicksort  Memory: 26kB
+               ->  Partial HashAggregate  (cost=161201.26..161201.59 rows=33 width=11) (actual rows=32.00 loops=3)
+                     Group Key: r.analyte_code
+                     Batches: 1  Memory Usage: 32kB
+                     Buffers: shared hit=4090 read=83845
+                     Worker 0:  Batches: 1  Memory Usage: 32kB
+                     Worker 1:  Batches: 1  Memory Usage: 32kB
+                     ->  Parallel Hash Join  (cost=9404.18..161006.60 rows=38931 width=3) (actual rows=36478.00 loops=3)
+                           Hash Cond: (r.lab_order_id = o.lab_order_id)
+                           Buffers: shared hit=4090 read=83845
+                           ->  Parallel Seq Scan on result r  (cost=0.00..138332.17 rows=5055317 width=7) (actual rows=4044101.00 loops=3)
+                                 Buffers: shared hit=3945 read=83834
+                           ->  Parallel Hash  (cost=9350.93..9350.93 rows=4260 width=4) (actual rows=3418.33 loops=3)
+                                 Buckets: 16384  Batches: 1  Memory Usage: 544kB
+                                 Buffers: shared hit=145 read=11
+                                 ->  Parallel Bitmap Heap Scan on order_site o  (cost=145.22..9350.93 rows=4260 width=4) (actual rows=10255.00 loops=1)
+                                       Recheck Cond: ((site_code = 'C'::bpchar) AND (ordered_on >= '2026-09-01'::date))
+                                       Heap Blocks: exact=144
+                                       Buffers: shared hit=145 read=11
+                                       ->  Bitmap Index Scan on order_site_site_ordered_idx  (cost=0.00..142.67 rows=10224 width=0) (actual rows=10255.00 loops=1)
+                                             Index Cond: ((site_code = 'C'::bpchar) AND (ordered_on >= '2026-09-01'::date))
+                                             Index Searches: 1
+                                             Buffers: shared hit=1 read=11
+ Planning:
+   Buffers: shared hit=32
+ Planning Time: 0.244 ms
+ JIT:
+   Functions: 60
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 393.879 ms
+(42 rows)
+
+ generic_plans | custom_plans 
+---------------+--------------
+             0 |            6
+(1 row)
+
+DEALLOCATE
+== 2. el día empieza en el central
+PREPARE
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=160366.79..160480.15 rows=33 width=11) (actual rows=32.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=9295 read=78650
+   ->  Gather Merge  (cost=160366.79..160479.42 rows=79 width=11) (actual rows=96.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=9295 read=78650
+         ->  Partial GroupAggregate  (cost=159366.76..159470.28 rows=33 width=11) (actual rows=32.00 loops=3)
+               Group Key: r.analyte_code
+               Buffers: shared hit=9295 read=78650
+               ->  Sort  (cost=159366.76..159401.16 rows=13758 width=3) (actual rows=9348.00 loops=3)
+                     Sort Key: r.analyte_code
+                     Sort Method: quicksort  Memory: 385kB
+                     Buffers: shared hit=9295 read=78650
+                     Worker 0:  Sort Method: quicksort  Memory: 193kB
+                     Worker 1:  Sort Method: quicksort  Memory: 385kB
+                     ->  Parallel Hash Join  (cost=6818.62..158421.04 rows=13758 width=3) (actual rows=9348.00 loops=3)
+                           Hash Cond: (r.lab_order_id = o.lab_order_id)
+                           Buffers: shared hit=9277 read=78650
+                           ->  Parallel Seq Scan on result r  (cost=0.00..138332.17 rows=5055317 width=7) (actual rows=4044101.00 loops=3)
+                                 Buffers: shared hit=9129 read=78650
+                           ->  Parallel Hash  (cost=6792.06..6792.06 rows=2125 width=4) (actual rows=875.33 loops=3)
+                                 Buckets: 4096  Batches: 1  Memory Usage: 160kB
+                                 Buffers: shared hit=148
+                                 ->  Parallel Bitmap Heap Scan on order_site o  (cost=53.46..6792.06 rows=2125 width=4) (actual rows=2626.00 loops=1)
+                                       Recheck Cond: ((site_code = $1) AND (ordered_on >= '2026-09-01'::date))
+                                       Heap Blocks: exact=143
+                                       Buffers: shared hit=148
+                                       ->  Bitmap Index Scan on order_site_site_ordered_idx  (cost=0.00..52.56 rows=3613 width=0) (actual rows=2626.00 loops=1)
+                                             Index Cond: ((site_code = $1) AND (ordered_on >= '2026-09-01'::date))
+                                             Index Searches: 1
+                                             Buffers: shared hit=5
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 1.199 ms
+ JIT:
+   Functions: 54
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 383.932 ms
+(39 rows)
+
+ generic_plans | custom_plans 
+---------------+--------------
+             1 |            5
+(1 row)
+
+DEALLOCATE
+== 3. el centro V con cada plan, caché caliente
+PREPARE
+SET
+                                                                        QUERY PLAN                                                                        
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=157163.94..157265.08 rows=33 width=11) (actual rows=32.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=10866
+   ->  Gather Merge  (cost=157163.94..157264.47 rows=56 width=11) (actual rows=64.00 loops=1)
+         Workers Planned: 1
+         Workers Launched: 1
+         Buffers: shared hit=10866
+         ->  Partial GroupAggregate  (cost=156163.93..156258.16 rows=33 width=11) (actual rows=32.00 loops=2)
+               Group Key: r.analyte_code
+               Buffers: shared hit=10866
+               ->  Sort  (cost=156163.93..156195.23 rows=12520 width=3) (actual rows=14022.00 loops=2)
+                     Sort Key: r.analyte_code
+                     Sort Method: quicksort  Memory: 769kB
+                     Buffers: shared hit=10866
+                     Worker 0:  Sort Method: quicksort  Memory: 97kB
+                     ->  Nested Loop  (cost=36.73..155311.82 rows=12520 width=3) (actual rows=14022.00 loops=2)
+                           Buffers: shared hit=10857
+                           ->  Parallel Bitmap Heap Scan on order_site o  (cost=36.30..5281.28 rows=1370 width=4) (actual rows=1313.00 loops=2)
+                                 Recheck Cond: ((site_code = 'V'::bpchar) AND (ordered_on >= '2026-09-01'::date))
+                                 Heap Blocks: exact=133
+                                 Buffers: shared hit=169
+                                 Worker 0:  Heap Blocks: exact=10
+                                 ->  Bitmap Index Scan on order_site_site_ordered_idx  (cost=0.00..35.72 rows=2329 width=0) (actual rows=2626.00 loops=1)
+                                       Index Cond: ((site_code = 'V'::bpchar) AND (ordered_on >= '2026-09-01'::date))
+                                       Index Searches: 1
+                                       Buffers: shared hit=5
+                           ->  Index Scan using result_lab_order_id_idx on result r  (cost=0.43..109.11 rows=40 width=7) (actual rows=10.68 loops=2626)
+                                 Index Cond: (lab_order_id = o.lab_order_id)
+                                 Index Searches: 2626
+                                 Buffers: shared hit=10688
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 0.316 ms
+ JIT:
+   Functions: 25
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 26.674 ms
+(37 rows)
+
+Timing is on.
+Time: 19.579 ms
+Time: 18.742 ms
+Time: 19.735 ms
+Time: 18.697 ms
+Time: 24.495 ms
+Timing is off.
+SET
+                                                                           QUERY PLAN                                                                           
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Finalize GroupAggregate  (cost=160366.79..160480.15 rows=33 width=11) (actual rows=32.00 loops=1)
+   Group Key: r.analyte_code
+   Buffers: shared hit=10159 read=77786
+   ->  Gather Merge  (cost=160366.79..160479.42 rows=79 width=11) (actual rows=96.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=10159 read=77786
+         ->  Partial GroupAggregate  (cost=159366.76..159470.28 rows=33 width=11) (actual rows=32.00 loops=3)
+               Group Key: r.analyte_code
+               Buffers: shared hit=10159 read=77786
+               ->  Sort  (cost=159366.76..159401.16 rows=13758 width=3) (actual rows=9348.00 loops=3)
+                     Sort Key: r.analyte_code
+                     Sort Method: quicksort  Memory: 193kB
+                     Buffers: shared hit=10159 read=77786
+                     Worker 0:  Sort Method: quicksort  Memory: 193kB
+                     Worker 1:  Sort Method: quicksort  Memory: 385kB
+                     ->  Parallel Hash Join  (cost=6818.62..158421.04 rows=13758 width=3) (actual rows=9348.00 loops=3)
+                           Hash Cond: (r.lab_order_id = o.lab_order_id)
+                           Buffers: shared hit=10141 read=77786
+                           ->  Parallel Seq Scan on result r  (cost=0.00..138332.17 rows=5055317 width=7) (actual rows=4044101.00 loops=3)
+                                 Buffers: shared hit=9993 read=77786
+                           ->  Parallel Hash  (cost=6792.06..6792.06 rows=2125 width=4) (actual rows=875.33 loops=3)
+                                 Buckets: 4096  Batches: 1  Memory Usage: 160kB
+                                 Buffers: shared hit=148
+                                 ->  Parallel Bitmap Heap Scan on order_site o  (cost=53.46..6792.06 rows=2125 width=4) (actual rows=2626.00 loops=1)
+                                       Recheck Cond: ((site_code = $1) AND (ordered_on >= '2026-09-01'::date))
+                                       Heap Blocks: exact=143
+                                       Buffers: shared hit=148
+                                       ->  Bitmap Index Scan on order_site_site_ordered_idx  (cost=0.00..52.56 rows=3613 width=0) (actual rows=2626.00 loops=1)
+                                             Index Cond: ((site_code = $1) AND (ordered_on >= '2026-09-01'::date))
+                                             Index Searches: 1
+                                             Buffers: shared hit=5
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 0.190 ms
+ JIT:
+   Functions: 54
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+ Execution Time: 349.394 ms
+(39 rows)
+
+Timing is on.
+Time: 222.187 ms
+Time: 220.920 ms
+Time: 224.341 ms
+Time: 225.750 ms
+Time: 219.648 ms
+Timing is off.
+RESET
+DEALLOCATE

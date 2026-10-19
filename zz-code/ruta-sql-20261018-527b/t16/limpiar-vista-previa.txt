@@ -1,0 +1,13 @@
+    166 KB  ruta-sql-20261006-fc2f/salidas
+    997 KB  ruta-sql-20261006-fc2f/accdb-museo/out
+      8 KB  ruta-sql-20261006-fc2f/accdb-museo/__pycache__
+      1 GB  ruta-sql-20261011-2b0e/salidas
+      5 GB  ruta-sql-20261012-88f6/salidas
+      2 GB  ruta-sql-20261014-d471/salidas
+      5 KB  ruta-sql-20261014-d471/boss4/__pycache__
+      4 KB  ruta-sql-20261014-d471/boss5/__pycache__
+     97 MB  ruta-sql-20261015-80f7/salidas
+      7 KB  ruta-sql-20261015-80f7/martes-solucion/__pycache__
+    208 MB  ruta-sql-20261018-527b/salidas
+      8 GB  en 11 directorios regenerables
+Vista previa: no se borró nada. Para borrar, repite con --borrar.

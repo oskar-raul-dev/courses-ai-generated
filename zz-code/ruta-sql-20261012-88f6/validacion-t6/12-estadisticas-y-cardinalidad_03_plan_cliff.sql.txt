@@ -1,0 +1,24 @@
+NOTICE:  index "result_as_is_recorded_at_brin" does not exist, skipping
+DROP INDEX
+CREATE INDEX
+ANALYZE
+DROP TABLE
+NOTICE:  table "plan_cliff" does not exist, skipping
+CREATE TABLE
+CREATE FUNCTION
+DO
+  width   |     elegido      | estimadas | reales  | index_ms | bitmap_ms | seq_ms | elegido_ms 
+----------+------------------+-----------+---------+----------+-----------+--------+------------
+ 1 day    | Bitmap Heap Scan |       636 |     711 |      0.1 |       0.1 |  303.2 |        0.1
+ 7 days   | Bitmap Heap Scan |      4449 |    4753 |      0.6 |       0.5 |  301.9 |        0.5
+ 1 mon    | Bitmap Heap Scan |     19703 |   22115 |      2.6 |       2.3 |  304.3 |        2.3
+ 2 mons   | Bitmap Heap Scan |     37500 |   41712 |      8.4 |       5.0 |  304.3 |        4.3
+ 3 mons   | Bitmap Heap Scan |     57203 |   63114 |     12.1 |       6.7 |  304.1 |        6.7
+ 6 mons   | Bitmap Heap Scan |    115284 |  127196 |     21.6 |      24.7 |  303.6 |       23.5
+ 1 year   | Bitmap Heap Scan |    242797 |  257309 |     42.7 |      30.6 |  308.8 |       31.3
+ 2 years  | Bitmap Heap Scan |    509677 |  522505 |     83.0 |      45.2 |  318.5 |       44.7
+ 4 years  | Bitmap Heap Scan |   1056643 | 1058595 |     83.2 |      74.9 |  339.6 |       76.6
+ 6 years  | Seq Scan         |   2013355 | 2017282 |    141.3 |     136.8 |  354.3 |      354.8
+ 10 years | Seq Scan         |   7294518 | 7210380 |    466.5 |     457.5 |  493.9 |      476.3
+(11 rows)
+

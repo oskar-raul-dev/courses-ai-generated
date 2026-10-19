@@ -1,0 +1,4 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Table	Op	Msg_type	Msg_text
+staging.resultado_item	analyze	status	OK
+staging.protocolos	analyze	status	OK

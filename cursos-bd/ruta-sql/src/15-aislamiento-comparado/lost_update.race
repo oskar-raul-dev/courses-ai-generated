@@ -1,0 +1,16 @@
+-- Fase 15 · la actualización perdida: dos cajas cobran al mismo deudor (28,00) y cada una escribe el saldo que
+-- calculó la aplicación: 18,00 (pagó 10) y 23,00 (pagó 5). El saldo correcto es 13,00.
+-- uv run lab race -f 15-aislamiento-comparado/lost_update.race --isolation read-committed
+-- @engine postgres
+-- @isolation read committed
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: BEGIN ISOLATION LEVEL {isolation};
+a2: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+b1: BEGIN ISOLATION LEVEL {isolation};
+b2: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+a3: UPDATE staging.debtor SET balance = 18.00 WHERE debtor_id = 1;
+b3: UPDATE staging.debtor SET balance = 23.00 WHERE debtor_id = 1;
+a4: COMMIT;
+b4: COMMIT;
+-- @permutation a1 a2 b1 b2 a3 b3 a4 b4

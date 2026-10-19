@@ -7,7 +7,7 @@
 > **Precedencia:** debajo del [alcance](alcance-del-proyecto.md) y de la
 > [guía](guia-de-estilo-y-convenciones.md), al mismo nivel que la
 > [propuesta de fases](propuesta-fases-y-alcance.md).
-> **Fecha:** 30/09/2026. **Derivado de** la propuesta de apéndices de la Ruta NoSQL Lite.
+> **Fecha:** 30/09/2026, con lo verificado en P8 y P9 trasladado el 11/10/2026. **Derivado de** la propuesta de apéndices de la Ruta NoSQL Lite.
 > **Solucionario (06/10/2026, D18):** los ejercicios de cada apéndice llevan su solución en
 > `soluciones/<mismo-nombre>.md`, escrita en la misma sesión que el apéndice (guía §10.3).
 
@@ -53,13 +53,15 @@ Los nombres de archivo son canónicos y no se renumeran.
 
 - **Alcance:** Windows 11 con WSL2 (dónde viven los archivos y por qué `/mnt/c` hunde el
   rendimiento); macOS arm64 con Docker Desktop, Podman o Colima, y **la tabla de emulación**: qué
-  imagen del curso corre nativa en arm64 y cuál no (SQL Server seguro no; Oracle Free, a verificar);
+  imagen del curso corre nativa en arm64 y cuál no (todas nativas salvo SQL Server, que corre con
+  Rosetta en Docker Desktop y **no arranca en Podman**; verificado el 11/10/2026);
   Linux, en media página. El ciclo `up`/`ps`/`logs`/`exec`/`down`/`down -v`, una línea cada uno. Las
   tres diferencias de Podman que muerden. Límites de memoria por servicio, que aquí deciden si Oracle
   entra al lado de los otros dos. Recuperar disco.
 - **No entra:** qué es una imagen, capas, redes, `Dockerfile`, *registries*. Todo eso está en
   `cursos-contenedores-cloud-infra/docker-container-legacy/`.
-- **Depende de:** la verificación de laboratorio (P8). Hereda la estructura del `a01` de la Lite.
+- **Depende de:** la verificación de laboratorio (P8, hecha el 11/10/2026: `hallazgos.md`, §H3 y
+  §H4). Hereda la estructura del `a01` de la Lite.
 
 ## 4. 🧩 a02 — El `compose.yaml` de la ruta (2 h · 6 ejercicios)
 
@@ -71,7 +73,9 @@ Los nombres de archivo son canónicos y no se renumeran.
   RAM medida**: qué combinaciones de perfiles entran en 16 GB.
 - **No entra:** orquestación, secretos, despliegue.
 - **Deja en el repositorio:** `src/lab/compose.yaml`. Lleva tag `apendice-a02-compose`.
-- **Bloqueado por:** P8. Sin digests medidos no se escribe.
+- **Depende de:** P8, hecha el 11/10/2026. Los digests, los tiempos de arranque y la tabla de RAM
+  medidos están en `hallazgos.md`; `a02` los vuelve a resolver el día que se escribe y anota la
+  diferencia.
 
 ## 5. ⌨️ a03 — CLIs de los motores (2 h · 8 ejercicios)
 
@@ -97,8 +101,9 @@ Los nombres de archivo son canónicos y no se renumeran.
 - **Alcance:** qué trae la caja y por qué cada pieza es verosímil (alcance §7.1); el generador con
   semilla y **cómo produce la suciedad** con las proporciones de la historia; los perfiles S, M y L
   con sus conteos (D4: **S por defecto**, M para medir, L nunca por defecto, y M dentro de 16 GB con
-  los tres motores, calibrado en P8); **la verdad del generador**: qué registros son la misma
-  persona, qué valor quiso escribir cada equipo, y cómo se consulta para medir una limpieza o una
+  los tres motores, calibrado en P8 con unos 250.000 pacientes y 17 M de resultados, y fijado en T1 con la semilla 1996:
+  242.427 pacientes y 12,1 M de resultados); **la
+  verdad del generador**: qué registros son la misma persona, qué valor quiso escribir cada equipo, y cómo se consulta para medir una limpieza o una
   deduplicación; el comando `lab load`, que carga `legacy` **donde hace falta** (D13): en Postgres
   siempre, y en MySQL y Oracle solo las tablas que pide cada fase. Las dos
   codificaciones, a propósito.
@@ -109,9 +114,9 @@ Los nombres de archivo son canónicos y no se renumeran.
 ## 8. 🐍 a06 — Python, Java y los drivers (2 h · 6 ejercicios)
 
 - **Alcance:** `uv` y el `uv.lock`; los drivers de Python de los tres motores (psycopg 3 para
-  Postgres; el de MySQL y `python-oracledb` en modo *thin*, que no necesita Instant Client, a
-  verificar en P8); cómo cada uno maneja transacciones y *autocommit*, que en el Bloque III importa;
-  y el **Java mínimo** (D11): Java 21, Maven y ejecutar un solo archivo sin proyecto, para el boss
+  Postgres; **PyMySQL** para MySQL (D22); y `python-oracledb` en modo *thin*, que no necesita Instant
+  Client, verificado el 11/10/2026); cómo cada uno maneja transacciones y *autocommit*, que en el Bloque III importa;
+  y el **Java mínimo** (D11, D19): Java 25, Maven y ejecutar un solo archivo sin proyecto, para el boss
   del puente y `a10`.
 - **No entra:** ORMs. Si una fase necesita mostrar lo que genera un ORM, lo muestra como SQL.
 
@@ -139,7 +144,11 @@ Los nombres de archivo son canónicos y no se renumeran.
 ## 11. ⚖️ a09 — Licencias, publicación y riesgo (1 h · 5 ejercicios)
 
 - **Alcance:** **la cláusula DeWitt** en las licencias de Oracle Database y SQL Server, citada del
-  texto de la licencia vigente, y cómo la aplica el curso (guía §6.1); qué permiten Oracle Free, SQL
+  texto de la licencia vigente, y cómo la aplica el curso (guía §6.1). **Con un matiz que P9
+  encontró**: la licencia de SQL Server 2025 Developer la trae (§5, "BENCHMARK TESTING"), pero Oracle
+  AI Database Free se licencia con los *Free Use Terms*, que no la tienen; el curso igual no publica
+  números de Oracle (D20) y explica por qué. Los *Free Use Terms* sí limitan el uso para dar
+  formación a terceros, y `a09` lo trata como riesgo declarado; qué permiten Oracle Free, SQL
   Server Developer y Express (límites de CPU, RAM y tamaño, y el uso que no es de desarrollo); la
   licencia de Postgres, la GPL de MySQL y su modelo comercial; y **el riesgo a cinco años**: las
   señales de desinversión de Oracle en MySQL desde 2025, dichas con fuentes y sin dramatismo.
@@ -167,8 +176,11 @@ Los nombres de archivo son canónicos y no se renumeran.
 
 ## 14. 📌 Pendientes de este documento
 
-- **a01, a02, a05 y a06 están bloqueados por P8**, la verificación de laboratorio.
-- **El nombre del driver de MySQL para Python** se decide en P8, entre el conector oficial y PyMySQL,
-  por su comportamiento con transacciones y con `LOAD DATA`.
-- **El texto exacto de la cláusula de las licencias** se cita en `a09` desde la licencia vigente, no
-  de memoria.
+- ✅ **P8 hecha el 11/10/2026**: a01, a02, a05 y a06 ya no están bloqueados. Lo verificado, en
+  `prompts/verificacion-de-laboratorio/hallazgos.md`.
+- ✅ **El driver de MySQL para Python es PyMySQL** (D22): igual al conector oficial con transacciones
+  y con `LOAD DATA`; gana por ser Python puro, MIT e independiente de Oracle.
+- ✅ **El texto de las cláusulas** está citado en `hallazgos.md` (§F2), con enlace y fecha, desde la
+  licencia vigente. `a09` lo vuelve a comprobar el día que se escribe.
+- **SQLcl** no viene en ninguna imagen de Oracle: `a03` decide en T1 si usa la imagen de SQLcl o
+  `sqlplus`, que sí viene.

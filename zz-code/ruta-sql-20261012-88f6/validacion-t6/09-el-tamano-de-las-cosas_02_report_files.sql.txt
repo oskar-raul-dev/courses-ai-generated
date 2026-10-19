@@ -1,0 +1,11 @@
+NOTICE:  table "report_pdf_bytea" does not exist, skipping
+NOTICE:  table "report_pdf_lo" does not exist, skipping
+NOTICE:  table "report_file" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 2000
+CREATE TABLE
+INSERT 0 2000
+CREATE TABLE
+INSERT 0 2000
+ANALYZE

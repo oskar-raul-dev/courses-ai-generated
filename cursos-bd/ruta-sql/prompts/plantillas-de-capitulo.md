@@ -19,7 +19,7 @@ Copia el bloque, rellena los `{{placeholders}}` y borra las notas entre llaves a
 ````markdown
 # {{emoji}} Fase {{NN}} — {{Tema}}: {{la promesa concreta del documento}}
 
-> **Curso:** Ruta SQL · Fase {{NN}} de 26 · Bloque {{romano}} — {{nombre del bloque}} · **{{X}} h**
+> **Curso:** Ruta SQL · Fase {{NN}} de 27 · Bloque {{romano}} — {{nombre del bloque}} · **{{X}} h**
 > **Motores:** PostgreSQL `postgres@sha256:{{digest}}` · contraste {{MySQL `mysql@sha256:…` | —}} · {{Oracle (apuesta sin resolver) | —}}
 > **Entorno de ejecución:** {{SQL | SQL + Python | SQL + Python + Java}}
 > **Perfil de volumen:** {{S para los ejemplos, M para las mediciones | … y L para la rotura}}
@@ -225,7 +225,7 @@ solo la sección 4 cambia de contenido según la fase.
 ````markdown
 # {{emoji}} Fase {{NN}} — {{la promesa concreta del documento}}
 
-> **Curso:** Ruta SQL · Fase {{NN}} de 26 · Bloque 0 — El instrumento · **{{X}} h**
+> **Curso:** Ruta SQL · Fase {{NN}} de 27 · Bloque 0 — El instrumento · **{{X}} h**
 > **Motores:** {{ninguno: esta fase se lee | PostgreSQL, MySQL y Oracle, con sus digests}}
 > **Entorno de ejecución:** {{ninguno | SQL + Python}}
 > **Depende de:** {{nada | Fase NN-1}} · **Habilita:** Fase {{NN+1}}
@@ -281,7 +281,7 @@ bitácora, y su entregable es un documento que el lector escribe.
 ````markdown
 # ⚖️ Fase {{NN}} — {{la promesa concreta}}
 
-> **Curso:** Ruta SQL · Fase {{NN}} de 26 · Bloque VI — El árbitro · **{{X}} h**
+> **Curso:** Ruta SQL · Fase {{NN}} de 27 · Bloque VI — El árbitro · **{{X}} h**
 > **Motores:** {{los que usa}} · **Entorno de ejecución:** {{…}}
 > **Evidencia:** bitácora de medición, entradas {{M-NN…}}
 > **Depende de:** {{F23 | Fase NN-1}} · **Habilita:** {{Fase NN+1 | el cierre del curso}}

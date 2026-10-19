@@ -1,0 +1,50 @@
+NOTICE:  table "portal_order" does not exist, skipping
+DROP TABLE
+SELECT 1327622
+ALTER TABLE
+CREATE INDEX
+ANALYZE
+CREATE TABLE
+DO
+ page  | offset_bloques | offset_ms | keyset_bloques | keyset_ms 
+-------+----------------+-----------+----------------+-----------
+     1 |             20 |      0.02 |             21 |      0.03
+   100 |           1743 |      0.38 |             18 |      0.01
+  1000 |          17687 |      3.99 |             22 |      0.02
+  5000 |          87969 |     19.89 |             20 |      0.03
+ 20000 |         351310 |     78.31 |             19 |      0.06
+ 50000 |         878758 |    195.58 |             21 |      0.05
+(6 rows)
+
+== "página 1 de …": el count(*) que acompaña a cada página
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Finalize Aggregate  (cost=18602.91..18602.92 rows=1 width=8) (actual rows=1.00 loops=1)
+   Buffers: shared hit=10688
+   ->  Gather  (cost=18602.70..18602.91 rows=2 width=8) (actual rows=3.00 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         Buffers: shared hit=10688
+         ->  Partial Aggregate  (cost=17602.70..17602.71 rows=1 width=8) (actual rows=1.00 loops=3)
+               Buffers: shared hit=10688
+               ->  Parallel Seq Scan on portal_order  (cost=0.00..16219.76 rows=553176 width=0) (actual rows=442540.67 loops=3)
+                     Buffers: shared hit=10688
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.027 ms
+ Execution Time: 36.917 ms
+(14 rows)
+
+== la rotura: el portal corre con statement_timeout = 100ms
+SET
+Timing is on.
+ count 
+-------
+    20
+(1 row)
+
+Time: 14.581 ms
+ERROR:  canceling statement due to statement timeout
+Time: 100.558 ms
+Timing is off.
+RESET

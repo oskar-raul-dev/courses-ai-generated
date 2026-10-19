@@ -1,0 +1,22 @@
+-- Fase 15 · la muestra asignada dos veces (MySQL).
+-- uv run lab race -f 15-aislamiento-comparado/write_skew_mysql.race --isolation serializable
+-- @engine mysql
+-- @isolation repeatable read
+-- @setup TRUNCATE staging.specimen_take
+-- @check SELECT count(*) AS takes, count(DISTINCT technician) AS technicians FROM staging.specimen_take
+-- @teardown TRUNCATE staging.specimen_take
+a1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+b1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+a2: START TRANSACTION;
+b2: START TRANSACTION;
+a3: SELECT specimen_id FROM staging.specimen s
+    WHERE NOT EXISTS (SELECT 1 FROM staging.specimen_take t WHERE t.specimen_id = s.specimen_id)
+    ORDER BY collected_at, specimen_id LIMIT 1;
+b3: SELECT specimen_id FROM staging.specimen s
+    WHERE NOT EXISTS (SELECT 1 FROM staging.specimen_take t WHERE t.specimen_id = s.specimen_id)
+    ORDER BY collected_at, specimen_id LIMIT 1;
+a4: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_a');
+b4: INSERT INTO staging.specimen_take (specimen_id, technician) VALUES (11231555, 'tecnico_b');
+a5: COMMIT;
+b5: COMMIT;
+-- @permutation a1 b1 a2 b2 a3 b3 a4 b4 a5 b5

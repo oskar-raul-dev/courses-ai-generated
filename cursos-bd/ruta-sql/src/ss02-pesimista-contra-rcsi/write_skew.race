@@ -1,0 +1,25 @@
+-- ss02 · la muestra asignada dos veces (Fase 15), en SQL Server. Dos técnicos ven libre la misma muestra y la toman.
+-- SET TRANSACTION ISOLATION LEVEL vale para la sesión; BEGIN TRAN abre la transacción.
+--   uv run --extra sqlserver lab race -f ss02-pesimista-contra-rcsi/write_skew.race --isolation read-committed
+--   … --isolation snapshot      (después de 02_snapshot.sql)
+--   … --isolation serializable
+-- @engine sqlserver
+-- @database ss02
+-- @setup ALTER DATABASE ss02 SET READ_COMMITTED_SNAPSHOT OFF WITH ROLLBACK IMMEDIATE
+-- @isolation read committed
+-- @setup TRUNCATE TABLE dbo.specimen_take
+-- @check SELECT COUNT(*) AS takes, COUNT(DISTINCT technician) AS technicians FROM dbo.specimen_take
+-- @teardown TRUNCATE TABLE dbo.specimen_take
+a1: SET TRANSACTION ISOLATION LEVEL {isolation}; BEGIN TRAN;
+b1: SET TRANSACTION ISOLATION LEVEL {isolation}; BEGIN TRAN;
+a2: SELECT TOP (1) specimen_id FROM dbo.specimen AS s
+    WHERE NOT EXISTS (SELECT 1 FROM dbo.specimen_take AS t WHERE t.specimen_id = s.specimen_id)
+    ORDER BY collected_at, specimen_id;
+b2: SELECT TOP (1) specimen_id FROM dbo.specimen AS s
+    WHERE NOT EXISTS (SELECT 1 FROM dbo.specimen_take AS t WHERE t.specimen_id = s.specimen_id)
+    ORDER BY collected_at, specimen_id;
+a3: INSERT INTO dbo.specimen_take (specimen_id, technician) VALUES (11231555, N'tecnico_a');
+b3: INSERT INTO dbo.specimen_take (specimen_id, technician) VALUES (11231555, N'tecnico_b');
+a4: COMMIT;
+b4: COMMIT;
+-- @permutation a1 b1 a2 b2 a3 b3 a4 b4

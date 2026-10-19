@@ -1,0 +1,4 @@
+-- una página al azar del portal, con keyset: los 20 anteriores a un punto al azar de la lista (pgbench)
+\set day random(0, 10875)
+SELECT * FROM staging.portal_order WHERE (ordered_on, lab_order_id) < (date '1997-03-04' + :day, 2147483647)
+ORDER BY ordered_on DESC, lab_order_id DESC LIMIT 20;

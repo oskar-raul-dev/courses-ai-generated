@@ -1,0 +1,10 @@
+name: backend-roto
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: go test ./...
+        with:
+          clave-inventada: 1
+      - run: echo ${{ steps.nada.outputs.x }}

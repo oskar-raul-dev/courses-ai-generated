@@ -100,7 +100,7 @@ tiene además su solucionario, `soluciones/<mismo-nombre>.md`, escrito en la mis
   de medida calibrado.
 - **Entra:** el compose con `postgres`, `mysql` y `oracle`; el generador con semilla y los perfiles
   S y M (`a05`); **la carga de la caja al esquema `legacy`**, con tipos de texto donde el original
-  tenía texto; el primer vistazo a las 214 tablas desde el catálogo (`information_schema`,
+  tenía texto; el primer vistazo a las tablas de la caja (unas 420, D24) desde el catálogo (`information_schema`,
   `pg_class`): cuántas, cuánto pesan y cuáles no tienen clave primaria; y **cómo se mide la forma**
   en cada motor, con el primer `EXPLAIN (ANALYZE, BUFFERS)` leído campo por campo, su equivalente en
   MySQL y la estructura de `DBMS_XPLAN` en Oracle (`a04`).
@@ -201,7 +201,8 @@ filas de `legacy` rechaza. El número de rechazos es la medición del bloque.
 
 - **El dolor:** los convenios (qué obra social cubre qué práctica en qué sede) y las tres columnas
   de código (`CodINOS`, `CodNBU`, `CodNBU2012`) con una tabla de equivalencias incompleta.
-- **El mecanismo:** dependencias multivaluadas (coberturas y teléfonos de un paciente) y la 4FN;
+- **El mecanismo:** dependencias multivaluadas (médicos derivantes y teléfonos de un paciente; la caja no
+  trae dos coberturas por persona, decisión de Oskar del 13/10/2026) y la 4FN;
   dependencias de join y la 5FN con la regla de convenios **cuando es cíclica**; catálogos
   versionados y tablas de equivalencia entre catálogos.
 - **🪞 Apuesta candidata:** "la descomposición en tres tablas binarias no pierde ni inventa filas
@@ -217,8 +218,8 @@ filas de `legacy` rechaza. El número de rechazos es la medición del bloque.
   2002 reconstruido a mano, y la pregunta de Norma: *"¿quién cambió este resultado, cuándo, y qué
   decía antes?"*.
 - **El mecanismo:** tiempo válido y tiempo de transacción; rangos (`daterange`) y restricciones de
-  exclusión; `WITHOUT OVERLAPS` y claves foráneas con período, si la versión del curso las trae
-  (se verifica); la historia de correcciones de `result`; bitemporalidad; la 6FN y el *anchor
+  exclusión; `WITHOUT OVERLAPS` y claves foráneas con período (`PERIOD`), que Postgres 18 trae (verificado el
+  11/10/2026); la historia de correcciones de `result`; bitemporalidad; la 6FN y el *anchor
   modeling*, y dónde hacen explotar los joins y dejan al optimizador sin estimación.
 - **El contraste:** Flashback de Oracle (apuesta sin resolver); MySQL sin tablas temporales, con
   *triggers*; las tablas versionadas de SQL Server quedan para el track (`ss04`).
@@ -274,7 +275,7 @@ modelo que dejó el Bloque I.
 - **El dolor:** el protocolo `-1847263541` de la replicación de Jet, el `DMax + 1`, y el portal
   enumerado en 2018 con su corrección, el MD5 del número.
 - **El mecanismo:** `bigint` con *identity* o secuencia, caché de secuencias y huecos, hi/lo en los
-  ORM; UUIDv4 contra UUIDv7 (`uuidv7()` nativo en Postgres 18, a verificar); *page splits* en InnoDB
+  ORM; UUIDv4 contra UUIDv7 (`uuidv7()` nativo en Postgres 18, verificado); *page splits* en InnoDB
   con UUIDv4; tamaño de índice y *full-page writes* en Postgres; **qué filtra cada identificador**
   (el secuencial filtra el volumen de negocio; el v7, la fecha de creación; el MD5 de un secuencial
   se revierte precalculando los N hashes); el patrón **`bigint` interno más identificador público
@@ -296,8 +297,8 @@ modelo que dejó el Bloque I.
   `key`, `code` o `num`, y que el asistente de *upsizing* trasladó intacto a SQL Server.
 - **El mecanismo:** B-tree y orden de columnas en el compuesto; índices parciales y de expresión
   (sobre el nombre normalizado, sobre el valor ya parseado); `INCLUDE`, *index-only scans* y el mapa
-  de visibilidad; GIN y BRIN (este sobre la fecha de un `result` que solo crece); *skip scan*, si la
-  versión lo trae; y **el costo de escritura**: bytes de WAL por fila con cero a ocho índices,
+  de visibilidad; GIN y BRIN (este sobre la fecha de un `result` que solo crece); *skip scan*, que
+  Postgres 18 trae (verificado: `Index Searches` en el `EXPLAIN ANALYZE`); y **el costo de escritura**: bytes de WAL por fila con cero a ocho índices,
   actualizaciones HOT y lo que las mata. En MySQL, cada índice secundario carga la clave primaria, y
   eso cose esta fase con F10.
 - **🪞 Apuesta candidata:** "cada índice adicional sobre `result` agrega bytes de WAL por fila en
@@ -330,7 +331,8 @@ modelo que dejó el Bloque I.
   el laboratorio central, que concentra la mayoría de las filas.
 - **El mecanismo:** métodos de join (*nested loop*, *hash*, *merge*) y orden de joins; sentencias
   preparadas, planes genéricos contra personalizados (`plan_cache_mode`); *bind peeking* en Oracle;
-  hints (los de MySQL, `pg_hint_plan` si está disponible, los de Oracle) y *SQL plan baselines*; la
+  hints (los de MySQL, los de Oracle, y `pg_hint_plan`, que no viene en la imagen del curso y queda
+  como ejercicio 🔥 con una imagen derivada) y *SQL plan baselines*; la
   estabilidad del plan como decisión.
 - **🪞 Apuesta candidata:** "a partir de la sexta ejecución, el plan genérico elige para el
   laboratorio central el mismo método que para un centro chico, y lee al menos 10 veces más".
@@ -529,7 +531,7 @@ El bloque donde el curso tiene que ser más honesto, porque es donde Florencia t
 - **⚖️ Veredicto:** cuándo no exponer la base como API.
 - 💀 **Boss del Bloque V — "Las 9:40"**, pedido por Verónica Colombo, en SQL y Python.
 - 💀☕ **Boss del puente — "El puente"**, pedido por Matías Ledesma: la interfaz con el SIH con Java
-  21, ActiveMQ Artemis y mensajes que imitan HL7 v2 (`ORM` y `ORU`). El broker no es el tema: es el
+  25, Apache Artemis y mensajes que imitan HL7 v2 (`ORM` y `ORU`). El broker no es el tema: es el
   lugar donde aparecen la doble escritura, la entrega duplicada, las correcciones fuera de orden y
   el mensaje veneno. Cierra con **¿hacía falta un broker?**, medido contra la cola de F22. Opcional
   y fuera de las 252 h, como todos los boss.
@@ -569,7 +571,8 @@ corriendo entera sobre la base nueva.
 
 Convención del repositorio para tracks: prefijo `ss`, prompts propios
 (`prompts/prompts-sqlserver-fase.md`), tags en `ss-fase-*` y **cero añadidos a los documentos del
-camino base**. Laboratorio en contenedor Linux, con emulación en Apple Silicon (declarada). **Todo
+camino base**. Laboratorio en contenedor Linux, con emulación en Apple Silicon (declarada), que solo funciona en
+Docker Desktop: en Podman no arranca (verificado el 11/10/2026). **Todo
 resultado de SQL Server va sin resolver** (guía §6.1).
 
 | # | Fase | h | Ej. | Qué cambia la decisión |
@@ -578,7 +581,7 @@ resultado de SQL Server va sin resolver** (guía §6.1).
 | ss02 | Pesimista contra RCSI | 8 | 22 | `READ COMMITTED` con bloqueos por defecto, el formulario del almuerzo que bloquea lectores, `READ_COMMITTED_SNAPSHOT` y el *version store* |
 | ss03 | Query Store y *parameter sniffing* | 8 | 22 | regresiones de plan, planes forzados, `OPTIMIZE FOR` |
 | ss04 | Clustered, `NEWSEQUENTIALID` y tablas temporales | 8 | 20 | el caso UUID en su motor más famoso; tablas versionadas por sistema para la auditoría de resultados |
-| ss05 | Data API builder y el tipo `json` | 8 | 20 | DAB contra PostgREST; el tipo `json` nativo de SQL Server 2025 (a verificar) |
+| ss05 | Data API builder y el tipo `json` | 8 | 20 | DAB contra PostgREST; el tipo `json` nativo de SQL Server 2025 (verificado) |
 | ssa-01 | Qué cambia en Windows | — | 6 | autenticación integrada, WSFC contra Pacemaker, SSMS, funciones ausentes en Linux |
 
 **Requisito:** el camino base hasta F18. `ss01` se puede hacer después de F04.
@@ -625,7 +628,8 @@ los apéndices en la propuesta de apéndices §2.
 
 ## 📌 12. Registro de decisiones
 
-Lo que sostiene este temario. **Cerradas por Oskar el 30/09/2026**, y trasladadas el mismo día al
+Lo que sostiene este temario. **Cerradas por Oskar el 30/09/2026** (D18 el 06/10, D19–D22 el 11/10,
+al verificar el laboratorio, D23–D42 el 12/10, en el paso 1 de T0–T5, y D43–D45 el 14/10, en el paso 1 de T7–T8, y D46–D51 el 14 y 15/10, en los pasos 1 de T9 a T15, y D52 el 18/10, en el de T13), y trasladadas el mismo día al
 sitio que dice "Manda en". Esta tabla queda como registro; si una decisión cambia, se cambia primero
 en su sitio y después aquí.
 
@@ -634,18 +638,52 @@ en su sitio y después aquí.
 | D1 | Estructura | 27 fases en 7 bloques, Bloque I de 6 × 8 h (§1.1) | ✅ | alcance §12 |
 | D2 | Operación | Fuera, salvo el particionado como diseño y "qué va en la base" (F09) | ✅ | alcance §11 |
 | D3 | Puente Java con Artemis | **Boss** ("El puente", al cierre del Bloque V), no laboratorio de F22 | ✅ | alcance §9 y §13 |
-| D4 | Volumen | Perfiles S, M y L; **S y M por defecto**; M ≈ 200.000 pacientes y 15 M de resultados, y siempre dentro de 16 GB con los tres motores | ✅ | alcance §7.1, `a05` |
+| D4 | Volumen | Perfiles S, M y L; **S y M por defecto**; M ≈ 250.000 pacientes y 17 M de resultados (calibrado el 11/10/2026; con la semilla 1996, T1 lo fijó en 242.427 y 12,1 M), y siempre dentro de 16 GB con los tres motores | ✅ | alcance §7.1, `a05` |
 | D5 | Miniproyectos de otras empresas | No: todo gira alrededor de Alameda | ✅ | alcance §11 |
 | D6 | Publicación | Repositorio tratado como público; de Oracle y SQL Server, solo la estructura del plan | ✅ | alcance §6.1, guía §6.1 |
 | D7 | Nombre | Ruta SQL, en `cursos-bd/ruta-sql/` | ✅ | alcance §12 |
 | D8 | Track SQL Server | `ss01`–`ss05` y `ssa-01`, 40 h fuera de las 252 | ✅ | §10 |
 | D9 | Boss | Cinco de bloque, el boss del puente en Java y el global "Un martes" | ✅ | alcance §13 |
 | D10 | Nombres | Inglés, convención habitual de SQL (`snake_case`, singular) y palabras completas dentro del límite del motor más restrictivo; `legacy` conserva los nombres de la caja | ✅ | alcance §7, guía §5 |
-| D11 | Java | Java 21 LTS, solo en el boss del puente y en `a10` | ✅ | `a06` |
+| D11 | Java | Java LTS, solo en el boss del puente y en `a10` (la versión, en D19) | ✅ | `a06` |
 | D12 | Versiones | Última estable, o última LTS donde exista la línea, a la fecha de la verificación de laboratorio | ✅ | `a02` |
 | D13 | Dónde se carga `legacy` | Donde hace falta: Postgres siempre; MySQL y Oracle, las tablas que pide cada fase | ✅ | `a05` |
 | D14 | Arnés de carreras | Intercalado determinista de sesiones en Python (`lab race`) | ✅ | `a04` |
 | D15 | El Access de museo | Apéndice opcional `a10`; el código pasa de `zz-code/ruta-sql-20261006-fc2f/accdb-museo/` a `src/a10-el-access-de-museo/` en su tanda | ✅ | propuesta de apéndices |
 | D16 | Punto de rotura en fases de plan | El precipicio del plan, con la línea que cambió (§2) | ✅ | guía §6 |
-| D17 | Reubicación de archivos | La historia en `00-historia-de-alameda.md`, con la nomenclatura de los otros cursos; la propuesta de diseño en `prompts/_desechable-propuesta-ruta.md` | ✅ | — |
+| D17 | Reubicación de archivos | La historia en `00-historia-de-alameda.md`, con la nomenclatura de los otros cursos; la propuesta de diseño en `prompts/`, como desechable (borrada al cerrar, 18/10/2026) | ✅ | — |
 | D18 | Solucionario | Todo ejercicio lleva solución en archivo separado, `soluciones/<documento>.md`, escrito en la misma sesión que su documento; completa en 🟢🟡, de referencia con rúbrica en 🟠🔴; los boss no publican su solución | ✅ 06/10/2026 | guía §10.3 |
+| D19 | Versión de Java | **Java 25 LTS**, la última LTS a la fecha de la verificación (D12), en lugar de la 21 | ✅ 11/10/2026 | alcance §9, `a06` |
+| D20 | Números de Oracle | **Se mantiene: ninguno se publica**, aunque los *Free Use Terms* de Oracle Free no lleven la cláusula DeWitt; `a09` cita los dos textos | ✅ 11/10/2026 | alcance §6.1, `a09` |
+| D21 | Imagen de Oracle | `gvenzl/oracle-free` en su variante `slim-faststart`: la mitad de disco que la oficial y el usuario de la aplicación por variable | ✅ 11/10/2026 | `a02` |
+| D22 | Driver de MySQL para Python | **PyMySQL**: igual al oficial en transacciones y `LOAD DATA`, Python puro, MIT y sin dependencia de Oracle | ✅ 11/10/2026 | `a06` |
+| D23 | Callout 🔑 | Se acepta en todo el curso como "la frase para memorizar" (lo usa `00-convencion-de-git-y-tags.md`) | ✅ 12/10/2026 | guía §8.3 |
+| D24 | Tablas de `ALAMEDA` | **Unas 420**, no 214: el inventario ya traía 280 `Precios_AAAA_MM` y 71 tablas anchas; el número exacto lo da el catálogo que genera `a05` | ✅ 12/10/2026 | historia §4, `a05` |
+| D25 | Semilla por defecto | **`1996`**, el año del cuaderno, en lugar de `1979`; los conteos de los perfiles se vuelven a medir en T1 | ✅ 12/10/2026 | contrato §8, `a05` |
+| D26 | Proyecto de Compose | `alameda-lab` | ✅ 12/10/2026 | contrato §2, `a02` |
+| D27 | Puertos publicados | Desplazados a `2xxxx` y configurables por variable (`POSTGRES_PORT=25432`, `MYSQL_PORT=23306`, `ORACLE_PORT=21521`…), para no chocar con motores locales ni con la NoSQL Lite | ✅ 12/10/2026 | contrato §2, `a02` |
+| D28 | Comando del laboratorio | CLI de Python con `uv`: `uv run lab up`, `uv run lab load --profile m`, `uv run lab measure`, `uv run lab race`, declarado en `src/pyproject.toml` | ✅ 12/10/2026 | contrato §2, `a02`, `a04`, `a05` |
+| D29 | Cliente de Oracle | `sqlplus`, que viene en la imagen; SQLcl se menciona como alternativa | ✅ 12/10/2026 | `a03` |
+| D30 | Proporciones que la historia no fija | Las del prototipo (`hallazgos.md` §H12): DNI dentro de `Nombre` 10,9 %; resultados con coma 45 % y con punto 45 %; `< 0,5` 3 %, `>1000` 2 %, `HEMOLIZADA` 2 %, vacío 3 % | ✅ 12/10/2026 | `a05` |
+| D31 | La verdad del generador | Esquema **`truth`**, cargado siempre en Postgres: `person`, `patient_record`, `order_payer`, `result_value` y `parser_case`; las fases que miden en MySQL u Oracle comparan contra Postgres | ✅ 12/10/2026 | contrato §5, `a05` |
+| D32 | Alcance del generador | **Todo el inventario** de la caja en T1, con un flujo aleatorio por tabla derivado de la semilla, para que agregar algo después no cambie los bytes de lo ya publicado | ✅ 12/10/2026 | `a05` |
+| D33 | Carga en MySQL | `LOAD DATA INFILE` del lado del servidor, con la caja en solo lectura y `--secure-file-priv` vacío; `local_infile` sigue apagado | ✅ 12/10/2026 | `a02`, `a05` |
+| D34 | Esquemas del modelo | El modelo nuevo en **`alameda`** (en MySQL, la base `alameda`) y el área de carga en **`staging`** | ✅ 12/10/2026 | contrato §5 |
+| D35 | El 90 % de Rubén | `a05` calibra las variantes de `Nombre` para que el port fiel de `ExtraerDNI()` acierte cerca del 90 % de las filas con DNI adentro, y lo mide; F04 publica lo que dé sobre M | ✅ 12/10/2026 | `a05`, F04 |
+| D36 | El parser de Matías | El T-SQL viaja en la caja tal cual; F04 lo porta línea a línea a PL/pgSQL y reproduce las dos diferencias en Postgres. El camino base no exige SQL Server | ✅ 12/10/2026 | F04 |
+| D37 | La tabla de rechazos | `staging.rejection` (`phase`, `rule`, `source_table`, `source_key`, `value`, `detail`) y la vista `staging.rejection_report` (regla, filas, % de `legacy`, contra la verdad), que es la que se publica | ✅ 12/10/2026 | F04, contrato §5 |
+| D38 | Los documentos 🔍 de F05 | Se verifican en fuentes oficiales; si se confirman, entran a la historia §8 con fuente; si no, se modela el tipo sin citar el rango | ✅ 12/10/2026 (residencia precaria y rango de extranjeros); 13/10/2026 (la libreta conserva su número) | F05 |
+| D39 | Las dos variantes de la 5FN | La caja trae la regla de convenios real (cíclica); F06 deriva la no cíclica con un script con semilla en `src/06-…/` | ✅ 12/10/2026 | F06 |
+| D40 | La señora del boss I | Plantada por el generador, igual con cualquier semilla, y conocida por `truth` | ✅ 12/10/2026 | `a05`, F08 |
+| D41 | El modelo para el Bloque II | F08 consolida los cargadores de F03–F08 en `uv run lab load --profile m --model` (`legacy` → `staging` → `alameda`) | ✅ 12/10/2026 | F08, `a05` |
+| D42 | La solución de los boss | En el directorio de `zz-code/` de su tanda, registrado en el plan §9; `src/` trae solo el punto de partida | ✅ 12/10/2026 | guía §10.1 |
+| D43 | La interfaz de `lab race` | Un archivo `.race` con pasos por sesión (`a1:`, `b1:`…) y permutaciones, al estilo del *isolation tester* de Postgres; el paso que espera un bloqueo se detecta en el catálogo del motor y se marca ⏳; el mismo motor se importa desde Python (`lab.race`) para las cajas concurrentes de F16 y del boss III | ✅ 14/10/2026 | `a04` |
+| D44 | La muestra asignada dos veces | Entra a la historia en la lista de la pandemia de 2020; F15 arma la muestra y su toma en `staging` a partir de los protocolos `EN PROCESO`, sin tocar el generador ni el hash de la caja | ✅ 14/10/2026 | historia §3, F15 |
+| D45 | El web service fiscal simulado | Un módulo de Python en el mismo proceso que imita `FECompUltimoAutorizado` y `FECAESolicitar`, con su registro de autorizados aparte, el rechazo 10016 y una latencia configurable; sin SOAP ni certificado, y la fase lo declara | ✅ 14/10/2026 | F16 |
+| D46 | Antibiogramas (paso 1 de T9, por defecto) | La verdad estructurada va a `truth/antibiogram.csv` (469.863 filas, 60.001 cultivos en M) con su propio flujo aleatorio: los 439 archivos anteriores de la caja conservan su hash; el antibiograma de `Urocultivo` (texto libre, 62 filas) no se toca | ✅ 14/10/2026 | `a05`, F19 |
+| D47 | Composición de los paneles (F21) | No está en la caja: `staging.practice_composition` la declara el curso, sobre códigos reales de `legacy.Practicas`, y la lección lo dice | ✅ 14/10/2026 | F21 §4.2 |
+| D48 | Criterios del boss IV | Cinco: tolerancia al tipeo, latencia de 10 ms, igualdad del informe con la fuente a 4 decimales, consistencia de fuente, auditoría y documento tras una corrección, y atomicidad ante una corrección inválida | ✅ 14/10/2026 | F21 §16, `boss/arnes.py` |
+| D49 | Paso 1 de T10 (por defecto) | Día real de mayor volumen de 2025 (26/12, 6.651 resultados) con escala declarada; mensajes del SIH simulados con semilla y formato simplificado; `truth.result_value` como verdad; la marca de agua se mide con `lab race` (determinista) y con escritores concurrentes; `test_decoding` para el CDC; sin broker; T10 pasa a densa | ✅ 14/10/2026 | F22, plan §2.2 |
+| D50 | Paso 1 de T11 a T14 (por defecto) | T11: perfiles `api` y `puente`, JWT con secreto de laboratorio, RLS sobre `alameda.result` completo, criterios de los dos boss, jars en `zz-code`, broker medido contra F22. T12: convenios declarados sin tocar la caja; F24 con diseño de referencia; Oracle en F25 como estructura; licencias con lista de precios pública y fecha. T13: MySQL y Mongo abajo durante el track; números de SQL Server privados; DAB fijado por digest. T14: LibreOffice en imagen fijada (o pruebas `.bas` declaradas no reejecutadas); semilla 1997 en `a10`; `a08` se cierra | ✅ 14/10/2026 | plan §5, F23–F26, track, `a10` |
+| D51 | Paso 1 de T12 a T15 (lo que D50 no cubría) | Boss global "Un martes": la presentación semanal por obra social (prácticas de la semana, precio del convenio vigente a la fecha, coseguro, topes por afiliado y prácticas que se facturan juntas), totales reconciliados contra `legacy` al centavo con supuestos declarados; arnés de cinco criterios en `src/26-…/martes/` (uno: `legacy` sigue recibiendo escritura por el CDC de F25), solución en `zz-code`. En T12 se corrige «de 26» → «de 27» y se agrega la nota 🏆 a F21 y F23; F24–F26 en banda de palabras, la de F19–F23 queda para T16. `a08` conserva E-51–E-53. T15: README de `src/` global, de `lab/`, de cada `boss/` y `puente/` y el de `a10`; el README del curso propone tres rutas de lectura (mínima, rendimiento, completa con track) | ✅ 15/10/2026 | F21, F23–F26, plan §5, `a08`, T15 |
+| D52 | Paso 1 de T13 (interactivo, 18/10/2026) | El código del track que habla con SQL Server extiende `lab` con un extra opcional `sqlserver` (`lab/engines/sqlserver.py`, `--engine sqlserver` en `load`, `measure` y `race`, perfil `dab` en el compose): el camino base no lo instala ni lo carga. El driver es `mssql-python` (Microsoft, MIT, con el ODBC 18 adentro), fijado en 1.15.0 | ✅ 18/10/2026 | `lab`, `a02`, track |

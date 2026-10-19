@@ -1,0 +1,13 @@
+### M-72 · ss05 · El índice JSON contra la columna calculada, para el antibiograma
+**Tipo:** apuesta sin resolver · **Motor:** SQL Server 2025 CU9 (Enterprise Developer, emulado) · **Perfil:** M (60.001 cultivos)
+**Hipótesis:** para meropenem R (600), el índice JSON lee menos del 10 % del recorrido de la clave agrupada y la columna calculada indexada lee menos que el índice JSON; para ciprofloxacina R (13.303), el índice JSON lee más del 15 % del recorrido. En Postgres, GIN `jsonb_path_ops` leyó el 27 % para meropenem y no ayudó para ciprofloxacina ([M-35](#m-35--f19--el-antibiograma-como-documento-en-la-búsqueda-por-un-resultado)). · **Resuélvela:** las consultas de `04_json.sql`, desde `src/ss05-data-api-builder-y-json/`, con `SET STATISTICS IO ON`
+
+### M-73 · ss05 · Lo que cuesta la seguridad por fila de SQL Server en el portal
+**Tipo:** apuesta sin resolver · **Motor:** SQL Server 2025 CU9 (Enterprise Developer, emulado) · **Perfil:** M (12.710.308 resultados)
+**Hipótesis:** con la política de `02_api.sql`, el paciente lee del orden de lo que lee sin ella (el predicado usa el índice por `patient_id`) y el médico, por `referral`, varias veces más, como en [M-47](#m-47--f23--lo-que-cuesta-la-seguridad-por-fila-y-dónde-va-el-índice). · **Resuélvela:** como `dab_api`, con `sp_set_session_context` a mano y `SET STATISTICS IO ON`, con la política encendida y apagada
+
+### M-74 · ss05 · El contrato de la Fase 23 por Data API builder, y la identidad fabricada
+**Tipo:** publicada · **Motor:** Data API builder 2.1.5 `…data-api-builder@sha256:d07e3e1ce53b…` sobre SQL Server 2025 CU9; los conteos son del modelo, iguales en Postgres · **Perfil:** M · **Fecha:** 18/10/2026
+**Hipótesis:** con el proveedor `AppService` y la seguridad por fila de SQL Server sobre `SESSION_CONTEXT`, cada perfil ve lo mismo que en la Fase 23, y una identidad fabricada en el encabezado `X-MS-CLIENT-PRINCIPAL` es aceptada.
+**Resultado:** sin identidad, 403; paciente 39, 1.284 resultados en 152 protocolos (los de Postgres hoy; 858 vienen de las tablas anchas de la Fase 25, y los otros 426 son los de M-48); protocolo ajeno, `[]`; médico 144, 1.114 protocolos; sin `X-MS-API-ROLE`, 403; la identidad fabricada del paciente 12594, 200 y 115 resultados ajenos. DAB manda en cada pedido `sp_reset_connection` y los *claims* con `sp_set_session_context … @read_only = 0`, en un solo `sp_executesql`. · **Apuesta:** ganada, que es el problema
+**Reproducir:** `uv run --extra sqlserver python ss05-data-api-builder-y-json/03_api.py` desde `src/`, con `uv run lab up sqlserver dab`, después de `01_modelo.py` y `02_api.sql`

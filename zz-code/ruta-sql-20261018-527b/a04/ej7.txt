@@ -1,0 +1,40 @@
+SELECT 242427
+ALTER TABLE
+ bloques_antes 
+---------------
+          4160
+(1 row)
+
+UPDATE 121213
+ bloques_despues 
+-----------------
+            6198
+(1 row)
+
+ tuple_count | dead_tuple_count | muertas_pct | libre_pct 
+-------------+------------------+-------------+-----------
+      242427 |           121213 |        31.8 |       0.6
+(1 row)
+
+ pg_sleep 
+----------
+ 
+(1 row)
+
+ n_live_tup | n_dead_tup 
+------------+------------
+     242427 |     121213
+(1 row)
+
+VACUUM
+ bloques_tras_vacuum 
+---------------------
+                6198
+(1 row)
+
+ tuple_count | dead_tuple_count | libre_pct 
+-------------+------------------+-----------
+      242427 |                0 |      32.4
+(1 row)
+
+DROP TABLE

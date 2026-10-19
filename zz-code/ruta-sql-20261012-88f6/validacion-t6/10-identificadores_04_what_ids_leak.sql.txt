@@ -1,0 +1,22 @@
+ diferencia_de_numeros | protocolos_de_la_semana 
+-----------------------+-------------------------
+                  1735 |                    1741
+(1 row)
+
+NOTICE:  table "portal_url" does not exist, skipping
+NOTICE:  table "md5_dictionary" does not exist, skipping
+DROP TABLE
+SELECT 25517
+SELECT 4200000
+CREATE INDEX
+ urls_2018 | revertidas 
+-----------+------------
+     25517 |      25517
+(1 row)
+
+               order_id               | version |   uuid_extract_timestamp   | ordered_on 
+--------------------------------------+---------+----------------------------+------------
+ 01a1231c-1665-784c-8eeb-05457f1f1dbb |       7 | 2026-10-10 00:00:05.733+00 | 2026-10-10
+ 01a1231c-1665-783e-8a99-265f920715fc |       7 | 2026-10-10 00:00:05.733+00 | 2026-10-10
+(2 rows)
+

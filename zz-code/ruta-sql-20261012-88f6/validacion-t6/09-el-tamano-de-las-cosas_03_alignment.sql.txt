@@ -1,0 +1,12 @@
+NOTICE:  table "result_as_is" does not exist, skipping
+NOTICE:  table "result_reordered" does not exist, skipping
+DROP TABLE
+NOTICE:  table "align_bad" does not exist, skipping
+NOTICE:  table "align_good" does not exist, skipping
+SELECT 12132303
+SELECT 12132303
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1327622
+INSERT 0 1327622
+VACUUM

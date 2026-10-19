@@ -1,0 +1,154 @@
+### psql sin ON_ERROR_STOP
+ pacientes 
+-----------
+    242427
+(1 row)
+
+ERROR:  relation "legacy.NoExiste" does not exist
+LINE 1: SELECT count(*) FROM legacy."NoExiste";
+                             ^
+       sigue       
+-------------------
+ después del error
+(1 row)
+
+exit=0
+### psql con ON_ERROR_STOP
+ pacientes 
+-----------
+    242427
+(1 row)
+
+ERROR:  relation "legacy.NoExiste" does not exist
+LINE 1: SELECT count(*) FROM legacy."NoExiste";
+                             ^
+exit=3
+### mysql
+mysql: [Warning] Using a password on the command line interface can be insecure.
+pacientes
+242427
+ERROR 1146 (42S02) at line 2: Table 'legacy.NoExiste' doesn't exist
+exit=1
+### mysql --force
+mysql: [Warning] Using a password on the command line interface can be insecure.
+pacientes
+242427
+ERROR 1146 (42S02) at line 2: Table 'legacy.NoExiste' doesn't exist
+sigue
+después del error
+exit=0
+### sqlplus
+SELECT count(*) AS pacientes FROM LEGACY."Pacientes"
+                                         *
+ERROR at line 1:
+ORA-00942: table or view "LEGACY"."Pacientes" does not exist
+Help: https://docs.oracle.com/error-help/db/ora-00942/
+
+
+SELECT count(*) FROM LEGACY."NoExiste"
+                            *
+ERROR at line 1:
+ORA-00942: table or view "LEGACY"."NoExiste" does not exist
+Help: https://docs.oracle.com/error-help/db/ora-00942/
+
+
+
+SIGUE
+------------------
+después del error
+
+exit=0
+### sqlplus con WHENEVER
+SELECT count(*) AS pacientes FROM LEGACY."Pacientes"
+                                         *
+ERROR at line 1:
+ORA-00942: table or view "LEGACY"."Pacientes" does not exist
+Help: https://docs.oracle.com/error-help/db/ora-00942/
+
+
+exit=174
+### sqlplus (con LEGACY cargado)
+
+ PACIENTES
+----------
+    242427
+
+SELECT count(*) FROM LEGACY."NoExiste"
+                            *
+ERROR at line 1:
+ORA-00942: table or view "LEGACY"."NoExiste" does not exist
+Help: https://docs.oracle.com/error-help/db/ora-00942/
+
+
+
+SIGUE
+------------------
+después del error
+
+exit=0
+### sqlplus con WHENEVER
+
+ PACIENTES
+----------
+    242427
+
+SELECT count(*) FROM LEGACY."NoExiste"
+                            *
+ERROR at line 1:
+ORA-00942: table or view "LEGACY"."NoExiste" does not exist
+Help: https://docs.oracle.com/error-help/db/ora-00942/
+
+
+exit=174
+### psql timing
+Timing is on.
+  count  
+---------
+ 1327622
+(1 row)
+
+Time: 1424.053 ms (00:01.424)
+### psql watch
+Mon 19 Oct 2026 01:51:37 AM UTC (every 1s)
+
+ sesiones 
+----------
+        2
+(1 row)
+
+Mon 19 Oct 2026 01:51:38 AM UTC (every 1s)
+
+ sesiones 
+----------
+        2
+(1 row)
+
+Mon 19 Oct 2026 01:51:39 AM UTC (every 1s)
+
+ sesiones 
+----------
+        2
+(1 row)
+
+
+### psql IdPaciente,DNI
+1,19056268
+2,40.021.044
+3,25024554
+### mysql -B
+### sqlplus markup csv
+"IdPaciente","DNI"
+1,"19056268"
+2,"40.021.044"
+3,"25024554"
+### psql -c sin transacción abierta: -1
+ ?column? 
+----------
+        1
+(1 row)
+
+ERROR:  division by zero
+exit=1
+### mysql -B
+service "mysql" is not running
+exit=1

@@ -1,0 +1,5 @@
+NOTICE:  table "file_listing" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+COPY 2190876
+ANALYZE

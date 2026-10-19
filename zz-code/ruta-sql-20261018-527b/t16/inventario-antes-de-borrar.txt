@@ -1,0 +1,29 @@
+## contenedores
+alameda-lab-dab-1	d07e3e1ce53b	Up 2 hours (healthy)
+alameda-lab-sqlserver-1	2b5b58162112	Exited (137) 43 minutes ago
+alameda-lab-postgres-1	2358fcba361e	Up 7 hours (healthy)
+alameda-lab-artemis-1	0f32b054e1f4	Exited (137) 2 hours ago
+alameda-lab-api-1	d155c6718ed9	Up 4 days (healthy)
+alameda-lab-mongo-1	098862b1339f	Exited (139) 3 days ago
+alameda-lab-oracle-1	f5ff19033860	Exited (143) 41 minutes ago
+alameda-lab-mysql-1	e2bde46db656	Exited (0) 41 minutes ago
+## volúmenes
+alameda-lab_artemis-data
+alameda-lab_mongo-data
+alameda-lab_mysql-data
+alameda-lab_oracle-data
+alameda-lab_postgres-data
+alameda-lab_sqlserver-data
+## redes
+alameda-lab_default
+## imágenes etiquetadas
+ruta-sql-libreoffice:a10	611902276815	634MB
+ruta-sql-uv-mssql:t13	072684c8773b	278MB
+ruta-sql/postgres-hint-plan:f13	831780c6fdc6	663MB
+## volúmenes sin etiqueta del proyecto
+alameda-lab_artemis-data
+alameda-lab_mongo-data
+alameda-lab_mysql-data
+alameda-lab_oracle-data
+alameda-lab_postgres-data
+alameda-lab_sqlserver-data

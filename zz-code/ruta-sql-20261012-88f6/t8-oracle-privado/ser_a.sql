@@ -1,0 +1,7 @@
+SET ECHO ON
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT last_number FROM mvcc_counter WHERE point_of_sale = 1;
+EXEC DBMS_SESSION.SLEEP(5)
+UPDATE mvcc_counter SET last_number = 18 WHERE point_of_sale = 1;
+ROLLBACK;
+EXIT

@@ -1,0 +1,88 @@
+=== run_bas_tests.py 
+PASS  two-digit year 27 -> 2027 / fecha_nac
+PASS  two-digit year 27 -> 2027 / direccion
+PASS  two-digit year 35 -> 1935 / nombre
+PASS  two-digit year 35 -> 1935 / dni
+PASS  two-digit year 35 -> 1935 / fecha_nac
+PASS  two-digit year 35 -> 1935 / direccion
+PASS  no DNI, address glued to name / nombre
+PASS  no DNI, address glued to name / dni
+PASS  no DNI, address glued to name / fecha_nac
+PASS  no DNI, address glued to name / direccion
+PASS  double space / nombre
+PASS  double space / dni
+PASS  double space / fecha_nac
+PASS  double space / direccion
+PASS  phone ends up in address / nombre
+PASS  phone ends up in address / dni
+PASS  phone ends up in address / fecha_nac
+PASS  phone ends up in address / direccion
+PASS  ExtraerDNI with keyword
+PASS  ExtraerDNI without keyword
+PASS  ExtraerDNI short number is not a DNI
+PASS  ExtraerDNI empty string
+
+40 passed, 0 failed
+
+exit=0
+=== run_bas_tests.py en-US
+FAIL  two-digit year 27 -> 2027 / fecha_nac: got [11/12/2027] expected [12/11/2027]
+PASS  two-digit year 27 -> 2027 / direccion
+PASS  two-digit year 35 -> 1935 / nombre
+PASS  two-digit year 35 -> 1935 / dni
+FAIL  two-digit year 35 -> 1935 / fecha_nac: got [] expected [23/05/1935]
+FAIL  two-digit year 35 -> 1935 / direccion: got [23/05/35 DEAN FUNES 3300] expected [DEAN FUNES 3300]
+PASS  no DNI, address glued to name / nombre
+PASS  no DNI, address glued to name / dni
+PASS  no DNI, address glued to name / fecha_nac
+PASS  no DNI, address glued to name / direccion
+PASS  double space / nombre
+PASS  double space / dni
+PASS  double space / fecha_nac
+PASS  double space / direccion
+PASS  phone ends up in address / nombre
+PASS  phone ends up in address / dni
+PASS  phone ends up in address / fecha_nac
+PASS  phone ends up in address / direccion
+PASS  ExtraerDNI with keyword
+PASS  ExtraerDNI without keyword
+PASS  ExtraerDNI short number is not a DNI
+PASS  ExtraerDNI empty string
+
+31 passed, 9 failed
+
+exit=0
+=== run_bas_tests.py es-AR default
+PASS  two-digit year 27 -> 2027 / fecha_nac
+PASS  two-digit year 27 -> 2027 / direccion
+PASS  two-digit year 35 -> 1935 / nombre
+PASS  two-digit year 35 -> 1935 / dni
+PASS  two-digit year 35 -> 1935 / fecha_nac
+PASS  two-digit year 35 -> 1935 / direccion
+PASS  no DNI, address glued to name / nombre
+PASS  no DNI, address glued to name / dni
+PASS  no DNI, address glued to name / fecha_nac
+PASS  no DNI, address glued to name / direccion
+PASS  double space / nombre
+PASS  double space / dni
+PASS  double space / fecha_nac
+PASS  double space / direccion
+PASS  phone ends up in address / nombre
+PASS  phone ends up in address / dni
+PASS  phone ends up in address / fecha_nac
+PASS  phone ends up in address / direccion
+PASS  ExtraerDNI with keyword
+PASS  ExtraerDNI without keyword
+PASS  ExtraerDNI short number is not a DNI
+PASS  ExtraerDNI empty string
+
+40 passed, 0 failed
+
+exit=0
+FAIL  two-digit year 35 -> 1935 / fecha_nac: got [23/05/2035] expected [23/05/1935]
+39 passed, 1 failed
+
+--- nota 18/10/2026: la ventana "default" depende de la versión de LibreOffice (main.xcd, TwoDigitYear):
+    LibreOffice 25.2.3 de Debian trixie (esta imagen): 1930 -> 40/40.
+    LibreOffice 26.2.1 (el de la Mac del autor, la corrida del 29/09): 1950 -> 39/40.
+    Con "es-AR 1950" explícito, la imagen reproduce el 39/40 del 29/09.

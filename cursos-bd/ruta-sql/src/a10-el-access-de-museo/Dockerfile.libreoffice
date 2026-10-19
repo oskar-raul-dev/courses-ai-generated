@@ -1,0 +1,11 @@
+# a10 · LibreOffice sin interfaz y mdbtools: correr ModParser.bas tal cual (run_bas_tests.py) y leer el .accdb sin Java.
+# Agregado el 18/10/2026: la prueba de 2026-09-29 usaba el LibreOffice de la máquina, y el curso no instala nada
+# fuera de un contenedor. Debian trixie trae LibreOffice 25.2 y mdbtools 1.0.
+#   docker build -t ruta-sql-libreoffice:a10 --label curso=ruta-sql -f Dockerfile.libreoffice .
+#   docker run --rm -v "$PWD":/w -w /w ruta-sql-libreoffice:a10 python3 run_bas_tests.py
+#   docker run --rm -v "$PWD":/w -w /w ruta-sql-libreoffice:a10 mdb-export out/alameda_1998.accdb pacientes
+FROM debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f
+LABEL curso=ruta-sql
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends libreoffice-core-nogui python3 mdbtools \
+ && rm -rf /var/lib/apt/lists/*

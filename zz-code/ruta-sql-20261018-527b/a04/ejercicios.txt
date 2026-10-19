@@ -1,0 +1,47 @@
+## ej1 pg
+📐 lab measure · postgres · perfil m · caja 3e59292e9918 · pgvector/pgvector:0.8.7-pg18@sha256:2358fcba361e…
+filas devueltas: 1 (estimadas: 1)
+bloques: 4160 (en caché 4160, leídos 0)
+filas examinadas en las hojas del plan: 242427
+plan:
+  Aggregate · estimadas 1 · reales 1 · bloques 4160
+    Gather · estimadas 2 · reales 3 · bloques 4160
+      Aggregate · estimadas 1 · reales 3 · bloques 4160
+        Seq Scan on Pacientes · estimadas 10 · reales 0 · descartadas 242427 · bloques 4160
+tiempo: 27.7 ms (contexto, no argumento)
+## ej1 mysql
+📐 lab measure · mysql · perfil m · caja 3e59292e9918 · mysql:9.7.2@sha256:e2bde46db656…
+contadores Handler_read: first 1 · key 29 · next 31 · rnd_next 242428
+filas examinadas (suma de los contadores): 242489
+plan (EXPLAIN ANALYZE):
+  -> Aggregate: count(0)  (cost=32088 rows=1) (actual time=111..111 rows=1 loops=1)
+      -> Filter: (legacy.Pacientes.Nombre like '%PASAP%')  (cost=25928 rows=26731) (actual time=111..111 rows=0 loops=1)
+          -> Table scan on Pacientes  (cost=25928 rows=240606) (actual time=0.343..82.7 rows=242427 loops=1)
+## ej6 pg
+🏁 lab race · postgres · permutación a1 a2 b1 b2 a3 b3 a4 b4 · repeatable read
+ a1  BEGIN
+ a2  1 fila  (28.00)
+ b1  BEGIN
+ b2  1 fila  (28.00)
+ a3  UPDATE 1
+ b3  ⏳ espera un bloqueo
+ a4  COMMIT
+   ↳ b3  ✗ 40001 could not serialize access due to concurrent update
+ b4  ROLLBACK
+resultado: a sin errores · b con error 40001 en b3
+comprobación: 1 fila  (18.00)
+## ej6 mysql
+🏁 lab race · mysql · permutación a1 a2 a3 b1 b2 b3 a4 b4 a5 b5 · repeatable read
+ a1  SET
+ a2  START
+ a3  1 fila  (28.00)
+ b1  SET
+ b2  START
+ b3  1 fila  (28.00)
+ a4  UPDATE 1
+ b4  ⏳ espera un bloqueo
+ a5  COMMIT
+   ↳ b4  UPDATE 1
+ b5  COMMIT
+resultado: a sin errores · b sin errores
+comprobación: 1 fila  (23.00)

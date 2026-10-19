@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": ["jasmine"], "noEmit": false, "module": "commonjs", "outDir": "salidas/js-t2b", "rootDir": "." },
+  "files": [
+    "salidas/src-t2b/src/app/core/domain/certificate-status.spec.ts",
+    "salidas/src-t2b/src/app/core/domain/certificate-validity.spec.ts",
+    "salidas/src-t2b/src/app/core/time/business-day.spec.ts",
+    "salidas/src-t2b/src/app/core/domain/resolve-template-version.spec.ts"
+  ]
+}

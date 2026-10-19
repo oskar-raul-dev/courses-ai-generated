@@ -1,0 +1,23 @@
+-- Fase 15 · la anomalía de solo lectura: a cobra en el lote abierto, b cierra el lote y c, que solo lee, informa
+-- el total del lote cerrado antes de que llegue el cobro de a. El informe dice 1000,00 y el lote
+-- termina en 2500,00.
+-- uv run lab race -f 15-aislamiento-comparado/read_only.race --isolation read-committed
+-- @engine postgres
+-- @isolation read committed
+-- @setup TRUNCATE staging.cash_receipt
+-- @setup DELETE FROM staging.cash_batch
+-- @setup INSERT INTO staging.cash_batch VALUES (1, 1)
+-- @setup INSERT INTO staging.cash_receipt VALUES (1, 1000.00)
+-- @check SELECT sum(amount) FROM staging.cash_receipt WHERE batch = 1
+a1: BEGIN ISOLATION LEVEL {isolation};
+a2: SELECT current_batch FROM staging.cash_batch WHERE id = 1;
+b1: BEGIN ISOLATION LEVEL {isolation};
+b2: UPDATE staging.cash_batch SET current_batch = current_batch + 1 WHERE id = 1;
+b3: COMMIT;
+c1: BEGIN ISOLATION LEVEL {isolation};
+c2: SELECT current_batch FROM staging.cash_batch WHERE id = 1;
+c3: SELECT sum(amount) FROM staging.cash_receipt WHERE batch = 1;
+c4: COMMIT;
+a3: INSERT INTO staging.cash_receipt VALUES (1, 1500.00);
+a4: COMMIT;
+-- @permutation a1 a2 b1 b2 b3 c1 c2 c3 c4 a3 a4

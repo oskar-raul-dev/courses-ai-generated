@@ -1,0 +1,13 @@
+-- Fase 18 · el ALTER de MySQL con lock_wait_timeout: por defecto espera un año (31.536.000 s); con 1 s se rinde y la cola sigue.
+-- uv run lab race -f 18-bloqueos-deadlocks-y-ddl/ddl_lock_timeout_mysql.race
+-- @engine mysql
+-- @setup DROP TABLE IF EXISTS staging.ddl_target
+-- @setup CREATE TABLE staging.ddl_target (debtor_id int PRIMARY KEY, balance decimal(12,2)) AS SELECT debtor_id, balance FROM staging.debtor
+a1: START TRANSACTION;
+a2: SELECT count(*) FROM staging.ddl_target;
+b1: SET SESSION lock_wait_timeout = 1;
+b2: ALTER TABLE staging.ddl_target ADD COLUMN reviewed_by varchar(30), ALGORITHM=INSTANT;
+c1: SELECT balance FROM staging.ddl_target WHERE debtor_id = 1;
+b3: SELECT 'b se rindió';
+a3: COMMIT;
+-- @permutation a1 a2 b1 b2 c1 b3 a3

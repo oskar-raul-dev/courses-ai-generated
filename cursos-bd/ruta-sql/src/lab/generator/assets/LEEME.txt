@@ -1,0 +1,31 @@
+LEEME - la caja
+Matias, sabado a la noche (domingo, ya)
+
+Lo que hay aca es una copia de la base ALAMEDA del SQL Server y de lo que anda alrededor.
+NO es produccion: es para que el arquitecto nuevo pueda mirar sin tocar nada.
+
+tablas\          todas las tablas de ALAMEDA, una por archivo, sacadas con bcp.
+                 Separador coma, texto entre comillas. Los NULL quedan vacios y sin comillas;
+                 un texto vacio queda "" (no es lo mismo, ojo).
+                 Un par salieron en Latin-1 porque asi salieron. Las demas en UTF-8.
+                 Las imagenes y los PDF NO estan (son 1,1 TB). Ver archivos\
+esquema\         ALAMEDA.sql, el script que genera el Management Studio
+vba\             los modulos del Access exportados como texto (el parser es ModParser)
+tsql\            la copia del parser que hice en 2016 para los reportes
+turnos\          el accdb de turnos de recepcion exportado a CSV. Los examenes van todos
+                 en una columna separados por punto y coma, como estan en el Access
+planillas\       lo que llega de afuera: padrones de PAMI, APROSS y OSDE, el NBU,
+                 los convenios de este anio y la planilla de la notificacion del COVID
+archivos\        listado.csv: nombre y tamanio de cada orden escaneada y cada PDF
+
+Cosas que conviene saber antes de abrir nada:
+- Pacientes.Nombre trae de todo adentro (DNI, obra social, telefono). Hay un parser.
+- Hay tablas que no se si se usan. No las borren todavia.
+- Precios_AAAA_MM son copias del primer dia de cada mes. La de verdad desde 2025 es Precios.
+- Los IdProtocolo raros (negativos, enormes) son de la replicacion de 2004. Son validos.
+- Las fechas de nacimiento en el futuro son del anio de dos digitos. No las toquen, Norma
+  quiere que queden como estan.
+
+Usuario y clave del SQL Server: pedirselos a Veronica, yo no los paso por mail.
+
+cualquier cosa me llaman, pero no los martes que es dia de facturacion

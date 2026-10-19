@@ -1,0 +1,21 @@
+bloque «// src/app/core/state/certificate-state.service.ts» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t3/base/src/app/core/state/certificate-state.service.ts
+bloque «// src/app/features/certificates/certificate-pdf.service.ts — LA VERSI» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t3/base/src/app/features/certificates/certificate-pdf.service.ts
+bloque «// src/app/core/api/template-api.service.ts — lo que se añade» → /Users/oskar/Developer/Learning/courses-ia-generated/zz-code/angular-16-legacy-for-backend-devs-20261007-a754/salidas/t3/base/src/app/core/api/template-api.service.ts
+diff aplicado  src/app/core/models/asset.model.ts (1 trozos)
+añadido        src/app/core/time/business-day.ts
+diff aplicado  src/app/core/domain/certificate-status.ts (5 trozos)
+diff aplicado  src/app/core/state/certificate-state.service.ts (3 trozos)
+diff aplicado  src/app/core/domain/certificate-validity.ts (3 trozos)
+diff aplicado  src/app/core/state/certificate-state.service.ts (2 trozos)
+diff aplicado  src/app/core/pdf/certificate-document.ts (4 trozos)
+diff aplicado  src/app/features/certificates/certificate-pdf.service.ts (1 trozos)
+spec escrito   src/app/core/domain/certificate-status.incidente-21.spec.ts
+preparación 15 aplicada a src/app/core/domain/certificate-status.ts
+db.incidente-21.json: 28 filas; fix con timeZone en CAL-INN-GPS-01
+tsc fix21: OK
+tsc base: OK
+jasmine fix21: OK — 15 specs, 0 failures
+jasmine base: FALLA — 6 specs, 3 failures
+jasmine roto15: FALLA — 2 specs, 2 failures
+línea base con el fix: igual a la de T2
+bash correr-t3.sh  0.36s user 0.29s system 4% cpu 13.472 total

@@ -1,0 +1,18 @@
+-- Fase 15 · dos verdades en la misma transacción (MySQL, REPEATABLE READ): la lectura común sale de la
+-- foto del comienzo; la lectura bloqueante (FOR UPDATE, FOR SHARE, y la de UPDATE y DELETE) lee lo último
+-- confirmado.
+-- uv run lab race -f 15-aislamiento-comparado/current_read_mysql.race
+-- @engine mysql
+-- @isolation repeatable read
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: SET SESSION TRANSACTION ISOLATION LEVEL {isolation};
+a2: START TRANSACTION;
+a3: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+b1: UPDATE staging.debtor SET balance = balance - 10 WHERE debtor_id = 1;
+a4: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+a5: SELECT balance FROM staging.debtor WHERE debtor_id = 1 FOR UPDATE;
+a6: UPDATE staging.debtor SET balance = balance - 5 WHERE debtor_id = 1;
+a7: SELECT balance FROM staging.debtor WHERE debtor_id = 1;
+a8: COMMIT;
+-- @permutation a1 a2 a3 b1 a4 a5 a6 a7 a8

@@ -1,0 +1,75 @@
+== extensiones
+      extname       | extversion 
+--------------------+------------
+ pg_stat_statements | 1.12
+ pgstattuple        | 1.5
+(2 rows)
+
+== tamanos
+ tabla | indices | total | bloques 
+-------+---------+-------+---------
+ 33 MB | 5344 kB | 38 MB |    4160
+(1 row)
+
+== pgstattuple
+ tuple_count | dead_tuple_count | libre_pct | ocupado_pct 
+-------------+------------------+-----------+-------------
+      242427 |                0 |       0.8 |        94.6
+(1 row)
+
+== pg_stat_user_tables
+  relname   | seq_scan | idx_scan | n_live_tup | n_dead_tup | hubo_autovacuum 
+------------+----------+----------+------------+------------+-----------------
+ Pacientes  |       75 |    17902 |     242427 |          0 | t
+ Protocolos |      539 |    28490 |    1327622 |       5898 | t
+(2 rows)
+
+== wal
+SELECT 1000
+                       QUERY PLAN                       
+--------------------------------------------------------
+ Update on a04_wal (actual rows=0.00 loops=1)
+   Buffers: shared hit=309 dirtied=1 written=4
+   WAL: records=200 bytes=15995
+   ->  Seq Scan on a04_wal (actual rows=100.00 loops=1)
+         Filter: ("IdPaciente" <= 100)
+         Rows Removed by Filter: 900
+         Buffers: shared hit=8
+ Planning:
+   Buffers: shared hit=10
+(9 rows)
+
+                       QUERY PLAN                       
+--------------------------------------------------------
+ Update on a04_wal (actual rows=0.00 loops=1)
+   Buffers: shared hit=282 dirtied=2 written=1
+   WAL: records=174 fpi=1 bytes=22754
+   ->  Seq Scan on a04_wal (actual rows=100.00 loops=1)
+         Filter: ("IdPaciente" <= 100)
+         Rows Removed by Filter: 900
+         Buffers: shared hit=9
+         WAL: records=1 bytes=254
+(8 rows)
+
+DROP TABLE
+== pg_stat_statements
+ reiniciado 
+------------
+ t
+(1 row)
+
+ count 
+-------
+ 18936
+(1 row)
+
+ count 
+-------
+     0
+(1 row)
+
+ calls | rows | bloques |                            consulta                            
+-------+------+---------+----------------------------------------------------------------
+     2 |    2 |    8320 | SELECT count(*) FROM legacy."Pacientes" WHERE "Nombre" LIKE $1
+(1 row)
+

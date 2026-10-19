@@ -1,0 +1,55 @@
+# T4 · resultados de correr-t4.sh, 2026-10-07
+nuevo          src/app/features/clients/tax-id.validator.ts
+diff aplicado  src/app/features/clients/client-form/client-form.component.ts (2 trozos)
+diff aplicado  src/app/features/clients/client-form/client-form.component.html (2 trozos)
+spec escrito   src/app/features/clients/tax-id.validator.incidente-22.spec.ts
+## tsc-base: sin errores
+## tsc-fix22: sin errores
+## jasmine-base
+Randomized with seed 10487
+Started
+...F..FFF.....
+
+Failures:
+1) T4 · el formulario de clientes con los validadores de este árbol "2091748323001" pasa los síncronos
+  Message:
+    {"pattern":{"requiredPattern":"/^\\d{9,10}$/","actualValue":"2091748323001"}}: Expected false to be true.
+  Stack:
+
+2) T4 · el formulario de clientes con los validadores de este árbol "20000000001" pasa los síncronos
+  Message:
+    {"pattern":{"requiredPattern":"/^\\d{9,10}$/","actualValue":"20000000001"}}: Expected false to be true.
+  Stack:
+
+3) T4 · el formulario de clientes con los validadores de este árbol el RUC de la hostería llega al chequeo asíncrono y queda VALID
+  Message:
+    Expected 'INVALID' to be 'PENDING'.
+  Stack:
+  Message:
+    Expected $.length = 0 to equal 1.
+    Expected $[0] = undefined to equal '2091748323001'.
+  Stack:
+  Message:
+    Expected 'INVALID' to be 'VALID'.
+  Stack:
+
+4) T4 · el formulario de clientes con los validadores de este árbol un RUC ya registrado se marca como repetido
+  Message:
+    Expected object to have properties
+        taxIdTaken: true
+    Expected object not to have properties
+        pattern: Object({ requiredPattern: '/^\d{9,10}$/', actualValue: '2091748323001' })
+  Stack:
+
+14 specs, 4 failures
+Finished in 2.026 seconds
+Randomized with seed 10487 (jasmine --random=true --seed=10487)
+## jasmine-fix22
+Randomized with seed 97803
+Started
+.................
+
+
+17 specs, 0 failures
+Finished in 2.018 seconds
+Randomized with seed 97803 (jasmine --random=true --seed=97803)

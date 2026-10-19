@@ -1,0 +1,11 @@
+-- Ejercicio 9 · el cobro como UPDATE relativo, en READ COMMITTED.
+-- @engine postgres
+-- @isolation read committed
+-- @setup UPDATE staging.debtor SET balance = 28.00 WHERE debtor_id = 1
+-- @check SELECT balance FROM staging.debtor WHERE debtor_id = 1
+a1: BEGIN ISOLATION LEVEL {isolation};
+b1: BEGIN ISOLATION LEVEL {isolation};
+a2: UPDATE staging.debtor SET balance = balance - 10 WHERE debtor_id = 1 RETURNING balance;
+b2: UPDATE staging.debtor SET balance = balance - 5 WHERE debtor_id = 1 RETURNING balance;
+a3: COMMIT;
+b3: COMMIT;

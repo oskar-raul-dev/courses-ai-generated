@@ -281,6 +281,13 @@ Es la divergencia más importante respecto de la NoSQL Lite, y **no se negocia**
   explica citando la documentación oficial, con enlace. **Nunca** aparece un número propio de estos
   dos motores: ni lecturas, ni filas reales, ni tiempos, ni tamaños medidos. De sus planes se
   publica solo la **estructura** (operaciones y orden, de `EXPLAIN PLAN` sin ejecutar).
+- **La única excepción es el dimensionamiento del laboratorio:** `a01` y `a02` publican cuánto tarda
+  en arrancar cada contenedor y cuánta memoria ocupa, también los de Oracle y SQL Server, porque sin
+  eso el lector no sabe si el laboratorio entra en su máquina. No es un resultado del motor sobre una
+  carga; ningún otro documento lo repite.
+- **Por qué también Oracle Free** (D20): sus *Free Use Terms* no llevan la cláusula DeWitt, pero los
+  contratos de empresa de Oracle sí, y un número medido en Free invita a extrapolarlo a la edición
+  que el lector tiene bajo cláusula. `a09` cita los dos textos.
 
 Formato de una medición publicada:
 
@@ -351,7 +358,7 @@ entrada nueva que cita a la anterior.
 ```markdown
 # 🔢 Fase 16 — El folio sin huecos: numerar comprobantes con tres cajas y un web service que no perdona
 
-> **Curso:** Ruta SQL · Fase 16 de 26 · Bloque III — La concurrencia · **10 h**
+> **Curso:** Ruta SQL · Fase 16 de 27 · Bloque III — La concurrencia · **10 h**
 > **Motores:** PostgreSQL `postgres@sha256:…` · contraste MySQL `mysql@sha256:…` · Oracle (apuesta sin resolver)
 > **Entorno de ejecución:** SQL + Python
 > **Perfil de volumen:** S para los ejemplos, M para las mediciones
@@ -385,6 +392,7 @@ El título es descriptivo y con carácter: `Fase NN — Tema: la promesa concret
 - 📖 **Traducción** entre motores, desde Access/T-SQL o desde la NoSQL Lite, y de vuelta.
 - 🧠 **Modelo mental.** 🧭 **Principio.**
 - ⚠️ **Advertencia.** 📝 **Nota de contexto.** 💡 **Truco.** 📚 **Referencia inline.**
+- 🔑 **La frase para memorizar**, en una o dos líneas (D23; la estrenó `00-convencion-de-git-y-tags.md`).
 - 🩺 **Diagnóstico.** El comando que confirma o descarta una hipótesis.
 - 🏚️ **La caja.** Un fragmento literal del sistema heredado: una fila de `legacy`, una línea del
   `.bas`, el `LEEME.txt`.
@@ -478,11 +486,13 @@ Pendientes sugeridos**, con destino explícito.
 
 ### 10.1 El boss de bloque
 
-Uno por bloque del I al V, al cierre de su última fase, más el **boss del puente** (Java 21 y
-Artemis), que va junto al del Bloque V. **Empieza con un sistema roto**, cruza al
+Uno por bloque del I al V, al cierre de su última fase, más el **boss del puente** (Java 25 y
+Apache Artemis), que va junto al del Bloque V. **Empieza con un sistema roto**, cruza al
 menos dos fases del bloque y se entrega como artefacto: un esquema migrado, un informe con
 mediciones, un diagnóstico con su comando. **Lo pide alguien de la historia**, con nombre, en su
-voz y con una consecuencia si sale mal. La lista está en el alcance §13.
+voz y con una consecuencia si sale mal. La lista está en el alcance §13. `src/` trae solo el
+punto de partida; la solución ejecutada vive en el directorio de `zz-code/` de su tanda (D42) y no
+viaja al repositorio público.
 
 ### 10.2 El boss global "Un martes"
 
@@ -528,14 +538,20 @@ fundacionales (Codd 1970, Berenson et al. 1995 sobre niveles de aislamiento, Cah
 sobre SSI, Fagin sobre la 5FN), después libros, después blogs y vídeos. **Siempre se advierte
 cuando un enlace apunta a otra versión.**
 
-**Libros base del curso** (edición y año comprobados en la tanda P9, y citados por esa edición):
+**Libros base del curso**, citados por esta edición (comprobada el 11/10/2026 en la tanda P9; el
+detalle y los ISBN, en `verificacion-de-laboratorio/hallazgos.md` §F1):
 
-- C. J. Date, *SQL and Relational Theory*.
-- Markus Winand, *SQL Performance Explained* y su sitio *Use The Index, Luke*.
-- Bill Karwin, *SQL Antipatterns*.
-- Martin Kleppmann, *Designing Data-Intensive Applications*.
-- Richard T. Snodgrass, *Developing Time-Oriented Database Applications in SQL*.
-- Thomas Kyte, *Expert Oracle Database Architecture*.
+- C. J. Date, *SQL and Relational Theory: How to Write Accurate SQL Code*, 3.ª ed., O'Reilly, 2015.
+- Markus Winand, *SQL Performance Explained*, edición del autor, 2012, y su sitio *Use The Index,
+  Luke*.
+- Bill Karwin, *SQL Antipatterns, Volume 1: Avoiding the Pitfalls of Database Programming*, Pragmatic
+  Bookshelf, 2022.
+- Martin Kleppmann y Chris Riccomini, *Designing Data-Intensive Applications*, 2.ª ed., O'Reilly,
+  2026.
+- Richard T. Snodgrass, *Developing Time-Oriented Database Applications in SQL*, Morgan Kaufmann,
+  1999.
+- Darl Kuhn y Thomas Kyte, *Expert Oracle Database Architecture*, 4.ª ed., Apress, 2021. Cubre
+  Oracle 21c, no 23ai/26ai: la fase que lo cite lo advierte.
 
 Formato: URL completa, título y una nota de qué versión cubre y por qué vale. Cada fase cierra sus
 referencias con un **orden de lectura sugerido**.
@@ -556,7 +572,10 @@ referencias con un **orden de lectura sugerido**.
   motor *es* el rol), más `mongo` (F20), `api` (F23), `broker` y `bridge` (boss del puente) y
   `sqlserver` (track).
 - **La emulación se declara**: todo lo que corra bajo Rosetta o QEMU lo dice en el encabezado de la
-  fase, porque cambia los tiempos (que igual no son argumento) y a veces el arranque.
+  fase, porque cambia los tiempos (que igual no son argumento) y a veces el arranque. Hoy solo SQL
+  Server corre emulado, y **solo en Docker Desktop**: en Podman sobre Apple Silicon no arranca
+  (verificado el 11/10/2026), así que el track lo dice como requisito y no ofrece el equivalente
+  Podman en esa plataforma.
 
 ---
 
@@ -676,9 +695,9 @@ Todo lo demás del `CLAUDE.md` aplica tal cual.
 
 ## 18. 📌 Pendientes que afectan a esta guía
 
-- **Versiones y digests sin fijar** hasta la verificación de laboratorio (tanda P8). Cuando se
-  fijen, viven en `a02` y esta guía solo apunta allí. P8 trabaja en `zz-code/` (§19.5).
-- **Ediciones de los libros base** sin comprobar (tanda P9).
+- ✅ **Versiones y digests verificados el 11/10/2026** (tanda P8), en
+  `verificacion-de-laboratorio/hallazgos.md`. Los fija `a02` en T1, y esta guía solo apunta allí.
+- ✅ **Ediciones de los libros base comprobadas el 11/10/2026** (tanda P9, §11).
 - ✅ **D6 cerrada el 30/09/2026**: el repositorio se trata como público, y de los planes de Oracle
   y SQL Server se publica solo la estructura.
 
@@ -724,7 +743,7 @@ números de esta guía, nunca los de la plantilla.
 | Solucionario | `soluciones/<documento>.md`, con la forma de §10.3 y la plantilla de solucionario |
 | Prompts de fase y de apéndice | [`prompts-de-fase.md`](prompts-de-fase.md), [`prompts-de-apendice.md`](prompts-de-apendice.md) y, para el track, [`prompts-sqlserver-fase.md`](prompts-sqlserver-fase.md) |
 | Historia de la empresa | `00-historia-de-alameda.md`, publicada |
-| Verificación previa (E6) | P8 y P9, pendientes: `verificacion-de-laboratorio/hallazgos.md` (formato `H1`, `H2`…) |
+| Verificación previa (E6) | P8 y P9, hechas el 11/10/2026: [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) (formato `H1`, `H2`…; las fuentes, `F1` y `F2`) |
 | Manual de `prompts/` | [`README.md`](README.md) |
 | Verificador | `verificar-corpus.py` sobre `verificador_base.py` (§19.4) |
 | Documentos vivos | `INSTINTOS.md`, `bitacora-de-medicion.md` (en lugar de `BENCHMARKS.md`, §17) y `a08` |
@@ -755,8 +774,9 @@ python3 prompts/verificar-corpus.py --publicacion   # además, lo que exige el r
 
 - **El código del curso vive en `src/`** (D-09), con **un solo `.gitignore`, en `src/`**, que nace en
   T0 y se sostiene sin el de la raíz del repositorio: `.venv/`, `__pycache__/`, la caja generada por
-  `a05`, el `.env` del laboratorio y, para el boss del puente, `target/`. Ninguna carpeta de `src/`
-  lleva el suyo.
+  `a05`, el `.env` del laboratorio y, para el boss del puente, `target/` y `lib/`. Ninguna carpeta de
+  `src/` lleva el suyo. En E9 (18/10/2026) se agregó uno en la raíz del curso, para la raíz del
+  repositorio público, que solo ignora archivos del sistema operativo y de los editores.
 - **Las pruebas de las sesiones van a `zz-code/ruta-sql-<fecha>-<hash>/`**, nunca al scratchpad, a
   `/tmp` ni a una carpeta del curso. P8 (la verificación de laboratorio) también: sus scripts y
   registros en `zz-code/`, y solo `hallazgos.md` en `prompts/verificacion-de-laboratorio/`. El plan

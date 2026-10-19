@@ -1,0 +1,7 @@
+-- Ejercicio 6 · el hueco de la secuencia.
+-- @engine postgres
+-- @setup SELECT setval('staging.invoice_number_seq', 247581)
+a1: BEGIN;
+a2: SELECT nextval('staging.invoice_number_seq');
+a3: ROLLBACK;
+b1: SELECT nextval('staging.invoice_number_seq');
