@@ -276,10 +276,13 @@ también se declara: los comandos `podman` de [F24](24-docker-y-podman-arquitect
 [F25](25-rootless-y-user-namespaces.md) y [F26](26-portabilidad-entre-motores.md) están
 contrastados contra la documentación oficial **pero no ejecutados**, y sus cabeceras lo dicen.
 
-Lo que todavía **no** encontrarás son las **soluciones y rúbricas de los ejercicios**. Cada
-ejercicio trae su criterio de éxito —una línea `Objetivo:` o una `Pregunta:` que solo se
-responde habiéndolo hecho—, y con eso puedes autoevaluarte, pero no hay un solucionario. Es
-un pendiente conocido, común a todos los cursos de este repositorio.
+Lo que **no** vas a encontrar, a propósito, es un **solucionario**. Cada ejercicio trae su
+criterio de éxito —una línea `Objetivo:` o una `Pregunta:` que solo se responde habiéndolo
+hecho—, y en un curso donde casi todo termina en una imagen que construye, un contenedor que
+arranca o un comando que responde, esa línea ya es la verificación: la máquina te dice si
+quedó bien, y una solución copiada te ahorraría justo el fallo que el ejercicio quiere que
+veas. La única rúbrica está en [F34](34-proyecto-final.md), porque el proyecto final es el
+tuyo y no tiene una salida única.
 
 > ⚠️ **Lo que sí se mueve bajo tus pies es el mundo exterior.** El baseline del laboratorio
 > —Debian 10 Buster, Node 10/12/14/16, npm 6— está fuera de soporte y por eso mismo no

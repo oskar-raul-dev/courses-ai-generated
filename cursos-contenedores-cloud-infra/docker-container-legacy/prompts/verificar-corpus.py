@@ -38,7 +38,8 @@ class VerificadorDelCurso(PerfilCoursesIA):
     # Seis callouts de un solo uso, heredados del curso ya publicado: se toleran y no se multiplican
     # (guía §16.2).
     CALLOUTS_HEREDADOS = {"🥇", "⚔️", "🛑", "🥊", "🗓️", "🧾"}
-    CALLOUTS = CALLOUTS | CALLOUTS_HEREDADOS
+    # 🔑 «La frase para memorizar» viene de la plantilla de la convención de git (07/10/2026).
+    CALLOUTS = CALLOUTS | CALLOUTS_HEREDADOS | {"🔑"}
     # Emoji en ### con moderación (guía §3 y §16.2): la escala de dificultad, los marcadores y los
     # títulos de ruta y de bloque que ya existen. El verificador compara carácter por carácter, así que
     # van también sin el U+FE0F.
@@ -48,8 +49,9 @@ class VerificadorDelCurso(PerfilCoursesIA):
     # El encabezado de fase (guía §7.1): «Curso» y «Objetivo» no faltan nunca. La fecha va solo donde
     # hubo verificación ejecutada o revisión de documentación externa (guía §16.2).
     CAMPOS_ENCABEZADO = ("**Curso:**", "**Objetivo")
-    # 00-PARTE-I-taller.md y 00-PARTE-II-laboratorio.md llevan número pero son entradas de Parte.
-    NO_CAPITULO = PerfilCoursesIA.NO_CAPITULO + ("parte",)
+    # 00-PARTE-I-taller.md y 00-PARTE-II-laboratorio.md llevan número pero son entradas de Parte, y
+    # 00-convencion-de-git-y-tags.md (07/10/2026) es un documento de apoyo: ninguno es fase.
+    NO_CAPITULO = PerfilCoursesIA.NO_CAPITULO + ("parte", "convencion")
 
     def verificar_documento_extra(self, ruta, lineas, texto):
         # `lineas` llega sin los bloques de código: los diagramas se buscan en el texto crudo.

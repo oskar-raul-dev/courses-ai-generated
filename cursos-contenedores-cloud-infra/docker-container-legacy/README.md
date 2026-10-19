@@ -96,6 +96,10 @@ Y si lo que se rompió es urgente, el atajo es otro:
 catálogos [F31](31-catalogo-de-fallos-i.md) y [F32](32-catalogo-de-fallos-ii.md) están ordenados
 por síntoma para que busques el mensaje de error literal.
 
+Antes de la [F02](02-dockerfile-esencial.md), donde nace tu laboratorio, lee la
+[convención de git](00-convencion-de-git-y-tags.md): cómo commiteas y etiquetas cada fase, con el
+tag de git y la etiqueta de la imagen llamándose igual.
+
 ---
 
 ## Cómo se estudia
@@ -141,3 +145,10 @@ Prosa en español latinoamericano neutro con tuteo; **código, identificadores y
 comentarios de código en español. Los diagramas de arquitectura y de flujo están en Mermaid, que
 GitHub dibuja directamente; los árboles de archivos, las salidas de terminal y las fichas de cierre
 de cada fase siguen en texto plano, porque así se leen y se copian mejor.
+
+---
+
+## Licencia
+
+Texto y código, bajo **CC BY-SA 4.0**. Los detalles, y las licencias de lo que el código baja al
+construir la imagen, están en [`LICENSE.md`](LICENSE.md).

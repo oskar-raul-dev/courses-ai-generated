@@ -240,7 +240,9 @@ PY
 # ─────────────────────────────────────────────────────────────────────────────
 comprobar "índice y README cuadran con el árbol" <<'PY'
 import re, glob
-fases = [f for f in glob.glob('[0-9][0-9]-*.md') if not f.startswith('00-PARTE')]
+# 00-convencion-de-git-y-tags.md (del 07/10/2026) es un documento de apoyo, no una fase.
+fases = [f for f in glob.glob('[0-9][0-9]-*.md')
+         if not f.startswith(('00-PARTE', '00-convencion'))]
 apes = glob.glob('a[0-9][0-9]-*.md')
 for doc in ('README.md', '0-programa-del-curso.md'):
     s = open(doc, encoding='utf-8').read()

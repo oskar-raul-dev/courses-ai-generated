@@ -894,7 +894,7 @@ Lo que esta sección no menciona se hereda tal cual.
 | Audiencia que no necesita lo básico | **Nada se da por sabido** (§4): ni Docker, ni Linux | El lector llega por un proyecto roto, no por Docker; el README pide un lenguaje y terminal, nada más |
 | Forma de lección setup → conceptos → antipatrones → traducción → ejercicios → veredicto | **La plantilla de diez secciones de §8**, cerrada con «La señal de que quedó bien» | Es un taller incremental sobre una sola imagen. El veredicto honesto no es por fase: F00 §7 y §9 fijan dónde no sirve (producción, migrar el proyecto) y F23 decide entre ARM64 nativo y AMD64 emulado |
 | 20–30 ejercicios por sección, 🟢🟡🟠🔴 | **20 a 35 obligatorios** con 🔥 y 💀 encima, y cuatro fases exentas (§9). Publicado: de 20 a 30 | La cifra la fija lo que la fase enseña; 35 es el techo, no la meta |
-| Ejercicios con solución de referencia o rúbrica | **Sin solucionario**: cada ejercicio cierra con `Objetivo:` o `Pregunta:`; solo F34 trae rúbrica | Decisión de la propuesta §8, tomada al cortar el curso; la autoverificación es esa línea |
+| Ejercicios con solución de referencia o rúbrica | **Sin solucionario**: cada ejercicio cierra con `Objetivo:` o `Pregunta:`; solo F34 trae rúbrica | Decisión de la propuesta §8, tomada al cortar el curso y confirmada el 19/10/2026 (el programa §9 lo explica al lector); la autoverificación es esa línea |
 | `0-ESTRUCTURA-CURSO.md` antes de la primera lección | **`0-programa-del-curso.md`**, con las rutas de lectura por perfil | El curso lo escribió con ese nombre y lo citan el README y las entradas de Parte; renombrarlo rompe el bloqueo de contenido |
 | `BENCHMARKS.md` e `INSTINTOS.md` | **No existen.** Las mediciones van en su fase, con condiciones declaradas (F23, F26); los instintos, en las Notas de época | El curso mide poco y en contexto; un documento aparte quedaría casi vacío |
 | Diccionario de traducción en los dos sentidos | **No aplica**: no hay paradigma de origen. Hace su papel el glosario (a16) | El curso enseña un entorno, no traduce de otro |
@@ -981,7 +981,10 @@ bash prompts/check-course.sh                        # las trece comprobaciones d
   documentación oficial, no ejecutados, y sus cabeceras lo declaran.
 
 Los dos se cierran en la pasada del autor como lector: tomar el curso desde
-cero, montar todos los contenedores y rehacer todas las pruebas. Sus reglas,
-lo que pide atención en cada tramo y dos decisiones que esperan al autor (el
-solucionario y la matriz de F11) están en
-[`pendientes-a-futuro.md`](pendientes-a-futuro.md).
+cero, montar todos los contenedores y rehacer todas las pruebas. Desde el
+19/10/2026 el curso **se publica antes de esa pasada**, porque lo no ejecutado
+ya está declarado al lector; la pasada queda como edición posterior. Sus
+reglas, lo que pide atención en cada tramo y la decisión que sigue esperando al
+autor (la matriz de F11) están en
+[`pendientes-a-futuro.md`](pendientes-a-futuro.md), junto con las dos cerradas
+(el solucionario y publicar antes de la pasada).

@@ -3,7 +3,7 @@
 
 > **Qué es este documento:** la hoja de trabajo de la pasada que cierra el curso: el autor lo toma
 > como lector, desde cero, en cada sistema, monta todos los contenedores y rehace todas las pruebas.
-> Al final, dos decisiones que esperan al autor. No se cita desde el curso.
+> Al final, las decisiones del autor: una abierta y dos cerradas el 19/10/2026. No se cita desde el curso.
 > **Fecha:** 05/10/2026. Ese día la redacción quedó cerrada: `verificar-corpus.py` (los dos modos) y
 > `check-course.sh` salen limpios.
 
@@ -69,13 +69,12 @@ en `0-programa-del-curso.md` y en el README, la guía §16.4, y `check-course.sh
 
 ## 🧭 Decisiones del autor
 
-### 1. El solucionario de los ejercicios
+### 1. El solucionario de los ejercicios — 🪦 cerrada el 19/10/2026
 
-La guía §16 lo declara **decisión** ("Sin solucionario: cada ejercicio cierra con `Objetivo:` o
-`Pregunta:`; solo F34 trae rúbrica"), pero `0-programa-del-curso.md` §9 se lo presenta al lector como
-**pendiente** ("Es un pendiente conocido"). Si es decisión, se reescribe ese párrafo del programa
-para decir por qué no hay solucionario; si es pendiente, pasa a la guía §16.4 y se planifica (941
-ejercicios, según el README).
+**Decisión, no pendiente** (valor por defecto, tomado al revisar el curso para publicar): manda la
+guía §16, que es la primera autoridad. El programa §9 se reescribió para decirle al lector por qué no
+hay solucionario —la línea `Objetivo:` o `Pregunta:` es la verificación, y la máquina responde—, y
+dejó de decir que es "un pendiente común a todos los cursos" (ya no lo era: la Ruta SQL trae el suyo).
 
 ### 2. La matriz de compatibilidad completa
 
@@ -83,6 +82,14 @@ F11 (ejercicio 24, 🔥) llama a la matriz contra las cuatro generaciones de Nod
 declarado del curso", que F20 retoma; F20 publica la suya corrida sobre `linux/amd64` emulado. La
 pasada da los datos para decidir si basta con la de F20 (y F11 deja de decir "pendiente") o si hace
 falta la corrida en ARM64 nativo.
+
+### 3. Publicar antes de la pasada — 🪦 cerrada el 19/10/2026
+
+**Se publica sin esperar la pasada** (valor por defecto, tomado al revisar el curso para publicar). Lo
+no ejecutado ya está declarado al lector en el README («Qué está verificado, y qué no»), el programa
+§9 y las cabeceras de F24–F26, así que publicar no promete nada que el curso no diga. La pasada queda
+como trabajo posterior a la publicación, con estas mismas reglas; lo que corrija entra como edición
+del curso publicado, y a17 se escribe en ella.
 
 ---
 
