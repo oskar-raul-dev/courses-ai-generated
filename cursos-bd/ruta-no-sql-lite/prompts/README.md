@@ -25,7 +25,7 @@ primera línea.
 | [`formato-bitacora-de-medicion.md`](formato-bitacora-de-medicion.md) | la ficha de medición, la apuesta, la rotura, el catálogo y los instintos | en cada fase B, y al alimentar los documentos vivos |
 | [`formato-de-miniproyectos.md`](formato-de-miniproyectos.md) | la plantilla de un `h-mini` y las decisiones sobre ellos | al revisar el `h-mini` de una familia |
 | [`prompts-de-fase.md`](prompts-de-fase.md) y [`prompts-de-apendice.md`](prompts-de-apendice.md) | el marco común y un bloque por documento | al abrir cada sesión |
-| `_desechable-plan-de-produccion.md` | tandas, estado, deuda de enlaces, bitácora, checklist y `zz-code/` | al empezar y al cerrar cada sesión |
+| ~~`_desechable-plan-de-produccion.md`~~ | tandas, estado, bitácora y checklist; borrado al dejar el curso listo para publicar (19/10/2026), con copia en `zz-code/ruta-no-sql-lite-20261012-90fb/plan-de-produccion-al-cerrar.md` | para saber cómo se hizo |
 | [`verificacion-de-laboratorio/hallazgos.md`](verificacion-de-laboratorio/hallazgos.md) | la verificación de T10 (H1–H13), con sus scripts | cuando una fase toca algo que T10 midió |
 | [`analisis-modelos-no-sql.md`](analisis-modelos-no-sql.md) y [`propuestas-historias.md`](propuestas-historias.md) | el porqué de las diez familias y las empresas candidatas | como registro; no se cambian |
 | `verificar-corpus.py` y `verificador_base.py` | las validaciones base y las propias del curso | al cerrar cada tanda |
