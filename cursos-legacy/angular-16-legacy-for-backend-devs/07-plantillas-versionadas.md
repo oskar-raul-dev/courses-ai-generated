@@ -128,13 +128,13 @@ Por eso esta fase fija la zona de referencia en un archivo y todo el cálculo de
 export type BusinessDay = string;
 
 /**
- * La zona horaria de referencia del negocio. CertCore opera en Colombia, que
- * no tiene horario de verano, así que un desplazamiento fijo es correcto y no
- * hace falta Intl para esto.
+ * La zona horaria de referencia del negocio. CertCore opera desde Bogotá,
+ * Lima y Quito, las tres en UTC-5 y sin horario de verano, así que un
+ * desplazamiento fijo es correcto y no hace falta Intl para esto.
  *
- * ⚠️ Si algún día CertCore opera en una zona CON horario de verano, este
- * archivo entero cambia: haría falta `Intl.DateTimeFormat` con `timeZone`, no
- * un número. Está escrito aquí para que ese día se cambie UN archivo.
+ * ⚠️ Si algún día un activo está en otra zona, o en una CON horario de verano,
+ * este archivo entero cambia: haría falta `Intl.DateTimeFormat` con `timeZone`,
+ * no un número. Está escrito aquí para que ese día se cambie UN archivo.
  *
  * 🧭 Ésta es la única definición de zona horaria del proyecto. La Fase 10, que
  * calcula la vigencia de los certificados, la reutiliza. Una segunda constante
@@ -167,7 +167,7 @@ export function toBusinessDay(instant: string): BusinessDay {
   return shifted.toISOString().slice(0, 10);
 }
 
-/** Hoy, en la zona del negocio. El único `new Date()` sin argumentos del proyecto. */
+/** Hoy, en la zona del negocio. El único `new Date()` sin argumentos que decide un día. */
 export function todayInBusinessZone(): BusinessDay {
   return toBusinessDay(new Date().toISOString());
 }
@@ -206,7 +206,7 @@ function parseOffsetMinutes(offset: string): number {
 
 **Detalles con intención**
 
-- **`addDays` con `Date.UTC` y no con `setDate`.** `setDate` opera en el huso local del navegador y en una zona con horario de verano puede devolver el mismo día dos veces. Aquí no hay horario de verano y aun así se escribe bien: el día que CertCore abra en otro país, este archivo ya está preparado.
+- **`addDays` con `Date.UTC` y no con `setDate`.** `setDate` opera en el huso local del navegador y en una zona con horario de verano puede devolver el mismo día dos veces. Ninguna de las tres sedes tiene horario de verano y aun así se escribe bien: el día que haga falta una zona que lo tenga, este archivo ya está preparado.
 - **`toBusinessDay` lanza en vez de devolver `null`.** Un instante mal formado es un dato corrupto, no una situación de negocio. Y el mensaje va en español, como todos los mensajes dirigidos a otro desarrollador.
 
 **Prueba de fuego**
@@ -432,6 +432,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
+  Subscription,
   catchError,
   combineLatest,
   concatMap,
@@ -496,6 +497,9 @@ export class TemplateStateService {
 
   private readonly stateSubject = new BehaviorSubject<TemplateState>(createInitialTemplateState());
 
+  /** La petición de load() en curso, para poder cancelarla. */
+  private loading?: Subscription;
+
   readonly state$: Observable<TemplateState> = this.stateSubject.asObservable();
 
   readonly loading$ = this.state$.pipe(map((state) => state.loading), distinctUntilChanged());
@@ -537,7 +541,10 @@ export class TemplateStateService {
   load(): void {
     this.patch({ loading: true, error: null });
 
-    this.templateApi.getAll().subscribe({
+    // Guardada y cancelable, como en la Fase 4: una respuesta que llega después
+    // de cerrar sesión no puede volver a llenar el estado.
+    this.loading?.unsubscribe();
+    this.loading = this.templateApi.getAll().subscribe({
       next: (versions) => this.patch({ versions, loading: false }),
       error: (error: unknown) => {
         this.patch({
@@ -622,6 +629,7 @@ export class TemplateStateService {
   }
 
   reset(): void {
+    this.loading?.unsubscribe();
     this.stateSubject.next(createInitialTemplateState());
   }
 
@@ -678,7 +686,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { TemplateFamily } from '../../../core/domain/template-family';
-import { TemplateStateService } from '../../../core/state/template-state.service';
+import { TemplateState, TemplateStateService } from '../../../core/state/template-state.service';
 
 @Component({
   selector: 'cc-template-list',
@@ -686,6 +694,7 @@ import { TemplateStateService } from '../../../core/state/template-state.service
 })
 export class TemplateListComponent implements OnInit {
   readonly families$: Observable<readonly TemplateFamily[]>;
+  readonly state$: Observable<TemplateState>;
 
   // Componente de 2021: inyección por constructor y detección por defecto.
   // Cambiar la FORMA del estado obliga a tocarlo —el `state$` que consumía ya
@@ -693,6 +702,7 @@ export class TemplateListComponent implements OnInit {
   // rompen otras tres cosas.
   constructor(private readonly templateState: TemplateStateService) {
     this.families$ = templateState.families$;
+    this.state$ = templateState.state$;
   }
 
   ngOnInit(): void {
@@ -704,6 +714,14 @@ export class TemplateListComponent implements OnInit {
 ```html
 <!-- src/app/features/templates/template-list/template-list.component.html -->
 <h2>Plantillas de checklist</h2>
+
+<!-- El cargando y el error de la Fase 4 se quedan: sin ellos, con el backend caído o
+     con CHAOS=error esta pantalla se queda en blanco y los ejercicios de caos de la
+     Fase 3 dejan de mostrar nada. -->
+<ng-container *ngIf="state$ | async as state">
+  <mat-progress-spinner *ngIf="state.loading" mode="indeterminate" diameter="32"></mat-progress-spinner>
+  <p class="template-error" *ngIf="state.error !== null">{{ state.error }}</p>
+</ng-container>
 
 <mat-nav-list>
   <a mat-list-item *ngFor="let family of families$ | async" [routerLink]="[family.templateId]">

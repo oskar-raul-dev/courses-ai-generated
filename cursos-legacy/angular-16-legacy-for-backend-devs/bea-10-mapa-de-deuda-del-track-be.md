@@ -68,7 +68,7 @@ Cada 💸 que aparece aquí existe **literalmente** en el cuerpo de una fase, y 
 | **B15** | La cobertura de pruebas **miente** en este sistema: con dos caminos vivos mide el doble de lo mismo | be06 §📌 | ❌ **Aceptada** | Se documenta en vez de perseguir un porcentaje. Desaparece sola si se resuelve **B10** |
 | **B16** | La restricción de be05 queda **`NOT VALID`**: 88 filas históricas siguen violándola | be05 §5.3 | ❌ **Aceptada, con firma** | Validar exige decidir qué se hace con esas filas, y en un dominio regulado el histórico no se reescribe. `VALIDATE` queda documentado y sin ejecutar |
 
-**Cuatro pagadas, cinco contenidas o diferidas, siete aceptadas.** Ése es el estado real del sistema al cerrar el track, y es un resultado, no un fracaso: **un backend heredado con siete deudas aceptadas y escritas está mejor gestionado que uno con cero deudas declaradas y las mismas por debajo.**
+**Tres pagadas, cinco contenidas o diferidas, ocho sin pagar** (siete aceptadas y B5, diagnosticada y costeada). Ése es el estado real del sistema al cerrar el track, y es un resultado, no un fracaso: **un backend heredado con ocho deudas sin pagar, escritas y con su razón, está mejor gestionado que uno con cero deudas declaradas y las mismas por debajo.**
 
 ---
 
@@ -117,7 +117,7 @@ Y el criterio que manda sobre los tres, el mismo de be07:
 
 **Este documento envejece a la primera modificación del código.** Es el mismo defecto que **B3** —un inventario en un `.md` que nada verifica—, y se acepta por la misma razón. Lo que lo mantiene vivo es que be07 lo consume: mientras alguien escriba el *assessment* a partir de aquí, esta tabla se revisa.
 
-**Una deuda listada no es una deuda gestionada.** Sólo las que tienen dueño y fecha de revisión lo están, y en este track ésa es exactamente una: la insignia, vía la ficha `R-01`. Las otras quince están **declaradas**, que es un peldaño menos y hay que decirlo así.
+**Una deuda listada no es una deuda gestionada.** Sólo las que tienen dueño y fecha de revisión lo están, y en este track ésa es exactamente una: la insignia, vía la ficha `R-01`. Las otras dieciséis están **declaradas**, que es un peldaño menos y hay que decirlo así.
 
 **No listes aquí deudas del track base.** Viven en sus fases. Si necesitas citar una —la ⭐ 3 de la Fase 7, el `status` de la Fase 10—, nómbrala y enlaza su capítulo.
 

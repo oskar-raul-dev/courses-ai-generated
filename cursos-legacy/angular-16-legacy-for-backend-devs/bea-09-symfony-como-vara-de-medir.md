@@ -144,7 +144,7 @@ Si este apéndice pintara Symfony como el paraíso, sería propaganda y el track
 
 **No conviertas este apéndice en una recomendación.** Dice que Symfony tiene disciplina de versiones y mercado; no dice que CertCore deba migrar. La respuesta correcta depende de la fecha de decomisión, y quien la decide es be07 con los números de las siete fases.
 
-**Las fechas envejecen.** La tabla de LTS está verificada el 11/09/2026; consúltala en la fuente antes de citarla en un documento que alguien vaya a firmar. Y fíjate en el detalle que cambia argumentos: **5.4 tiene seguridad hasta febrero de 2029**, más allá de lo que marca la política estándar. Las excepciones existen y desmontan generalizaciones.
+**Las fechas envejecen.** La tabla de LTS está verificada el 11/09/2026; consúltala en la fuente antes de citarla en un documento que alguien vaya a firmar. Y fíjate en el detalle que cambia argumentos: **5.4 tiene seguridad hasta febrero de 2029**, más allá de lo que marca la política estándar. Las excepciones existen y desmontan generalizaciones: esa extensión la patrocinó Ibexa, y la fecha está confirmada en el blog oficial de Symfony (*Symfony 5.4 LTS will receive security fixes until February 2029*, consultado el 14/10/2026).
 
 **El alumno no escribe Symfony en este track, y eso es deliberado.** Los seis ejercicios de abajo son de comparación argumentada, ninguno de código. Si acabas montando un proyecto de Symfony para "probar", te has salido del track: lo que se entrena aquí es defender una decisión, no aprender un framework.
 

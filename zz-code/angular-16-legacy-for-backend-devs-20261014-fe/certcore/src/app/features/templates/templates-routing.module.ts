@@ -1,15 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { TemplateEditorComponent } from './template-editor/template-editor.component';
 import { TemplateListComponent } from './template-list/template-list.component';
+import { TemplateVersionsComponent } from './template-versions/template-versions.component';
 
-// path: '' porque el prefijo 'templates' ya lo puso la ruta padre. Repetirlo
-// aquí produciría /templates/templates, que es el segundo error más común del día.
-const routes: Routes = [{ path: '', component: TemplateListComponent }];
+// 🧬 RouterModule.forChild() heredado apuntando a componentes standalone.
+// `component:` y no `loadComponent:`: los tres viajan ya en el chunk de este
+// módulo, así que diferirlos otra vez no ahorraría nada.
+const routes: Routes = [
+  { path: '', component: TemplateListComponent },
+  { path: ':templateId', component: TemplateVersionsComponent },
+  { path: ':templateId/new-version', component: TemplateEditorComponent },
+];
 
 @NgModule({
-  // forChild() en los módulos de feature: se cuelga del router que ya existe
-  // en vez de crear uno nuevo.
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })

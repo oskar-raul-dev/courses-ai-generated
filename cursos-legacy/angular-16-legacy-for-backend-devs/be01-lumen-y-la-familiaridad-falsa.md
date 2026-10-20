@@ -19,11 +19,11 @@ Al terminar be00 sabes qué promete el servidor que vas a apagar. Ahora vas a co
 
 ## ✅ 2. Qué queda listo al terminar
 
-- [ ] `docker compose up -d` levanta los dos servicios y `curl localhost:3000/health` devuelve `{"status":"ok","php":"7.4.33","lumen":"5.8.13","chaos":"ninguno"}`. Sin instalar PHP, Composer ni `psql` en tu máquina.
-- [ ] `docker compose exec api composer show laravel/lumen-framework` dice **`5.8.13`**, y `cat server/composer.json` explica por qué no dice `6.0`.
+- [ ] `docker compose up -d` levanta los dos servicios y `curl localhost:3000/health` devuelve `{"status":"ok","php":"7.4.33","lumen":"Lumen (5.8.12) (Laravel Components 5.8.*)","chaos":"ninguno"}` —sí, 5.8.12: ver §5.4—. Sin instalar PHP, Composer ni `psql` en tu máquina.
+- [ ] `docker compose exec api composer show laravel/lumen-framework` dice **`5.8.13`**, y sabes explicar, con `server/composer.json` delante, por qué no dice `6.0`.
 - [ ] El **inyector de caos está reimplementado en PHP** con los seis modos, las mismas variables (`CHAOS`, `CHAOS_RATE`, `CHAOS_DELAY_MS`) y las mismas dos vías de activación. `CHAOS=latencia` —mal escrito, en español— **impide que el servicio arranque** y el log nombra los seis válidos.
 - [ ] Los ejercicios de caos de la **Fase 3 del track base** se repiten contra este backend sin cambiar una palabra del enunciado. Lo comprobaste con tres de ellos como mínimo.
-- [ ] `BASE_URL=http://localhost:3000 ./smoke.sh` corre sin modificar una línea y da **`OK: 4/24`**. No es un fallo: es la línea base. Anotaste cuáles cuatro pasan y por qué.
+- [ ] `BASE_URL=http://localhost:3000 ./smoke.sh` corre sin modificar una línea y da **`OK: 4/26`**. Ojo: dice `FALLOS: 22 de 26`; las cuatro que pasan son la línea base. No es un fallo: es la línea base. Anotaste cuáles cuatro pasan y por qué.
 - [ ] `FALSA-FAMILIARIDAD.md` existe y documenta los **cuatro bugs**, cada uno con el comando que lo reproduce y la salida literal.
 - [ ] Hiciste el **experimento de los diez minutos** de §5.9 y pegaste la respuesta del asistente con tus anotaciones. Esa página es el mejor material que vas a producir en el track.
 
@@ -31,7 +31,7 @@ Al terminar be00 sabes qué promete el servidor que vas a apagar. Ahora vas a co
 
 ## 🚫 3. Qué NO entra todavía
 
-- **PostgreSQL, migraciones, modelos que consultan de verdad** → be03. Aquí se sirven datos fijos, y el límite exacto es `->toSql()`: la consulta se construye, no se ejecuta.
+- **PostgreSQL, migraciones, modelos que consultan de verdad** → be03. Aquí se sirven datos fijos y Eloquent está apagado: ni siquiera `->toSql()` funciona todavía (bug 3 de §5.7). En be03, con `withEloquent()`, `->toSql()` construye la consulta sin conectar, y ése es el límite exacto entre las dos fases.
 - **La clasificación del código heredado por procedencia** → be02. Hoy lo levantas; la próxima fase lo lees con lupa.
 - **Las pruebas automatizadas** → be06, y por una razón que se escribe allí: no se puede probar lo que todavía no se ha decidido cuál es.
 - **Subir a PHP 8.** Es la premisa del track, no un pendiente. La conversación completa es de be07.
@@ -115,7 +115,7 @@ El detalle de sintaxis, `declare(strict_types=1)`, los arrays que son lista y ma
 
 ### 5.1 La forma del monolito
 
-Todo el backend vive en `server/`, dentro del mismo proyecto. El frontend sigue en la raíz **y no se toca** — `git diff fase-10-certificados-vigencia..HEAD -- src/` tiene que seguir devolviendo vacío al cerrar esta fase, igual que al cerrar be00.
+Todo el backend vive en `server/`, dentro del mismo proyecto. El frontend sigue en la raíz **y no se toca** — `git diff fase-10..HEAD -- src/` tiene que seguir devolviendo vacío al cerrar esta fase, igual que al cerrar be00.
 
 ```
 server/
@@ -324,7 +324,7 @@ class HealthController extends BaseController
 **Detalles con intención**
 
 - **Devolver un array desde un controlador de Lumen produce JSON**, con `Content-Type: application/json` y todo. No hace falta `response()->json()`. Es cómodo, es idiomático, y en be02 te va a servir para clasificar código: quien venía de Symfony **nunca** hace esto y devuelve siempre un objeto `Response` explícito.
-- **`app()->version()` devuelve algo como `Lumen (5.8.13) (Laravel Components 5.8.*)`.** Léelo entero la primera vez: ahí está, en una cadena, la relación real entre los dos frameworks.
+- **`app()->version()` devuelve `Lumen (5.8.12) (Laravel Components 5.8.*)`, aunque `composer show` diga `5.8.13`.** La cadena está escrita a mano en `Application::version()` y nadie la subió en el último parche. Léela entera la primera vez: ahí está, en una cadena, la relación real entre los dos frameworks, y de regalo la primera lección de be04 — la versión que el código dice de sí mismo no es la del paquete instalado.
 
 **Prueba de fuego**
 
@@ -624,10 +624,10 @@ Ahora el momento de la fase:
 ```bash
 BASE_URL=http://localhost:3000 ./smoke.sh
 #   ...
-#   OK: 4/24
+#   FALLOS: 22 de 26     ← es decir, pasan 4: la línea base
 ```
 
-**Cuatro de veinticuatro, y no se toca el `smoke.sh`.** Ése es el contador que vas a ver bajar y subir durante todo el track, y la regla que lo hace útil cabe en una línea: *el juez no se ajusta para aprobar al acusado*. Si en algún momento te descubres editando `smoke.sh` para que pase algo, para y pregúntate qué acabas de dejar de comprobar.
+**Cuatro de veintiséis, y no se toca el `smoke.sh`.** Ése es el contador que vas a ver bajar y subir durante todo el track, y la regla que lo hace útil cabe en una línea: *el juez no se ajusta para aprobar al acusado*. Si en algún momento te descubres editando `smoke.sh` para que pase algo, para y pregúntate qué acabas de dejar de comprobar.
 
 ```
 💸 DEUDA TÉCNICA INTENCIONAL — datos fijos en una ruta anónima
@@ -651,17 +651,20 @@ En el código heredado, `app/Http/Controllers/LegacyTemplateController.php` tien
 
 ```php
 // Código heredado, tal como está. En be02 vas a clasificar quién lo escribió.
-$cached = Cache::get('templates.all');
+$cached = app('cache')->get('templates.all');
 ```
 
-Funciona. Se ejecuta. Ahora búscalo:
+Funciona: los facades están apagados, pero `app('cache')` pide el servicio al contenedor directamente. Ahora busca el `get()` que se ejecuta:
 
 ```bash
-docker compose exec api grep -rn "function get" vendor/illuminate/cache/CacheManager.php
-#   (nada)
+docker compose exec api grep -n "function get" vendor/illuminate/cache/CacheManager.php
+#   80:    protected function get($name)
+#   278:   protected function getPrefix(array $config)
+#   289:   protected function getConfig($name)
+#   299:   public function getDefaultDriver()
 ```
 
-Ningún archivo del proyecto declara un método estático `get` en una clase `Cache`. **No existe.** `Cache` es un facade: extiende `Illuminate\Support\Facades\Facade`, que implementa `__callStatic`, que pide al contenedor el servicio registrado bajo `cache` y le llama `get()` al objeto de verdad.
+Aparece un `get`, y **no es ése**: es protegido, recibe el nombre de un almacén y no una clave. El `get('templates.all')` que se ejecuta no está en `CacheManager`: el gestor no lo tiene, y su `__call` se lo pasa al almacén por defecto, un `Illuminate\Cache\Repository`. Con un facade (`Cache::get`) el camino tiene un salto más: `__callStatic` pide al contenedor el servicio `cache` y le llama `get()`. En los dos casos, el nombre que buscas no te lleva a la implementación.
 
 > 🧠 **En una capa con resolución dinámica, buscar el nombre no encuentra la implementación — encuentra el nombre.** Y en un curso construido entero sobre buscar en el código, ése es el reflejo que hay que romper.
 
@@ -693,7 +696,13 @@ Y ahora lo que de verdad hace daño, que es el caso a medias. Descomenta `withFa
 En el modelo heredado:
 
 ```php
+<?php
 // server/app/Models/Template.php — el modelo, tal como está desde 2018
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
 class Template extends Model
 {
     protected $table = 'templates';
@@ -710,25 +719,32 @@ class Template extends Model
 ```
 
 ```bash
-docker compose exec api grep -rn "function active" server/app/
+docker compose exec api grep -rn "function active" app/
 #   (nada)
-docker compose exec api grep -rn "::active(" server/app/
-#   app/Http/Controllers/LegacyTemplateController.php:31:  $rows = Template::active()->get();
+docker compose exec api grep -rn "::active(" app/
+#   app/Http/Controllers/LegacyTemplateController.php:21:        $rows = Template::active()->get();
 ```
 
 Dos búsquedas, dos resultados incompatibles: hay una llamada y no hay una declaración. `__call` de Eloquent recibe `active`, le antepone `scope`, y llama al método que sí existe. Es la misma magia del bug 1 con otra puerta.
 
-**Y aquí está el límite exacto de esta fase**, que es contenido y no una limitación:
+**Y aquí está el límite de esta fase**, que es contenido y no una limitación:
 
 ```bash
-docker compose exec api php tools/probe.php "Template::active()->toSql()"
-#   select * from "templates" where "valid_until" is null
-
-docker compose exec api php tools/probe.php "Template::active()->get()"
-#   SQLSTATE[08006] [7] could not translate host name "db" ... o Connection refused
+docker compose exec api php tools/probe.php "App\Models\Template::active()->toSql()"
+#   Call to a member function connection() on null
 ```
 
-`toSql()` **no conecta con nada**: construye la consulta con la gramática que dice la configuración. `get()` sí, y ahí se acaba be01. Esa diferencia vale por sí sola: puedes investigar el 90% de un ORM sin una base de datos delante, y casi nadie lo sabe.
+En be01 **ni siquiera `toSql()` funciona**: Eloquent está apagado (`withEloquent()` comentado) y el modelo no tiene a quién pedirle la gramática. Guarda esta salida. En be03, con Eloquent encendido, la misma línea da otra cosa, **aunque la base esté parada**:
+
+```bash
+# be03, con withEloquent() y con `docker compose stop db`:
+docker compose exec api php tools/probe.php "App\Models\Template::active()->toSql()"
+#   string(53) "select * from "templates" where "valid_until" is null"
+docker compose exec api php tools/probe.php "App\Models\Template::active()->get()"
+#   SQLSTATE[08006] [7] could not translate host name "db" to address ...
+```
+
+`toSql()` **no conecta con nada**: construye la consulta con la gramática de la conexión configurada. `get()` sí conecta. Esa diferencia vale por sí sola: puedes investigar el 90% de un ORM sin una base de datos delante, y casi nadie lo sabe. Lo que no puedes es investigarlo con el ORM apagado.
 
 #### Bug 4 — Lo que Lumen quitó, y la respuesta que asume que está
 
@@ -772,6 +788,11 @@ Lumen 5.8 no trae `tinker`. Sin una consola interactiva, investigar una capa din
 
 $app = require __DIR__ . '/../bootstrap/app.php';
 
+// Sin una petición, Lumen no arranca sus proveedores de servicios. boot() los
+// arranca a mano: sin esta línea, Eloquent no tiene resolutor de conexiones ni
+// siquiera con withEloquent() encendido.
+$app->boot();
+
 $expression = $argv[1] ?? null;
 
 if ($expression === null) {
@@ -793,7 +814,7 @@ Las cuatro preguntas que vas a hacerle todo el track:
 ```bash
 # ¿Qué objeto está detrás de este facade, de verdad?
 php tools/probe.php "get_class(app('cache'))"
-#   string(38) "Illuminate\Cache\CacheManager"
+#   string(29) "Illuminate\Cache\CacheManager"
 
 # ¿Qué hay registrado en el contenedor?
 php tools/probe.php "array_slice(array_keys(app()->getBindings()), 0, 10)"
@@ -802,7 +823,7 @@ php tools/probe.php "array_slice(array_keys(app()->getBindings()), 0, 10)"
 php tools/probe.php "method_exists(App\Models\Template::class, 'active')"
 #   bool(false)     ← y sin embargo Template::active() funciona
 
-# ¿Qué SQL sale de esto?
+# ¿Qué SQL sale de esto? (desde be03: en be01 Eloquent está apagado)
 php tools/probe.php "App\Models\Template::active()->toSql()"
 ```
 
@@ -861,17 +882,17 @@ Llega el ticket: *"la lista de plantillas está devolviendo datos viejos a veces
 
 ```bash
 # Paso 1 — el reflejo. Dónde se cachea esto.
-docker compose exec api grep -rn "Cache::get" server/app/
-#   app/Http/Controllers/LegacyTemplateController.php:28
+docker compose exec api grep -rn "templates.all" app/
+#   app/Http/Controllers/LegacyTemplateController.php:15
 
 # Paso 2 — la implementación. Dónde está ese get().
-docker compose exec api grep -rn "class Cache" server/app/ vendor/illuminate/support/
-#   (nada útil: sólo el facade, que no implementa get)
+docker compose exec api grep -n "function get" vendor/illuminate/cache/CacheManager.php
+#   80:    protected function get($name)   ← un get, y no es éste
 ```
 
 Aquí se acaba el camino conocido, y empieza el que hay que aprender. Son tres pasos y ninguno es buscar:
 
-1. **Pregúntale al objeto, no al archivo.** `php tools/probe.php "get_class(app('cache'))"` → `Illuminate\Cache\CacheManager`. Ya sabes qué clase mirar, y no la dedujiste: la observaste.
+1. **Pregúntale al objeto, no al archivo.** `php tools/probe.php "get_class(app('cache'))"` → `Illuminate\Cache\CacheManager`, y `get_class(app('cache')->store())` → `Illuminate\Cache\Repository`. Ya sabes qué clase mirar, y no la dedujiste: la observaste.
 2. **Sigue el binding.** El facade declara su clave —`protected static function getFacadeAccessor() { return 'cache'; }`— y el contenedor la resuelve. El puente entre el nombre que ves y la clase que corre es esa cadena, y es la única pista que existe.
 3. **Usa el stack trace como mapa.** Lanza una excepción a propósito dentro del bloque sospechoso y lee la traza de abajo arriba: `__callStatic` aparece en ella con nombre y apellido, y te dice el camino exacto que `grep` no podía enseñarte.
 
@@ -907,12 +928,12 @@ El desarrollo completo del método —incluida la tabla de qué técnica aplicar
 15. Añade un `config/app.php` con una clave cualquiera y léela con `config()` **sin** registrarla en el bootstrap. Anota qué devuelve. Regístrala y repite. Escribe la regla en una línea.
 16. **Diagnóstico.** Descomenta `$app->withFacades()`, pide `/probe/cache` y comprueba que responde. Después busca en `server/app/` todo el código heredado que resuelve cacheo **sin** facades. ¿Cuántas formas distintas encuentras? Guarda el número: es la primera medición de be02.
 17. Escribe `tools/probe.php` y úsalo para responder tres preguntas: qué clase hay detrás de `app('cache')`, cuántos bindings tiene el contenedor al arrancar, y si `Template` tiene un método `active`.
-18. **Diagnóstico.** Ejecuta `Template::active()->toSql()` y después `->get()`. Pega las dos salidas y explica en tres frases por qué la primera funciona sin base de datos.
+18. **Diagnóstico.** Ejecuta `Template::active()->toSql()` y después `->get()`, hoy en be01 y otra vez en be03 con la base parada. Pega las cuatro salidas y explica en tres frases por qué en be03 la primera funciona sin base de datos y en be01 no funciona ninguna.
 19. Haz el experimento de los diez minutos (§5.9) con una pregunta tuya, y documenta los seis pasos. Este ejercicio no se salta.
 
 **🟠 Difícil (20–27)**
 
-20. **Diagnóstico.** El `smoke.sh` da `4/24`. Elige **una** comprobación que falle y que puedas hacer pasar sin base de datos, hazla pasar, y argumenta en cinco líneas si eso mejora el backend o sólo mejora el marcador.
+20. **Diagnóstico.** El `smoke.sh` deja pasar 4 de 26. Elige **una** comprobación que falle y que puedas hacer pasar sin base de datos, hazla pasar, y argumenta en cinco líneas si eso mejora el backend o sólo mejora el marcador.
 21. Documenta los cuatro bugs en `FALSA-FAMILIARIDAD.md` con el formato de la §6: síntoma, causa, fix mínimo y **cómo se habría detectado antes**. Esa última columna es la que vale.
 22. **Diagnóstico.** Haz que `CHAOS=error` devuelva `500` **con** las cabeceras de CORS y después **sin** ellas. Entra a la aplicación Angular con cada variante y anota qué mensaje ve el usuario en cada caso. Explica por qué el orden de los middleware decide cuál de los dos ve.
 23. Compara el arranque de Lumen con el de Laravel leyendo los dos `bootstrap/app.php` (el de Laravel lo tienes en la documentación oficial). Escribe una tabla de qué hace cada uno y qué se paga por cada línea de más.
@@ -960,7 +981,7 @@ El desarrollo completo del método —incluida la tabla de qué técnica aplicar
 
 ## 🚀 9. Cierre y conexión con la siguiente fase
 
-Tienes un backend vivo en el puerto 3000, con un endpoint de salud, el inyector de caos completo, y un `smoke.sh` que dice `4/24` sin que nadie lo haya tocado. Tienes también un documento —`FALSA-FAMILIARIDAD.md`— que vale más que el código: cuatro bugs reproducidos, y la respuesta de un asistente pegada con tus anotaciones encima.
+Tienes un backend vivo en el puerto 3000, con un endpoint de salud, el inyector de caos completo, y un `smoke.sh` que deja pasar 4 de 26 sin que nadie lo haya tocado. Tienes también un documento —`FALSA-FAMILIARIDAD.md`— que vale más que el código: cuatro bugs reproducidos, y la respuesta de un asistente pegada con tus anotaciones encima.
 
 Y tienes una sospecha que en **be02** se vuelve una medición. Al buscar cómo resuelve el cacheo el código heredado (ejercicio 16) encontraste más de una forma. No es descuido: es que cada persona que pasó por aquí venía de otro framework y resolvió con los reflejos que traía. La próxima fase clasifica el código **por la procedencia de quien lo escribió**, lo cuenta, y convierte esa sospecha en el inventario que el *assessment* de be07 va a costear.
 
@@ -970,15 +991,15 @@ Y tienes una sospecha que en **be02** se vuelve una medición. Al buscar cómo r
 >
 > ```bash
 > git tag -a be-fase-01-lumen-y-la-familiaridad-falsa \
->   -m "be01 cerrada: /health vivo en el 3000 con Lumen 5.8.13 sobre PHP 7.4.33;
-> inyector de caos reimplementado con los seis modos; smoke.sh en 4/24 sin tocarlo;
+>   -m "be01 cerrada: /health vivo en el 3000 con Lumen 5.8.13 (dice 5.8.12) sobre PHP 7.4.33;
+> inyector de caos reimplementado con los seis modos; smoke.sh en 4/26 sin tocarlo;
 > los cuatro bugs de familiaridad falsa documentados en FALSA-FAMILIARIDAD.md;
 > experimento de los diez minutos hecho"
 > ```
 >
 > Los commits de esta fase llevan `be01: …` y los de ejercicio `be01 ej28: …`. El namespace `be-fase-*` es propio del track; la convención completa está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) §🔥.
 >
-> Esta fase estrena el par `-roto`/`-fix` del track BE: los dos incidentes que reserva abajo salen de este tag, y sus ramas se llaman `incidente/be-01` e `incidente/be-02`. Y estrena también una comprobación que vas a repetir en las seis fases que quedan: `git diff fase-10-certificados-vigencia..HEAD -- src/` **tiene que devolver vacío**. El día que devuelva algo, el track se rompió.
+> Esta fase estrena el par `-roto`/`-fix` del track BE: los dos incidentes que reserva abajo salen de este tag, y sus ramas se llaman `incidente/be-01` e `incidente/be-02`. Y estrena también una comprobación que vas a repetir en las seis fases que quedan: `git diff fase-10..HEAD -- src/` **tiene que devolver vacío**. El día que devuelva algo, el track se rompió.
 
 ---
 

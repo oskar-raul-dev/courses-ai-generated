@@ -71,10 +71,10 @@ runtime es 7.4 y una preparación que no arranca no es una preparación.
 
 | ID | Fase | Forma | Artefacto |
 |---|---|---|---|
-| be-01 | be01 | Rama | `incidente-be/01` |
+| be-01 | be01 (rama desde be03) | Rama | `incidente-be/01` |
 | be-02 | be01 | Rama | `incidente-be/02` |
-| be-03 | be02 | **Ninguna** | El sistema ya está así |
-| be-04 | be03 | Siembra | `sql/seed-incidente-be-04.sql` |
+| be-03 | be02 (desde be03) | Siembra | `sql/seed-incidente-be-03.sql` |
+| be-04 | be03 | **Ninguna** | El sistema ya está así desde be03 |
 | be-05 | be03 | Siembra | `sql/seed-incidente-be-05.sql` |
 | be-06 | be04 | **`.env`** + siembra | `POSTGRES_TAG` · `sql/seed-incidente-be-06.sql` |
 | be-07 | be04 | Rama | `incidente-be/07` |
@@ -85,7 +85,7 @@ runtime es 7.4 y una preparación que no arranca no es una preparación.
 | be-12 | be07 | **Ninguna** | El informe va en el enunciado |
 
 **Cuatro ramas, cinco guiones de siembra, una línea del `.env` y tres sin nada.**
-El reparto no es casual y conviene defenderlo: en el track base dieciséis de veinte
+El reparto no es casual y conviene defenderlo: en el track base dieciséis de los veintidós
 incidentes necesitaban rama, porque casi todo el daño estaba en el código. Aquí
 **la mitad está en el dato o en la configuración**, y eso es exactamente lo que un
 backend añade al curso.
@@ -104,20 +104,28 @@ backend añade al curso.
 
 ### `incidente-be/01` — el caché sin caducidad ni invalidación
 
-**De dónde sale:** `be-fase-01-lumen-y-la-familiaridad-falsa`
+**De dónde sale:** `be-fase-03-el-reemplazo` (hace falta la base y el camino viejo en `/legacy/templates`)
 **Qué se toca:** `server/app/Http/Controllers/LegacyTemplateController.php`
 **Parcela:** `laravel` — helpers, *service locator*, sin tipos ni `declare`.
 
 ```php
-// ANTES (lo que hay en el tag)
+// ANTES (lo que hay en el tag: la versión de be02 §5.1)
 public function index()
 {
+    // Service locator: la dependencia se pide donde se usa, no se declara.
+    $cached = app('cache')->get('templates.all');
+
+    if ($cached) {
+        return $cached;
+    }
+
     $rows = Template::active()->get();
 
     return response()->json(collect($rows)->values());
 }
 
-// DESPUÉS (el commit de la rama)
+// DESPUÉS (el commit de la rama). Arriba, junto a los otros `use`, también `use Cache;`:
+// el alias es global y desde App\Http\Controllers no se ve sin importarlo.
 public function index()
 {
     // Cacheado durante el incidente de rendimiento de marzo. Funcionó.
@@ -183,14 +191,18 @@ $app->register(App\Providers\TimingServiceProvider::class);
 ```
 
 **Qué se rompe.** `Laravel\Lumen\Routing\Router` no tiene `aliasMiddleware()`: es
-del router de Laravel. Fatal al arrancar, así que el contenedor entra en bucle de
-reinicio y el estudiante ve *"arranca y se muere solo"*.
+del router de Laravel. Fatal al arrancar: el preflight de `compose.yaml` arranca los
+proveedores antes de servir, el contenedor sale con `Exited (255)` y el estudiante ve
+*"arranca y se muere solo"*.
 
 **Y el segundo bug, que es el que hace bueno el incidente:** aunque se arregle el
-primero, `Log::info()` falla con `Class 'Log' not found` porque los facades están
-apagados. **Dos bugs en cinco líneas copiadas, y el primero tapa al segundo.**
+primero, `Log::info()` falla con `A facade root has not been set.` porque los facades
+están apagados (el `use` apunta a la clase del facade, que existe, pero nadie la conectó
+al contenedor). **Dos bugs en cinco líneas copiadas, y el primero tapa al segundo.**
 
-⚠️ El middleware `TimingMiddleware` **sí existe** en la rama y está bien escrito.
+⚠️ El middleware `TimingMiddleware` **sí existe** en la rama y está bien escrito
+(`server/app/Http/Middleware/TimingMiddleware.php`: mide `microtime(true)` alrededor de
+`$next($request)` y pone la cabecera `X-Response-Time-Ms`).
 Que la pieza que el compañero programó esté correcta y lo que falle sea el pegote
 es deliberado: el error no está en saber PHP.
 
@@ -233,6 +245,15 @@ Y como no hay `set -e`, el guion **imprime "respaldo completado"** después de h
 fallado dos veces. El archivo existe, pesa lo normal, y es un `tar` de un directorio
 de datos que se estaba escribiendo.
 
+**Dónde se ejecuta.** Dentro del contenedor de la base —`docker compose exec -T db bash < scripts/backup.sh`—,
+que es donde están `psql` y el directorio de datos. Medido en el laboratorio:
+
+| Escalón | Qué pasa |
+|---|---|
+| 9.6 con `wal_level=replica` | Todo responde y el respaldo es bueno. (Con el `minimal` por defecto de la imagen 9.6, `pg_start_backup` falla: el proveedor lo tenía en `replica`; para reproducir 2016 hay que arrancar la base con `-c wal_level=replica`.) |
+| 11 y 13 | `pg_start_backup`/`pg_stop_backup` funcionan; sólo falla `pg_switch_xlog()`, **después** del `tar`. El respaldo sigue sirviendo. |
+| 16.9 | Fallan `pg_start_backup` y `pg_stop_backup`: el `tar` copia un directorio de datos vivo sin modo respaldo. Imprime «respaldo completado» y el archivo pesa lo normal (6,6 MB con la semilla). |
+
 ⚠️ **El `echo` final es imprescindible en la preparación.** Sin él, el estudiante ve
 un guion que evidentemente falló; con él, ve el escenario real — un proceso nocturno
 que dice que todo salió bien.
@@ -256,7 +277,6 @@ restricción **ya puesta**: es el despliegue "de ayer" del ticket)
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class ArchiveInspections extends Command
 {
@@ -265,23 +285,52 @@ class ArchiveInspections extends Command
     public function handle()
     {
         $year = $this->option('year');
+        $db = app('db');
 
-        // Un solo UPDATE masivo. Si una fila falla, falla la sentencia entera y
-        // el mes se queda a medias — que es exactamente el síntoma del ticket.
-        $updated = DB::table('inspections')
+        // Archivar es MOVER la fila: se borra y se vuelve a insertar con status
+        // 'archived'. Así lo exige el disparador de auditoría de 2017, que sólo
+        // registra INSERT. Las que tienen certificado las archiva otro proceso.
+        $rows = $db->table('inspections')
             ->whereYear('started_at', $year)
-            ->where('status', '!=', 'archived')
-            ->update(['status' => 'archived']);
+            ->where('status', 'approved')
+            ->whereNotExists(function ($query) {
+                $query->from('certificates')->whereColumn('certificates.inspection_id', 'inspections.id');
+            })
+            ->orderBy('id')
+            ->get();
 
-        $this->info("archivadas: {$updated}");
+        $moved = 0;
+
+        // Una sola transacción para todo el año: si una fila falla, falla el año entero
+        // y el mes se queda a medias — que es exactamente el síntoma del ticket.
+        $db->transaction(function () use ($db, $rows, &$moved) {
+            foreach ($rows as $row) {
+                $data = (array) $row;
+                $data['status'] = 'archived';
+
+                $db->table('inspections')->where('id', $row->id)->delete();
+                $db->table('inspections')->insert($data);   // ← el INSERT sí revalida la FK
+                $moved++;
+            }
+        });
+
+        $this->info("archivadas: {$moved}");
     }
 }
 ```
 
-**Qué se rompe.** El `UPDATE` no toca `template_id` ni `template_version`, y aun así
-**la fila entera se revalida** contra la foránea compuesta `NOT VALID` de be05. Las
-88 inspecciones huérfanas de 2023 la violan, así que la sentencia falla completa y
-no archiva ninguna.
+Y el comando se registra en `$commands` de `server/app/Console/Kernel.php`.
+
+**Qué se rompe.** El proceso no archiva con un `UPDATE`: **mueve** la fila, con `DELETE` e
+`INSERT`, porque el disparador de auditoría de 2017 sólo registra inserciones. Para la
+foránea compuesta `NOT VALID` de be05, la fila reinsertada **es una fila nueva**, y se
+comprueba: las ochenta y ocho huérfanas de 2023 la violan, la transacción del año entero se
+deshace y no archiva ninguna. Un `UPDATE` de sólo el estado **no** habría fallado —PostgreSQL
+no revisa la foránea si la clave no cambia (be05 §5.3)—, y es justo lo que despista.
+
+Medido en el laboratorio: `--year=2023` falla con
+`Key (template_id, template_version)=(elevator-annual, 3) is not present in table "templates"`
+y deja 0 archivadas; `--year=2024` archiva 170.
 
 ⚠️ **La rama exige el volumen sintético sembrado antes** (`volume.php` con
 `--seed=20240915 --violations=88`), o no hay filas huérfanas y el proceso pasa sin
@@ -301,15 +350,16 @@ docker compose exec -T db psql -U postgres certcore < sql/seed-incidente-be-NN.s
 
 Y todos se revierten igual: `docker compose exec api php artisan migrate:fresh --seed`.
 
-### `sql/seed-incidente-be-04.sql` — el orden alterado
+### `sql/seed-incidente-be-03.sql` — el orden alterado
 
 ```sql
--- be-04: "Desde el despliegue, las plantillas salen en otro orden".
--- No cambia NINGÚN dato visible: sólo fuerza la reescritura física de una fila,
--- que es lo que reorganiza el montón y cambia el orden de un SELECT sin ORDER BY.
+-- be-03: "El listado del panel cambia de orden según el día".
+-- No cambia NINGÚN dato visible: sólo fuerza la reescritura física de las filas de
+-- ascensores, que es lo que reorganiza el montón y cambia el orden de un SELECT sin
+-- ORDER BY (el de /legacy/templates). Con la de calderas no se ve: ya está al final.
 UPDATE templates
    SET valid_from = valid_from
- WHERE template_id = 'boiler-annual';
+ WHERE template_id = 'elevator-annual';
 
 -- Comprobación de la preparación (debe salir boiler-annual primero):
 --   SELECT template_id, version FROM templates;
@@ -324,13 +374,14 @@ UPDATE templates
 
 ```sql
 -- be-05: "No puedo crear inspecciones nuevas: dice que el id ya existe".
--- Reproduce el estado en que quedó la base tras el sembrador de be03: filas con
--- id explícito y la secuencia sin reajustar.
-SELECT setval('inspections_id_seq', 1, false);
+-- Reproduce el estado en que quedó la base de producción tras un sembrador anterior
+-- al de be03, que no reajustaba esta secuencia: filas con id explícito (500…504) y
+-- la secuencia apuntando al primero de ellos.
+SELECT setval('inspections_id_seq', (SELECT min(id) FROM inspections), false);
 
--- Comprobación (last_value debe ser 1 y max(id) mucho mayor):
---   SELECT last_value FROM inspections_id_seq;
---   SELECT max(id) FROM inspections;
+-- Comprobación (el siguiente id que dará la secuencia ya existe):
+--   SELECT last_value, is_called FROM inspections_id_seq;   -- 500, f
+--   SELECT min(id), max(id) FROM inspections;
 ```
 
 ⚠️ **Sólo se desajusta `inspections_id_seq`.** Las de `clients` y `findings` se
@@ -352,37 +403,100 @@ UPDATE certificates
    SET valid_until = now() - interval '40 days'
  WHERE id IN (SELECT id FROM certificates ORDER BY issued_at LIMIT 3);
 
--- Comprobación (debe devolver 3 o más):
+-- Comprobación (con la semilla del db.json devuelve 2: sólo hay dos certificados):
 --   SELECT count(*) FROM certificates WHERE valid_until < now();
 ```
 
 > ⚠️ **`ExpiredCertificatesReport.php` tiene que existir en el tag de be04**, con su
-> `DB::select()` apoyado en `pg_constraint.consrc`. Es parte del código heredado que
-> la fase entrega, no de esta preparación — y por eso `SQL-CRUDO.txt` lo lista desde
-> `bea-04`. Si al escribir be04 ese archivo no quedó puesto, este incidente no se
-> puede preparar.
+> SQL a mano apoyado en `pg_constraint.consrc`. Es parte del código heredado que la
+> fase entrega —por eso `SQL-CRUDO.txt` lo lista desde `bea-04`—, pero ninguna lección
+> lo escribe entero. Si tu be04 no lo dejó puesto, éstos son los dos archivos, y el
+> comando se registra en `$commands` de `server/app/Console/Kernel.php`:
+
+```php
+<?php
+// server/app/Reports/ExpiredCertificatesReport.php
+// Informe mensual de certificados vencidos. Escrito en 2017, con PostgreSQL 9.6 delante,
+// y no tocado desde entonces. SQL a mano: es una de las entradas de SQL-CRUDO.txt (bea-04).
+
+namespace App\Reports;
+
+class ExpiredCertificatesReport
+{
+    public function run()
+    {
+        // Las reglas de la tabla, para etiquetar en el informe por qué se excluye cada fila.
+        // pg_constraint.consrc existe hasta PostgreSQL 11 inclusive (be04 §5.3).
+        $rules = app('db')->select("
+            SELECT c.conname, c.consrc AS definition
+            FROM pg_constraint c
+            WHERE c.conrelid = 'certificates'::regclass
+        ");
+
+        $expired = app('db')->select('
+            SELECT id, inspection_id, valid_until
+            FROM certificates
+            WHERE valid_until < now()
+            ORDER BY valid_until
+        ');
+
+        return ['rules' => $rules, 'expired' => $expired];
+    }
+}
+```
+
+```php
+<?php
+// server/app/Console/Commands/ReportExpiredCertificates.php — `php artisan certcore:report:expired`
+
+namespace App\Console\Commands;
+
+use App\Reports\ExpiredCertificatesReport;
+use Illuminate\Console\Command;
+
+class ReportExpiredCertificates extends Command
+{
+    protected $signature = 'certcore:report:expired';
+
+    protected $description = 'Informe mensual de certificados vencidos';
+
+    public function handle()
+    {
+        $report = (new ExpiredCertificatesReport())->run();
+
+        $this->info(sprintf('vencidos: %d · reglas: %d', count($report['expired']), count($report['rules'])));
+    }
+}
+```
 
 ### `sql/seed-incidente-be-08.sql` — la fecha en el borde
 
 ```sql
--- be-08: "El certificado dice que vence hoy y en el PDF dice ayer".
--- La franja peligrosa es la de cinco horas entre medianoche en Bogotá y
--- medianoche en UTC. Se coloca el vencimiento a las 00:30 de HOY, hora local.
-UPDATE certificates
-   SET valid_until = (current_date + time '00:30')
- WHERE id = 'CERT-2024-0087';
+-- be-08: "El certificado sale vigente y el informe lo cuenta como vencido".
+-- La franja peligrosa son las cinco horas en las que un valor sin zona ya pasó si se
+-- lee en UTC y todavía no si se lee en Bogotá. El vencimiento se pone dos horas por
+-- delante de la hora de Bogotá, escrito sin zona: cae dentro de la franja a cualquier
+-- hora del día, porque se mueve el dato en vez de esperar al reloj.
+-- La semilla del db.json no trae el CERT-2024-0087 del ticket: se crea (o se ajusta,
+-- si ya existe) sobre la inspección 502, que está aprobada.
+INSERT INTO certificates (id, inspection_id, issued_at, valid_until, status, revoked_at)
+VALUES ('CERT-2024-0087', 502, current_date - interval '1 year',
+        (now() AT TIME ZONE 'America/Bogota') + interval '2 hours', 'valid', NULL)
+ON CONFLICT (id) DO UPDATE SET valid_until = EXCLUDED.valid_until;
 
--- Comprobación: la respuesta a "¿está vigente?" tiene que DIFERIR según la zona.
+-- Comprobación: la respuesta a "¿está vencido?" tiene que DIFERIR según la zona
+-- (UTC: t; Bogotá: f), y el informe de vencidos tiene que contar uno más que sin el guion.
 --   SET TimeZone='UTC';             SELECT valid_until < now() FROM certificates WHERE id='CERT-2024-0087';
 --   SET TimeZone='America/Bogota';  SELECT valid_until < now() FROM certificates WHERE id='CERT-2024-0087';
 ```
 
-⚠️ **Este incidente sólo se reproduce en una franja horaria concreta.** Si el
-estudiante lo intenta a las tres de la tarde, las dos respuestas coinciden y no ve
-nada. El enunciado lo resuelve pidiendo además que cambie el TZ del contenedor de
-PHP; **si se prepara para una sesión con horario fijo, ajústese la hora del `UPDATE`
-para que el borde caiga dentro de la sesión**. Es la única preparación de este
-cuaderno sensible al reloj y hay que saberlo.
+⚠️ **El incidente vive en una franja de cinco horas, y la receta la persigue.** Con
+un valor fijo (`current_date + time '00:30'`, la versión anterior de este guion) sólo se
+reproducía de 19:30 a 00:30 de Bogotá: a las tres de la tarde las dos respuestas
+coincidían y no se veía nada. Poner el dato relativo a `now()` lo deja dentro de la
+franja a cualquier hora. **Requisito:** el informe tiene que correr, así que si el
+estudiante no cerró be-06 aplica antes su parche (`pg_get_constraintdef`). Medido el
+15/10/2026: con el guion, el informe da `vencidos: 3`; sin él, `vencidos: 2`.
 
 ### `sql/seed-incidente-be-09.sql` — la inspección 3117
 
@@ -437,7 +551,7 @@ fallando, que es más didáctico si hay tiempo—, la receta es:
 
 ```bash
 # 1. El mundo de antes: el informe funciona.
-sed -i '' 's/^POSTGRES_TAG=.*/POSTGRES_TAG=11.22/' .env
+sed -i '' 's/^POSTGRES_TAG=.*/POSTGRES_TAG=11/' .env
 docker compose down -v && docker compose up -d
 docker compose exec api php artisan migrate --seed
 docker compose exec -T db psql -U postgres certcore < sql/seed-incidente-be-06.sql
@@ -452,17 +566,19 @@ docker compose exec api php artisan certcore:report:expired      # ❌ y sin un 
 ```
 
 ⚠️ **`pg_constraint.consrc` existe hasta PG 11 inclusive y desaparece en PG 12**, así
-que el escalón "de antes" tiene que ser `11.x`. Con `13` el informe ya falla y la
+que el escalón "de antes" tiene que ser `11` (medido: con `postgres:11` el informe da
+`vencidos: 2 · reglas: 2`; con `16.9`, `column c.consrc does not exist`). Con `13` el informe ya falla y la
 demostración pierde el contraste.
 
 ---
 
 ## 6. Las tres que no necesitan preparación
 
-**`be-03`** (dos endpoints que divergen) y **`be-11`** (el `500` frente al `422`)
-**ya están así en el sistema** desde be02 y be06 respectivamente. No hay nada que
-sembrar: la pluralidad de caminos es el estado real del backend que el alumno
-construyó, y eso es precisamente lo que los hace buenos incidentes.
+**`be-04`** (el orden que cambió con el reemplazo) y **`be-11`** (el `500` frente al
+`422`) **ya están así en el sistema** desde be03: el `ORDER BY` del camino nuevo y los
+dos caminos vivos (`/findings` y `/legacy/findings`). No hay nada que sembrar: es el
+estado real del backend que el alumno construyó, y eso es precisamente lo que los
+hace buenos incidentes.
 
 **`be-12`** (el *assessment* adversarial) trae su artefacto **dentro del enunciado**:
 el informe de tres páginas está transcrito en el bloque de preparación del cuaderno.
@@ -503,10 +619,11 @@ nombre de un archivo, de una columna o de un endpoint, hay que revisar aquí. La
 comprobación barata es correr las tres verificaciones de §7 sobre las doce recetas
 antes de dar el track por cerrado.
 
-**`be-08` es sensible al reloj** y es la única. Está anotado en su receta y no tiene
-arreglo limpio: el bug que reproduce **es** un bug de franja horaria, y una
-preparación que lo hiciera reproducible a cualquier hora estaría reproduciendo otra
-cosa.
+**`be-08` depende de `now()`** y es la única. La versión anterior de su receta fijaba
+la hora y sólo reproducía el incidente cinco horas al día; la actual pone el dato
+relativo al reloj, que reproduce el mismo bug (un dato dentro de la franja) a cualquier
+hora. Lo que sí sigue siendo sensible: la receta necesita el informe de be-06 ya
+parcheado.
 
 **`be-09` y `be-10` dependen de la semilla exacta** `--seed=20240915` con
 `--violations=88`. El número 88 aparece literalmente en las soluciones de referencia

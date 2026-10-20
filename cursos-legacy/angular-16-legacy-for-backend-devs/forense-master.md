@@ -79,7 +79,7 @@ La tabla que se consulta de verdad. A la izquierda, lo que ves o lo que te cuent
 | "Desplegamos el fix y la gente sigue viendo el error" | [Fase 13](13-build-despliegue.md) — caché del `index.html`, casi siempre |
 | "En UAT funciona y en PROD no" | [Fase 13](13-build-despliegue.md) — configuración, caché, versiones, y **sólo al final**, código |
 | Un pod no arranca 🔥 | [Fase 14](14-casi-prod-kind.md) — `describe` si nunca llegó a `Running`, `logs --previous` si arrancó y murió |
-| `CrashLoopBackOff` sin logs, en un Mac con chip M 🔥 | [**A12**](a12-arm64-m1.md) §6 — casi siempre una imagen amd64 |
+| `CrashLoopBackOff` con `exec format error` en los logs, tras construir en un Mac con chip M 🔥 | [**A12**](a12-arm64-m1.md) §6 — una imagen arm64 en un nodo amd64 |
 
 ---
 

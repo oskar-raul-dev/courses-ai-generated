@@ -1,0 +1,41 @@
+           md5_volumen            
+----------------------------------
+ 370d92153dec56deb2494bc4f577725b
+
+ violaciones | con_certificado_posible |       primera       |       ultima        
+-------------+-------------------------+---------------------+---------------------
+          88 |                      88 | 2023-04-15 03:55:00 | 2023-05-06 09:28:00
+
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=273.25..273.26 rows=1 width=8) (actual time=1.405..1.406 rows=1 loops=1)
+   ->  Hash Anti Join  (cost=13.25..273.25 rows=1 width=0) (actual time=1.381..1.400 rows=88 loops=1)
+         Hash Cond: (((i.template_id)::text = (t.template_id)::text) AND (i.template_version = t.version))
+         ->  Seq Scan on inspections i  (cost=0.00..250.29 rows=729 width=520) (actual time=0.006..0.510 rows=4005 loops=1)
+         ->  Hash  (cost=11.30..11.30 rows=130 width=520) (actual time=0.006..0.006 rows=3 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               ->  Seq Scan on templates t  (cost=0.00..11.30 rows=130 width=520) (actual time=0.002..0.003 rows=3 loops=1)
+ Planning Time: 0.323 ms
+ Execution Time: 1.425 ms
+
+=== P1
+ERROR:  insert or update on table "inspections" violates foreign key constraint "inspections_template_fk"
+DETAIL:  Key (template_id, template_version)=(elevator-annual, 9) is not present in table "templates".
+=== P2
+BEGIN
+INSERT 0 1
+ROLLBACK
+=== P3
+BEGIN
+UPDATE 1
+ROLLBACK
+=== P4
+BEGIN
+ROLLBACK
+=== censo
+ERROR:  insert or update on table "inspections" violates foreign key constraint "inspections_template_fk"
+DETAIL:  Key (template_id, template_version)=(elevator-annual, 8) is not present in table "templates".
+ count 
+-------
+    88
+

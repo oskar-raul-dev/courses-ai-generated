@@ -3,7 +3,7 @@
 > Tutorial Angular 16 — Inspecciones y certificaciones · Fase 10 de 14 · **8 horas**
 > Depende de: Fase 9 (hallazgos y severidad) · Habilita: Fase 11
 > Apéndices de apoyo: [A08 (PDF en cliente con jsPDF 2)](a08-pdf-cliente.md)
-> [Incidentes asociados](cuaderno-incidentes.md): 14, 15
+> [Incidentes asociados](cuaderno-incidentes.md): 14, 15, 21
 > Estilo de esta fase: **nuevo**, con una costura 🧬 hacia el `CertificatesModule` heredado
 
 ---
@@ -71,7 +71,7 @@ Hay tres respuestas posibles y sólo una es defendible.
 
 **Medianoche del navegador** es la que sale cuando alguien construye la fecha sin offset. Significa que el certificado vence a horas distintas para personas distintas, y que el mismo usuario ve una cosa en la oficina y otra de viaje. Es el peor de los tres porque es el único que produce respuestas **inconsistentes entre sí**.
 
-**Fin del día de negocio en la zona de negocio** (`'2025-02-10T23:59:59-05:00'`) significa que el certificado vale todo el día 10 en Colombia, que es donde opera CertCore y donde se hacen las inspecciones. Es la única de las tres que se puede defender delante de un cliente, y es la que la semilla ya trae puesta.
+**Fin del día de negocio en la zona de negocio** (`'2025-02-10T23:59:59-05:00'`) significa que el certificado vale todo el día 10 en la hora local del lugar donde está el activo, que es donde se hacen las inspecciones. Las tres sedes —Bogotá, Lima y Quito— están en UTC−5 sin cambio de hora, y por eso el código la llama *la zona del negocio* y la escribe una sola vez. Es la única de las tres que se puede defender delante de un cliente, y es la que la semilla ya trae puesta.
 
 > 🧠 **La lección transferible, y vale para cualquier sistema con vencimientos:** el bug nunca está en `Date`. `Date` hace lo que le pides. El bug está en que nadie escribió a qué hora vence algo, así que cada capa lo decidió por su cuenta y todas decidieron distinto.
 
@@ -140,8 +140,10 @@ export function endOfBusinessDay(day: BusinessDay): Instant {
 }
 
 /**
- * Ahora mismo. El segundo y último `new Date()` sin argumentos del proyecto —
- * el primero está en `todayInBusinessZone()`, cinco líneas más arriba.
+ * Ahora mismo. Junto con `todayInBusinessZone()`, la única puerta al reloj para el
+ * código nuevo. Los `new Date()` que dejaron las fases 8 y 9 sellan instantes
+ * (`startedAt`, `completedAt`, `resolvedAt`) o pintan la hora del autosave:
+ * ninguno decide un día.
  *
  * Devuelve la forma con `Z` porque es lo que produce `toISOString()` y porque
  * para un instante da igual: `Z` y `-05:00` son dos maneras de escribir el
@@ -169,8 +171,8 @@ export function isPast(instant: Instant, now: Instant): boolean {
  *
  * Aritmética en UTC y sobre las tres piezas de la fecha, igual que `addDays`:
  * dividir la diferencia de dos instantes entre 86.400.000 parece equivalente y
- * no lo es en cuanto aparece un cambio de hora. Aquí no hay horario de verano
- * y aun así se escribe bien.
+ * no lo es en cuanto aparece un cambio de hora. En las tres sedes no hay
+ * horario de verano y aun así se escribe bien.
  */
 export function daysBetween(from: BusinessDay, to: BusinessDay): number {
   const [fromYear, fromMonth, fromDay] = from.split('-').map(Number);
@@ -340,6 +342,15 @@ export function certificateStatusLabel(status: DerivedCertificateStatus): string
 }
 
 /**
+ * Días de calendario hasta el vencimiento, contados en días de negocio.
+ * Negativo si ya venció, y no se recorta a cero: "venció hace 40 días" es
+ * información, y la lista de cobertura de la Fase 11 la usa.
+ */
+export function daysUntilExpiry(certificate: Certificate, now: Instant): number {
+  return daysBetween(toBusinessDay(now), toBusinessDay(certificate.validUntil));
+}
+
+/**
  * ⭐ La regla de negocio central de la fase, y son cuatro líneas.
  *
  * El orden de las comprobaciones ES la regla, y la primera sorprende:
@@ -364,7 +375,7 @@ export function deriveCertificateStatus(
     return 'expired';
   }
 
-  const remaining = daysBetween(toBusinessDay(now), toBusinessDay(certificate.validUntil));
+  const remaining = daysUntilExpiry(certificate, now);
 
   return remaining <= EXPIRING_WINDOW_DAYS ? 'expiring' : 'valid';
 }
@@ -399,7 +410,7 @@ export function buildCertificateView(certificate: Certificate, now: Instant): Ce
     certificate,
     status,
     validity: { from: certificate.issuedAt, until: certificate.validUntil },
-    daysUntilExpiry: daysBetween(toBusinessDay(now), toBusinessDay(certificate.validUntil)),
+    daysUntilExpiry: daysUntilExpiry(certificate, now),
     renewalDueOn: renewalDueOn(certificate.validUntil),
     storedStatus: certificate.status,
     // `issued` guardado frente a `valid` derivado no es divergencia: es el
@@ -414,6 +425,7 @@ export function buildCertificateView(certificate: Certificate, now: Instant): Ce
 
 - **`DerivedCertificateStatus` con `Exclude` en vez de escribir los cuatro valores a mano.** Si mañana alguien añade `suspended` a `CertificateStatus`, el `Record` de etiquetas deja de compilar y el compilador te trae hasta aquí — el mismo truco que la Fase 9 usó con `DOWNGRADED`. Escribir los cuatro sueltos rompería ese hilo.
 - **`revokedAt !== null` y no `== null`.** Se puede porque `normalizeCertificate` —5.4— cierra el borde HTTP. Es literalmente la línea que produjo el incidente 12 en la Fase 9, y aquí ya está resuelta antes de escribirla.
+- **`daysUntilExpiry` es pública, y el estado y la vista la reutilizan.** La cuenta de días se escribe una vez: el estado, la vista y el panel de la Fase 11 preguntan lo mismo, y tres `daysBetween` en tres sitios son tres lugares donde alguien invierte los argumentos.
 - **`diverges` tiene una excepción y está justificada en el código.** Es la clase de detalle que, sin comentario, alguien "simplifica" en seis meses y llena la pantalla de avisos falsos.
 
 ```
@@ -511,7 +523,7 @@ function normalizeCertificate(raw: Certificate): Certificate {
 ```ts
 // src/app/core/state/certificate-state.service.ts
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, concatMap, map, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, concatMap, map, tap, throwError } from 'rxjs';
 
 import { CertificateApiService } from '../api/certificate-api.service';
 import { canIssueCertificate, summarizeFindings } from '../domain/inspection-findings';
@@ -540,6 +552,9 @@ export class CertificateStateService {
     error: null,
   });
 
+  /** La petición de load() en curso, para poder cancelarla. */
+  private loading?: Subscription;
+
   readonly state$: Observable<CertificateState> = this.stateSubject.asObservable();
 
   /**
@@ -559,7 +574,10 @@ export class CertificateStateService {
   load(): void {
     this.stateSubject.next({ ...this.stateSubject.value, loading: true, error: null });
 
-    this.certificateApi.getAll().subscribe({
+    // La carga anterior se cancela: emitir, revocar y entrar al detalle llaman a
+    // load(), y una respuesta vieja no puede pisar a una nueva.
+    this.loading?.unsubscribe();
+    this.loading = this.certificateApi.getAll().subscribe({
       next: (items) => this.stateSubject.next({ items, loading: false, error: null }),
       error: (error: unknown) =>
         this.stateSubject.next({
@@ -700,7 +718,7 @@ import { CertificateStateService } from '../../../core/state/certificate-state.s
  * en la Fase 9 a propósito.
  */
 @Component({
-  selector: 'app-certificate-list',
+  selector: 'cc-certificate-list',
   standalone: true,
   imports: [AsyncPipe, DatePipe, NgFor, NgIf, MatButtonModule, MatIconModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -740,7 +758,9 @@ export class CertificateListComponent implements OnInit {
     <span [class]="chipClass(view)">{{ statusLabel(view.status) }}</span>
 
     <span class="certificate-list__validity">
-      Vigente hasta {{ view.validity.until | date: 'dd/MM/yyyy' }}
+      <!-- Un instante se pinta en la zona de negocio (CERTCORE_TIME_ZONE_OFFSET), no en la del
+           navegador: sin el '-0500', un navegador en UTC muestra el día siguiente. -->
+      Vigente hasta {{ view.validity.until | date: 'dd/MM/yyyy' : '-0500' }}
     </span>
 
     <!-- "quedan 12 días" o "venció hace 400": el mismo número con dos lecturas. -->
@@ -762,13 +782,22 @@ export class CertificateListComponent implements OnInit {
 
 ```ts
 // src/app/features/certificates/certificate-detail/certificate-detail.component.ts — lo esencial
-export class CertificateDetailComponent {
+export class CertificateDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly certificateState = inject(CertificateStateService);
   private readonly certificatePdf = inject(CertificatePdfService);
   private readonly snackBar = inject(MatSnackBar);
 
   private readonly reload$ = new Subject<void>();
+
+  /**
+   * viewOf() busca dentro de la lista del estado, y la lista sólo la carga quien
+   * la pide. Sin esta línea, entrar directo a /certificates/CERT-… (un enlace en un
+   * correo, una recarga) pinta «No existe un certificado» con el certificado ahí.
+   */
+  ngOnInit(): void {
+    this.certificateState.load();
+  }
 
   readonly view$: Observable<CertificateView> = combineLatest([
     this.route.paramMap,
@@ -820,7 +849,7 @@ La renovación, en la plantilla del detalle, es dos líneas y ninguna entidad nu
 <!-- Renovar no es un flujo: es empezar otra inspección a tiempo. -->
 <p *ngIf="view.status === 'expiring' || view.status === 'expired'">
   Renueva antes del {{ view.renewalDueOn | date: 'dd/MM/yyyy' }}.
-  <a [routerLink]="['/inspections', 'new']" [queryParams]="{ assetId: view.assetId }">
+  <a [routerLink]="['/inspections', 'new']">
     Programar la inspección de renovación
   </a>
 </p>
@@ -882,6 +911,7 @@ import { Certificate } from '../models/certificate.model';
 import { ChecklistTemplate } from '../models/checklist-template.model';
 import { Client } from '../models/client.model';
 import { Inspection } from '../models/inspection.model';
+import { toBusinessDay } from '../time/business-day';
 import { CertificateView, certificateStatusLabel } from '../domain/certificate-status';
 import { InspectionFinding } from '../domain/inspection-findings';
 import { severityLabel } from '../domain/finding-severity';
@@ -961,18 +991,22 @@ export function buildCertificateDocument(
  * La firma mínima de `autoTable` que este archivo usa. Se declara aquí para
  * que la función pura no dependa del tipo de la librería y siga siendo
  * probable sin instalarla — y sin un solo `any`.
+ *
+ * ⚠️ Las filas van mutables (`string[][]`) aunque aquí nadie las muta: el
+ * `autoTable` real pide `RowInput[]`, y un parámetro `readonly` en esta firma
+ * haría que la función de la librería ya no encajara en ella.
  */
 export type AutoTableFn = (
   document: jsPDF,
   options: {
     readonly startY: number;
-    readonly head: readonly (readonly string[])[];
-    readonly body: readonly (readonly string[])[];
+    readonly head: string[][];
+    readonly body: string[][];
   },
 ) => void;
 
 function formatInstant(instant: string): string {
-  // El documento se lee en Colombia: se imprime el día de negocio, no el
+  // El documento se lee donde está el activo: se imprime el día de negocio, no el
   // instante completo, y desde luego no el UTC.
   return toBusinessDay(instant).split('-').reverse().join('/');
 }
@@ -1262,7 +1296,7 @@ Dos roturas de una línea.
 
 - https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString — lo que hace y lo que **no**: siempre devuelve UTC, y ahí nace la mitad de los bugs de esta fase.
 - https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC — la aritmética de calendario de `addMonths` y `daysBetween`.
-- https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat — lo que haría falta el día que CertCore opere en una zona **con** horario de verano, que es cuando el offset fijo de `business-day.ts` deja de servir. Hoy no hace falta; conviene saber dónde está la puerta.
+- https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat — lo que haría falta el día que un activo esté en otra zona, o en una **con** horario de verano, que es cuando el offset fijo de `business-day.ts` deja de servir. Conviene saber dónde está la puerta.
 - https://www.typescriptlang.org/docs/handbook/utility-types.html#excludeuniontype-excludedmembers — el `Exclude` de `DerivedCertificateStatus`. ⚠️ La documentación cubre versiones posteriores a la 5.1.6 del curso; para este tipo no hay diferencia.
 - https://v16.angular.io/guide/lazy-loading-ngmodules — el `loadChildren` que la Fase 1 dejó puesto y que hoy carga dos standalone. ⚠️ Cuidado con caer en angular.dev, que documenta el enrutado de la 17 en adelante.
 - https://www.typescriptlang.org/docs/handbook/modules/reference.html#import-type — el `import type { jsPDF }` de 5.8, que es lo que permite tipar sin arrastrar la librería.
@@ -1272,9 +1306,9 @@ Dos roturas de una línea.
 
 **Video / apoyo**
 
-- Cualquier charla sobre *time zones are hard* sirve para la sección 4, y casi todas cuentan los mismos tres chistes. ⚠️ La mayoría se centra en el horario de verano, que es el problema que Colombia **no** tiene; la parte transferible aquí es la otra: decidir a qué hora del día ocurre algo.
+- Cualquier charla sobre *time zones are hard* sirve para la sección 4, y casi todas cuentan los mismos tres chistes. ⚠️ La mayoría se centra en el horario de verano, que es el problema que ninguna de las tres sedes tiene; la parte transferible aquí es la otra: decidir a qué hora del día ocurre algo.
 
-**Orden de lectura sugerido:** `toISOString` **antes** de escribir 5.1, si la diferencia entre un instante y un día todavía te suena a lo mismo. El `Exclude` cuando llegues a 5.3 y no antes. jsPDF **sólo cuando el PDF te salga mal**, y entonces por A08, no por el README — y `jspdf-autotable` sólo si la tabla te sale corrida. La página de `Intl.DateTimeFormat` es para después: es la respuesta a una pregunta que este curso no tiene, y leerla antes confunde.
+**Orden de lectura sugerido:** `toISOString` **antes** de escribir 5.1, si la diferencia entre un instante y un día todavía te suena a lo mismo. El `Exclude` cuando llegues a 5.3 y no antes. jsPDF **sólo cuando el PDF te salga mal**, y entonces por A08, no por el README — y `jspdf-autotable` sólo si la tabla te sale corrida. La página de `Intl.DateTimeFormat` es para después: es la respuesta a una pregunta que estas fases todavía no hacen, y leerla antes confunde.
 
 ---
 
@@ -1335,3 +1369,4 @@ Los enunciados ya están escritos en el índice de [`cuaderno-incidentes.md`](cu
 |---|---|---|---|
 | 14 | "Descargué el certificado y la tabla de hallazgos no dice lo mismo que la pantalla" | Trazabilidad | 🟠 |
 | 15 | "El certificado venció ayer para el sistema y hoy para el cliente, y sólo pasa por la tarde" | Tiempo | 🔴 |
+| 21 | "En la isla todavía era 12 y el sistema ya decía vencido" | Tiempo | 🟠 |

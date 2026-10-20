@@ -608,6 +608,13 @@ mantenimiento. El curso lo **construye pieza por pieza**: al terminar la última
 fase obligatoria, el estudiante tiene CertCore delante, en su disco, y puede abrir
 cualquier archivo del que el material haya hablado.
 
+La empresa que lo usa es **Plomada Ingeniería de Inspección S.A.S.**, colombiana, con filiales en Lima (2019) y Quito (2021). Cuatro invariantes de esa ficción que ninguna fase puede contradecir:
+
+- **Los tres países comparten hora.** Bogotá, Lima y Quito están en `-05:00` sin horario de verano. La base del curso solo conoce esa zona; la zona de cada activo entra con el incidente 21.
+- **La vigencia se mide en la hora local del activo.** Un certificado vence al final del día en esa hora. Galápagos (`Pacific/Galapagos`, UTC−6) es la excepción que cobra el incidente 21, no el horario de verano.
+- **El cliente se identifica por NIT o RUC.** NIT en Colombia (9 o 10 dígitos), RUC en Perú (11) y en Ecuador (13, terminado en `001`). La pantalla dice «NIT o RUC»; el país del cliente queda como pendiente 22.
+- **Las plantillas se nombran por país.** Las de Colombia no llevan sufijo; las de Perú y Ecuador llevan `-pe` o `-ec` y solo existen en los datos de los incidentes que las necesitan.
+
 Esa es toda la ficción, y es lo que hace el curso autocontenido. También impone
 cuatro reglas.
 
@@ -857,3 +864,38 @@ contradecir**:
   durante años. El pecado fue elegirlo para *un servicio*, acertar, y que nadie
   volviera a decidir. Cualquier capítulo que se lea como *"Lumen es malo"* está mal
   escrito y se reescribe.
+- **El origen y los autores son los de la historia §3.** `certcore-api` lo empezó un independiente
+  que venía de .NET, por costo de licencias y hosting; lo escribieron y mantuvieron cuatro personas en
+  ocho años, cada una con permanencia de dieciocho meses; y en 2022 el acta de Wilson, *«certcore-api
+  funciona; no se toca sin un plan»*, es la única revisión que tuvo. Ningún capítulo BE atribuye el
+  código a un equipo de PHP de la empresa.
+- **Los nombres salen de la historia.** Plomada, sus filiales, Aurum Suites, Sabana Labs y las personas
+  de §3 se toman de `00-historia-del-sistema.md`; un nombre nuevo se busca antes en todo el repositorio.
+
+---
+
+## 16. 🧾 Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 14/10/2026**, al cerrar la edición de la historia y del track BE. Va al
+> final para no renumerar: el verificador y las plantillas citan esta guía por número de sección. Lo
+> que aquí no se menciona se hereda tal cual de `zz-instrucciones/`.
+
+El `CLAUDE.md` del repositorio y los lineamientos de producción dan **valores por defecto**, y esta
+guía los reemplaza donde lo declara. La tabla dice la regla general, lo que hace este curso y por qué.
+
+| Regla general | Lo que hace este curso | Por qué |
+|---|---|---|
+| Diagramas en Mermaid | **Sin Mermaid en esta edición**: los diagramas se quedan en bloques de texto, y su migración va en otra sesión (D12). El verificador los avisa como `DIAGRAMA` | El alcance de esta edición es de contenido e historia; el cambio de formato no entra en ella |
+| Fecha de vigencia en cada encabezado | **No se exige** en el encabezado de fase ni de apéndice | Esta guía no la pide; el verificador base la avisa como `ENCAB`, y la subclase desactiva ese aviso |
+| Emoji en `###` con moderación | **Se admite en tres familias**: los marcadores de §7.1 y §7.3 (⭐ 💸 🧬 🪦 🩻…), las secciones de la plantilla de incidente (🎫 El ticket, 🎯 Qué se te pide, 🔧 Preparación, 📝 Tu investigación) y los títulos de era de `00-historia-del-sistema.md` (🗄️ 🪨 🏢 🧱 🔀 🧊…) | Cada emoji marca una sección recurrente, no es decoración; cambiarlos rompería los enlaces por ancla de los índices. Los de era no están en la guía, por eso se declaran aquí. `verificar-corpus.py` los acepta en su lista `EMOJI_H3` |
+| Callouts de la lista general | **Además de los de §7.2**, 🔑 (convención de tags y claves) y 🧬 (procedencia del estilo heredado) | Aparecen en `00-convencion-de-git-y-tags.md`, `a06-rxjs.md`, `08-formulario-dinamico.md` y el cuaderno; son marcas de este curso |
+| Enlaces dentro del curso | **Un enlace fuera del curso**: `README.md` apunta a `../angular-8-legacy-for-backend-devs` (el puente de LabCore) | Es el camino de migración del lector del track A (§12.1). El verificador lo reporta como `FUERA`, y es el único error declarado |
+| Nombres de las plantillas de `zz-instrucciones/plantillas/` | **Los documentos conservan su nombre y numeración** (D13). `diccionario-de-terminos` → §5.2 y §15.4; `contrato-de-nombres` → §5.3 y §15.2; `plantillas-de-capitulo` → el archivo del mismo nombre; `prompts-de-fase` → `prompts-extendidos-fases.md` y `prompts-backend-fase.md`; `prompts-de-apendice` → `prompts-extendidos-apendices.md` y `prompts-backend-apendice.md`; `plan-de-produccion` → no hay, por D7 | La numeración de un documento rector es una interfaz publicada; renombrarla rompe los enlaces de los prompts y de los verificadores |
+| Ejercicios: 25 como mínimo por fase (§9) | **La fase 14 tiene 15**: es opcional (🔥), no tiene horas en el calendario y ninguna fase depende de ella. Su ejercicio de cierre es el ambiente, no una batería | Ampliarla a 25 duplicaría una fase que el curso no exige; el lector que no la hace no pierde nada del camino base |
+| Borrar lo deprecado | **`_deprecado-tutorial-angular16.md` se borró** con permiso del autor; queda en el historial de git (commit `45bab6f`) y no se cita | Era el registro de la versión anterior, y el historial ya cumple esa función |
+
+**Cómo se verifica.** `python3 prompts/verificar-corpus.py` corre el perfil `courses-ia` de
+`verificador_base.py` (copiado de `zz-instrucciones/herramientas/`) con las excepciones de esta
+sección, y `python3 prompts/verificar-forenses.py` revisa la estructura de las piezas forenses y las marcas de cierre de sus pasos.
+La salida esperada es un único `ERROR FUERA` y ningún otro error: cualquier otro error es de la edición
+en curso y se corrige antes de cerrarla.

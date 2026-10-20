@@ -1,0 +1,46 @@
+<h2>Inspecciones</h2>
+
+<a mat-raised-button color="primary" routerLink="/inspections/start">
+  <mat-icon>add</mat-icon>
+  Empezar inspección
+</a>
+
+<ng-container *ngIf="state$ | async as state">
+  <mat-progress-spinner *ngIf="state.loading" mode="indeterminate" diameter="32"></mat-progress-spinner>
+
+  <p class="inspection-list-error" *ngIf="state.error !== null">{{ state.error }}</p>
+
+  <table mat-table [dataSource]="state.items" *ngIf="state.items.length > 0">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>Número</th>
+      <td mat-cell *matCellDef="let inspection">{{ inspection.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="assetId">
+      <th mat-header-cell *matHeaderCellDef>Activo</th>
+      <td mat-cell *matCellDef="let inspection">{{ inspection.assetId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="version">
+      <th mat-header-cell *matHeaderCellDef>Versión</th>
+      <td mat-cell *matCellDef="let inspection">v{{ inspection.templateVersion }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let inspection">{{ inspection.status }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let inspection">
+        <a mat-icon-button [routerLink]="['/inspections', inspection.id]" aria-label="Abrir">
+          <mat-icon>open_in_new</mat-icon>
+        </a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</ng-container>

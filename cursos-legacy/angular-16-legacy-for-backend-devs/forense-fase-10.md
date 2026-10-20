@@ -122,7 +122,7 @@ export function toBusinessDay(instant: string): string { … }
 const expired = toBusinessDay(cert.validUntil) < todayInBusinessZone();
 ```
 
-> 🧭 **La regla del proyecto: la zona horaria de una decisión de negocio es un dato del negocio, no del entorno.** Un certificado vence al final del día **en el huso donde opera la empresa**, y eso no cambia porque el inspector esté de viaje o porque el servidor esté en otro continente. Cuando esa decisión tiene nombre y vive en un archivo, deja de tomarse por accidente en catorce sitios distintos.
+> 🧭 **La regla del proyecto: la zona horaria de una decisión de negocio es un dato del negocio, no del entorno.** Un certificado vence al final del día **en el huso donde está el activo**, y eso no cambia porque el inspector esté de viaje o porque el servidor esté en otro continente. Cuando esa decisión tiene nombre y vive en un archivo, deja de tomarse por accidente en catorce sitios distintos.
 
 
 **Aquí termina la ruta A.** El bug está localizado en una conversión que usa el huso del navegador para una decisión de negocio, y el arreglo es una función con el huso dentro. Si tu síntoma era que el PDF no coincide con la pantalla, la tuya es la **ruta B**.
@@ -195,7 +195,7 @@ export interface CertificateDocumentSource {
 
 **"Es un bug de zonas horarias de JavaScript."** El callejón más caro, porque manda a buscar librerías. `Date` es incómodo y aquí no se equivocó: convirtió correctamente entre husos, tres veces, con tres resultados correctos. El bug es que nadie decidió **cuál de los tres** era el bueno para esta decisión de negocio.
 
-**"Guardemos todo en UTC y se acabó."** Es la respuesta estándar y resuelve el problema equivocado. UTC te da un **instante** sin ambigüedad, y eso ya lo tienes con el offset. Lo que UTC no te da es el **día de calendario del negocio**, que es lo que decide si un certificado está vencido. Un certificado que vence "el 10 de febrero" no vence a las 05:00 UTC del 11 porque sí: vence al final del día laboral de donde opera la empresa.
+**"Guardemos todo en UTC y se acabó."** Es la respuesta estándar y resuelve el problema equivocado. UTC te da un **instante** sin ambigüedad, y eso ya lo tienes con el offset. Lo que UTC no te da es el **día de calendario del negocio**, que es lo que decide si un certificado está vencido. Un certificado que vence "el 10 de febrero" no vence a las 05:00 UTC del 11 porque sí: vence al final del día laboral del lugar donde está el activo.
 
 **"Sumemos un día."** Mueve el error de sitio. Con `+1` día el bug desaparece por la tarde en Bogotá y aparece por la mañana en Auckland. Un desplazamiento constante nunca arregla un problema de husos, sólo cambia a quién le toca.
 
@@ -217,5 +217,5 @@ Si marcaste hallazgos como resueltos reproduciendo la ruta B, `npm run seed`.
 
 Y el segundo, que vale para cualquier artefacto exportado: **lo que hay en la pantalla es una foto de hace un rato.** Está bien para mirar y está mal para imprimir. Cualquier cosa que sobreviva a la sesión —un PDF, un correo, un export— se arma pidiendo el dato otra vez, y la forma de garantizarlo es que la función que lo arma **no acepte** lo que el componente ya tenía.
 
-**Incidentes del cuaderno que usan esta ruta:** 14 (el PDF que no coincide) y 15 (venció ayer/hoy).
+**Incidentes del cuaderno que usan esta ruta:** 14 (el PDF que no coincide), 15 (venció ayer/hoy) y 21 (vencido antes de hora en Galápagos).
 **Amplía:** **A08** §7 y §9 para el PDF que se arma desde el dato y para lo que un documento exportado ya no puede desandar, y `forense-fase-09.md` para el mismo mecanismo de dato guardado frente a dato derivado.

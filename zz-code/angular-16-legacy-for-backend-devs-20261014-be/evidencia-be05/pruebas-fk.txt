@@ -1,0 +1,31 @@
+=== P1: inserción NUEVA que viola la invariante (debe fallar)
+=== P2: inserción NUEVA válida (debe pasar; se deshace)
+ERROR:  insert or update on table "inspections" violates foreign key constraint "inspections_template_fk"
+DETAIL:  Key (template_id, template_version)=(elevator-annual, 9) is not present in table "templates".
+BEGIN
+INSERT 0 1
+ROLLBACK
+=== P3: fila VIEJA violadora, cambio SOLO de status (no toca la clave: debe pasar; se deshace)
+BEGIN
+UPDATE 1
+ROLLBACK
+=== P4: fila VIEJA violadora, cambio de la CLAVE a otra versión inexistente (debe fallar; se deshace)
+BEGIN
+ERROR:  insert or update on table "inspections" violates foreign key constraint "inspections_template_fk"
+DETAIL:  Key (template_id, template_version)=(elevator-annual, 8) is not present in table "templates".
+ROLLBACK
+=== Censo tras las pruebas (debe seguir en 88)
+ violaciones_intactas 
+----------------------
+                   88
+(1 row)
+
+=== Coste de VALIDATE (se deshace; debe fallar)
+Timing is on.
+BEGIN
+Time: 0.109 ms
+ERROR:  insert or update on table "inspections" violates foreign key constraint "inspections_template_fk"
+DETAIL:  Key (template_id, template_version)=(elevator-annual, 9) is not present in table "templates".
+Time: 1.091 ms
+ROLLBACK
+Time: 0.066 ms

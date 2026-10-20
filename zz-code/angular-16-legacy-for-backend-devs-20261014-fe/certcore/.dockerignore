@@ -1,0 +1,10 @@
+# .dockerignore
+# Sin esto, el `COPY . .` de la etapa 1 manda al demonio de Docker cientos de
+# megabytes que no se usan —y `node_modules` de tu máquina, que puede tener
+# binarios de otra arquitectura y romper el `npm ci` de formas creativas.
+node_modules
+dist
+coverage
+.git
+.angular
+mock/db.json

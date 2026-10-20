@@ -183,7 +183,7 @@ export const templateResolver: ResolveFn<ChecklistTemplate> = (route) => {
 | `HttpInterceptorFn` | clase con `implements HttpInterceptor` | `{ provide: HTTP_INTERCEPTORS, useClass: …, multi: true }` |
 | `ResolveFn<T>` | clase con `implements Resolve<T>` | `resolve: { data: DataResolver }` con la clase |
 
-> 🧬 **El archivo donde las dos generaciones se tocan** es `core/core.module.ts` de la **Fase 2**: un `NgModule` de 2021 registrando a la vez `provideHttpClient(withInterceptorsFromDi(), withInterceptors([authInterceptor]))`. Eso no viola la regla del §2: no hay dos estilos *escritos* en el archivo, hay un módulo heredado registrando código de las dos épocas, que es su trabajo. Por eso lleva 🧬 y no 💸.
+> 🧬 **El archivo donde las dos generaciones se tocan** es `core/core.module.ts` de la **Fase 2**: un `NgModule` heredado de 2021 al que la migración de 2024 le añadió `provideHttpClient(withInterceptorsFromDi(), withInterceptors([authInterceptor]))`, que es API de Angular 15 y no existía cuando se escribió el módulo. Eso no viola la regla del §2: no hay dos estilos *escritos* en el archivo, hay un módulo heredado registrando código de las dos épocas, que es su trabajo. Por eso lleva 🧬 y no 💸.
 
 ---
 

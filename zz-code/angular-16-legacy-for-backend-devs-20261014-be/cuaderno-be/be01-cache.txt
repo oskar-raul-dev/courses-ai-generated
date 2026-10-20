@@ -1,0 +1,9 @@
+1. panel (legacy) antes de publicar: ["elevator-annual-v2","boiler-annual-v1"]
+   cerrar v2 → 200
+   publicar v3 → 201
+2. panel después de publicar:        ["elevator-annual-v2","boiler-annual-v1"]
+   vigentes en la base (nuevo):      ["elevator-annual-v3"]
+3. tras reiniciar el contenedor: ["elevator-annual-v2","boiler-annual-v1"]
+almacén: string(26) "Illuminate\Cache\FileStore"
+archivos: 1
+grep del get de la fachada: 0

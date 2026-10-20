@@ -2,7 +2,7 @@
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · Fase 5 de 14 · **6 horas**
 > Depende de: Fase 4 (estado con servicios y `BehaviorSubject`) · Habilita: Fases 6 a 13
-> Apéndices de apoyo: [A01 (Angular Material 16)](a01-material.md) · [A04 (`inject()](a04-inject-vs-constructor.md)` vs constructor)
+> Apéndices de apoyo: [A01 (Angular Material 16)](a01-material.md) · [A04 (`inject()` vs constructor)](a04-inject-vs-constructor.md)
 > [Incidentes asociados](cuaderno-incidentes.md): 06, 07
 > Estilo de esta fase: **mixto 🧬 y deliberado** — la convivencia *es* el tema
 
@@ -345,7 +345,7 @@ git rm src/app/features/clients/clients-routing.module.ts
 
 **Detalles con intención**
 
-- **`main.ts` no se toca.** CertCore sigue arrancando con `platformBrowserDynamic().bootstrapModule(AppModule)`, y va a seguir así hasta la Fase 13. `bootstrapApplication` es otra conversión, mucho más cara, y no hace falta ninguna para tener componentes standalone: la aplicación no necesita ser standalone para alojarlos.
+- **`main.ts` no se toca.** CertCore sigue arrancando con `platformBrowserDynamic().bootstrapModule(AppModule)`, y va a seguir así hasta el final del curso. `bootstrapApplication` es otra conversión, mucho más cara, y no hace falta ninguna para tener componentes standalone: la aplicación no necesita ser standalone para alojarlos.
 - **El guard no cambia.** `authGuard` ya era funcional desde la Fase 2, y le da exactamente igual si detrás hay un módulo o un componente. Las piezas funcionales de la Fase 2 fueron, sin que se dijera entonces, el ensayo de esta fase.
 - **La ruta sigue siendo diferida.** Es lo primero que hay que comprobar y lo primero que se olvida.
 
@@ -445,7 +445,7 @@ La Fase 1 dejó doce módulos de Material reexportados por comodidad y una prome
 - `template-list.component.html` → progress-spinner, list
 - `asset-list.component.html` y las otras cuatro pantallas placeholder → nada
 
-Tres módulos de los doce **no los usa nadie**: `MatTableModule`, `MatDialogModule` y `MatSnackBarModule`. Están ahí porque en 2021 alguien pensó que harían falta. Y hacen falta — en la Fase 6 —, pero hoy son peso muerto que viaja en cada carga de la aplicación.
+Tres módulos de los doce **no los usa ningún módulo que siga importando `SharedModule`**: `MatTableModule`, `MatDialogModule` y `MatSnackBarModule`. La lista de clientes sí usa `mat-table`, pero ya no pasa por `SharedModule`: importa lo suyo desde 5.2. Están ahí porque en 2021 alguien pensó que harían falta. Y hacen falta — en la Fase 6 —, pero hoy son peso muerto que viaja en cada carga de la aplicación.
 
 ```ts
 // src/app/shared/shared.module.ts — sólo la lista de Material

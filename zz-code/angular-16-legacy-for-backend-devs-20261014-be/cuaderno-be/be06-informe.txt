@@ -1,0 +1,6 @@
+## POSTGRES_TAG=11 (11.16 (Debian 11.16-1.pgdg90+1))
+vencidos: 2 · reglas: 2
+## POSTGRES_TAG=16.9 (16.9 (Debian 16.9-1.pgdg130+1))
+In Connection.php line 664:
+  SQLSTATE[42703]: Undefined column: 7 ERROR:  column c.consrc does not exist  
+  LINE 2:             SELECT c.conname, c.consrc AS definition                 

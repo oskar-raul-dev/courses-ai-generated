@@ -51,7 +51,7 @@ Reglas del track que no se negocian:
   constructor property promotion, sin tipos union. Aquí el runtime es 7.4 **a
   propósito**; lo de PHP 8 va marcado 🔥 como comparación.
 - **Lumen no fue una tontería.** En 2016, para una empresa mediana
-  latinoamericana con gente de PHP del intranet viejo, era la decisión sensata, y
+  latinoamericana sin equipo de software y sin ganas de pagar licencias, era la decisión sensata, y
   el beneficio se cobró durante años. El pecado no fue elegirlo: fue elegirlo
   para *un servicio*, acertar, y que nadie volviera a decidir nunca.
 - **El cierre lleva el bloque 🏷️**, con el namespace propio del track:
@@ -61,7 +61,7 @@ Reglas del track que no se negocian:
 
 - Fase be00 de be07 — 📜 El contrato: auditoría del mock
 - Horas: **6h**
-- Depende de: **Fase 10 del track base terminada** (`fase-10-certificados-vigencia`)
+- Depende de: **Fase 10 del track base terminada** (`fase-10`)
 - Habilita: be01
 - Apéndices de apoyo: ninguno todavía
 - Incidentes reservados: ninguno

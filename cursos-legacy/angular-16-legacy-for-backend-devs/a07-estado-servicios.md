@@ -182,7 +182,7 @@ Dos detalles que deciden si esto escala o no:
 // Fase 11: certificados por vencer, agrupados por cliente. El cruce no existe
 // en ningún estado; se calcula cuando alguien lo mira.
 readonly expiringByClient$ = combineLatest([
-  this.certificateState.certificates$,
+  this.certificateState.state$.pipe(map((state) => state.items)),
   this.clientState.clients$,
 ]).pipe(
   map(([certificates, clients]) => groupExpiringByClient(certificates, clients)),
@@ -190,7 +190,7 @@ readonly expiringByClient$ = combineLatest([
 );
 ```
 
-> 💡 **Dónde va la función que calcula.** Fuera del servicio, en `core/domain/`, como función pura. El servicio la llama; no la contiene. Así la **Fase 12** puede testear la regla de negocio sin `TestBed`, sin `HttpClient` y sin montar nada — y el 80% del coverage del proyecto sale de ahí.
+> 💡 **Dónde va la función que calcula.** Fuera del servicio, en `core/domain/`, como función pura. El servicio la llama; no la contiene. Así la **Fase 12** puede testear la regla de negocio sin `TestBed`, sin `HttpClient` y sin montar nada — y buena parte del coverage del proyecto sale de ahí.
 
 ---
 
@@ -233,7 +233,7 @@ La pregunta no es "¿me desuscribo?" sino **"¿esta suscripción puede sobrevivi
 
 Sólo el último caso necesita gestión, y la forma nueva es `takeUntilDestroyed(this.destroyRef)`. Las dos formas heredadas —`Subscription` manual y `takeUntil` con un `Subject` de destrucción— están vivas en CertCore y se explican en **A06** §8.
 
-> 🧭 **La regla de oro, que se repite en todo el curso: `async` pipe para pintar, `.subscribe()` para efectos.** Si la suscripción es sólo para que un valor aparezca en pantalla, no escribas una suscripción: escribe un `async`. En toda la Fase 4 no hay una sola suscripción manual en código de producción, y no es una casualidad de la fase.
+> 🧭 **La regla de oro, que se repite en todo el curso: `async` pipe para pintar, `.subscribe()` para efectos.** Si la suscripción es sólo para que un valor aparezca en pantalla, no escribas una suscripción: escribe un `async`. En la Fase 4, fuera de la suscripción de sesión del servicio (que no necesita cortarse, §3) y de los ejemplos de fuga que la fase construye a propósito, no hay ninguna suscripción manual en código de producción, y no es una casualidad de la fase.
 
 **Cómo se caza una fuga cuando ya existe**, que es lo que de verdad vas a tener que hacer:
 

@@ -79,8 +79,19 @@ services:
       # petición ya usa el archivo nuevo. En PHP eso sale gratis porque no hay
       # proceso que reiniciar — cada petición relee lo que haya en disco.
       - ".:/app"
+    # Todos los comandos del track corren desde server/: `php artisan`,
+    # `php tools/probe.php`, `composer`, `./vendor/bin/phpunit`.
+    working_dir: /app/server
     environment:
       DB_DSN: "pgsql:host=db;dbname=certcore"
+      # Sin APP_ENV, Lumen se cree en producción y `artisan migrate` pide una
+      # confirmación interactiva: por `docker compose exec` se queda esperando.
+      APP_ENV: local
+      # El caos pasa del shell a la API, con los mismos valores por defecto que
+      # el mock. Sin el `:-`, un CHAOS_RATE vacío valdría 0 y no 0,3.
+      CHAOS: "${CHAOS:-}"
+      CHAOS_RATE: "${CHAOS_RATE:-0.3}"
+      CHAOS_DELAY_MS: "${CHAOS_DELAY_MS:-2500}"
       # El servidor embebido es de un solo proceso. Con cuatro workers, una
       # petición colgada (CHAOS=timeout) deja de tumbar el laboratorio entero.
       # Disponible desde PHP 7.4.0, que es justo la versión que corre aquí.
@@ -89,7 +100,11 @@ services:
       db:
         # No "cuando el contenedor arranque": cuando el healthcheck esté verde.
         condition: service_healthy
-    command: php -S 0.0.0.0:3000 -t server/public
+    # Preflight: cargar el arranque y arrancar los proveedores ANTES de servir.
+    # `php -S` no lee nada hasta la primera petición, así que sin esto un CHAOS
+    # mal escrito o un proveedor roto no impiden arrancar: el proceso muere aquí,
+    # con el mensaje. ($$ es un $ literal para compose.)
+    command: sh -c "php -r '$$app = require \"bootstrap/app.php\"; $$app->boot();' && exec php -S 0.0.0.0:3000 -t public"
 
 volumes:
   pgdata:

@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+// server/artisan — consola de Lumen. Lo que usa be03: `php artisan migrate` y `php artisan db:seed`.
+
+$app = require __DIR__ . '/bootstrap/app.php';
+
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+
+exit($kernel->handle(new Symfony\Component\Console\Input\ArgvInput(), new Symfony\Component\Console\Output\ConsoleOutput()));

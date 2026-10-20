@@ -1,0 +1,14 @@
+## certcore:archive --year=2023
+In Connection.php line 664:
+  SQLSTATE[23503]: Foreign key violation: 7 ERROR:  insert or update on table  
+   "inspections" violates foreign key constraint "inspections_template_fk"     
+  DETAIL:  Key (template_id, template_version)=(elevator-annual, 3) is not pr  
+## certcore:archive --year=2024
+archivadas: 170
+## estado tras los dos intentos
+2023|0
+2024|170
+## con el parche de la solución
+88 inspecciones no se pudieron archivar (violan inspections_template_fk): 13912, 13913, 13914, 13915, 13916, 13917, 13918, 13919, 13920, 13921…
+archivadas: 266
+pendientes_aprobadas_2023|88

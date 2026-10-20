@@ -2,7 +2,7 @@
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · Ficha de contexto ·
 > **Se lee antes de la Fase 0**
-> ~30 minutos · No hay código acá: hay motivos. · Vigencia: 2026-10-07.
+> ~30 minutos · No hay código acá: hay motivos. · Vigencia: 2026-10-14.
 
 Este documento cuenta de dónde viene CertCore, el sistema que vas a mantener. No
 es decoración narrativa: es la información que en un trabajo real **nadie te da**
@@ -191,11 +191,9 @@ Para Plomada eso trajo un cliente que no es Aurum, aunque el contrato lo
 negoció Aurum: la empresa de la familia, con su propio RUC de trece dígitos.
 Y trajo una pregunta que Patricio hizo en la primera reunión: *"¿Y allá qué
 certificamos? Si no hay ascensor."* No lo hay: la hostería tiene dos pisos y
-nunca lo necesitó. Y ninguna norma de las islas le pide a nadie una
-inspección de tercero para una caldera de agua caliente o para una red contra
-incendio: el permiso anual lo da el cuerpo de bomberos con su propia visita.
-
-Lo que la pide es el contrato, y no es la primera vez. Con Aurum el
+nunca lo necesitó. Y la inspección de tercero para una caldera de agua caliente o
+para una red contra incendio no la pide ninguna norma que el curso pueda citar: la
+pide el contrato, y no es la primera vez. Con Aurum el
 certificado nunca fue un trámite municipal sino un requisito de venta (§2, *Por
 qué tres países*), y el piloto lo llevó al extremo. El **estándar de marca** de
 Aurum exige en todas sus propiedades una certificación anual, hecha por un
@@ -342,11 +340,13 @@ pendientes.
 
 Eso explica de una sola vez cuatro cosas que vas a encontrar en el curso y que,
 sin esta historia, parecen caprichos: que el contrato devuelva **el objeto
-completo, sin paginar** (en 2016 había doce inspecciones en la base); que el
+completo, sin paginar** (en 2016 se certificaban unos cuatrocientos activos al año); que el
 `status` del certificado venga **guardado como dato** en vez de calculado; que
 las plantillas versionadas se identifiquen con un `id` compuesto que nadie
 diseñó, sino que fue quedando; y que la pantalla de clientes **haya nacido
-pensando en el NIT**, aunque hoy un tercio de los clientes tenga RUC.
+pensando en el NIT**, aunque hoy un tercio de los clientes tenga RUC. Las
+carteras de Lima y de Quito no pasaron nunca por esa pantalla: se cargaron por
+script, directo a la API, el día en que se abrió cada filial.
 
 En este curso **no tocas la API**: en la Fase 3 construyes un mock que la imita, y
 con eso alcanza para todo lo demás. Pero cuando una fase diga *"esto se arregla
@@ -705,11 +705,11 @@ reales. Que te resulte familiar es el punto.
 | **Empresa** | Plomada Ingeniería de Inspección S.A.S. (matriz, Bogotá) | Plomada Perú S.A.C. (Miraflores, Lima) | Plomada Ecuador Cía. Ltda. (Quito; inspectores también en Guayaquil) |
 | **Desde** | 2012; acreditada en 2013 | 2019, por compra de Inspecciones Rímac | 2021, con socio local |
 | **Ente acreditador** | ONAC | INACAL | SAE (Servicio de Acreditación Ecuatoriano; OAE hasta 2014) |
-| **Norma de acreditación** | ISO/IEC 17020 | NTP-ISO/IEC 17020 | NTE INEN ISO/IEC 17020 |
+| **Norma de acreditación** | NTC-ISO/IEC 17020:2012 | NTP-ISO/IEC 17020 | NTE INEN ISO/IEC 17020 |
 | **Norma de ascensores** | NTC 5926-1 (Acuerdo 470 de 2011 en Bogotá) | Norma EM.070 del RNE | RTE INEN 095 |
 | **Quién verifica en la ciudad** | IDIGER, en Bogotá | la municipalidad, en la ITSE | — |
 | **Identificación del cliente** | NIT | RUC | RUC |
-| **Huso** | UTC−5, sin cambio de hora | UTC−5, sin cambio de hora | UTC−5; **Galápagos, UTC−6** (`America/Galapagos`) |
+| **Huso** | UTC−5, sin cambio de hora | UTC−5, sin cambio de hora | UTC−5; **Galápagos, UTC−6** (`Pacific/Galapagos`) |
 | **Clientes de Aurum** | 4 torres (Aurum Suites S.A.S.) | 3 torres (Aurum Suites Perú S.A.C.) | 2 torres (Aurum Suites Ecuador S.A.) y el Inn de Galápagos (Hostería Chiriboga Cía. Ltda.) |
 | **Moneda** | peso colombiano | sol | dólar estadounidense |
 
@@ -731,10 +731,9 @@ mínima de esto, no una copia.
 | Habitaciones del Inn de Galápagos | 20, y un salón para eventos | ficticia |
 | Viajes de inspección a Galápagos | 1 al año, dos inspectores de Guayaquil | ficticia |
 | Personas de calidad que administran plantillas | 2, en Bogotá | ficticia |
-| Inspecciones en la base cuando nació la API | 12 | heredada de la ficha v1 |
 | Componentes de las eras 1 y 2 sin migrar | cuarenta y pico | heredada de la ficha v1 |
 | Subidas de versión de PostgreSQL | 4 en ocho años (9.6 → 11 → 13 → 16) | heredada del track BE |
-| Visitas e inspecciones del distrito a transporte vertical en Bogotá, 2024 | 1.953 | real, publicada por la Alcaldía de Bogotá; por verificar la cifra exacta |
+| Visitas de verificación de IDIGER a sistemas de transporte vertical en Bogotá, del 1 de enero al 9 de septiembre de 2024 | 1.953 | real: boletín de la Alcaldía de Bogotá del 11/09/2024 (cifra parcial del año) |
 
 ---
 

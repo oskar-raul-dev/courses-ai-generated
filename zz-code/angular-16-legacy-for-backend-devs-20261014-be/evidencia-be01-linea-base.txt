@@ -1,0 +1,100 @@
+
+🔐 Autenticación
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ el login devuelve accessToken
+     esperado: sí
+     recibido: no
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ el login devuelve expiresIn numérico
+     esperado: number
+     recibido: 
+  ❌ el token tiene tres segmentos
+     esperado: 3
+     recibido: 
+  ❌ credenciales inválidas devuelven 401
+     esperado: 401
+     recibido: 404
+  ❌ una ruta protegida sin token devuelve 401
+     esperado: 401
+     recibido: 404
+
+📚 Colecciones
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ GET /clients devuelve un array
+     esperado: array
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ GET /assets devuelve un array
+     esperado: array
+     recibido: 
+  ✅ GET /templates devuelve un array
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ GET /inspections devuelve un array
+     esperado: array
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ GET /findings devuelve un array
+     esperado: array
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ GET /certificates devuelve un array
+     esperado: array
+     recibido: 
+
+🔤 Dialecto
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ ?clientId= filtra assets
+     esperado: true
+     recibido: 
+  ❌ ?templateId=&version= devuelve una sola plantilla
+     esperado: 1
+     recibido: 3
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ la ruta anidada de hallazgos existe
+     esperado: array
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ y devuelve sólo los de esa inspección
+     esperado: true
+     recibido: 
+  ✅ un id inexistente devuelve 404
+
+🔍 Rarezas del contrato
+  ❌ el id de plantilla es compuesto
+     esperado: elevator-annual-v2
+     recibido: elevator-annual-v1
+  ✅ y el identificador lógico vive en templateId
+  ❌ la v2 tiene validUntil null
+     esperado: null
+     recibido: 2023-12-31
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ el certificado trae status guardado
+     esperado: string
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ la inspección 501 declara templateVersion 1
+     esperado: 1
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ y guarda sus tres respuestas
+     esperado: 3
+     recibido: 
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ GET /inspections devuelve las respuestas embebidas
+     esperado: true
+     recibido: 
+
+🕐 Fechas
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ los instantes llevan offset -05:00
+     esperado: true
+     recibido: 
+  ✅ las vigencias de plantilla son días desnudos
+
+✍️  Escritura
+parse error: Invalid numeric literal at line 1, column 10
+  ❌ PATCH devuelve el objeto completo
+     esperado: true
+     recibido: 
+
+FALLOS: 22 de 26

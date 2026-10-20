@@ -186,5 +186,5 @@ Si probaste el caso del validador colgado quitando el `first()`, **devuélvelo a
 
 Y el segundo, que se lleva a cualquier stack: **"no pasa nada" casi siempre significa que hay un estado intermedio que nadie está pintando.** `PENDING`, `submitting`, "cargando": los tres son estados reales del sistema, y si la interfaz sólo dibuja el éxito y el error, el usuario ve un botón muerto y escribe un ticket que no se puede reproducir.
 
-**Incidentes del cuaderno que usan esta ruta:** ninguno directamente, y es a propósito: esta ruta es la **herramienta** con la que se resuelven varios de la semana 2 y 3. El `ng.getComponent($0)` reaparece en `forense-fase-08.md` y en `forense-fase-09.md`.
+**Incidentes del cuaderno que usan esta ruta:** el 22 (el RUC que el formulario no acepta) directamente; los demás, a propósito, solo como **herramienta**: con esta ruta se resuelven varios de la semana 2 y 3. El `ng.getComponent($0)` reaparece en `forense-fase-08.md` y en `forense-fase-09.md`.
 **Amplía:** **A05** §6 para validadores asíncronos y §7 para `value` frente a `getRawValue()`, **A01** §3 para por qué un `mat-error` puede no pintarse.

@@ -7,24 +7,23 @@
  */
 export interface FeatureState<T> {
   /**
-   * 💸 DEUDA TÉCNICA INTENCIONAL
-   * `T[]` y no `readonly T[]`. El array que este estado expone es el mismo que
-   * guarda el servicio, y cualquier suscriptor puede hacerle push, splice o
-   * sort. Cuando eso pasa, la referencia no cambia, nadie emite, y con OnPush
-   * la vista no se entera: la lista se queda como estaba aunque el dato ya no.
-   * Lo correcto es `readonly items: readonly T[]` hasta la salida y reemplazar
-   * en vez de mutar. Fíjate en que el borde HTTP sí está protegido —los
-   * *ApiService de la Fase 3 devuelven `readonly T[]`—; lo que queda abierto es
-   * de la puerta para adentro.
-   * SE PAGA EN LA FASE 6, con la pantalla que deja de repintar delante.
+   * 🪦 LA DEUDA DE LA FASE 4, PAGADA
+   * `readonly items: readonly T[]` cierra la casa entera: los *ApiService ya
+   * devolvían `readonly T[]` desde la Fase 3, y ahora el dato sigue siendo
+   * inmutable de la puerta para adentro. El compilador rechaza push, splice y
+   * sort, que son las tres formas de romper OnPush sin darse cuenta.
+   *
+   * `readonly` en la propiedad además de en el array: lo primero impide
+   * reasignar `state.items = otra`, lo segundo impide mutar la que hay. Faltando
+   * cualquiera de los dos, la puerta queda entornada.
    */
-  items: T[];
+  readonly items: readonly T[];
 
   /** La entidad sobre la que está trabajando el usuario, o `null` si ninguna. */
-  selected: T | null;
+  readonly selected: T | null;
 
   /** Hay una carga en vuelo. Un booleano, y en el ejercicio 23 verás su límite. */
-  loading: boolean;
+  readonly loading: boolean;
 
   /**
    * El mensaje de error, ya traducido por `toApiError`, o `null` si no hay.
@@ -32,7 +31,7 @@ export interface FeatureState<T> {
    * 11 necesita pintarlo, y un error que sólo existe en un `catch` local no se
    * puede pintar en otra pantalla.
    */
-  error: string | null;
+  readonly error: string | null;
 }
 
 /**

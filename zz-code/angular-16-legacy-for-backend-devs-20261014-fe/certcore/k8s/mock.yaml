@@ -1,0 +1,36 @@
+# k8s/mock.yaml — el backend, con la misma forma y sin nada nuevo
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certcore-mock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certcore-mock
+  template:
+    metadata:
+      labels:
+        app: certcore-mock
+    spec:
+      containers:
+        - name: mock
+          image: certcore-mock:fase-14
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  # ⚠️ El nombre importa y no es libre: el `nginx.conf` de la Fase 13 hace
+  # `proxy_pass http://certcore-mock:3000/`, y ese nombre lo resuelve ahora el
+  # DNS del cluster en vez del de la red de Docker. Llamarlo distinto obligaría
+  # a tocar la imagen, que es exactamente lo que esta fase no hace.
+  name: certcore-mock
+spec:
+  selector:
+    app: certcore-mock
+  ports:
+    - port: 3000
+      targetPort: 3000

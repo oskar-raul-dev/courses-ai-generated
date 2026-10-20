@@ -96,7 +96,7 @@ readonly form2 = this.fb.nonNullable.group({
 });
 ```
 
-> 📝 **Nota de migración.** Los formularios genéricos llegaron en Angular **14**, y con ellos `nonNullable`, `FormRecord` y `NonNullableFormBuilder`. Antes existía `initialValueIsDefault: true`, que hacía la mitad —el `reset()`— y no tocaba el tipo, porque no había tipo. Si en un proyecto heredado ves `initialValueIsDefault`, estás mirando código anterior a la 14: es el mismo comportamiento con el nombre viejo, y `nonNullable` lo sustituyó. En CertCore no aparece: la migración de 2024 pasó por encima de esa era.
+> 📝 **Nota de migración.** Los formularios genéricos llegaron en Angular **14**, y con ellos `nonNullable`, `FormRecord` y `NonNullableFormBuilder`. Si en algún artículo ves `initialValueIsDefault`, es el nombre anterior de la misma idea, que sólo hacía la mitad —el `reset()`— y no tocaba el tipo; `nonNullable` es el que se usa hoy. En CertCore no aparece: la migración de 2024 pasó por encima de esa era.
 
 ---
 

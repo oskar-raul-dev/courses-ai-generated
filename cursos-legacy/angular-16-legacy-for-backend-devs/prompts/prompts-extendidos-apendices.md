@@ -5,7 +5,7 @@ Cada sección es el prompt completo del apéndice, listo para copiar al chat que
 redacta. Los valores están rellenados con los de `propuesta-fases-y-alcance.md`
 §4; si alguna vez cambian allí, se cambian aquí después y nunca al revés.
 
-Las horas de los apéndices **no cuentan** dentro de las 122h del calendario: son
+Las horas de los apéndices **no cuentan** dentro de las 123h del calendario: son
 consulta bajo demanda.
 
 **Y una pieza de forma fija que ningún apéndice puede olvidar:** el cierre
@@ -51,7 +51,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A01 — Angular Material 16 (MDC)
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Angular Material y CDK 16.2.14
 - Usado por: Fases 1, 6, 7, 8, 10
 - Estado: Base
@@ -127,7 +127,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A02 — Bootstrap 5 + Sass
-- Horas de referencia: **2h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **2h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Bootstrap 5.3.x + dart-sass
 - Usado por: ninguna fase lo asume; se ofrece a quien lo herede
 - Estado: 🔥 Opcional
@@ -203,7 +203,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A03 — Node y npm
-- Horas de referencia: **2h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **2h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Node 18.18.2, npm 9.8.1, lockfile v3
 - Usado por: Fases 0, 3, 12, 13
 - Estado: Base
@@ -279,7 +279,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A04 — inject() vs constructor
-- Horas de referencia: **2h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **2h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Angular 16.2.12
 - Usado por: Fases 0, 1, 2, 5 — y de consulta en todas
 - Estado: Base
@@ -355,7 +355,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A05 — Formularios reactivos tipados
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Angular 16.2.12 — tipado disponible desde la 14
 - Usado por: Fases 0, 2, 6, 8, 9
 - Estado: Base
@@ -431,7 +431,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A06 — RxJS 7 idiomático
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: RxJS 7.8.1
 - Usado por: Fases 2, 3, 4, 8, 11
 - Estado: Base
@@ -507,7 +507,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A07 — Estado con servicios y BehaviorSubject
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Angular 16.2.12 + RxJS 7.8.1
 - Usado por: Fases 4, 6, 7, 9, 11
 - Estado: Base
@@ -583,7 +583,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A08 — PDF en cliente con jsPDF 2
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: jspdf 2.5.1 + jspdf-autotable 3.8.x
 - Usado por: Fase 10
 - Estado: Base
@@ -659,7 +659,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A09 — Docker y Kubernetes para el dev de front
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: Docker Engine 24+, nginx 1.25, kind (sin versión fijada)
 - Usado por: Fases 13 y 14
 - Estado: Base
@@ -735,7 +735,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A10 — Puente Angular 8/9 → 16
-- Horas de referencia: **3h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **3h** (no cuentan en el calendario de 123h)
 - Versión cubierta: de Angular 8.2.14 / 9 a 16.2.12
 - Usado por: lectores que vienen del Track A (LabCore); de consulta en todas las fases
 - Estado: Base
@@ -811,7 +811,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A11 — Puente Angular 16 → 17+
-- Horas de referencia: **2h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **2h** (no cuentan en el calendario de 123h)
 - Versión cubierta: de 16.2.12 hacia 17 y posteriores
 - Usado por: Fase 12 (la pincelada de signals sale de aquí)
 - Estado: 🔥 Opcional
@@ -887,7 +887,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A12 — macOS Apple Silicon y arm64
-- Horas de referencia: **2h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **2h** (no cuentan en el calendario de 123h)
 - Versión cubierta: sin versiones fijadas: es un apéndice de plataforma
 - Usado por: Fases 0, 12, 13, 14
 - Estado: 🔥 Opcional por plataforma
@@ -897,7 +897,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 - **Qué problema resuelve (una línea):** Que alguien con un Mac de la serie M pueda seguir el curso completo, incluidas las fases de contenedor.
 - **Secciones esperadas:** dónde estás parado en tres capas (máquina, Node, imagen) y por qué confundirlas es el 90% del problema, Node 18 en arm64 —que a diferencia de Node 12 no compila nada y por eso este apéndice es corto—, el Chromium de Karma en arm64 para la Fase 12, construir la imagen de la Fase 13 para la arquitectura correcta (`--platform`, `buildx`), Colima frente a Docker Desktop frente a Podman en dos líneas cada uno, y 🩺 diagnóstico por síntoma.
 - **Qué queda explícitamente fuera:** `node-sass` y `node-gyp` (no aplican: el stack de este curso no compila C++, y eso se dice explícitamente porque quien venga del Track A lo va a buscar); el Dockerfile del proyecto (Fase 13); kind (Fase 14).
-- **Advertencias obligatorias:** el `CrashLoopBackOff` de la Fase 14 en un Mac arm64 casi siempre es una imagen amd64, y esa es la advertencia que más tiempo ahorra del apéndice. Los ejercicios requieren un Mac con Apple Silicon y se dice explícitamente que quien no lo tenga no necesita este documento.
+- **Advertencias obligatorias:** en un Mac arm64 la imagen amd64 **arranca** en kind, traducida por la VM del runtime (Rosetta o QEMU), y eso esconde el fallo; el `CrashLoopBackOff` con `exec format error` en `kubectl logs` y `Exit Code: 255` aparece con una imagen arm64 en un nodo amd64 sin emulación (medido el 20/10/2026). Es la advertencia que más tiempo ahorra del apéndice. Los ejercicios requieren un Mac con Apple Silicon y se dice explícitamente que quien no lo tenga no necesita este documento.
 - **Ejercicios:** 6 cortos, de consulta.
 
 ## Regla anti-solapamiento
@@ -963,7 +963,7 @@ versionados. Enlaza `00-convencion-de-git-y-tags.md`; no lo reexpliques.
 ## Identidad
 
 - Apéndice A13 — i18n moderno
-- Horas de referencia: **2h** (no cuentan en el calendario de 122h)
+- Horas de referencia: **2h** (no cuentan en el calendario de 123h)
 - Versión cubierta: `@angular/localize` 16.2.12 · `@ngx-translate/core` 15.x
 - Usado por: ninguna fase; es lectura
 - Estado: 🔥 Opcional

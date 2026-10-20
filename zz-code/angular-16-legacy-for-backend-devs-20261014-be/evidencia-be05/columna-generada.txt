@@ -1,0 +1,44 @@
+=== Intento de columna generada (debe fallar)
+BEGIN
+ERROR:  generation expression is not immutable
+ROLLBACK
+=== Mismo cálculo como inmutable: comprobación de que el problema es now()
+BEGIN
+ALTER TABLE
+ROLLBACK
+=== Plan del censo con la restricción puesta, 4005 filas
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=583.34..583.35 rows=1 width=8) (actual time=1.598..1.600 rows=1 loops=1)
+   ->  Hash Anti Join  (cost=13.25..583.34 rows=1 width=0) (actual time=1.176..1.594 rows=88 loops=1)
+         Hash Cond: (((i.template_id)::text = (t.template_id)::text) AND (i.template_version = t.version))
+         ->  Seq Scan on inspections i  (cost=0.00..540.05 rows=4005 width=19) (actual time=0.004..0.557 rows=4005 loops=1)
+         ->  Hash  (cost=11.30..11.30 rows=130 width=520) (actual time=0.007..0.007 rows=3 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               ->  Seq Scan on templates t  (cost=0.00..11.30 rows=130 width=520) (actual time=0.003..0.004 rows=3 loops=1)
+ Planning Time: 0.388 ms
+ Execution Time: 1.644 ms
+(9 rows)
+
+=== Columnas de inspections y restricciones
+                                             Table "public.inspections"
+      Column      |              Type              | Collation | Nullable |                 Default                 
+------------------+--------------------------------+-----------+----------+-----------------------------------------
+ id               | integer                        |           | not null | nextval('inspections_id_seq'::regclass)
+ asset_id         | character varying(255)         |           | not null | 
+ inspector_id     | character varying(255)         |           | not null | 
+ template_id      | character varying(255)         |           | not null | 
+ template_version | integer                        |           | not null | 
+ status           | character varying(255)         |           | not null | 
+ started_at       | timestamp(0) without time zone |           | not null | 
+ completed_at     | timestamp(0) without time zone |           |          | 
+ answers          | jsonb                          |           | not null | 
+Indexes:
+    "inspections_pkey" PRIMARY KEY, btree (id)
+Foreign-key constraints:
+    "inspections_asset_id_foreign" FOREIGN KEY (asset_id) REFERENCES assets(id)
+    "inspections_template_fk" FOREIGN KEY (template_id, template_version) REFERENCES templates(template_id, version) NOT VALID
+Referenced by:
+    TABLE "certificates" CONSTRAINT "certificates_inspection_id_foreign" FOREIGN KEY (inspection_id) REFERENCES inspections(id)
+    TABLE "findings" CONSTRAINT "findings_inspection_id_foreign" FOREIGN KEY (inspection_id) REFERENCES inspections(id)
+

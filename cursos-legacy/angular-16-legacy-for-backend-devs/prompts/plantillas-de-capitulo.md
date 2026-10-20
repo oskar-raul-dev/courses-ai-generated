@@ -10,8 +10,8 @@ Junto con la guía de estilo y el alcance, forman el marco para que las fases,
 escritas cada una en su chat, se lean como un solo documento.
 
 > **Nota de coherencia:** las cifras de referencia son las de
-> `propuesta-fases-y-alcance.md` §2 — **108h de fases + 14h de cuaderno de
-> incidentes = 122h**, con la Fase 14 opcional y sin horas. Si alguna vez cambian,
+> `propuesta-fases-y-alcance.md` §2 — **108h de fases + 15h de cuaderno de
+> incidentes = 123h**, con la Fase 14 opcional y sin horas. Si alguna vez cambian,
 > esta plantilla se actualiza primero y las fases después.
 
 ---
@@ -222,7 +222,7 @@ una decisión de proyecto.}}
 ## Recordatorios al rellenar una fase
 
 - Las horas deben coincidir con la tabla de `propuesta-fases-y-alcance.md` §2. El
-  total de fases es **108h**; el cuaderno aporta las 14h restantes.
+  total de fases es **108h**; el cuaderno aporta las 15h restantes.
 - **Declara el estilo de la fase en el encabezado.** Es la primera cosa que el
   lector necesita saber en este track, y la que evita que copie un patrón de la
   Fase 2 dentro de un componente de la Fase 8.
@@ -349,7 +349,7 @@ realidad de la empresa, y a quién preguntar antes de improvisar.}}
 
 ## Recordatorios al rellenar un apéndice
 
-- Las horas del apéndice **no cuentan** dentro de las 122h del calendario.
+- Las horas del apéndice **no cuentan** dentro de las 123h del calendario.
 - Un apéndice no repite lo que ya explica una fase: enlaza.
 - **También cierra con el bloque 🏷️** (guía §8.1), casi siempre en su variante
   negativa: los apéndices no llevan tag propio porque el código que explican lo

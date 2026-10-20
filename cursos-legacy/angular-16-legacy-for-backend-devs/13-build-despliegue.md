@@ -324,7 +324,9 @@ export class InspectionApiService {
 
 **Detalles con intención**
 
-- **El cambio en los servicios de API es de dos líneas cada uno, y son ocho servicios.** Hazlo con el compilador de guía: borra `apiBaseUrl` del `AppEnvironment` y corre `ng build`. Los errores que salgan son el mapa completo, exactamente como la Fase 6 hizo con la inmutabilidad del estado. Cuéntalos y anótalos en `deuda.md`: ese número —*"la URL horneada vivía en N sitios"*— es lo que se lleva a una reunión.
+- **El cambio en los servicios de API es de dos líneas cada uno, y son siete sitios: los seis `*ApiService` y `AuthService`.** Hazlo con el compilador de guía: borra `apiBaseUrl` del `AppEnvironment` y corre `ng build`. Los errores que salgan son el mapa completo, exactamente como la Fase 6 hizo con la inmutabilidad del estado: medido, ocho, los siete sitios más el propio `environment.ts`. Cuéntalos y anótalos en `deuda.md`: ese número —*"la URL horneada vivía en N sitios"*— es lo que se lleva a una reunión.
+- **Dos de esos archivos son heredados y se tocan en su estilo:** `AuthService` y el `ShellComponent` de la toolbar reciben `AppConfigService` por **constructor**, no con `inject()`.
+- **La suite de la Fase 12 deja de compilar, y conviene saberlo antes del `test:ci`.** El spec de `FindingApiService` usaba `environment.apiBaseUrl` y ya no existe. Y todo spec que instancie un servicio de API de verdad —ése y el del invariante en `InspectionStateService`— revienta con *"se pidió la configuración antes de cargarla"*, porque en un test nadie corre el `APP_INITIALIZER`. El arreglo es el doble de siempre: `{ provide: AppConfigService, useValue: { current: { apiBaseUrl: '/api', environmentName: 'DEV' } } }`. Medido: con los dos specs tocados, la suite vuelve a 35/35.
 - **`Pick<AppEnvironment, 'production'>` y no una interfaz nueva.** El tipo de la Fase 1 sigue siendo la fuente; esto sólo dice qué parte de él sobrevive aquí. Y el `environmentName` que la toolbar pinta ahora sale de `AppConfigService`, así que el `'UAT'` que el tipo declaraba desde la Fase 1 por fin tiene quién lo produzca.
 
 **Prueba de fuego**
@@ -428,8 +430,9 @@ COPY entrypoint.sh /docker-entrypoint.d/40-certcore-config.sh
 
 # El bit de ejecución se pone AQUÍ y no se hereda del sistema de archivos del
 # que copiaste: si el archivo llega sin permiso de ejecución, nginx arranca
-# igual, ignora el script en silencio, y la aplicación sale con la
-# configuración de desarrollo. Es la causa raíz más tonta del incidente 19.
+# igual, ignora el script con UNA línea en el log que nadie lee ("Ignoring …,
+# not executable"), y la aplicación sale con el config.json de desarrollo que
+# trajo el build: etiqueta DEV y peticiones a localhost:3000. Es el 🧨 3.
 RUN chmod +x /docker-entrypoint.d/40-certcore-config.sh
 
 EXPOSE 80
@@ -515,6 +518,8 @@ server {
 }
 ```
 
+> ⚠️ **nginx resuelve `certcore-mock` al arrancar, no al reenviar.** Si el nombre no existe en la red —el mock no está levantado, o lanzaste la imagen sin `--network certcore-net`— el contenedor muere en un segundo con *"host not found in upstream "certcore-mock""*. Por eso el orden de 5.7 empieza por el mock, y por eso un `docker run` suelto de esta imagen para "ver si arranca" no arranca. La Fase 14 tropieza con lo mismo en Kubernetes: el Service del mock tiene que existir antes que el pod de la aplicación.
+
 **El patrón a memorizar**
 
 > Lo que lleva hash en el nombre se cachea para siempre; lo que no lleva hash no se cachea nunca. Toda la política de caché de una SPA cabe en esa frase, y equivocarse en el lado del `index.html` produce el bug más frustrante que existe: el que ya arreglaste.
@@ -579,11 +584,14 @@ echo "[certcore] configuración de arranque: $ENVIRONMENT_NAME -> $API_BASE_URL"
 # red por defecto tendrías que usar direcciones IP, que cambian.
 docker network create certcore-net
 
-# El mock de la Fase 3, en un contenedor. No hace falta una imagen propia:
-# se monta el directorio y se ejecuta con la misma versión exacta de Node.
+# El mock de la Fase 3, en un contenedor. No hace falta una imagen propia: se
+# monta el proyecto, se instalan sus dependencias (express, jsonwebtoken,
+# json-server) y se ejecuta con la misma versión exacta de Node. Sin el
+# `npm install`, `server.js` no encuentra sus módulos y el contenedor muere.
 docker run -d --name certcore-mock --network certcore-net \
-  -v "$(pwd)/mock:/app/mock" -w /app \
-  node:18.18.2-alpine node mock/server.js
+  -v "$(pwd):/app" -w /app \
+  node:18.18.2-alpine \
+  sh -c "npm install --no-audit --no-fund --loglevel=error && node mock/server.js"
 
 # La imagen de la aplicación, construida UNA vez y etiquetada con el tag de
 # git que la produjo — no `:latest`. Es lo que pide la convención del curso, y
@@ -615,6 +623,8 @@ docker exec certcore-uat  cat /usr/share/nginx/html/assets/config.json
 
 Dos archivos distintos dentro de dos contenedores nacidos de la misma imagen, escritos por el mismo script, alimentados por variables distintas. **Eso es todo el capítulo**, y si sale bien, el problema del despliegue de una SPA se te queda entendido.
 
+> ⚠️ **Ábrelas por `localhost` y no por un nombre de host.** El `CorrelationIdInterceptor` de 2021 llama a `crypto.randomUUID()`, que sólo existe en un **contexto seguro**: HTTPS, o `localhost`. Servida por HTTP a cualquier otro nombre —`http://certcore-uat`, la IP de la máquina, el UAT interno sin TLS de una empresa—, `crypto.randomUUID` vale `undefined`, el interceptor lanza antes de que la petición salga, y **todas** las llamadas fallan con *"No se pudo conectar con el servidor"* sin una sola línea en Network. Medido en el laboratorio del curso: por `localhost`, PROD y UAT funcionan; por `http://certcore-prod`, el login no llega a salir. El HTTPS está fuera de alcance (§3), y ésta es la razón más concreta para no dejarlo fuera en un despliegue de verdad.
+
 Para el segundo acto, levanta un mock con caos —`CHAOS=latency,error CHAOS_RATE=0.5`— en otro contenedor, apunta el UAT a ése, y mira las dos pestañas al lado. Misma imagen, mismo código, dos comportamientos. Ésa es la conversación de *"en UAT falla y en PROD no"*, reproducida en tu máquina en treinta segundos.
 
 ```
@@ -625,9 +635,11 @@ para los workers. Funciona en tu máquina y funciona con `docker run`.
 NO SE PAGA AQUÍ, y su destino está documentado fuera del curso: **A09** explica
 por qué en el cluster real de una empresa esto es exactamente lo que va a
 fallar. Muchas plataformas aplican políticas que prohíben contenedores que
-corran como root, y entonces nginx no puede abrir el puerto 80 y el pod entra en
-un bucle de reinicios cuyo mensaje —`bind() to 0.0.0.0:80 failed (13:
-Permission denied)`— no menciona la política que lo causó.
+corran como root y les asignan un usuario sin privilegios, y entonces el pod
+entra en un bucle de reinicios cuyo mensaje no menciona la política que lo
+causó. El primero, medido en la Fase 14, ni siquiera es de nginx: es este
+script, `can't create …/assets/config.json: Permission denied`; detrás vendrían
+`/var/cache/nginx` y el puerto 80.
 Lo correcto es la imagen `nginxinc/nginx-unprivileged`, escuchando en 8080, con
 `runAsNonRoot` declarado. Son tres líneas y **no se escriben aquí** porque este
 capítulo se hace con `docker run`, donde el problema no existe y arreglarlo
@@ -660,7 +672,9 @@ Eso, tal cual, es todo lo que un usuario te puede mandar en una captura. Y con l
 **Tres: traduce.** Con el mapa y la posición, `source-map` en Node te devuelve el archivo y la línea del `.ts` original:
 
 ```bash
-npx source-map@0.7.4 --help   # o el visor de source maps que prefieras
+npm install --no-save source-map@0.7.4   # la librería, no una herramienta de línea de comandos:
+#   desde un script de Node traduce la posición con SourceMapConsumer;
+#   o usa el visor de source maps que prefieras
 ```
 
 y el resultado deja de ser `main.8a1f2c3d.js:1:184213` y pasa a ser
@@ -714,8 +728,9 @@ Una página. Se lee entera antes de tocar nada, el viernes a las seis.
 
 ## 4. Después de desplegar
 
-- [ ] Recarga **una vez**, sin Ctrl+Shift+R. Si tienes que forzar la recarga
-      para ver el cambio, el bug no está arreglado: está cacheado.
+- [ ] Abre la URL en una **pestaña nueva**, sin recargar ni forzar. Si ves
+      la versión anterior, el `index.html` está cacheado: una recarga (F5) lo
+      revalida y te lo esconde. Y `curl -I` a `/`: tiene que decir `no-store`.
 - [ ] Comprueba el ambiente en la toolbar y en `docker logs` del contenedor.
 - [ ] Escribe el post-mortem de ocho puntos mientras lo tienes fresco. Sin
       culpabilización: se analiza el sistema, no a la persona.
@@ -735,17 +750,17 @@ Una página. Se lee entera antes de tocar nada, el viernes a las seis.
 **Síntoma:** desplegaste el fix hace dos horas y los usuarios siguen viendo el bug. A ti te funciona.
 **Causa:** el `index.html` está cacheado. El navegador del usuario sigue pidiendo los bundles de ayer, que siguen existiendo porque el despliegue no borró nada.
 **Fix mínimo:** el `Cache-Control: no-store` sobre `index.html` y `config.json`.
-**Lo que importa:** es el **incidente 18**, y a ti te funciona porque tienes DevTools abierto con *Disable cache* puesto desde hace meses. La primera regla de este bug es **no diagnosticarlo con tu navegador**: usa una ventana privada, o `curl -I` y mira las cabeceras.
+**Lo que importa:** es el **incidente 18**, y a ti te funciona porque tienes DevTools abierto con *Disable cache* puesto desde hace meses. La primera regla de este bug es **no diagnosticarlo con tu navegador**. Una ventana privada tampoco sirve para esto: no tiene caché, así que ve la versión nueva y sólo prueba que el servidor ya la sirve. Lo que dice si el `index.html` se cachea es `curl -I` y sus cabeceras.
 
 **Síntoma:** en UAT funciona y en PROD la pantalla se queda en blanco, sin errores visibles.
-**Causa:** `config.json` tiene un `apiBaseUrl` que no responde, o un `environmentName` que no está entre los tres válidos. El `APP_INITIALIZER` lanza y Angular no arranca.
+**Causa:** `config.json` tiene un `environmentName` que no está entre los tres válidos —o no se puede leer—. El `APP_INITIALIZER` lanza y Angular no arranca. Un `apiBaseUrl` que no responde **no** produce esto: la aplicación arranca y falla después, en cada petición (🧨 4).
 **Fix mínimo:** la variable de entorno del `docker run`.
-**Lo que importa:** es el **incidente 19**, y la pantalla en blanco es una **decisión**, no un fallo del diseño: el `parseAppConfig` de 5.1 prefiere no arrancar antes que arrancar contra el backend equivocado. Lo que sí hace falta es que el error sea visible — está en la consola y en `docker logs`, y el ejercicio 25 te hace decidir si además debería pintarse en pantalla.
+**Lo que importa:** es el **incidente 19**, y la pantalla en blanco es una **decisión**, no un fallo del diseño: el `parseAppConfig` de 5.1 prefiere no arrancar antes que arrancar contra el backend equivocado. Lo que sí hace falta es que el error sea visible — está en la consola, y el valor culpable en la línea `[certcore]` de `docker logs`; el ejercicio 25 te hace decidir si además debería pintarse en pantalla.
 
 **Síntoma:** el contenedor arranca, la aplicación carga, y la toolbar dice `DEV` en producción.
 **Causa:** el `entrypoint.sh` no se ejecutó. Casi siempre por el bit de ejecución, a veces por el shebang de bash en una imagen Alpine.
 **Fix mínimo:** el `chmod +x` del Dockerfile.
-**Lo que importa:** nginx **arranca igual**. Un script del `docker-entrypoint.d/` que no es ejecutable se ignora sin ruido, así que el síntoma aparece tres capas más allá, en la toolbar. El `echo` del final de 5.6 existe exactamente para esto: si no está en `docker logs`, el script no corrió.
+**Lo que importa:** nginx **arranca igual**. Un script del `docker-entrypoint.d/` que no es ejecutable se ignora con una sola línea —*"/docker-entrypoint.sh: Ignoring /docker-entrypoint.d/40-certcore-config.sh, not executable"*— entre las de arranque de nginx, y el síntoma aparece tres capas más allá, en la toolbar. El `echo` del final de 5.6 existe exactamente para esto: si la línea `[certcore]` no está en `docker logs`, el script no corrió. Búscala con `grep '\[certcore\]'` y no con `grep certcore`, que también encuentra la de nginx ignorándolo.
 
 ### Pieza forense de esta fase
 
@@ -766,7 +781,7 @@ Si los digests difieren, no tienes un problema de configuración: tienes dos art
 ```bash
 docker exec certcore-prod cat /usr/share/nginx/html/assets/config.json
 docker exec certcore-uat  cat /usr/share/nginx/html/assets/config.json
-docker logs certcore-prod 2>&1 | grep certcore
+docker logs certcore-prod 2>&1 | grep '\[certcore\]'
 ```
 
 El `echo` del `entrypoint.sh` está en los logs justo por esto: contesta la pregunta sin entrar al contenedor, que es lo que un equipo de plataforma te va a dejar hacer y lo otro no.
@@ -795,9 +810,9 @@ Cuatro roturas, una por capa, y las cuatro se arreglan en una línea.
 
 1. **Quita el `try_files`** y recarga estando en `/inspections/500`. 404 de nginx. Ahora navega hasta ahí desde el listado sin recargar: funciona. Explica esa asimetría sin usar la palabra "router".
 
-2. **Quita el `Cache-Control: no-store` del `index.html`**, despliega un cambio visible —el título de la toolbar—, y recarga en una ventana privada. Después recarga con Ctrl+Shift+R. Anota cuántas veces tuviste que forzar y cómo se lo explicarías a un usuario que no puede.
+2. **Quita el `Cache-Control: no-store` del `index.html`** —aplica a `location /` la política de los bundles—, entra a la aplicación, despliega un cambio visible —el título de la toolbar— y vuelve a entrar **escribiendo la URL** o en una **pestaña nueva**: ves la versión de ayer. Ahora recarga con F5: ves la nueva, porque Chromium revalida el documento al recargar. Y una ventana privada también ve la nueva, porque no tiene caché. Medido así en el laboratorio del curso. Explica por qué entonces *"ya le dije que recargara"* arregla a unos usuarios y no a otros, y por qué ni tu navegador ni una ventana privada sirven para diagnosticarlo.
 
-3. **Quita el `chmod +x` del Dockerfile**, reconstruye y levanta. El contenedor arranca, la aplicación funciona, y dice `DEV`. Busca el mensaje del `entrypoint.sh` en `docker logs` y comprueba que no está. Ése es el diagnóstico entero.
+3. **Quita el `chmod +x` del Dockerfile**, reconstruye y levanta. El contenedor arranca, la aplicación carga, dice `DEV` y el login falla contra `localhost:3000`, porque el `config.json` que sirve es el de desarrollo que trajo el build. Busca la línea `[certcore]` en `docker logs` y comprueba que no está; la que sí está es la de nginx diciendo que lo ignoró. Ése es el diagnóstico entero.
 
 4. **Pon `ENVIRONMENT_NAME=PRD`** —sin la O— en el `docker run`. Pantalla en blanco. Abre la consola, lee el mensaje del `parseAppConfig`, y decide en cinco líneas si prefieres eso o una aplicación que arranca con una etiqueta rara. Después haz lo mismo con `API_BASE_URL=http://un-backend-que-no-existe` y observa que **ésta sí arranca**, porque el error no está en el JSON: está en lo que hay al otro lado. Explica por qué esos dos casos se comportan distinto y cuál de los dos es más peligroso.
 
@@ -829,7 +844,7 @@ Cuatro roturas, una por capa, y las cuatro se arreglan en una línea.
 
 **🟠 Difícil (17–23)**
 
-17. **Diagnóstico.** Reproduce el **incidente 18**: quita el `no-store` del `index.html`, despliega un cambio visible, y compruébalo en una ventana privada y con `curl -I`. Entrega las cabeceras de los dos casos y explica por qué tu navegador habitual no sirve para diagnosticar esto.
+17. **Diagnóstico.** Reproduce el **incidente 18**: quita el `no-store` del `index.html`, despliega un cambio visible, y compruébalo volviendo a entrar en una pestaña nueva, recargando con F5, y con `curl -I`. Entrega las cabeceras de los dos despliegues y explica por qué tu navegador habitual no sirve para diagnosticar esto.
 18. Levanta un tercer contenedor con el mock en modo caos (`CHAOS=latency,error CHAOS_RATE=0.5`) y apunta el UAT a él. Documenta tres diferencias observables entre las dos pestañas sin tocar una línea de código.
 19. 🧬 **Estilo.** Ticket: *"la toolbar debería mostrar también contra qué backend está corriendo, no sólo el ambiente"*. El archivo es el componente de layout, **heredado** de la Fase 1. Escribe el fix y justifica en cinco líneas por qué no lo convertiste a standalone ni le cambiaste el `constructor` por `inject()` aunque tocaste seis líneas.
 20. **Diagnóstico.** Provoca un error en la aplicación desplegada y recorre los tres pasos de 5.8 hasta llegar a la línea del `.ts`. Después borra el `.map` y repite. Entrega hasta dónde llegaste en cada caso.
@@ -919,7 +934,7 @@ La **Fase 14** es 🔥 y **no es requisito de nada**. Toma la imagen que acabas 
 
 ## 📌 Pendientes sugeridos
 
-- **La frase de la Fase 5 sobre `main.ts` hay que corregirla.** Aquella fase escribió que CertCore seguiría arrancando con `platformBrowserDynamic().bootstrapModule(AppModule)` *"hasta la Fase 13"*, y esta fase **no** lo convierte: el `APP_INITIALIZER` funciona igual en las dos formas y convertir el `AppModule` contradice su propia regla de que los nueve módulos heredados no se tocan. El ejercicio 21 hace escribir la variante y decidir. → **Aviso para una segunda pasada sobre la Fase 5**: la frase correcta es *"y va a seguir así hasta el final del curso"*.
+- **La frase de la Fase 5 sobre `main.ts` ya está corregida.** Decía *"hasta la Fase 13"* y ahora dice *"hasta el final del curso"*, que es lo que pasa: esta fase no convierte `AppModule` ni `main.ts`, y el `APP_INITIALIZER` funciona igual en las dos formas. El ejercicio 21 hace escribir la variante y decidir.
 - **El mock quedó contenedorizado a medias y a propósito.** Se levanta montando el directorio sobre una imagen de Node en vez de construir una imagen propia, porque construirla no enseña nada sobre Angular y añade un Dockerfile más que mantener. Es una decisión, no un olvido, y conviene que la Fase 14 lo sepa: allí el mock necesita un Deployment y esa decisión hay que volver a tomarla. → **Aviso para el chat de la Fase 14.**
 - **La zona horaria no reservó un tercer incidente, y es deliberado.** El contenedor corre en UTC, pero el reloj que importa para un certificado es el del navegador del usuario y el offset del negocio, que son fijos desde la Fase 7. El caso de despliegue es el mismo incidente 15 de la Fase 10 con otra ropa, y reservarle un ID nuevo habría sido repetir. Queda como paso del recorrido forense. → **Nota para el chat del cuaderno de incidentes.**
 - **`HOTFIX.md` vive en la raíz del repositorio y no dentro del material del curso.** Es el único archivo que el estudiante se lleva al trabajo, así que tiene que estar donde lo encuentre — no en un capítulo. Si el cierre del track forense (`forense-master.md`) escribe su propia versión, hay que fundirlas y dejar una: dos checklists de hotfix que dicen cosas parecidas es peor que ninguno. → **Aviso para el chat del track forense.**

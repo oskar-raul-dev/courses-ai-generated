@@ -1,2 +1,39 @@
-<h2>Panel</h2>
-<p>El panel llega en la Fase 11.</p>
+<ng-container *ngIf="metrics$ | async as metrics; else loading">
+  <section class="kpi-row">
+    <cc-kpi-card
+      label="Certificados por vencer (30 días)"
+      icon="schedule"
+      [value]="metrics.buckets.in30.length"
+      [alert]="metrics.buckets.in30.length > 0"
+    />
+    <cc-kpi-card
+      label="Certificados vencidos"
+      icon="error"
+      [value]="metrics.buckets.expired.length"
+      [alert]="metrics.buckets.expired.length > 0"
+    />
+    <cc-kpi-card
+      label="Hallazgos críticos abiertos"
+      icon="warning"
+      [value]="metrics.openCriticalCount"
+      hint="Bloquean la emisión de su certificado"
+      [alert]="metrics.openCriticalCount > 0"
+    />
+    <cc-kpi-card
+      label="Inspecciones en curso"
+      icon="assignment"
+      [value]="metrics.inProgressCount"
+    />
+  </section>
+
+  <cc-expiry-panel [buckets]="metrics.buckets" [coverage]="metrics.coverage" />
+  <cc-inspector-rates [rates]="metrics.inspectorRates" />
+  <cc-expiry-chart [buckets]="metrics.buckets" />
+  <cc-findings-chart [items]="metrics.topFindings" />
+
+  <p class="dashboard-generated">Actualizado: {{ metrics.generatedAt | date: 'dd/MM/yyyy HH:mm:ss' : '-0500' }}</p>
+</ng-container>
+
+<ng-template #loading>
+  <cc-empty-state message="Cargando el panel…" />
+</ng-template>

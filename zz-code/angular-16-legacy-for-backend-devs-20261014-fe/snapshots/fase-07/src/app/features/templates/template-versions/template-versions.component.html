@@ -1,0 +1,54 @@
+<!-- src/app/features/templates/template-versions/template-versions.component.html -->
+<h2>{{ templateId }}</h2>
+
+<ng-container *ngIf="family$ | async as family; else noFamily">
+  <a mat-raised-button color="primary" routerLink="new-version">
+    <mat-icon>add</mat-icon>
+    Nueva versión
+  </a>
+
+  <!-- La línea de tiempo. Una fila por versión, de la más antigua a la más
+       nueva, con su ventana de vigencia escrita en claro. -->
+  <ol class="version-timeline">
+    <li *ngFor="let version of family.versions">
+      <strong>v{{ version.version }}</strong>
+      <span>
+        Vigente desde {{ version.validFrom }}
+        <ng-container *ngIf="version.validUntil !== null">
+          hasta {{ version.validUntil }}
+        </ng-container>
+        <ng-container *ngIf="version.validUntil === null">
+          · sin fecha de fin
+        </ng-container>
+      </span>
+      <span>{{ version.items.length }} ítems</span>
+    </li>
+  </ol>
+
+  <!-- El probador de fechas: la pieza forense de esta fase, en pantalla. -->
+  <mat-form-field appearance="outline">
+    <mat-label>¿Qué versión regía el día…?</mat-label>
+    <input matInput [formControl]="dayControl" placeholder="AAAA-MM-DD" />
+  </mat-form-field>
+
+  <ng-container *ngIf="resolution$ | async as resolution">
+    <p *ngIf="resolution.status === 'resolved'" class="resolution-ok">
+      Ese día regía la <strong>v{{ resolution.template.version }}</strong>, con
+      {{ resolution.template.items.length }} ítems.
+    </p>
+
+    <p *ngIf="resolution.status === 'none'" class="resolution-none">
+      Ningún día cubre el {{ resolution.day }}. Hay un hueco entre versiones, y
+      hoy no se podría empezar una inspección con esta fecha.
+    </p>
+
+    <p *ngIf="resolution.status === 'ambiguous'" class="resolution-ambiguous">
+      ⚠️ Hay {{ resolution.candidates.length }} versiones vigentes ese día. Es un
+      error en las fechas y hay que corregirlo: el sistema no elige por ti.
+    </p>
+  </ng-container>
+</ng-container>
+
+<ng-template #noFamily>
+  <cc-empty-state icon="checklist" message="No existe una plantilla con ese identificador."></cc-empty-state>
+</ng-template>

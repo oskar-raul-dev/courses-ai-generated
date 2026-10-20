@@ -28,24 +28,20 @@ function readChaosConfig(env) {
 
 function createChaosMiddleware(chaos) {
   const has = (fault) => chaos.faults.includes(fault);
-  // La probabilidad se tira UNA vez por petición y se reutiliza: si cada fallo
-  // tirara su propio dado, con dos flags activos la mitad de las peticiones
-  // saldrían ilesas y el escenario dejaría de ser reproducible.
-  const rolls = () => Math.random() < chaos.rate;
 
-  function applyResponseFaults(request, response, next) {
-    if (has('timeout') && rolls()) {
+  function applyResponseFaults(hit, response, next) {
+    if (has('timeout') && hit) {
       // Ni respondemos ni llamamos a next(). La petición se queda colgada para
       // siempre, que es exactamente lo que hace un backend que se atascó: no
       // manda un error, no cierra la conexión, no dice nada.
       return;
     }
 
-    if (has('error') && rolls()) {
+    if (has('error') && hit) {
       return response.status(500).json({ message: 'Fallo interno del servidor' });
     }
 
-    if (has('malformed') && rolls()) {
+    if (has('malformed') && hit) {
       // Envolvemos response.json para corromper el cuerpo justo antes de salir.
       // Fíjate en que el status sigue siendo 200: en Network todo está verde.
       // json-server responde con res.jsonp, no con res.json: sin parchear jsonp,
@@ -65,13 +61,18 @@ function createChaosMiddleware(chaos) {
       return next();
     }
 
+    // La probabilidad se tira UNA vez por petición y se reutiliza: si cada fallo
+    // tirara su propio dado, con dos flags activos la mitad de las peticiones
+    // saldrían ilesas y el escenario dejaría de ser reproducible.
+    const hit = Math.random() < chaos.rate;
+
     if (has('latency')) {
       // El retraso es incondicional: una latencia intermitente no se distingue
       // de un problema de red, y aquí queremos que se distinga.
-      return setTimeout(() => applyResponseFaults(request, response, next), chaos.delayMs);
+      return setTimeout(() => applyResponseFaults(hit, response, next), chaos.delayMs);
     }
 
-    applyResponseFaults(request, response, next);
+    applyResponseFaults(hit, response, next);
   };
 }
 

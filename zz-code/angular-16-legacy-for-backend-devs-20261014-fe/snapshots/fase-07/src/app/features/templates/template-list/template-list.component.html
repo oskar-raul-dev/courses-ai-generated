@@ -1,0 +1,10 @@
+<h2>Plantillas de checklist</h2>
+
+<mat-nav-list>
+  <a mat-list-item *ngFor="let family of families$ | async" [routerLink]="[family.templateId]">
+    <span matListItemTitle>{{ family.templateId }}</span>
+    <span matListItemLine>
+      {{ family.versions.length }} versiones · la más reciente es la v{{ family.latest.version }}
+    </span>
+  </a>
+</mat-nav-list>

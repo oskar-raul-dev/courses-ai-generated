@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { CertificateDetailComponent } from './certificate-detail/certificate-detail.component';
 import { CertificateListComponent } from './certificate-list/certificate-list.component';
 
-// path: '' porque el prefijo 'certificates' ya lo puso la ruta padre. Repetirlo
-// aquí produciría /certificates/certificates, que es el segundo error más común del día.
-const routes: Routes = [{ path: '', component: CertificateListComponent }];
+// 🧬 RouterModule.forChild() de 2021 con componentes standalone de 2025.
+const routes: Routes = [
+  { path: '', component: CertificateListComponent },
+  { path: ':id', component: CertificateDetailComponent },
+];
 
 @NgModule({
-  // forChild() en los módulos de feature: se cuelga del router que ya existe
-  // en vez de crear uno nuevo.
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })

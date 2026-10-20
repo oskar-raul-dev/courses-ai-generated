@@ -1,7 +1,7 @@
 # 📓 Cuaderno de incidentes — Track BE 🔥
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · **Track BE opcional 🔥** · **12 incidentes · 8 horas**
-> Declaradas **aparte** de las 122h del track base y de las 72h de las ocho fases BE
+> Declaradas **aparte** de las 123h del track base y de las 72h de las ocho fases BE
 
 Doce tickets del otro lado del cable. Siguen llegando vagos y escritos por gente que no sabe qué es un facade — sólo que ahora la respuesta no está en DevTools: está en un log, en un `EXPLAIN`, en una línea del `.env`, o en un `grep` que **no** encuentra nada.
 
@@ -107,7 +107,7 @@ Las dos vienen de que este track está construido distinto, y conviene tenerlas 
 
 **1 · No hay campo «Ruta forense» que apunte a un archivo aparte.** El track BE **no tiene `forense-be-NN.md`**: su pieza forense es un log, un `EXPLAIN` o un `grep` vacío, y **cabe en la §6 de cada fase**, junto al código que la produce (la divergencia está declarada en `propuesta-fases-backend.md` §9). Así que cada incidente enlaza la **§6 de su fase**, y ese enlace cumple exactamente el mismo papel.
 
-**2 · El reparto es por bloque de fases, no por semana.** El cuaderno base reparte sus veinte incidentes en cuatro semanas porque el curso dura un mes y tiene calendario. Este track es **opcional y a ritmo propio**: repartirlo por semanas inventaría un calendario que nadie tiene. Se reparte por la fase que lo habilita, que es el único orden real.
+**2 · El reparto es por bloque de fases, no por semana.** El cuaderno base reparte sus veintidós incidentes en cuatro semanas porque el curso dura un mes y tiene calendario. Este track es **opcional y a ritmo propio**: repartirlo por semanas inventaría un calendario que nadie tiene. Se reparte por la fase que lo habilita, que es el único orden real.
 
 Y una consecuencia del reparto que también se declara: **no hay incidentes 🟢**. Para llegar aquí hay que haber hecho diez fases del track base con sus incidentes, más las fases BE previas. No queda ningún incidente de principiante que dar, y fabricar uno sería relleno. La escala arranca en 🟡 y pesa en 🟠.
 
@@ -143,7 +143,7 @@ Actualiza la columna **Estado** en el mismo commit que abre o cierra cada incide
 |---|---|---|---|---|---|
 | [be-06](#incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada) ⭐ | be04 | "El informe falla y no hemos desplegado nada" | Cambio fuera del repositorio | 🔴 | ⬜ |
 | [be-07](#incidente-be-07--el-respaldo-de-anoche-no-se-puede-restaurar) | be04 | "El respaldo de anoche no se puede restaurar" | Artefacto de emergencia | 🟠 | ⬜ |
-| [be-08](#incidente-be-08--el-certificado-dice-que-vence-hoy-y-en-el-pdf-dice-ayer) | be04 | "El certificado dice que vence hoy y en el PDF dice ayer" | Tiempo | 🟠 | ⬜ |
+| [be-08](#incidente-be-08--el-certificado-sale-vigente-y-el-informe-lo-cuenta-como-vencido) | be04 | "El certificado sale vigente y el informe lo cuenta como vencido" | Tiempo | 🟠 | ⬜ |
 
 ### Bloque 5 · La invariante (be05)
 
@@ -184,12 +184,15 @@ Actualiza la columna **Estado** en el mismo commit que abre o cierra cada incide
 
 ### 🔧 Preparación
 
-Hace falta código: una rama. Sale del tag de be01.
+Hace falta código: una rama. Sale del tag de **be03**: el panel heredado lee `/legacy/templates`, que necesita la base y el camino viejo montado (en el tag de be01 todavía no hay ninguna de las dos cosas). Se clasifica en este bloque porque la lección que lo resuelve es la de be01.
 
 ```bash
-git switch -c incidente-be/01 be-fase-01-lumen-y-la-familiaridad-falsa
+git switch -c incidente-be/01 be-fase-03-el-reemplazo
 docker compose up -d
+docker compose exec api php artisan migrate:fresh --seed
 ```
+
+El centro de servicio entra por el panel heredado (`GET /legacy/templates`); la publicación de la v3 se hizo por el camino nuevo (`PUT /templates/elevator-annual-v2` para cerrar la v2 y `POST /templates` para la v3).
 
 ---
 
@@ -286,17 +289,17 @@ Cache::put('templates.all', $rows, 600);   // 600 segundos, explícito
 Invalidar la clave donde se publica, no esperar a que caduque:
 
 ```php
-// server/app/Http/Controllers/TemplateController.php (parcela symfony)
-public function store(Request $request): JsonResponse
-{
-    $template = $this->templates->publish($request->all());
-
-    // El caché de la otra parcela también es nuestro problema mientras las dos
-    // estén vivas. Esto es exactamente el coste del estado intermedio de be06.
-    app('cache')->forget('templates.all');
-
-    return new JsonResponse($template, 201);
-}
+// server/app/Http/Controllers/TemplateController.php (el camino nuevo, be03)
+// En store() y en update(): las dos cambian qué plantillas están vigentes.
+return $this->persist(
+    function () use ($template) {
+        $template->save();
+        // El caché de la otra parcela también es nuestro problema mientras las dos
+        // estén vivas. Esto es exactamente el coste del estado intermedio de be06.
+        app('cache')->forget('templates.all');
+    },
+    fn () => response()->json(TemplateSerializer::toArray($template), 201)
+);
 ```
 
 Fíjate en lo que acaba de pasar: **para arreglar bien un bug de una parcela hay que tocar la otra.** Ése es el coste medido de la reescritura a medias, y por eso be06 lo cuenta con un número.
@@ -308,10 +311,10 @@ Fíjate en lo que acaba de pasar: **para arreglar bien un bug de una parcela hay
 /** @test */
 public function publicar_una_version_invalida_el_cache_de_la_lista(): void
 {
-    $this->get('/templates');                        // llena el caché
+    $this->api('GET', '/legacy/templates');          // llena el caché (panel heredado)
     $this->assertNotNull(app('cache')->get('templates.all'));
 
-    $this->post('/v2/templates', [
+    $this->api('POST', '/templates', [               // publica por el camino nuevo
         'templateId' => 'elevator-annual',
         'version' => 3,
         'validFrom' => '2026-06-01',
@@ -448,7 +451,7 @@ in /app/server/app/Providers/TimingServiceProvider.php:14
 Dos cosas fallan a la vez, y la segunda es la interesante:
 
 1. **`aliasMiddleware()` no existe en el router de Lumen.** Es del router de Laravel. Aquí el registro se hace en `bootstrap/app.php`, con `$app->middleware([])` para el global o `$app->routeMiddleware([])` para el nombrado.
-2. **`Log::info()` habría fallado igual**, con otro mensaje —`Class 'Log' not found`—, porque **los facades están apagados** (`$app->withFacades()` comentado desde 2016). Es decir: hay **dos** bugs en cinco líneas copiadas, y el primero tapa al segundo. Arreglar sólo el que ves te deja creyendo que terminaste.
+2. **`Log::info()` habría fallado igual**, con otro mensaje —`A facade root has not been set.`—, porque **los facades están apagados** (`$app->withFacades()` comentado desde 2016). Es decir: hay **dos** bugs en cinco líneas copiadas, y el primero tapa al segundo. Arreglar sólo el que ves te deja creyendo que terminaste.
 
 > 🧠 **El ejemplo no está mal: está escrito para otro framework que se llama casi igual.** Ochocientos votos son ochocientas personas para las que funcionó — en Laravel. Ninguna de ellas te mintió.
 
@@ -511,7 +514,7 @@ No llegó — se quedó en una rama, y esa es la buena noticia. Llegó al equipo
 
 **Si tu causa fue distinta a esta**
 
-- *"Falta el proveedor en `bootstrap/app.php`."* Es exactamente la trampa: **añadirlo con `$app->register()` hace que el error cambie** —pasa a `Class 'Log' not found`— y parece que avanzas. Estás persiguiendo el segundo bug con el primero todavía puesto.
+- *"Falta el proveedor en `bootstrap/app.php`."* Es exactamente la trampa: **quitar o corregir el `aliasMiddleware` hace que el error cambie** —pasa a `A facade root has not been set.`— y parece que avanzas. Estás persiguiendo el segundo bug con el primero todavía puesto.
 - *"Hay que encender los facades."* Resuelve el `Log::info` y deja el `aliasMiddleware` intacto. Y además cambia el arranque de una aplicación de ocho años para arreglar una línea de un ejemplo copiado: ver la autopsia de [`be01` §5.7](be01-lumen-y-la-familiaridad-falsa.md#57-los-cuatro-bugs-de-la-familiaridad-falsa-).
 
 </details>
@@ -526,7 +529,7 @@ No llegó — se quedó en una rama, y esa es la buena noticia. Llegó al equipo
 
 ### 🎫 El ticket
 
-> *"El listado de plantillas del panel muestra la v1 arriba y el de la pantalla de plantillas muestra la v2 arriba. Son los mismos datos. Uno de los dos está mal pero no sabemos cuál, y el de arriba cambia según el día."*
+> *"El listado de plantillas del panel viejo a veces pone la de ascensores arriba y a veces la de calderas, y en la pantalla de plantillas siempre sale primero la de calderas. Son los mismos datos. Uno de los dos está mal pero no sabemos cuál, y el de arriba cambia según el día."*
 
 **Reportado por:** analista de calidad
 **Ambiente:** UAT
@@ -537,11 +540,13 @@ Determinar **si hay un bug**, y eso incluye la posibilidad de que no lo haya. Si
 
 ### 🔧 Preparación
 
-Ninguna: el sistema ya está así desde be02. Sólo hace falta el laboratorio arriba.
+El sistema ya está así desde be03: el panel heredado lee `/legacy/templates` y la pantalla, `/templates`. Lo único que hace falta es el «día» del ticket: alguien cerró o publicó una versión, y eso reescribe filas.
 
 ```bash
-git switch be-fase-02-estratos-por-procedencia   # o tu rama de trabajo
+git switch be-fase-03-el-reemplazo   # o tu rama de trabajo
 docker compose up -d
+docker compose exec api php artisan migrate:fresh --seed
+docker compose exec -T db psql -U postgres certcore < sql/seed-incidente-be-03.sql
 ```
 
 ---
@@ -557,11 +562,15 @@ docker compose up -d
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```bash
+TOKEN=$(curl -s -X POST localhost:3000/auth/login -H 'Content-Type: application/json' \
+  -d '{"email":"inspector@certcore.co","password":"certcore123"}' | jq -r .accessToken)
 for i in 1 2 3; do
-  curl -s localhost:3000/templates    | jq -r '.[0].id'
-  curl -s localhost:3000/v2/templates | jq -r '.[0].id'
+  curl -s -H "Authorization: Bearer $TOKEN" localhost:3000/legacy/templates | jq -r '.[0].template_id'
+  curl -s -H "Authorization: Bearer $TOKEN" localhost:3000/templates        | jq -r '.[0].id'
 done
 ```
+
+Y después de que alguien toque una plantilla, otra vez. Fíjate también en que el panel viejo **no devuelve la misma forma**: filas crudas, en `snake_case`, sin el `id` compuesto.
 
 Si las columnas no son estables entre ejecuciones, el problema no es *cuál de los dos está mal*. Y para saber por qué, hay una cláusula SQL cuya **ausencia** es la respuesta.
 
@@ -603,10 +612,10 @@ Uno de los dos controladores tiene `orderBy` y el otro no. ¿Qué garantiza Post
 Dos endpoints sirven el mismo recurso y **sólo uno ordena**:
 
 ```php
-// server/app/Http/Controllers/TemplateController.php  (parcela symfony) — ordena
+// server/app/Http/Controllers/TemplateController.php  (camino nuevo, /templates) — ordena
 $query->orderBy('template_id')->orderBy('version');
 
-// server/app/Http/Controllers/LegacyTemplateController.php  (parcela laravel) — no
+// server/app/Http/Controllers/LegacyTemplateController.php  (parcela laravel, /legacy/templates) — no
 $rows = Template::active()->get();
 ```
 
@@ -618,12 +627,12 @@ El mock de json-server sí devolvía el orden de inserción del `db.json`, siemp
 
 **Parche mínimo**
 
-En el archivo que el frontend consume —y sólo en ése—, escrito **en el estilo de esa parcela**:
+En el archivo que consume el panel —y sólo en ése—, escrito **en el estilo de esa parcela**:
 
 ```php
 // server/app/Http/Controllers/LegacyTemplateController.php  (parcela laravel)
 // Sin ORDER BY explícito el orden no está garantizado, y el frontend no ordena:
-// la pantalla cambia sin que nadie la toque. Mismo criterio que /v2/templates.
+// la pantalla cambia sin que nadie la toque. Mismo criterio que /templates.
 $rows = Template::active()->orderBy('template_id')->orderBy('version')->get();
 ```
 
@@ -644,18 +653,19 @@ Lo que **no** se hace es unificar los dos endpoints. Ésa es la decisión de [`b
 /** @test */
 public function el_listado_de_plantillas_tiene_orden_estable_tras_un_update(): void
 {
-    $before = json_decode($this->call('GET', '/templates')->getContent(), true);
+    $before = json_decode($this->api('GET', '/legacy/templates')->getContent(), true);
 
-    // Un UPDATE cualquiera: es lo que reorganiza el montón en PostgreSQL.
+    // Un UPDATE que no cambia nada visible: reescribe las filas de ascensores al
+    // final del montón. Con la de calderas no se ve: ya estaba al final.
     DB::table('templates')
-        ->where('template_id', 'boiler-annual')
-        ->update(['valid_from' => '2022-01-02']);
+        ->where('template_id', 'elevator-annual')
+        ->update(['valid_from' => DB::raw('valid_from')]);
 
-    $after = json_decode($this->call('GET', '/templates')->getContent(), true);
+    $after = json_decode($this->api('GET', '/legacy/templates')->getContent(), true);
 
     $this->assertSame(
-        array_column($before, 'id'),
-        array_column($after, 'id'),
+        array_column($before, 'template_id'),
+        array_column($after, 'template_id'),
         'El orden del listado cambió tras un UPDATE: falta ORDER BY.'
     );
 }
@@ -697,13 +707,13 @@ Contestar la pregunta del ticket —**no, nadie tocó la pantalla**— con evide
 
 ### 🔧 Preparación
 
-Un dato: una tabla sembrada con el orden alterado.
+Ninguna: el sistema está así desde be03. Sólo hace falta la siembra limpia.
 
 ```bash
-docker compose exec -T db psql -U postgres certcore < sql/seed-incidente-be-04.sql
+git switch be-fase-03-el-reemplazo   # o tu rama de trabajo
+docker compose up -d
+docker compose exec api php artisan migrate:fresh --seed
 ```
-
-Para volver: `docker compose exec api php artisan migrate:fresh --seed`.
 
 ---
 
@@ -718,7 +728,9 @@ El ticket trae la mejor pista y está en su primera palabra: *"desde que cambiar
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```bash
-curl -s localhost:3000/templates | jq -r '.[].id'
+TOKEN=$(curl -s -X POST localhost:3000/auth/login -H 'Content-Type: application/json' \
+  -d '{"email":"inspector@certcore.co","password":"certcore123"}' | jq -r .accessToken)
+curl -s -H "Authorization: Bearer $TOKEN" localhost:3000/templates | jq -r '.[].id'
 ```
 
 Los tres identificadores están. Ninguno se borró. Entonces la pregunta ya no es *qué falta*, es **quién decide ese orden** — y hay exactamente tres candidatos: la base, el backend y el frontend. Descarta el tercero con un `grep` en `src/`.
@@ -728,7 +740,7 @@ Los tres identificadores están. Ninguno se borró. Entonces la pregunta ya no e
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-json-server devolvía el orden de inserción del `db.json`. ¿Qué devuelve PostgreSQL cuando la consulta no dice nada sobre el orden, y qué operación reciente sobre la tabla lo cambió?
+json-server devolvía el orden de inserción del `db.json`: ascensores v1, v2 y después la caldera. ¿Qué orden pide **explícitamente** la consulta del camino nuevo, y en qué fase se escribió esa línea?
 
 </details>
 
@@ -758,40 +770,58 @@ json-server devolvía el orden de inserción del `db.json`. ¿Qué devuelve Post
 
 **Causa raíz**
 
-La misma familia que [`be-03`](#incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres) vista desde el otro lado, y por eso este incidente es 🟡 y aquél 🟠: aquí ya sabes que existe la clase de problema.
+La familia de [`be-03`](#incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres), pero al revés, y por eso este incidente es 🟡 y aquél 🟠: aquí **sí hay** `ORDER BY`, y es la causa.
 
-`GET /templates` no lleva `ORDER BY`. El mock devolvía el orden de inserción del `db.json` —estable, garantizado por el archivo—, y el frontend se construyó encima de esa propiedad **sin que nadie la escribiera en el contrato**. Al reemplazar el servidor (be03), la propiedad desapareció: PostgreSQL no promete orden sin `ORDER BY`, y basta un `UPDATE` para que el montón se reorganice.
+Antes del reemplazo, el orden lo decidía json-server: el de inserción del `db.json` (`elevator-annual-v1`, `elevator-annual-v2`, `boiler-annual-v1`). En be03 la trampa anotada en `CONTRACT.md` se pagó con una línea —`orderBy('template_id')->orderBy('version')`— y ese criterio es **alfabético**: `boiler` va antes que `elevator`. El orden cambió **a propósito**, pero nadie lo discutió como un cambio de contrato, porque nadie había escrito el orden anterior en el contrato.
 
-**Nadie tocó la pantalla, y el ticket tiene razón en preguntarlo.**
+```
+mock (antes de be03):  elevator-annual-v1, elevator-annual-v2, boiler-annual-v1
+PHP  (desde be03):     boiler-annual-v1, elevator-annual-v1, elevator-annual-v2
+```
+
+**Nadie tocó la pantalla, y el ticket tiene razón en preguntarlo.** El frontend no ordena (`grep` en `src/`), y `git diff fase-10..HEAD -- src/` está vacío.
 
 **Parche mínimo**
 
-```php
-// server/app/Http/Controllers/TemplateController.php
-// El orden es contrato aunque nadie lo escribiera: el frontend no ordena.
-$query->orderBy('template_id')->orderBy('version');
+No hay bug que parchear: hay una decisión que **documentar**. El orden alfabético es estable, es explícito y no depende del montón, que es exactamente lo que be-03 echa de menos. Lo que faltaba era escribirlo:
+
+```markdown
+<!-- CONTRACT.md · GET /templates · Trampas -->
+- Orden: `templateId` y después `version`, ascendente (be03). Antes de be03 era el orden
+  de inserción del `db.json`, que no es un dato y no se puede reproducir en la base.
 ```
+
+Si el negocio quiere los ascensores primero, el arreglo **no** es volver al orden de inserción —en la base no existe—, sino un criterio de dominio con nombre: una columna `display_order` o un orden por familia decidido por alguien.
 
 **La refactorización correcta**
 
-Que el `smoke.sh` lo vigile, para que no vuelva a perderse en el próximo reemplazo:
+Que el `smoke.sh` lo vigile, para que el orden no vuelva a cambiar sin que nadie lo decida:
 
 ```bash
-# smoke.sh — el orden de /templates es contrato de facto: fíjalo.
-ids=$(curl -s "$BASE_URL/templates" | jq -r '[.[].id] | join(",")')
-check "GET /templates · orden estable por templateId y versión" \
+# smoke.sh — el orden de /templates es contrato desde be03: fíjalo.
+ids=$(curl -s "${AUTH[@]}" "$BASE_URL/templates" | jq -r '[.[].id] | join(",")')
+check "GET /templates · orden por templateId y versión" \
       "boiler-annual-v1,elevator-annual-v1,elevator-annual-v2" "$ids"
 ```
 
-Y aquí viene la decisión, porque **hay un argumento en contra y es bueno**: fijar el orden en el juez del contrato convierte una propiedad accidental en una promesa, y a partir de ese momento no se puede cambiar sin romper el contrato. El ejercicio 18 de be00 pedía exactamente este argumento. **La recomendación del track es fijarlo**, por una razón de dominio: la pantalla de plantillas la usa gente que compara versiones de una norma, y un orden que cambia solo destruye la confianza en un sistema de certificación. Pero si tu argumento fue el contrario y está escrito, está bien.
+Y aquí viene la decisión, porque **hay un argumento en contra y es bueno**: fijar el orden en el juez del contrato convierte una elección en una promesa, y a partir de ese momento no se puede cambiar sin romper el contrato. El ejercicio 18 de be00 pedía exactamente este argumento. **La recomendación del track es fijarlo**, por una razón de dominio: la pantalla de plantillas la usa gente que compara versiones de una norma, y un orden que cambia solo destruye la confianza en un sistema de certificación. Pero si tu argumento fue el contrario y está escrito, está bien.
 
 **Prueba de regresión**
 
-La de [`be-03`](#incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres) sirve tal cual. Si ya la escribiste, este incidente no necesita una nueva — y darse cuenta de eso también es parte del ejercicio.
+```php
+// server/tests/TemplateOrderTest.php
+/** @test */
+public function el_orden_de_templates_es_el_documentado(): void
+{
+    $ids = array_column(json_decode($this->api('GET', '/templates')->getContent(), true), 'id');
+
+    $this->assertSame(['boiler-annual-v1', 'elevator-annual-v1', 'elevator-annual-v2'], $ids);
+}
+```
 
 **Prevención**
 
-`ORDER BY` explícito en toda consulta de colección, y la comprobación en el `smoke.sh`. Las dos juntas: la primera arregla hoy, la segunda impide que se pierda en el próximo cambio de motor.
+Un cambio de orden es un cambio de contrato y se anuncia como tal. El `smoke.sh` lo vigila; `CONTRACT.md` lo explica.
 
 **Por qué llegó a producción**
 
@@ -799,8 +829,9 @@ Porque el `smoke.sh` **pasó en verde**. El juez del contrato comprobaba forma, 
 
 **Si tu causa fue distinta a esta**
 
+- *"Falta un `ORDER BY`."* Es la causa de [`be-03`](#incidente-be-03--el-mismo-dato-sale-distinto-según-por-dónde-entres), no de éste: aquí el `ORDER BY` está, y es el que puso a la caldera arriba. Distinguir los dos es el ejercicio.
 - *"Se cambió el `db.json`."* Se descarta en veinte segundos con un `SELECT`, y es la hipótesis correcta que va primero: el dato antes que el código.
-- *"El frontend ordena y alguien lo tocó."* Se descarta con `git diff fase-10-certificados-vigencia..HEAD -- src/`, que **tiene que estar vacío** — y comprobarlo es, además, el checklist de todas las fases BE.
+- *"El frontend ordena y alguien lo tocó."* Se descarta con `git diff fase-10..HEAD -- src/`, que **tiene que estar vacío** — y comprobarlo es, además, el checklist de todas las fases BE.
 
 </details>
 
@@ -825,7 +856,7 @@ Reproducir, encontrar la causa, y aplicar el **hotfix mínimo** — este ticket 
 
 ### 🔧 Preparación
 
-Un dato: la base sembrada con la secuencia desajustada, que es como quedó tras el reemplazo.
+Un dato: la base sembrada con la secuencia desajustada, que es como quedó **producción** tras el reemplazo (con un sembrador anterior al de be03 §5.4, que no reajustaba esa secuencia).
 
 ```bash
 docker compose exec -T db psql -U postgres certcore < sql/seed-incidente-be-05.sql
@@ -894,12 +925,12 @@ Compara los dos números. Y después pregúntate qué pasa con una secuencia cua
 ```
 SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates
 unique constraint "inspections_pkey"
-DETAIL:  Key (id)=(3) already exists.
+DETAIL:  Key (id)=(500) already exists.
 ```
 
-La secuencia `inspections_id_seq` va por 3 y la tabla tiene inspecciones hasta la 503. La causa está en el sembrador de [`be03` §5.4](be03-el-reemplazo.md#54-la-siembra-desde-tu-propio-dbjson): insertó las filas **con su `id` explícito** —tenía que hacerlo, porque el frontend conoce la inspección 501 por su número— y **la secuencia no se enteró**. En PostgreSQL, un `INSERT` que trae el valor de una columna `serial` no consume el siguiente de la secuencia: la secuencia sigue donde estaba.
+La secuencia `inspections_id_seq` va por 500 y la tabla tiene inspecciones de la 500 a la 504. La causa está en el sembrador de [`be03` §5.4](be03-el-reemplazo.md#54-la-siembra-desde-tu-propio-dbjson): insertó las filas **con su `id` explícito** —tenía que hacerlo, porque el frontend conoce la inspección 501 por su número— y **la secuencia no se enteró**. En PostgreSQL, un `INSERT` que trae el valor de una columna `serial` no consume el siguiente de la secuencia: la secuencia sigue donde estaba.
 
-Así que el sistema funcionó perfectamente hasta la primera creación de una inspección nueva, que intentó el `id` 1, chocó, reintentó el 2, chocó, y así. **Y "al compañero de otra sucursal sí le deja"** porque estaba creando un **cliente**, no una inspección: `clients_id_seq` sí se reajustó — el sembrador tenía tres `setval` y ése estaba, el de `inspections` se quedó fuera en una edición posterior.
+Así que el sistema funcionó perfectamente hasta la primera creación de una inspección nueva, que pidió el `id` 500, chocó; el siguiente intento pidió el 501, chocó, y así hasta el 504 — cada intento fallido **consume** un valor de la secuencia. Por eso el inspector lo intentó cuatro veces y las cuatro falló: la quinta habría vuelto a fallar y la sexta habría funcionado. **Y "al compañero de otra sucursal sí le deja"** porque estaba creando un **cliente**, no una inspección: `clients_id_seq` sí se reajustó — el sembrador que corrió en producción tenía el `setval` de `clients` y no el de `inspections`, que se quedó fuera en una edición posterior. El de be03 §5.4 trae los tres; por eso hace falta el guion de preparación para ver el estado de producción.
 
 > 🧠 **El error más caro de una migración de datos no está en los datos: está en los objetos que los acompañan.** Secuencias, índices, permisos, disparadores. Los datos se ven al mirar la tabla; una secuencia desajustada sólo se ve el día que alguien escribe.
 
@@ -1182,7 +1213,8 @@ Una rama, con el guion de respaldo de 2016 tal como está:
 ```bash
 git switch -c incidente-be/07 be-fase-04-el-salto-de-version-que-nadie-corrio
 docker compose up -d
-bash scripts/backup.sh          # ← míralo fallar
+# El guion corre donde corría en 2016: junto a la base, con su psql y su PGDATA.
+docker compose exec -T db bash < scripts/backup.sh   # ← míralo «terminar bien»
 ```
 
 ---
@@ -1324,7 +1356,7 @@ Porque un respaldo sólo falla el día que hay que restaurar, y ese día tardó 
 
 ---
 
-## Incidente be-08 — "El certificado dice que vence hoy y en el PDF dice ayer"
+## Incidente be-08 — "El certificado sale vigente y el informe lo cuenta como vencido"
 
 > **Fase:** be04 · **Categoría:** Tiempo · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -1332,7 +1364,7 @@ Porque un respaldo sólo falla el día que hay que restaurar, y ese día tardó 
 
 ### 🎫 El ticket
 
-> *"El certificado CERT-2024-0087 aparece como vigente en la pantalla, pero el PDF que descargué esta mañana dice que venció ayer. Es el mismo certificado. El cliente ya llamó preguntando. ¿Cuál de los dos vale?"*
+> *"El certificado CERT-2024-0087 sale como vigente en la pantalla, y el PDF que le mandamos al cliente esta mañana dice lo mismo. Pero el informe de vencidos que corrí hace un rato me da tres, y yo cuento dos: el tercero es ése. Es el mismo certificado. El cliente ya llamó preguntando. ¿Cuál de los dos vale?"*
 
 **Reportado por:** coordinador de certificaciones
 **Ambiente:** PROD
@@ -1343,12 +1375,14 @@ Explicar **cuál de los dos tiene razón** — y la respuesta honesta puede ser 
 
 ### 🔧 Preparación
 
-Un dato con la fecha justa en el borde, y una variable de entorno:
+Un dato con la fecha justa en el borde, y el informe corriendo donde corre en producción:
 
 ```bash
+# Si todavía no cerraste be-06, aplica antes su parche: sin él, el informe no corre en PostgreSQL 16.
 docker compose exec -T db psql -U postgres certcore < sql/seed-incidente-be-08.sql
-# El certificado del ticket queda con valid_until a las 00:30 de hoy.
-docker compose up -d api      # el contenedor de PHP corre en UTC
+# El certificado del ticket queda con valid_until dos horas por delante de la hora de Bogotá,
+# escrito sin zona: dentro de la franja en la que las dos lecturas discrepan, a cualquier hora del día.
+docker compose exec api php artisan certcore:report:expired   # el contenedor de PHP corre en UTC
 ```
 
 ---
@@ -1356,7 +1390,7 @@ docker compose up -d api      # el contenedor de PHP corre en UTC
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar</summary>
 
-Dos capas dan dos respuestas sobre el mismo dato. Antes de decidir cuál está mal, **pregúntale a las dos por separado** y anota las dos respuestas con su hora exacta. Después pregúntate qué reloj usó cada una.
+Dos capas dan dos respuestas sobre el mismo dato: la pantalla (y el PDF, que sale del mismo sitio) y el informe. Antes de decidir cuál está mal, **pregúntale a las dos por separado** y anota las dos respuestas con su hora exacta. Después pregúntate qué reloj usó cada una.
 
 </details>
 
@@ -1370,14 +1404,14 @@ docker compose exec db  psql -U postgres certcore -c \
   "SELECT valid_until, pg_typeof(valid_until) FROM certificates WHERE id='CERT-2024-0087';"
 ```
 
-La tercera salida trae la palabra que explica el incidente entero, y está en el tipo de la columna.
+La tercera salida trae la palabra que explica el incidente entero, y está en el tipo de la columna. Después, compara la cláusula `WHERE` de `server/app/Reports/ExpiredCertificatesReport.php` con la de la vista `certificates_with_status` de be05.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-El `db.json` original guardaba `2024-06-30T00:30:00-05:00`. La columna es `timestamp` **sin zona**. ¿Qué guardó PostgreSQL exactamente, y qué le pasó al `-05:00`? Y con ese valor guardado, ¿qué contesta un proceso que corre en UTC frente a uno que corre en `America/Bogota`?
+El `db.json` original guardaba `2024-06-30T00:30:00-05:00`. La columna es `timestamp` **sin zona**. ¿Qué guardó PostgreSQL exactamente, y qué le pasó al `-05:00`? Con ese valor guardado, ¿qué contesta una comparación que lo lee en UTC frente a una que lo lee en `America/Bogota`? ¿Y cuál de las dos hace cada capa?
 
 </details>
 
@@ -1407,45 +1441,46 @@ El `db.json` original guardaba `2024-06-30T00:30:00-05:00`. La columna es `times
 
 **Causa raíz**
 
-Tres capas, tres relojes, **un dato al que le falta la mitad de la información**.
+Varias capas, dos relojes, **un dato al que le falta la mitad de la información**.
 
 ```
 db.json original :  2024-06-30T00:30:00-05:00
 columna          :  2024-06-30 00:30:00          ← timestamp SIN zona: el offset se descartó
 ```
 
-El offset **no se guardó en ninguna parte**. A partir de ahí, cada capa lo interpreta con su propio reloj:
+El offset **no se guardó en ninguna parte**. A partir de ahí, cada capa lo reinterpreta con su propio reloj. Pon el reloj a las 04:00 UTC del 30 de junio, que en Bogotá son las 23:00 del 29:
 
-- La **pantalla** pregunta al backend, que compara con `now()` de una sesión en UTC. A las 04:00 UTC del 30 de junio, `00:30` todavía no ha pasado: **vigente**.
-- El **PDF** se genera en el navegador del coordinador ([`a08`](a08-pdf-cliente.md)), en `America/Bogota`, y ahí la comparación cae del otro lado: **vencido ayer**.
+- La **pantalla** y el **PDF** leen la fecha en el navegador ([`a08`](a08-pdf-cliente.md) arma el PDF con los mismos datos que la pantalla), con el `-05:00` que el backend le pega al servir desde [`be03`](be03-el-reemplazo.md). Para ellos `00:30` es hora de Bogotá, y a las 23:00 del 29 todavía no ha llegado: **vigente**. La vista `certificates_with_status` de be05 hace la misma lectura (`AT TIME ZONE 'America/Bogota'`) y dice lo mismo.
+- El **informe de vencidos** es SQL escrito a mano en 2017 (`WHERE valid_until < now()`), y corre en una sesión en UTC. Para él `00:30` es hora UTC, y a las 04:00 ya pasó: **vencido**.
 
 **Los dos tienen razón dentro de su marco, y ninguno de los dos es la respuesta correcta** — porque la pregunta *"¿está vigente?"* no tiene respuesta única mientras nadie haya decidido **a qué hora y en qué zona vence un certificado**.
 
-> 🧠 **Esto no es un bug de fechas. Es una decisión de negocio que nunca se tomó, disfrazada de bug de fechas.** Por eso no se arregla convirtiendo una columna: se arregla escribiendo una frase y después implementándola en las tres capas.
+> 🧠 **Esto no es un bug de fechas. Es una decisión de negocio que nunca se tomó, disfrazada de bug de fechas.** Por eso no se arregla convirtiendo una columna: se arregla escribiendo una frase y después implementándola en todas las capas.
 
-Y hay un agravante que conviene mirar de frente: la interpretación *"todos los datos entraron con `-05:00`"` es una **suposición**. La sostiene el `db.json` y no la verifica nadie. Si un solo registro entró desde otra zona, esa fila está mal para siempre y **no hay forma de saber cuál es**.
+Y hay un agravante que conviene mirar de frente: la interpretación *"todos los datos entraron con `-05:00`"* es una **suposición**. La sostiene el `db.json` y no la verifica nadie. Si un solo registro entró desde otra zona, esa fila está mal para siempre y **no hay forma de saber cuál es**.
 
 **Parche mínimo**
 
-No hay parche de código honesto para este incidente, y decirlo es parte de la solución. Lo mínimo es **la frase**, escrita en `INVARIANTES.md` y firmada:
+Lo primero es **la frase**, escrita en `INVARIANTES.md` y firmada:
 
-> *La vigencia de un certificado de CertCore termina al final del día calendario de `valid_until`, en `America/Bogota`. Un certificado cuyo `valid_until` cae el 30 de junio está vigente hasta las 23:59:59 del 30 de junio, hora de Bogotá.*
+> *La vigencia de un certificado de CertCore termina en el instante `valid_until`, leído en `America/Bogota`. Es la regla que ya aplican el frontend (Fase 10) y la vista `certificates_with_status` (be05); toda comparación nueva la cumple o no se escribe.*
 
-Con esa frase escrita, el fix del backend es una línea y las tres capas dicen lo mismo:
+Con esa frase escrita, el parche del informe es una cláusula, la misma que usa la vista:
 
 ```php
-// server/app/Http/Serializers/CertificateSerializer.php
-// La comparación se hace SIEMPRE reinterpretando la fecha heredada en la zona
-// de origen asumida (-05:00 / America/Bogota), y contra el fin del día. La
-// suposición está declarada en INVARIANTES.md; sin declararla, esto sería
-// adivinar con más pasos.
-$expiresAt = new DateTimeImmutable(
-    $certificate->valid_until, new DateTimeZone('America/Bogota')
-);
-$expiresAt = $expiresAt->setTime(23, 59, 59);
-
-$status = $expiresAt < new DateTimeImmutable('now') ? 'expired' : 'valid';
+// server/app/Reports/ExpiredCertificatesReport.php
+// La fecha heredada se reinterpreta SIEMPRE en la zona de origen asumida
+// (America/Bogota), como hace la vista de be05. La suposición está declarada en
+// INVARIANTES.md; sin declararla, esto sería adivinar con más pasos.
+$expired = app('db')->select("
+    SELECT id, inspection_id, valid_until
+    FROM certificates
+    WHERE (valid_until AT TIME ZONE 'America/Bogota') < now()
+    ORDER BY valid_until
+");
 ```
+
+Fíjate en el cambio de comillas: la consulta original iba entre comillas simples de PHP, y con `'America/Bogota'` dentro deja de compilar.
 
 **La refactorización correcta**
 
@@ -1454,38 +1489,56 @@ Migrar las seis columnas de fecha con hora a `TIMESTAMPTZ`, que es la 💸 decla
 **Prueba de regresión**
 
 ```php
-// server/tests/CertificateValidityTest.php
-/** @test */
-public function la_vigencia_es_la_misma_en_cualquier_zona_del_proceso(): void
+// server/tests/ExpiredReportTimezoneTest.php
+use App\Reports\ExpiredCertificatesReport;
+
+class ExpiredReportTimezoneTest extends TestCase
 {
-    $answers = [];
+    use DatabaseTransactions;
 
-    foreach (['UTC', 'America/Bogota', 'Europe/Madrid'] as $timezone) {
-        date_default_timezone_set($timezone);
-        $answers[] = json_decode($this->call('GET', '/certificates/CERT-2024-0087')->getContent(), true)['status'];
+    /** @test */
+    public function el_informe_cuenta_lo_mismo_en_cualquier_zona_de_la_sesion(): void
+    {
+        $db = $this->app->make('db');
+
+        // Un certificado dentro de la franja: ya pasó si se lee en UTC, todavía no si se lee en Bogotá.
+        $db->statement("
+            INSERT INTO certificates (id, inspection_id, issued_at, valid_until, status, revoked_at)
+            VALUES ('CERT-PRUEBA-FRANJA', 502, now() - interval '1 year',
+                    (now() AT TIME ZONE 'America/Bogota') + interval '2 hours', 'valid', NULL)
+        ");
+
+        $counts = [];
+        foreach (['UTC', 'America/Bogota', 'Pacific/Auckland'] as $timezone) {
+            $db->statement("SET TIME ZONE '{$timezone}'");
+            $counts[$timezone] = count((new ExpiredCertificatesReport())->run()['expired']);
+        }
+        $db->statement('SET TIME ZONE DEFAULT');
+
+        // Si falla, la vigencia depende de dónde corra la sesión: el bug del ticket.
+        $this->assertCount(1, array_unique($counts), json_encode($counts));
     }
-
-    // Si esta aserción falla, la vigencia depende de dónde corra el proceso —
-    // que es exactamente el bug del ticket.
-    $this->assertCount(1, array_unique($answers));
 }
 ```
+
+Sin el parche falla con `{"UTC":3,"America/Bogota":2,"Pacific/Auckland":3}`; con él, pasa.
 
 **Prevención**
 
 - **La comprobación de formato en el `smoke.sh`** que faltaba (be03, ejercicio 🧨 y [`bea-07`](bea-07-tiempo-zonas-y-timestamptz.md), ejercicio 8): toda fecha del contrato viaja con offset explícito, en ISO 8601. Sin ella, un cambio de formato de fecha pasa el juez en verde.
 - **El TZ fijado explícitamente en el arranque** (`date_default_timezone_set('UTC')` en `bootstrap/app.php`), en vez de heredarlo del entorno. Una zona que viene de una variable del contenedor es configuración que despliega sin pasar por un commit — la misma familia que [`be-06`](#incidente-be-06--el-informe-falla-y-no-hemos-desplegado-nada).
+- Un **`grep` de `now()`** en el SQL escrito a mano (`SQL-CRUDO.txt` de be04): cada comparación contra el reloj es una lectura de zona, y ésta no fue la única.
 - Y la de fondo: **guardar zonas, no offsets**, y decidir la regla de negocio antes que el tipo de la columna.
 
 **Por qué llegó a producción**
 
-Porque en Colombia no hay horario de verano. `America/Bogota` es `-05:00` los 365 días, así que un sistema que confunde offset fijo con zona horaria **funciona** — y funciona durante años. El defecto sólo se manifiesta en la franja de cinco horas entre medianoche local y medianoche UTC, con un dato que caiga justo ahí. La mayoría de los certificados vencen a mediodía y nadie vio nunca nada.
+Porque en Colombia, Perú y Ecuador continental no hay horario de verano. `America/Bogota` es `-05:00` los 365 días, así que un sistema que confunde offset fijo con zona horaria **funciona** — y funciona durante años. El defecto sólo se manifiesta en la franja de cinco horas en la que un valor sin zona ya pasó leído en UTC y todavía no leído en Bogotá, con un dato que caiga justo ahí. La mayoría de los certificados vencen a mediodía y nadie vio nunca nada.
 
 **Si tu causa fue distinta a esta**
 
-- *"El PDF usa datos viejos."* Es un bug real y documentado del track base —el PDF se arma desde la vista ([`a08`](a08-pdf-cliente.md) §7)— y encaja con el síntoma. Se descarta comprobando que la fecha del PDF **coincide** con la de la base: no es un dato viejo, es el mismo dato leído distinto.
+- *"El PDF usa datos viejos."* Es un bug real y documentado del track base —el PDF se arma desde la vista ([`a08`](a08-pdf-cliente.md) §7)— pero aquí no aplica: el PDF **coincide** con la pantalla. Quien discrepa es el informe.
 - *"El reloj del servidor está mal."* Se descarta con `date` en los dos contenedores. Y ojo: si el reloj estuviera mal, **las dos capas dirían lo mismo equivocado**, no cosas distintas. Que difieran es la prueba de que el problema es de interpretación, no de hora.
-- *"Falta un `AT TIME ZONE` en la consulta."* Es parte del fix y no es la causa raíz. Si te quedaste ahí, tapaste el síntoma en una capa: el PDF seguiría discrepando, porque se genera en el navegador.
+- *"Falta un `AT TIME ZONE` en la consulta."* Es el parche, y no es la causa raíz. Si te quedaste ahí, tapaste el síntoma en una capa: la próxima consulta escrita a mano contra `now()` vuelve a abrir el ticket, porque la regla sigue sin estar escrita.
 
 </details>
 
@@ -1721,7 +1774,7 @@ El error nombra una restricción. Busca cuándo se añadió y con qué modificad
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-La restricción está `NOT VALID`: no se comprobó contra el histórico. Pero un `UPDATE` sobre una fila vieja **revalida la fila entera**, aunque el `UPDATE` no toque las columnas de la restricción. ¿Cuántas de las inspecciones de 2023 que el proceso intenta archivar son de las ochenta y ocho huérfanas?
+La restricción está `NOT VALID`: no se comprobó contra el histórico, y un `UPDATE` que no cambia la clave tampoco la comprueba (be05 §5.3). Así que mira **cómo** archiva el proceso: ¿actualiza la fila, o la mueve? Y después: ¿cuántas de las inspecciones de 2023 que intenta archivar son de las ochenta y ocho huérfanas?
 
 </details>
 
@@ -1760,9 +1813,9 @@ in table "templates".
 
 El despliegue de ayer fue el de [`be05`](be05-la-invariante-que-no-sostenia-nadie.md): la clave foránea compuesta, añadida con `NOT VALID`. Hace exactamente lo que promete —las ochenta y ocho filas históricas se quedaron intactas y nadie las tocó— y tiene un efecto lateral que hay que conocer **antes** de desplegar, no después:
 
-> ⚠️ **Un `UPDATE` sobre una fila vieja que viola la restricción falla, aunque el `UPDATE` no toque las columnas de la restricción.** La fila entera se revalida al modificarse.
+> ⚠️ **Para una restricción `NOT VALID`, una fila reinsertada es una fila nueva.** Un `UPDATE` que no toca la clave pasa sin comprobarse; un `DELETE` + `INSERT` de la misma fila, no.
 
-El proceso de cierre de mes hace `UPDATE inspections SET status = 'archived' WHERE ...`. No toca `template_id` ni `template_version`. Y falla igual, en las ochenta y ocho filas huérfanas de 2023 — que son justo las del incidente [`be-09`](#incidente-be-09--una-inspección-de-2023-no-se-puede-reimprimir).
+El proceso de cierre de mes no hace `UPDATE`: **mueve** cada inspección aprobada del año —la borra y la vuelve a insertar con `status = 'archived'`— porque el disparador de auditoría de 2017 sólo registra inserciones. El `INSERT` de cualquiera de las ochenta y ocho huérfanas de 2023 —las del incidente [`be-09`](#incidente-be-09--una-inspección-de-2023-no-se-puede-reimprimir)— viola la restricción, y como todo el año va en una transacción, no se archiva ninguna. 2024 no tiene huérfanas y se archiva entero (170 filas con la semilla `20240915`).
 
 **Esto no es un bug: es el comportamiento correcto y documentado**, y el fallo real es de comunicación — nadie lo anunció en el correo de despliegue.
 
@@ -1772,16 +1825,23 @@ Que el proceso de archivado **no se caiga a la mitad**, que es lo peor de todo: 
 
 ```php
 // server/app/Console/Commands/ArchiveInspections.php
-// Se archiva fila a fila y se cuenta lo que no se pudo. Un proceso de cierre
-// de mes tiene que terminar SIEMPRE y decir qué quedó fuera: caerse a la mitad
-// es peor que no correr, porque nadie sabe en qué punto se detuvo.
+// Se archiva fila a fila, cada una en su propia transacción, y se cuenta lo que no
+// se pudo. Un proceso de cierre de mes tiene que terminar SIEMPRE y decir qué quedó
+// fuera: caerse a la mitad es peor que no correr, porque nadie sabe dónde se detuvo.
 $skipped = [];
 
-foreach ($inspections as $inspection) {
+foreach ($rows as $row) {
     try {
-        DB::table('inspections')->where('id', $inspection->id)->update(['status' => 'archived']);
-    } catch (QueryException $exception) {
-        $skipped[] = $inspection->id;
+        $db->transaction(function () use ($db, $row) {
+            $data = (array) $row;
+            $data['status'] = 'archived';
+
+            $db->table('inspections')->where('id', $row->id)->delete();
+            $db->table('inspections')->insert($data);
+        });
+        $moved++;
+    } catch (\Illuminate\Database\QueryException $exception) {
+        $skipped[] = $row->id;
     }
 }
 
@@ -1812,6 +1872,7 @@ public function el_archivado_termina_y_reporta_las_que_no_pudo(): void
         SELECT i.id FROM inspections i
         LEFT JOIN templates t ON t.template_id = i.template_id AND t.version = i.template_version
         WHERE t.template_id IS NULL AND extract(year from i.started_at) = 2023
+          AND i.status = 'approved'
     ");
 
     $exitCode = $this->artisan('certcore:archive --year=2023');
@@ -1819,8 +1880,12 @@ public function el_archivado_termina_y_reporta_las_que_no_pudo(): void
     // Termina bien...
     $this->assertSame(0, $exitCode);
     // ...y no dejó a medias las que sí podía archivar.
+    // Las únicas aprobadas de 2023 que quedan sin archivar son las huérfanas (las que
+    // tienen certificado las archiva otro proceso y no entran en la cuenta).
     $pending = DB::table('inspections')
-        ->whereYear('started_at', 2023)->where('status', '!=', 'archived')->count();
+        ->whereYear('started_at', 2023)->where('status', 'approved')
+        ->whereNotExists(function ($q) { $q->from('certificates')->whereColumn('certificates.inspection_id', 'inspections.id'); })
+        ->count();
 
     $this->assertSame(count($orphans), $pending);
 }
@@ -1856,7 +1921,7 @@ Es el patrón más común de los incidentes que siguen a un cambio correcto: *el
 
 ### 🎫 El ticket
 
-> *"Cuando registro un hallazgo con una severidad que no está en la lista, unas veces sale un error feo de servidor y otras veces sale un mensaje decente diciendo qué está mal. Es el mismo formulario. ¿De qué depende?"*
+> *"Cuando registro un hallazgo y el número de inspección que pongo ya no existe, unas veces sale un error feo de servidor y otras veces sale un mensaje decente diciendo qué está mal. Es el mismo formulario. ¿De qué depende?"*
 
 **Reportado por:** inspector de campo
 **Ambiente:** UAT
@@ -1867,7 +1932,7 @@ Contestar la pregunta literal del ticket —**¿de qué depende?**— y decidir 
 
 ### 🔧 Preparación
 
-Ninguna: el sistema ya está así desde be06.
+Ninguna: el sistema ya está así desde be06 (el camino viejo vive en `/legacy/findings` desde be03; el nuevo, `POST /findings`, valida desde be06).
 
 ```bash
 git switch be-fase-06-la-reescritura-a-medias
@@ -1889,20 +1954,24 @@ Antes de leer código: manda el mismo cuerpo malo dos veces, por dos sitios dist
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```bash
+TOKEN=$(curl -s -X POST localhost:3000/auth/login -H 'Content-Type: application/json' \
+  -d '{"email":"inspector@certcore.co","password":"certcore123"}' | jq -r .accessToken)
+curl -sS -o /dev/null -w '%{http_code}\n' -X POST localhost:3000/legacy/findings \
+     -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+     -d '{"inspection_id":9999,"item_id":"ITEM-01","severity":"critical","description":"prueba"}'
 curl -sS -o /dev/null -w '%{http_code}\n' -X POST localhost:3000/findings \
-     -H 'Content-Type: application/json' -d '{"severity":"catastrofico"}'
-curl -sS -o /dev/null -w '%{http_code}\n' -X POST localhost:3000/v2/findings \
-     -H 'Content-Type: application/json' -d '{"severity":"catastrofico"}'
+     -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+     -d '{"inspection_id":9999,"item_id":"ITEM-01","severity":"critical","description":"prueba"}'
 ```
 
-Dos comandos y ya sabes que no es azar. Ahora la pregunta útil: **¿cuál de las dos rutas llama el frontend?**
+Dos comandos y ya sabes que no es azar. Ahora la pregunta útil: **¿quién llama a cada una de las dos rutas?**
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Uno de los dos controladores valida antes de escribir y el otro deja que la base rechace el valor. Mira **en qué capa** se detecta el error en cada caso, y qué clase de excepción llega al manejador cuando lo detecta la base.
+Uno de los dos controladores comprueba que la inspección exista antes de escribir y el otro deja que la clave foránea de la base rechace la fila. Mira **en qué capa** se detecta el error en cada caso, y qué clase de excepción llega al manejador cuando lo detecta la base.
 
 </details>
 
@@ -1935,20 +2004,24 @@ Uno de los dos controladores valida antes de escribir y el otro deja que la base
 Dos caminos vivos para el mismo recurso, con la validación en capas distintas:
 
 ```php
-// server/routes/web.php — camino viejo (parcela laravel)
-$router->post('/findings', function (Request $request) {
-    return Finding::create($request->all());     // → QueryException → 500
+// server/routes/web.php — camino viejo (parcela laravel), en /legacy desde be03
+$router->post('/legacy/findings', function (Request $request) {
+    return Finding::create($request->all());     // inspection_id inexistente → violación de FK → QueryException → 500
 });
 
 // server/app/Http/Controllers/FindingController.php — camino nuevo (parcela symfony)
 public function store(Request $request): JsonResponse
 {
-    $this->validate($request, ['severity' => 'required|in:critical,major,minor']);
+    $this->validate($request, [
+        'inspection_id' => 'required|exists:inspections,id',
+        'item_id' => 'required',
+        'severity' => 'required|in:critical,major,minor',
+    ]);
     // → 422 con el detalle
 }
 ```
 
-El mismo dato malo produce un `500` por una puerta y un `422` por la otra. **"A veces" era, en realidad, "según por dónde entres"** — y el inspector que abrió el ticket no tenía forma de saber que había dos puertas, porque el formulario es uno solo y el frontend elige la ruta según la pantalla desde la que se abra.
+El mismo dato malo produce un `500` por una puerta y un `422` por la otra. **"A veces" era, en realidad, "según por dónde entres"** — y el inspector que abrió el ticket no tenía forma de saber que había dos puertas: registra los hallazgos desde el panel heredado, que manda a `/legacy/findings`, y a veces desde el integrador de campo, que ya manda a `/findings`.
 
 **Las dos respuestas son defendibles por separado.** Lo que no es defendible es que dependa de la puerta.
 
@@ -1957,18 +2030,20 @@ El mismo dato malo produce un `500` por una puerta y un `422` por la otra. **"A 
 Gana **el que el frontend consume**, y eso se comprueba, no se opina:
 
 ```bash
-grep -rn "'/findings'\|/v2/findings" src/ | head
+grep -rn "post<\|\.post(" src/app/core/api/finding-api.service.ts
 ```
 
-Si es el viejo, el fix va ahí, escrito en el estilo de esa parcela:
+No sale nada: **el frontend de Angular no crea hallazgos**. Los clientes de estas dos rutas son el panel heredado (`/legacy/findings`) y el integrador (`/findings`). Cuando ningún cliente del contrato depende de la diferencia, decide el contrato: gana el `422` del camino nuevo, y el fix va en el viejo, escrito en el estilo de esa parcela:
 
 ```php
 // server/routes/web.php  (parcela laravel)
 // Validar antes de escribir: el mismo dominio que la base ya restringe, en la
 // capa donde se puede contestar con un mensaje útil. No se cambia el código de
 // estado del camino nuevo: se hace que éste diga lo mismo.
-$router->post('/findings', function (Request $request) {
+$router->post('/legacy/findings', function (Request $request) {
     $validator = app('validator')->make($request->all(), [
+        'inspection_id' => 'required|exists:inspections,id',
+        'item_id' => 'required',
         'severity' => 'required|in:critical,major,minor',
     ]);
 
@@ -1995,10 +2070,10 @@ Y una tercera capa que conviene añadir aunque el frontend valide: el `CHECK` en
 /** @test */
 public function los_dos_caminos_responden_igual_ante_un_dato_invalido(): void
 {
-    $payload = ['inspection_id' => 501, 'item_id' => 'ITEM-01', 'severity' => 'catastrofico'];
+    $payload = ['inspection_id' => 9999, 'item_id' => 'ITEM-01', 'severity' => 'critical'];
 
-    $viejo = $this->call('POST', '/findings', $payload)->getStatusCode();
-    $nuevo = $this->call('POST', '/v2/findings', $payload)->getStatusCode();
+    $viejo = $this->api('POST', '/legacy/findings', $payload)->getStatusCode();
+    $nuevo = $this->api('POST', '/findings', $payload)->getStatusCode();
 
     // No afirma cuál es el correcto: afirma que no depende de la puerta. Es
     // la única aserción honesta mientras los dos caminos sigan vivos.
@@ -2038,7 +2113,7 @@ Es la consecuencia directa de la economía de rotación de [`be02`](be02-estrato
 
 > *"La consultora entregó su informe sobre `certcore-api`. Recomienda reescribirlo completo en seis meses, con un equipo de cuatro personas, y dice que el sistema actual es inmantenible. La dirección quiere aprobarlo el martes. ¿Ves algún problema?"*
 
-**Reportado por:** el jefe de tecnología
+**Reportado por:** el gerente de sistemas, Hernando Gil
 **Ambiente:** —
 
 ### 🎯 Qué se te pide
@@ -2053,7 +2128,7 @@ Ninguna técnica. El informe es esto, y es todo lo que te van a dar:
 
 ```
 INFORME DE MODERNIZACIÓN — certcore-api
-Preparado por: consultora externa · 3 páginas
+Preparado por: Sabana Labs · 3 páginas
 
 HALLAZGOS
 · Runtime PHP 7.4, sin soporte de seguridad desde noviembre de 2022.
@@ -2144,7 +2219,7 @@ El informe tiene un **diagnóstico correcto y una recomendación sin sustento**,
 2. **Las tres cifras no tienen origen.** Seis meses, cuatro personas, la inversión. Tú tienes el coste medido de cruzar **un** controlador ([`be06`](be06-la-reescritura-a-medias.md), ejercicio 27) y sabes que multiplicarlo es optimista. No hace falta discutir el número: basta con pedir de dónde sale.
 3. **No cuenta el estado intermedio.** Seis meses de reescritura son seis meses con **dos sistemas vivos**, que es el estado más caro de los tres ([`be06` §4](be06-la-reescritura-a-medias.md#-4-concepto-mínimo)). Y CertCore ya tiene una reescritura a medias que alguien empezó y no terminó: **es la mejor evidencia disponible de que este riesgo es real aquí, no en abstracto.**
 4. **Presenta una sola opción.** Faltan las otras tres: quedarse y formar, estrangular por endpoint, y no hacer nada documentando el riesgo. **Estrangular es probablemente la respuesta correcta** y es la que un informe de tres páginas nunca propone, porque es la aburrida.
-5. **Y el defecto que lo invalida entero: no aparece la fecha de decomisión.** Ni una vez.
+5. **Y el defecto que lo invalida entero: no aparece la fecha de decomisión.** Ni una vez. Y el dato que nadie actualizó ya estaba escrito en 2022: el acta de Wilson pedía *«no se toca sin un plan»*, el informe no dice cuál es, y nadie lo ha escrito.
 
 > 🧭 **La respuesta correcta depende de la fecha de decomisión, no de la calidad del código.** Con dos años de vida por delante, reescribir es tirar el dinero. Con diez, no reescribir es la decisión cara. **El mismo código, la misma consultora, el mismo informe — y dos recomendaciones opuestas.** Un documento que no nombra ese dato no puede recomendar nada.
 
@@ -2223,7 +2298,7 @@ Se llena al terminar los doce, de una sola vez, releyendo tu propio `git log`. N
 - **[be-08]** La frase que define la vigencia de un certificado **no estaba escrita en ninguna parte**. Sin ella, `TIMESTAMPTZ` sólo haría más precisas dos respuestas contradictorias. → **`INVARIANTES.md`**, firmada, antes de la migración de tipos que be04 costeó.
 - **[be-09]** El sistema no tiene forma de avisar de que una inspección apunta a una plantilla inexistente: el frontend degrada con elegancia y lo oculta. → **Auditoría diaria de invariante** (be05, ejercicio 🔥) y una comprobación en el `smoke.sh`.
 - **[be-10]** El correo de despliegue no se mandó, y el paso 6 del procedimiento de be05 lo pedía. Es el paso más barato de los siete y el que se salta siempre. → **Plantilla de correo de despliegue** para cambios de esquema, en la guía de be06.
-- **[be-11]** El dominio de `severity` no está restringido en la base (💸 **B7** del [mapa de deuda](bea-10-mapa-de-deuda-del-track-be.md), declarada como aceptada). Este incidente es el argumento más fuerte para pagarla al menos en esa columna. → **Revisar B7 en `bea-10`** con este caso como evidencia.
+- **[be-11]** La misma regla de negocio (una inspección existente) vive en dos capas con vocabularios distintos: la base la impone con una clave foránea y el camino viejo deja que explote, mientras el camino nuevo la valida. → **be06 §5.1**: decidir el camino oficial. No obliga a pagar B7, porque la clave foránea ya existe en `findings`.
 - **[be-12]** La empresa **no tiene fecha de decomisión** de sus sistemas, y sin ese dato ninguna decisión de modernización es evaluable. Es el pendiente más grande del track y no es técnico. → **be07 §7**, la sección *"qué hace falta para decidir"*.
 
 ---

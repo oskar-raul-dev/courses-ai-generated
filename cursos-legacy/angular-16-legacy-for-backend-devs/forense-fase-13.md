@@ -66,7 +66,7 @@ docker exec certcore-uat  cat /usr/share/nginx/html/assets/config.json
 Y sin entrar al contenedor, que es lo que un equipo de plataforma sí te va a dejar hacer:
 
 ```bash
-docker logs certcore-prod 2>&1 | grep certcore
+docker logs certcore-prod 2>&1 | grep '\[certcore\]'
 # [certcore] configuración de arranque: PROD -> /api
 ```
 
@@ -78,18 +78,21 @@ Las tres salidas que resuelven el ticket A:
 |---|---|
 | El JSON con los valores esperados | la configuración está bien: pasa al 3 |
 | El JSON con los valores de **otro** ambiente | la imagen se levantó con las variables equivocadas |
-| **No existe el archivo** | el `entrypoint.sh` no corrió → pantalla en blanco garantizada |
-| El archivo existe y está vacío o mal formado | corrió y falló a medias |
+| El JSON de **desarrollo** (`http://localhost:3000`, `DEV`) | el `entrypoint.sh` no corrió: es el que trajo el build → la aplicación arranca, dice DEV y no llega al backend |
+| Un valor que `parseAppConfig` no admite (`PRD`, `prod`) | el script corrió y escribió lo que le dieron → **pantalla en blanco** |
+| No existe el archivo, o está mal formado | alguien lo quitó o lo rompió → **pantalla en blanco** |
 
-Los dos últimos son la causa clásica del ticket A, y su mecanismo merece nombrarse: `APP_INITIALIZER` **bloquea el arranque** de la aplicación hasta que resuelve. Si la petición a `assets/config.json` devuelve un `404` o un JSON inválido, la promesa se rechaza, Angular no arranca, y lo que ve el usuario es **una página en blanco sin ningún error visible** — porque el error ocurrió antes de que hubiera dónde pintarlo.
+Los dos últimos son la causa clásica del ticket A, y su mecanismo merece nombrarse: `APP_INITIALIZER` **bloquea el arranque** de la aplicación hasta que resuelve. Si `parseAppConfig` rechaza el valor, o la petición a `assets/config.json` devuelve un `404` o un JSON inválido, la promesa se rechaza, Angular no arranca, y lo que ve el usuario es **una página en blanco**. El error sí está, una línea en la consola que lo nombra —*"`environmentName` vale "PRD" y sólo admite DEV, UAT o PROD"*—, pero en la pantalla no hay nada, porque el fallo ocurrió antes de que hubiera dónde pintarlo.
 
 ```bash
-# Y la causa raíz más tonta de las tres, comprobable en un segundo:
+# Y la causa más tonta de la fila del JSON de desarrollo, comprobable en un segundo:
 docker exec certcore-prod ls -l /docker-entrypoint.d/
-# -rw-r--r--  1 root root  412 40-certcore-config.sh    ← SIN el bit de ejecución
+# -rw-r--r--  1 root root  1738 40-certcore-config.sh    ← SIN el bit de ejecución
+docker logs certcore-prod 2>&1 | grep -i ignoring
+# /docker-entrypoint.sh: Ignoring /docker-entrypoint.d/40-certcore-config.sh, not executable
 ```
 
-Sin `+x`, nginx **ignora el script en silencio**, arranca perfectamente, y sirve la aplicación sin `config.json`. No hay error en ningún log. Es la causa raíz del incidente 19 y es una línea del Dockerfile.
+Sin `+x`, nginx ignora el script **con una sola línea en el log** que nadie lee, arranca perfectamente, y sirve el `config.json` de desarrollo que venía en el `dist/`. No deja la pantalla en blanco: deja una aplicación que dice DEV y llama a `localhost:3000`. Es el 🧨 3 de la Fase 13 y es una línea del Dockerfile.
 
 ### Paso 3 — ¿Qué llega al navegador? No lo que crees: lo que llega
 
@@ -109,7 +112,7 @@ Cache-Control: no-store          ← lo que TIENE que decir
 Cache-Control: public, max-age=31536000    ← el incidente 18, completo
 ```
 
-**Qué descarta.** Si el `index.html` se está cacheando, el ticket B está resuelto: despliegas el fix, el usuario recarga, y **sigue recibiendo el `index.html` de ayer** — que referencia los bundles de ayer, que siguen existiendo porque nadie borra nada. La aplicación vieja funciona perfectamente, y por eso nadie ve ningún error.
+**Qué descarta.** Si el `index.html` se está cacheando, el ticket B está resuelto: despliegas el fix, el usuario vuelve a entrar —un marcador, una pestaña nueva, la URL escrita— y **sigue recibiendo el `index.html` de ayer**. Si recarga con F5, Chromium revalida el documento y ve el fix (medido en el laboratorio del curso), y por eso *"le dije que recargara"* arregla a unos y no a otros. El `index.html` de ayer referencia los bundles de ayer, que siguen existiendo porque nadie borra nada. La aplicación vieja funciona perfectamente, y por eso nadie ve ningún error.
 
 ```bash
 # Y el config.json, tal como lo ve un cliente cualquiera:
@@ -168,9 +171,9 @@ ERROR TypeError: Cannot read properties of null (reading 'validUntil')
 | Lo que ves | Causa | Comprobación |
 |---|---|---|
 | Digests distintos entre ambientes | dos artefactos, no un problema de config | `docker inspect --format '{{.Image}}'` |
-| Pantalla en blanco, sin errores | `APP_INITIALIZER` rechazado | ¿existe `assets/config.json`? |
-| `config.json` no existe | el `entrypoint.sh` no corrió | `ls -l /docker-entrypoint.d/` → falta `+x` |
-| `config.json` con valores de otro ambiente | variables equivocadas al levantar | `docker logs \| grep certcore` |
+| Pantalla en blanco, un error en consola | `APP_INITIALIZER` rechazado | ¿qué dice `assets/config.json`? ¿un valor fuera de DEV/UAT/PROD, o un 404? |
+| La toolbar dice DEV en PROD | el `entrypoint.sh` no corrió | `ls -l /docker-entrypoint.d/` → falta `+x`; en el log, `Ignoring …` |
+| `config.json` con valores de otro ambiente | variables equivocadas al levantar | `docker logs \| grep '\[certcore\]'` |
 | El fix desplegado no llega a los usuarios | `index.html` cacheado | `curl -I` → `Cache-Control` |
 | "A mí me funciona" | *Disable cache* en el navegador de quien lo dice | usa `curl`, no el navegador |
 | Navegar funciona, recargar da 404 | falta `try_files` | `curl` a una ruta profunda |
@@ -183,7 +186,7 @@ ERROR TypeError: Cannot read properties of null (reading 'validUntil')
 
 **"Es un bug de código, ya lo estoy mirando."** El callejón que define el ticket, y cuesta tardes. Los pasos 1 a 4 cuestan cinco minutos entre todos y descartan tres capas. Empezar por el paso 5 significa leer código buscando una diferencia que no está ahí.
 
-**"Reconstruimos y volvemos a desplegar."** A veces "arregla" el ticket B —porque el `index.html` nuevo llega con otro momento de caché— y **no arregla nada**: la política de caché sigue mal y el mismo bug vuelve en el siguiente despliegue. Peor aún: enseña al equipo que redesplegar es un procedimiento de diagnóstico.
+**"Reconstruimos y volvemos a desplegar."** Parece arreglar el ticket B para quien recargó después —y lo habría visto igual sin redesplegar— y **no arregla nada**: la política de caché sigue mal y el mismo bug vuelve en el siguiente despliegue. Peor aún: enseña al equipo que redesplegar es un procedimiento de diagnóstico.
 
 **"Es la CDN."** Puede ser, y se descarta en el mismo paso 3: si `curl` directo al origen ya devuelve el `Cache-Control` equivocado, la CDN está obedeciendo. Si el origen está bien y la CDN no, entonces sí es de ellos, y ya tienes la evidencia para el ticket.
 

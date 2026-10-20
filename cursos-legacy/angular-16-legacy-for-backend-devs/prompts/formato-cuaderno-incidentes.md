@@ -11,7 +11,7 @@ curso y el entregable del chat correspondiente.
 > un scroll de distancia. **Los IDs son globales y nunca se reasignan**, aunque un
 > incidente se retire.
 
-**Presupuesto:** 20 incidentes, **14h** repartidas en el mes, ≈3.5h por semana.
+**Presupuesto:** 22 incidentes, **15h** repartidas en el mes, ≈3.75h por semana.
 
 ---
 
@@ -63,7 +63,7 @@ sistema *viejo*:
 
 El índice se actualiza en el mismo commit que abre o cierra un incidente. La fila
 existe desde el momento en que una fase reserva el ID, en su sección
-📌 *Reservas para el cuaderno de incidentes*, y **los veinte enunciados ya están
+📌 *Reservas para el cuaderno de incidentes*, y **los veintidós enunciados ya están
 escritos abajo**, cada uno con su preparación, sus tres pistas plegadas y su
 solución de referencia. Por eso la columna de estado es del estudiante: un ⬜
 quiere decir que todavía no lo tocó, y el ID **nunca** se reasigna, ni siquiera
@@ -81,28 +81,31 @@ El título va **en palabras del usuario**, no en lenguaje técnico. *"La inspecc
 de marzo se ve distinta desde ayer"* es un buen título; *"resolución incorrecta de
 `templateVersion`"* es la respuesta, y va en la solución.
 
-### Distribución objetivo de los 20
+### Distribución de los 22
 
 Se reparte por semana y por dificultad; las fases exactas las fijan las reservas
-de cada fase, pero el reparto no se negocia:
+de cada fase. El objetivo original era de 20, con una dificultad por semana; el 21
+(Galápagos, Fase 10) y el 22 (el RUC, Fase 6) entraron con la historia de Plomada y
+mezclaron la dificultad de las semanas 2 y 3. El reparto vigente, contado contra el
+índice (§10):
 
-- **Semana 1** — fases 0-4 · **4-5 incidentes 🟢**: setup, endpoint mal escrito,
+- **Semana 1** — fases 0-4 · **5 incidentes 🟢**: setup, endpoint mal escrito,
   CORS, el primer `Object is possibly 'null'`, un servicio de estado que devuelve
   el valor inicial para siempre.
-- **Semana 2** — fases 5-8 · **5-6 incidentes 🟡**: standalone que no importa lo
+- **Semana 2** — fases 5-8 · **7 incidentes: 4 🟡 y 3 🟠** (el 22 entre ellos): standalone que no importa lo
   que usa, plantilla renderizada con la versión equivocada, `FormGroup` dinámico
   con controles huérfanos, autosave que se dispara en bucle.
-- **Semana 3** — fases 9-11 · **5-6 incidentes 🟠**: hallazgo `critical` que no
+- **Semana 3** — fases 9-11 · **6 incidentes: 5 🟠 y 1 🔴** (el 21 entre ellos): hallazgo `critical` que no
   bloquea la emisión, certificado emitido con hallazgos pendientes, PDF con datos
   de hace dos minutos, dashboard que se arrastra al final del mes.
-- **Semana 4** — fases 12-13 · **4-5 incidentes 🔴**: intermitentes, fuga de
+- **Semana 4** — fases 12-13 · **4 incidentes 🔴**: intermitentes, fuga de
   suscripción a `valueChanges`, el certificado que venció ayer para uno y hoy para
   otro, la imagen desplegada a PROD hablándole a UAT.
 
 ### Categorías
 
 Máquina de estados · versionado normativo · tiempo · trazabilidad · formularios
-dinámicos · estado (servicios) · convivencia de estilos 🧬 · tipos (strict) ·
+dinámicos · formularios · estado (servicios) · convivencia de estilos 🧬 · tipos (strict) ·
 integración · performance · UI · despliegue · testing.
 
 ### Dificultad
@@ -416,11 +419,11 @@ Lo que apareció investigando y no cabía en el fix, con el ID que lo originó:
 
 ## 10. Checklist antes de dar por cerrado el cuaderno
 
-> ✅ **Escrito.** Los veinte enunciados están en `cuaderno-incidentes.md`, con el
-> reparto **5 / 6 / 5 / 4** por semana y la escala **5 🟢 · 3 🟡 · 7 🟠 · 5 🔴**,
-> verificados contra el índice fila por fila. Las tres formas de preparación de §4
-> se usaron **dieciséis veces la rama, dos el `db.incidente-NN.json` y dos el flag
-> de caos** —sin inventar ni un flag que la Fase 3 no construya: los seis son
+> ✅ **Escrito.** Los veintidós enunciados están en `cuaderno-incidentes.md`, con el
+> reparto **5 / 7 / 6 / 4** por semana y la escala **5 🟢 · 4 🟡 · 8 🟠 · 5 🔴**,
+> verificados contra el índice fila por fila. Las formas de preparación de §4
+> se usaron **dieciséis veces la rama, tres el `db.incidente-NN.json`, dos el flag
+> de caos y una vez ninguna (el 22)** —sin inventar ni un flag que la Fase 3 no construya: los seis son
 > `latency`, `error`, `malformed`, `cors`, `expired` y `timeout`—.
 >
 > 🪦 **Y el checklist decía "al menos 4 de versionado de plantillas".** Son
@@ -431,7 +434,7 @@ Lo que apareció investigando y no cabía en el fix, con el ID que lo originó:
 > reconstruye—, así que un cuarto sería una variante de alguno. La línea de abajo
 > se corrigió a tres y el README ya decía tres.
 
-- [ ] 20 incidentes, con el reparto por semana y dificultad de §3.
+- [ ] 22 incidentes, con el reparto por semana y dificultad de §3.
 - [ ] Al menos 3 de versionado de plantillas, 2 de convivencia de estilos 🧬 y
       2 de tipos bajo `strict`.
 - [ ] Cada incidente enlaza su **Ruta forense**, y la pieza enlazada lo reclama de

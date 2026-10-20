@@ -1,6 +1,6 @@
 # 🏗️ Angular 16 legacy para devs de backend
 
-> Tutorial de **122 horas** · Dominio: inspecciones y certificaciones · Español
+> Tutorial de **123 horas** · Dominio: inspecciones y certificaciones · Español
 > latinoamericano, código en inglés
 
 Un curso para desarrolladores **backend o full-stack senior** que heredan una aplicación Angular 16 en mantenimiento. No enseña a escribir Angular moderno: enseña a **leer, depurar y arreglar** un sistema que ya es moderno y que aun así duele — porque alguien lo migró, y las cicatrices están puestas.
@@ -10,6 +10,8 @@ Un curso para desarrolladores **backend o full-stack senior** que heredan una ap
 Todo el curso gira alrededor de un sistema con nombre propio:
 
 > **CertCore** es el sistema de inspecciones y certificaciones que tu equipo heredó. Nació en 2021 sobre Angular 12, se migró a **Angular 16.2.12** durante 2024, y hoy está en mantenimiento. Casi no entran features nuevas: entran cambios normativos, legales y hotfixes.
+
+La empresa que lo usa es **Plomada Ingeniería de Inspección S.A.S.**, de Bogotá, con filiales en Lima y Quito: certifica ascensores, calderas y redes contra incendio para clientes que tienen activos en los tres países. Su software tiene una historia de tres equipos y cuatro autores que empezó antes que la aplicación Angular: la API `certcore-api` es de 2016, y la cuenta de cómo llegó hasta aquí está en [`00-historia-del-sistema.md`](00-historia-del-sistema.md).
 
 Administra clientes y sus activos, plantillas de checklist **versionadas**, la ejecución de inspecciones en campo, hallazgos con severidad, y la emisión de certificados con vigencia y PDF.
 
@@ -32,7 +34,7 @@ Lo que **no** es: formación de arquitectos de frontend, promoción de patrones 
 
 ## 📚 Las fases
 
-Catorce fases obligatorias suman **108h**, más **14h** de cuaderno de incidentes. **El track forense va embebido en cada fase**, no aparte. Las horas de apéndices no cuentan en el calendario.
+Catorce fases obligatorias suman **108h**, más **15h** de cuaderno de incidentes: **123h** en total. **El track forense va embebido en cada fase**, no aparte. Las horas de apéndices no cuentan en el calendario.
 
 | Fase | Archivo | Horas | Ejercicios |
 |---|---|---|---|
@@ -85,7 +87,7 @@ La puerta es [`forense-master.md`](forense-master.md), que trae el método de cu
 
 ## 📓 Cuaderno de incidentes
 
-[`cuaderno-incidentes.md`](cuaderno-incidentes.md) — **20 incidentes, 14 horas**, repartidos a lo largo del mes. Cada uno trae el ticket como llegó, la preparación para tener el sistema roto, tres pistas plegadas, un espacio para tu investigación, y la solución de referencia con parche mínimo, refactorización correcta, **test de regresión en código**, prevención y post-mortem.
+[`cuaderno-incidentes.md`](cuaderno-incidentes.md) — **22 incidentes, 15 horas**, repartidos a lo largo del mes. Cada uno trae el ticket como llegó, la preparación para tener el sistema roto, tres pistas plegadas, un espacio para tu investigación, y la solución de referencia con parche mínimo, refactorización correcta, **test de regresión en código**, prevención y post-mortem.
 
 Tres de versionado de plantillas, dos de convivencia de estilos 🧬, dos de tipos bajo `strict`. Y una regla que es la mitad del ejercicio: **la solución viene incluida, y abrirla antes de escribir la tuya no te ahorra tiempo — te ahorra el ejercicio.**
 
@@ -129,11 +131,11 @@ No es "hagamos el backend bien". Es lo contrario:
 > hace ocho años, el sistema factura, y no hay presupuesto para deshacerla.
 
 **Ocho fases (`be00`–`be07`) y once apéndices (`bea-01`–`bea-11`), 72h más 8h de
-cuaderno propio, declaradas aparte de las 122h del curso.** Prerrequisito: la
+cuaderno propio, declaradas aparte de las 123h del curso.** Prerrequisito: la
 Fase 10 terminada. Regla no negociable: **el frontend no se toca** — se apaga
 `npm run mock`, se levanta el contenedor en el mismo puerto 3000, y la aplicación
 Angular no cambia ni un archivo. Al cerrar la última fase,
-`git diff fase-10-certificados-vigencia..HEAD -- src/` sigue devolviendo vacío.
+`git diff fase-10..HEAD -- src/` sigue devolviendo vacío.
 
 | Fase | Archivo | Horas | Ejercicios |
 |---|---|---|---|
@@ -232,6 +234,16 @@ El salto conceptual real está en cinco puntos, y ahí se gasta el espacio: **Rx
 
 ---
 
-> 🧭 **El principio que ordena las 122 horas.** No enseñamos Angular bonito ni formamos arquitectos de frontend. Formamos ojo para leer código ajeno, reproducir un bug desde un ticket vago, comparar UAT contra PROD, y aplicar un hotfix que no rompa otras tres cosas.
+> 🧭 **El principio que ordena las 123 horas.** No enseñamos Angular bonito ni formamos arquitectos de frontend. Formamos ojo para leer código ajeno, reproducir un bug desde un ticket vago, comparar UAT contra PROD, y aplicar un hotfix que no rompa otras tres cosas.
 >
 > El filtro de cada párrafo es el mismo: **¿esto ayuda a diagnosticar, depurar, corregir o prevenir?** Si no, sobra. Aunque esté muy bien escrito.
+
+---
+
+## 📜 Licencia y ficción
+
+Texto y código, bajo **CC BY-SA 4.0**. Los detalles y los enlaces están en [`LICENSE.md`](LICENSE.md).
+
+Plomada Ingeniería de Inspección, CertCore, Aurum Suites, sus clientes y su gente son **inventados** para
+este curso ([`00-historia-del-sistema.md`](00-historia-del-sistema.md)). Si un nombre se parece al de una
+empresa, un producto o una persona reales, es coincidencia.

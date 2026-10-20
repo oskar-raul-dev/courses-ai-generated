@@ -45,28 +45,28 @@ git switch -c inc/08/version-equivocada-roto fase-07
 Escribirlo antes no es disciplina: es la única forma de saber que el test **prueba lo que crees**. Un test escrito después del fix pasa desde el primer momento, y no hay ninguna evidencia de que habría fallado antes.
 
 ```ts
-// El test entero cabe en diez líneas y no necesita TestBed: la regla vive en
-// una función pura, que es lo que hace posible esto.
-it('lee una inspección con la versión que guardó, no con la vigente', () => {
-  const family = [templateV1, templateV2];   // v1 hasta 2023-12-31, v2 desde 2024-01-01
-  const inspection = { templateVersion: 1, templateId: 'elevator-annual' } as Inspection;
+// inspection-detail.component.spec.ts — TestBed con HttpClientTestingModule y
+// un ActivatedRoute con inspectionId=501. El test ejecuta la línea culpable,
+// que vive en el componente; no reimplementa la regla dentro del `it`.
+it('pide la plantilla con la versión que la inspección guardó', () => {
+  fixture.detectChanges();
+  httpMock.expectOne((request) => request.url.endsWith('/inspections/501')).flush(INSPECTION_501);
 
-  const applied = family.find((version) => version.version === inspection.templateVersion);
+  const templateRequest = httpMock.expectOne((request) => request.url.endsWith('/templates'));
 
-  expect(applied?.version).toBe(1);
-  expect(applied?.items.length).toBe(3);     // la v2 tiene cuatro
+  expect(templateRequest.request.params.get('version')).toBe('1');
 });
 ```
 
 ```
 Chrome Headless 120.0.0: Executed 1 of 1 (1 FAILED) (0.031 secs / 0.008 secs)
 
-TemplateResolution
-  ✗ lee una inspección con la versión que guardó, no con la vigente
-    Expected 2 to be 1.
+InspectionDetailComponent
+  ✗ pide la plantilla con la versión que la inspección guardó
+    Expected null to be '1'.
 ```
 
-**Qué descarta.** `Expected 2 to be 1` es la evidencia de que el test **ve** el bug. Si hubiera pasado en verde, el test no estaría probando lo que dice probar, y habrías desplegado un fix sin red.
+**Qué descarta.** `Expected null to be '1'` es la evidencia de que el test **ve** el bug: el componente pidió la familia entera, sin `version`. La tentación contraria es escribir `family.find((v) => v.version === inspection.templateVersion)` dentro del propio `it` y comprobar que da la v1. Ese test pasa con el bug puesto, porque no ejecuta ni una línea de producción. Si hubiera pasado en verde, el test no estaría probando lo que dice probar, y habrías desplegado un fix sin red.
 
 ```bash
 git commit -am "incidente(08): repro — el test reproduce el bug y falla"
@@ -88,13 +88,12 @@ git diff inc/08/version-equivocada-roto inc/08/version-equivocada-fix
 ```
 
 ```diff
--    const template = resolveTemplateVersion(family, todayInBusinessZone());
-+    const template = family.find(
-+      (version) => version.version === inspection.templateVersion,
-+    );
+-      this.templateApi.getFamily(inspection.templateId).pipe(
+-        map((family) => resolveTemplateVersion(family, todayInBusinessZone())),
++      this.templateApi.getByVersion(inspection.templateId, inspection.templateVersion).pipe(
 ```
 
-**Dos líneas.** Ése es el punto 5 del post-mortem, aislado del ruido de once fases, y se puede pegar en un ticket. Sin los dos tags, encontrarlo dentro de seis meses cuesta una tarde de arqueología.
+**Tres líneas.** Ése es el punto 5 del post-mortem, aislado del ruido de once fases, y se puede pegar en un ticket. Sin los dos tags, encontrarlo dentro de seis meses cuesta una tarde de arqueología.
 
 > 💡 **Y el atajo para releer el cuaderno entero sin abrir un archivo:** `git tag -n99 -l 'inc/*'` lista todos los incidentes con el mensaje completo de cada tag.
 
@@ -111,24 +110,25 @@ Un fallo que ocurre una de cada diez veces no se investiga: **se hace ocurrir si
 
 ```bash
 # Correr la misma suite varias veces y ver si el patrón aparece:
-ng test --watch=false --browsers=ChromeHeadless
+npm run test:ci
 ```
 
 ```
-Randomized with seed 47291
+LOG: 'Semilla de Jasmine: 47291'
 Chrome Headless 120.0.0: Executed 128 of 128 SUCCESS (2.104 secs)
 ```
 
 ```
-Randomized with seed 83104
+LOG: 'Semilla de Jasmine: 83104'
 Chrome Headless 120.0.0: Executed 128 of 128 (1 FAILED) (2.233 secs)
 ```
 
-**Qué descarta.** La semilla es lo primero que Jasmine imprime y lo primero que casi nadie lee. Si con una semilla falla y con otra pasa, **el problema es el orden** (sospechoso 3). Si falla con todas o con ninguna, el orden no es el culpable y hay que mirar los otros tres.
+**Qué descarta.** La semilla la imprime `src/test-seed.spec.ts` (Fase 12 §5.1) —sin él, `test:ci` no la dice en ningún sitio— y es lo primero que casi nadie lee. Si con una semilla falla y con otra pasa, **el problema es el orden** (sospechoso 3). Si falla con todas o con ninguna, el orden no es el culpable y hay que mirar los otros tres.
 
 ```bash
-# Y a partir de aquí, la semilla se fija y el fallo es reproducible:
-ng test --watch=false --browsers=ChromeHeadless --seed=83104
+# Y a partir de aquí, la semilla se fija y el fallo es reproducible. Por la
+# variable que lee el karma.conf.js: `ng test --seed` no existe en la 16.
+JASMINE_SEED=83104 npm run test:ci
 ```
 
 ### Sospechoso 1 — El reloj
@@ -244,7 +244,7 @@ git bisect start
 git bisect bad HEAD
 git bisect good fase-11
 # En cada paso, corre la suite N veces con la semilla que falla:
-git bisect run sh -c 'ng test --watch=false --browsers=ChromeHeadless --seed=83104'
+git bisect run sh -c 'JASMINE_SEED=83104 npm run test:ci'
 ```
 
 Es el último recurso porque cuesta N ejecuciones completas de la suite, y es infalible cuando el resto no dio nada.

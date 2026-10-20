@@ -19,6 +19,13 @@ export class ApiError extends Error {
 
 /** Traduce cualquier fallo en un ApiError y lo relanza. Nunca lo traga. */
 export function toApiError(error: unknown): Observable<never> {
+  // Un ApiError que ya viene construido —el del chequeo de forma, por ejemplo—
+  // pasa tal cual. Sin esta línea, el mensaje específico («no es una lista de
+  // plantillas») se convierte en el genérico de abajo y la pantalla no dice qué falló.
+  if (error instanceof ApiError) {
+    return throwError(() => error);
+  }
+
   if (error instanceof HttpErrorResponse) {
     const message =
       error.status === 0

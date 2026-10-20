@@ -305,7 +305,7 @@ console.log('db.json regenerado desde db.seed.json');
 - **La v2 no sólo añade un ítem: le cambia el título a `main-cable`.** "Estado del cable principal" pasó a "Estado y tensión del cable principal" porque la norma lo pidió. Es el detalle que hace que renderizar con la versión equivocada sea *visible* y no sólo incorrecto.
 - **La 503 está rechazada y tiene un hallazgo `critical` sin resolver.** Por eso no tiene certificado, y por eso es el caso de prueba de la Fase 9.
 - **Los `findings` son una colección propia**, con `inspectionId`, y eso es lo que hace que json-server sirva `GET /inspections/503/findings` sin configurar nada. El modelo de §5.1 no la tenía, pero la guía §5.3 ya nombraba ese endpoint: se siembra hoy porque añadirla en la Fase 9 significaría cambiar el `db.json` sobre el que seis fases construyeron.
-- **Todas las fechas llevan offset `-05:00`.** Ni una `Z`, ni una fecha desnuda. La Fase 10 va a vivir de eso.
+- **Todas las fechas-hora llevan offset `-05:00`.** Ni una `Z`, ni una fecha-hora desnuda. Las fechas de calendario, como `installedAt`, van sin hora a propósito: son un día, no un instante. La Fase 10 va a vivir de esa distinción.
 
 > ⚠️ **El `status` de los certificados está guardado como dato, y eso es un error de diseño puesto a propósito.** `CERT-2024-000502` dice `"valid"` y su `validUntil` es de febrero de 2025: según el reloj de quien lea esto, hace tiempo que no es válido. Un estado que se calcula pero se almacena empieza a mentir el día siguiente. La Fase 10 lo convierte en derivado, y el ejercicio 21 te hace nombrar el problema antes de que te lo cuenten.
 
@@ -424,10 +424,6 @@ function readChaosConfig(env) {
 ```js
 function createChaosMiddleware(chaos) {
   const has = (fault) => chaos.faults.includes(fault);
-  // La probabilidad se tira UNA vez por petición y se reutiliza: si cada fallo
-  // tirara su propio dado, con dos flags activos la mitad de las peticiones
-  // saldrían ilesas y el escenario dejaría de ser reproducible.
-  const rolls = () => Math.random() < chaos.rate;
 
   return (request, response, next) => {
     // El caos no toca la autenticación. `expired` es la excepción y vive en auth.js.
@@ -435,13 +431,18 @@ function createChaosMiddleware(chaos) {
       return next();
     }
 
+    // La probabilidad se tira UNA vez por petición y se reutiliza: si cada fallo
+    // tirara su propio dado, con dos flags activos la mitad de las peticiones
+    // saldrían ilesas y el escenario dejaría de ser reproducible.
+    const hit = Math.random() < chaos.rate;
+
     if (has('latency')) {
       // El retraso es incondicional: una latencia intermitente no se distingue
       // de un problema de red, y aquí queremos que se distinga.
-      return setTimeout(() => applyResponseFaults(request, response, next), chaos.delayMs);
+      return setTimeout(() => applyResponseFaults(hit, response, next), chaos.delayMs);
     }
 
-    applyResponseFaults(request, response, next);
+    applyResponseFaults(hit, response, next);
   };
 }
 ```
@@ -449,23 +450,28 @@ function createChaosMiddleware(chaos) {
 **Paso 3: los fallos que afectan a la respuesta.**
 
 ```js
-  function applyResponseFaults(request, response, next) {
-    if (has('timeout') && rolls()) {
+  function applyResponseFaults(hit, response, next) {
+    if (has('timeout') && hit) {
       // Ni respondemos ni llamamos a next(). La petición se queda colgada para
       // siempre, que es exactamente lo que hace un backend que se atascó: no
       // manda un error, no cierra la conexión, no dice nada.
       return;
     }
 
-    if (has('error') && rolls()) {
+    if (has('error') && hit) {
       return response.status(500).json({ message: 'Fallo interno del servidor' });
     }
 
-    if (has('malformed') && rolls()) {
+    if (has('malformed') && hit) {
       // Envolvemos response.json para corromper el cuerpo justo antes de salir.
       // Fíjate en que el status sigue siendo 200: en Network todo está verde.
+      // Y se parchean los DOS: json-server responde las colecciones con
+      // res.jsonp, no con res.json. Sin el segundo, GET /templates sale intacto
+      // y el modo parece que no hace nada.
       const originalJson = response.json.bind(response);
+      const originalJsonp = response.jsonp.bind(response);
       response.json = (body) => originalJson(corruptPayload(body));
+      response.jsonp = (body) => originalJsonp(corruptPayload(body));
     }
 
     next();
@@ -751,6 +757,13 @@ export class ApiError extends Error {
 
 /** Traduce cualquier fallo en un ApiError y lo relanza. Nunca lo traga. */
 export function toApiError(error: unknown): Observable<never> {
+  // Un ApiError que ya viene construido —el del chequeo de forma, por ejemplo—
+  // pasa tal cual. Sin esta línea, el mensaje específico («no es una lista de
+  // plantillas») se convierte en el genérico de abajo y la pantalla no dice qué falló.
+  if (error instanceof ApiError) {
+    return throwError(() => error);
+  }
+
   if (error instanceof HttpErrorResponse) {
     const message =
       error.status === 0
@@ -865,7 +878,7 @@ export class ClientApiService {
 }
 ```
 
-Los tres que faltan siguen exactamente el mismo molde, y los escribes tú en los ejercicios 9 y 26:
+Los tres que faltan siguen exactamente el mismo molde. Escribes el de activos en el ejercicio 9, y los otros dos salen del mismo patrón:
 
 - `AssetApiService` — `getAll()`, `getByClient(clientId: number)`.
 - `InspectionApiService` — `getAll()`, `getById(id: number)`, `getFindings(inspectionId: number)` contra `/inspections/:id/findings`.
@@ -1046,7 +1059,7 @@ Borra la comprobación `Array.isArray` de `TemplateApiService.getAll()`, corre c
 
 8. **Diagnóstico.** Con `CHAOS=error`, recarga la pantalla de Plantillas veinte veces y cuenta los fallos. Compara con `CHAOS_RATE`. Después ponlo en `1` y en `0.1` y comprueba que la cuenta acompaña.
 9. Escribe `AssetApiService` completo siguiendo el molde de 5.10, con `getAll()` y `getByClient(clientId)`. Criterio: `getByClient(1)` devuelve exactamente dos activos.
-10. **Diagnóstico.** Con `CHAOS=malformed CHAOS_RATE=1`, describe qué ve el usuario, qué mensaje se pinta, y en qué línea del código se detuvo el flujo. Compáralo con lo que pasa cuando el guard no está (ejercicio 11).
+10. **Diagnóstico.** Con `CHAOS=malformed CHAOS_RATE=1`, describe qué ve el usuario, qué mensaje se pinta, y en qué línea del código se detuvo el flujo. Compáralo con el 🧨 del ejercicio 11, que rompe la misma línea de otra forma.
 11. Haz el 🧨 de la sección 6 y entrega las cuatro respuestas.
 12. **Diagnóstico.** Con `CHAOS=timeout CHAOS_RATE=1`, describe el estado de la petición en Network y explica por qué el navegador no la corta él solo. ¿Cuánto tiempo estaría así?
 13. Con `CHAOS=latency CHAOS_DELAY_MS=8000`, entra a Plantillas y **navega a otra ruta antes de que responda**. Añade un `console.log` en el `ngOnDestroy` y otro en el `next` del `subscribe`, y demuestra cuál de los dos se ejecuta. Explica qué habría pasado sin el `unsubscribe`.

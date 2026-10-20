@@ -1,0 +1,40 @@
+
+🔐 Autenticación
+  ✅ el login devuelve accessToken
+  ✅ el login devuelve expiresIn numérico
+  ✅ el token tiene tres segmentos
+  ✅ credenciales inválidas devuelven 401
+  ✅ una ruta protegida sin token devuelve 401
+
+📚 Colecciones
+  ✅ GET /clients devuelve un array
+  ✅ GET /assets devuelve un array
+  ✅ GET /templates devuelve un array
+  ✅ GET /inspections devuelve un array
+  ✅ GET /findings devuelve un array
+  ✅ GET /certificates devuelve un array
+
+🔤 Dialecto
+  ✅ ?clientId= filtra assets
+  ✅ ?templateId=&version= devuelve una sola plantilla
+  ✅ la ruta anidada de hallazgos existe
+  ✅ y devuelve sólo los de esa inspección
+  ✅ un id inexistente devuelve 404
+
+🔍 Rarezas del contrato
+  ✅ el id de plantilla es compuesto
+  ✅ y el identificador lógico vive en templateId
+  ✅ la v2 tiene validUntil null
+  ✅ el certificado trae status guardado
+  ✅ la inspección 501 declara templateVersion 1
+  ✅ y guarda sus tres respuestas
+  ✅ GET /inspections devuelve las respuestas embebidas
+
+🕐 Fechas
+  ✅ los instantes llevan offset -05:00
+  ✅ las vigencias de plantilla son días desnudos
+
+✍️  Escritura
+  ✅ PATCH devuelve el objeto completo
+
+OK: 26/26

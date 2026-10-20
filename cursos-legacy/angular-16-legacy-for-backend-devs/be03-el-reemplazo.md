@@ -21,9 +21,9 @@ Es la bisagra del track: hasta aquí el backend nuevo era un laboratorio con dat
 
 ## ✅ 2. Qué queda listo al terminar
 
-- [ ] `BASE_URL=http://localhost:3000 ./smoke.sh` da **`OK: 24/24`** contra el backend en PHP, **sin haber tocado una línea del `smoke.sh`**.
+- [ ] `BASE_URL=http://localhost:3000 ./smoke.sh` da **`OK: 26/26`** contra el backend en PHP, **sin haber tocado una línea del `smoke.sh`**.
 - [ ] `npm run mock` está **apagado**. La aplicación Angular funciona entera contra el contenedor: entrar, clientes, activos, plantillas, la inspección 501, hallazgos, certificados.
-- [ ] `git diff fase-10-certificados-vigencia..HEAD -- src/` sigue devolviendo **vacío**.
+- [ ] `git diff fase-10..HEAD -- src/` sigue devolviendo **vacío**.
 - [ ] Las **siete tablas** existen con sus migraciones versionadas, y `docker compose exec db psql -U postgres certcore -c '\dt'` las lista.
 - [ ] La base está sembrada **desde tu propio `mock/db.json`**, no desde un volcado ajeno: la inspección 501 con su `templateVersion: 1`, la 503 rechazada con su hallazgo crítico, y los mismos identificadores que llevas viendo desde la Fase 3.
 - [ ] La **paginación de servidor** funciona en el dialecto del mock (`_page`, `_limit`, cabecera `X-Total-Count`) **y un cliente que no la pide sigue recibiendo todo**. Lo comprobaste con el frontend, que no la pide.
@@ -230,18 +230,18 @@ class CreateCoreTables extends Migration
 ```
 💸 DEUDA TÉCNICA INTENCIONAL — tres, y las tres están en este esquema
 
-1. certificates.status es una COLUMNA, no un derivado. Lo correcto sería una
+1. [💸 2] certificates.status es una COLUMNA, no un derivado. Lo correcto sería una
    columna generada o una vista: el estado de un certificado es una función de
    valid_until, revoked_at y el reloj. Tal como está, empieza a mentir al día
    siguiente de cada emisión.
    SE PAGA EN be05, y aquí se MIDE (§5.6).
 
-2. Fechas en `timestamp` SIN zona, con datos que traen offset -05:00. Lo
+2. [💸 4] Fechas en `timestamp` SIN zona, con datos que traen offset -05:00. Lo
    correcto es TIMESTAMPTZ. Es de donde sale la cicatriz de la Fase 10 del
    track base.
    SE PAGA EN be04, con bea-07 al lado.
 
-3. inspections apunta a (template_id, template_version) SIN clave foránea
+3. [⭐ 3] inspections apunta a (template_id, template_version) SIN clave foránea
    compuesta. Ninguna restricción sostiene la invariante central del sistema.
    SE PAGA EN be05 ⭐ — es la fase insignia del track.
 
@@ -269,6 +269,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Template extends Model
@@ -281,6 +282,20 @@ class Template extends Model
     // con where(). Es una limitación real del ORM y bea-04 la desarrolla.
     public $incrementing = false;
     protected $primaryKey = null;
+
+    /**
+     * ⚠️ Sin este método, `$template->save()` sobre una fila existente actualiza
+     * TODAS las plantillas: con `$primaryKey = null` Eloquent no sabe qué fila es y
+     * el UPDATE sale sin WHERE. Se le da la clave compuesta, con los valores
+     * ORIGINALES (por si el UPDATE cambia la versión). Medido en el laboratorio:
+     * cerrar la v2 sin esto le ponía fecha de fin a la v1 y a la de calderas.
+     */
+    protected function setKeysForSaveQuery(Builder $query)
+    {
+        return $query
+            ->where('template_id', $this->getOriginal('template_id', $this->template_id))
+            ->where('version', $this->getOriginal('version', $this->version));
+    }
 
     // Las columnas de la parcela CakePHP se llaman `created`/`modified`, y
     // estas tablas ni siquiera las tienen. Sin esta línea, Eloquent añade
@@ -451,9 +466,252 @@ trait PaginatesLikeJsonServer
 
 Esto no es cosmético. Que los datos sean **los mismos que llevas viendo desde la Fase 3** —la inspección 501 con su v1, la 503 rechazada con su hallazgo crítico— es la mitad del efecto de la fase: cuando el `smoke.sh` se ponga rojo, vas a reconocer el dato que falla.
 
+#### Antes de sembrar: Eloquent, la consola y las rutas protegidas
+
+Hasta be01 nada de esto existía: Eloquent apagado, sin `artisan`, sin base. Son seis piezas, y **sin cualquiera de ellas la
+siembra no corre**. Ninguna es difícil; todas son de las que Laravel hace por ti y Lumen no.
+
+**1 · El arranque** (`server/bootstrap/app.php`, el tramo que cambia respecto a be01):
+
+```php
+// be03: Eloquent se enciende aquí. withFacades() sigue apagado (bea-03).
+$app->withEloquent();
+
+$app->singleton(
+    Illuminate\Contracts\Debug\ExceptionHandler::class,
+    App\Exceptions\Handler::class
+);
+
+$app->singleton(
+    Illuminate\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
+);
+
+// Sólo los archivos de config/ que registres aquí son legibles con config().
+// Uno que exista en el directorio y no esté en esta lista devuelve null, sin
+// advertencia. Es la primera trampa que se lleva a todo el mundo.
+$app->configure('chaos');
+$app->configure('database');
+
+// Migraciones y seeds para `php artisan migrate` y `php artisan db:seed`.
+$app->register(Illuminate\Database\MigrationServiceProvider::class);
+// Lumen no enlaza la interfaz del repositorio de migraciones con su implementación; sin esto `migrate` no se construye.
+$app->alias('migration.repository', Illuminate\Database\Migrations\MigrationRepositoryInterface::class);
+
+// ── Middleware global: corre en TODA petición, en este orden ────────────────
+$app->middleware([
+    App\Http\Middleware\CorsMiddleware::class,
+    App\Http\Middleware\ChaosMiddleware::class,
+]);
+
+// Middleware con nombre, que se aplica ruta por ruta. Vacío hasta be03, que es
+// cuando vuelve a haber algo que proteger.
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\RequireToken::class,
+]);
+```
+
+- **`withEloquent()` se descomenta; `withFacades()` no.** Las migraciones y el seeder usan `Schema::` y `DB::` con su nombre
+  completo (`Illuminate\Support\Facades\DB`): funcionan sin los alias porque la consola fija la raíz de los facades.
+- **El alias del repositorio de migraciones** no es opcional: sin él, `artisan migrate` falla con
+  `Target [Illuminate\Database\Migrations\MigrationRepositoryInterface] is not instantiable`. Laravel lo enlaza solo; Lumen no.
+
+**2 · La conexión** (`server/config/database.php`):
+
+```php
+<?php
+// server/config/database.php
+// La conexión a la base del compose. El host `db` sólo existe dentro de la red del
+// compose: desde el host no resuelve. Ver bea-02, "could not translate host name".
+
+return [
+    'default' => 'pgsql',
+
+    'connections' => [
+        'pgsql' => [
+            'driver' => 'pgsql',
+            'host' => 'db',
+            'port' => 5432,
+            'database' => 'certcore',
+            'username' => 'postgres',
+            'password' => 'certcore',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+        ],
+    ],
+
+    'migrations' => 'migrations',
+];
+```
+
+**3 · La consola** (`server/artisan` y los comandos que se registran en `server/app/Console/Kernel.php`):
+
+```php
+#!/usr/bin/env php
+<?php
+// server/artisan — consola de Lumen. Lo que usa be03: `php artisan migrate` y `php artisan db:seed`.
+
+$app = require __DIR__ . '/bootstrap/app.php';
+
+$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+
+exit($kernel->handle(new Symfony\Component\Console\Input\ArgvInput(), new Symfony\Component\Console\Output\ConsoleOutput()));
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Console;
+
+use Laravel\Lumen\Console\Kernel as ConsoleKernel;
+
+// be03: migrate y db:seed. Son los comandos de illuminate/database, no propios.
+class Kernel extends ConsoleKernel
+{
+    protected $commands = [
+        \Illuminate\Database\Console\Migrations\MigrateCommand::class,
+        \Illuminate\Database\Console\Migrations\FreshCommand::class,
+        \Illuminate\Database\Console\Seeds\SeedCommand::class,
+    ];
+}
+```
+
+**4 · El autoload de los seeders.** Los seeders no tienen namespace, así que Composer no los encuentra por PSR-4. En
+`server/composer.json`, dentro de `"autoload"`, va `"classmap": ["database/seeds"]`, y después
+`docker compose exec api composer dump-autoload`. Sin eso: `Class DbJsonSeeder does not exist`.
+
+**5 · El seeder por defecto** (`server/database/seeds/DatabaseSeeder.php`), que es el que llama `migrate --seed`:
+
+```php
+<?php
+// server/database/seeds/DatabaseSeeder.php
+// El que llama `artisan migrate --seed` y `migrate:fresh --seed`. Sólo delega.
+
+declare(strict_types=1);
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $this->call(DbJsonSeeder::class);
+    }
+}
+```
+
+**6 · `APP_ENV=local` en `compose.yaml`.** Sin `APP_ENV`, Lumen se cree en producción y `artisan migrate` pide una
+confirmación interactiva. Por `docker compose exec` sin terminal se queda esperando para siempre. La línea está en la
+receta de [`bea-02`](bea-02-receta-de-imagen-y-compose.md).
+
+Y las rutas, que en be01 eran dos y ahora son el contrato entero. Todo lo que no es `/health` ni `/auth/login` exige
+token, igual que el `requireToken()` del mock. **Las rutas que llama el frontend las sirve ya el camino nuevo**: es lo que
+significa «el reemplazo». El camino viejo **no se borra**: se muda a `/legacy/…`, porque el panel heredado y algún
+integrador todavía lo llaman, y borrarlo es una decisión de be07, no de esta fase. El `TemplateController` que en be02 vivía
+en `/v2/templates` es el que esta fase completa y sube a `/templates`. Desde aquí hay dos caminos vivos, y be06 los mide:
+
+```php
+<?php
+// server/routes/web.php — be03: el contrato entero, con la base detrás.
+// La ruta de /templates con datos fijos de be01 se borra aquí: `git diff be-fase-01 be-fase-03` la enseña.
+
+/** @var \Laravel\Lumen\Routing\Router $router */
+
+$router->get('/health', 'HealthController@show');
+$router->post('/auth/login', 'AuthController@login');
+
+// Todo lo demás exige token. Es el requireToken() del mock.
+$router->group(['middleware' => 'auth'], function ($router) {
+    $router->get('/clients', 'ClientController@index');
+    $router->get('/clients/{id}', 'ClientController@show');
+    $router->post('/clients', 'ClientController@store');
+    $router->put('/clients/{id}', 'ClientController@update');
+    $router->delete('/clients/{id}', 'ClientController@destroy');
+
+    $router->get('/assets', 'AssetController@index');
+    $router->get('/assets/{id}', 'AssetController@show');
+    $router->post('/assets', 'AssetController@store');
+    $router->put('/assets/{id}', 'AssetController@update');
+
+    $router->get('/templates', 'TemplateController@index');
+    $router->get('/templates/{id}', 'TemplateController@show');
+    $router->post('/templates', 'TemplateController@store');
+    $router->put('/templates/{id}', 'TemplateController@update');
+
+    $router->get('/inspections', 'InspectionController@index');
+    $router->get('/inspections/{id}', 'InspectionController@show');
+    $router->post('/inspections', 'InspectionController@store');
+    $router->patch('/inspections/{id}', 'InspectionController@patch');
+    $router->get('/inspections/{id}/findings', 'FindingController@byInspection');
+
+    $router->get('/findings', 'FindingController@index');
+    $router->post('/findings', 'FindingController@store');
+    $router->patch('/findings/{id}', 'FindingController@patch');
+
+    $router->get('/certificates', 'CertificateController@index');
+    $router->get('/certificates/{id}', 'CertificateController@show');
+    $router->post('/certificates', 'CertificateController@store');
+    $router->patch('/certificates/{id}', 'CertificateController@patch');
+
+    // ── Camino viejo, todavía vivo (be06: dos caminos). Ningún cliente nuevo lo usa;
+    // el panel heredado y algún integrador sí. No se borra hasta que be07 decida.
+    $router->get('/legacy/templates', 'LegacyTemplateController@index');
+
+    // Parcela laravel, tal como estaba: sin validar, deja que la base decida.
+    $router->post('/legacy/findings', function (\Illuminate\Http\Request $request) {
+        return \App\Models\Finding::create($request->all());   // inspection_id inexistente → FK → 500
+    });
+});
+```
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Firebase\JWT\JWT;
+use Illuminate\Http\Request;
+
+/**
+ * El equivalente de requireToken() del mock. Todo lo que no es /auth/ ni /health exige
+ * un token firmado con el mismo secreto. El mensaje es el del mock, literal, porque el
+ * frontend lo muestra.
+ */
+class RequireToken
+{
+    public function handle(Request $request, Closure $next)
+    {
+        $header = (string) $request->header('Authorization', '');
+
+        if (strpos($header, 'Bearer ') !== 0) {
+            return response()->json(['message' => 'Falta el token de acceso'], 401);
+        }
+
+        try {
+            $request->attributes->set('user', JWT::decode(substr($header, 7), \App\Http\Controllers\AuthController::SECRET, ['HS256']));
+        } catch (\Exception $error) {
+            return response()->json(['message' => 'Token inválido o expirado'], 401);
+        }
+
+        return $next($request);
+    }
+}
+```
+
+El middleware se registra con nombre en `bootstrap/app.php` (`'auth' => App\Http\Middleware\RequireToken::class`
+dentro de `routeMiddleware`). Para que el middleware pueda usar el secreto, en `AuthController` (§5.5) la constante
+`SECRET` es `public`, no `private`.
+
 ```php
 <?php
 // server/database/seeds/DbJsonSeeder.php
+// Versión completa: la de be03 §5.4 más assets, findings, certificates y users (de mock/auth.js).
 
 declare(strict_types=1);
 
@@ -464,10 +722,9 @@ class DbJsonSeeder extends Seeder
 {
     public function run(): void
     {
-        // El db.json del PROPIO alumno, montado en el contenedor. No un
-        // volcado que venga con el curso: el tuyo, con lo que hayas hecho.
-        $raw = file_get_contents('/app/mock/db.json');
-        $db = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        // El db.json del PROPIO alumno (mock/db.json de la Fase 3), montado en /app. No un volcado que
+        // venga con el curso: el tuyo, con lo que hayas hecho.
+        $db = json_decode((string) file_get_contents('/app/mock/db.json'), true, 512, JSON_THROW_ON_ERROR);
 
         DB::transaction(function () use ($db) {
             foreach ($db['clients'] as $client) {
@@ -478,11 +735,20 @@ class DbJsonSeeder extends Seeder
                 ]);
             }
 
+            foreach ($db['assets'] as $asset) {
+                DB::table('assets')->insert([
+                    'id' => $asset['id'],
+                    'client_id' => $asset['clientId'],
+                    'type' => $asset['type'],
+                    'description' => $asset['description'],
+                    'installed_at' => $asset['installedAt'],
+                ]);
+            }
+
             foreach ($db['templates'] as $template) {
                 DB::table('templates')->insert([
-                    // El id compuesto del JSON NO se guarda: se descompone.
-                    // Si alguna vez no cuadra con templateId + version, tienes
-                    // un dato corrupto y quieres enterarte ahora, no en be05.
+                    // El id compuesto del JSON NO se guarda: se descompone. Si no cuadra con
+                    // templateId + version, el dato está corrupto y conviene enterarse ahora.
                     'template_id' => $template['templateId'],
                     'version' => $template['version'],
                     'valid_from' => $template['validFrom'],
@@ -499,23 +765,57 @@ class DbJsonSeeder extends Seeder
                     'template_id' => $inspection['templateId'],
                     'template_version' => $inspection['templateVersion'],
                     'status' => $inspection['status'],
-                    // La cadena entra con su offset -05:00 y la columna es
-                    // `timestamp` SIN zona: PostgreSQL se queda con la hora
-                    // local y TIRA EL OFFSET, en silencio. Ahí nace la deuda
-                    // 💸 4, y en be04 se cobra.
+                    // La cadena entra con su offset -05:00 y la columna es `timestamp` SIN zona:
+                    // PostgreSQL se queda con la hora local y tira el offset en silencio (💸 4).
                     'started_at' => $inspection['startedAt'],
                     'completed_at' => $inspection['completedAt'],
                     'answers' => json_encode($inspection['answers']),
                 ]);
             }
 
-            // …y lo mismo para assets, findings y certificates.
+            foreach ($db['findings'] as $finding) {
+                DB::table('findings')->insert([
+                    'id' => $finding['id'],
+                    'inspection_id' => $finding['inspectionId'],
+                    'item_id' => $finding['itemId'],
+                    'severity' => $finding['severity'],
+                    'description' => $finding['description'],
+                    'resolved_at' => $finding['resolvedAt'],
+                ]);
+            }
 
-            // Las secuencias de las tablas con `serial` hay que reajustarlas a
-            // mano después de insertar ids explícitos, o el primer INSERT
-            // nuevo choca con la 500. Es el error que sale SIEMPRE al sembrar.
-            DB::statement("SELECT setval('inspections_id_seq', (SELECT MAX(id) FROM inspections))");
+            foreach ($db['certificates'] as $certificate) {
+                DB::table('certificates')->insert([
+                    'id' => $certificate['id'],
+                    'inspection_id' => $certificate['inspectionId'],
+                    'issued_at' => $certificate['issuedAt'],
+                    'valid_until' => $certificate['validUntil'],
+                    'status' => $certificate['status'],
+                    'revoked_at' => $certificate['revokedAt'],
+                ]);
+            }
+
+            // Los dos usuarios del mock. Las contraseñas en claro del mock pasan a hash: es la única
+            // mejora que esta fase se permite, porque no es visible en el contrato.
+            $users = [
+                ['INS-15', 'inspector@certcore.co', 'Ana Restrepo', 'inspector'],
+                ['SUP-02', 'supervisor@certcore.co', 'Diego Marín', 'supervisor'],
+            ];
+
+            foreach ($users as [$id, $email, $name, $role]) {
+                DB::table('users')->insert([
+                    'id' => $id,
+                    'email' => $email,
+                    'password_hash' => password_hash('certcore123', PASSWORD_BCRYPT),
+                    'name' => $name,
+                    'role' => $role,
+                ]);
+            }
+
+            // Las secuencias de las tablas con `serial` hay que reajustarlas a mano después de
+            // insertar ids explícitos, o el primer INSERT nuevo choca con la clave duplicada.
             DB::statement("SELECT setval('clients_id_seq', (SELECT MAX(id) FROM clients))");
+            DB::statement("SELECT setval('inspections_id_seq', (SELECT MAX(id) FROM inspections))");
             DB::statement("SELECT setval('findings_id_seq', (SELECT MAX(id) FROM findings))");
         });
     }
@@ -553,7 +853,8 @@ class AuthController extends BaseController
     // El mismo secreto de juguete que el mock, y por el mismo motivo: esto es
     // un laboratorio. Un secreto de verdad no vive en el repositorio — y esa
     // conversación, en serio, es de bea-08.
-    private const SECRET = 'certcore-dev-secret';
+    // public y no private: el middleware RequireToken firma la comprobación con él.
+    public const SECRET = 'certcore-dev-secret';
     private const TTL_SECONDS = 3600;
 
     public function login(Request $request)
@@ -716,7 +1017,7 @@ Y en la aplicación, la pantalla de plantillas **en blanco**. Dos síntomas, una
 
 **🔴 Muy difícil (28–31)**
 
-28. **Diagnóstico.** Consigue `OK: 24/24` y después demuestra que el frontend no cambió: `git diff fase-10-certificados-vigencia..HEAD -- src/` vacío, y un recorrido completo de las seis pantallas con Network abierto. Anota **cualquier** diferencia en las peticiones.
+28. **Diagnóstico.** Consigue `OK: 26/26` y después demuestra que el frontend no cambió: `git diff fase-10..HEAD -- src/` vacío, y un recorrido completo de las seis pantallas con Network abierto. Anota **cualquier** diferencia en las peticiones.
 29. Escribe `contract-diff.sh` de verdad (ejercicio 24 de be00) y corre el `smoke.sh` contra el mock y contra PHP a la vez. Lista las comprobaciones que difieren. Si no difiere ninguna, tu `smoke.sh` es demasiado débil: **escribe tres comprobaciones más que sí las distingan**.
 30. **Diagnóstico.** El sembrador mete las fechas con offset `-05:00` en columnas sin zona. Averigua exactamente qué guardó PostgreSQL: pide el valor crudo, compáralo con el JSON original, y escribe qué información se perdió. **Séllalo en un commit**: en be04 vas a abrirlo.
 31. **Diagnóstico adversarial.** Alguien sostiene que reimplementar el dialecto de json-server fue un error y que lo correcto habría sido diseñar una API REST decente y adaptar el frontend. Escribe la refutación en tres párrafos con números: cuántos archivos del frontend habría que tocar (cuéntalos), cuánto duraría el sistema con dos contratos a la vez, y **qué parte del argumento contrario es cierta**. Esa última parte es la nota.
@@ -752,7 +1053,7 @@ Y en la aplicación, la pantalla de plantillas **en blanco**. Dos síntomas, una
 
 ## 🚀 9. Cierre y conexión con la siguiente fase
 
-El mock está apagado. La aplicación Angular funciona entera contra PostgreSQL 16 servido por un Lumen de 2019, con el mismo contrato, en el mismo puerto y sin una línea cambiada en `src/`. El `smoke.sh` dice `24/24` y no lo has tocado.
+El mock está apagado. La aplicación Angular funciona entera contra PostgreSQL 16 servido por un Lumen de 2019, con el mismo contrato, en el mismo puerto y sin una línea cambiada en `src/`. El `smoke.sh` dice `26/26` y no lo has tocado.
 
 Y dejaste tres cosas anotadas sin arreglar, que es más difícil que arreglarlas: cuántos certificados mienten hoy, qué información se perdió al meter fechas con offset en columnas sin zona, y el comentario en la migración donde debería haber una clave foránea compuesta y no la hay.
 
@@ -766,7 +1067,7 @@ Y dejaste tres cosas anotadas sin arreglar, que es más difícil que arreglarlas
 > git tag -a be-fase-03-el-reemplazo \
 >   -m "be03 cerrada: siete tablas migradas y sembradas desde el db.json propio;
 > dialecto de json-server reimplementado con paginación compatible hacia atrás;
-> login absorbido sin cambio de contrato; smoke.sh en OK: 24/24 sin tocarlo;
+> login absorbido sin cambio de contrato; smoke.sh en OK: 26/26 sin tocarlo;
 > certificados que mienten, contados y anotados"
 > ```
 >

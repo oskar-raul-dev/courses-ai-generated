@@ -25,8 +25,8 @@ Y trae la pregunta que este curso ha estado esquivando: **¿cuándo hay que culp
 - [ ] Los hallazgos del panel **coinciden** con los que muestra el detalle de cada inspección. Si no coinciden, alguien leyó la colección `findings` en vez de derivarlos.
 - [ ] Con doscientas inspecciones, el panel hace **cinco** peticiones al abrirse y cinco por minuto — no cuatrocientas. Lo compruebas en Network.
 - [ ] Sales del panel a `/clients`, esperas cinco minutos, y en Network **no sale nada**. Si sigue pidiendo, tienes el incidente 16.
-- [ ] `DEMO_INSPECTIONS=2000 npm run seed:demo` y el panel se arrastra. Sabes decir con un número **dónde** se arrastra, y no es en la detección de cambios.
-- [ ] Tienes en `deuda.md` tres cifras nuevas: el peso de Chart.js en el bundle inicial, el tiempo de `buildMetrics` con 200 y con 2000 registros, y el peso de un autosave de la Fase 8 con una plantilla larga.
+- [ ] Subes `DEMO_INSPECTIONS` —2000, 5000— hasta que el cálculo del panel pase de 16 ms, y sabes decir con un número **dónde** empieza a arrastrarse, y que no es en la detección de cambios.
+- [ ] Tienes en `deuda.md` tres cifras nuevas: el peso de Chart.js en el chunk del panel, el tiempo de `buildMetrics` con 200 y con 2000 registros, y el peso de un autosave de la Fase 8 con una plantilla larga.
 - [ ] `git tag` lista `fase-11`.
 
 ---
@@ -162,6 +162,13 @@ const dayFromToday = (delta) => {
   return shifted.toISOString().slice(0, 10);
 };
 
+/** El mismo día de calendario, un año antes: la vigencia de doce meses de la Fase 10. */
+const dayYearBefore = (day) => {
+  const [year, month, dayOfMonth] = day.split('-').map(Number);
+
+  return new Date(Date.UTC(year - 1, month - 1, dayOfMonth)).toISOString().slice(0, 10);
+};
+
 const seed = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.seed.json'), 'utf8'));
 
 // Los activos generados usan tipos que SÍ tienen plantilla y tipos que NO.
@@ -182,12 +189,32 @@ for (let index = 0; index < INSPECTION_COUNT; index += 1) {
   // Los ids arrancan en 600 para no chocar con las inspecciones canónicas
   // 500-504, que se quedan exactamente como estaban.
   const id = 600 + index;
-  const asset = pick(demoAssets.filter((candidate) => candidate.type !== 'tank'));
+  // Sólo ascensores y calderas tienen plantilla en la semilla: tanques y
+  // sistemas contra incendio quedan sin inspeccionar a propósito.
+  const asset = pick(
+    demoAssets.filter((candidate) => candidate.type === 'elevator' || candidate.type === 'boiler'),
+  );
   const templateId = asset.type === 'boiler' ? 'boiler-annual' : 'elevator-annual';
-  const startedDay = dayFromToday(-Math.floor(nextRandom() * 500));
   const status = pick(['approved', 'approved', 'approved', 'rejected', 'completed', 'in_progress']);
+  // Sólo las aprobadas tienen certificado, y sus vigencias se reparten a
+  // propósito entre las cuatro ventanas del panel: vencidas, dentro de 30,
+  // dentro de 60-90, y más allá. Relativas a HOY, así que el panel enseña algo
+  // el día que corras esto y también dentro de dos años.
+  const validUntilDay =
+    status === 'approved' ? dayFromToday(pick([-200, -40, 12, 25, 45, 75, 200, 320])) : null;
+  // La fecha de una aprobada sale de su vencimiento y no al revés: el
+  // certificado vale doce meses (Fase 10), así que se emitió un año antes. Al
+  // revés saldrían certificados que vencen antes de emitirse.
+  const startedDay =
+    validUntilDay === null ? dayFromToday(-Math.floor(nextRandom() * 500)) : dayYearBefore(validUntilDay);
+  // La versión que regía ESE día, con las dos puntas: buscar sólo por
+  // `validFrom` devuelve la v1 para siempre, porque es la primera fila que
+  // empezó antes. Es el incidente 08 de la Fase 7 escrito en el generador.
   const template = seed.templates.find(
-    (candidate) => candidate.templateId === templateId && candidate.validFrom <= startedDay,
+    (candidate) =>
+      candidate.templateId === templateId &&
+      candidate.validFrom <= startedDay &&
+      (candidate.validUntil === null || startedDay <= candidate.validUntil),
   );
 
   demoInspections.push({
@@ -205,19 +232,19 @@ for (let index = 0; index < INSPECTION_COUNT; index += 1) {
     // deriva, y sembrar hallazgos aquí sería volver a tener dos verdades.
     answers: template.items.map((item) => ({
       itemId: item.id,
-      answer: pick(item.criteria),
+      // Una aprobada no puede tener un crítico abierto —la Fase 9 niega la
+      // aprobación—, así que en ellas el peor criterio de un ítem crítico no sale.
+      answer: pick(
+        status === 'approved' && item.nonComplianceSeverity === 'critical'
+          ? item.criteria.slice(0, -1)
+          : item.criteria,
+      ),
       evidenceUrl: item.photoRequired ? `assets/evidence/${id}-${item.id}.jpg` : null,
       note: null,
     })),
   });
 
-  // Sólo las aprobadas tienen certificado, y sus vigencias se reparten a
-  // propósito entre las cuatro ventanas del panel: vencidas, dentro de 30,
-  // dentro de 60-90, y más allá. Relativas a HOY, así que el panel enseña algo
-  // el día que corras esto y también dentro de dos años.
-  if (status === 'approved') {
-    const validUntilDay = dayFromToday(pick([-200, -40, 12, 25, 45, 75, 200, 320]));
-
+  if (validUntilDay !== null) {
     demoCertificates.push({
       id: `CERT-${startedDay.slice(0, 4)}-${String(id).padStart(6, '0')}`,
       inspectionId: id,
@@ -252,6 +279,7 @@ console.log(
 - **La semilla se lee y se extiende, no se sustituye.** Las inspecciones 500-504 y sus hallazgos siguen ahí, con los mismos ids, así que todo lo que las nueve fases anteriores te hicieron comprobar sigue comprobándose igual sobre un `db.json` con volumen.
 - **No se generan filas en `findings`.** Es la decisión de la Fase 9 llevada hasta el final: sembrar hallazgos con severidad escrita sería reintroducir la segunda verdad que esta fase tiene que evitar. Las cuatro filas canónicas se quedan porque son historia, y su divergencia con lo derivado es material del ejercicio 9.
 - **La semilla del generador es fija.** Sin eso, medir el rendimiento en dos ejecuciones no significa nada.
+- **Los datos generados respetan las reglas de las fases anteriores.** La versión de plantilla es la que regía el día de la inspección, ninguna aprobada lleva un crítico abierto y ningún certificado vence antes de emitirse. Un generador que se las salte produce un panel con números imposibles, y entonces no se distingue un bug del panel de un bug del generador.
 
 **Prueba de fuego**
 
@@ -265,18 +293,18 @@ import { Asset } from '../models/asset.model';
 import { Certificate } from '../models/certificate.model';
 import { ChecklistTemplate } from '../models/checklist-template.model';
 import { Inspection } from '../models/inspection.model';
-import { BusinessInstant, toBusinessDay } from '../time/business-day';
+import { Instant } from '../time/business-day';
 import {
-  CERTIFICATE_EXPIRING_DAYS,
-  certificateStatus,
+  EXPIRING_WINDOW_DAYS,
   daysUntilExpiry,
+  deriveCertificateStatus,
 } from './certificate-status';
 import { InspectionFinding } from './inspection-findings';
 
 /**
  * Las ventanas del panel. Ojo con lo que NO es: sólo `in30` coincide con un
  * estado del dominio —el `expiring` que la Fase 10 definió con
- * CERTIFICATE_EXPIRING_DAYS—. Las de 60 y 90 son ventanas de REPORTE: un
+ * EXPIRING_WINDOW_DAYS—. Las de 60 y 90 son ventanas de REPORTE: un
  * certificado a 75 días está `valid` y el panel lo agrupa aparte porque a
  * alguien le sirve verlo, no porque el sistema lo considere distinto.
  *
@@ -290,7 +318,7 @@ export type ExpiryBuckets = Readonly<Record<ExpiryWindow, readonly Certificate[]
 
 export function bucketCertificates(
   certificates: readonly Certificate[],
-  now: BusinessInstant,
+  now: Instant,
 ): ExpiryBuckets {
   const buckets: Record<ExpiryWindow, Certificate[]> = {
     revoked: [],
@@ -303,7 +331,7 @@ export function bucketCertificates(
 
   for (const certificate of certificates) {
     // El estado se calcula, nunca se lee del campo. Fase 10.
-    const status = certificateStatus(certificate, now);
+    const status = deriveCertificateStatus(certificate, now);
 
     if (status === 'revoked' || status === 'expired') {
       buckets[status].push(certificate);
@@ -317,11 +345,11 @@ export function bucketCertificates(
     // decisión que tomó `appliesOn` de la Fase 7 con las fechas de plantilla, y
     // se toma igual por la misma razón: quien lee "vence en 30 días" espera
     // verlo ahí, no en el cajón siguiente.
-    if (days <= CERTIFICATE_EXPIRING_DAYS) {
+    if (days <= EXPIRING_WINDOW_DAYS) {
       buckets.in30.push(certificate);
-    } else if (days <= CERTIFICATE_EXPIRING_DAYS * 2) {
+    } else if (days <= EXPIRING_WINDOW_DAYS * 2) {
       buckets.in60.push(certificate);
-    } else if (days <= CERTIFICATE_EXPIRING_DAYS * 3) {
+    } else if (days <= EXPIRING_WINDOW_DAYS * 3) {
       buckets.in90.push(certificate);
     } else {
       buckets.later.push(certificate);
@@ -450,7 +478,7 @@ export function assetsWithoutCoverage(
   assets: readonly Asset[],
   inspections: readonly Inspection[],
   certificates: readonly Certificate[],
-  now: BusinessInstant,
+  now: Instant,
 ): readonly AssetCoverage[] {
   // Un certificado apunta a una inspección, no a un activo: el puente lo pone
   // la inspección. Es la única forma de saber de qué activo es un certificado,
@@ -490,7 +518,7 @@ export function assetsWithoutCoverage(
       continue;
     }
 
-    const status = certificateStatus(latest, now);
+    const status = deriveCertificateStatus(latest, now);
 
     if (status === 'revoked') {
       result.push({ kind: 'revoked', asset, certificate: latest });
@@ -511,7 +539,7 @@ export function assetsWithoutCoverage(
 
 /** Todo lo que el panel necesita, en un solo objeto y sin un Observable dentro. */
 export interface DashboardMetrics {
-  readonly generatedAt: BusinessInstant;
+  readonly generatedAt: Instant;
   readonly buckets: ExpiryBuckets;
   readonly inspectorRates: readonly InspectorRate[];
   readonly topFindings: readonly FindingCount[];
@@ -523,8 +551,8 @@ export interface DashboardMetrics {
 
 **Detalles con intención**
 
-- **Las cuatro funciones reciben el `now` en vez de leer el reloj**, igual que `certificateStatus` de la Fase 10. Es lo que permite que la Fase 12 las teste con una tabla y que el ejercicio 26 no necesite congelar el tiempo.
-- **`CERTIFICATE_EXPIRING_DAYS * 2` y `* 3` en vez de `60` y `90`.** Si mañana el negocio pasa a avisar con quince días, las tres ventanas se mueven juntas. Escribir los tres números sueltos es cómo nace la constante duplicada que el propio prompt de esta fase avisaba de evitar.
+- **Las cuatro funciones reciben el `now` en vez de leer el reloj**, igual que `deriveCertificateStatus` de la Fase 10. Es lo que permite que la Fase 12 las teste con una tabla y que el ejercicio 26 no necesite congelar el tiempo.
+- **`EXPIRING_WINDOW_DAYS * 2` y `* 3` en vez de `60` y `90`.** Si mañana el negocio pasa a avisar con quince días, las tres ventanas se mueven juntas. Escribir los tres números sueltos es cómo nace la constante duplicada que el propio prompt de esta fase avisaba de evitar.
 - **`rate: number | null`, y el `null` sube arriba con un `-1` en el `sort`.** Un inspector sin decisiones no encabeza la lista de rechazos; el `?? -1` lo manda al final a propósito.
 
 **El patrón a memorizar**
@@ -646,6 +674,7 @@ import { AssetStateService } from '../state/asset-state.service';
 import { CertificateStateService } from '../state/certificate-state.service';
 import { InspectionStateService } from '../state/inspection-state.service';
 import { TemplateStateService } from '../state/template-state.service';
+import { nowInstant } from '../time/business-day';
 
 /**
  * Cada cuánto se refresca el panel. Constante exportada por la misma razón que
@@ -706,16 +735,16 @@ export class DashboardMetricsService {
     // que las quiere planas, y una API pública nueva por un solo consumidor es
     // deuda barata de crear y cara de quitar.
     this.templateState.state$.pipe(map((state) => state.versions)),
-    this.certificateState.certificates$,
+    this.certificateState.state$.pipe(map((state) => state.items)),
     this.assetState.assets$,
   ]).pipe(
     map(([stored, inspections, versions, certificates, assets]) => {
-      // El instante se toma UNA vez por cálculo y se pasa a las cuatro
-      // funciones puras. Si cada una llamara a `new Date()` por su cuenta, dos
-      // KPI del mismo panel podrían estar calculados con relojes distintos —
-      // improbable, y suficiente para que a las 23:59:59 una tarjeta diga hoy
-      // y la de al lado diga mañana.
-      const now = new Date().toISOString();
+      // El instante se toma UNA vez por cálculo, por la puerta al reloj de la
+      // Fase 10, y se pasa a las cuatro funciones puras. Si cada una leyera el
+      // reloj por su cuenta, dos KPI del mismo panel podrían estar calculados
+      // con relojes distintos — improbable, y suficiente para que a las
+      // 23:59:59 una tarjeta diga hoy y la de al lado diga mañana.
+      const now = nowInstant();
       const derived = deriveAllFindings(inspections, versions, stored);
       const findings = flattenFindings(derived);
 
@@ -771,7 +800,7 @@ export class DashboardMetricsService {
 
 - **`combineLatest` y no `forkJoin`.** `forkJoin` espera a que todas completen y emite una vez; los `state$` de los servicios son `BehaviorSubject` y no completan nunca, así que `forkJoin` se quedaría esperando para siempre. Es el error más común al montar un panel y no da ningún síntoma: sólo una pantalla en blanco.
 - **`switchMap` en el latido.** Si un refresco tarda más de un minuto, el siguiente cancela al anterior. Es una **lectura**, así que cancelar es lo correcto — regla de la Fase 6.
-- **El `map` que calcula todo corre en cada emisión de cualquiera de las cinco fuentes.** Con cinco fuentes emitiendo al refrescar, eso son hasta cinco recálculos por minuto en vez de uno. Es visible con doscientas inspecciones y molesto con dos mil, y es exactamente el ejercicio 18. La solución no es memorizar a ciegas: es medir primero.
+- **El `map` que calcula todo corre en cada emisión de cualquiera de las cinco fuentes.** Medido con el panel quieto: **siete** recálculos por minuto para cinco peticiones, no uno. Sobran dos porque `inspections$` y `assets$` llevan `distinctUntilChanged` desde la Fase 4, y los `state$` de plantillas y certificados no: emiten también cuando `loading` pasa a `true`, con los mismos datos. Con doscientas inspecciones no se nota (1–3 ms cada uno), y es exactamente el ejercicio 18. La solución no es memorizar a ciegas: es medir primero.
 
 ```
 💸 DEUDA TÉCNICA INTENCIONAL — los KPI se calculan en el cliente
@@ -785,10 +814,12 @@ la Fase 8 no pagó su PATCH por respuesta.
 Lo que sí entra es EL NÚMERO. El ejercicio 18 mide `buildMetrics` con 200 y con
 2000 inspecciones y busca el volumen en que el cálculo pasa de 16 ms, que es lo
 que dura un fotograma a 60 fps: a partir de ahí, cada recálculo tira un
-fotograma y el panel se siente pegajoso aunque nada falle. Ese número —el tuyo,
-medido en tu máquina— es lo que se lleva a la reunión donde se decide si vale la
-pena el endpoint. El ejercicio 25 lo diseña para que la decisión tenga las dos
-mitades.
+fotograma y el panel se siente pegajoso aunque nada falle. En la máquina de
+referencia (Apple Silicon, Chromium 129) salió 1–3,5 ms con 200, 5–7,5 con 1000,
+8–14 con 2000 y 14–23 con 5000: el umbral cae entre 2000 y 5000. Ese número —el
+tuyo, medido en tu máquina— es lo que se lleva a la reunión donde se decide si
+vale la pena el endpoint. El ejercicio 25 lo diseña para que la decisión tenga
+las dos mitades.
 ```
 
 ### 5.5 Las tarjetas y las listas
@@ -859,7 +890,9 @@ export class KpiCardComponent {
        Se nota poco con cuarenta filas y muchísimo con dos mil (ejercicio 15). -->
   <ul class="coverage-list">
     <li *ngFor="let entry of coverage; trackBy: trackByAssetId">
-      <a [routerLink]="['/assets', entry.asset.id]">{{ entry.asset.id }}</a>
+      <!-- `/assets/:id/edit`, que es la única ruta de un activo que existe
+           (Fase 6). `['/assets', id]` a secas cae en el 404. -->
+      <a [routerLink]="['/assets', entry.asset.id, 'edit']">{{ entry.asset.id }}</a>
       <span>{{ entry.asset.description }}</span>
 
       <!-- Los tres casos se dicen distinto a propósito: "nunca se certificó" y
@@ -874,8 +907,19 @@ export class KpiCardComponent {
 
 ```ts
 // src/app/features/dashboard/expiry-panel/expiry-panel.component.ts — lo esencial
+// El decorador es el de siempre: standalone, OnPush, y `imports: [NgFor, NgIf,
+// RouterLink]`. Sin `NgFor` el build NO avisa —ni error ni warning—: la lista
+// sale vacía y sólo la consola del navegador dice NG0303. Le pasó al
+// formulario de activos de la Fase 6 hasta que se validó en un navegador.
 export class ExpiryPanelComponent {
-  @Input({ required: true }) buckets!: ExpiryBuckets;
+  @Input({ required: true }) buckets: ExpiryBuckets = {
+    revoked: [],
+    expired: [],
+    in30: [],
+    in60: [],
+    in90: [],
+    later: [],
+  };
   @Input({ required: true }) coverage: readonly AssetCoverage[] = [];
 
   /**
@@ -977,7 +1021,12 @@ export class DashboardHomeComponent {
   <cc-expiry-chart [buckets]="metrics.buckets" />
   <cc-findings-chart [items]="metrics.topFindings" />
 
-  <p class="dashboard-generated">Actualizado: {{ metrics.generatedAt }}</p>
+  <!-- `generatedAt` es un instante en UTC; se pinta en la zona del negocio,
+       con el mismo -05:00 de `business-day.ts`. Sin la zona, el coordinador de
+       Bogotá lee "20:19" a las tres de la tarde. -->
+  <p class="dashboard-generated">
+    Actualizado: {{ metrics.generatedAt | date: 'dd/MM/yyyy HH:mm:ss' : '-0500' }}
+  </p>
 </ng-container>
 
 <ng-template #loading>
@@ -1072,7 +1121,9 @@ export class FindingsChartComponent implements OnChanges {
 
 - **`ngOnChanges` y no un getter.** `[data]="buildData()"` en la plantilla se ejecuta en cada ciclo de detección de cambios, devuelve un objeto nuevo cada vez, y Chart.js redibuja. Es la forma más rápida de conseguir un panel que consume CPU sin hacer nada.
 - **`maintainAspectRatio: false` con una altura fija en el CSS.** Sin eso, Chart.js recalcula el tamaño en cada `resize` y en algunos casos entra en un bucle de crecimiento que hace scroll infinito. Es un clásico y está en A06 con su detalle.
-- **Chart.js viaja en el bundle inicial y jsPDF no**, y eso no es incoherente con la Fase 10. La regla es la misma en los dos casos: se difiere lo que **quizá** no se use. El gráfico se ve al abrir la pantalla a la que redirige `/`; el PDF sólo si alguien pulsa un botón. El ejercicio 17 te hace medir las dos cifras antes de creerte el argumento.
+- **Chart.js no viaja en el bundle inicial, pero tampoco se difiere como jsPDF**, y eso no es incoherente con la Fase 10. El `DashboardModule` es lazy desde la Fase 1, así que Chart.js va en su chunk: medido, el inicial queda en 821 kB con gráficos y sin ellos, y el chunk del panel pasa de 12 kB a 228 kB (216 kB de Chart.js y ng2-charts, 64 kB transferidos). Ese chunk se descarga justo después del login, porque `/` redirige al panel. jsPDF se difiere un paso más, hasta que alguien pulsa el botón. La regla es la misma en los dos casos: se difiere lo que **quizá** no se use, y el gráfico se usa siempre. El ejercicio 17 te hace medir las cifras antes de creerte el argumento.
+
+`ExpiryChartComponent` e `InspectorRatesComponent`, los otros dos hijos que importa el módulo de 5.6, siguen este mismo molde y no se repiten aquí: standalone, `OnPush`, `@Input({ required: true })`, y en el gráfico `ngOnChanges` con `animation: false`. El de vencimientos pinta una barra por ventana (vencidos, 30, 60, 90 y más adelante); la tabla de inspectores muestra **siempre** `decided` junto a la tasa, y `—` cuando `rate` es `null`.
 
 ---
 
@@ -1086,7 +1137,7 @@ export class FindingsChartComponent implements OnChanges {
 **Lo que importa:** es el atajo que la sección 4 anticipa y el que un proyecto real comete de verdad, porque leer la tabla es una petición y derivar parece caro. Los dos números son correctos según quien los mire, y ése es el peor tipo de bug: el que no se puede cerrar demostrando que uno de los dos está mal.
 
 **Síntoma:** la pestaña sigue haciendo peticiones media hora después de que el usuario se fuera del panel.
-**Causa:** `shareReplay()` sin `refCount`. La suscripción interna nunca muere y el `timer` sigue disparando.
+**Causa:** `shareReplay(1)` sin `refCount`. La suscripción interna nunca muere y el `timer` sigue disparando.
 **Fix mínimo:** `shareReplay({ bufferSize: 1, refCount: true })`.
 **Lo que importa:** es el **incidente 16**, y no da ni un error. Lo delata Network con el panel cerrado, no la consola. Es la misma fuga que la Fase 4 enseñó a cazar y la misma opción que la Fase 8 puso en su `view$`; la diferencia es que aquí el costo es visible en el servidor de otra persona.
 
@@ -1131,11 +1182,11 @@ Si el número está por debajo de 16 ms, el cálculo no es el problema aunque lo
 
 Tres roturas, y la tercera es la que enseña algo que no esperas.
 
-1. **Quita el `refCount` del `shareReplay`.** Abre el panel, vete a `/clients`, y deja Network abierto diez minutos. Cuenta las peticiones. Después vuelve al panel y vuelve a salir tres veces más: comprueba si el número de peticiones por minuto sube o se queda igual, y explica por qué. La respuesta —**se queda igual, porque la fuente compartida es una sola**— es más interesante que la que casi todo el mundo predice, y entender por qué es entender qué comparte `shareReplay` exactamente.
+1. **Quita el `refCount` del `shareReplay`**, cambiando la línea por `shareReplay(1)`. Borrar sólo la clave del objeto no compila: en RxJS 7.8, `ShareReplayConfig` exige `refCount`, y la forma de olvidarlo en la vida real es la abreviada. Abre el panel, vete a `/clients`, y deja Network abierto diez minutos. Cuenta las peticiones. Después vuelve al panel y vuelve a salir tres veces más: comprueba si el número de peticiones por minuto sube o se queda igual, y explica por qué. La respuesta —**se queda igual, porque la fuente compartida es una sola**— es más interesante que la que casi todo el mundo predice, y entender por qué es entender qué comparte `shareReplay` exactamente. Medido: cinco peticiones por minuto con el panel cerrado, y diez en dos minutos después de entrar y salir tres veces.
 
 2. **Mueve el `timer` al `ngOnInit` del componente, sin `takeUntilDestroyed`.** Ahora sí: entra y sal del panel cinco veces y cuenta. Cinco temporizadores vivos, veinticinco peticiones por minuto, y creciendo. Ésta es la versión multiplicativa de la misma fuga y es la que de verdad tumba un servidor.
 
-3. **Sustituye `deriveAllFindings` por una lectura directa de la colección `findings`.** El panel carga más rápido, se ve mejor, y miente: los hallazgos de las inspecciones 500 y 501 no coinciden con lo que dice su pantalla de detalle, porque las filas 902 y 903 de la semilla divergen de la derivación desde la Fase 9. Guarda las dos capturas: es el mejor ejemplo del curso de que "más rápido" y "correcto" son ejes distintos.
+3. **Sustituye `deriveAllFindings` por una lectura directa de la colección `findings`.** El panel carga más rápido, se ve mejor, y miente. Con la semilla, la severidad de las inspecciones 500 y 501 no coincide con la de su pantalla de detalle: la fila 903 dice menor donde la derivación dice mayor, y la 902 dice mayor donde dice menor, porque divergen de la derivación desde la Fase 9. Con `seed:demo` la mentira es de tamaño: la colección sigue teniendo cuatro filas y las inspecciones generadas tienen cientos de hallazgos derivados. Guarda las dos capturas: es el mejor ejemplo del curso de que "más rápido" y "correcto" son ejes distintos.
 
 ---
 
@@ -1165,7 +1216,7 @@ Tres roturas, y la tercera es la que enseña algo que no esperas.
 **🟠 Difícil (16–21)**
 
 16. **Diagnóstico.** Haz el 🧨 número 1: quita el `refCount`, sal del panel y mide diez minutos de tráfico. Después haz el 🧨 número 2 y mide otra vez. Explica por qué el primero **no** se multiplica al entrar y salir y el segundo sí, y qué comparte exactamente `shareReplay`.
-17. Monta los dos gráficos con ng2-charts 4.1.1. Después mide el bundle inicial con y sin Chart.js (`ng build --named-chunks --stats-json`), anota las dos cifras en `deuda.md`, y argumenta en cinco líneas por qué aquí no se difiere y en la Fase 10 sí. Si al medir te convence lo contrario, cámbialo y defiéndelo.
+17. Monta los dos gráficos con ng2-charts 4.1.1. Después mide el bundle inicial y el chunk del panel con y sin Chart.js (`ng build --named-chunks --stats-json`), anota las cifras en `deuda.md`, y argumenta en cinco líneas por qué aquí basta con el chunk lazy del módulo y en la Fase 10 jsPDF se difiere hasta el clic. Si al medir te convence lo contrario, cámbialo y defiéndelo.
 18. 💸 **El número de la deuda.** Instrumenta el `map` de `metrics$` con `console.time` y mídelo con `DEMO_INSPECTIONS` a 200, 500, 1000 y 2000. Entrega los cuatro números y **el volumen en el que el cálculo pasa de 16 ms**. Después mide cuántas veces por minuto se ejecuta de verdad y di si el problema es el cálculo o su frecuencia.
 19. 💸 **La otra deuda, la de la Fase 8.** Con una plantilla de sesenta ítems, mide el peso del cuerpo de un `PATCH` del autosave y multiplícalo por las pulsaciones de una jornada de ocho horas. Compáralo con lo que costaría el `PATCH` por respuesta que el ejercicio 31 de la Fase 8 dejó diseñado, y decide con el número delante si lo escribirías. Anota la cifra en `deuda.md`.
 20. 🧬 **Estilo.** Ticket: *"desde el panel quiero llegar a la lista de inspecciones ya filtrada por el inspector que pinché"*. Decide en qué archivo va —`InspectorRatesComponent` es standalone, `InspectionListComponent` es heredado— y escríbelo en los dos, en el estilo de cada uno. Justifica cuál entregarías si sólo pudieras hacer uno.
@@ -1213,7 +1264,7 @@ Debajo hay tres cosas que valen fuera de este proyecto. La primera es la que est
 
 Lo que te llevas: en una SPA, el rendimiento casi nunca es el costo de una operación. Es su **frecuencia**. Un cálculo de cuarenta milisegundos es invisible una vez por minuto y es una pantalla congelada cinco veces por segundo, y el mismo código produce los dos resultados. Antes de optimizar qué hace tu aplicación, mira cuántas veces lo hace.
 
-La **Fase 12** hace la pregunta que este curso ha estado aplazando once fases: **¿cómo sabes que esto funciona?** Monta Jasmine, Karma y TestBed desde cero —CertCore no tiene ni un spec, decisión cerrada desde el principio— y va a reclamar todo lo que estas cinco fases dejaron escrito puro: `resolveTemplateVersion`, `buildAnswerForm`, `computeProgress`, `deriveSeverity`, `certificateStatus`, `bucketCertificates`. Se van a testear sin `TestBed` y en tres líneas cada uno, y ése es el momento en que se entiende por qué llevan cinco fases sin inyectar nada. Después llegan los componentes, que son otra historia, y el coverage medible. Y de paso, el guiño a las signals: lo único de Angular 17 que este curso mira de cerca.
+La **Fase 12** hace la pregunta que este curso ha estado aplazando once fases: **¿cómo sabes que esto funciona?** Monta Jasmine, Karma y TestBed desde cero —CertCore no tiene ni un spec, decisión cerrada desde el principio— y va a reclamar todo lo que estas cinco fases dejaron escrito puro: `resolveTemplateVersion`, `buildAnswerForm`, `computeProgress`, `deriveSeverity`, `deriveCertificateStatus`, `bucketCertificates`. Se van a testear sin `TestBed` y en tres líneas cada uno, y ése es el momento en que se entiende por qué llevan cinco fases sin inyectar nada. Después llegan los componentes, que son otra historia, y el coverage medible. Y de paso, el guiño a las signals: lo único de Angular 17 que este curso mira de cerca.
 
 > **La señal de que quedó bien:** cuando el coordinador abre el panel a las ocho de la mañana, mira cuatro números, y sabe a quién llamar antes de terminar el café — y cuando tú puedes decir, con una cifra medida, hasta cuántos registros eso va a seguir siendo verdad.
 

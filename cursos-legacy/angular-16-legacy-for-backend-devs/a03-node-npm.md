@@ -273,13 +273,13 @@ Dos copias de RxJS en el árbol producen el error más desconcertante que da Ang
 
 1. 🟢 Cambia a una versión de Node distinta con `nvm use 20` (o la que tengas a mano), ejecuta `npm install` en el proyecto del curso y anota el mensaje exacto. Después añade `engine-strict=true` al `.npmrc` y repítelo. Explica en dos líneas qué cambió y por qué el segundo mensaje es más útil.
 
-2. 🟢 Ejecuta `npm ls @angular/core rxjs typescript` y compara los tres números con la tabla de `alcance-del-proyecto.md` §9. Si alguno no coincide, averigua por qué antes de arreglarlo.
+2. 🟢 Ejecuta `npm ls @angular/core rxjs typescript` y compara los tres números con las versiones fijadas en el `package.json` del proyecto (`@angular/core`, `typescript`, `rxjs`). Si alguno no coincide, averigua por qué antes de arreglarlo.
 
 3. 🟡 Borra `node_modules` y `package-lock.json`, ejecuta `npm install`, y haz `git diff package-lock.json`. Anota cuántas líneas cambiaron y si alguna versión se movió. Guarda la cifra en el mensaje de un tag anotado `ej/a03/3` — es el dato que convierte "el lockfile es importante" en una afirmación con número.
 
 4. 🟡 Abre `package-lock.json`, busca la entrada de `rxjs` y localiza sus cuatro campos de la §3. Después cambia a mano el `version` a `7.8.0`, ejecuta `npm ci`, y explica qué pasó y por qué es exactamente lo que quieres que pase.
 
-5. 🟠 Instala una librería que declare un peer incompatible con Angular 16 —`ng2-charts@5` sirve, porque pide Angular 17— y lee el `ERESOLVE` completo. Identifica en el mensaje: qué paquete pide qué, quién no está de acuerdo, y qué versión sí encajaría. No lo instales con `--legacy-peer-deps`: desinstala y escribe en tres líneas qué habrías hecho si esa librería fuera un requisito de negocio.
+5. 🟠 Instala una librería que declare un peer incompatible con Angular 16 —`@angular/material@17` sirve, porque pide `@angular/core` 17— y lee el `ERESOLVE` completo. Identifica en el mensaje: qué paquete pide qué, quién no está de acuerdo, y qué versión sí encajaría. No lo instales con `--legacy-peer-deps`: desinstala y escribe en tres líneas qué habrías hecho si esa librería fuera un requisito de negocio.
 
 6. 🟠 Con el proyecto de la Fase 13 construido, compara el peso de `node_modules` (`du -sh node_modules`) con el de `dist/` (`du -sh dist`). Explica la diferencia usando la §4, y di qué comando responde de verdad a "¿cuánto pesa esta librería para el usuario?".
 

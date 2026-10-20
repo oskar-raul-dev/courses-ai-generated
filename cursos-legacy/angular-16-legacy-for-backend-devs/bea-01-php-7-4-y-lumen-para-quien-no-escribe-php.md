@@ -210,12 +210,12 @@ Y encima existen los **avisos** (`Warning`, `Notice`, `Deprecated`), que no son 
 
 ```php
 $row = [];
-echo $row['nope'];   // Warning: Undefined array key "nope" ... y sigue, con null
+echo $row['nope'];   // Notice: Undefined index: nope ... y sigue, con null (PHP 7.4)
 ```
 
 > 🧭 **La regla práctica:** en PHP, que no haya excepción no significa que no haya pasado nada. Antes de dar por bueno un comportamiento, **mira el log**. En el track BE, `docker compose logs -f api` es lo que la consola del navegador era en el track base.
 
-🔥 En PHP 8 muchos de estos avisos se convirtieron en errores de verdad, lo que hace el lenguaje bastante más honesto — y es una de las razones por las que subir de versión no es gratis: código que "funcionaba" empieza a reventar.
+🔥 En PHP 8 algunos de estos avisos cambiaron de nivel (la clave inexistente pasó de `Notice` a `Warning`) y varios se convirtieron en errores de verdad, lo que hace el lenguaje bastante más honesto — y es una de las razones por las que subir de versión no es gratis: código que "funcionaba" empieza a reventar.
 
 ---
 
@@ -307,7 +307,7 @@ Y el detalle que te va a hacer perder tiempo exactamente una vez: **la traza pue
 3. **Diagnóstico.** Crea un array de las tres plantillas, filtra con `array_filter` las que tengan `validUntil === null`, y devuélvelo desde una ruta. Mira el JSON. Después añade `array_values()` y vuelve a mirar. Explica qué le pasaría al `*ngFor` del frontend con la primera versión.
 4. Demuestra con `var_dump` la diferencia entre `isset($a['k'])` y `array_key_exists('k', $a)` cuando el valor es `null`. Relaciónalo con la Fase 9 del track base en una frase.
 5. **Diagnóstico.** Escribe una función con `int $version` y llámala con `"2"`, primero sin `declare(strict_types=1)` y después con él. Pega los dos resultados. ¿Cuál de los dos comportamientos tiene el código heredado de CertCore?
-6. Provoca los tres tipos de fallo —un `Warning` por clave inexistente, una `Exception` lanzada a mano, y un `Error` por llamar a un método inexistente— y comprueba cuáles atrapa `catch (Exception $e)` y cuáles `catch (Throwable $e)`. Haz una tabla de tres filas.
+6. Provoca los tres tipos de fallo —un `Notice` por clave inexistente, una `Exception` lanzada a mano, y un `Error` por llamar a un método inexistente— y comprueba cuáles atrapa `catch (Exception $e)` y cuáles `catch (Throwable $e)`. Haz una tabla de tres filas.
 7. **Diagnóstico.** Mueve una clase de `app/Support/` a `app/Http/` sin cambiar su namespace y pide una ruta que la use. Pega el error literal. ¿Menciona en algún sitio que el problema es el namespace?
 8. Toma un stack trace real de tu laboratorio (provoca uno) y anótalo a mano: dónde está el qué, dónde el dónde, qué líneas son ruido de `vendor/`, y cuál es el primer archivo tuyo que aparece.
 9. **Diagnóstico.** Busca en el código heredado de `server/app/` tres cosas: un archivo sin `declare(strict_types=1)`, un `@` silenciando algo, y un `array_filter` sin `array_values`. Para cada uno escribe una línea de qué podría salir mal. Guarda la lista: es materia prima de be02.

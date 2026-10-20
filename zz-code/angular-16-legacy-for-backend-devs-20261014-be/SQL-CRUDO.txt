@@ -1,0 +1,52 @@
+SQL-CRUDO.txt — todo el SQL que escribe a mano el backend de be03, y lo que le pasa en cada escalón.
+Generado el 14/10/2026 con grep sobre server/ (ver EVIDENCIA-VERSIONES.md §5). Lo que no está aquí
+lo genera Eloquent o el query builder de Lumen.
+
+[1] server/database/seeds/DbJsonSeeder.php:106
+    SELECT setval('clients_id_seq', (SELECT MAX(id) FROM clients))
+    Afecta: no. Función estable desde PG 8.1; sin cambios de nombre en 9.6–16.9.
+    Escalones: 9.6 OK · 11 OK · 13 OK · 16.9 OK.
+
+[2] server/database/seeds/DbJsonSeeder.php:107
+    SELECT setval('inspections_id_seq', (SELECT MAX(id) FROM inspections))
+    Afecta: no. Mismo caso que [1].
+
+[3] server/database/seeds/DbJsonSeeder.php:108
+    SELECT setval('findings_id_seq', (SELECT MAX(id) FROM findings))
+    Afecta: no. Mismo caso que [1].
+
+[4] server/app/Http/Controllers/HealthLegacyController.php:14 (PDO, sin framework; neutro en be02)
+    SELECT 1
+    Afecta: no. La consulta más simple que existe. Ninguna de las rupturas verificadas (PG 10, 12, 14, 15)
+    toca SELECT 1. La ruta no se llama en el frontend ni en smoke.sh.
+
+[5] server/app/Http/Controllers/ClientController.php:29 (query builder, no raw, pero es SQL de PostgreSQL)
+    WHERE legal_name ILIKE '%…%' OR tax_id ILIKE '%…%'
+    Afecta: no. ILIKE es extensión de PostgreSQL, no SQL estándar; sigue igual en 9.6–16.9.
+    Nota: es lo que haría que este backend no corriera en otro motor sin tocar la línea.
+
+[6] Solo en psql, HALLAZGOS.md §1 (consulta de estado de certificados)
+    SELECT ... CASE WHEN valid_until < now() ... now() + interval '30 days' ... GROUP BY 1, 2
+    Afecta: no. now(), interval y CASE son estándar. Sin embargo, `valid_until` es timestamp SIN zona:
+    el resultado depende de la zona de sesión (ver EVIDENCIA-VERSIONES.md §6). Eso no es una ruptura de
+    versión, es la deuda 💸 4.
+
+Migraciones (server/database/migrations/2016_09_20_000100_create_core_tables.php), por tipo, no por consulta:
+    jsonb, timestamp (sin zona), date, primary key compuesta (template_id, version).
+    Afecta: ninguno de los cuatro escalones lo rompió. Los cuatro aceptan el mismo DDL.
+
+[7] server/app/Reports/ExpiredCertificatesReport.php (añadido el 15/10/2026; es el informe heredado de be04)
+    SELECT c.conname, c.consrc AS definition FROM pg_constraint c WHERE c.conrelid = 'certificates'::regclass
+    Afecta: SÍ. pg_constraint.consrc se eliminó en PostgreSQL 12. Medido: con postgres:11 da
+    «vencidos: 2 · reglas: 2»; con 16.9, «column c.consrc does not exist». Parche: pg_get_constraintdef(c.oid),
+    probado en 16.9 y 9.6. Es el incidente be-06.
+
+[8] scripts/backup.sh (guion de respaldo de 2016, rama del incidente be-07; no está en el árbol principal)
+    pg_start_backup / pg_stop_backup / pg_switch_xlog
+    Afecta: SÍ. pg_switch_xlog() falla desde PG 10 (medido en 11 y 13); pg_start/stop_backup fallan en PG 15+ (medido
+    en 16.9). El guion no comprueba códigos de salida y dice «respaldo completado» igual.
+
+Resultado del cruce: 2 de 8 consultas escritas a mano afectadas (las dos del código heredado de 2016–2017). Las de
+Eloquent y el query builder: ninguna rota en 9.6 → 16.9 (smoke 26/26 en los cuatro escalones).
+
+Cociente pedido en §5.4: no se calcula. No he contado las consultas que genera Eloquent (N); sin ese número el cociente no existe.

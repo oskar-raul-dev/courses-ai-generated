@@ -287,15 +287,18 @@ Las otras tres, en una línea cada una: **el contrato de un endpoint por cada ca
 Aquí es donde los dos caminos dejan de ser un problema estético.
 
 ```php
-// Camino viejo (parcela laravel): no valida, deja explotar.
-$router->post('/findings', function (Request $request) {
-    return Finding::create($request->all());   // severity inválido → QueryException → 500
+// Camino viejo (parcela laravel), mudado a /legacy en be03: no valida, deja explotar.
+$router->post('/legacy/findings', function (Request $request) {
+    return Finding::create($request->all());   // inspection_id inexistente → violación de FK → QueryException → 500
 });
 
 // Camino nuevo (parcela symfony): valida y responde 422 con detalle.
 public function store(Request $request): JsonResponse
 {
-    $this->validate($request, ['severity' => 'required|in:critical,major,minor']);
+    $this->validate($request, [
+        'inspection_id' => 'required|exists:inspections,id',
+        'severity' => 'required|in:critical,major,minor',
+    ]);
     // …
 }
 ```
@@ -338,21 +341,25 @@ El ticket tiene razón, y ése es el punto: no es intermitente, es **dependiente
 
 1. **Reproduce las dos, con el mismo cuerpo.**
    ```bash
+   TOKEN=$(curl -s -X POST localhost:3000/auth/login -H 'Content-Type: application/json' \
+        -d '{"email":"inspector@certcore.co","password":"certcore123"}' | jq -r .accessToken)
+   curl -sS -o /dev/null -w '%{http_code}\n' -X POST localhost:3000/legacy/findings \
+        -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+        -d '{"inspection_id":9999,"item_id":"ITEM-01","severity":"critical","description":"prueba"}'
    curl -sS -o /dev/null -w '%{http_code}\n' -X POST localhost:3000/findings \
-        -H 'Content-Type: application/json' -d '{"severity":"catastrofico"}'
-   curl -sS -o /dev/null -w '%{http_code}\n' -X POST localhost:3000/v2/findings \
-        -H 'Content-Type: application/json' -d '{"severity":"catastrofico"}'
+        -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+        -d '{"inspection_id":9999,"item_id":"ITEM-01","severity":"critical","description":"prueba"}'
    #   500
    #   422
    ```
    En dos comandos ya sabes que no es azar. **Ese es el paso que convierte "a veces" en "depende de".**
-2. **Pregunta quién llama a cada una.** `grep` en `src/` del frontend. Si sólo una tiene cliente, la decisión está tomada por los hechos.
-3. **Mira qué produce el `500`.** Una `QueryException` que llega al manejador sin traducir: la base rechazó el valor. No es un fallo del servidor, es **una validación que ocurre en la capa equivocada y con el vocabulario equivocado**.
+2. **Pregunta quién llama a cada una.** `grep` en `src/` del frontend. En CertCore la respuesta sorprende: **ninguna** —el frontend no crea hallazgos; los crean el panel heredado y un integrador, por `/legacy/findings`—. Cuando ningún cliente del contrato depende de la diferencia, decide el contrato: el `422` del camino nuevo, y el viejo se alinea con él.
+3. **Mira qué produce el `500`.** Una `QueryException` que llega al manejador sin traducir: la base rechazó la fila porque la clave foránea a `inspections` no existe. No es un fallo del servidor, es **una validación que ocurre en la capa equivocada y con el vocabulario equivocado**.
 4. **Y la pregunta que cierra:** ¿cuántos recursos más tienen este par? La tabla de §5.1 lo contesta, y ése es el número que mide de verdad la superficie.
 
 > 🧠 **"A veces" casi nunca significa azar: significa una variable que quien reporta no puede ver.** En el track base era el caos, la caché o el reloj. Aquí es la ruta. El método es el mismo: **encontrar de qué depende el "a veces"**.
 
-> 🧨 **Rompe a propósito y observa.** Haz que el camino viejo devuelva `422` como el nuevo. Corre el `smoke.sh` —probablemente pase— y después entra a la aplicación y crea un hallazgo inválido. Anota qué ve el usuario, y si mejoró o empeoró. Después responde lo difícil: **¿cómo sabrías, sin preguntarle a nadie, si alguna pantalla dependía del `500`?** Si tu respuesta es "no puedo saberlo", acabas de entender por qué el contrato manda sobre la elegancia — y por qué un sistema sin pruebas te obliga a ser conservador aunque tengas razón.
+> 🧨 **Rompe a propósito y observa.** Haz que el camino viejo devuelva `422` como el nuevo. Corre el `smoke.sh` —probablemente pase— y después manda un hallazgo inválido por `/legacy/findings`, como lo haría el panel heredado. Anota qué ve el usuario, y si mejoró o empeoró. Después responde lo difícil: **¿cómo sabrías, sin preguntarle a nadie, si alguna pantalla dependía del `500`?** Si tu respuesta es "no puedo saberlo", acabas de entender por qué el contrato manda sobre la elegancia — y por qué un sistema sin pruebas te obliga a ser conservador aunque tengas razón.
 
 ---
 

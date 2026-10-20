@@ -192,8 +192,10 @@ kubectl delete pod <pod>                         # ✍️ lo mata; el Deployment
 | `Pending` | el cluster todavía no lo ha colocado en ningún nodo | `describe`: no hay recursos, o no hay nodo que cumpla las restricciones |
 | `ContainerCreating` | está bajando la imagen o montando volúmenes | normal unos segundos; si se queda, `describe` |
 | `ErrImagePull` / `ImagePullBackOff` | no consiguió la imagen | ¿está empujada? ¿llega el nodo al registro? ¿hay `imagePullSecret`? (§1) |
+| `ErrImageNeverPull` | la imagen no está en el nodo y `imagePullPolicy: Never` prohíbe ir a buscarla | en kind, falta el `kind load` (Fase 14 §5.3) |
+| `CreateContainerConfigError` | no pudo ni crear el contenedor: una clave del ConfigMap que no existe, o una política que no cumple (`runAsNonRoot`) | `describe`: la causa está en la última línea |
 | `Running` | el contenedor arrancó | ⚠️ **arrancar no es funcionar**: mira `READY 1/1`, no sólo el estado |
-| `CrashLoopBackOff` | arrancó, se murió, y lleva varios intentos; el cluster espera cada vez más entre uno y otro | `logs --previous` (§7) |
+| `CrashLoopBackOff` | arrancó, se murió, y lleva varios intentos; el cluster espera cada vez más entre uno y otro | `logs`, que enseña el intento que acaba de fallar (§7) |
 | `OOMKilled` (en `describe`) | se pasó del límite de memoria y el kernel lo mató | subir el límite, o averiguar por qué consume eso |
 | `Completed` | el proceso terminó **bien** | correcto en un Job; en un Deployment significa que tu proceso no se queda vivo |
 | `Terminating` | le pidieron que se fuera y aún no se ha ido | si se queda ahí, algo no responde a la señal de apagado |
@@ -202,9 +204,9 @@ kubectl delete pod <pod>                         # ✍️ lo mata; el Deployment
 
 **`Running` con `READY 0/1` es un pod que no sirve tráfico.** El contenedor está vivo y su prueba de disponibilidad no pasa, así que el Service no le manda nada. Si la aplicación "está desplegada" y no responde, ésta es la primera columna que hay que mirar.
 
-**`CrashLoopBackOff` no es un error: es una consecuencia.** El error real ocurrió hace unos segundos, en el arranque anterior, y está en los logs de ese intento. El estado sólo te dice que ya ha pasado varias veces.
+**`CrashLoopBackOff` no es un error: es una consecuencia.** El error real ocurrió hace unos segundos, en el último arranque, y está en los logs de ese intento. El estado sólo te dice que ya ha pasado varias veces.
 
-> 💡 **En un Mac con chip M hay un `CrashLoopBackOff` con causa propia**: la imagen está construida para amd64 y el nodo es arm64. `kubectl describe` no lo explica bien y los logs vienen vacíos. Es lo primero que hay que descartar en Apple Silicon, y el diagnóstico completo está en **A12** 🔥.
+> 💡 **Hay un `CrashLoopBackOff` con causa propia cuando el equipo mezcla Macs con chip M y servidores x86**: la imagen se construyó arm64 en un Mac y el nodo es amd64. `kubectl describe` solo da `Exit Code: 255`; el mensaje útil está en los logs: `exec /…: exec format error`. En tu propio kind no aparece, porque la VM de tu runtime traduce la otra arquitectura. El diagnóstico completo está en **A12** 🔥.
 
 ---
 
@@ -213,11 +215,11 @@ kubectl delete pod <pod>                         # ✍️ lo mata; el Deployment
 Es la técnica que separa diagnosticar de adivinar, y son dos comandos.
 
 ```bash
-kubectl logs <pod>                # 👁️ el intento ACTUAL, que a lo mejor aún no ha fallado
-kubectl logs <pod> --previous     # 👁️ el intento ANTERIOR: aquí está el mensaje que buscas
+kubectl logs <pod>                # 👁️ el ÚLTIMO intento
+kubectl logs <pod> --previous     # 👁️ el intento de ANTES del último
 ```
 
-Un contenedor en `CrashLoopBackOff` arranca, falla y se reinicia. Cuando tú escribes `kubectl logs`, estás mirando el intento en curso — que puede llevar dos segundos de vida y no haber llegado todavía al error. El mensaje que explica todo está en el anterior, y `--previous` es la única forma de verlo.
+Cuál de los dos te da el mensaje depende de cómo esté el contenedor ahora. En `CrashLoopBackOff` está esperando su próximo intento, así que el último es el que acaba de fallar: `kubectl logs` a secas ya enseña el error, y `--previous` puede responder *"unable to retrieve container logs"* si el kubelet ya recogió el de antes. Con el pod `Running` y `RESTARTS` mayor que cero pasa lo contrario: el intento actual está sano, `kubectl logs` enseña un proceso tranquilo, y el fallo sólo está en `--previous`. Es el caso más traicionero, porque el pod parece bien. Medido los dos en el cluster de la Fase 14.
 
 **Y cuando ni eso alcanza**, tres recursos más:
 
@@ -257,7 +259,7 @@ spec:
     runAsUser: 101
 ```
 
-El pod entra en `CrashLoopBackOff` y los logs dicen que nginx no puede escribir en `/var/cache/nginx` ni escuchar en el 80.
+El pod entra en `CrashLoopBackOff`, y el primer mensaje no es el de nginx sino el del `entrypoint.sh` de la Fase 13: *"can't create /usr/share/nginx/html/assets/config.json: Permission denied"*. Si el script pudiera escribir, el siguiente sería nginx con *"mkdir() "/var/cache/nginx/client_temp" failed (13: Permission denied)"*, y después el puerto 80. Medido en el cluster de la Fase 14. Y si la política es `runAsNonRoot: true` **sin** `runAsUser`, el pod ni siquiera arranca: `CreateContainerConfigError`, *"container has runAsNonRoot and image will run as root"*, que por lo menos nombra la causa.
 
 **El arreglo de verdad son cuatro cambios coordinados**, y ninguno es difícil:
 
@@ -284,7 +286,8 @@ Y una advertencia final, que también es una liberación: **lo que la Fase 14 mo
 |---|---|---|
 | Antes de cualquier comando que escriba | 👁️ `kubectl config current-context` | el `--force` a la rama equivocada, versión cluster |
 | El pod no arranca y no sabes por qué | 👁️ `kubectl describe pod` y mira los `Events` | ahí está la causa, en orden cronológico |
-| `CrashLoopBackOff` | 👁️ `kubectl logs --previous` | el intento actual todavía no ha fallado |
+| `CrashLoopBackOff` | 👁️ `kubectl logs` | el último intento es el que acaba de fallar |
+| `Running` con reinicios | 👁️ `kubectl logs --previous` | el intento actual está sano; el fallo fue el anterior |
 | `ImagePullBackOff` con la imagen delante | ¿empujada? ¿red? ¿`imagePullSecret`? | el nodo no ve tu almacén local |
 | Cambiaste un ConfigMap y no pasa nada | ✍️ `kubectl rollout restart deployment/…` | las variables de entorno se leen al arrancar |
 | Quieres ver la aplicación sin Ingress | ✍️ `kubectl port-forward svc/…` | túnel directo, sin tocar nada del cluster |
@@ -323,9 +326,9 @@ Y una advertencia final, que también es una liberación: **lo que la Fase 14 mo
 
 3. 🟡 Crea un Secret con `kubectl create secret generic demo --from-literal=token=abc123` y recupera su valor en claro con un solo comando. Después escribe tres líneas explicándole a un compañero qué te da un Secret y qué no.
 
-4. 🟡 Provoca los cuatro estados de la §6 en el cluster de la Fase 14 y anota, para cada uno, qué comando te dio la causa: `ImagePullBackOff` (aplica sin cargar la imagen), `CrashLoopBackOff` (`command: ["sh", "-c", "exit 1"]`), `Running` con `READY 0/1` (una probe que apunte a una ruta que no existe) y `Pending` (pide `resources.requests` imposibles de satisfacer).
+4. 🟡 Provoca los cuatro estados de la §6 en el cluster de la Fase 14 y anota, para cada uno, qué comando te dio la causa: `ErrImageNeverPull` (aplica sin cargar la imagen; con la política por defecto sería `ImagePullBackOff`), `CrashLoopBackOff` (`command: ["sh", "-c", "echo intento; exit 1"]`: sin el `echo` no hay nada que leer), `Running` con `READY 0/1` (una probe que apunte a una ruta que no existe) y `Pending` (pide `resources.requests` imposibles de satisfacer).
 
-5. 🟡 Con un pod en `CrashLoopBackOff`, ejecuta `kubectl logs` y `kubectl logs --previous` y pega las dos salidas. Explica por qué la segunda es la que sirve, en una frase que un compañero pueda repetir.
+5. 🟡 Con un pod en `CrashLoopBackOff`, ejecuta `kubectl logs` y `kubectl logs --previous` y pega las dos salidas. Después haz que sólo falle el primer arranque y repite con el pod ya `Running`. Explica cuándo sirve cada una, en una frase que un compañero pueda repetir.
 
 6. 🟠 Cambia el ConfigMap de la Fase 14 sin reiniciar nada y comprueba que `kubectl get configmap` dice una cosa y `kubectl exec … cat config.json` dice otra. Después arréglalo con `rollout restart`. Escribe el post-mortem de tres líneas y compáralo con el del incidente de caché de la Fase 13: son el mismo bug con dos mecanismos.
 

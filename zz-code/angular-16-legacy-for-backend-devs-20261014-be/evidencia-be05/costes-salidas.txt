@@ -1,0 +1,23 @@
+Timing is on.
+--- Salida A (validando, sólo medir y deshacer): cuánto cuesta y qué falla
+BEGIN
+Time: 0.152 ms
+ERROR:  insert or update on table "inspections" violates foreign key constraint "inspections_template_fk"
+DETAIL:  Key (template_id, template_version)=(elevator-annual, 9) is not present in table "templates".
+Time: 3.014 ms
+ROLLBACK
+Time: 0.191 ms
+--- Salida B (CHECK con función, NOT VALID, medir y deshacer)
+CREATE FUNCTION
+Time: 1.481 ms
+BEGIN
+Time: 0.080 ms
+ALTER TABLE
+Time: 0.271 ms
+--- VALIDATE de la salida B: debería fallar con 88 filas
+ERROR:  check constraint "inspections_template_check" of relation "inspections" is violated by some row
+Time: 8.425 ms
+ROLLBACK
+Time: 0.072 ms
+DROP FUNCTION
+Time: 1.114 ms

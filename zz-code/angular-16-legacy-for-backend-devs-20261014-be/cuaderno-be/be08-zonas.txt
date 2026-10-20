@@ -1,0 +1,39 @@
+           ahora_utc           |      guardado       
+-------------------------------+---------------------
+ 2026-10-15 03:42:36.706116+00 | 2026-10-15 00:30:00
+(1 row)
+
+SET
+ sesion | vencido 
+--------+---------
+ UTC    | t
+(1 row)
+
+SET
+ sesion | vencido 
+--------+---------
+ Bogota | f
+(1 row)
+
+       id       | estado_vista 
+----------------+--------------
+ CERT-2024-0087 | expiring
+(1 row)
+
+
+== Revisión del 15/10/2026 (tarde): receta independiente de la hora y canon «pantalla y PDF frente a informe»
+La receta original (current_date + time '00:30') sólo cae en la franja de 19:30 a 00:30 de Bogotá.
+A las 02:43 de Bogotá las dos sesiones decían vencido (UTC t, Bogota t): no se reproducía.
+Receta nueva: valid_until = (now() AT TIME ZONE 'America/Bogota') + interval '2 hours', escrito sin zona.
+  UTC vencido?    t
+  Bogota vencido? f
+  vista           expiring
+Navegador (Playwright, supervisor): pantalla «Estado: Por vencer · Vigente del 15/10/2025 al 15/10/2026»;
+  PDF descargado: «Estado: Por vencer  Vigencia: del 15/10/2025 al 15/10/2026». Pantalla y PDF coinciden.
+Informe de vencidos (PHP en UTC, con el parche de be-06 aplicado a mano):
+  en la franja     -> vencidos: 3 · reglas: 2
+  fuera de franja  -> vencidos: 2 · reglas: 2
+Prueba de regresión be08-ExpiredReportTimezoneTest.php:
+  sin el parche de be-08 -> {"UTC":3,"America/Bogota":2,"Pacific/Auckland":3}  FAILURES (1 test, 1 assertion)
+  con el parche          -> OK (1 test, 1 assertion)
+Informe restaurado (cmp) tras cada prueba.

@@ -1,7 +1,7 @@
 # 📅 Fase be04 — El salto de versión que nadie corrió
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · **Track BE opcional 🔥** · Fase be04 de be07 · **10 horas**
-> Depende de: **be03 cerrada** (`smoke.sh` en `24/24` contra PostgreSQL) · Habilita: be05
+> Depende de: **be03 cerrada** (`smoke.sh` en `26/26` contra PostgreSQL) · Habilita: be05
 > Apéndices de apoyo: [`bea-05`](bea-05-dialectos-y-saltos-de-version-en-postgresql.md) · [`bea-04`](bea-04-eloquent-lo-que-absorbe-y-lo-que-no.md) ⭐ · [`bea-07`](bea-07-tiempo-zonas-y-timestamptz.md) · [`bea-02`](bea-02-receta-de-imagen-y-compose.md) · Incidentes asociados: **be-06** ⭐, **be-07**, **be-08**
 > Estilo de esta fase: **investigación.** Se escribe poco código y se leen muchas notas de release
 
@@ -15,7 +15,7 @@ Investigar un incidente cuyo `git log` está vacío.
 
 Durante quince fases del track base y tres de éste, tu reflejo ante un fallo ha sido el mismo: buscar el cambio. `git log`, `git blame`, `git bisect`, el diff entre dos tags. Esta fase existe para romper ese reflejo una vez, en un entorno controlado, **porque la causa no está en el repositorio y no hay forma de que lo esté.**
 
-> 🧠 **A la infraestructura sí la actualizan. A la aplicación no.** La base tenía dueño —un proveedor gestionado, una auditoría, un calendario ajeno— y subió cuatro veces en ocho años. La aplicación no tenía dueño y sigue en 2016.
+> 🧠 **A la infraestructura sí la actualizan. A la aplicación no.** La base tenía dueño —un proveedor gestionado, una auditoría, un calendario ajeno— y pasó por cuatro escalones en ocho años. La aplicación no tenía dueño y sigue en 2016.
 
 ---
 
@@ -72,7 +72,7 @@ Y el motivo de fondo lo pone el propio negocio, con una ironía que no hubo que 
 
 > 🧠 **Postgres es extraordinariamente bueno en compatibilidad hacia atrás. El 95% siguió funcionando y por eso nadie miró. La calidad de la compatibilidad es lo que permitió el abandono.**
 
-No hay villano. Cuatro versiones mayores, ocho años, y la aplicación no se enteró casi de nada. Si se hubiera roto entera en 2019, alguien habría tenido que mirarla — y hoy no estaríamos aquí. 🩻 La sección *"esto sí funciona igual"* de [`bea-05`](bea-05-dialectos-y-saltos-de-version-en-postgresql.md) es larga a propósito: el SQL estándar, el protocolo de cable y los tipos básicos aguantan sin despeinarse.
+No hay villano. Siete versiones mayores, cuatro escalones, ocho años, y la aplicación no se enteró casi de nada. Si se hubiera roto entera en 2019, alguien habría tenido que mirarla — y hoy no estaríamos aquí. 🩻 La sección *"esto sí funciona igual"* de [`bea-05`](bea-05-dialectos-y-saltos-de-version-en-postgresql.md) es larga a propósito: el SQL estándar, el protocolo de cable y los tipos básicos aguantan sin despeinarse.
 
 **Matiz 2 — la factura la paga el código que se saltó las convenciones.**
 
@@ -362,7 +362,7 @@ La ruta, en cinco pasos, y el valor está en el **orden**:
 **Video / apoyo**
 - https://www.youtube.com/results?search_query=postgresql+major+version+upgrade+strategy — charlas sobre estrategias de subida en producción. Busca las que hablen de ventanas y de vuelta atrás, no las que enseñan el comando.
 
-**Orden de lectura sugerido:** [`bea-05`](bea-05-dialectos-y-saltos-de-version-en-postgresql.md) **antes** de recorrer la cadena, para saber qué mirar → las notas de release **durante**, una por escalón, y sólo la sección de migración → [`bea-07`](bea-07-tiempo-zonas-y-timestamptz.md) **cuando llegues a §5.5**, no antes → Dekker **después**, para el post-mortem.
+**Orden de lectura sugerido:** [`bea-05`](bea-05-dialectos-y-saltos-de-version-en-postgresql.md) **antes** de recorrer la cadena, para saber qué mirar → las notas de release **durante**, una por escalón, y sólo la sección de migración → [`bea-07`](bea-07-tiempo-zonas-y-timestamptz.md) **cuando llegues a la §5.5 de esta fase**, no antes → Dekker **después**, para el post-mortem.
 
 > ⚠️ URLs, títulos y contenidos pueden haber cambiado o desaparecido; verifícalos. Y una advertencia propia de esta fase: **las notas de release de PostgreSQL son largas y sólo interesa la sección "Migration to Version X"**, que está siempre al principio. Todo lo demás son mejoras, y ninguna mejora te rompe nada.
 
@@ -407,4 +407,4 @@ Y dejaste una cosa diagnosticada y sin arreglar, otra vez a propósito: las fech
 |---|---|---|---|
 | **be-06** ⭐ | "El informe falla y no hemos desplegado nada" | Cambio fuera del repositorio · sin par `-roto`/`-fix` | 🔴 |
 | **be-07** | "El respaldo de anoche no se puede restaurar" | Artefacto de emergencia envejecido | 🟠 |
-| **be-08** | "El certificado dice que vence hoy y en el PDF dice ayer" | Fechas sin zona · TZ del contenedor | 🟠 |
+| **be-08** | "El certificado sale vigente y el informe lo cuenta como vencido" | Fechas sin zona · SQL a mano contra `now()` | 🟠 |

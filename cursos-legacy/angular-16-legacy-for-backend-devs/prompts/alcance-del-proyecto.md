@@ -12,7 +12,7 @@ Documento de encuadre. Define qué es este proyecto, para quién, qué produce y
 
 ## 1. En una frase
 
-Un tutorial práctico de **122 horas** que prepara a desarrolladores senior para
+Un tutorial práctico de **123 horas** que prepara a desarrolladores senior para
 **mantener, depurar y hacer hotfixes** en una aplicación Angular 16 heredada y en
 producción — una que ya sobrevivió a una migración y tiene las cicatrices puestas.
 
@@ -286,10 +286,10 @@ globales y no se reasignan. El formato está en `formato-cuaderno-incidentes.md`
 
 ## 7. Lo que está dentro del alcance
 
-Catorce fases obligatorias (0-13) que suman **108h**, más **14h** de cuaderno de
-incidentes: **122h** de calendario, alrededor de veintiséis días de media
+Catorce fases obligatorias (0-13) que suman **108h**, más **15h** de cuaderno de
+incidentes: **123h** de calendario, alrededor de veintiséis días de media
 jornada. El track forense va **embebido** en cada fase, no aparte. Los incidentes
-son **20**, con post-mortem de ocho puntos.
+son **22**, con post-mortem de ocho puntos.
 
 También entran los apéndices de consulta rápida (que no cuentan horas de
 calendario), el testing desde cero con Jasmine, Karma y TestBed hasta coverage
@@ -426,7 +426,7 @@ se adopta el control flow de la 17, y si el equipo sube el umbral de coverage.
 ## 🔥 El track opcional de backend
 
 **Fuera del alcance obligatorio, y declarado como tal.** El curso se completa
-entero con el mock: las 122h no cambian y ninguna fase base depende del track BE.
+entero con el mock: las 123h no cambian y ninguna fase base depende del track BE.
 
 El **track BE** levanta el backend de CertCore —**PHP 7.4 + Lumen + PostgreSQL 16**— para medir y contener
 lo que costó una decisión de arquitectura que nadie revisó. Son ocho fases

@@ -175,7 +175,7 @@ Qué cuesta:
 
 - Un bloqueo `SHARE ROW EXCLUSIVE` sobre `inspections` durante la creación. Con cuatro mil filas, imperceptible; con cuatro millones, sigue siendo rápido **porque `NOT VALID` no lee las filas** — ésa es toda la gracia.
 - Las 88 filas sucias siguen siendo inválidas y ahora están **declaradas** como tales, que es mejor que estar escondidas.
-- Y un efecto que hay que saber: `NOT VALID` **no se hereda hacia atrás**, pero sí se aplica a un `UPDATE` de una fila vieja. Tocar una de las 88 para cualquier otra cosa hará que falle. Eso es correcto y hay que avisarlo, porque el primer `UPDATE` masivo que alguien haga se va a estrellar contra esto.
+- Y un efecto que hay que saber: `NOT VALID` **no reescribe ni valida el pasado**, pero sí se aplica a un `UPDATE` de una fila vieja que cambie la columna de clave: si pones una de las 88 a una versión que no existe, falla. Tocar sólo otra columna no la hace fallar, porque la foránea no se reevalúa si la clave no cambia. Eso es correcto y hay que avisarlo, porque el primer `UPDATE` masivo que alguien haga se va a estrellar contra esto.
 
 ```sql
 -- Cuando el negocio decida qué hacer con las 88, se valida. NO HOY.
@@ -371,7 +371,7 @@ Llega el ticket, y viene de auditoría interna: *"la inspección 3117 no se pued
 11. **Diagnóstico.** Intenta borrar una plantilla referenciada, con la restricción puesta y sin ella. Documenta los dos comportamientos y cuál de los dos ve el usuario.
 12. Escribe la variante sutil de la consulta: inspecciones cuya versión de plantilla **existe** pero **no estaba vigente** en su `started_at`. ¿Cuántas hay? ¿Es una violación de la invariante o de otra cosa?
 13. Implementa la salida B (`CHECK` con función) en una rama, y demuestra con un `DELETE` que no protege lo que la foránea sí protege.
-14. **Diagnóstico.** Con la restricción puesta, intenta un `UPDATE` sobre una de las 88 filas sucias (cambia sólo el `status`). Pega el error y explica por qué es correcto que falle y por qué hay que avisarlo antes de desplegar.
+14. **Diagnóstico.** Con la restricción puesta, prueba dos `UPDATE` sobre una de las 88 filas sucias: uno que cambie sólo el `status`, y otro que cambie `template_version` a una versión que no existe. Anota cuál falla, pega el error y explica por qué el primero pasa y el segundo no, y por qué hay que avisarlo antes de desplegar.
 15. Haz que el controlador de certificados lea de la vista y comprueba con el `smoke.sh` que el contrato no cambió.
 16. **Diagnóstico.** Mide el tiempo de `GET /certificates` leyendo de la tabla y leyendo de la vista, con cuatro mil filas. ¿Cuánto cuesta la verdad?
 17. Escribe el paso 3 del procedimiento —qué se hace con las filas malas— como un documento firmable: la decisión, quién la toma, y qué pasaría si se tomara la contraria.
@@ -452,7 +452,7 @@ Y el bug estrella del track base quedó explicado desde el otro lado del cable: 
 > Esta fase paga la deuda más grande del track base —⭐ 3, la invariante de plantillas versionadas— y la factura se lee entre dos tags de **cursos distintos**, que es la primera vez que pasa:
 >
 > ```bash
-> git diff fase-07-plantillas-versionadas be-fase-05-la-invariante-que-no-sostenia-nadie -- src/ server/
+> git diff fase-07 be-fase-05-la-invariante-que-no-sostenia-nadie -- src/ server/
 > ```
 >
 > El lado de `src/` sale **vacío**, y eso es exactamente el punto: la causa se arregló donde estaba, y el frontend que la sufría no cambió ni una línea. La convención completa está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) §🔥.

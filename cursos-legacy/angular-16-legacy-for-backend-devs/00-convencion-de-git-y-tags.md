@@ -8,6 +8,10 @@ con un prefijo, y un tag por fase cerrada. Más tres usos de los tags que en est
 curso rinden muchísimo por lo poco que cuestan: los ejercicios, los incidentes y
 los puntos de retorno.
 
+> **Cuándo se lee:** antes de la [Fase 0](00-setup-hola-mundo.md), y cada vez que el bloque 🏷️
+> de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-07.
+
 > 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa
 > espacio, no agrega overhead y se borra con `git tag -d`. La pregunta no es
 > "¿vale la pena etiquetar esto?", es "¿por qué no?".
@@ -124,7 +128,7 @@ en verde— haces commit y creas el tag.** Uno por fase, y no hace falta más.
 > produce cada incidente**, y lo hacen nombrando el tag —
 > `git switch -c incidente/08 fase-07`. Sin tag, ese commit no tiene nombre, y
 > preparar el incidente pasa de un comando a bucear en `git log` a ver cuál
-> era. **Dieciséis de los veinte incidentes** empiezan así, y los otros cuatro
+> era. **Dieciséis de los veintidós incidentes** empiezan así, y los otros seis
 > siguen necesitando el tag como punto de retorno cuando el diagnóstico te deja
 > el sistema peor de lo que estaba. Los tags de ejercicio son tuyos y puedes
 > saltártelos; éste no.
@@ -259,10 +263,10 @@ abrir un archivo.
 
 ## 🚑 Incidentes: acá el tag sí es contenido
 
-El cuaderno plantea **veinte incidentes** —la inspección de marzo que hoy se ve
+El cuaderno plantea **veintidós incidentes** —la inspección de marzo que hoy se ve
 distinta, el certificado emitido sobre una inspección rechazada, el `.nvmrc` que
 tu shell no aplicó— y pide resolverlos con la estructura de post-mortem de ocho
-puntos de la guía de estilo (§13): síntoma, repro, evidencia, causa raíz,
+puntos: síntoma, repro, evidencia, causa raíz,
 corrección, prueba de regresión, prevención, y el análisis sin culpabilización.
 
 Esa estructura tiene una traducción exacta a git, y por eso acá el par de tags

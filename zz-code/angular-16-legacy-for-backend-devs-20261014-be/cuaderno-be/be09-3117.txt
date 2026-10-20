@@ -1,0 +1,9 @@
+GET /inspections/3117 → {"id":3117,"templateId":"elevator-annual","templateVersion":3,"status":"approved","respuestas":3}
+GET /templates?templateId=elevator-annual&version=3 → []   ← la pantalla arma el formulario con esto
+una inspección del mismo mes que sí sale: {"id":10010,"templateVersion":1}
+
+== Navegador (Playwright, supervisor), 15/10/2026
+/inspections/3117 -> redirige a /inspections/3117/findings (aprobada, sólo lectura)
+<cc-inspection-findings> sin contenido: pantalla en blanco
+consola: ERROR ApiError: No existe la plantilla elevator-annual en su versión 3.
+red: 200 /inspections/3117 · 200 /templates?templateId=elevator-annual&version=3 []

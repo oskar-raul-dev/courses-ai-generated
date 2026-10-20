@@ -8,7 +8,7 @@
 
 **Qué problema resuelve:** que las fechas de CertCore signifiquen **lo mismo** en la base, en el runtime de PHP y en el navegador. Hoy no lo significan, y este apéndice explica la cicatriz desde el lado del servidor.
 
-**Qué queda fuera:** librerías de fecha de terceros —con `DateTimeImmutable` sobra para todo lo que hace este sistema—; y el horario de verano en profundidad: **en Colombia no aplica**, y se nombra sólo porque los datos de proveedores externos sí pueden traerlo.
+**Qué queda fuera:** librerías de fecha de terceros —con `DateTimeImmutable` sobra para todo lo que hace este sistema—; y el horario de verano en profundidad: **en Colombia, Perú y Ecuador continental no aplica**, y Galápagos tampoco (está en UTC−6 todo el año). Se nombra sólo porque los datos de proveedores externos sí pueden traerlo.
 
 ---
 
@@ -216,7 +216,7 @@ Con esa frase escrita, la implementación es una línea en cada capa y todas dic
 
 **Migrar a `TIMESTAMPTZ` obliga a elegir una zona de origen, y esa elección es irreversible.** El dato guardado no dice de dónde vino. En CertCore se asume `-05:00` porque lo dice el `db.json`, y esa suposición hay que escribirla en la migración, no dejarla implícita en la cabeza de quien la ejecutó.
 
-**En Colombia no hay horario de verano, y eso oculta la mitad de los bugs.** `America/Bogota` es `-05:00` todo el año, así que un sistema que confunde offset fijo con zona horaria **funciona** aquí. El día que llegue un dato de un proveedor en `America/Santiago` o en `Europe/Madrid`, el error aparece de golpe y sin relación aparente con nada. Guarda zonas, no offsets.
+**En Colombia, Perú y Ecuador continental no hay horario de verano, y eso oculta la mitad de los bugs.** `America/Bogota` y `America/Lima` son `-05:00` todo el año, así que un sistema que confunde offset fijo con zona horaria **funciona** aquí. Galápagos no tiene horario de verano, pero está en otro offset (`Pacific/Galapagos`, `-06:00`): ahí el mismo error se nota en cuanto una hora de Puerto Ayora se interpreta con `-05:00`. El día que llegue un dato de un proveedor en `America/Santiago` o en `Europe/Madrid`, el error aparece de golpe y sin relación aparente con nada. Guarda zonas, no offsets.
 
 **El `smoke.sh` no detecta un cambio de formato de fecha** si sólo comprueba tipos y presencia de campos (be03, ejercicio 🧨). Un contrato ejecutable que no comprueba el formato de las fechas deja pasar exactamente la familia de bugs de este apéndice.
 

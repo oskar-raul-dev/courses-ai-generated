@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
-import { environment } from '../../environments/environment';
+import { AppConfigService } from './config/app-config.service';
 import {
   AccessTokenPayload,
   AuthCredentials,
@@ -76,7 +76,10 @@ export class AuthService {
 
   // Inyección por constructor: el estilo del código heredado, que es lo que
   // este archivo es. La comparación completa con inject() está en A04.
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly appConfig: AppConfigService,
+  ) {
     // La sesión puede existir antes de que la aplicación arranque: el token
     // sobrevive a la recarga. Se decodifica UNA vez, aquí.
     this.currentUserSubject.next(this.readUserFromStorage());
@@ -84,7 +87,7 @@ export class AuthService {
 
   login(credentials: AuthCredentials): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, credentials)
+      .post<LoginResponse>(`${this.appConfig.current.apiBaseUrl}/auth/login`, credentials)
       // tap y no map: el efecto de guardar no transforma la respuesta, y quien
       // llama sigue recibiendo lo que el servidor mandó.
       .pipe(

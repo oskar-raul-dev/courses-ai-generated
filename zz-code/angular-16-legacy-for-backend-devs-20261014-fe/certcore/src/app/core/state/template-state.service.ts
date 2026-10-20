@@ -1,79 +1,92 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, distinctUntilChanged, filter, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, catchError, combineLatest, concatMap, distinctUntilChanged, filter, map, of, tap } from 'rxjs';
 
-import { TemplateApiService } from '../api/template-api.service';
 import { ApiError } from '../api/api-error';
+import { TemplateApiService, buildTemplateRowId } from '../api/template-api.service';
 import { AuthService } from '../auth.service';
-import { ChecklistTemplate } from '../models/checklist-template.model';
-import { FeatureState, createInitialState } from './feature-state.model';
+import { TemplateFamily, groupIntoFamilies } from '../domain/template-family';
+import { TemplateResolution, resolveTemplateVersion } from '../domain/resolve-template-version';
+import { templateIdForAssetType } from '../domain/asset-rules';
+import { Asset } from '../models/asset.model';
+import { ChecklistItem, ChecklistTemplate } from '../models/checklist-template.model';
+import { BusinessDay, addDays } from '../time/business-day';
+
+/**
+ * El estado de esta feature NO es `FeatureState<ChecklistTemplate>`, y es la
+ * primera vez que el molde de la Fase 4 se queda corto. Dos diferencias:
+ *
+ *   - `versions` en vez de `items`: son filas de versión, no entidades sueltas,
+ *     y la pantalla siempre las mira agrupadas.
+ *   - `selectedFamilyId` en vez de `selected`: se selecciona una FAMILIA, que
+ *     es un concepto que no existe como fila en el backend.
+ *
+ * Todo lo demás del molde se mantiene igual, porque lo demás sí servía: sujeto
+ * privado, Observable público de sólo lectura, un único `patch()`, `readonly`
+ * de punta a punta y reseteo al cerrar sesión. Romper un patrón no es tirarlo:
+ * es cambiar la pieza que estorba y dejar quietas las que no.
+ */
+export interface TemplateState {
+  readonly versions: readonly ChecklistTemplate[];
+  readonly selectedFamilyId: string | null;
+  readonly loading: boolean;
+  readonly error: string | null;
+}
+
+function createInitialTemplateState(): TemplateState {
+  return { versions: [], selectedFamilyId: null, loading: false, error: null };
+}
+
+/** Lo que el editor entrega para publicar. Sin `id` ni `validUntil`: los pone el servicio. */
+export interface NewVersionDraft {
+  readonly templateId: string;
+  readonly version: number;
+  readonly validFrom: BusinessDay;
+  readonly items: readonly ChecklistItem[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class TemplateStateService {
   private readonly templateApi = inject(TemplateApiService);
   private readonly authService = inject(AuthService);
 
-  /**
-   * El sujeto es privado y se llama `stateSubject`; lo público es `state$`.
-   * Regla del proyecto: los dos nombres se distinguen por la palabra, no por el
-   * signo. Un `state` privado y un `state$` público difieren en un carácter, y
-   * ese carácter se pierde en un `Ctrl+F` a las siete de la tarde.
-   */
-  private readonly stateSubject = new BehaviorSubject<FeatureState<ChecklistTemplate>>(
-    createInitialState<ChecklistTemplate>(),
-  );
+  private readonly stateSubject = new BehaviorSubject<TemplateState>(createInitialTemplateState());
 
-  /** Sólo lectura. Sin asObservable(), cualquiera podría hacerle next(). */
-  readonly state$: Observable<FeatureState<ChecklistTemplate>> = this.stateSubject.asObservable();
+  /** La carga en curso. Ver load() y reset(). */
+  private loading?: Subscription;
 
-  // Derivados. distinctUntilChanged evita que un cambio en `loading` haga
-  // reevaluar a quien sólo mira `items`.
-  readonly templates$ = this.state$.pipe(map((state) => state.items), distinctUntilChanged());
-  readonly selected$ = this.state$.pipe(map((state) => state.selected), distinctUntilChanged());
+  readonly state$: Observable<TemplateState> = this.stateSubject.asObservable();
+
   readonly loading$ = this.state$.pipe(map((state) => state.loading), distinctUntilChanged());
   readonly error$ = this.state$.pipe(map((state) => state.error), distinctUntilChanged());
 
+  readonly families$: Observable<readonly TemplateFamily[]> = this.state$.pipe(
+    map((state) => groupIntoFamilies(state.versions)),
+    distinctUntilChanged(),
+  );
+
+  readonly selectedFamily$: Observable<TemplateFamily | null> = combineLatest([
+    this.families$,
+    this.state$.pipe(map((state) => state.selectedFamilyId), distinctUntilChanged()),
+  ]).pipe(
+    map(([families, selectedFamilyId]) =>
+      selectedFamilyId === null
+        ? null
+        : families.find((family) => family.templateId === selectedFamilyId) ?? null,
+    ),
+  );
+
   /**
-   * La versión más alta de cada familia. Es un cálculo, no un dato: guardarlo
-   * sería tener dos fuentes de verdad que se pueden desincronizar.
-   *
-   * Ojo: esto NO resuelve "qué versión aplica a esta fecha", que es otra cosa y
-   * es la Fase 7 entera ⭐. Aquí sólo es "la más nueva de cada una".
+   * ⚠️ "La más alta de cada familia", que NO es "la vigente". Sigue aquí porque
+   * el editor la usa como punto de partida —se edita a partir de la última—,
+   * y con ese uso es correcta. Usarla para decidir con qué plantilla se hace
+   * una inspección es el incidente 08. La pregunta de la vigencia la contesta
+   * `resolveForDay()`, y no hay atajo.
    */
-  readonly latestVersions$: Observable<ChecklistTemplate[]> = this.templates$.pipe(
-    map((templates) => {
-      const latestByFamily = new Map<string, ChecklistTemplate>();
-
-      for (const template of templates) {
-        const current = latestByFamily.get(template.templateId);
-
-        if (current === undefined || template.version > current.version) {
-          latestByFamily.set(template.templateId, template);
-        }
-      }
-
-      return [...latestByFamily.values()];
-    }),
-    // Sin esto, el Map se recorre una vez POR CADA suscriptor. Con cuatro
-    // pantallas mirando, cuatro cálculos idénticos en cada emisión.
-    //
-    // ⚠️ `refCount: true` es la mitad que importa: hace que la suscripción a la
-    // fuente se cierre cuando se va el último suscriptor. Con `refCount: false`
-    // —que es el valor por defecto del atajo `shareReplay(1)`— la suscripción
-    // interna queda viva para siempre aunque no quede nadie escuchando, y eso es
-    // una fuga con nombre y apellido. Ejercicio 15.
-    shareReplay({ bufferSize: 1, refCount: true }),
+  readonly latestVersions$: Observable<readonly ChecklistTemplate[]> = this.families$.pipe(
+    map((families) => families.map((family) => family.latest)),
   );
 
   constructor() {
-    // Cuando la sesión se cierra —por el botón de la toolbar o por un 401 que
-    // cazó el interceptor— el estado del usuario anterior desaparece. Esto no
-    // es rendimiento: es privacidad. Y al hacerlo aquí, ningún sitio que llame
-    // a logout() tiene que acordarse de limpiar nada.
-    //
-    // Nadie se desuscribe de esta suscripción, y es CORRECTO: los dos servicios
-    // son providedIn: 'root' y viven lo mismo que la aplicación, así que la
-    // suscripción no sobrevive a nadie. Una fuga es una suscripción que
-    // sobrevive a su dueño; ésta no tiene a quién sobrevivir. Ejercicio 24.
     this.authService.currentUser$
       .pipe(filter((user) => user === null))
       .subscribe(() => this.reset());
@@ -82,43 +95,109 @@ export class TemplateStateService {
   load(): void {
     this.patch({ loading: true, error: null });
 
-    // Suscripción a pelo, y aquí también está bien: un observable de HttpClient
-    // completa por su cuenta en cuanto llega la respuesta, así que no queda
-    // nada abierto. Compáralo con la suscripción del componente de la sección
-    // 6, que nunca completa — ésa sí es una fuga.
-    this.templateApi.getAll().subscribe({
-      next: (templates) => {
-        // [...templates] porque lo que llega es readonly y lo que guardamos no.
-        // Esa copia parece responsable y sólo protege la mitad del camino: el
-        // array que sale por state$ sigue siendo mutable 💸.
-        this.patch({ items: [...templates], loading: false });
-      },
+    // La carga anterior se cancela antes de empezar otra, y reset() también la
+    // cancela: una respuesta que llega después de cerrar sesión no puede volver
+    // a llenar el estado con los datos del usuario anterior (medido en navegador).
+    this.loading?.unsubscribe();
+    this.loading = this.templateApi.getAll().subscribe({
+      next: (versions) => this.patch({ versions, loading: false }),
       error: (error: unknown) => {
         this.patch({
           loading: false,
-          error: error instanceof ApiError
-            ? error.message
-            : 'No se pudieron cargar las plantillas.',
+          error:
+            error instanceof ApiError ? error.message : 'No se pudieron cargar las plantillas.',
         });
       },
     });
   }
 
-  select(rowId: string): void {
-    const selected = this.stateSubject.value.items.find((template) => template.id === rowId) ?? null;
-    this.patch({ selected });
-  }
-
-  reset(): void {
-    this.stateSubject.next(createInitialState<ChecklistTemplate>());
+  selectFamily(templateId: string | null): void {
+    this.patch({ selectedFamilyId: templateId });
   }
 
   /**
-   * El único punto del servicio que llama a next(). Reemplaza el objeto de
-   * estado entero: la referencia cambia siempre, que es lo que hace posible
-   * OnPush y distinctUntilChanged.
+   * ¿Qué versión de esta familia rige este día? Es una CONSULTA, no estado: no
+   * guarda nada y su respuesta caduca. Por eso devuelve un Observable derivado
+   * y no hay ningún `resolvedTemplate` dentro de `TemplateState`.
    */
-  private patch(changes: Partial<FeatureState<ChecklistTemplate>>): void {
+  resolveForDay(templateId: string, day: BusinessDay): Observable<TemplateResolution> {
+    return this.families$.pipe(
+      map((families) => families.find((family) => family.templateId === templateId)),
+      map((family) =>
+        family === undefined
+          ? ({ status: 'none', day } satisfies TemplateResolution)
+          : resolveTemplateVersion(family.versions, day),
+      ),
+    );
+  }
+
+  /**
+   * ⭐ PUBLICAR. La operación más peligrosa del sistema, y merece leerse dos
+   * veces: son DOS escrituras y el backend no tiene transacciones.
+   *
+   * Orden elegido: primero se CIERRA la anterior, después se CREA la nueva.
+   * Si falla la segunda, queda un hueco —`none`— y nadie puede empezar una
+   * inspección hasta que alguien lo arregle: ruidoso, visible e inofensivo.
+   * Con el orden contrario, un fallo dejaría dos versiones vigentes a la vez
+   * —`ambiguous`—, y ahí el daño depende de que todo el que consulte se niegue
+   * a elegir. Nuestro resolver se niega; el reporte que alguien escriba dentro
+   * de dos años, quizá no.
+   *
+   * Lo correcto de verdad es un endpoint que haga las dos cosas o ninguna.
+   * Eso es trabajo de backend, está en los 📌 y es el ejercicio 31.
+   */
+  publishNewVersion(
+    draft: NewVersionDraft,
+    previous: ChecklistTemplate | null,
+  ): Observable<ChecklistTemplate> {
+    const created: ChecklistTemplate = {
+      id: buildTemplateRowId(draft.templateId, draft.version),
+      templateId: draft.templateId,
+      version: draft.version,
+      validFrom: draft.validFrom,
+      // Nace abierta: la que se cierra es la anterior. Una versión con fecha de
+      // fin en el momento de nacer sería una versión que ya sabe cuándo muere,
+      // y eso lo decide la norma siguiente, que todavía no existe.
+      validUntil: null,
+      items: draft.items,
+    };
+
+    const close$: Observable<ChecklistTemplate | null> =
+      previous === null || previous.validUntil !== null
+        ? // No hay anterior, o ya estaba cerrada. `of(null)` mantiene la tubería
+          // con una sola forma en vez de partir el método en dos caminos.
+          of(null)
+        : this.templateApi.close(previous, addDays(draft.validFrom, -1));
+
+    return close$.pipe(
+      // concatMap y NO switchMap. Es la regla que la Fase 6 dejó escrita: para
+      // leer, switchMap; para escribir, jamás. Cancelar el cierre a mitad
+      // dejaría el sistema en el peor de los dos estados rotos.
+      concatMap(() => this.templateApi.create(created)),
+      tap(() => this.load()),
+    );
+  }
+
+  /**
+   * ¿Qué versión rige HOY para este activo? Es `resolveForDay` con la regla de
+   * negocio del tipo de activo delante. Vive aquí porque la pregunta es de
+   * plantillas y porque la pantalla de empezar ya no es la única que la hace.
+   */
+  resolveForAsset(asset: Asset, day: BusinessDay): Observable<TemplateResolution> {
+    return this.resolveForDay(templateIdForAssetType(asset.type), day);
+  }
+
+  /** Retirar una familia: cerrar su versión abierta y no crear ninguna. */
+  retire(template: ChecklistTemplate, lastDay: BusinessDay): Observable<ChecklistTemplate> {
+    return this.templateApi.close(template, lastDay).pipe(tap(() => this.load()));
+  }
+
+  reset(): void {
+    this.loading?.unsubscribe();
+    this.stateSubject.next(createInitialTemplateState());
+  }
+
+  private patch(changes: Partial<TemplateState>): void {
     this.stateSubject.next({ ...this.stateSubject.value, ...changes });
   }
 }

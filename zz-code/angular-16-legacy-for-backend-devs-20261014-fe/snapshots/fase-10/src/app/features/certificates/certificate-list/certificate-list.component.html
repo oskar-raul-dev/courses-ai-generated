@@ -1,0 +1,26 @@
+<!-- src/app/features/certificates/certificate-list/certificate-list.component.html -->
+<h2>Certificados</h2>
+
+<p *ngIf="(state$ | async)?.loading">Cargando certificados…</p>
+
+<ul class="certificate-list" *ngIf="views$ | async as views">
+  <li *ngFor="let view of views" class="certificate-list__item">
+    <a [routerLink]="['/certificates', view.certificate.id]">{{ view.certificate.id }}</a>
+
+    <span [class]="chipClass(view)">{{ statusLabel(view.status) }}</span>
+
+    <span class="certificate-list__validity">
+      Vigente hasta {{ view.validity.until | date: 'dd/MM/yyyy' }}
+    </span>
+
+    <!-- "quedan 12 días" o "venció hace 400": el mismo número con dos lecturas. -->
+    <span *ngIf="view.daysUntilExpiry >= 0">Quedan {{ view.daysUntilExpiry }} días</span>
+    <span *ngIf="view.daysUntilExpiry < 0">Venció hace {{ -view.daysUntilExpiry }} días</span>
+
+    <!-- El aviso de divergencia NO es para el usuario final: dice qué guarda la fila. -->
+    <span class="certificate-list__diverges" *ngIf="view.diverges">
+      ⚠️ La fila guardada dice "{{ view.storedStatus }}" y el cálculo dice
+      "{{ view.status }}".
+    </span>
+  </li>
+</ul>

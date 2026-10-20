@@ -448,7 +448,7 @@ import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -526,6 +526,10 @@ type AutosaveState =
     MatInputModule,
     MatRadioModule,
     MatSnackBarModule,
+    // MatDialogModule no aporta directivas a la plantilla: está por el servicio
+    // MatDialog que el guard de salida usa. Sin él, la pantalla no abre:
+    // NullInjectorError: No provider for MatDialog (la trampa de la Fase 5).
+    MatDialogModule,
   ],
   templateUrl: './inspection-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

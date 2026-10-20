@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Las pruebas corren DENTRO del contenedor api, contra el postgres:16.9 del compose (be06 §5.3). -->
+<phpunit bootstrap="tests/bootstrap.php" colors="false" stopOnFailure="false">
+    <testsuites>
+        <testsuite name="certcore">
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

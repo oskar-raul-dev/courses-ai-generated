@@ -1,0 +1,5 @@
+panel  /legacy/templates: ["elevator-annual","boiler-annual"]
+pantalla /templates:      ["boiler-annual-v1","elevator-annual-v1","elevator-annual-v2"]
+## be-03: después de sql/seed-incidente-be-03.sql
+panel  /legacy/templates: ["boiler-annual","elevator-annual"]
+pantalla /templates:      ["boiler-annual-v1","elevator-annual-v1","elevator-annual-v2"]

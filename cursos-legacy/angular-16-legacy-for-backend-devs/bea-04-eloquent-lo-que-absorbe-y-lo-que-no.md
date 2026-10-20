@@ -33,7 +33,9 @@
 Todo lo demás de este apéndice depende de esto, y sin ello estarías suponiendo. Tres formas, de menos a más invasiva:
 
 ```php
-// 1. Sin ejecutar nada: qué SQL saldría. No necesita conexión.
+// 1. Sin ejecutar nada: qué SQL saldría. No necesita que la base esté arriba,
+//    pero sí Eloquent encendido (withEloquent(), desde be03) y la app arrancada:
+//    en be01 falla con "Call to a member function connection() on null".
 Template::active()->toSql();
 //   select * from "templates" where "valid_until" is null
 //   ⚠️ Muestra los marcadores, no los valores. Para los valores: ->getBindings()

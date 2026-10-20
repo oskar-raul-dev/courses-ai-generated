@@ -22,11 +22,11 @@ Durante diez fases le hablaste a `npm run mock`. En algún momento de be03 lo va
 ## ✅ 2. Qué queda listo al terminar
 
 - [ ] `CONTRACT.md` existe en la raíz del proyecto y documenta **los seis recursos y el login**, cada uno con su forma de petición y su forma de respuesta, capturadas del tráfico real.
-- [ ] `smoke.sh` existe, es ejecutable (`chmod +x`) y **pasa en verde contra `npm run mock`**. Su salida final es literalmente `OK: 24/24`.
+- [ ] `smoke.sh` existe, es ejecutable (`chmod +x`) y **pasa en verde contra `npm run mock`**. Su salida final es literalmente `OK: 26/26`.
 - [ ] `smoke.sh` **falla en rojo** si cambias a mano un solo campo del `db.json` — por ejemplo el `id` de una plantilla. Lo comprobaste y lo volviste a dejar bien con `npm run seed`.
 - [ ] La tabla del **dialecto de json-server** está escrita: qué parámetros de consulta usa de verdad el frontend de CertCore, cuáles existen pero nadie usa, y cuáles hay que reimplementar sí o sí.
 - [ ] Los **seis modos del inyector de caos** están inventariados con su vía de activación, incluido el que manipula el TTL del token.
-- [ ] `git diff fase-10-certificados-vigencia..HEAD -- src/` devuelve **vacío**. Es la comprobación que abre el track y la que vas a repetir al cerrar cada una de las ocho fases: el backend se adapta al contrato, nunca al revés.
+- [ ] `git diff fase-10..HEAD -- src/` devuelve **vacío**. Es la comprobación que abre el track y la que vas a repetir al cerrar cada una de las ocho fases: el backend se adapta al contrato, nunca al revés.
 - [ ] Sabes explicar, sin mirar, **por qué `certificates.status` es un campo guardado**, por qué el `id` de una plantilla es compuesto, y por qué `GET /inspections` devuelve el objeto entero.
 
 ---
@@ -49,7 +49,7 @@ La tentación, con `mock/` a un `cd` de distancia, es abrir `server.js` y transc
 
 Un servidor tiene siempre dos contratos. Está el que su código *podría* servir —todas las rutas que json-server expone automáticamente, todos los parámetros que acepta, todos los códigos que sabe devolver— y está el que el cliente *consume de verdad*, que es un subconjunto pequeño y caprichoso. Reimplementar el primero es meses de trabajo inútil. Reimplementar el segundo es be03.
 
-Y hay una asimetría que sólo se ve capturando: el frontend usa cosas que el mock nunca prometió. `GET /inspections/501/findings` funciona porque json-server genera rutas anidadas cuando una colección tiene un campo `<recurso>Id`. Nadie la diseñó. Nadie la documentó. El `FindingApiService` de la Fase 9 la usa, así que **es contrato**, con el mismo peso que si estuviera en un OpenAPI firmado.
+Y hay una asimetría que sólo se ve capturando: el frontend usa cosas que el mock nunca prometió, y el código promete cosas que el frontend nunca usa. `GET /findings?inspectionId=501` funciona porque json-server filtra por cualquier campo; nadie lo diseñó ni lo documentó, y el `FindingApiService` de la Fase 9 lo usa, así que **es contrato**, con el mismo peso que si estuviera en un OpenAPI firmado. Al revés, `GET /inspections/501/findings` también responde —json-server genera rutas anidadas cuando una colección tiene un campo `<recurso>Id`— y `InspectionApiService.getFindings()` la declara, pero **ningún componente la llama**. Leyendo el código parece contrato; capturando el tráfico se ve que no lo es.
 
 > 🧠 **Un contrato de facto pesa igual que uno de derecho, y es más difícil de encontrar** — porque nadie lo escribió, y porque el día que lo rompes el error no aparece en el servidor: aparece tres capas más allá, en un `*ngFor` que recibe `undefined`.
 
@@ -57,16 +57,16 @@ Y hay una asimetría que sólo se ve capturando: el frontend usa cosas que el mo
 
 Antes de escribir el contrato conviene saber de quién es. Está en [`00-historia-del-sistema.md`](00-historia-del-sistema.md), en la **Era 0 (2016-2018)**, y es el cimiento de todo el track:
 
-`certcore-api` **es de 2016**. Es anterior a la aplicación Angular, anterior a CertCore como producto, anterior a casi todo el que hoy trabaja en la empresa. La empresa certificaba ascensores y calderas antes de tener una sola pantalla: la operación vivía en hojas de cálculo y en una intranet PHP, y la API nació para que esa intranet dejara de escribir en el Excel compartido.
+`certcore-api` **es de 2016**. Es anterior a la aplicación Angular, anterior a CertCore como producto, anterior a casi todo el que hoy trabaja en la empresa. La empresa certificaba ascensores y calderas antes de tener una sola pantalla: la operación vivía en hojas de cálculo, y la hoja de vencimientos ya no daba: la API nació para digitalizar la emisión de certificados.
 
-Y el dato que ordena el track: **nadie la revisó nunca**. No hubo una decisión mala. Hubo una decisión buena en 2016 y ninguna decisión más durante ocho años.
+Y el dato que ordena el track: **nadie la revisó nunca**. No hubo una decisión mala. Hubo una decisión buena en 2016 y ninguna revisión durante ocho años. La única vez que alguien la miró con mandato fue en 2022, cuando Wilson Arévalo volvió por horas a organizar el área: abrió la API, reconoció su código de 2016, y escribió en el acta de entrega una línea que vas a encontrar citada: *«certcore-api funciona; no se toca sin un plan»*. Ese plan no llegó.
 
 Tres rarezas que arrastras desde la Fase 3 del track base, y que hoy por fin tienen explicación:
 
 | Lo que te pareció raro | De dónde viene |
 |---|---|
-| `GET /inspections` devuelve las inspecciones **enteras**, con todas sus respuestas, sin paginar | En 2016 había cuarenta inspecciones al año. Devolver el objeto completo era correcto y era más simple |
-| `certificates.status` está **guardado** como dato, pudiendo derivarse de `validUntil` | La intranet de 2016 no tenía dónde calcular nada al vuelo: lo que se mostraba tenía que estar en una columna |
+| `GET /inspections` devuelve las inspecciones **enteras**, con todas sus respuestas, sin paginar | En 2016 se certificaban unos cuatrocientos activos al año. Devolver el objeto completo era correcto y era más simple |
+| `certificates.status` está **guardado** como dato, pudiendo derivarse de `validUntil` | La API de 2016 no tenía dónde calcular nada al vuelo: lo que se mostraba tenía que estar en una columna |
 | El `id` de una plantilla es **compuesto** (`elevator-annual-v2`) con el identificador lógico aparte en `templateId` | Nadie lo diseñó. Alguien necesitó dos versiones de la misma plantilla, la clave primaria ya era el nombre, y concatenó |
 
 Las tres son la misma historia contada tres veces: **una decisión razonable en su momento, congelada por ausencia de revisión.** Ninguna es estupidez. Todas son deuda.
@@ -75,7 +75,7 @@ Las tres son la misma historia contada tres veces: **una decisión razonable en 
 
 El track te va a cobrar ocho facturas y conviene poner esto ahora, porque después de la tercera vas a querer decir que elegir Lumen fue una tontería. No lo fue.
 
-En 2016, una empresa mediana latinoamericana con dos personas que sabían PHP del intranet viejo y ninguna que supiera otra cosa, que necesitaba una API REST pequeña y rápida: Lumen era **la decisión sensata**. Era el microframework del ecosistema más grande del mundo PHP, arrancaba en milisegundos, no arrastraba la ceremonia de Laravel completo, y lo podía mantener la gente que ya estaba. El beneficio se cobró durante años, y en be07 vas a tener que ponerle un número a ese beneficio.
+En 2016, una empresa mediana latinoamericana sin programadores en planta, que necesitaba una API REST pequeña y rápida y no quería pagar licencias de Windows Server ni de SQL Server: Lumen era **la decisión sensata**. Era el microframework del ecosistema más grande del mundo PHP, arrancaba en milisegundos, no arrastraba la ceremonia de Laravel completo, y corría en cualquier hosting. El beneficio se cobró durante años, y en be07 vas a tener que ponerle un número a ese beneficio.
 
 > 🧭 **El pecado no fue elegirlo. Fue elegirlo para *un servicio*, acertar, y que nadie volviera a decidir nunca.** Una decisión correcta que no se revisa en ocho años deja de ser correcta sin que nadie lo note, porque nadie estaba mirando.
 
@@ -106,7 +106,7 @@ Seis recorridos, uno por recurso, con el mock limpio (`npm run seed && npm run m
 | Entrar con `inspector@certcore.co` | Fase 2 | `POST /auth/login` |
 | Abrir Clientes y entrar a uno | Fase 6 | `GET /clients`, `GET /clients/:id`, `GET /assets?clientId=:id` |
 | Abrir Plantillas y ver una versión | Fase 7 | `GET /templates`, `GET /templates?templateId=…&version=…` |
-| Abrir la inspección 501 y responder un ítem | Fases 8 y 9 | `GET /inspections/501`, `PATCH /inspections/501`, `GET /inspections/501/findings` |
+| Abrir la inspección 501 y responder un ítem | Fases 8 y 9 | `GET /inspections/501`, `PATCH /inspections/501`, `GET /findings?inspectionId=501` |
 | Abrir un certificado y descargarlo | Fase 10 | `GET /certificates`, `GET /certificates/:id` |
 | Abrir el panel | Fase 11 | las cuatro anteriores, en ráfaga cada minuto |
 
@@ -162,19 +162,19 @@ Repite esa ficha para `/clients`, `/assets`, `/templates`, `/inspections`, `/fin
 
 ### 5.3 El dialecto de json-server, medido
 
-json-server 0.17.4 acepta una cantidad enorme de parámetros. CertCore usa cuatro. Esta tabla es lo que be03 tiene que reimplementar, ni más ni menos:
+json-server 0.17.4 acepta una cantidad enorme de parámetros. CertCore usa seis. Esta tabla es lo que be03 tiene que reimplementar, ni más ni menos:
 
 | Forma | ¿La usa el frontend? | Dónde | Qué hay que hacer en be03 |
 |---|---|---|---|
 | `GET /recurso` | ✅ | los seis `*ApiService` | Reimplementar |
 | `GET /recurso/:id` | ✅ | detalles | Reimplementar |
-| `?campo=valor` (igualdad exacta) | ✅ | `assets?clientId=…`, `templates?templateId=…&version=…` | Reimplementar. **Varios parámetros se combinan con AND** |
-| `GET /inspections/:id/findings` (ruta anidada) | ✅ | `FindingApiService.getByInspection()` | Reimplementar. **Nadie la diseñó y es contrato** |
+| `?campo=valor` (igualdad exacta) | ✅ | `assets?clientId=…`, `templates?templateId=…&version=…`, `clients?taxId=…`, `findings?inspectionId=…`, `certificates?inspectionId=…` | Reimplementar. **Varios parámetros se combinan con AND** |
+| `GET /inspections/:id/findings` (ruta anidada) | ❌ | la declara `InspectionApiService.getFindings()`, pero nadie la llama | No hace falta para el frontend. Si se implementa, que sea a propósito |
 | `_page` / `_limit` + `X-Total-Count` | ❌ | — | **No implementar todavía.** Es la 💸 1 y se paga en be03, con el frontend intacto |
 | `_sort` / `_order` | ❌ | — | No implementar. Ojo: **no usarlo no significa que el orden dé igual** (ver trampa de `/templates`) |
 | `_embed` / `_expand` | ❌ | — | No implementar |
-| `q` (búsqueda de texto completo) | ❌ | el filtro de clientes es **en cliente**, sobre la lista ya cargada | No implementar |
-| `POST` / `PUT` / `PATCH` / `DELETE` | ✅ salvo `PUT` | `PATCH` en inspecciones y hallazgos; `POST` en clientes y plantillas | Reimplementar los tres usados |
+| `q` (búsqueda de texto completo) | ✅ | el buscador de clientes (`ClientApiService.search`, con `switchMap`) | Reimplementar. Busca en **todos** los campos: `q=900` también encuentra por NIT |
+| `POST` / `PUT` / `PATCH` / `DELETE` | ✅ los cuatro | `POST` en clientes, activos, plantillas y certificados; `PUT` en clientes, activos y el cierre de plantillas; `PATCH` en inspecciones, hallazgos y certificados; `DELETE` en clientes | Reimplementar los cuatro. **Ojo con `DELETE`:** json-server borra en cascada, y `DELETE /clients/3` se lleva también todas las plantillas y las cinco inspecciones. Eso no es contrato: es un efecto del mock |
 
 ```
 💸 DEUDA TÉCNICA INTENCIONAL — el contrato no tiene paginación
@@ -224,7 +224,7 @@ Este archivo es el entregable que más veces vas a ejecutar en todo el track. Co
 # lados que está juzgando.
 
 set -u   # una variable sin definir es un error; -e NO, porque queremos
-         # ejecutar las 24 comprobaciones aunque una falle.
+         # ejecutar las 26 comprobaciones aunque una falle.
 
 BASE_URL="${BASE_URL:-http://localhost:3000}"
 EMAIL="inspector@certcore.co"
@@ -303,11 +303,11 @@ check "?templateId=&version= devuelve una sola plantilla" "1" \
   "$(curl -s "${AUTH[@]}" "$BASE_URL/templates?templateId=elevator-annual&version=1" \
       | jq -r 'length')"
 
-# La ruta anidada que nadie diseñó y que la Fase 9 consume.
-check "la ruta anidada de hallazgos existe" "array" \
-  "$(curl -s "${AUTH[@]}" "$BASE_URL/inspections/503/findings" | jq -r 'type')"
+# El filtro que nadie diseñó y que la Fase 9 consume (FindingApiService).
+check "?inspectionId= filtra hallazgos" "array" \
+  "$(curl -s "${AUTH[@]}" "$BASE_URL/findings?inspectionId=503" | jq -r 'type')"
 check "y devuelve sólo los de esa inspección" "true" \
-  "$(curl -s "${AUTH[@]}" "$BASE_URL/inspections/503/findings" \
+  "$(curl -s "${AUTH[@]}" "$BASE_URL/findings?inspectionId=503" \
       | jq -r 'all(.[]; .inspectionId == 503)')"
 
 # Un recurso que no existe es 404, no 200 con cuerpo vacío.
@@ -382,7 +382,7 @@ exit 1
 ```
 
 **Detalles con intención**
-- **`set -u` sí, `set -e` no.** Con `-e`, la primera comprobación en rojo aborta el archivo y pierdes las veintitrés restantes. Un juez de contrato tiene que dar el informe completo: en be03 vas a querer ver las once que fallan a la vez, no la primera once veces.
+- **`set -u` sí, `set -e` no.** Con `-e`, la primera comprobación en rojo aborta el archivo y pierdes las veinticinco restantes. Un juez de contrato tiene que dar el informe completo: en be03 vas a querer ver las once que fallan a la vez, no la primera once veces.
 - **Sólo `curl` y `jq`.** El juez no puede depender de Node —que es el lado que va a desaparecer— ni de PHP —que es el que va a llegar—. Un árbitro que se va con uno de los dos equipos no es un árbitro.
 - **Cada comprobación nombra a quién protege.** `PATCH devuelve el objeto completo` lleva escrito que el autosave de la Fase 8 se apoya en eso. Dentro de tres fases, el comentario es la diferencia entre arreglar la causa y "ajustar el test".
 - **`jq -r 'type'` en vez de mirar el cuerpo.** Compara la **forma**, que es lo que el frontend consume, y no el contenido, que cambia en cuanto el alumno cree un cliente. Un `smoke.sh` que se rompe porque hiciste tu trabajo es un `smoke.sh` que vas a comentar.
@@ -392,17 +392,17 @@ exit 1
 
 **Prueba de fuego**
 
-Con el mock limpio, `./smoke.sh` tiene que imprimir `OK: 24/24`. Ahora rompe el contrato a mano:
+Con el mock limpio, `./smoke.sh` tiene que imprimir `OK: 26/26`. Ahora rompe el contrato a mano:
 
 ```bash
 # Cambia el id compuesto de la v2 por un entero, como haría cualquier ORM
 # que no supiera de esta rareza.
 sed -i '' 's/"elevator-annual-v2"/"7"/' mock/db.json
-./smoke.sh          # → FALLOS: 2 de 24
+./smoke.sh          # → FALLOS: 1 de 26
 npm run seed        # y lo devuelves
 ```
 
-**Dos** fallos, no uno: el `id` y el filtro `?templateId=&version=`, porque la fila dejó de encontrarse por su clave. Ésa es exactamente la cascada que vas a ver en be03 el día que las migraciones generen claves primarias enteras, y verla hoy —cuando todavía es un `sed`— es la mitad de esta fase.
+**Un** fallo, y lo interesante es el que **no** sale: el filtro `?templateId=&version=` sigue encontrando la fila, porque busca por esas dos columnas y no por el `id`. Quien sí se rompería es el cierre de versión de la Fase 7 —`PUT /templates/elevator-annual-v2`, que localiza la fila por su `id`—, y el `smoke.sh` no lo comprueba. Ésa es la cascada que vas a ver en be03 el día que las migraciones generen claves primarias enteras: no la del juez, la de la pantalla que nadie probó. Verla hoy —cuando todavía es un `sed`— es la mitad de esta fase.
 
 ---
 
@@ -465,7 +465,7 @@ La ruta es corta y son tres pasos:
 **🟡 Intermedio (8–16)**
 
 8. **Diagnóstico.** Con `CHAOS=latency CHAOS_DELAY_MS=8000`, corre `./smoke.sh` y mide cuánto tarda. Después añade `--max-time 3` a los `curl`. ¿Qué cambia en el informe, y qué decisión de diseño te obliga a tomar eso para be03?
-9. Documenta la ruta anidada `GET /inspections/:id/findings`: quién la llama, qué devuelve, y **por qué existe** aunque nadie la escribiera. Busca en `mock/server.js` la línea que la genera.
+9. Documenta la ruta anidada `GET /inspections/:id/findings`: quién la **declara**, qué devuelve, por qué existe aunque nadie la escribiera, y **por qué ningún componente la llama**. Busca en `mock/server.js` qué la genera y en `src/` quién usa `getFindings()`.
 10. **Diagnóstico.** Pide `GET /templates?version=1` sin `templateId`. ¿Cuántas filas devuelve y por qué? ¿Qué pasaría si el frontend hiciera esa llamada?
 11. Compara `GET /inspections` con `GET /inspections/500`. ¿La inspección viene igual en los dos? Documenta cualquier diferencia; si no la hay, escribe que no la hay — eso también es contrato.
 12. Escribe la tabla de §5.3 con tus propias mediciones, marcando cada fila como "usado" o "no usado" **con la evidencia**: el archivo del frontend y la línea.
@@ -519,7 +519,7 @@ La ruta es corta y son tres pasos:
 
 ## 🚀 9. Cierre y conexión con la siguiente fase
 
-Terminaste con dos archivos y ninguna línea de PHP, y ése era el trato. `CONTRACT.md` explica el porqué de cada campo; `smoke.sh` decide si un servidor cumple. Entre los dos definen, en el único sentido que importa, **qué significa que el backend nuevo funcione**: no que esté bien escrito, no que sea rápido, no que use el framework de moda — que `./smoke.sh` diga `OK: 24/24` y que la aplicación Angular no se entere de nada.
+Terminaste con dos archivos y ninguna línea de PHP, y ése era el trato. `CONTRACT.md` explica el porqué de cada campo; `smoke.sh` decide si un servidor cumple. Entre los dos definen, en el único sentido que importa, **qué significa que el backend nuevo funcione**: no que esté bien escrito, no que sea rápido, no que use el framework de moda — que `./smoke.sh` diga `OK: 26/26` y que la aplicación Angular no se entere de nada.
 
 **be01** es el paso natural porque ahora tienes contra qué escribir. Vas a levantar el monolito de 2016 —Lumen sobre PHP 7.4, con Composer y el contenedor congelado— y a descubrir, en carne propia, que la parte difícil no es PHP: es que **Lumen se parece a Laravel lo bastante como para que todo lo que sabes de Laravel te lleve al sitio equivocado con total confianza**. Ahí empieza la factura de verdad.
 
@@ -529,7 +529,7 @@ Terminaste con dos archivos y ninguna línea de PHP, y ése era el trato. `CONTR
 >
 > ```bash
 > git tag -a be-fase-00-el-contrato-auditoria-del-mock \
->   -m "be00 cerrada: CONTRACT.md con siete fichas; smoke.sh en OK: 24/24;
+>   -m "be00 cerrada: CONTRACT.md con siete fichas; smoke.sh en OK: 26/26;
 > dialecto de json-server medido; seis modos de caos inventariados;
 > las tres rarezas de la Era 0 explicadas"
 > ```

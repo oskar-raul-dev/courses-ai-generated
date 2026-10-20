@@ -1,0 +1,25 @@
+# k8s/kind-config.yaml
+# Comentarios en español, como todo el código del proyecto. Un manifiesto
+# también lo es.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    # ⚠️ ESTO HAY QUE PONERLO AL CREAR EL CLUSTER. No se puede añadir después:
+    # un cluster de kind es un contenedor, y los mapeos de puerto de un
+    # contenedor se fijan al crearlo. Si creas el cluster sin esto y descubres
+    # más tarde que el Ingress no responde, la única salida es
+    # `kind delete cluster` y volver a empezar.
+    #
+    # Es el tropiezo número dos de esta fase, y va aquí arriba precisamente
+    # para que no te pase.
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP

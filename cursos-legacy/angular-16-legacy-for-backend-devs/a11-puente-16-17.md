@@ -10,7 +10,7 @@ Casi siempre es lo primero. Y saberlo también te permite decir en una reunión,
 
 **Qué queda fuera:** el procedimiento de migración paso a paso, y **cualquier recomendación de migrar**. Este curso enseña a mantener, no a modernizar. La decisión de llevar CertCore más allá de la 16 no es técnica y no se toma leyendo un apéndice.
 
-> ⚠️ **En Angular 16 los signals existen y son experimentales.** CertCore no los usa: aquí se leen, no se adoptan. La decisión está cerrada en `alcance-del-proyecto.md` §13 y ninguna fase la contradice.
+> ⚠️ **En Angular 16 los signals existen y son experimentales.** CertCore no los usa: aquí se leen, no se adoptan. La decisión está cerrada para este curso y ninguna fase la contradice.
 
 ---
 
@@ -164,7 +164,7 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-Esto **ya existe en Angular 16** —de hecho la Fase 0 arranca así, antes de que la Fase 1 traiga la herencia— y por eso es la parte del futuro que menos te va a sorprender. Lo que cambia después de la 17 es que deja de ser una alternativa y pasa a ser lo que el CLI genera por defecto y lo que la documentación asume.
+Esto **ya existe en Angular 16** —la Fase 0 lo muestra junto a la forma heredada, y la Fase 1 explica por qué CertCore sigue con la suya— y por eso es la parte del futuro que menos te va a sorprender. Lo que cambia después de la 17 es que deja de ser una alternativa y pasa a ser lo que el CLI genera por defecto y lo que la documentación asume.
 
 `withComponentInputBinding()` merece una mención: hace que los parámetros de la ruta lleguen directamente como `@Input` del componente, y elimina la mitad del código que la **Fase 8** escribe para derivar el formulario de la ruta. Es de los añadidos que más gustan y menos se conocen.
 

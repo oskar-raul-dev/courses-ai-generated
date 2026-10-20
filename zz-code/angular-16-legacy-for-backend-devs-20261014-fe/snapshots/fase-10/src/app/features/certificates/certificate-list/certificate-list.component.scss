@@ -1,0 +1,29 @@
+/* Estilo mínimo de la lista de certificados: la lección 10 no lo da. */
+.certificate-list {
+  list-style: none;
+  padding: 0;
+}
+
+.certificate-list__item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.chip {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.chip--valid { background: #e8f5e9; }
+.chip--expiring { background: #fff8e1; }
+.chip--expired { background: #ffebee; }
+.chip--revoked { background: #eceff1; }
+
+.certificate-list__diverges {
+  color: #b26a00;
+}

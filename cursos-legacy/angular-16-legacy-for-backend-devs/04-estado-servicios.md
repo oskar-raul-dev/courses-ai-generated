@@ -170,7 +170,7 @@ export function createInitialState<T>(): FeatureState<T> {
 ```ts
 // src/app/core/state/template-state.service.ts
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, distinctUntilChanged, filter, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, distinctUntilChanged, filter, map, shareReplay } from 'rxjs';
 
 import { TemplateApiService } from '../api/template-api.service';
 import { ApiError } from '../api/api-error';
@@ -192,6 +192,9 @@ export class TemplateStateService {
   private readonly stateSubject = new BehaviorSubject<FeatureState<ChecklistTemplate>>(
     createInitialState<ChecklistTemplate>(),
   );
+
+  /** La petición de load() en curso, para poder cancelarla. */
+  private loading?: Subscription;
 
   /** Sólo lectura. Sin asObservable(), cualquiera podría hacerle next(). */
   readonly state$: Observable<FeatureState<ChecklistTemplate>> = this.stateSubject.asObservable();
@@ -221,11 +224,15 @@ export class TemplateStateService {
   load(): void {
     this.patch({ loading: true, error: null });
 
-    // Suscripción a pelo, y aquí también está bien: un observable de HttpClient
-    // completa por su cuenta en cuanto llega la respuesta, así que no queda
-    // nada abierto. Compáralo con la suscripción del componente de la sección
-    // 6, que nunca completa — ésa sí es una fuga.
-    this.templateApi.getAll().subscribe({
+    // Un observable de HttpClient completa por su cuenta en cuanto llega la
+    // respuesta, así que no queda nada abierto: no es una fuga (compáralo con la
+    // suscripción del componente de la sección 6, que nunca completa). Pero se
+    // GUARDA, por otra razón: si alguien cierra sesión con esta petición en
+    // vuelo, la respuesta llega después del reset() y vuelve a llenar el estado
+    // con los datos del usuario anterior. Medido en navegador: el siguiente
+    // usuario veía la lista del anterior. Cancelarla en reset() lo cierra.
+    this.loading?.unsubscribe();
+    this.loading = this.templateApi.getAll().subscribe({
       next: (templates) => {
         // [...templates] porque lo que llega es readonly y lo que guardamos no.
         // Esa copia parece responsable y sólo protege la mitad del camino: el
@@ -249,6 +256,7 @@ export class TemplateStateService {
   }
 
   reset(): void {
+    this.loading?.unsubscribe();
     this.stateSubject.next(createInitialState<ChecklistTemplate>());
   }
 

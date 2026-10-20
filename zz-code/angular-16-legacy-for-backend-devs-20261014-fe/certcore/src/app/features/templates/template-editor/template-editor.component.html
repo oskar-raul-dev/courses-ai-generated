@@ -1,0 +1,73 @@
+<!-- src/app/features/templates/template-editor/template-editor.component.html -->
+<!-- La lección 07 no da esta plantilla: se escribe aquí con los controles que el
+     componente declara. Ver la corrección de ngOnInit en el componente. -->
+<h2>Nueva versión de {{ templateId }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="template-editor">
+  <mat-form-field appearance="outline">
+    <mat-label>Vigente desde</mat-label>
+    <input matInput formControlName="validFrom" placeholder="AAAA-MM-DD" />
+    <mat-error *ngIf="form.controls.validFrom.hasError('pattern')">
+      Escribe la fecha como AAAA-MM-DD.
+    </mat-error>
+  </mat-form-field>
+
+  <p class="template-editor-hint">
+    La versión anterior se cierra el día antes. Los ítems se copian de la última versión: edítalos aquí,
+    la versión anterior no cambia.
+  </p>
+
+  <div formArrayName="items">
+    <div *ngFor="let item of form.controls.items.controls; let i = index" [formGroupName]="i" class="item-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Identificador</mat-label>
+        <input matInput formControlName="id" />
+        <mat-error *ngIf="item.controls.id.hasError('pattern')">Minúsculas, números y guiones.</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Título</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Criterios (separados por comas)</mat-label>
+        <input matInput formControlName="criteria" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Severidad si no cumple</mat-label>
+        <mat-select formControlName="nonComplianceSeverity">
+          <mat-option *ngFor="let severity of severities" [value]="severity">{{ severity }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="photoRequired">Foto obligatoria</mat-checkbox>
+
+      <button mat-icon-button type="button" (click)="moveItem(i, -1)" aria-label="Subir">
+        <mat-icon>arrow_upward</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="moveItem(i, 1)" aria-label="Bajar">
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="removeItem(i)" aria-label="Quitar ítem">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <p class="template-editor-error" *ngIf="form.controls.items.hasError('duplicatedItemIds')">
+    Hay identificadores de ítem repetidos. Cada ítem necesita uno propio.
+  </p>
+
+  <div class="template-editor-actions">
+    <button mat-button type="button" (click)="addItem()">
+      <mat-icon>add</mat-icon>
+      Añadir ítem
+    </button>
+    <a mat-button [routerLink]="['/templates', templateId]">Cancelar</a>
+    <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+      {{ submitting ? 'Publicando…' : 'Publicar versión' }}
+    </button>
+  </div>
+</form>

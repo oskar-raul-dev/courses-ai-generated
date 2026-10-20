@@ -1,0 +1,13 @@
+# k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: certcore-config
+data:
+  # Los mismos dos valores que la Fase 13 pasaba con `-e`, exactamente con los
+  # mismos nombres, porque los lee el mismo `entrypoint.sh`.
+  #
+  # `/api` porque el nginx de dentro de la imagen reenvía esa ruta al Service
+  # `certcore-mock`. Ni una línea de la imagen cambió para que esto funcione.
+  ENVIRONMENT_NAME: "UAT"
+  API_BASE_URL: "/api"

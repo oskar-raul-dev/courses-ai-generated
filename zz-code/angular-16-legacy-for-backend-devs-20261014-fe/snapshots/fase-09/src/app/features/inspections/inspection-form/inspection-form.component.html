@@ -1,0 +1,86 @@
+<!-- src/app/features/inspections/inspection-form/inspection-form.component.html -->
+<ng-container *ngIf="view$ | async as view">
+  <header class="inspection-header">
+    <h2>Inspección {{ view.inspection.id }} · {{ view.inspection.assetId }}</h2>
+    <!-- Que la versión esté SIEMPRE a la vista no es decoración: es lo primero
+         que se pregunta cualquiera que abra un ticket sobre esta pantalla. -->
+    <p>
+      Plantilla {{ view.template.templateId }}
+      <strong>v{{ view.template.version }}</strong>
+      · iniciada el {{ view.inspection.startedAt }}
+    </p>
+
+    <ng-container *ngIf="autosave$ | async as autosave">
+      <!-- Cuatro *ngIf y no un ngSwitch: NgSwitch son tres directivas más que
+           importar en el decorador para ahorrar dos líneas. En un standalone,
+           cada import se paga. -->
+      <span class="autosave" [class.autosave-failed]="autosave.status === 'failed'">
+        <span *ngIf="autosave.status === 'pending'">Cambios sin guardar…</span>
+        <span *ngIf="autosave.status === 'saving'">Guardando…</span>
+        <span *ngIf="autosave.status === 'saved'">Guardado a las {{ autosave.at }}</span>
+        <span *ngIf="autosave.status === 'failed'">{{ autosave.message }}</span>
+      </span>
+    </ng-container>
+  </header>
+
+  <!-- El formulario entero es el FormRecord. Cada bloque se ata a su control
+       por el itemId, que es el mismo que la clave. -->
+  <form [formGroup]="view.form">
+    <section class="checklist-item" *ngFor="let item of view.template.items">
+      <!-- formGroupName con un valor dinámico: la clave la trae el dato. Es
+           exactamente lo que un FormGroup escrito a mano no puede hacer. -->
+      <fieldset [formGroupName]="item.id">
+        <legend>
+          {{ item.title }}
+          <span *ngIf="item.photoRequired" class="checklist-item-photo">· requiere evidencia</span>
+        </legend>
+
+        <mat-radio-group formControlName="answer">
+          <mat-radio-button *ngFor="let criterion of item.criteria" [value]="criterion">
+            {{ criterionLabel(criterion) }}
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Evidencia (ruta del archivo)</mat-label>
+          <input matInput formControlName="evidenceUrl" placeholder="assets/evidence/…" />
+          <mat-error *ngIf="view.form.get([item.id, 'evidenceUrl'])?.hasError('required')">
+            Este ítem exige evidencia fotográfica.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Observación</mat-label>
+          <textarea matInput formControlName="note" rows="2"></textarea>
+        </mat-form-field>
+      </fieldset>
+    </section>
+  </form>
+
+  <!-- Las respuestas huérfanas, aparte y en sólo lectura. No se borran: la
+       decisión es de la Fase 7 y aquí se cumple. -->
+  <section class="orphan-answers" *ngIf="view.orphans.length > 0">
+    <h3>Respuestas de ítems retirados</h3>
+    <p>
+      Estas respuestas se registraron con un ítem que ya no forma parte de esta
+      versión de la plantilla. Se conservan como evidencia y no se pueden editar.
+    </p>
+    <ul>
+      <li *ngFor="let orphan of view.orphans">
+        <strong>{{ orphan.itemId }}</strong> · {{ criterionLabel(orphan.answer) }}
+      </li>
+    </ul>
+  </section>
+
+  <footer *ngIf="progress$ | async as progress">
+    <span>{{ progress.answered }} de {{ progress.total }} ítems respondidos</span>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!progress.canComplete"
+      (click)="complete(view, progress)"
+    >
+      Completar inspección
+    </button>
+  </footer>
+</ng-container>

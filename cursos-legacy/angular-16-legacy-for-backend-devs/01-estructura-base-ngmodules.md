@@ -2,7 +2,7 @@
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · Fase 1 de 14 · **8 horas**
 > Depende de: Fase 0 (setup + hola mundo standalone) · Habilita: Fases 2 a 13
-> Apéndices de apoyo: [A01 (Angular Material 16)](a01-material.md) · [A04 (`inject()](a04-inject-vs-constructor.md)` vs constructor)
+> Apéndices de apoyo: [A01 (Angular Material 16)](a01-material.md) · [A04 (`inject()` vs constructor)](a04-inject-vs-constructor.md)
 > [Incidentes asociados](cuaderno-incidentes.md): 02
 > Estilo de esta fase: **heredado** (NgModule + `constructor`)
 
@@ -871,7 +871,7 @@ Antes de escribir código: la guía de NgModules y la de tipos de módulo, que j
 
 ## 🚀 9. Cierre y conexión con la siguiente fase
 
-Tienes el esqueleto de CertCore: once módulos, seis features que se descargan solas, un layout que se ve, un 404 que funciona, configuración por ambiente y una deuda 💸 con fecha de cobro. Y tienes algo menos visible y más importante: sabes leer un `NgModule` y decir en diez segundos qué declara, qué necesita, qué presta y qué provee.
+Tienes el esqueleto de CertCore: diez módulos, seis features que se descargan solas, un layout que se ve, un 404 que funciona, configuración por ambiente y una deuda 💸 con fecha de cobro. Y tienes algo menos visible y más importante: sabes leer un `NgModule` y decir en diez segundos qué declara, qué necesita, qué presta y qué provee.
 
 La **Fase 2** trae la autenticación, y con ella **el primer punto de contacto entre las dos generaciones** 🧬. Un `authGuard` funcional —una función, sin clase ni decorador— protegiendo rutas declaradas en estos módulos. Un `authInterceptor` funcional conviviendo con el registro de interceptores de clase. Ahí vas a ver por primera vez las dos épocas de CertCore tocándose en el mismo árbol de archivos, y vas a entender por qué la regla del proyecto existe.
 

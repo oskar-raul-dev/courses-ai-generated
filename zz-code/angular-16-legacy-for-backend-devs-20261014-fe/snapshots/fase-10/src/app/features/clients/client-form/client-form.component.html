@@ -1,0 +1,39 @@
+<!-- src/app/features/clients/client-form/client-form.component.html -->
+<h2>{{ isEdit ? 'Editar cliente' : 'Nuevo cliente' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="client-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Razón social</mat-label>
+    <input matInput formControlName="legalName" autocomplete="organization" />
+    <!-- Los mat-error van DENTRO del mat-form-field. Fuera no se pintan, y no
+         avisa nadie: es el error de MDC que más se repite. -->
+    <mat-error *ngIf="form.controls.legalName.hasError('required')">
+      La razón social es obligatoria.
+    </mat-error>
+    <mat-error *ngIf="form.controls.legalName.hasError('minlength')">
+      Debe tener al menos 3 caracteres.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>NIT</mat-label>
+    <input matInput formControlName="taxId" inputmode="numeric" />
+    <mat-hint *ngIf="form.controls.taxId.pending">Verificando el NIT…</mat-hint>
+    <mat-error *ngIf="form.controls.taxId.hasError('required')">
+      El NIT es obligatorio.
+    </mat-error>
+    <mat-error *ngIf="form.controls.taxId.hasError('pattern')">
+      El NIT son 9 o 10 dígitos, sin puntos ni guiones.
+    </mat-error>
+    <mat-error *ngIf="form.controls.taxId.hasError('taxIdTaken')">
+      Ya existe un cliente con este NIT.
+    </mat-error>
+  </mat-form-field>
+
+  <div class="client-form-actions">
+    <a mat-button routerLink="/clients">Cancelar</a>
+    <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+      {{ submitting ? 'Guardando…' : 'Guardar' }}
+    </button>
+  </div>
+</form>

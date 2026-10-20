@@ -1,0 +1,37 @@
+<!-- src/app/features/inspections/inspection-start/inspection-start.component.html -->
+<h2>Empezar una inspección</h2>
+
+<mat-form-field appearance="outline">
+  <mat-label>Activo</mat-label>
+  <mat-select [formControl]="assetControl">
+    <mat-option *ngFor="let asset of assets$ | async" [value]="asset.id">
+      {{ asset.id }} · {{ asset.description }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<ng-container *ngIf="resolution$ | async as resolution">
+  <p *ngIf="resolution.status === 'resolved'">
+    Se usará la <strong>v{{ resolution.template.version }}</strong> de
+    {{ resolution.template.templateId }}, vigente hoy ({{ today }}).
+  </p>
+
+  <p *ngIf="resolution.status === 'none'" class="resolution-none">
+    No hay plantilla vigente hoy ({{ today }}) para este tipo de activo. Revisa las fechas de las versiones.
+  </p>
+
+  <p *ngIf="resolution.status === 'ambiguous'" class="resolution-ambiguous">
+    Hay {{ resolution.candidates.length }} versiones vigentes hoy. El sistema no elige: hay que corregir las fechas.
+  </p>
+
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="resolution.status !== 'resolved'"
+    (click)="start(resolution)"
+  >
+    Empezar inspección
+  </button>
+</ng-container>
+
+<a mat-button routerLink="/inspections">Volver al listado</a>

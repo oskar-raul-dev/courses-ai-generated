@@ -1,0 +1,38 @@
+<!-- src/app/features/certificates/certificate-detail/certificate-detail.component.html -->
+<ng-container *ngIf="view$ | async as view; else notFound">
+  <h2>Certificado {{ view.certificate.id }}</h2>
+
+  <p>
+    Estado: <strong>{{ statusLabel(view.status) }}</strong>
+    · Vigente del {{ view.validity.from | date: 'dd/MM/yyyy' }} al {{ view.validity.until | date: 'dd/MM/yyyy' }}
+  </p>
+
+  <p *ngIf="view.diverges">
+    ⚠️ La fila guardada dice "{{ view.storedStatus }}" y el cálculo dice "{{ view.status }}".
+  </p>
+
+  <!-- Renovar no es un flujo: es empezar otra inspección a tiempo. -->
+  <p *ngIf="view.status === 'expiring' || view.status === 'expired'">
+    Renueva antes del {{ view.renewalDueOn | date: 'dd/MM/yyyy' }}.
+    <!-- Ruta de inicio de inspección de la Fase 8 (`start`). -->
+    <a [routerLink]="['/inspections', 'start']">Programar la inspección de renovación</a>
+  </p>
+
+  <div class="certificate-actions">
+    <button mat-raised-button color="primary" (click)="download(view.certificate.id)">
+      Descargar PDF
+    </button>
+    <button
+      mat-stroked-button
+      color="warn"
+      *ngIf="view.certificate.revokedAt === null"
+      (click)="revoke(view)"
+    >
+      Revocar
+    </button>
+  </div>
+</ng-container>
+
+<ng-template #notFound>
+  <p>No existe un certificado con ese identificador.</p>
+</ng-template>

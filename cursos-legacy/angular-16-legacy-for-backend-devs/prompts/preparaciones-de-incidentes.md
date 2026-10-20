@@ -12,17 +12,17 @@ exactamente la respuesta que el estudiante tiene que encontrar por su cuenta.
 **Por qué existe.** La §4 de
 [`formato-cuaderno-incidentes.md`](formato-cuaderno-incidentes.md) define **cómo**
 llega el sistema roto a la máquina del estudiante —un flag del caos, un
-`mock/db.incidente-NN.json`, o una rama `incidente/NN`—, y los veinte enunciados
+`mock/db.incidente-NN.json`, o una rama `incidente/NN`—, y los veintidós enunciados
 usan ese mecanismo. Lo que no estaba escrito en ninguna parte era **el
 contenido**: qué línea rompe cada rama y qué registros cambia cada archivo de
-datos. Sin eso, dieciocho de los veinte incidentes se quedaban en la línea del
+datos. Sin eso, diecinueve de los veintidós incidentes se quedaban en la línea del
 `git switch` o del `cp`.
 
 **Quién lo aplica.** El curso se trabaja sin instructor, así que hay dos formas y
 las dos son legítimas:
 
 - **El estudiante, antes de empezar el mes.** Prepara las dieciséis ramas y los
-  dos archivos de datos de una sentada, sin leer las secciones *"Qué se rompe"*
+  tres archivos de datos de una sentada, sin leer las secciones *"Qué se rompe"*
   más allá de lo necesario para aplicarlas, y no vuelve a abrir este archivo. Es
   menos limpio de lo que parece —vas a ver el diff— pero funciona sorprendentemente
   bien: un mes después, en medio de un ticket vago, nadie se acuerda de qué línea
@@ -38,7 +38,7 @@ las dos son legítimas:
 - [1. Cómo se usa este documento](#1-cómo-se-usa-este-documento)
 - [2. Mapa: qué necesita cada incidente](#2-mapa-qué-necesita-cada-incidente)
 - [3. Las dieciséis ramas](#3-las-dieciséis-ramas)
-- [4. Los dos `mock/db.incidente-NN.json`](#4-los-dos-mockdbincidente-nnjson)
+- [4. Los tres `mock/db.incidente-NN.json`](#4-los-tres-mockdbincidente-nnjson)
 - [5. Las dos que sólo necesitan un flag](#5-las-dos-que-sólo-necesitan-un-flag)
 - [6. Verificar que la preparación sirve](#6-verificar-que-la-preparación-sirve)
 - [⚠️ Advertencias](#️-advertencias)
@@ -68,7 +68,7 @@ cambiado, un `import` que falta. Hay **una sola excepción declarada** —el
 incidente 02, que añade archivos— y está explicada en su receta.
 
 > 🧭 **Y la regla que ordena las tres formas:** se usa siempre la más barata que
-> sirva. Dieciséis ramas frente a dos archivos de datos y dos flags no es un
+> sirva. Dieciséis ramas frente a tres archivos de datos y dos flags no es un
 > desequilibrio: es lo que sale cuando la mayoría de los bugs de una SPA en
 > mantenimiento están en el código y no en la red ni en el dato.
 
@@ -96,8 +96,10 @@ incidente 02, que añade archivos— y está explicada en su receta.
 | 16 | 11 | rama `incidente/16` | el `interval` que sobrevive al componente |
 | 17 | 12 | rama `incidente/17` | el `localStorage` que no limpia nadie |
 | 18 | 13 | rama `incidente/18` | el `max-age` de un año sobre el `index.html` |
-| 19 | 13 | rama `incidente/19` | el `chmod +x` que falta |
+| 19 | 13 | rama `incidente/19` | el `PRD` que el `entrypoint.sh` escribe sin mirar |
 | 20 | 12 | rama `incidente/20` | el `toBeTruthy()` y el suelo global |
+| 21 | 10 | **dato** `db.incidente-21.json` | la caldera de Galápagos sin `timeZone` |
+| 22 | 6 | **ninguna** | la semilla basta: el formulario de la Fase 6 ya rechaza un RUC |
 
 Las ramas se crean todas igual y no hace falta buscar ningún commit: salen del tag
 que el estudiante puso al cerrar la fase.
@@ -279,12 +281,13 @@ del ticket— y el botón "Nuevo cliente" sale gris y plano. Inspecciónalo:
 **Qué se toca:** el panel, para que embeba el listado.
 
 ```ts
-// src/app/features/dashboard/dashboard.component.ts
-imports: [/* …lo que ya tenía… */, ClientListComponent],
+// src/app/features/dashboard/dashboard.module.ts — el panel es el heredado
+// DashboardHomeComponent, declarado aquí; el standalone entra por `imports`.
+imports: [SharedModule, DashboardRoutingModule, ClientListComponent],
 ```
 
 ```html
-<!-- src/app/features/dashboard/dashboard.component.html -->
+<!-- src/app/features/dashboard/dashboard-home/dashboard-home.component.html -->
 <cc-client-list></cc-client-list>
 ```
 
@@ -537,10 +540,12 @@ camino de un correo.
 **Qué se toca:** `src/app/core/domain/certificate-status.ts`.
 
 ```diff
--  const expired = isAfterBusinessDay(nowInstant(), certificate.validUntil);
+-  if (isPast(certificate.validUntil, now)) {
 +  // Dos slice(0, 10) que parecen la misma operación y no lo son: el primero
 +  // recorta el día LOCAL del dato, el segundo el día en UTC.
-+  const expired = certificate.validUntil.slice(0, 10) < new Date().toISOString().slice(0, 10);
++  if (certificate.validUntil.slice(0, 10) < new Date().toISOString().slice(0, 10)) {
+     return 'expired';
+   }
 ```
 
 **Qué se rompe.** En Bogotá (`-05:00`), a partir de las **19:00** locales el día en
@@ -570,80 +575,106 @@ new Date().toISOString().slice(0, 10);                  // el día en UTC
 ### `incidente/16` — la suscripción que sobrevive a su dueño
 
 **De dónde sale:** `fase-11`.
-**Qué se toca:** `src/app/features/dashboard/dashboard.component.ts`.
+**Qué se toca:** `src/app/features/dashboard/dashboard-home/dashboard-home.component.ts`.
 
 El latido de la Fase 11 vive dentro de `DashboardMetricsService.metrics$` y muere
 con la suscripción del `async`. La rama añade **un segundo refresco**, imperativo,
-del tipo que aparece siempre con la excusa de *"para que el gráfico se actualice
-aunque el `async` no emita"*:
+en el cascarón heredado y en su estilo —constructor, sin `inject()`—, del tipo que
+aparece siempre con la excusa de *"para que la lista esté fresca aunque el `async`
+no emita"*:
 
 ```ts
-private readonly dashboardState = inject(DashboardStateService);
+import { Component, OnInit } from '@angular/core';
+import { Observable, interval } from 'rxjs';
+// …DASHBOARD_REFRESH_MS e InspectionStateService importados…
 
-ngOnInit(): void {
-  // `interval` NO completa nunca. Este componente sí se destruye.
-  interval(60_000)
-    .pipe(switchMap(() => this.dashboardState.reload()))
-    .subscribe();
+export class DashboardHomeComponent implements OnInit {
+  constructor(
+    private readonly dashboardMetrics: DashboardMetricsService,
+    private readonly inspectionState: InspectionStateService,
+  ) {
+    this.metrics$ = this.dashboardMetrics.metrics$;
+  }
+
+  ngOnInit(): void {
+    interval(DASHBOARD_REFRESH_MS).subscribe(() => this.inspectionState.load());
+  }
 }
 ```
 
-Sin `takeUntilDestroyed`, sin `DestroyRef`, sin `ngOnDestroy`.
+Sin `ngOnDestroy`, sin `takeUntilDestroyed`, sin `DestroyRef`.
 
 **Qué se rompe.** Cada visita al panel deja un `interval` corriendo, y con él un
 componente que el recolector de basura no puede liberar. Cinco visitas, cinco
-refrescos por minuto, para siempre.
+`load()` por minuto, para siempre.
 
-**Cómo comprobarlo.** Entra al panel cinco veces, sal a otra pantalla y **deja
-Network abierto dos minutos**:
+**Cómo comprobarlo.** Entra al panel cinco veces, sal a `/clients` y **deja
+Network abierto dos minutos**. Medido en el laboratorio del curso:
 
 ```
-certificates   200   xhr   14 ms
-inspections    200   xhr   22 ms
-certificates   200   xhr   11 ms
-…cinco pares por minuto, desde fuera del panel
+inspections    200   xhr
+inspections    200   xhr
+…diez en dos minutos, desde fuera del panel, y ninguna otra colección
 ```
+
+El spec de regresión del cuaderno da *"Expected 4 to be 1."* en esta rama y pasa
+en `fase-11`.
 
 ---
 
 ### `incidente/17` — el test que necesita que otro haya corrido antes
 
 **De dónde sale:** `fase-12`.
-**Qué se toca:** dos specs, y ninguno de los dos parece tener nada malo.
+**Qué se toca:** dos specs nuevos, y ninguno de los dos parece tener nada malo.
 
-```diff
- // src/app/core/auth.service.spec.ts
--  afterEach(() => {
--    localStorage.clear();
--  });
+```ts
+// src/app/core/auth.service.spec.ts — NUEVO. HttpClientTestingModule y el
+// AuthService real. Sin afterEach: el token se queda en localStorage.
+export const VALID_TOKEN = '<un JWT con exp en 2100; la firma no se comprueba>';
+
+it('guarda el token al iniciar sesión', () => {
+  service.login({ email: 'inspector@certcore.co', password: 'certcore123' }).subscribe();
+  httpMock.expectOne(`${environment.apiBaseUrl}/auth/login`).flush({ accessToken: VALID_TOKEN });
+
+  expect(localStorage.getItem('certcore.accessToken')).toBe(VALID_TOKEN);
+});
 ```
 
 ```ts
-// src/app/core/auth.guard.spec.ts — se deja EXACTAMENTE así: sin setup que
-// garantice que no hay sesión. Es la mitad del bug y la que nadie mira.
-it('redirige al login cuando no hay sesión', () => {
-  expect(authGuard(route, state)).toBeInstanceOf(UrlTree);
+// src/app/core/guards/auth.guard.spec.ts — se AÑADE un segundo describe, y se
+// deja EXACTAMENTE así: sin setup que garantice que no hay sesión. Es la mitad
+// del bug y la que nadie mira. El describe de la Fase 12, con el doble de
+// AuthService, no se toca: es inmune porque no lee localStorage.
+describe('authGuard con el AuthService real', () => {
+  beforeEach(() => TestBed.configureTestingModule({ imports: [HttpClientTestingModule] }));
+
+  it('redirige al login cuando no hay sesión', () => {
+    expect(TestBed.runInInjectionContext(() => authGuard(route, state))).toBeInstanceOf(UrlTree);
+  });
 });
 ```
 
 **Qué se rompe.** `TestBed.resetTestingModule()` reconstruye el inyector entre
-tests y **no toca `localStorage`**, que vive fuera de Angular. Si el spec del
-servicio corre antes que el del guard, el guard encuentra una sesión válida,
-devuelve `true`, y el test falla.
+tests y **no toca `localStorage`**, que vive fuera de Angular. El `AuthService`
+real lee el token al construirse: si el spec del servicio corre antes que el del
+guard, el guard encuentra una sesión válida, devuelve `true`, y el test falla.
 
 **Cómo comprobarlo.** Con `random: true` en el `karma.conf.js` —que la Fase 12 ya
-dejó puesto— corre la suite cinco veces y anota las semillas:
+dejó puesto— corre `npm run test:ci` cinco o seis veces y anota las semillas.
+Medido en el laboratorio del curso: fallaron dos de seis.
 
 ```
-Randomized with seed 47291 → 128 of 128 SUCCESS
-Randomized with seed 83104 → 128 of 128 (1 FAILED)
-    AuthGuard ✗ redirige al login cuando no hay sesión
-      Expected UrlTree to be true.
+Semilla de Jasmine: 45294 → 37 of 37 SUCCESS
+Semilla de Jasmine: 71897 → 37 of 37 (1 FAILED)
+    authGuard con el AuthService real ✗ redirige al login cuando no hay sesión
+      Expected instance of Boolean to be an instance of UrlTree.
 ```
 
-Si no falla ninguna vez, fuerza el orden con `ng test --seed=<n>` hasta dar con
-una que ponga el spec del servicio primero, y **anota esa semilla en la rama**: es
-lo único que garantiza que el estudiante pueda reproducirlo.
+Si no falla ninguna vez, prueba semillas con `JASMINE_SEED=<n> npm run test:ci`
+hasta dar con una que ponga el spec del servicio primero, y **anota esa semilla
+en la rama**: es lo único que garantiza que el estudiante pueda reproducirlo. Con
+`npm test` (modo `--watch`) no hace falta buscar: desde la segunda recarga falla
+siempre, porque el Chrome es el mismo y el token de la anterior sigue ahí.
 
 > ⚠️ No pongas `random: false` para "asegurar" la preparación. Eso convierte un
 > test que avisa en un test que miente, y es exactamente la reacción que el
@@ -657,6 +688,10 @@ lo único que garantiza que el estudiante pueda reproducirlo.
 **Qué se toca:** `nginx.conf`.
 
 ```diff
+-location / {
+-    try_files $uri $uri/ /index.html;
+-}
+-
 -location ~* \.(js|css|woff2?)$ {
 -    expires 1y;
 -    add_header Cache-Control "public, immutable";
@@ -684,107 +719,114 @@ de cada usuario conserva el de la última visita, que referencia los bundles de 
 versión — **que siguen existiendo, porque un despliegue no borra nada**. Esos
 usuarios ejecutan la aplicación de ayer, completa y sin un solo error.
 
-**Cómo comprobarlo.**
+**Cómo comprobarlo.** Con la red y el mock de la Fase 13 §5.7 levantados —sin
+ellos nginx no arranca—:
 
 ```bash
 docker build -t certcore:inc18 .
-docker run --rm -d --name certcore-inc18 -p 8080:80 certcore:inc18
+docker run --rm -d --name certcore-inc18 --network certcore-net -p 8080:80 certcore:inc18
 curl -I http://localhost:8080/ | grep -i cache
+# Cache-Control: max-age=31536000
 # Cache-Control: public, max-age=31536000     ← sobre el index.html
 ```
 
-Y el síntoma completo, que necesita dos despliegues: abre la aplicación **sin**
-*Disable cache*, reconstruye la imagen con cualquier cambio visible, recarga, y no
-verás el cambio. Con DevTools abierto y *Disable cache* sí lo ves — que es el
-*"a mí me funciona"* del ticket, y es el dato clave.
+Y el síntoma completo, que necesita dos despliegues. Medido en el laboratorio del
+curso con Chromium: tras el segundo, quien vuelve a entrar escribiendo la URL o en
+una pestaña nueva ve la versión de ayer; quien recarga con F5 ve la nueva —el
+navegador revalida el documento al recargar—; y una ventana privada o *Disable
+cache* también la ven. Ése es el *"a mí me funciona"* y el *"una dice que sigue
+igual"* del ticket.
 
 ---
 
-### `incidente/19` — el bit de ejecución que no se hereda
+### `incidente/19` — la variable que el script escribe sin mirar
 
 **De dónde sale:** `fase-13`.
-**Qué se toca:** `Dockerfile`.
-
-```diff
- COPY entrypoint.sh /docker-entrypoint.d/40-certcore-config.sh
--RUN chmod +x /docker-entrypoint.d/40-certcore-config.sh
-```
-
-Y para que el contraste UAT/PROD del enunciado exista, el archivo tiene que llegar
-**sin** el bit puesto desde el sistema de archivos de origen:
+**Qué se toca:** nada del código. La rama añade los dos archivos de variables con
+los que el cuaderno levanta cada ambiente:
 
 ```bash
-chmod -x entrypoint.sh
-git update-index --chmod=-x entrypoint.sh   # git guarda el bit; hay que quitarlo también ahí
+# deploy/uat.env — copiado de la plantilla del curso
+ENVIRONMENT_NAME=UAT
+API_BASE_URL=/api
 ```
 
-**Qué se rompe.** El entrypoint de nginx recorre `/docker-entrypoint.d/`,
-encuentra un archivo que no puede ejecutar, **lo ignora en silencio** y arranca
-perfectamente. nginx sirve la aplicación; sólo falta el `config.json`. Y como
-`APP_INITIALIZER` bloquea el arranque de Angular hasta que su promesa resuelve, el
-`404` de `assets/config.json` deja la pantalla en blanco **sin ningún error
-visible** — porque el fallo ocurrió antes de que hubiera dónde pintarlo.
+```bash
+# deploy/prod.env — escrito por el equipo de plataforma, que abrevia a tres letras
+ENVIRONMENT_NAME=PRD
+API_BASE_URL=/api
+```
 
-**Cómo comprobarlo.**
+**Qué se rompe.** El `entrypoint.sh` no valida nada —la Fase 13 dejó la validación
+en `parseAppConfig`— y escribe `PRD` en el `config.json`. `APP_INITIALIZER`
+bloquea el arranque, `parseAppConfig` rechaza el valor, Angular no arranca: página
+en blanco, con un solo error en la consola que nombra el valor.
+
+**Cómo comprobarlo.** Medido en el laboratorio del curso:
 
 ```bash
-docker exec certcore-prod ls -l /docker-entrypoint.d/
-# -rw-r--r--  1 root root  412 40-certcore-config.sh     ← sin la x
 docker exec certcore-prod cat /usr/share/nginx/html/assets/config.json
-# cat: can't open …: No such file or directory
-docker logs certcore-prod 2>&1 | grep certcore
-# (nada — el script nunca corrió)
+# { "apiBaseUrl": "/api", "environmentName": "PRD" }
+docker logs certcore-prod 2>&1 | grep '\[certcore\]'
+# [certcore] configuración de arranque: PRD -> /api
+# Y en la consola del navegador, por localhost:
+# ERROR Error: assets/config.json: `environmentName` vale "PRD" y sólo admite DEV, UAT o PROD.
 ```
 
-> 💡 **Y el contraste que hace el ticket:** levanta el contenedor de UAT desde una
-> imagen construida **antes** de quitar el bit. Los dos digests van a ser
-> distintos, y el estudiante tiene que descubrir que ése es el primer paso —
-> `docker inspect --format '{{.Image}}'`—, no el último.
+> ⚠️ **No la prepares quitando el `chmod +x`.** Parece la misma rotura y no lo es:
+> sin el bit, nginx deja una línea `Ignoring …, not executable` en el log y sirve
+> el `config.json` de desarrollo que viaja en el `dist/`, así que la aplicación
+> **arranca** con la etiqueta DEV y peticiones a `localhost:3000`. Es el 🧨 3 de la
+> Fase 13, no una pantalla en blanco.
 
 ---
 
 ### `incidente/20` — la línea verde que no afirma nada
 
 **De dónde sale:** `fase-12`.
-**Qué se toca:** el spec del detalle de inspección y el `karma.conf.js`.
+**Qué se toca:** el spec de `InspectionStateService` y el `karma.conf.js`.
 
-```diff
- // src/app/features/inspections/inspection-detail/inspection-detail.component.spec.ts
--  expect(applied?.version).toBe(1);
--  expect(applied?.items.length).toBe(3);
-+  expect(component.view).toBeTruthy();   // ← se ejecutó todo; no se comprobó nada
+La Fase 12 no tiene el spec del detalle de inspección donde el cuaderno sitúa el
+08, así que la rama reproduce el mismo mecanismo sobre `findingsOf`, que lleva la
+misma línea del invariante (`getByVersion(inspection.templateId,
+inspection.templateVersion)`). El test de regresión de la fase se sustituye por
+uno que lo ejecuta todo y no afirma nada:
+
+```ts
+// src/app/core/state/inspection-state.service.spec.ts — sustituye al de la Fase 12
+it('carga los hallazgos de una inspección', () => {
+  let result: unknown;
+  service.findingsOf(INSPECTION_501).subscribe((findings) => (result = findings));
+
+  httpMock.match((request) => request.url.endsWith('/findings')).forEach((r) => r.flush([]));
+  httpMock.match((request) => request.url.endsWith('/templates')).forEach((r) => r.flush([V2]));
+
+  expect(result).toBeTruthy();   // ← se ejecutó todo; no se comprobó nada
+});
 ```
 
 ```diff
  // karma.conf.js
- coverageReporter: {
-   check: {
-     global: { statements: 80, branches: 70, functions: 80, lines: 80 },
--    each: { statements: 60, branches: 50, functions: 60, lines: 60 },
-   },
+ check: {
+   global: { statements: 80, branches: 70, functions: 80, lines: 80 },
+-  each: { statements: 50, branches: 40, functions: 50, lines: 50 },
  },
 ```
 
-**Qué se rompe.** Dos cosas, y la segunda es la que duele. El suelo por archivo
-desaparece, así que el 82 % global esconde un 43 % en `features/`. Y el spec del
-archivo del incidente 08 sigue **cubriendo al 100 %** la línea culpable —se
-ejecuta— mientras pasa igual con la v1 que con la v2, porque `toBeTruthy()` no
-mira la versión.
+**Qué se rompe.** El suelo por archivo desaparece, y la línea del invariante sigue
+**cubierta** —se ejecuta— mientras el test pasa igual con la v1 que con la v2,
+porque `toBeTruthy()` no mira la versión.
 
-**Cómo comprobarlo.**
-
-```bash
-ng test --no-watch --code-coverage
-# All files                       82.3   74.6   86   81.9
-# features/**/components          43.2   31.5   48   42.7
-```
-
-Y la prueba de que el coverage no protege: cambia `templateVersion` por `2` en el
-fixture del spec. **La suite sigue en verde.**
+**Cómo comprobarlo.** Medido en el laboratorio del curso: cambia
+`inspection.templateVersion` por `2` en `findingsOf` y corre la suite. **Sigue en
+verde**, con `inspection-state.service.ts` en el informe. El global de la rama
+ronda el 35 % y no el 82 % del ticket —la suite de la Fase 12 es la que es—, y eso
+no estorba: el número del ticket es el del equipo dos años después, y lo que el
+estudiante tiene que encontrar es el mecanismo, no la cifra.
 
 ---
 
-## 4. Los dos `mock/db.incidente-NN.json`
+## 4. Los tres `mock/db.incidente-NN.json`
 
 Se generan a partir del `db.seed.json` de la Fase 3 y se editan a mano sólo los
 registros de abajo. **Todo lo demás queda idéntico**: una semilla que difiera en
@@ -897,6 +939,99 @@ un hallazgo crítico en rojo a la vista.
 > importa — `this.http.get<Finding[]>(url)` **no valida nada**, el genérico es una
 > promesa que le haces al compilador sobre datos que vienen de fuera, y `strict`
 > protege la frontera entre tus archivos, no la frontera con la red.
+
+---
+
+### `db.incidente-21.json` — el activo fuera de UTC−5
+
+**Para el incidente 21** (Fase 10).
+**Qué cambia:** cinco colecciones ganan una fila cada una, y ninguna fila de la
+semilla se toca. Es la hostería de Galápagos tal como quedó en la base el día de
+su primera certificación: el cliente (creado desde la pantalla, después del
+incidente 22), la caldera, la plantilla ecuatoriana, la inspección aprobada y el
+certificado que `computeValidity` emitió con el `-05:00` de siempre.
+
+```json
+{
+  "clients": [
+    { "id": 4, "legalName": "Hostería Chiriboga Cía. Ltda.", "taxId": "2091748323001" }
+  ],
+  "assets": [
+    { "id": "CAL-INN-GPS-01", "clientId": 4, "type": "boiler",
+      "description": "Caldera de agua caliente, cuarto de máquinas, Puerto Ayora",
+      "installedAt": "2016-04-18" }
+  ],
+  "templates": [
+    {
+      "id": "boiler-annual-ec-v1",
+      "templateId": "boiler-annual-ec",
+      "version": 1,
+      "validFrom": "2022-06-01",
+      "validUntil": null,
+      "items": [
+        { "id": "pressure-valve", "title": "Válvula de seguridad y alivio de presión",
+          "criteria": ["ok", "leaking", "blocked"],
+          "photoRequired": true, "nonComplianceSeverity": "critical" },
+        { "id": "flue-gas", "title": "Análisis de gases de combustión",
+          "criteria": ["within_range", "out_of_range"],
+          "photoRequired": false, "nonComplianceSeverity": "major" }
+      ]
+    }
+  ],
+  "inspections": [
+    { "id": 505, "assetId": "CAL-INN-GPS-01", "inspectorId": "INS-41",
+      "templateId": "boiler-annual-ec", "templateVersion": 1, "status": "approved",
+      "startedAt": "2025-03-12T14:10:00.000Z", "completedAt": "2025-03-12T16:30:00.000Z",
+      "answers": [
+        { "itemId": "pressure-valve", "answer": "ok",
+          "evidenceUrl": "assets/evidence/505-pressure-valve.jpg", "note": null },
+        { "itemId": "flue-gas", "answer": "within_range", "evidenceUrl": null, "note": null }
+      ] }
+  ],
+  "certificates": [
+    { "id": "CERT-2025-000505", "inspectionId": 505,
+      "issuedAt": "2025-03-12T20:40:00.000Z",
+      "validUntil": "2026-03-12T23:59:59-05:00",
+      "status": "issued", "revokedAt": null }
+  ]
+}
+```
+
+**La caldera no trae `timeZone`.** Es el bug entero: el activo está en Puerto
+Ayora y nada en la base lo dice. El fix se lo agrega; la preparación no.
+
+**Las fechas de la inspección y del certificado van en `Z`**, a diferencia de la
+semilla, que todo lo escribe con `-05:00`. Es deliberado: son las que la
+aplicación escribe con `nowInstant()`, y delatan que estas filas no salieron de la
+semilla sino del uso. El `validUntil`, en cambio, lleva `-05:00` porque así lo
+cierra `endOfBusinessDay`.
+
+**El RUC es ficticio y bien formado**: trece dígitos, los dos primeros de la
+provincia (20, Galápagos) y los tres últimos `001`, como fija el art. 3 del
+Reglamento de la Ley del RUC. El resto es inventado: tercer dígito 9 (la
+convención de las sociedades privadas) y un décimo calculado por módulo 11, como
+hacen los validadores comunes, aunque el SRI no exige ningún algoritmo a las
+sociedades. El incidente 22 lo usa para crear el cliente.
+
+**Qué se rompe.** El certificado vence a las `23:59:59-05:00`, que en Puerto
+Ayora (`Pacific/Galapagos`, UTC−6 todo el año) son las 22:59:59. Entre las 23:00 y
+las 23:59:59 del 12 de marzo de 2026, hora de la isla, la lista dice VENCIDO.
+
+**Cómo comprobarlo.**
+
+```bash
+curl -s http://localhost:3000/certificates/CERT-2025-000505 | python3 -m json.tool
+# "validUntil": "2026-03-12T23:59:59-05:00"   ← -05:00, para un activo en UTC−6
+```
+
+En la pantalla: con el reloj del sistema en el 12 de marzo de 2026 a las 23:15,
+hora de Galápagos, la lista de certificados dice **Vencido** para
+`CERT-2025-000505`; a las 22:45 del mismo día, **Por vencer**. Los certificados de
+la semilla no cambian entre las dos horas.
+
+> ⚠️ **No caduca, pero pide mover el reloj**, igual que el 15. Si alguien hace el
+> curso después del 12 de marzo de 2026 y no lo mueve, el certificado sale vencido
+> con toda la razón, y el síntoma no se ve.
 
 ---
 

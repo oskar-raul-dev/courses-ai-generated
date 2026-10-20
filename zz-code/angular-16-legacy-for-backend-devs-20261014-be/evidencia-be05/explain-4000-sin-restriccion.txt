@@ -1,0 +1,13 @@
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=282.14..282.15 rows=1 width=8) (actual time=1.831..1.832 rows=1 loops=1)
+   ->  Hash Anti Join  (cost=13.25..280.73 rows=562 width=0) (actual time=1.790..1.814 rows=88 loops=1)
+         Hash Cond: (((i.template_id)::text = (t.template_id)::text) AND (i.template_version = t.version))
+         ->  Seq Scan on inspections i  (cost=0.00..257.50 rows=750 width=520) (actual time=0.018..0.856 rows=4005 loops=1)
+         ->  Hash  (cost=11.30..11.30 rows=130 width=520) (actual time=0.057..0.058 rows=3 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 9kB
+               ->  Seq Scan on templates t  (cost=0.00..11.30 rows=130 width=520) (actual time=0.007..0.008 rows=3 loops=1)
+ Planning Time: 0.795 ms
+ Execution Time: 1.939 ms
+(9 rows)
+

@@ -116,7 +116,7 @@ this.saveRequests$.pipe(
 ```ts
 // Fase 11: el dashboard cruza certificados con clientes sin guardar el cruce.
 readonly expiringByClient$ = combineLatest([
-  this.certificateState.certificates$,
+  this.certificateState.state$.pipe(map((state) => state.items)),
   this.clientState.clients$,
 ]).pipe(
   map(([certificates, clients]) => groupExpiringByClient(certificates, clients)),

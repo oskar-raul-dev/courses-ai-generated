@@ -1,0 +1,33 @@
+<section class="expiry-panel">
+  <h3>Certificados por vencer</h3>
+
+  <!-- El número siempre; el gráfico sólo cuando la forma importa. Aquí la
+       forma importa —la distribución entre ventanas se lee de un vistazo— así
+       que hay las dos cosas: cuatro cifras y una barra. -->
+  <ul class="expiry-windows">
+    <li><strong>{{ buckets.in30.length }}</strong> en 30 días</li>
+    <li><strong>{{ buckets.in60.length }}</strong> en 60 días</li>
+    <li><strong>{{ buckets.in90.length }}</strong> en 90 días</li>
+    <li class="expiry-expired"><strong>{{ buckets.expired.length }}</strong> vencidos</li>
+  </ul>
+
+  <h3>Activos sin cobertura vigente ({{ coverage.length }})</h3>
+
+  <!-- ⭐ trackBy. Sin él, cada refresco de un minuto crea objetos nuevos y
+       Angular destruye y recrea las cuarenta filas enteras: cuarenta nodos
+       fuera del DOM y cuarenta dentro, cada minuto, para mostrar exactamente
+       lo mismo. Con él, compara por `asset.id` y no toca nada si nada cambió.
+       Se nota poco con cuarenta filas y muchísimo con dos mil (ejercicio 15). -->
+  <ul class="coverage-list">
+    <li *ngFor="let entry of coverage; trackBy: trackByAssetId">
+      <a [routerLink]="['/assets', entry.asset.id, 'edit']">{{ entry.asset.id }}</a>
+      <span>{{ entry.asset.description }}</span>
+
+      <!-- Los tres casos se dicen distinto a propósito: "nunca se certificó" y
+           "se le venció hace 40 días" son dos conversaciones diferentes. -->
+      <em *ngIf="entry.kind === 'never-certified'">Sin certificado</em>
+      <em *ngIf="entry.kind === 'expired'">Vencido hace {{ entry.daysOverdue }} días</em>
+      <em *ngIf="entry.kind === 'revoked'">Certificado revocado</em>
+    </li>
+  </ul>
+</section>

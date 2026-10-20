@@ -3,7 +3,7 @@
 
 Documento de encuadre. Consolida las decisiones tomadas sobre CertCore y reparte
 el presupuesto:
-**108h de fases + 14h de cuaderno de incidentes = 122h**.
+**108h de fases + 15h de cuaderno de incidentes = 123h**.
 
 > 🧭 Junto con `alcance-del-proyecto.md`, este documento **depreca a
 > `_deprecado-tutorial-angular16.md`**. La cifra de 96h, el mapa de 12 fases y la
@@ -49,11 +49,11 @@ seis maneras distintas y cada una produce un ticket diferente.
 
 ---
 
-## ⏱️ 2. Reparto horario: 122h
+## ⏱️ 2. Reparto horario: 123h
 
-**108h de fases (track forense embebido) + 14h de cuaderno de incidentes.**
+**108h de fases (track forense embebido) + 15h de cuaderno de incidentes.**
 
-Las horas de apéndices **no cuentan** dentro de las 122: son consulta bajo
+Las horas de apéndices **no cuentan** dentro de las 123: son consulta bajo
 demanda. La Fase 14 tampoco: es opcional y va sin horas asignadas al calendario.
 
 | Fase | Nombre | Horas | Nota |
@@ -74,8 +74,8 @@ demanda. La Fase 14 tampoco: es opcional y va sin horas asignadas al calendario.
 | 🚚 13 | Build, despliegue y cierre | **7h** | Docker + nginx + config en runtime |
 | 🔥 14 | Ambiente "casi prod" con kind | **—** | **Opcional.** Sin horas en el calendario |
 | | **Subtotal fases** | **108h** | |
-| 📓 | **Cuaderno de incidentes** | **14h** | 20 incidentes, ≈3.5h por semana |
-| | **Total** | **122h** | |
+| 📓 | **Cuaderno de incidentes** | **15h** | 22 incidentes, ≈3.75h por semana |
+| | **Total** | **123h** | |
 
 Son **veintiséis días de media jornada**, algo más que el mes que preveía el
 documento base. La diferencia se la comen tres cosas que aquel no contemplaba: el
@@ -227,8 +227,8 @@ Deployment, Service, el ConfigMap montado como volumen alimentando el mismo
 
 Corre sobre **el runtime de contenedores que ya tengas**. No se ata a ninguno.
 
-⚠️ En Apple Silicon la imagen debe ser arm64 o el pod queda en `CrashLoopBackOff`
-sin explicar por qué. Enlaza con **A12**.
+⚠️ En Apple Silicon la imagen amd64 arranca igual en kind, traducida por la VM del runtime; el
+`CrashLoopBackOff` sin explicación llega con una imagen arm64 en un nodo amd64. Enlaza con **A12**.
 
 ---
 
@@ -289,9 +289,9 @@ lleva al trabajo real.
 
 ---
 
-## 📓 6. Cuaderno de incidentes (14h)
+## 📓 6. Cuaderno de incidentes (15h)
 
-**20 incidentes**, ≈3.5h por semana, todos dentro de `cuaderno-incidentes.md`.
+**22 incidentes**, ≈3.75h por semana, todos dentro de `cuaderno-incidentes.md`.
 El formato completo está en `formato-cuaderno-incidentes.md`.
 
 Distribución por dificultad:
@@ -399,7 +399,7 @@ No queda ninguna respuesta bloqueante. Lo que sigue es escribir, en este orden:
    demás depende de ellas.
 3. Las fases 5 a 8, que son el núcleo formativo (⭐ 7 y 8).
 4. Los apéndices A03, A04, A05, A06 y A07, que las fases anteriores ya citan.
-5. Las fases 9 a 13, los apéndices restantes, las piezas forenses, y los veinte
+5. Las fases 9 a 13, los apéndices restantes, las piezas forenses, y los veintidós
    enunciados del cuaderno.
 
 La Fase 14 y los apéndices 🔥 van al final: son opcionales y nada los espera.
@@ -410,7 +410,7 @@ La Fase 14 y los apéndices 🔥 van al final: son opcionales y nada los espera.
 
 Este documento cubre **el track base y solo el track base**. El track opcional de
 backend —ocho fases `be00–be07`, once apéndices `bea-01–bea-11`, 72h más 8h de
-cuaderno, todo declarado **fuera de las 122h**— tiene su propio documento de
+cuaderno, todo declarado **fuera de las 123h**— tiene su propio documento de
 encuadre y es su fuente de verdad:
 
 **[`propuesta-fases-backend.md`](propuesta-fases-backend.md)**

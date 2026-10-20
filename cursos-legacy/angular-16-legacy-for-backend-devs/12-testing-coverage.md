@@ -14,7 +14,7 @@ CertCore lleva tres años en producción y **no tiene un solo test**. No es una 
 
 Hoy escribes los primeros. Y la pregunta que ordena la fase no es *"¿cómo se usa Jasmine?"* —eso se aprende en veinte minutos— sino la única que importa en un sistema que ya sólo recibe hotfixes: **¿qué merece un test?** Testear once fases de código retroactivamente no lo hace ningún equipo del mundo, y quien lo propone en una reunión está proponiendo un trimestre. Lo que sí se hace, y lo que esta fase enseña, es cubrir tres cosas: **lo que se toca en un hotfix, lo que ya se rompió una vez, y las reglas que si fallan no dan ningún error**.
 
-Vas a descubrir además que la mitad del trabajo ya está hecho. Las Fases 7 a 11 llevan cinco capítulos escribiendo el dominio sin inyecciones, sin `Observable` y sin saber en qué pantalla corre — `resolveTemplateVersion`, `computeProgress`, `deriveSeverity`, `certificateStatus`, `bucketCertificates`—. Cada una de esas funciones se testea en tres líneas y sin navegador, y ése era el plan desde la Fase 7 aunque no lo dijéramos así.
+Vas a descubrir además que la mitad del trabajo ya está hecho. Las Fases 7 a 11 llevan cinco capítulos escribiendo el dominio sin inyecciones, sin `Observable` y sin saber en qué pantalla corre — `resolveTemplateVersion`, `computeProgress`, `deriveSeverity`, `deriveCertificateStatus`, `bucketCertificates`—. Cada una de esas funciones se testea en tres líneas y sin navegador, y ése era el plan desde la Fase 7 aunque no lo dijéramos así.
 
 Y hay una lección que sólo se puede dar aquí, porque necesita once fases de código detrás: **la testabilidad es lo que delata el diseño**. Cuando una función necesita trucos para probarse, casi nunca es culpa del test.
 
@@ -27,7 +27,7 @@ Y hay una lección que sólo se puede dar aquí, porque necesita once fases de c
 - [ ] La tabla de ocho casos borde de `resolveTemplateVersion` (Fase 7 §5.3) es una suite de ocho `it`, y cuando uno falla el nombre te dice cuál sin abrir el código.
 - [ ] Existe el **test de regresión del invariante**: una inspección de agosto de 2023 se lee con la v1 aunque la v2 esté vigente. Rompes esa línea en el código de producción y el test se pone rojo.
 - [ ] `authGuard` y `authInterceptor` —funcionales— tienen test, y `CorrelationIdInterceptor` —de clase, de 2021— también. Son tres técnicas distintas y sabes por qué.
-- [ ] `KpiCardComponent` (standalone) e `InspectionListComponent` (declarado) tienen su spec, con **dos configuraciones de `TestBed` distintas**. Intercambiarlas no compila, y sabes leer el error.
+- [ ] `KpiCardComponent` (standalone) e `InspectionListComponent` (declarado) tienen su spec, con **dos configuraciones de `TestBed` distintas**. Intercambiarlas compila y revienta al correr el test, y sabes leer el error.
 - [ ] `npm run test:ci` imprime el coverage y **falla** si baja del umbral. Las exclusiones están escritas en `angular.json` con su justificación al lado.
 - [ ] Sabes decir, con el informe delante, por qué un 82 % global no significa que el sistema esté probado.
 - [ ] `git tag` lista `fase-12`.
@@ -40,7 +40,7 @@ Y hay una lección que sólo se puede dar aquí, porque necesita once fases de c
 - **Mutation testing** → fuera de alcance. Es la respuesta correcta a la pregunta *"¿mis tests sirven para algo?"* y es una herramienta más que instalar, configurar y esperar. Se nombra en el ejercicio 29, que hace la misma pregunta a mano.
 - **CI real** → fuera de alcance. Lo que sí entra es el comando que un pipeline necesitaría (`test:ci`), porque sin él no se puede ni medir coverage en local.
 - **`TestScheduler` y la sintaxis de marbles con guiones** → se nombra y se descarta. Los observables de este curso se testean coleccionando emisiones en un array y con `fakeAsync`; aprender un segundo lenguaje para escribir `'--a--b|'` no aporta nada aquí. **A06** lo comenta.
-- **Tests del PDF** (`certificate-pdf.ts`) → es una de las exclusiones justificadas de 5.1. Genera un binario; comprobar que jsPDF dibuja es testear jsPDF.
+- **Tests del PDF** (`certificate-pdf.service.ts`) → es una de las exclusiones justificadas de 5.1. Genera un binario; comprobar que jsPDF dibuja es testear jsPDF.
 - **Tocar el código de producción de las fases anteriores** → esta fase escribe specs, no refactoriza. La única excepción está en el ejercicio 26, y es a propósito.
 
 ---
@@ -61,7 +61,7 @@ Eso deja tres categorías que sí merecen test desde el primer día:
 
 **Lo que se toca en un hotfix.** El invariante de plantillas, el cálculo de vigencia, la derivación de severidad. Son las tres reglas que un ticket va a hacer tocar, y las tres son funciones puras.
 
-**Lo que ya se rompió una vez.** Los dieciséis incidentes del cuaderno. Un bug que ocurrió puede volver a ocurrir, y su test es la única garantía de que el fix sobrevive a la siguiente refactorización.
+**Lo que ya se rompió una vez.** Los incidentes del cuaderno que ya se rompieron antes de esta fase (del 01 al 16, el 21 y el 22). Un bug que ocurrió puede volver a ocurrir, y su test es la única garantía de que el fix sobrevive a la siguiente refactorización.
 
 **Lo que si falla no da ningún error.** Ésta es la categoría más importante de este sistema y la más fácil de olvidar. Una inspección renderizada con la plantilla equivocada no lanza una excepción: pinta una pantalla perfectamente creíble. Un hallazgo `critical` que no bloquea no da un 500: emite el certificado. Ninguno de los dos aparece en un log. **Sólo un test los ve.**
 
@@ -114,7 +114,7 @@ TestBed.configureTestingModule({
 });
 ```
 
-Intercambiarlas produce dos errores distintos y los dos merecen verse una vez. Un standalone en `declarations` da un error explícito —*"Component X is standalone, and cannot be declared in an NgModule"*— que se lee y se entiende. Un componente declarado puesto en `imports` da otro que **no** dice lo que pasa: se queja de que el tipo no es un módulo, un componente standalone ni una directiva, y a mitad de un spec de cuarenta líneas cuesta relacionarlo con la causa.
+Intercambiarlas compila —el `TestBed` se configura en tiempo de ejecución— y produce dos errores distintos al correr el spec, y los dos merecen verse una vez. Un standalone en `declarations` da un error explícito, que hasta propone el arreglo: *"KpiCardComponent is marked as standalone and can't be declared in any NgModule - did you intend to import it instead (by adding it to the "imports" array)?"*. Un componente declarado puesto en `imports` da otro que **no** dice lo que pasa: *"Unexpected directive 'InspectionListComponent' imported by the module 'DynamicTestModule'. Please add an @NgModule annotation."* Te pide que le pongas un `@NgModule` al componente, que es justo lo que no hay que hacer, y a mitad de un spec de cuarenta líneas cuesta relacionarlo con la causa.
 
 > 🧭 **La regla de siempre, aplicada al test: el spec se escribe en el estilo del archivo que prueba.** Un componente de 2021 se testea como se testeaba en 2021, con `declarations` y su módulo alrededor, aunque el spec lo escribas hoy. Convertirlo a standalone "para que el test quede más limpio" es modernizar mientras arreglas, que es como se rompen otras tres cosas.
 
@@ -150,15 +150,15 @@ npx ng generate config karma
 
 Y si te falta el objetivo `test` entero, alguien generó el proyecto con `--minimal` en vez de `--skip-tests`. No es tu caso, pero conviene saber distinguirlos: los dos dejan la carpeta sin specs y sólo uno deja el andamiaje.
 
-**Las versiones, que nunca se fijaron.** El `alcance-del-proyecto.md` §9 manda **Jasmine 4.6.x y Karma 6.4.x**, y la Fase 0 fijó exacto todo lo que usaba — pero no usaba éstos, así que se quedaron con el `^` que puso el CLI. Hoy se cierra, porque la regla del proyecto es que ninguna dependencia vive con rango:
+**Las versiones, que nunca se fijaron.** El `alcance-del-proyecto.md` §9 manda **Jasmine 4.6.x y Karma 6.4.x**, y la Fase 0 fijó exacto todo lo que usaba — pero no usaba éstos, así que se quedaron con el `~` que puso el CLI. Hoy se cierra, porque la regla del proyecto es que ninguna dependencia vive con rango:
 
 ```jsonc
 // package.json — comprueba primero con `npm ls` qué patch tienes instalado y
 // fija ése. Estos son los que trae el CLI 16.2.12, y lo que importa no es el
-// número exacto sino que deje de haber un `^` delante.
+// número exacto sino que deje de haber un `~` delante.
 {
   "devDependencies": {
-    "@types/jasmine": "4.6.4",
+    "@types/jasmine": "4.3.6",
     "jasmine-core": "4.6.1",
     "karma": "6.4.4",
     "karma-chrome-launcher": "3.2.0",
@@ -199,9 +199,15 @@ module.exports = function (config) {
         // sobrevive entre specs. Apagarlo esconde el incidente 17 en vez de
         // arreglarlo.
         random: true,
+        // Para repetir un orden concreto: `JASMINE_SEED=83104 npm run test:ci`.
+        // `ng test` no tiene `--seed` en la 16 —responde "Unknown argument:
+        // seed"—, así que la semilla entra por aquí. Sin la variable, Jasmine
+        // sortea una en cada ejecución.
+        seed: process.env['JASMINE_SEED'],
       },
-      // La consola del navegador NO se limpia entre ejecuciones: cuando un
-      // test falla por un error que nadie capturó, el mensaje sigue ahí.
+      // El informe de Jasmine se queda pintado en la ventana de Chrome al
+      // terminar, en vez de borrarse: con `npm test`, el test rojo y su traza
+      // se leen ahí sin volver a correr nada.
       clearContext: false,
     },
     reporters: ['progress', 'kjhtml'],
@@ -230,6 +236,10 @@ module.exports = function (config) {
        * puede quedarse por debajo del 50 %, así que no se puede compensar un
        * servicio sin probar con un módulo de constantes al 100 %.
        *
+       * ⚠️ Con un límite que ninguno de los dos ve: sólo se mide lo que algún
+       * spec IMPORTA. Un archivo que ningún test toca no sale en el informe
+       * con un 0 %; no sale. No baja el global ni dispara `each`.
+       *
        * Las ramas van más bajas que las sentencias a propósito: un `if` de
        * guarda que nunca se cumple en producción tampoco se cumple en un test,
        * y perseguirlo produce tests que inventan situaciones imposibles.
@@ -242,6 +252,15 @@ module.exports = function (config) {
     restartOnFileChange: true,
   });
 };
+```
+
+Falta una pieza que nadie echa de menos hasta el primer intermitente. Con `npm test`, Jasmine pinta la semilla en la ventana de Chrome; con `test:ci` no la imprime en ningún sitio, y sin ella un fallo por orden no se puede repetir. Son cuatro líneas:
+
+```ts
+// src/test-seed.spec.ts — no es un test: imprime la semilla en la terminal.
+jasmine.getEnv().addReporter({
+  jasmineDone: (result) => console.log(`Semilla de Jasmine: ${result.order.seed}`),
+});
 ```
 
 ```jsonc
@@ -261,9 +280,11 @@ module.exports = function (config) {
     // `exports`. Un test que los cubra prueba que el archivo existe.
     "src/**/*.module.ts",
     // Dibuja un PDF con jsPDF. Comprobar que dibuja es testear jsPDF; lo que
-    // sí se testea es `buildCertificateDocument`, que es puro y decide QUÉ se
-    // dibuja. Fase 10 §5.6.
-    "src/app/core/pdf/**",
+    // sí se testea es `buildCertificateDocument` (`core/pdf/`), que es puro y
+    // decide QUÉ se dibuja. Por eso se excluye el servicio y NO la carpeta
+    // `core/pdf/**`: ésa se llevaría por delante justo lo que hay que probar.
+    // Fase 10 §5.6.
+    "src/app/features/certificates/certificate-pdf.service.ts",
     // El mock es Node, no Angular, y corre en otro proceso.
     "mock/**"
   ]
@@ -288,6 +309,8 @@ escribir para llegar. Con esa lista delante, la decisión es tuya y no mía.
 **Prueba de fuego**
 
 `npm test` levanta Chrome y se queda esperando cambios: ése es el modo de trabajo. `npm run test:ci` no abre nada, corre una vez, imprime el resumen de coverage y **devuelve un código de salida distinto de cero si baja del umbral** — compruébalo con `echo $?` en la terminal. Si siempre devuelve cero, el `check` no está donde crees.
+
+Y mira cuántos archivos salen en el informe antes de creerte el porcentaje. Con los specs de esta fase escritos —los de §5 y el de regresión de §6—, la suite tiene 35 tests verdes, el global se queda en un 37 % de sentencias y el informe lista **40 de los 72 archivos** de `src/app` que no son módulos. Los otros 32 no están al 0 %: no están, porque ningún spec los importa. Por eso añadir un spec puede **bajar** el porcentaje. Al escribir el de `DashboardMetricsService` el global cayó del 35 % al 30 %, porque el spec metió en el denominador los servicios de estado que importa. El número sólo habla de lo que algún test tocó, y eso es medio incidente 20.
 
 ### 5.2 La tabla de la Fase 7, convertida en suite
 
@@ -363,7 +386,7 @@ describe('resolveTemplateVersion', () => {
       // de este `if`, TypeScript sabe que `resolution.template` existe. Sin la
       // unión, harían falta un `as` o un `!`, y en CertCore no se usan.
       if (resolution.status === 'resolved') {
-        expect(resolution.template.version).toBe(testCase.expectedVersion);
+        expect<number | null>(resolution.template.version).toBe(testCase.expectedVersion);
       }
     });
   }
@@ -385,7 +408,7 @@ describe('resolveTemplateVersion', () => {
 ```ts
 // src/app/core/domain/certificate-status.spec.ts
 import { Certificate } from '../models/certificate.model';
-import { certificateStatus, daysUntilExpiry } from './certificate-status';
+import { daysUntilExpiry, deriveCertificateStatus } from './certificate-status';
 
 function certificate(validUntil: string, revokedAt: string | null = null): Certificate {
   return {
@@ -400,7 +423,7 @@ function certificate(validUntil: string, revokedAt: string | null = null): Certi
   };
 }
 
-describe('certificateStatus', () => {
+describe('deriveCertificateStatus', () => {
   // ⭐ Ni un `jasmine.clock()`, ni un `Date` falseado, ni una variable global.
   // El instante es un PARÁMETRO —decisión de la Fase 10 §5.2— y por eso este
   // archivo entero es aritmética. Compáralo con 5.6, donde una función que
@@ -408,25 +431,26 @@ describe('certificateStatus', () => {
   const now = '2026-09-06T10:00:00-05:00';
 
   it('devuelve `valid` cuando falta más del umbral', () => {
-    expect(certificateStatus(certificate('2027-01-01T23:59:59-05:00'), now)).toBe('valid');
+    expect(deriveCertificateStatus(certificate('2027-01-01T23:59:59-05:00'), now)).toBe('valid');
   });
 
   it('devuelve `expiring` en el día exacto del umbral', () => {
     // Treinta días clavados. El límite es inclusive, así que cae en `expiring`
     // y no en `valid`: es el borde que la Fase 10 §5.2 decidió a propósito y
     // el que un refactor rompe sin darse cuenta.
-    expect(certificateStatus(certificate('2026-10-06T23:59:59-05:00'), now)).toBe('expiring');
+    expect(deriveCertificateStatus(certificate('2026-10-06T23:59:59-05:00'), now)).toBe('expiring');
   });
 
   it('devuelve `expired` un segundo después de vencer', () => {
-    expect(certificateStatus(certificate('2026-09-06T09:59:59-05:00'), now)).toBe('expired');
+    expect(deriveCertificateStatus(certificate('2026-09-06T09:59:59-05:00'), now)).toBe('expired');
   });
 
-  it('devuelve `valid` en el último segundo de vigencia', () => {
+  it('devuelve `expiring`, y no `expired`, en el último segundo de vigencia', () => {
     // El mismo día, un segundo antes. Los dos tests de arriba y de abajo son
     // el mismo borde por sus dos lados, y escribir sólo uno de los dos es cómo
-    // se cuela un `<` donde iba un `<=`.
-    expect(certificateStatus(certificate('2026-09-06T10:00:01-05:00'), now)).toBe('valid');
+    // se cuela un `<` donde iba un `<=`. Y no es `valid`: le quedan cero días,
+    // y cero cae dentro del umbral.
+    expect(deriveCertificateStatus(certificate('2026-09-06T10:00:01-05:00'), now)).toBe('expiring');
   });
 
   it('`revoked` gana sobre `expired`', () => {
@@ -435,7 +459,7 @@ describe('certificateStatus', () => {
     // los `if` es la regla de negocio, y éste es el test que lo fija.
     const revokedAndExpired = certificate('2026-08-01T23:59:59-05:00', '2026-03-01T10:00:00-05:00');
 
-    expect(certificateStatus(revokedAndExpired, now)).toBe('revoked');
+    expect(deriveCertificateStatus(revokedAndExpired, now)).toBe('revoked');
   });
 
   it('cuenta días negativos para un certificado vencido', () => {
@@ -447,19 +471,33 @@ describe('certificateStatus', () => {
 ```
 
 ```ts
-// src/app/core/time/business-day.spec.ts — los dos casos que valen por diez
-describe('addMonths', () => {
+// src/app/core/domain/certificate-validity.spec.ts — los dos casos que valen por diez
+import { computeValidity } from './certificate-validity';
+
+describe('computeValidity', () => {
+  // `addMonths` es privada a propósito (Fase 10 §5.2), así que el recorte se
+  // prueba por la única puerta que lo usa. Un test que la importara fijaría un
+  // detalle de implementación que la Fase 10 decidió no publicar.
+
   it('recorta al último día del mes cuando el día no existe allí', () => {
     // 29 de febrero de un año bisiesto, más doce meses. La aritmética ingenua
     // da el 1 de marzo y REGALA un día de vigencia; la correcta recorta al 28.
     // Es un caso que llega una vez cada cuatro años y que ningún QA prueba.
-    expect(addMonths('2024-02-29', 12)).toBe('2025-02-28');
+    expect(computeValidity('2024-02-29T09:00:00-05:00').until).toBe('2025-02-28T23:59:59-05:00');
   });
 
-  it('recorta también hacia el mes corto', () => {
-    expect(addMonths('2024-01-31', 1)).toBe('2024-02-29');
+  it('cuenta desde el día del negocio, no desde el de UTC', () => {
+    // Emitido a las 23:30 del 15 de marzo en Bogotá, que en UTC ya es el 16.
+    // Vence el 15: es el mismo borde que `todayInBusinessZone`, abajo, pero
+    // sin andamio, porque aquí el instante entra por parámetro.
+    expect(computeValidity('2024-03-15T23:30:00-05:00').until).toBe('2025-03-15T23:59:59-05:00');
   });
 });
+```
+
+```ts
+// src/app/core/time/business-day.spec.ts — el único que necesita andamio
+import { todayInBusinessZone } from './business-day';
 
 describe('todayInBusinessZone', () => {
   /**
@@ -467,7 +505,7 @@ describe('todayInBusinessZone', () => {
    * `todayInBusinessZone()` no recibe nada: pregunta la hora. Para testearlo
    * hay que falsear el reloj del navegador entero.
    *
-   * Compáralo con `certificateStatus`, arriba, que hace lo mismo y recibe el
+   * Compáralo con `deriveCertificateStatus`, más arriba, que hace lo mismo y recibe el
    * instante. La diferencia entre los dos archivos no es de test: es de diseño,
    * y el test es lo que la delata. Guarda esta comparación para el ejercicio 26.
    */
@@ -705,7 +743,7 @@ describe('ClientStateService', () => {
     expect(clientApi.search).toHaveBeenCalledWith('Central');
   }));
 
-  it('emite el estado nuevo a quien esté suscrito', () => {
+  it('emite el estado nuevo a quien esté suscrito', fakeAsync(() => {
     const clients: readonly Client[] = [{ id: 1, legalName: 'Edificio Central S.A.S.', taxId: '900123456' }];
     clientApi.search.and.returnValue(of(clients));
     service = TestBed.inject(ClientStateService);
@@ -724,6 +762,9 @@ describe('ClientStateService', () => {
     const subscription = service.state$.subscribe((state) => emissions.push(state));
 
     service.search('Central');
+    // El mismo debounce de arriba. Sin este `tick`, el `it` termina antes de
+    // que salga la petición y la secuencia tiene un solo estado: el inicial.
+    tick(300);
 
     expect(emissions.length).toBeGreaterThan(1);
     expect(emissions[emissions.length - 1].items).toEqual(clients);
@@ -733,7 +774,7 @@ describe('ClientStateService', () => {
     // en un servicio `providedIn: 'root'` es cómo un test contamina al
     // siguiente — y con `random: true`, "el siguiente" cambia cada vez.
     subscription.unsubscribe();
-  });
+  }));
 });
 ```
 
@@ -800,7 +841,9 @@ describe('authGuard', () => {
     // No se comprueba que navegara: se comprueba que DEVOLVIÓ el UrlTree. Es
     // la diferencia entre testear la decisión del guard y testear al router,
     // que ya está testeado por Angular.
-    expect(run('/inspections/500')).not.toBeTrue();
+    const result = run('/inspections/500') as unknown as { commands: readonly string[] };
+
+    expect(result.commands).toEqual(['/login']);
   });
 });
 ```
@@ -822,9 +865,9 @@ describe('authInterceptor', () => {
     // El "siguiente" de la cadena, escrito a mano. Captura lo que le llega y
     // devuelve una respuesta cualquiera: un interceptor se testea por lo que
     // le PASA al siguiente, no por lo que el servidor conteste.
-    let forwarded: HttpRequest<unknown> | null = null;
+    const forwarded: HttpRequest<unknown>[] = [];
     const next: HttpHandlerFn = (request) => {
-      forwarded = request;
+      forwarded.push(request);
       return of(new HttpResponse({ status: 200 }));
     };
 
@@ -832,13 +875,13 @@ describe('authInterceptor', () => {
 
     TestBed.runInInjectionContext(() => authInterceptor(original, next).subscribe());
 
-    expect(forwarded!.headers.get('Authorization')).toBe('Bearer un-token');
+    expect(forwarded[0]?.headers.get('Authorization')).toBe('Bearer un-token');
   });
 });
 ```
 
 ```ts
-// src/app/core/interceptors/correlation-id.interceptor.spec.ts
+// src/app/core/interceptors/correlation-id.interceptor.spec.ts — sin los imports
 // 🧬 EL MISMO TRABAJO, EN LA OTRA GENERACIÓN.
 //
 // `CorrelationIdInterceptor` se escribió en 2021 y sigue siendo una clase con
@@ -853,10 +896,10 @@ describe('CorrelationIdInterceptor', () => {
 
     const interceptor = TestBed.inject(CorrelationIdInterceptor);
 
-    let forwarded: HttpRequest<unknown> | null = null;
+    const forwarded: HttpRequest<unknown>[] = [];
     const next: HttpHandler = {
       handle: (request) => {
-        forwarded = request;
+        forwarded.push(request);
         return of(new HttpResponse({ status: 200 }));
       },
     };
@@ -869,7 +912,7 @@ describe('CorrelationIdInterceptor', () => {
     // `toBeTruthy()` sería uno que no prueba nada. Se comprueba la FORMA, que
     // es lo único estable de un valor aleatorio — y ésta es la primera lección
     // del incidente 17.
-    expect(forwarded!.headers.get('X-Correlation-Id')).toMatch(
+    expect(forwarded[0]?.headers.get('X-Correlation-Id')).toMatch(
       /^[0-9a-f-]{36}$/,
     );
   });
@@ -883,7 +926,7 @@ describe('CorrelationIdInterceptor', () => {
 ### 5.8 🧬 Los dos `TestBed`, uno por generación
 
 ```ts
-// src/app/features/dashboard/kpi-card/kpi-card.component.spec.ts
+// src/app/features/dashboard/kpi-card/kpi-card.component.spec.ts — sin los imports
 // COMPONENTE NUEVO — standalone.
 describe('KpiCardComponent', () => {
   let fixture: ComponentFixture<KpiCardComponent>;
@@ -930,8 +973,9 @@ describe('KpiCardComponent', () => {
 ```
 
 ```ts
-// src/app/features/inspections/inspection-list/inspection-list.component.spec.ts
+// src/app/features/inspections/inspection-list/inspection-list.component.spec.ts — sin los imports
 // COMPONENTE HEREDADO — declarado en InspectionsModule desde la Fase 1.
+// INSPECTIONS_FIXTURE: dos `Inspection` completas, la primera con templateVersion 2.
 describe('InspectionListComponent', () => {
   let fixture: ComponentFixture<InspectionListComponent>;
 
@@ -939,23 +983,28 @@ describe('InspectionListComponent', () => {
     TestBed.configureTestingModule({
       /**
        * 🧬 Va en `declarations`, y hay que darle a mano lo que su NgModule le
-       * daba: `SharedModule` para los componentes de Material que usa la
-       * plantilla, y un doble del servicio de estado.
+       * daba: `SharedModule`, `MatTableModule` —que `SharedModule` dejó de
+       * reexportar en la Fase 5 y `InspectionsModule` importa por su cuenta—,
+       * y un doble del servicio de estado. Sin `MatTableModule` la tabla no se
+       * pinta y el test falla con cero filas, no con un error.
        *
-       * Ponerlo en `imports` no compila, y el error —"no es un NgModule, un
-       * componente standalone ni una directiva"— no dice lo que pasa. Al revés
-       * pasa lo mismo: un standalone en `declarations` da un error explícito,
-       * y ése sí se lee. El ejercicio 20 te hace ver los dos.
+       * Ponerlo en `imports` compila y revienta al correr: "Unexpected
+       * directive 'InspectionListComponent' imported by the module
+       * 'DynamicTestModule'. Please add an @NgModule annotation." No dice lo
+       * que pasa. Al revés, un standalone en `declarations` da un error
+       * explícito, y ése sí se lee. El ejercicio 20 te hace ver los dos.
        */
       declarations: [InspectionListComponent],
-      imports: [SharedModule, RouterTestingModule],
+      imports: [SharedModule, MatTableModule, RouterTestingModule],
       providers: [
         {
           provide: InspectionStateService,
+          // El doble imita lo que el componente LEE, y este componente de
+          // 2021 lee `state$` entero, no los `inspections$` / `loading$` de la
+          // Fase 4. Un doble con los nombres equivocados no da error: deja la
+          // pantalla vacía y el test falla con cero filas.
           useValue: {
-            inspections$: of(INSPECTIONS_FIXTURE),
-            loading$: of(false),
-            error$: of(null),
+            state$: of({ items: INSPECTIONS_FIXTURE, selected: null, loading: false, error: null }),
             load: () => undefined,
           },
         },
@@ -985,20 +1034,25 @@ describe('InspectionListComponent', () => {
 it('refresca cada minuto', fakeAsync(() => {
   const subscription = service.metrics$.subscribe();
 
+  // `timer(0, ms)` NO dispara al suscribirse: el primer latido es un
+  // setTimeout de cero, y en fakeAsync hasta ése hay que adelantarlo. Sin este
+  // `tick(0)`, la primera aserción ve cero llamadas.
+  tick(0);
   expect(inspectionState.load).toHaveBeenCalledTimes(1);
 
   tick(DASHBOARD_REFRESH_MS);
 
   expect(inspectionState.load).toHaveBeenCalledTimes(2);
 
-  subscription.unsubscribe();
-  // ⚠️ Sin esto, `fakeAsync` lanza al terminar:
+  // ⚠️ Sin esta línea, `fakeAsync` lanza al terminar:
   //   "Error: 1 periodic timer(s) still in the queue."
-  // El `timer(0, ms)` de la Fase 11 es periódico y nunca termina solo. El
-  // mensaje es de los pocos de Angular que dicen exactamente lo que pasa, y
-  // aun así confunde: no es un bug del código, es que el test tiene que
-  // limpiar lo que abrió.
-  discardPeriodicTasks();
+  // El `timer(0, ms)` de la Fase 11 es periódico y nunca termina solo; con el
+  // `refCount: true` de su `shareReplay`, desuscribirse lo mata. El mensaje es
+  // de los pocos de Angular que dicen exactamente lo que pasa, y aun así
+  // confunde: no es un bug del código, es que el test tiene que cerrar lo que
+  // abrió. `discardPeriodicTasks()` es la red para cuando no hay suscripción
+  // que cerrar —un timer que el código arranca por su cuenta—; aquí sobra.
+  subscription.unsubscribe();
 }));
 ```
 
@@ -1054,7 +1108,7 @@ Lo que **no** cambia: las funciones puras se seguirán testeando exactamente igu
 
 **Síntoma:** `Error: 1 periodic timer(s) still in the queue`, al final de un `fakeAsync`.
 **Causa:** un `timer(0, ms)` o un `setInterval` sigue vivo cuando la zona falsa termina.
-**Fix mínimo:** `discardPeriodicTasks()` antes de salir.
+**Fix mínimo:** desuscribirse antes de salir; `discardPeriodicTasks()` sólo cuando el test no tiene la suscripción que mantiene vivo el timer.
 **Lo que importa:** el mensaje dice la verdad y aun así se malinterpreta. No es que el código tenga una fuga —el `refCount` de la Fase 11 se encarga de eso— es que el test abrió una suscripción y tiene que cerrarla. Distinguir "el código deja algo abierto" de "el test dejó algo abierto" es media hora cada vez que pasa.
 
 **Síntoma:** el test de regresión pasa a la primera, recién escrito, sin haber tocado el código.
@@ -1078,20 +1132,23 @@ git tag -a inc/08/version-equivocada-roto -m "F7 inc08: el test reproduce el bug
 ```
 
 ```ts
-// El test entero cabe en diez líneas y no necesita TestBed.
-it('lee una inspección con la versión que guardó, no con la vigente', () => {
-  const family = [v1, v2];               // v1 hasta 2023-12-31, v2 desde 2024-01-01
-  const inspection = { templateVersion: 1, /* … */ };
+// src/app/core/state/inspection-state.service.spec.ts — lo esencial
+// TestBed con HttpClientTestingModule, como en 5.5, y la 501 de la semilla como
+// fixture: agosto de 2023, ejecutada con la v1.
+it('pide la versión que la inspección guardó, no la vigente', () => {
+  service.findingsOf(INSPECTION_501).subscribe();
 
-  // ❌ Lo que hacía el código roto: resolver por la fecha de HOY.
-  //    resolveTemplateVersion(family, todayInBusinessZone()) → v2
-  // ✅ Lo que tiene que hacer: buscar por la versión guardada.
-  const applied = family.find((version) => version.version === inspection.templateVersion);
+  const templateRequest = httpMock.expectOne((request) => request.url.endsWith('/templates'));
 
-  expect(applied?.version).toBe(1);
-  expect(applied?.items.length).toBe(3);   // la v2 tiene cuatro
+  // ❌ El código roto resolvía por la fecha de HOY y pedía la v2.
+  expect(templateRequest.request.params.get('version')).toBe('1');
+
+  httpMock.expectOne((request) => request.url.endsWith('/findings')).flush([]);
+  templateRequest.flush([V1]);   // la fila elevator-annual-v1
 });
 ```
+
+⚠️ El test llama al código de producción —`findingsOf`, donde vive la línea del invariante— y no reimplementa la regla. Es la tentación de este test: escribir el `family.find(…)` dentro del `it` y comprobar que da la v1. Se lee bien, pasa siempre, y no se pone rojo aunque rompas la línea de producción, porque no la ejecuta. Con éste, cambiar `inspection.templateVersion` por la versión vigente da *"Expected '2' to be '1'"*.
 
 Después el fix, después el tag `-fix`, y el `git diff` entre los dos es el punto 5 del post-mortem sin una línea de ruido.
 
@@ -1101,7 +1158,7 @@ Después el fix, después el tag `-fix`, y el `git diff` entre los dos es el pun
 
 **El azar.** `crypto.randomUUID()`, `Math.random()`. Se comprueba la forma, no el valor. El `CorrelationIdInterceptor` de 5.7 es el ejemplo.
 
-**El orden.** Corre la suite tres veces y anota la semilla que Jasmine imprime al principio. Si falla con una semilla y pasa con otra, **reproduce con esa semilla** —`ng test --seed=<n>`— y bisecciona: quita la mitad de los `describe` y vuelve a correr. Lo que queda cuando el fallo desaparece es la pareja de tests que se contaminan.
+**El orden.** Corre la suite tres veces y anota la semilla que imprime `test-seed.spec.ts` al terminar. Si falla con una semilla y pasa con otra, **reproduce con esa semilla** —`JASMINE_SEED=<n> npm run test:ci`, porque `ng test --seed` no existe en la 16— y bisecciona: quita la mitad de los `describe` y vuelve a correr. Lo que queda cuando el fallo desaparece es la pareja de tests que se contaminan.
 
 **La asincronía.** Un `subscribe` que resuelve después de que el `it` terminó. Jasmine no espera a nadie que no le hayas dicho que espere: si el `it` es síncrono y dentro hay algo que no lo es, la aserción corre antes que el valor. `fakeAsync` + `tick` lo hace determinista; `done` también, y es peor porque un `done` que no se llama tarda cinco segundos en fallar.
 
@@ -1113,7 +1170,7 @@ Tres roturas, y las tres se hacen sobre tests, no sobre código.
 
 1. **Cambia el `toBeNull()` del test del incidente 12 por `toBeFalsy()`.** Después quita el `normalizeFinding` del servicio. El test **sigue pasando** con el bug puesto, porque `undefined` es falsy. Guarda esa sensación: acabas de escribir un test de regresión que no detecta la regresión que existe para detectar.
 
-2. **Pon `random: false` en el `karma.conf.js`** y añade a propósito una dependencia de orden: un spec que deja un `jasmine.clock()` instalado sin desinstalarlo. Todo verde. Ahora vuelve a poner `random: true` y corre cinco veces. Anota cuántas fallan y con qué semilla. La lección es que el test intermitente **ya existía**; lo único que cambió fue si te enterabas.
+2. **Pon `random: false` en el `karma.conf.js`** y añade a propósito una dependencia de orden: quita el `uninstall()` del spec de `todayInBusinessZone`, y escribe la víctima, un test que espere tiempo real, como el `done` del ejercicio 13. Hace falta la víctima: el reloj falso **sí** sobrevive a su `describe`, pero los demás specs de esta fase reciben el instante por parámetro y no lo notan, así que sin ella todo sigue verde aunque la fuga exista. Con `random: false`, todo verde. Ahora vuelve a poner `random: true` y corre cinco o seis veces. Anota cuántas fallan y con qué semilla. Medido: falló una de seis (semilla 13212, *"Timeout - Async function did not complete within 5000ms"*, porque el `setTimeout` de la víctima es el del reloj falso y nunca dispara), y con `JASMINE_SEED=13212` falla siempre. La lección es que el test intermitente **ya existía**; lo único que cambió fue si te enterabas.
 
 3. **Comenta las cuatro líneas de `codeCoverageExclude` en `angular.json`** y corre `npm run test:ci`. Mira cuánto baja el porcentaje global y cuáles son los archivos que lo hunden. Después decide, uno por uno, si los excluirías o los testearías — y escribe la justificación de cada exclusión al lado, que es lo que la 💸 pide y lo que nadie hace.
 
@@ -1124,12 +1181,12 @@ Tres roturas, y las tres se hacen sobre tests, no sobre código.
 **🟢 Fácil (1–8)**
 
 1. Corre los tres comandos de 5.1 y entrega el inventario: ¿está el objetivo `test`? ¿está `tsconfig.spec.json`? ¿está `karma.conf.js`? ¿qué versiones de Jasmine y Karma tienes, y con qué rango?
-2. Fija Jasmine y Karma a versión exacta en `package.json`, reinstala, y comprueba con `npm ls jasmine-core karma` que no queda ningún `^`. Explica en dos frases por qué esto importa en un curso y no sólo en un proyecto.
+2. Fija Jasmine y Karma a versión exacta en `package.json`, reinstala, y comprueba con `npm ls jasmine-core karma` que no queda ningún `~`. Explica en dos frases por qué esto importa en un curso y no sólo en un proyecto.
 3. Escribe la suite completa de `resolveTemplateVersion` con los ocho casos de la tabla, uno por `it`. Comprueba que los ocho pasan.
 4. **Diagnóstico.** Cambia `appliesOn` para que el extremo superior sea exclusivo (`day < validUntil` en vez de `<=`). Corre la suite y entrega **cuáles** de los ocho casos fallan y por qué sólo ésos. Después revierte.
-5. Escribe los dos tests de `addMonths`: el 29 de febrero más doce meses y el 31 de enero más uno. Explica en tres frases por qué el recorte va hacia abajo.
+5. Escribe los dos tests de `computeValidity`: la emisión del 29 de febrero de 2024 y la de las 23:30. Explica en tres frases por qué el recorte va hacia abajo, y en una por qué se prueba sin exportar `addMonths`.
 6. **Diagnóstico.** Corre `npm test` tres veces seguidas y anota el orden de los `describe` y la semilla que Jasmine imprime. Explica qué está pasando y por qué es deseable.
-7. Escribe los seis tests de `certificateStatus`, incluidos los dos lados del borde exacto del vencimiento. Comprueba que si cambias un `<=` por un `<` en el código, exactamente uno se pone rojo.
+7. Escribe los seis tests de `deriveCertificateStatus`, incluidos los dos lados del borde exacto del vencimiento. Comprueba que si cambias un `<=` por un `<` en el código, exactamente uno se pone rojo.
 8. **Diagnóstico.** Corre `npm run test:ci` con sólo los specs de funciones puras escritos. Entrega el porcentaje global de coverage y responde: ¿cuántos componentes has testeado? Guarda la respuesta para el ejercicio 27.
 
 **🟡 Intermedio (9–17)**
@@ -1149,8 +1206,8 @@ Tres roturas, y las tres se hacen sobre tests, no sobre código.
 18. 🧬 **Estilo.** Escribe el spec de `KpiCardComponent` (standalone) con `imports` y `setInput`. Después intenta asignar la entrada directamente (`fixture.componentInstance.value = 7`) y explica qué se rompe con `@Input({ required: true })` y qué con `ngOnChanges`.
 19. 🧬 **Estilo.** Escribe el spec de `InspectionListComponent` (declarado) con `declarations` y su módulo alrededor. Entrega la lista de todo lo que tuviste que darle a mano y que su NgModule le daba gratis.
 20. **Diagnóstico.** Intercambia las dos configuraciones: mete el standalone en `declarations` y el declarado en `imports`. Copia los dos errores enteros y explica cuál de los dos te habría costado más tiempo en un spec de cuarenta líneas, y por qué.
-21. Testea el refresco de `DashboardMetricsService` con `fakeAsync`, `tick(DASHBOARD_REFRESH_MS)` y `discardPeriodicTasks()`. Comprueba que `load()` se llamó dos veces.
-22. **Diagnóstico.** Quita el `discardPeriodicTasks()` del ejercicio anterior. Copia el error, explica por qué **no** es un bug del código de la Fase 11, y describe cómo distinguirías este caso de una fuga de verdad.
+21. Testea el refresco de `DashboardMetricsService` con `fakeAsync`, `tick(0)`, `tick(DASHBOARD_REFRESH_MS)` y el `unsubscribe()` final. Comprueba que `load()` se llamó dos veces. Después quita el `tick(0)` y explica por qué la primera aserción ve cero llamadas.
+22. **Diagnóstico.** Quita el `unsubscribe()` del ejercicio anterior. Copia el error, explica por qué **no** es un bug del código de la Fase 11, y describe cómo distinguirías este caso de una fuga de verdad. Después pon `discardPeriodicTasks()` en su lugar y explica por qué el test vuelve a verde aunque la suscripción sigue viva.
 23. Escribe el test de regresión del invariante de plantillas siguiendo el procedimiento de la sección 6: rama desde `fase-07`, test primero, verlo fallar, tag `-roto`, fix, tag `-fix`. Entrega el `git diff` entre los dos tags.
 24. **Diagnóstico.** Activa el umbral `each` del `karma.conf.js` y corre `npm run test:ci`. Entrega la lista de archivos que caen por debajo del 50 %, ordenada por porcentaje, y clasifícalos en tres grupos: hay que testearlos, hay que excluirlos con motivo, o hay que borrarlos porque nadie los usa.
 
@@ -1161,13 +1218,13 @@ Tres roturas, y las tres se hacen sobre tests, no sobre código.
 27. Escribe el post-mortem completo de ocho puntos del incidente **20** —*"tenemos 82 % de coverage y el bug llegó a producción igual"*— con su par de tags. Usa el número que mediste en el ejercicio 8. El punto 8 —post-mortem sin culpabilización— es el que da la lección: el problema no fue de quien escribió los tests, fue de que el número que el equipo miraba no medía lo que creía medir.
 28. **Diagnóstico.** Escribe un test que detecte una **fuga de suscripción**: crea `InspectionFormComponent`, suscríbete a su autosave, destruye el componente con `fixture.destroy()`, y comprueba que ya no emite nada. Después quita el `takeUntilDestroyed` del componente y comprueba que el test se pone rojo. Explica por qué esta clase de test es rara de ver y por qué debería serlo menos.
 29. 💸 **El precio del 100 %.** Sube el umbral global del `karma.conf.js` al 95 %, corre la suite, y escribe **todos** los tests que hagan falta para llegar. Después entrega dos listas: los tests que escribirías igual sin el umbral, y los que sólo existen para el número. Con esas dos listas delante, decide cuál es el umbral correcto para CertCore y defiéndelo en cinco líneas.
-30. Elige uno de los dieciséis incidentes que el cuaderno ya tiene reservados —del 01 al 16— cuyo test de regresión todavía no exista, y escríbelo entero siguiendo el procedimiento de la sección 6: rama desde el tag de su fase, test primero, verlo fallar, y sólo entonces el fix. Entrega el par de tags y el `git diff`. Si eliges uno intermitente, tienes además el problema del ejercicio 25.
+30. Elige uno de los incidentes que el cuaderno ya tiene reservados antes de esta fase —del 01 al 16, el 21 y el 22— cuyo test de regresión todavía no exista, y escríbelo entero siguiendo el procedimiento de la sección 6: rama desde el tag de su fase, test primero, verlo fallar, y sólo entonces el fix. Entrega el par de tags y el `git diff`. Si eliges uno intermitente, tienes además el problema del ejercicio 25.
 
 **🔥 Opcionales**
 
 - 🔥 **Mutation testing.** Instala Stryker fijando su versión exacta, córrelo sobre `src/app/core/domain/`, y entrega el porcentaje de mutantes que tus tests matan. Compáralo con tu porcentaje de coverage. La diferencia entre los dos números es la respuesta honesta a *"¿mis tests sirven para algo?"*, y suele doler.
 - 🔥 **La suite en el pipeline.** Escribe el workflow que correría `npm ci && npm run test:ci` en un contenedor, sin instalar Chrome a mano —hay imágenes que lo traen— y con el `--no-sandbox` que ya dejaste puesto. El CI real está fuera de alcance; escribir el archivo y ver por qué falla la primera vez, no.
-- 🔥 **Snapshot del PDF.** `certificate-pdf.ts` está excluido del coverage porque comprobar que jsPDF dibuja es testear jsPDF. Pero el `CertificateDocument` que entra sí se puede fijar: escribe un test que compare el objeto completo contra una referencia guardada, y decide si esa clase de test protege o sólo se rompe cada vez que alguien cambia una etiqueta.
+- 🔥 **Snapshot del PDF.** `certificate-pdf.service.ts` está excluido del coverage porque comprobar que jsPDF dibuja es testear jsPDF. Pero el `CertificateDocument` que entra sí se puede fijar: escribe un test que compare el objeto completo contra una referencia guardada, y decide si esa clase de test protege o sólo se rompe cada vez que alguien cambia una etiqueta.
 
 ---
 
@@ -1194,7 +1251,7 @@ Tres roturas, y las tres se hacen sobre tests, no sobre código.
 
 CertCore tiene red. No una red completa —eso no lo tiene ningún sistema heredado y perseguirlo es cómo se pierde un trimestre— sino la que importa: las reglas que si fallan no dan ningún error, los bugs que ya ocurrieron una vez, y el código que un hotfix va a tocar.
 
-Y hay tres cosas que se llevan más allá de este proyecto. La primera la construyeron cinco fases sin decirlo: **el dominio puro es el que se puede probar**, y la mitad de esta suite existe porque `resolveTemplateVersion`, `deriveSeverity` y `certificateStatus` no inyectan nada, no piden la hora y no saben en qué pantalla corren. La segunda: **el test de regresión va antes del fix**, y un test que no has visto fallar no es un test, es una línea verde. Y la tercera, la más incómoda: **la testabilidad delata el diseño**. Cuando te hacen falta trucos para probar algo, el problema casi nunca está en el test — y en este mismo repositorio tienes el ejemplo, con un `new Date()` escondido dentro de un servicio que escribiste hace dos fases.
+Y hay tres cosas que se llevan más allá de este proyecto. La primera la construyeron cinco fases sin decirlo: **el dominio puro es el que se puede probar**, y la mitad de esta suite existe porque `resolveTemplateVersion`, `deriveSeverity` y `deriveCertificateStatus` no inyectan nada, no piden la hora y no saben en qué pantalla corren. La segunda: **el test de regresión va antes del fix**, y un test que no has visto fallar no es un test, es una línea verde. Y la tercera, la más incómoda: **la testabilidad delata el diseño**. Cuando te hacen falta trucos para probar algo, el problema casi nunca está en el test — y en este mismo repositorio tienes el ejemplo, con un `new Date()` escondido dentro de un servicio que escribiste hace dos fases.
 
 Lo que te llevas: en un sistema heredado, la pregunta *"¿qué testeamos?"* no se contesta con un porcentaje. Se contesta mirando el historial de tickets. Lo que se rompió, lo que se toca, y lo que falla en silencio — en ese orden. El coverage es la consecuencia, nunca el objetivo, y el día que se convierte en objetivo empieza a medir otra cosa.
 
@@ -1220,7 +1277,7 @@ La **Fase 13** cierra el curso donde el círculo se cierra de verdad: la misma i
 > procedimiento: en el commit `-roto` **el test existe y falla**; en el `-fix`
 > pasa. El `git diff` entre los dos deja de ser sólo el fix y pasa a ser el fix
 > **más la prueba de que arregla lo que dice arreglar**. El ejercicio 30 te hace
-> aplicarlo hacia atrás sobre uno de los dieciséis incidentes que el cuaderno
+> aplicarlo hacia atrás sobre uno de los incidentes que el cuaderno
 > ya tiene reservados, y sus ramas salen del tag de la fase donde vive cada
 > bug, no de éste. Y una advertencia de git que sólo aplica hoy: `npm run
 > test:ci` deja una carpeta `coverage/` con cientos de archivos HTML. Va al
@@ -1231,10 +1288,10 @@ La **Fase 13** cierra el curso donde el círculo se cierra de verdad: la misma i
 
 ## 📌 Pendientes sugeridos
 
-- **Jasmine y Karma llevaban once fases con rango `^`, y esta fase lo cierra.** No fue un error de la Fase 0 —usó `--skip-tests` y fijó sólo lo que usaba— pero contradice técnicamente su afirmación de que todas las versiones estaban fijadas. → **Aviso para una segunda pasada sobre la Fase 0**: una línea diciendo que las de testing se fijan en la Fase 12 cerraría el bucle.
+- **Jasmine y Karma llevaban once fases con rango `~`, y esta fase lo cierra.** No fue un error de la Fase 0 —usó `--skip-tests` y fijó sólo lo que usaba— pero contradice técnicamente su afirmación de que todas las versiones estaban fijadas. → **Aviso para una segunda pasada sobre la Fase 0**: una línea diciendo que las de testing se fijan en la Fase 12 cerraría el bucle.
 - **La `codeCoverageExclude` no va donde el prompt de esta fase decía.** Los umbrales van en `karma.conf.js` y las exclusiones en `angular.json`, porque las lee el builder antes de instrumentar. Escritas en el sitio equivocado no dan error: no hacen nada. → **Corrección al prompt de la Fase 12**, ya aplicada aquí.
 - **`CertificateStateService.issue()` tiene un `new Date()` escondido y es una deuda de diseño de la Fase 10.** El ejercicio 26 lo doma y hace argumentar si merece arreglarse. Si el curso hace una segunda pasada, la respuesta debería subir al texto de la Fase 10 —un `Clock` inyectable de tres líneas, o `issuedAt` como parámetro— porque el mismo problema va a aparecer en la Fase 13 con la configuración en arranque. → **Aviso para una segunda pasada sobre la Fase 10.**
-- **Sólo dos de los dieciséis incidentes reservados tienen test de regresión escrito en el cuerpo del curso.** El resto queda como el ejercicio 30, que hace elegir uno. Un curso con más presupuesto tendría un test por incidente y sería el mejor material de todo el track. → **Decisión de proyecto**: es media fase de trabajo y produciría un `cuaderno-incidentes.md` mucho más largo.
+- **Sólo dos de los dieciocho incidentes reservados antes de esta fase tienen test de regresión escrito en el cuerpo del curso.** El resto queda como el ejercicio 30, que hace elegir uno. Un curso con más presupuesto tendría un test por incidente y sería el mejor material de todo el track. → **Decisión de proyecto**: es media fase de trabajo y produciría un `cuaderno-incidentes.md` mucho más largo.
 - **El coverage del proyecto va a estar dominado por funciones puras y eso es honesto, no un truco.** Pero significa que el número global no dice nada sobre los componentes, que son donde vive el riesgo de una SPA. El umbral `each` lo mitiga; no lo resuelve. → **Nota para el chat de A11 o para el cierre del track forense**: el checklist de hotfix debería incluir "¿esta zona tiene test, o sólo tiene porcentaje?".
 - **`RouterTestingModule` está deprecado en Angular 17** en favor de `provideRouter`, y esta fase lo usa porque en la 16 es lo que hay. Es la tercera pieza de esta fase con fecha de caducidad, junto a `HttpClientTestingModule` y el `TestBed` sin signals. → **Aviso para el chat de A11**: las tres merecen una fila en su tabla de traducción.
 - **Los IDs de incidente no quedan en orden de fase.** La Fase 12 se lleva el 17 y el **20**, y la Fase 13 el 18 y el 19. Está así en los dos prompts y no lo cambio, pero el cuaderno se lee por ID y alguien va a preguntar por qué el último incidente no es del último capítulo. → **Nota para el chat del cuaderno de incidentes.**

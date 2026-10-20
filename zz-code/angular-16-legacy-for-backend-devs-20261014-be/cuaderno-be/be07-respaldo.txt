@@ -1,0 +1,55 @@
+psql: could not connect to server: No such file or directory
+	Is the server running locally and accepting
+	connections on Unix domain socket "/var/run/postgresql/.s.PGSQL.5432"?
+## 9.6 (wal_level=)
+   psql: could not connect to server: No such file or directory
+   	Is the server running locally and accepting
+   	connections on Unix domain socket "/var/run/postgresql/.s.PGSQL.5432"?
+   ERROR:  WAL level not sufficient for making an online backup
+   HINT:  wal_level must be set to "replica" or "logical" at server start.
+    pg_switch_xlog 
+    0/14EDE90
+   respaldo completado: /tmp/certcore-backups/certcore-2026-10-15.tar.gz
+## 11 (wal_level=replica)
+    pg_start_backup 
+    0/2000028
+    pg_stop_backup 
+    0/20000F8
+   NOTICE:  WAL archiving is not enabled; you must ensure that all required WAL segments are copied through other means to complete the backup
+   ERROR:  function pg_switch_xlog() does not exist
+   LINE 1: SELECT pg_switch_xlog()
+                  ^
+   HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+   respaldo completado: /tmp/certcore-backups/certcore-2026-10-15.tar.gz
+## 13 (wal_level=replica)
+    pg_start_backup 
+    0/2000028
+   NOTICE:  WAL archiving is not enabled; you must ensure that all required WAL segments are copied through other means to complete the backup
+    pg_stop_backup 
+    0/2000100
+   ERROR:  function pg_switch_xlog() does not exist
+   LINE 1: SELECT pg_switch_xlog()
+                  ^
+   HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+   respaldo completado: /tmp/certcore-backups/certcore-2026-10-15.tar.gz
+## 16.9 (wal_level=replica)
+   ERROR:  function pg_start_backup(unknown) does not exist
+   LINE 1: SELECT pg_start_backup('nightly')
+                  ^
+   HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+   ERROR:  function pg_stop_backup() does not exist
+   LINE 1: SELECT pg_stop_backup()
+                  ^
+   HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+   ERROR:  function pg_switch_xlog() does not exist
+   LINE 1: SELECT pg_switch_xlog()
+                  ^
+   HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+    pg_start_backup 
+    0/2000028
+    pg_stop_backup 
+    0/20000F8
+   NOTICE:  WAL archiving is not enabled; you must ensure that all required WAL segments are copied through other means to complete the backup
+    pg_switch_xlog 
+    0/3000000
+   respaldo completado: /tmp/certcore-backups/certcore-2026-10-15.tar.gz

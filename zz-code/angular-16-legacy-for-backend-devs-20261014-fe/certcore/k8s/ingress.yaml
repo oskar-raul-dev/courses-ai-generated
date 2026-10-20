@@ -1,0 +1,21 @@
+# k8s/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: certcore
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          # Una sola regla: todo lo que entre va al Service de la aplicación.
+          # El reparto entre la SPA y `/api` ya lo hace el nginx de dentro de la
+          # imagen, y dejarlo ahí es lo que mantiene la paridad con la Fase 13:
+          # el mismo reparto en tu portátil y en el cluster.
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: certcore
+                port:
+                  number: 80

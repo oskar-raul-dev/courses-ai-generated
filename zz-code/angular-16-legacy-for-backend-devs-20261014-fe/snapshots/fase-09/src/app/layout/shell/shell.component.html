@@ -1,0 +1,39 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="sidenav.toggle()" aria-label="Abrir el menú">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>CertCore</span>
+  <span class="shell-spacer"></span>
+
+  <ng-container *ngIf="currentUser$ | async as currentUser">
+    <span class="shell-user">{{ currentUser.name }} · {{ currentUser.role }}</span>
+    <button mat-icon-button (click)="logout()" aria-label="Cerrar sesión">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </ng-container>
+
+  <!-- Marcar el ambiente en la barra evita el error más caro del curso:
+       creer que estás en UAT cuando estás en producción. -->
+  <span class="shell-environment">{{ environmentName }}</span>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        *ngFor="let item of navigationItems"
+        [routerLink]="item.path"
+        routerLinkActive="active-link"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Aquí es donde el router pinta la feature que toque. -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

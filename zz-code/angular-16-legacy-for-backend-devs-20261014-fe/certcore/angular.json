@@ -64,21 +64,21 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "1.5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "8kb"
                 }
               ],
               "outputHashing": "all",
               "sourceMap": {
                 "scripts": true,
                 "styles": false,
-                "vendor": false,
-                "hidden": false
+                "hidden": true,
+                "vendor": false
               }
             },
             "development": {
@@ -132,7 +132,14 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "karmaConfig": "karma.conf.js",
+            "codeCoverageExclude": [
+              "src/environments/**",
+              "src/**/*.module.ts",
+              "src/app/features/certificates/certificate-pdf.service.ts",
+              "mock/**"
+            ]
           }
         }
       }

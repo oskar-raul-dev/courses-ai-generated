@@ -1,9 +1,9 @@
 # 📓 Cuaderno de incidentes — CertCore
 
-> Tutorial Angular 16 — Inspecciones y certificaciones · **20 incidentes · 14 horas**
-> ≈3.5h por semana, repartidas a lo largo del mes que dura el curso
+> Tutorial Angular 16 — Inspecciones y certificaciones · **22 incidentes · 15 horas**
+> ≈3.75h por semana, repartidas a lo largo del mes que dura el curso
 
-Veinte tickets como los que llegan de verdad: vagos, escritos por alguien que no sabe qué es un resolver, y a veces describiendo dos problemas distintos como si fueran uno. Tu trabajo es convertirlos en un diagnóstico.
+Veintidós tickets como los que llegan de verdad: vagos, escritos por alguien que no sabe qué es un resolver, y a veces describiendo dos problemas distintos como si fueran uno. Tu trabajo es convertirlos en un diagnóstico.
 
 > 🧭 **El trato.** Cada incidente trae su solución de referencia, plegada al final. Está ahí porque trabajas sin instructor y necesitas saber si acertaste. **Abrirla antes de escribir la tuya no te ahorra tiempo: te ahorra el ejercicio**, que es lo único que estabas comprando. Lo mismo con las tres pistas: son un plan de rescate, no un atajo.
 
@@ -67,11 +67,11 @@ Los verbos son fijos: `abre`, `repro`, `hipótesis`, `hipótesis descartada`, `c
 Y como el fix de casi todos estos incidentes es de una o dos líneas, márcalo con el par de tags de [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md):
 
 ```bash
-git tag -a inc/08/version-ejecutada-roto -m "F7 inc08: el test reproduce el bug y falla"
+git tag -a inc/08/version-equivocada-roto -m "F7 inc08: el test reproduce el bug y falla"
 # …el fix…
-git tag -a inc/08/version-ejecutada-fix  -m "F7 inc08: causa raíz y fix, con el test en verde"
+git tag -a inc/08/version-equivocada-fix  -m "F7 inc08: causa raíz y fix, con el test en verde"
 
-git diff inc/08/version-ejecutada-roto inc/08/version-ejecutada-fix   # ← el post-mortem, sin ruido
+git diff inc/08/version-equivocada-roto inc/08/version-equivocada-fix   # ← el post-mortem, sin ruido
 git tag -n99 -l 'inc/*'                                              # ← el cuaderno entero, sin abrir un archivo
 ```
 
@@ -111,6 +111,7 @@ Actualiza la columna **Estado** en el mismo commit que abre o cierra cada incide
 |---|---|---|---|---|---|
 | [06](#incidente-06--el-botón-de-nuevo-cliente-se-ve-gris-y-plano-desde-el-martes-pero-todo-compila) | 5 | "El botón de Nuevo cliente se ve gris y plano desde el martes, pero todo compila" | Convivencia de estilos 🧬 | 🟡 | ⬜ |
 | [07](#incidente-07--metí-el-listado-de-clientes-en-el-panel-y-la-pantalla-se-queda-en-blanco) | 5 | "Metí el listado de clientes en el panel y la pantalla se queda en blanco" | Convivencia de estilos 🧬 | 🟡 | ⬜ |
+| [22](#incidente-22--no-me-deja-crear-el-cliente-de-galápagos-dice-que-el-nit-son-9-o-10-dígitos) | 6 | "No me deja crear el cliente de Galápagos: dice que el NIT son 9 o 10 dígitos" | Formularios | 🟡 | ⬜ |
 | [08](#incidente-08--la-inspección-de-agosto-ahora-tiene-un-ítem-más-que-cuando-la-hice) | 7 | "La inspección de agosto ahora tiene un ítem más que cuando la hice" | Versionado normativo | 🟡 | ⬜ |
 | [09](#incidente-09--publiqué-la-v3-y-el-sistema-dice-que-hay-dos-plantillas-vigentes) | 7 | "Publiqué la v3 y el sistema dice que hay dos plantillas vigentes" | Versionado normativo | 🟠 | ⬜ |
 | [10](#incidente-10--cambié-de-inspección-desde-el-listado-y-me-aparecieron-ítems-de-la-otra) | 8 | "Cambié de inspección desde el listado y me aparecieron ítems de la otra" | Versionado normativo | 🟠 | ⬜ |
@@ -125,6 +126,7 @@ Actualiza la columna **Estado** en el mismo commit que abre o cierra cada incide
 | [14](#incidente-14--descargué-el-certificado-y-la-tabla-de-hallazgos-no-dice-lo-mismo-que-la-pantalla) | 10 | "Descargué el certificado y la tabla de hallazgos no dice lo mismo que la pantalla" | Trazabilidad | 🟠 | ⬜ |
 | [15](#incidente-15--el-certificado-venció-ayer-para-el-sistema-y-hoy-para-el-cliente-y-sólo-pasa-por-la-tarde) | 10 | "El certificado venció ayer para el sistema y hoy para el cliente, y sólo pasa por la tarde" | Tiempo | 🔴 | ⬜ |
 | [16](#incidente-16--cerré-el-panel-hace-media-hora-y-el-servidor-sigue-recibiendo-peticiones-mías) | 11 | "Cerré el panel hace media hora y el servidor sigue recibiendo peticiones mías" | Performance | 🟠 | ⬜ |
+| [21](#incidente-21--en-la-isla-todavía-era-12-y-el-sistema-ya-decía-vencido) | 10 | "En la isla todavía era 12 y el sistema ya decía vencido" | Tiempo | 🟠 | ⬜ |
 
 ### Semana 4 · Fases 12-13
 
@@ -146,7 +148,7 @@ Actualiza la columna **Estado** en el mismo commit que abre o cierra cada incide
 
 > **Fase:** 0 · **Categoría:** Despliegue · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 20-30 min · **Ruta forense:** [`forense-fase-00.md`](forense-fase-00.md)
+> **Tiempo sugerido:** 15-25 min · **Ruta forense:** [`forense-fase-00.md`](forense-fase-00.md)
 
 ### 🎫 El ticket
 
@@ -324,7 +326,7 @@ Si concluiste "hay que actualizar Angular a una versión que soporte TS 5.4", el
 
 > **Fase:** 1 · **Categoría:** UI · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 25-40 min · **Ruta forense:** [`forense-fase-01.md`](forense-fase-01.md)
+> **Tiempo sugerido:** 20-30 min · **Ruta forense:** [`forense-fase-01.md`](forense-fase-01.md)
 
 ### 🎫 El ticket
 
@@ -472,7 +474,7 @@ Nunca llegó: se cazó en desarrollo, que es donde se cazan los errores que no p
 
 > **Fase:** 2 · **Categoría:** Integración · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 30-40 min · **Ruta forense:** [`forense-fase-02.md`](forense-fase-02.md) y [`forense-fase-00.md`](forense-fase-00.md)
+> **Tiempo sugerido:** 20-30 min · **Ruta forense:** [`forense-fase-02.md`](forense-fase-02.md) y [`forense-fase-00.md`](forense-fase-00.md)
 
 ### 🎫 El ticket
 
@@ -646,7 +648,7 @@ Si concluiste que fue el guard, comprueba Network: sin ninguna petición en rojo
 
 > **Fase:** 3 · **Categoría:** Integración · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 30-40 min · **Ruta forense:** [`forense-fase-03.md`](forense-fase-03.md)
+> **Tiempo sugerido:** 20-30 min · **Ruta forense:** [`forense-fase-03.md`](forense-fase-03.md)
 
 ### 🎫 El ticket
 
@@ -809,7 +811,7 @@ Si concluiste `latency`, el síntoma se parece y hay una diferencia observable: 
 
 > **Fase:** 4 · **Categoría:** Estado (servicios) · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 25-40 min · **Ruta forense:** [`forense-fase-04.md`](forense-fase-04.md)
+> **Tiempo sugerido:** 20-30 min · **Ruta forense:** [`forense-fase-04.md`](forense-fase-04.md)
 
 ### 🎫 El ticket
 
@@ -974,7 +976,7 @@ Si concluiste que el mock no devuelve nada, se descarta con un `curl` a `/templa
 
 > **Fase:** 5 · **Categoría:** Convivencia de estilos 🧬 · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 30-45 min · **Ruta forense:** [`forense-fase-05.md`](forense-fase-05.md)
+> **Tiempo sugerido:** 20-30 min · **Ruta forense:** [`forense-fase-05.md`](forense-fase-05.md)
 
 ### 🎫 El ticket
 
@@ -1132,7 +1134,7 @@ Si buscaste el problema en `styles.scss` o en el tema, es exactamente donde el t
 
 > **Fase:** 5 · **Categoría:** Convivencia de estilos 🧬 · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 35-50 min · **Ruta forense:** [`forense-fase-05.md`](forense-fase-05.md) y [`forense-fase-01.md`](forense-fase-01.md)
+> **Tiempo sugerido:** 25-35 min · **Ruta forense:** [`forense-fase-05.md`](forense-fase-05.md) y [`forense-fase-01.md`](forense-fase-01.md)
 
 ### 🎫 El ticket
 
@@ -1227,8 +1229,9 @@ Un componente standalone resuelve sus dependencias en su propio inyector y en el
 Sí, hay un parche de una línea, y **no es el que hay que entregar**:
 
 ```ts
-// El hotfix de un viernes: proveer el token también en la ruta del panel.
-{ path: '', component: DashboardComponent, providers: [{ provide: CLIENT_LIST_PAGE_SIZE, useValue: 5 }] }
+// dashboard-routing.module.ts — el hotfix de un viernes: proveer el token
+// también en la ruta del panel.
+{ path: '', component: DashboardHomeComponent, providers: [{ provide: CLIENT_LIST_PAGE_SIZE, useValue: 5 }] }
 ```
 
 Funciona y deja la trampa puesta para la siguiente pantalla que reuse el componente. Se entrega **sólo** si hay que desplegar ya, y con el ticket de seguimiento abierto en el mismo commit.
@@ -1312,7 +1315,7 @@ Si buscaste en `SharedModule` o en `CoreModule`, el paréntesis del error te est
 
 > **Fase:** 7 · **Categoría:** Versionado normativo · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 45-60 min · **Ruta forense:** [`forense-fase-07.md`](forense-fase-07.md) y [`forense-fase-12.md`](forense-fase-12.md)
+> **Tiempo sugerido:** 30-40 min · **Ruta forense:** [`forense-fase-07.md`](forense-fase-07.md) y [`forense-fase-12.md`](forense-fase-12.md)
 
 ### 🎫 El ticket
 
@@ -1441,33 +1444,34 @@ Y la regla de revisión que la acompaña: **cada aparición de `resolveTemplateV
 
 **Prueba de regresión**
 
-Va **antes** del fix, y hay que verla fallar. No necesita `TestBed`: la regla vive en una función pura.
+Va **antes** del fix, y hay que verla fallar. Y tiene que ejecutar **la línea culpable**, que vive en el componente: un test que reimplementara la regla dentro del `it` —un `family.find(…)` sobre dos fixtures— pasaría en verde con el bug puesto, porque nunca toca el código de producción.
 
 ```ts
-// src/app/core/domain/template-resolution.spec.ts
-it('lee una inspección con la versión que guardó, no con la vigente', () => {
-  const family = [templateV1, templateV2];   // v1 hasta 2023-12-31, v2 desde 2024-01-01
-  const inspection = { templateId: 'elevator-annual', templateVersion: 1 } as Inspection;
+// src/app/features/inspections/inspection-detail/inspection-detail.component.spec.ts — lo esencial
+// TestBed con HttpClientTestingModule y un ActivatedRoute con inspectionId=501.
+it('pide la plantilla con la versión que la inspección guardó', () => {
+  fixture.detectChanges();
+  httpMock.expectOne((request) => request.url.endsWith('/inspections/501')).flush(INSPECTION_501);
 
-  const applied = family.find((version) => version.version === inspection.templateVersion);
+  const templateRequest = httpMock.expectOne((request) => request.url.endsWith('/templates'));
 
-  expect(applied?.version).toBe(1);
-  expect(applied?.items.length).toBe(3);            // la v2 tiene cuatro
-  expect(applied?.items[0].title).toBe('Estado del cable principal');   // la v2 dice "y tensión"
+  // La 501 se ejecutó con la v1. El código roto pide la familia entera, sin
+  // `version`, y elige la vigente.
+  expect(templateRequest.request.params.get('version')).toBe('1');
 });
 ```
 
 ```
 Chrome Headless: Executed 1 of 1 (1 FAILED)
-  ✗ lee una inspección con la versión que guardó, no con la vigente
-    Expected 2 to be 1.
+  ✗ pide la plantilla con la versión que la inspección guardó
+    Expected null to be '1'.
 ```
 
 ```bash
-git tag -a inc/08/version-ejecutada-roto -m "F7 inc08: el test reproduce el bug y falla"
+git tag -a inc/08/version-equivocada-roto -m "F7 inc08: el test reproduce el bug y falla"
 # …el fix…
-git tag -a inc/08/version-ejecutada-fix  -m "F7 inc08: causa raíz y fix, con el test en verde"
-git diff inc/08/version-ejecutada-roto inc/08/version-ejecutada-fix   # ← dos líneas
+git tag -a inc/08/version-equivocada-fix  -m "F7 inc08: causa raíz y fix, con el test en verde"
+git diff inc/08/version-equivocada-roto inc/08/version-equivocada-fix   # ← el fix y nada más
 ```
 
 **Prevención**
@@ -1492,7 +1496,7 @@ Si concluiste que el editor sobrescribió la v1, es la hipótesis correcta de de
 
 > **Fase:** 7 · **Categoría:** Versionado normativo · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 50-70 min · **Ruta forense:** [`forense-fase-07.md`](forense-fase-07.md)
+> **Tiempo sugerido:** 40-50 min · **Ruta forense:** [`forense-fase-07.md`](forense-fase-07.md)
 
 ### 🎫 El ticket
 
@@ -1691,7 +1695,7 @@ Si concluiste que `resolveTemplateVersion` está mal escrita, mírala otra vez: 
 
 > **Fase:** 8 · **Categoría:** Versionado normativo · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 50-70 min · **Ruta forense:** [`forense-fase-07.md`](forense-fase-07.md) y [`forense-fase-08.md`](forense-fase-08.md)
+> **Tiempo sugerido:** 40-50 min · **Ruta forense:** [`forense-fase-07.md`](forense-fase-07.md) y [`forense-fase-08.md`](forense-fase-08.md)
 
 ### 🎫 El ticket
 
@@ -1885,7 +1889,7 @@ Si concluiste que hay que llamar a `form.reset()` al cambiar de ruta, no basta: 
 
 > **Fase:** 8 · **Categoría:** Formularios dinámicos · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 45-70 min · **Ruta forense:** [`forense-fase-08.md`](forense-fase-08.md)
+> **Tiempo sugerido:** 35-45 min · **Ruta forense:** [`forense-fase-08.md`](forense-fase-08.md)
 
 ### 🎫 El ticket
 
@@ -2083,7 +2087,7 @@ Si concluiste que el `debounceTime` es muy corto, subirlo espacia el bucle y no 
 
 > **Fase:** 9 · **Categoría:** Tipos (strict) · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 45-70 min · **Ruta forense:** [`forense-fase-09.md`](forense-fase-09.md)
+> **Tiempo sugerido:** 35-45 min · **Ruta forense:** [`forense-fase-09.md`](forense-fase-09.md)
 
 ### 🎫 El ticket
 
@@ -2277,7 +2281,7 @@ Si concluiste que el backend está mal y que lo arreglen ellos, tienes razón **
 
 > **Fase:** 9 · **Categoría:** Tipos (strict) · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 50-70 min · **Ruta forense:** [`forense-fase-09.md`](forense-fase-09.md)
+> **Tiempo sugerido:** 40-50 min · **Ruta forense:** [`forense-fase-09.md`](forense-fase-09.md)
 
 ### 🎫 El ticket
 
@@ -2475,7 +2479,7 @@ Si tu primera hipótesis fue "el supervisor no guardó bien", es la más natural
 
 > **Fase:** 10 · **Categoría:** Trazabilidad · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 45-60 min · **Ruta forense:** [`forense-fase-10.md`](forense-fase-10.md)
+> **Tiempo sugerido:** 30-40 min · **Ruta forense:** [`forense-fase-10.md`](forense-fase-10.md)
 
 ### 🎫 El ticket
 
@@ -2664,7 +2668,7 @@ Si concluiste que el PDF está cacheado, se descarta en un segundo: cada descarg
 
 > **Fase:** 10 · **Categoría:** Tiempo · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 1h30-2h · **Ruta forense:** [`forense-fase-10.md`](forense-fase-10.md)
+> **Tiempo sugerido:** 70-80 min · **Ruta forense:** [`forense-fase-10.md`](forense-fase-10.md)
 
 ### 🎫 El ticket
 
@@ -2744,8 +2748,10 @@ En Bogotá, `-05:00`, las 19:00 locales son las 00:00 UTC **del día siguiente**
 El dato está bien: `"validUntil": "2025-02-10T23:59:59-05:00"`, con offset explícito, como toda fecha del proyecto desde la Fase 3. **El bug está en quien lo lee.**
 
 ```ts
-// src/app/core/domain/certificate-status.ts
-const expired = certificate.validUntil.slice(0, 10) < new Date().toISOString().slice(0, 10);
+// src/app/core/domain/certificate-status.ts — la línea que cambió
+  if (certificate.validUntil.slice(0, 10) < new Date().toISOString().slice(0, 10)) {
+    return 'expired';
+  }
 ```
 
 Esa línea compara **dos días calculados en husos distintos**:
@@ -2771,7 +2777,16 @@ toBusinessDay('2025-02-10T23:59:59-05:00');            // '2025-02-10' — el d�
 
 **Parche mínimo**
 
-No lo hay que sea honesto, y hay que decirlo: los tres arreglos de una línea que aparecen en cualquier revisión **mueven el síntoma a otra hora o a otro huso**.
+Hay uno honesto, y es volver a la línea que la Fase 10 dejó escrita: comparar **instantes**, con el `now` que entra por parámetro.
+
+```ts
+// src/app/core/domain/certificate-status.ts — dentro de deriveCertificateStatus
+  if (isPast(certificate.validUntil, now)) {
+    return 'expired';
+  }
+```
+
+Lo que no hay es un arreglo honesto **distinto** de ése. Los tres de una línea que aparecen en cualquier revisión **mueven el síntoma a otra hora o a otro huso**:
 
 ```ts
 // ❌ Los tres, y por qué:
@@ -2785,59 +2800,46 @@ cert.validUntil.slice(0,10) < todayLocalString();          // depende del huso d
 
 **La refactorización correcta**
 
-Una decisión, con nombre, en un archivo, llamada desde todas partes:
+Ya está hecha, y es la de la Fase 10: una decisión, con nombre, en un archivo, llamada desde todas partes. `isPast` compara instantes y no días; `toBusinessDay` es el **único** sitio del proyecto donde un instante se convierte en día, con la zona de `business-day.ts`; y ninguna función de dominio pregunta la hora, porque el `now` le llega de fuera. La rama rompió las tres cosas en una línea: comparó días en vez de instantes, los sacó con dos husos distintos y le preguntó la hora a `new Date()`.
 
-```ts
-// src/app/core/domain/business-day.ts
-/**
- * La zona horaria de las decisiones de negocio de CertCore.
- *
- * No es la del navegador ni la del servidor: es la del país donde la empresa
- * opera y donde la norma aplica. Un certificado vence al final del día ahí,
- * y eso no cambia porque el inspector esté de viaje.
- */
-export const BUSINESS_TIME_ZONE = 'America/Bogota';
-
-/** El día de calendario del negocio para un instante ISO. */
-export function toBusinessDay(instant: string): string {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: BUSINESS_TIME_ZONE,
-    year: 'numeric', month: '2-digit', day: '2-digit',
-  }).format(new Date(instant));   // 'en-CA' produce YYYY-MM-DD, que ordena como cadena
-}
-
-/** Hoy, según el negocio. */
-export function todayInBusinessZone(): string {
-  return toBusinessDay(new Date().toISOString());
-}
-```
-
-```ts
-// Y la comparación, que ahora dice lo que significa:
-const expired = toBusinessDay(certificate.validUntil) < todayInBusinessZone();
-```
+Lo que falta no es código: es que nadie pueda volver a escribir esa línea sin que algo se ponga rojo. Eso es la prevención, abajo.
 
 > 🧭 **La regla del proyecto: la zona horaria de una decisión de negocio es un dato del negocio, no del entorno.** Cuando esa decisión tiene nombre y vive en un archivo, deja de tomarse por accidente en catorce sitios distintos.
 
 **Prueba de regresión**
 
 ```ts
-// src/app/core/domain/certificate-status.spec.ts
-it('no depende del huso del navegador', () => {
-  const certificate = { validUntil: '2025-02-10T23:59:59-05:00' } as Certificate;
+// src/app/core/domain/certificate-status.spec.ts — el caso del incidente 15
+import { Certificate } from '../models/certificate.model';
+import { buildCertificateView } from './certificate-status';
 
-  // Las 20:00 de Bogotá del día en que vence: en UTC ya es el día 11.
-  // Antes del fix, este caso devolvía 'expired'.
-  const bogotaEvening = '2025-02-11T01:00:00.000Z';
+function certificate(validUntil: string): Certificate {
+  return {
+    id: 'CERT-2024-000502',
+    inspectionId: 502,
+    issuedAt: '2024-02-10T10:00:00-05:00',
+    validUntil,
+    // El campo guardado que la Fase 10 dejó de leer, puesto mal a propósito.
+    status: 'valid',
+    revokedAt: null,
+  };
+}
 
-  expect(buildCertificateView(certificate, bogotaEvening).status).toBe('valid');
-});
+describe('incidente 15: el vencimiento no depende del huso de nadie', () => {
+  const certificate502 = certificate('2025-02-10T23:59:59-05:00');
 
-it('vence al terminar el día del negocio, no antes', () => {
-  const certificate = { validUntil: '2025-02-10T23:59:59-05:00' } as Certificate;
+  it('sigue vigente a las 20:00 de Bogotá del día en que vence', () => {
+    // En UTC ya es el día 11. Antes del fix, este caso devolvía 'expired'.
+    // Es `expiring` y no `valid` porque le quedan cero días (Fase 10 §5.3).
+    const bogotaEvening = '2025-02-11T01:00:00.000Z';
 
-  expect(buildCertificateView(certificate, '2025-02-10T04:00:00.000Z').status).toBe('valid');
-  expect(buildCertificateView(certificate, '2025-02-11T06:00:00.000Z').status).toBe('expired');
+    expect(buildCertificateView(certificate502, bogotaEvening).status).toBe('expiring');
+  });
+
+  it('vence al terminar el día del negocio, no antes', () => {
+    expect(buildCertificateView(certificate502, '2025-02-10T04:00:00.000Z').status).toBe('expiring');
+    expect(buildCertificateView(certificate502, '2025-02-11T06:00:00.000Z').status).toBe('expired');
+  });
 });
 ```
 
@@ -2876,7 +2878,7 @@ Y si concluiste que el `status: "valid"` guardado en el `db.json` es el culpable
 
 > **Fase:** 11 · **Categoría:** Performance · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 45-60 min · **Ruta forense:** [`forense-fase-11.md`](forense-fase-11.md) y [`forense-fase-04.md`](forense-fase-04.md)
+> **Tiempo sugerido:** 30-40 min · **Ruta forense:** [`forense-fase-11.md`](forense-fase-11.md) y [`forense-fase-04.md`](forense-fase-04.md)
 
 ### 🎫 El ticket
 
@@ -2910,7 +2912,7 @@ Network con el filtro en `Fetch/XHR`, **fuera** del panel, y dos minutos de paci
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-El ritmo te dice el número: si el refresco era de un minuto y ves cinco pares de peticiones por minuto, hay cinco pantallas zombis. Ahora la pregunta es qué suscripción sobrevive al componente — y no todas pueden.
+El ritmo te dice el número: si el refresco era de un minuto y ves cinco peticiones por minuto a la misma colección, hay cinco pantallas zombis. Y la colección te dice cuál: el latido del panel de la Fase 11 pide **cinco** colecciones a la vez, así que si fuera ése verías las cinco. Ahora la pregunta es qué suscripción sobrevive al componente — y no todas pueden.
 
 </details>
 
@@ -2948,93 +2950,92 @@ Un observable de `HttpClient` completa solo y no se puede fugar. ¿Cuál de los 
 **Causa raíz**
 
 ```
-# Network, fuera del panel, dos minutos:
-certificates   200   xhr   14 ms
-inspections    200   xhr   22 ms
-certificates   200   xhr   11 ms
+# Network, fuera del panel, dos minutos, tras cinco visitas:
+inspections    200   xhr   21 ms
 inspections    200   xhr   19 ms
-…cinco pares por minuto tras cinco visitas al panel
+inspections    200   xhr   18 ms
+inspections    200   xhr   22 ms
+inspections    200   xhr   20 ms
+…diez en dos minutos, y ni un `templates`, `certificates`, `assets` o `findings`
 ```
 
-`DashboardComponent` se suscribe a un `interval` para refrescar las métricas y **no lo corta al destruirse**:
+El latido de la Fase 11 está bien: `DashboardMetricsService.metrics$` lleva su `shareReplay({ bufferSize: 1, refCount: true })` y muere con el `async` pipe al salir del panel. Lo que sigue vivo es **un segundo refresco**, imperativo, que alguien añadió en el cascarón heredado *"para que la lista de inspecciones esté fresca aunque el `async` no emita"*:
 
 ```ts
-// src/app/features/dashboard/dashboard.component.ts
+// src/app/features/dashboard/dashboard-home/dashboard-home.component.ts
 ngOnInit(): void {
   // `interval` NO completa nunca. Este componente sí se destruye. La
   // suscripción sobrevive a su dueño, y eso es la definición de una fuga.
-  interval(60_000)
-    .pipe(switchMap(() => this.dashboardState.reload()))
-    .subscribe();
+  interval(DASHBOARD_REFRESH_MS).subscribe(() => this.inspectionState.load());
 }
 ```
 
-Cada visita al panel deja un `interval` corriendo. Cinco visitas, cinco refrescos por minuto, para siempre — y con ellos, cinco componentes que el recolector de basura no puede liberar. Eso explica las dos mitades del ticket: **el tráfico** y **el navegador que se pone lento durante la mañana**.
+Cada visita al panel deja un `interval` corriendo. Cinco visitas, cinco `load()` por minuto, para siempre — y con ellos, cinco componentes que el recolector de basura no puede liberar, porque cada `interval` guarda una referencia al suyo. Eso explica las dos mitades del ticket: **el tráfico** y **el navegador que se pone lento durante la mañana**.
 
-> 🧠 **No toda suscripción sin cerrar es una fuga.** Una fuga es una suscripción que **sobrevive a quien la creó**. El `subscribe` a `HttpClient` de dos líneas más arriba no lo es: completa al llegar la respuesta. El del `interval` sí, porque `interval` no completa nunca.
+> 🧠 **No toda suscripción sin cerrar es una fuga.** Una fuga es una suscripción que **sobrevive a quien la creó**. El `subscribe` a `HttpClient` que hace `load()` por dentro no lo es: completa al llegar la respuesta. El del `interval` sí, porque `interval` no completa nunca.
 
 **Parche mínimo**
 
-El archivo es **nuevo** (standalone, `inject()`), así que el parche va en estilo nuevo:
+El archivo es **heredado** —lo declaró la Fase 1, constructor y detección por defecto—, así que el parche va en su estilo, el de 2021: un `Subscription` guardado y un `ngOnDestroy`. `takeUntilDestroyed` funcionaría igual y sería modernizar mientras arreglas, que es como se rompen otras tres cosas.
 
 ```ts
-// src/app/features/dashboard/dashboard.component.ts
-private readonly destroyRef = inject(DestroyRef);
+// src/app/features/dashboard/dashboard-home/dashboard-home.component.ts
+export class DashboardHomeComponent implements OnInit, OnDestroy {
+  private refresh?: Subscription;
 
-ngOnInit(): void {
-  interval(60_000)
-    .pipe(
-      switchMap(() => this.dashboardState.reload()),
-      // Corta cuando Angular destruye el componente. Sin argumento sólo se
-      // puede llamar en el contexto de inyección; aquí estamos en ngOnInit,
-      // así que el DestroyRef va explícito. Ver el apéndice A04 §7.
-      takeUntilDestroyed(this.destroyRef),
-    )
-    .subscribe();
+  ngOnInit(): void {
+    this.refresh = interval(DASHBOARD_REFRESH_MS).subscribe(() => this.inspectionState.load());
+  }
+
+  ngOnDestroy(): void {
+    this.refresh?.unsubscribe();
+  }
 }
 ```
 
 **La refactorización correcta**
 
-El refresco periódico no es del componente: es del estado. Y así, además, deja de reiniciarse cada vez que alguien entra al panel:
+**Borrar el `interval` entero.** El refresco periódico no es del componente: ya es del servicio, y el latido de `metrics$` llama a `inspectionState.load()` cada minuto **mientras alguien mire**, que es exactamente lo que el segundo refresco pretendía y no conseguía:
 
 ```ts
-// src/app/core/state/dashboard-state.service.ts
-/**
- * El refresco vive aquí, no en la pantalla. `providedIn: 'root'` significa que
- * hay uno solo, y `refCount: true` que sólo corre mientras alguien mire — con
- * `refCount: false` seguiría pidiendo con el panel cerrado, que es este mismo
- * incidente escrito de otra manera. Ver el apéndice A06 §7.
- */
-readonly metrics$ = interval(60_000).pipe(
-  startWith(0),
-  switchMap(() => this.load()),
-  shareReplay({ bufferSize: 1, refCount: true }),
+// src/app/core/dashboard/dashboard-metrics.service.ts — lo que ya estaba
+private readonly heartbeat$ = timer(0, DASHBOARD_REFRESH_MS).pipe(
+  tap(() => {
+    this.inspectionState.load();
+    // …las otras tres colecciones…
+  }),
+  switchMap(() => this.findingApi.getAll()),
 );
+// …y en `metrics$`: shareReplay({ bufferSize: 1, refCount: true }).
 ```
 
-Y el componente se queda con un `async` pipe y **ninguna suscripción manual**, que es el sitio donde este bug ya no puede existir.
+Y el componente se queda con un `async` pipe, el constructor y **ninguna suscripción manual**, que es el sitio donde este bug ya no puede existir.
 
 **Prueba de regresión**
 
 ```ts
-// src/app/features/dashboard/dashboard.component.spec.ts
-it('deja de refrescar cuando se destruye', fakeAsync(() => {
+// src/app/features/dashboard/dashboard-home/dashboard-home.component.spec.ts — lo esencial
+// Componente HEREDADO: se monta con su módulo alrededor. `imports:
+// [DashboardModule, RouterTestingModule]`, el servicio del panel con
+// `metrics$: NEVER` —el cascarón se queda en "Cargando" sin timer propio— y un
+// doble de InspectionStateService con `load` espiado.
+it('no deja nada pidiendo cuando se destruye', fakeAsync(() => {
+  const fixture = TestBed.createComponent(DashboardHomeComponent);
   fixture.detectChanges();
-  httpMock.expectOne((r) => r.url.includes('/certificates')).flush([]);
-
-  tick(60_000);
-  httpMock.expectOne((r) => r.url.includes('/certificates')).flush([]);   // el refresco periódico
+  tick(DASHBOARD_REFRESH_MS);
+  const beforeDestroy = inspectionState.load.calls.count();
 
   fixture.destroy();
-  tick(180_000);
+  tick(3 * DASHBOARD_REFRESH_MS);
 
-  // Falla antes del fix: el interval seguía vivo y aquí había tres peticiones
-  // más esperando. `verify()` en el afterEach las habría delatado igual.
-  httpMock.expectNone((r) => r.url.includes('/certificates'));
+  // Falla antes del fix: "Expected 4 to be 1." Tres llamadas más, de un
+  // componente que ya no existe.
+  expect(inspectionState.load.calls.count()).toBe(beforeDestroy);
   discardPeriodicTasks();
 }));
 ```
+
+El `discardPeriodicTasks()` del final sólo trabaja en la rama rota, donde el `interval` sigue vivo; con el fix no queda nada que descartar. Pasa en verde con el parche y con la refactorización, y sirve para las dos.
 
 **Prevención**
 
@@ -3045,17 +3046,19 @@ El test de arriba, replicado en cualquier pantalla con refresco periódico, y un
 grep -rn "interval(\|timer(.*,\|fromEvent(" src/app --include="*.ts" | grep -v spec
 ```
 
-Y la regla de oro del curso, que es la prevención de fondo: **`async` pipe para pintar, `.subscribe()` para efectos — y entonces alguien se desuscribe.** El panel refactorizado no tiene ninguna suscripción manual, y por eso no puede fugarse.
+En CertCore ese `grep` devuelve **un** resultado legítimo —el `timer` de `DashboardMetricsService`, con su `refCount`— y uno de más en la rama del incidente. Revisar uno por uno lo que devuelve cuesta dos minutos.
+
+Y la regla de oro del curso, que es la prevención de fondo: **`async` pipe para pintar, `.subscribe()` para efectos — y entonces alguien se desuscribe.** El panel de la Fase 11 no tiene ninguna suscripción manual, y por eso no se fugaba hasta que alguien le añadió una.
 
 **Por qué llegó a producción**
 
-El refresco automático se añadió tarde, en la última semana antes de una demostración, y se probó de la única manera en que este bug es invisible: **abriendo el panel y mirándolo**. Nadie salió y volvió cinco veces.
+El refresco extra se añadió tarde, en la última semana antes de una demostración, y se probó de la única manera en que este bug es invisible: **abriendo el panel y mirándolo**. Nadie salió y volvió cinco veces.
 
 El sistema tampoco ayuda: una fuga de suscripción **no produce ningún síntoma inmediato**. La primera visita funciona perfecto, la segunda también, y el coste se acumula tan despacio que cuando alguien lo nota ya no lo relaciona con nada que se haya desplegado. Aquí lo detectó **infraestructura**, mirando tráfico — no el equipo de desarrollo, y no un test.
 
 **Si tu causa fue distinta a esta**
 
-Si concluiste que hay que poner `OnPush` en el panel, es el sospechoso 4 puesto en primer lugar: `OnPush` decide cuándo se **revisa** un componente, y una fuga es un componente que **ya no existe** y sigue trabajando. No se tocan. Si concluiste que el `switchMap` cancela y por tanto no hay problema, cancela la petición **anterior de la misma suscripción**, no la suscripción: hay cinco `interval` independientes, cada uno con su `switchMap` funcionando perfectamente. Y si tu fix fue subir el intervalo a cinco minutos, espacia el tráfico y deja las cinco suscripciones vivas: el navegador se sigue poniendo lento.
+Si concluiste que hay que poner `OnPush` en el panel, es el sospechoso 4 puesto en primer lugar: `OnPush` decide cuándo se **revisa** un componente, y una fuga es un componente que **ya no existe** y sigue trabajando. No se tocan. Si concluiste que falta el `refCount` del `shareReplay` —el 🧨 1 de la Fase 11—, el tráfico lo descarta: esa fuga pide las **cinco** colecciones y no se multiplica al entrar y salir, y aquí hay una sola colección y cinco veces. Si concluiste que el `switchMap` del latido cancela y por tanto no hay problema, cancela la petición **anterior de la misma suscripción**, no la suscripción: hay cinco `interval` independientes. Y si tu fix fue subir el intervalo a cinco minutos, espacia el tráfico y deja las cinco suscripciones vivas: el navegador se sigue poniendo lento.
 
 </details>
 
@@ -3064,7 +3067,7 @@ Si concluiste que hay que poner `OnPush` en el panel, es el sospechoso 4 puesto 
 
 > **Fase:** 12 · **Categoría:** Testing · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 1h30-2h · **Ruta forense:** [`forense-fase-12.md`](forense-fase-12.md)
+> **Tiempo sugerido:** 70-80 min · **Ruta forense:** [`forense-fase-12.md`](forense-fase-12.md)
 
 ### 🎫 El ticket
 
@@ -3081,8 +3084,10 @@ Hacerlo determinista **antes** de investigar, localizar la pareja de tests que s
 
 ```bash
 git switch -c incidente/17 fase-12
-ng test --watch=false --browsers=ChromeHeadless
-# Repítelo. Anota la semilla que Jasmine imprime al principio de cada ejecución.
+npm run test:ci
+# Repítelo. Anota la semilla que imprime src/test-seed.spec.ts (Fase 12 §5.1).
+# `npm test` no sirve aquí: el modo --watch tiene su propia trampa, que es parte
+# de la solución.
 ```
 
 ---
@@ -3090,7 +3095,7 @@ ng test --watch=false --browsers=ChromeHeadless
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar</summary>
 
-Un fallo que ocurre una de cada diez veces no se investiga: **se hace ocurrir siempre**. Lo primero que Jasmine imprime es lo primero que casi nadie lee, y es exactamente lo que te permite reproducirlo.
+Un fallo que ocurre una de cada diez veces no se investiga: **se hace ocurrir siempre**. La línea de la semilla es la que casi nadie lee, y es exactamente lo que te permite reproducirlo.
 
 </details>
 
@@ -3135,24 +3140,24 @@ Lo que queda es una pareja de tests que no deberían conocerse. ¿Qué comparten
 **Causa raíz**
 
 ```
-Randomized with seed 47291
+LOG: 'Semilla de Jasmine: 47291'
 Chrome Headless 120.0.0: Executed 128 of 128 SUCCESS (2.104 secs)
 
-Randomized with seed 83104
+LOG: 'Semilla de Jasmine: 83104'
 Chrome Headless 120.0.0: Executed 128 of 128 (1 FAILED) (2.233 secs)
 
-  AuthGuard
+  authGuard con el AuthService real
     ✗ redirige al login cuando no hay sesión
-      Expected UrlTree to be true.
+      Expected instance of Boolean to be an instance of UrlTree.
 ```
 
-Falla **según la semilla**, así que es el orden. Y con la semilla fija (`ng test --seed=83104`) más la bisección, la pareja aparece:
+Falla **según la semilla**, así que es el orden. Y con la semilla fija (`JASMINE_SEED=83104 npm run test:ci`, la variable que lee el `karma.conf.js` de la Fase 12: `ng test --seed` no existe en la 16) más la bisección, la pareja aparece:
 
 ```ts
 // auth.service.spec.ts — deja un token puesto y no lo limpia
 it('guarda el token al iniciar sesión', () => {
   service.login({ email: 'inspector@certcore.co', password: 'certcore123' }).subscribe();
-  httpMock.expectOne('/auth/login').flush({ accessToken: VALID_TOKEN });
+  httpMock.expectOne(`${environment.apiBaseUrl}/auth/login`).flush({ accessToken: VALID_TOKEN });
 
   expect(localStorage.getItem('certcore.accessToken')).toBe(VALID_TOKEN);
   // …y aquí termina. El token sigue en localStorage.
@@ -3160,16 +3165,25 @@ it('guarda el token al iniciar sesión', () => {
 ```
 
 ```ts
-// auth.guard.spec.ts — asume que no hay sesión
-it('redirige al login cuando no hay sesión', () => {
-  // No hay ningún setup que garantice que NO hay sesión: se da por hecho.
-  expect(authGuard(route, state)).toBeInstanceOf(UrlTree);
+// auth.guard.spec.ts — un segundo describe, "sin dobles, para probar la
+// integración de verdad": el AuthService REAL, que lee localStorage al nacer.
+describe('authGuard con el AuthService real', () => {
+  beforeEach(() => TestBed.configureTestingModule({ imports: [HttpClientTestingModule] }));
+
+  it('redirige al login cuando no hay sesión', () => {
+    // No hay ningún setup que garantice que NO hay sesión: se da por hecho.
+    expect(TestBed.runInInjectionContext(() => authGuard(route, state))).toBeInstanceOf(UrlTree);
+  });
 });
 ```
 
+El `describe` de la Fase 12, el del doble con `isAuthenticated` espiado, es inmune: no lee `localStorage`. Por eso el bug no estaba en la fase y entró con el segundo bloque.
+
 **`localStorage` no lo limpia nadie.** `TestBed.resetTestingModule()` reconstruye el inyector entre tests y no toca el almacenamiento del navegador, que vive fuera de Angular. Si el spec del servicio corre **antes** que el del guard, el guard encuentra una sesión válida, devuelve `true`, y el test falla.
 
-Con la semilla `47291` el orden es el contrario y todo pasa. **En tu máquina siempre pasa** porque Karma en modo `--watch` reutiliza la misma semilla mientras no reinicies.
+Con la semilla `47291` el orden es el contrario y todo pasa. Medido en el laboratorio del curso con `npm run test:ci`, que arranca un Chrome con el perfil vacío cada vez: fallaron dos de seis semillas.
+
+¿Y el *"en mi máquina siempre pasa"*? En `npm test`, con `--watch`, cada recarga sortea una semilla nueva —no reutiliza la anterior—, pero el navegador es **el mismo** y su `localStorage` también: la primera ejecución depende de la semilla, y desde la segunda el token de la anterior ya está ahí y el guard falla **siempre**. Quien dice que en su máquina pasa corrió la suite una vez, o no miró la segunda. Y de paso tienes la forma más rápida de reproducirlo: deja `npm test` abierto y guarda cualquier archivo.
 
 > 🧭 **Un test que sólo pasa si otro corrió antes no es un test: es media prueba.** Y su fallo aparece el día que alguien añada un `it` en otro archivo, que es cuando nadie lo va a relacionar con nada.
 
@@ -3188,7 +3202,10 @@ afterEach(() => {
 Un `afterEach` en el spec culpable arregla **esta** pareja y deja el mecanismo intacto para el siguiente que escriba en `localStorage`. La limpieza va donde no se pueda olvidar:
 
 ```ts
-// src/test.ts — se ejecuta una vez, y aplica a toda la suite.
+// src/test-hooks.spec.ts — fuera de todo `describe`, así que aplica a la suite
+// entera. En la 16 ya no hay `src/test.ts`: el CLI lo dejó de generar en la 15,
+// y un spec de nivel superior es el sitio equivalente, igual que el de la
+// semilla de la Fase 12 §5.1.
 afterEach(() => {
   // Todo lo que vive fuera de Angular y sobrevive al TestBed.
   localStorage.clear();
@@ -3199,30 +3216,31 @@ afterEach(() => {
 Y la mitad que de verdad previene: **cada test declara el estado del que parte en vez de asumirlo.**
 
 ```ts
-// src/app/core/guards/auth.guard.spec.ts
+// src/app/core/guards/auth.guard.spec.ts — en el describe del AuthService real
 beforeEach(() => {
   // El escenario, explícito. Un test que dice de qué parte se puede leer
   // aislado, y deja de depender de en qué orden lo ejecuten.
   localStorage.removeItem('certcore.accessToken');
+  TestBed.configureTestingModule({ imports: [HttpClientTestingModule] });
 });
 ```
 
 **Prueba de regresión**
 
-Aquí la "prueba" es que el fallo deje de depender del orden, y eso se comprueba forzando el orden peor:
+Aquí la "prueba" es que el fallo deje de depender del orden, y eso se comprueba poniendo el residuo a propósito, **antes** de que corra el setup del spec:
 
 ```ts
-// src/app/core/guards/auth.guard.spec.ts
-describe('authGuard con estado sucio de otro test', () => {
-  beforeEach(() => {
-    // Reproduce exactamente lo que dejaba el spec de AuthService.
-    localStorage.setItem('certcore.accessToken', VALID_TOKEN);
-  });
+// src/app/core/guards/auth.guard.spec.ts — dentro del describe del AuthService real
+describe('con el residuo de otro spec', () => {
+  // beforeAll y NO beforeEach. Jasmine corre los beforeEach de fuera hacia
+  // dentro: uno interno que pusiera el token correría DESPUÉS del removeItem
+  // del externo y el test fallaría siempre, con fix y sin él. beforeAll corre
+  // antes que todos ellos, que es justo donde queda lo que deja otro archivo.
+  beforeAll(() => localStorage.setItem('certcore.accessToken', VALID_TOKEN));
 
   it('parte de un estado limpio pase lo que pase antes', () => {
-    // Falla antes del fix: el guard veía la sesión y devolvía true.
-    // El beforeEach del propio spec tiene que ganarle al residuo.
-    expect(authGuard(route, state)).toBeInstanceOf(UrlTree);
+    // Falla antes del fix con cualquier semilla; pasa después con todas.
+    expect(TestBed.runInInjectionContext(() => authGuard(route, state))).toBeInstanceOf(UrlTree);
   });
 });
 ```
@@ -3231,12 +3249,12 @@ Y la comprobación de que el arreglo es real, que es la que hay que dejar en el 
 
 ```bash
 # La misma semilla que fallaba, tres veces. Si pasa las tres, está cerrado.
-for i in 1 2 3; do ng test --watch=false --browsers=ChromeHeadless --seed=83104 || exit 1; done
+for i in 1 2 3; do JASMINE_SEED=83104 npm run test:ci || exit 1; done
 ```
 
 **Prevención**
 
-El `afterEach` global de `test.ts`, y una regla de revisión: **un test no asume el estado del que parte; lo declara.** Si un `it` necesita que no haya sesión, la quita él, aunque "obviamente" no la haya.
+El `afterEach` global de `test-hooks.spec.ts`, y una regla de revisión: **un test no asume el estado del que parte; lo declara.** Si un `it` necesita que no haya sesión, la quita él, aunque "obviamente" no la haya.
 
 Y una decisión de proceso que vale más que las dos: **fijar y registrar la semilla en el pipeline.** Un pipeline que aleatoriza sin dejar rastro de la semilla produce fallos que nadie puede reproducir; uno que la imprime y la conserva convierte cada fallo en un caso investigable.
 
@@ -3244,7 +3262,7 @@ Y una decisión de proceso que vale más que las dos: **fijar y registrar la sem
 
 Al pipeline, no a producción — y es un matiz importante, porque el daño de este incidente es distinto: **erosiona la confianza en la suite entera**. Cuando el equipo aprende que los rojos a veces son mentira, el día que uno sea real nadie va a mirarlo.
 
-El sistema lo permitió por tres decisiones separadas, ninguna mala por sí sola. Jasmine aleatoriza el orden **a propósito**, para detectar exactamente esto. Karma en `--watch` reutiliza la semilla, así que en local nunca varía. Y `localStorage` es global por diseño del navegador. La combinación de las tres hace que el bug sea invisible en desarrollo y frecuente en integración continua.
+El sistema lo permitió por tres decisiones separadas, ninguna mala por sí sola. Jasmine aleatoriza el orden **a propósito**, para detectar exactamente esto. El pipeline arranca cada vez un Chrome con el perfil vacío, así que allí el fallo depende de la semilla y aparece y desaparece. Y `localStorage` es global por diseño del navegador: en local, con `--watch`, el residuo de una ejecución pasa a la siguiente, y el que lo ve rojo una vez lo achaca a "algo raro de mi máquina" y relanza. La combinación hace que el bug parezca ruido en los dos sitios.
 
 **Y la frase para el equipo**, que es parte del entregable:
 
@@ -3252,7 +3270,7 @@ El sistema lo permitió por tres decisiones separadas, ninguna mala por sí sola
 
 **Si tu causa fue distinta a esta**
 
-Si concluiste que el pipeline es más lento y por eso falla, tienes razón en el mecanismo de otros intermitentes y no de éste: el tiempo no cambia el orden de los `describe`. Si tu hipótesis fue el reloj, se descarta en un `grep`: ningún archivo de esa pareja llama a `new Date()`. Si tu fix fue marcar el test con `xit` "mientras tanto", es legítimo **como decisión consciente y con fecha**, y un desastre como reflejo: un `xit` sin comentario ni ticket es un test que nadie va a volver a mirar — y el coverage sigue contando sus líneas si otro test las toca de refilón, que es el incidente 20.
+Si concluiste que el pipeline es más lento y por eso falla, tienes razón en el mecanismo de otros intermitentes y no de éste: el tiempo no cambia el orden de los `describe`. Si tu hipótesis fue el reloj, se descarta en un `grep`: el único reloj de la pareja es el `Date.now()` de `isAuthenticated`, comparado con un `exp` de 2100, y no cambia nada en ningún orden. Si tu fix fue marcar el test con `xit` "mientras tanto", es legítimo **como decisión consciente y con fecha**, y un desastre como reflejo: un `xit` sin comentario ni ticket es un test que nadie va a volver a mirar — y el coverage sigue contando sus líneas si otro test las toca de refilón, que es el incidente 20.
 
 </details>
 
@@ -3262,7 +3280,7 @@ Si concluiste que el pipeline es más lento y por eso falla, tienes razón en el
 
 > **Fase:** 13 · **Categoría:** Despliegue · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 1h-1h30 · **Ruta forense:** [`forense-fase-13.md`](forense-fase-13.md)
+> **Tiempo sugerido:** 50-60 min · **Ruta forense:** [`forense-fase-13.md`](forense-fase-13.md)
 
 ### 🎫 El ticket
 
@@ -3279,8 +3297,10 @@ Explicar por qué a unos les funciona y a otros no, y por qué **"a mí me funci
 
 ```bash
 git switch -c incidente/18 fase-13
+# La red y el mock de la Fase 13 §5.7 tienen que estar levantados: nginx resuelve
+# `certcore-mock` al arrancar y, sin él, el contenedor muere en un segundo.
 docker build -t certcore:inc18 .
-docker run --rm -d --name certcore-inc18 -p 8080:80 \
+docker run --rm -d --name certcore-inc18 --network certcore-net -p 8080:80 \
   -e ENVIRONMENT_NAME=PROD -e API_BASE_URL=/api certcore:inc18
 ```
 
@@ -3347,6 +3367,16 @@ El `nginx.conf` aplica la política de caché de los bundles **a todo**, incluid
 
 El resultado es que el navegador de cada usuario conserva el `index.html` de la última visita, que referencia los bundles de esa versión — **que siguen existiendo en el servidor, porque un despliegue no borra nada**. Esos usuarios ejecutan la aplicación de ayer, completa y funcionando, sin ningún error que delate nada.
 
+Medido en el laboratorio del curso con dos despliegues seguidos y Chromium, que es lo que explica la última frase del ticket:
+
+| Cómo vuelve el usuario | Lo que ve |
+|---|---|
+| Escribe la URL, usa un marcador o abre una pestaña nueva | **la versión de ayer** |
+| Recarga con F5 | la nueva: el navegador revalida el documento al recargar |
+| Ventana privada, o DevTools con *Disable cache* | la nueva: no hay caché que usar |
+
+*"Le dije a dos personas que recargaran y una dice que sigue igual"*: una recargó, y la otra volvió a entrar por donde entra siempre.
+
 **Y "a mí me funciona" es el dato clave:** quien lo dice tiene DevTools abierto con *Disable cache*. Es el único de todo el equipo que **nunca** ha visto este bug, y por eso es también quien lo va a descartar más rápido.
 
 > 🧭 **La regla que cabe en una frase y resuelve toda la política de caché de una SPA: lo que lleva hash en el nombre se cachea para siempre; lo que no lleva hash no se cachea nunca.** Equivocarse en el lado del `index.html` produce el bug más frustrante que existe: el que ya arreglaste.
@@ -3389,7 +3419,7 @@ El parche arregla los despliegues futuros y **no alcanza a quien ya tiene el HTM
 
 **Prueba de regresión**
 
-Aquí no hay `.spec.ts`: lo que hay que verificar es la respuesta del servidor, y eso se comprueba contra la imagen construida.
+Aquí no hay `.spec.ts`: lo que hay que verificar es la respuesta del servidor, y eso se comprueba contra la imagen construida y levantada. Medido en el laboratorio del curso: verde contra la imagen de `fase-13`, rojo (*"index.html cacheable"*) contra la de esta rama.
 
 ```bash
 #!/usr/bin/env bash
@@ -3425,11 +3455,11 @@ La regla de caché se escribió con una sola intención —que los bundles no se
 
 El fallo es invisible en desarrollo (`ng serve` no cachea), invisible para quien tiene DevTools abierto (que es todo el equipo de desarrollo), y **sólo aparece en el segundo despliegue**, cuando ya hay una versión anterior que conservar. Entre la decisión y su consecuencia pasaron semanas y varios despliegues correctos.
 
-Y hay un agravante de proceso que merece decirse: **la primera reacción del equipo fue pedirle a los usuarios que recargaran**, que no funciona —una recarga normal usa la caché— y consumió dos horas antes de que nadie mirara una cabecera.
+Y hay un agravante de proceso que merece decirse: **la primera reacción del equipo fue pedirle a los usuarios que recargaran**, que funciona a medias —F5 revalida el documento, pero el usuario que vuelve mañana por su marcador recibe otra vez el de la caché— y consumió dos horas de "a unos sí y a otros no" antes de que nadie mirara una cabecera.
 
 **Si tu causa fue distinta a esta**
 
-Si concluiste que el despliegue no llegó, se descarta en el paso 1 del recorrido de `forense-fase-13.md`: los digests de la imagen coinciden. Si concluiste que es la CDN, puede serlo **y se comprueba igual**: si `curl` directo al origen ya devuelve la cabecera mala, la CDN está obedeciendo. Y si tu fix fue reconstruir y volver a desplegar, funciona por accidente esta vez —el HTML nuevo llega con otro momento de caché para algunos— y deja la política intacta: el mismo bug vuelve en el siguiente despliegue, y ahora con el equipo convencido de que redesplegar es un procedimiento de diagnóstico.
+Si concluiste que el despliegue no llegó, se descarta en el paso 1 del recorrido de `forense-fase-13.md`: los digests de la imagen coinciden. Si concluiste que es la CDN, puede serlo **y se comprueba igual**: si `curl` directo al origen ya devuelve la cabecera mala, la CDN está obedeciendo. Y si tu fix fue reconstruir y volver a desplegar, parece funcionar para quien recargó después —que lo habría visto igual sin redesplegar—, no alcanza a nadie con el HTML cacheado, y deja la política intacta: el mismo bug vuelve en el siguiente despliegue, y ahora con el equipo convencido de que redesplegar es un procedimiento de diagnóstico.
 
 </details>
 
@@ -3439,7 +3469,7 @@ Si concluiste que el despliegue no llegó, se descarta en el paso 1 del recorrid
 
 > **Fase:** 13 · **Categoría:** Despliegue · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 1h30-2h · **Ruta forense:** [`forense-fase-13.md`](forense-fase-13.md)
+> **Tiempo sugerido:** 70-80 min · **Ruta forense:** [`forense-fase-13.md`](forense-fase-13.md)
 
 ### 🎫 El ticket
 
@@ -3457,14 +3487,14 @@ Descartar las capas en el orden correcto —el código va **al final**—, encon
 ```bash
 git switch -c incidente/19 fase-13
 docker build -t certcore:inc19 .
-
+# La red y el mock de la Fase 13 §5.7, levantados: sin ellos nginx no arranca.
+# Cada ambiente se levanta con su archivo de variables, como en la empresa.
 # UAT, que funciona:
-docker run --rm -d --name certcore-uat -p 8080:80 \
-  -e ENVIRONMENT_NAME=UAT -e API_BASE_URL=/api certcore:inc19
-
+docker run --rm -d --name certcore-uat --network certcore-net -p 8080:80 \
+  --env-file deploy/uat.env certcore:inc19
 # PROD, que no:
-docker run --rm -d --name certcore-prod -p 8081:80 \
-  -e ENVIRONMENT_NAME=PROD -e API_BASE_URL=/api certcore:inc19
+docker run --rm -d --name certcore-prod --network certcore-net -p 8081:80 \
+  --env-file deploy/prod.env certcore:inc19
 ```
 
 ---
@@ -3486,7 +3516,7 @@ Es la misma. Entonces la diferencia está en lo que cada contenedor tiene dentro
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-En uno de los dos, el archivo no existe. `APP_INITIALIZER` **bloquea el arranque** de Angular hasta que resuelve. ¿Qué pasa si la promesa se rechaza antes de que haya dónde pintar un error?
+Los dos archivos existen y el script corrió en los dos. Léelos **letra por letra**, no de un vistazo. Y recuerda que `APP_INITIALIZER` **bloquea el arranque** de Angular hasta que resuelve: ¿qué pasa si la promesa se rechaza antes de que haya dónde pintar un error?
 
 </details>
 
@@ -3521,80 +3551,74 @@ Los cuatro pasos, en orden, y cada uno descarta una capa entera:
 ```bash
 # 1. ¿Es la misma imagen? Sí: los digests coinciden.
 docker inspect --format '{{.Image}}' certcore-prod certcore-uat
-# sha256:9f2c4b1e…
-# sha256:9f2c4b1e…
+# sha256:f5a23f87…
+# sha256:f5a23f87…
 
 # 2. ¿Qué configuración tiene cada uno?
 docker exec certcore-uat  cat /usr/share/nginx/html/assets/config.json
-# {"apiBaseUrl": "/api", "environmentName": "UAT"}
+# { "apiBaseUrl": "/api", "environmentName": "UAT" }
 docker exec certcore-prod cat /usr/share/nginx/html/assets/config.json
-# cat: can't open '/usr/share/nginx/html/assets/config.json': No such file or directory
+# { "apiBaseUrl": "/api", "environmentName": "PRD" }     ← sin la O
 
-# 3. ¿Qué dijo el arranque?
-docker logs certcore-prod 2>&1 | grep certcore
-# (nada — el script nunca corrió)
+# 3. ¿Qué dijo el arranque? El script corrió, y escribió lo que le dieron.
+docker logs certcore-prod 2>&1 | grep '\[certcore\]'
+# [certcore] configuración de arranque: PRD -> /api
 
-# 4. Y la causa, en un ls:
-docker exec certcore-prod ls -l /docker-entrypoint.d/
-# -rw-r--r--  1 root root  412 40-certcore-config.sh     ← SIN el bit de ejecución
+# 4. ¿Y de dónde salió? Del archivo de variables de PROD, que escribió otro equipo.
+grep ENVIRONMENT_NAME deploy/prod.env
+# ENVIRONMENT_NAME=PRD
 ```
 
-El `entrypoint.sh` **llegó a la imagen sin permiso de ejecución**. El entrypoint de nginx recorre `/docker-entrypoint.d/`, encuentra un archivo que no puede ejecutar, **lo ignora en silencio**, y arranca perfectamente. nginx sirve la aplicación; sólo falta el `config.json`.
+El `entrypoint.sh` **no valida nada, y es a propósito**: la Fase 13 dejó la validación donde está el tipo, en `parseAppConfig`. Y ahí está la pantalla en blanco. `APP_INITIALIZER` bloquea el arranque de Angular hasta que su promesa resuelve; `parseAppConfig` rechaza `PRD`, la promesa se rechaza, **Angular no arranca**, y lo que ve el usuario es una página vacía. El error existe, y es exacto:
 
-**Y ahí está la pantalla en blanco:** `APP_INITIALIZER` bloquea el arranque de Angular hasta que su promesa resuelve. La petición a `assets/config.json` devuelve `404`, la promesa se rechaza, **Angular no arranca**, y lo que ve el usuario es una página vacía sin ningún error visible — porque el fallo ocurrió antes de que hubiera dónde pintarlo.
+```
+ERROR Error: assets/config.json: `environmentName` vale "PRD" y sólo admite DEV, UAT o PROD.
+```
 
-> 🧠 **Una pantalla en blanco sin errores en consola es casi siempre un fallo en el arranque**, y en una aplicación con `APP_INITIALIZER` es casi siempre él. No hay error visible porque no hay aplicación donde mostrarlo. Es una firma muy reconocible una vez que la has visto.
+…en la consola, que es donde soporte no mira — *"o al menos yo no veo nada"*. En la pantalla no hay nada porque el fallo ocurrió antes de que hubiera dónde pintarlo. Medido en el laboratorio del curso: con `PRD`, `<body>` vacío y esa única línea en consola.
 
-**Por qué en UAT sí funciona:** el contenedor de UAT se levantó desde una imagen construida en otra máquina, donde el archivo sí tenía el bit puesto en el sistema de archivos de origen. **Los permisos de un archivo copiado con `COPY` dependen de cómo estuviera en la máquina que construyó**, y eso convierte el build en algo que depende del entorno — que es exactamente lo que una imagen existe para evitar.
+> 🧠 **Una pantalla en blanco con un solo error en consola es casi siempre un fallo en el arranque**, y en una aplicación con `APP_INITIALIZER` es casi siempre él. No hay error visible porque no hay aplicación donde mostrarlo. Es una firma muy reconocible una vez que la has visto.
+
+**Por qué en UAT sí funciona:** porque es la misma imagen con otro archivo de variables, y el de UAT se copió de la plantilla del curso. La afirmación del ticket —*"la misma imagen se comporta distinto"*— era cierta, y por eso el paso 1 no basta: descarta el artefacto y deja la configuración, que es justo donde estaba.
 
 **Parche mínimo**
 
-```dockerfile
-# Dockerfile
-COPY entrypoint.sh /docker-entrypoint.d/40-certcore-config.sh
-
-# El bit de ejecución se pone AQUÍ y no se hereda del sistema de archivos del
-# que copiaste. Si el archivo llega sin permiso, nginx arranca igual, ignora el
-# script en silencio, y la aplicación sale con la configuración ausente.
-RUN chmod +x /docker-entrypoint.d/40-certcore-config.sh
+```bash
+# deploy/prod.env
+ENVIRONMENT_NAME=PROD
 ```
+
+Y relanzar el contenedor de PROD. Sin reconstruir nada: es la promesa entera de la Fase 13.
 
 **La refactorización correcta**
 
-El `chmod` arregla la causa y deja el **modo de fallo** intacto: si mañana el script falla por otra razón —una variable ausente, un directorio sin permiso de escritura—, la aplicación volverá a salir en blanco sin decir nada. Dos cambios lo convierten en un fallo ruidoso:
+El parche arregla el valor y deja el **modo de fallo** intacto: el próximo valor mal escrito volverá a ser una pantalla en blanco que soporte reporta como "no carga". Dos cambios lo convierten en un fallo ruidoso, uno en cada lado del arranque.
+
+En el contenedor, que lo ve el orquestador: el script rechaza lo que la aplicación rechazaría, y el contenedor **no arranca**.
 
 ```sh
-#!/bin/sh
-# entrypoint.sh
-# `set -e` para que cualquier fallo detenga el arranque en vez de dejar el
-# contenedor sirviendo una aplicación incompleta. Un contenedor que no arranca
-# es un problema visible; uno que arranca mal es un ticket de dos horas.
-set -e
-
-: "${ENVIRONMENT_NAME:?falta la variable ENVIRONMENT_NAME}"
-: "${API_BASE_URL:?falta la variable API_BASE_URL}"
-
-cat > /usr/share/nginx/html/assets/config.json <<JSON
-{"apiBaseUrl": "${API_BASE_URL}", "environmentName": "${ENVIRONMENT_NAME}"}
-JSON
-
-echo "[certcore] configuración de arranque: ${ENVIRONMENT_NAME} -> ${API_BASE_URL}"
+# entrypoint.sh — después de los valores por defecto
+# La misma lista que AppConfig y parseAppConfig. Un valor fuera de ella para el
+# arranque del CONTENEDOR, que el orquestador ve, en vez del de la aplicación,
+# que sólo ve quien abre la consola.
+case "$ENVIRONMENT_NAME" in
+  DEV|UAT|PROD) ;;
+  *) echo "[certcore] ENVIRONMENT_NAME='$ENVIRONMENT_NAME' no es DEV, UAT ni PROD" >&2; exit 1 ;;
+esac
 ```
 
-Y del lado de Angular, que el fallo tenga dónde verse:
+El precio, dicho: la lista vive ahora en dos sitios, el tipo y el script, y la Fase 13 prefería uno. Se paga porque un contenedor que no arranca lo reporta la plataforma en minutos, y una aplicación que no arranca la reporta un usuario en horas.
+
+Y del lado de Angular, que el fallo que quede —un `404`, un JSON roto— tenga dónde verse:
 
 ```ts
-// src/app/core/config/app-config.initializer.ts
-export function loadAppConfig(): Promise<void> {
-  const http = inject(HttpClient);
-  const config = inject(AppConfigService);
-
-  return firstValueFrom(http.get<AppConfig>('assets/config.json'))
-    .then((loaded) => config.set(loaded))
-    .catch((error: unknown) => {
-      // Sin esto, el fallo de arranque es una página en blanco muda.
-      // Pintar a mano en el DOM es feo y es lo único que funciona: Angular
-      // todavía no existe, así que no hay componente que pueda hacerlo.
+// src/app/app.module.ts — la factoría del APP_INITIALIZER de la Fase 13 §5.2
+export function loadAppConfig(appConfig: AppConfigService): () => Promise<void> {
+  return () =>
+    appConfig.load().catch((error: unknown) => {
+      // Sin esto, el fallo de arranque es una página en blanco muda. Pintar a
+      // mano en el DOM es feo y es lo único que funciona: Angular todavía no
+      // existe, así que no hay componente que pueda hacerlo.
       document.body.innerHTML =
         '<p style="font-family:system-ui;padding:2rem">' +
         'No se pudo cargar la configuración de la aplicación. ' +
@@ -3604,9 +3628,11 @@ export function loadAppConfig(): Promise<void> {
 }
 ```
 
+Medido con la imagen refactorizada: con `PRD` el contenedor sale con código 1 y su log dice por qué; y con un `config.json` borrado a mano, la pantalla muestra el mensaje en vez de quedarse en blanco.
+
 **Prueba de regresión**
 
-Contra la imagen construida, en el pipeline:
+Contra la imagen construida, en el pipeline. Dos trampas que el script esquiva y que conviene ver: nginx resuelve `certcore-mock` al arrancar, así que fuera de una red con ese nombre **cualquier** contenedor de esta imagen muere y todo daría rojo; y `docker run -d` devuelve 0 aunque el contenedor muera un segundo después, así que lo que se comprueba es si sigue vivo.
 
 ```bash
 #!/usr/bin/env bash
@@ -3614,27 +3640,35 @@ Contra la imagen construida, en el pipeline:
 set -euo pipefail
 IMAGE="${1:?uso: check-image.sh <imagen>}"
 
-# 1. El script de configuración es ejecutable. Es el incidente 19.
+# Una red de usar y tirar con un `certcore-mock` de mentira, hecho con la propia imagen.
+NET="certcore-check-$$"
+docker network create "$NET" >/dev/null
+STUB=$(docker run -d --network "$NET" --network-alias certcore-mock --entrypoint sleep "$IMAGE" 120)
+trap 'docker rm -f "$STUB" >/dev/null; docker network rm "$NET" >/dev/null' EXIT
+
+# 1. El script de configuración es ejecutable (el 🧨 3 de la Fase 13).
 docker run --rm --entrypoint sh "$IMAGE" -c \
   '[ -x /docker-entrypoint.d/40-certcore-config.sh ]' \
-  || { echo "❌ el entrypoint no es ejecutable: la app saldrá en blanco"; exit 1; }
+  || { echo "❌ el entrypoint no es ejecutable: la app saldrá con la config de desarrollo"; exit 1; }
 
-# 2. Sin las variables obligatorias, el contenedor NO arranca en silencio.
-if docker run --rm -d --name certcore-check "$IMAGE" >/dev/null 2>&1; then
-  sleep 2
-  docker rm -f certcore-check >/dev/null
-  echo "❌ arrancó sin ENVIRONMENT_NAME: falla en silencio"; exit 1
-fi
-
-# 3. Con ellas, el config.json existe y tiene los valores dados.
-CID=$(docker run --rm -d -e ENVIRONMENT_NAME=TEST -e API_BASE_URL=/api "$IMAGE")
+# 2. Con un ambiente inválido, el contenedor NO sigue corriendo. Es este incidente.
+CID=$(docker run -d --network "$NET" -e ENVIRONMENT_NAME=PRD -e API_BASE_URL=/api "$IMAGE")
 sleep 2
-docker exec "$CID" cat /usr/share/nginx/html/assets/config.json | grep -q '"TEST"' \
+RUNNING=$(docker inspect --format '{{.State.Running}}' "$CID")
+docker rm -f "$CID" >/dev/null
+[ "$RUNNING" = "false" ] \
+  || { echo "❌ arrancó con ENVIRONMENT_NAME=PRD: la pantalla saldrá en blanco"; exit 1; }
+
+# 3. Con valores válidos, el config.json tiene los valores dados.
+CID=$(docker run -d --network "$NET" -e ENVIRONMENT_NAME=UAT -e API_BASE_URL=/api-test "$IMAGE")
+sleep 2
+docker exec "$CID" cat /usr/share/nginx/html/assets/config.json | grep -q '"/api-test"' \
   || { docker rm -f "$CID" >/dev/null; echo "❌ config.json no refleja las variables"; exit 1; }
 docker rm -f "$CID" >/dev/null
-
 echo "✅ imagen correcta"
 ```
+
+Medido en el laboratorio del curso: rojo en el paso 2 con la imagen de `fase-13`, verde con la refactorizada, y rojo en el paso 1 con una imagen construida sin el `chmod +x`.
 
 **Prevención**
 
@@ -3642,15 +3676,15 @@ El script de arriba, y la regla que lo justifica: **todo lo que puede fallar en 
 
 **Por qué llegó a producción**
 
-Tres decisiones razonables que sólo juntas producen el fallo. **`COPY` conserva los permisos del origen**, lo cual es útil y hace que el build dependa de la máquina que lo ejecuta. **El entrypoint de nginx ignora lo que no puede ejecutar** en vez de fallar, que es prudente para no romper contenedores por un archivo suelto de otro. Y **`APP_INITIALIZER` bloquea el arranque**, que es exactamente lo que queremos: una aplicación que arranca sin saber a qué backend hablar es peor que una que no arranca.
+Tres decisiones razonables que sólo juntas producen el fallo. **El archivo de variables de PROD lo escribe otro equipo**, que abrevia los ambientes a tres letras en todos sus sistemas. **El `entrypoint.sh` escribe lo que le den**, porque la Fase 13 decidió validar una sola vez y en el tipo. Y **`APP_INITIALIZER` bloquea el arranque**, que es exactamente lo que queremos: una aplicación que arranca sin saber en qué ambiente está es peor que una que no arranca.
 
-Ninguna de las tres está mal. La combinación produce un contenedor sano sirviendo una aplicación muerta, sin una sola línea en ningún log.
+Ninguna de las tres está mal. La combinación produce un contenedor sano, con un log de arranque impecable, sirviendo una aplicación que no arranca.
 
-El agravante es que **el archivo llegó bien a la imagen de UAT** —construida en otra máquina, en otro momento— así que la evidencia disponible decía "la misma imagen se comporta distinto", que es la afirmación que más tiempo hace perder cuando resulta ser falsa. En este caso era cierta: la imagen sí era la misma; lo que cambió fue **cuál de los dos contenedores se levantó desde una construcción anterior**.
+El agravante es que **la imagen sí era la misma**, así que la evidencia disponible decía "la misma imagen se comporta distinto", que es la afirmación que más tiempo hace perder cuando alguien la toma por imposible: lleva a buscar en el código una diferencia que está en un archivo de cuatro líneas.
 
 **Si tu causa fue distinta a esta**
 
-Si concluiste que las variables de entorno están mal en PROD, es la hipótesis correcta que hay que descartar **primero** y se descarta en el paso 2: el problema no es que el JSON tenga valores equivocados, es que **no existe**. Si concluiste que falta `try_files` en el `nginx.conf`, eso produce un `404` al recargar una ruta profunda, no una pantalla en blanco en la raíz — y se descarta con un `curl` a `/inspections/500`. Y si te fuiste directo al código de la aplicación, es exactamente el callejón que este incidente entrena a evitar: los cuatro pasos cuestan cinco minutos entre todos y descartan tres capas.
+Si concluiste que el `entrypoint.sh` no corrió por el bit de ejecución —el 🧨 3 de la Fase 13—, es la hipótesis que hay que descartar **primero** y se descarta en el paso 3: la línea `[certcore]` está en el log. Además, ese fallo no deja la pantalla en blanco: deja una aplicación que arranca con la etiqueta DEV y llama a `localhost:3000`, porque el `config.json` de desarrollo viaja en el `dist/`. Si concluiste que el `apiBaseUrl` de PROD apunta a un backend que no responde, ése es el otro caso del 🧨 4 y **arranca**: falla después, en cada petición. Si concluiste que falta `try_files` en el `nginx.conf`, eso produce un `404` al recargar una ruta profunda, no una pantalla en blanco en la raíz, y se descarta con un `curl` a `/inspections/500`. Y si te fuiste directo al código de la aplicación, es exactamente el callejón que este incidente entrena a evitar: los cuatro pasos cuestan cinco minutos entre todos y descartan tres capas.
 
 </details>
 
@@ -3659,7 +3693,7 @@ Si concluiste que las variables de entorno están mal en PROD, es la hipótesis 
 
 > **Fase:** 12 · **Categoría:** Testing · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 1h30-2h · **Ruta forense:** [`forense-fase-12.md`](forense-fase-12.md)
+> **Tiempo sugerido:** 70-80 min · **Ruta forense:** [`forense-fase-12.md`](forense-fase-12.md)
 
 ### 🎫 El ticket
 
@@ -3676,7 +3710,7 @@ Este incidente **no termina en un fix de código**: termina en un diagnóstico y
 
 ```bash
 git switch -c incidente/20 fase-12
-ng test --watch=false --code-coverage --browsers=ChromeHeadless
+npm run test:ci                      # termina en rojo por el umbral global; el informe se genera igual
 open coverage/certcore/index.html   # o el navegador que uses
 ```
 
@@ -3729,9 +3763,9 @@ Una línea "cubierta" significa que **se ejecutó** durante la suite. No signifi
 
 **Causa raíz**
 
-Hay dos, y la segunda es la que duele.
+Hay tres, y la tercera es la que duele.
 
-**Primera: el 82 % global esconde su distribución.**
+**Primera: el 82 % global esconde su distribución.** El informe de abajo es el del equipo, dos años de specs después de la Fase 12. El tuyo, en la rama, va a dar mucho menos —la suite de la fase ronda el 37 %—, y no importa: el mecanismo es el mismo y se ve igual.
 
 ```
 File                          % Stmts   % Branch   % Funcs   % Lines
@@ -3748,7 +3782,9 @@ El coverage del proyecto **está dominado por funciones puras**, y eso es honest
 
 El precio es que **el número global no dice nada sobre los componentes**, que es donde vive el riesgo de una SPA. Con un 43 % en `features/`, más de la mitad de las pantallas no las mira nadie — y el 82 % de la portada las deja invisibles.
 
-**Segunda, y es la de verdad: una línea cubierta no es una línea comprobada.**
+**Segunda: el informe sólo lista lo que algún spec importa.** Un archivo que ningún test toca no sale con un 0 %: no sale. Con la suite de la Fase 12, el informe lista 40 de los 72 archivos de `src/app` que no son módulos, y los 32 restantes no bajan el porcentaje porque no existen para él. Escribir un spec que importe un servicio con dependencias **baja** el global: al añadir el de `DashboardMetricsService`, cayó del 35 % al 30 %. Un 82 % sólo dice cuánto se ejecutó de lo que alguien quiso mirar.
+
+**Tercera, y es la de verdad: una línea cubierta no es una línea comprobada.**
 
 ```ts
 // El archivo del incidente 08 aparecía cubierto al 100 %. Éste era el test:
@@ -3772,15 +3808,17 @@ La línea `resolveTemplateVersion(family, todayInBusinessZone())` **se ejecutó*
 No hay parche: el entregable es una decisión. Y la primera parte es **el test que faltaba**, que ya existe desde el incidente 08 y afirma el invariante en vez de la ausencia de excepciones:
 
 ```ts
-expect(applied?.version).toBe(1);
-expect(applied?.items.length).toBe(3);
+// La 501 se ejecutó con la v1: la petición tiene que decirlo.
+expect(templateRequest.request.params.get('version')).toBe('1');
 ```
+
+Y la prueba de que éste sí protege es la que el `toBeTruthy()` no pasa: cambia `inspection.templateVersion` por la versión vigente en el código, y éste se pone rojo (*"Expected null to be '1'"*) mientras el otro sigue en verde.
 
 **La refactorización correcta**
 
 Tres cambios, en orden de valor y **ninguno es "subir el número"**:
 
-**Uno — umbrales por carpeta, no globales.** Un solo número deja que las funciones puras paguen la factura de los componentes.
+**Uno — umbrales por archivo y por carpeta, no sólo globales.** Un solo número deja que las funciones puras paguen la factura de los componentes. `overrides` es de `karma-coverage` y funciona tal cual; con la suite de la Fase 12 ya hace saltar cuatro archivos de `core/domain/`.
 
 ```jsonc
 // karma.conf.js — coverageReporter
@@ -3822,13 +3860,13 @@ describe('invariantes de CertCore', () => {
 
 **Prueba de regresión**
 
-La de este incidente es distinta: se prueba **el pipeline**, no el código.
+La de este incidente es distinta: se prueba **el pipeline**, no el código. El `each` del `karma.conf.js` ya hace esto; el script existe para que el suelo no dependa de que nadie borre esa línea, que es exactamente lo que pasó en la rama. Necesita un cuarto reporter en `coverageReporter.reporters`, `{ type: 'json-summary' }`: sin él, el archivo que lee no existe.
 
 ```bash
 #!/usr/bin/env bash
-# scripts/check-coverage.sh — falla si algún archivo baja del suelo por archivo.
-set -euo pipefail
-ng test --watch=false --code-coverage --browsers=ChromeHeadless
+# scripts/check-coverage.sh — falla si un test falla O si algún archivo baja del suelo.
+set -uo pipefail
+npm run test:ci; tests=$?
 
 node -e '
 const s = require("./coverage/certcore/coverage-summary.json");
@@ -3843,12 +3881,14 @@ if (bad.length) {
   process.exit(1);
 }
 console.log("✅ ningún archivo por debajo del suelo");
-'
+'; floor=$?
+
+exit $(( tests || floor ))
 ```
 
 **Prevención**
 
-Los umbrales por archivo, la pregunta de revisión, y los cuatro tests de invariante. Y una cuarta cosa que no es técnica y vale más que las tres: **cada incidente de este cuaderno se cierra con un test que falla antes del fix.** Veinte incidentes son veinte tests que prueban comportamiento real y no cobertura — y eso es una suite construida desde los bugs que de verdad ocurrieron, que es la única forma honesta de saber que prueba lo que importa.
+Los umbrales por archivo, la pregunta de revisión, y los cuatro tests de invariante. Y una cuarta cosa que no es técnica y vale más que las tres: **cada incidente de este cuaderno se cierra con un test que falla antes del fix.** Veintidós incidentes son veintidós tests que prueban comportamiento real y no cobertura — y eso es una suite construida desde los bugs que de verdad ocurrieron, que es la única forma honesta de saber que prueba lo que importa.
 
 **Por qué llegó a producción**
 
@@ -3861,6 +3901,692 @@ No hay nadie a quien señalar aquí: hay una métrica mal elegida y un proceso q
 **Si tu causa fue distinta a esta**
 
 Si tu conclusión fue "hay que subir el coverage al 90 %", es la que el ticket descarta de entrada y merece decir por qué: **con estos tests, el 90 % se alcanza cubriendo más componentes con más `toBeTruthy()`**, y el sistema quedaría igual de desprotegido con un número más bonito. Si concluiste que hacen falta tests end-to-end, es una conversación legítima y de otro presupuesto — y no arregla ésta: un e2e que no afirme el invariante tampoco lo habría detectado. Y si concluiste que el problema fue no haber escrito el test de regresión **antes** del fix, has llegado al mismo sitio por otro camino: verlo en rojo es lo único que demuestra que un test prueba lo que dice probar.
+
+</details>
+
+---
+
+## Incidente 21 — "En la isla todavía era 12 y el sistema ya decía vencido"
+
+> **Fase:** 10 · **Categoría:** Tiempo · **Dificultad:** 🟠
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 25-35 min · **Ruta forense:** [`forense-fase-10.md`](forense-fase-10.md)
+
+### 🎫 El ticket
+
+> **De:** Patricio Villacís · **Asunto:** RV: certificado de la caldera — Aurum Inn Galápagos
+>
+> *"Les reenvío lo de abajo. Anoche a las once y cuarto, hora de la isla, el administrador del Inn me pidió confirmar el certificado de la caldera, porque la gente de cumplimiento del laboratorio lo pedía antes de la cena de cierre de la convención. Entré a CertCore desde Quito y salía VENCIDO. El papel dice que vence el 12, y allá todavía era 12. Esta mañana sale vencido también, pero eso sí está bien: los inspectores vuelan mañana. Lo que no quiero es que me vuelva a pasar con un cliente al lado."*
+>
+> > *"Ingeniero, buenas noches. La coordinadora de cumplimiento del laboratorio nos pide confirmar que la caldera está certificada. El certificado que tenemos dice vigente hasta el 12 de marzo. ¿Nos confirma, por favor? Es para antes de la cena. — Administración, Aurum Inn Galápagos"*
+
+**Reportado por:** gerente de Plomada Ecuador, reenviando el correo de un cliente
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Reproducir el "vencido" de las once y cuarto sin viajar a Galápagos, explicar por qué a esa misma hora un certificado de una torre de Quito **no** se equivoca, y arreglarlo sin mover un segundo los certificados del continente y sin reescribir nada de lo ya emitido.
+
+### 🔧 Preparación
+
+El código de la Fase 10 ya tiene el bug: lo que falta es el dato que lo dispara. Un `db.json` alterno, con la hostería de Galápagos, su caldera, la plantilla ecuatoriana `boiler-annual-ec` y el certificado que se emitió hace un año.
+
+```bash
+cp mock/db.json mock/db.mio.json          # guarda el tuyo
+cp mock/db.incidente-21.json mock/db.json
+npm run mock
+npm start
+```
+
+Y el experimento que reproduce el ticket, que **es parte de la preparación**: pon el reloj de tu sistema operativo en el **12 de marzo de 2026 a las 23:15, hora de Galápagos** (UTC−6), y abre la lista de certificados. Después ponlo a las 22:45 del mismo día y compara. Devuelve el reloj al terminar: hay tests de la Fase 12 que dependen de él.
+
+Para volver: `npm run seed`, o `cp mock/db.mio.json mock/db.json`.
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — dónde mirar</summary>
+
+Antes de leer código, mira el cuerpo crudo del certificado `CERT-2025-000505` y los últimos seis caracteres de su `validUntil`. Después busca en qué ciudad está el activo de esa inspección. Una de las dos cosas no sabe de la otra.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+Abre `src/app/core/time/business-day.ts` y lee entero el comentario de `CERTCORE_TIME_ZONE_OFFSET`, con su ⚠️. ¿Cuántos de los activos del `db.json` cumplen lo que dice ese comentario?
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+`2026-03-12T23:59:59-05:00`: ¿qué hora es en Puerto Ayora en ese instante? ¿Y a qué hora de Puerto Ayora empieza CertCore a decir que el certificado venció?
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+```
+```
+
+**Hipótesis**
+- ❌ Descartada:
+- ✅ Confirmada:
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
+
+**Causa raíz**
+
+Esta vez **quien lee no tiene la culpa.** `deriveCertificateStatus` compara instantes con `isPast`, que es exactamente lo que la Fase 10 decidió y lo que arregló el incidente 15. El que está mal es el **instante**, y está mal desde el día en que se emitió:
+
+```json
+{ "id": "CERT-2025-000505", "inspectionId": 505,
+  "issuedAt": "2025-03-12T20:40:00.000Z",
+  "validUntil": "2026-03-12T23:59:59-05:00",
+  "status": "issued", "revokedAt": null }
+```
+
+`computeValidity` cerró el día con `endOfBusinessDay`, y `endOfBusinessDay` le pega `CERTCORE_TIME_ZONE_OFFSET`: `-05:00`, la hora de Bogotá, Lima y Quito. La caldera está en Puerto Ayora, que vive en UTC−6 todo el año:
+
+```js
+new Date('2026-03-12T23:59:59-05:00').toLocaleString('es-EC', { timeZone: 'Pacific/Galapagos' });
+// '12/3/2026, 22:59:59'  ← en la isla, el certificado "vence" a las once menos un segundo
+new Date('2026-03-12T23:59:59-05:00').toLocaleString('es-EC', { timeZone: 'America/Guayaquil' });
+// '12/3/2026, 23:59:59'  ← en el continente, donde debe
+```
+
+Desde las 23:00 hasta las 23:59:59 del último día, hora de la isla, CertCore lo declara vencido. Es una hora al año por activo, y el ticket cayó justo dentro de ella. Patricio miraba desde Quito, pero la pantalla habría dicho lo mismo desde cualquier sitio: el instante está guardado así.
+
+Lo había avisado el comentario de la constante, escrito a finales de 2022: *"si algún día un activo está en otra zona… este archivo entero cambia"*. El Inn llegó en 2024 por un contrato comercial, se dio de alta como cualquier cliente, y nadie volvió a leer ese ⚠️.
+
+> 🧠 **El 15 y el 21 son el mismo error visto desde los dos lados.** En el 15 el dato estaba bien y lo leía mal quien lo leía. Aquí el que lee es correcto y el dato nació mal, porque *"la zona del negocio es la zona del activo"* era verdad en el continente y nadie lo escribió como supuesto. La regla de la historia —el certificado vale hasta el final del día **en la hora del lugar donde está el activo**— siempre fue ésa. El código conocía la mitad.
+
+**Parche mínimo**
+
+Va en dos pasos, porque el bug también tiene dos lados: **leer** bien lo que ya se emitió, sin tocarlo, y **emitir** bien lo que viene. Y el país entra por donde el sistema puede saberlo: por el activo.
+
+Primero el dato, que es de un **activo** y no de un certificado. Lo emitido no se toca: el histórico es de la auditoría. En el `db.json`, la caldera gana su zona:
+
+```diff
+     { "id": "CAL-INN-GPS-01", "clientId": 4, "type": "boiler",
+       "description": "Caldera de agua caliente, cuarto de máquinas, Puerto Ayora",
+-      "installedAt": "2016-04-18" }
++      "installedAt": "2016-04-18", "timeZone": "Pacific/Galapagos" }
+```
+
+El modelo lo admite como **opcional**. Sin el campo, todo sigue por el camino de siempre:
+
+```diff
+// src/app/core/models/asset.model.ts
+   /** Fecha de instalación, sin hora: es un día de calendario, no un instante. */
+   readonly installedAt: string;
++  /**
++   * 🩹 INCIDENTE 21. La zona IANA del lugar donde está el activo, SÓLO si no es
++   * la del negocio (`business-day.ts`). Hoy, únicamente la caldera del Inn.
++   */
++  readonly timeZone?: string;
+ }
+```
+
+`business-day.ts` gana dos funciones con zona. Están **al lado** de las de siempre y no las reemplazan:
+
+```ts
+// src/app/core/time/business-day.ts — lo que añade el fix del incidente 21
+
+/**
+ * 🩹 INCIDENTE 21. El día de calendario de un instante en una zona IANA.
+ *
+ * Sin zona es `toBusinessDay`, el camino de siempre: los activos que no traen
+ * `timeZone` —todos los del continente— no pasan por `Intl` y no se mueven ni
+ * un segundo. Con zona, la cuenta la hace `Intl`, que sí conoce las zonas.
+ */
+export function toLocalDay(instant: Instant, timeZone?: string): BusinessDay {
+  if (timeZone === undefined) {
+    return toBusinessDay(instant);
+  }
+
+  // 'en-CA' formatea como YYYY-MM-DD, que es exactamente un `BusinessDay`.
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date(instant));
+}
+
+/** El último instante de un día en una zona IANA. Sin zona, `endOfBusinessDay`. */
+export function endOfLocalDay(day: BusinessDay, timeZone?: string): Instant {
+  if (timeZone === undefined) {
+    return endOfBusinessDay(day);
+  }
+
+  return `${day}T23:59:59${offsetOn(day, timeZone)}`;
+}
+
+/**
+ * El desplazamiento de una zona en un día dado, como '-06:00'. Se mide al
+ * mediodía UTC de ese día: en las zonas de CertCore no hay cambio de hora, y en
+ * una que lo tuviera el salto ocurre de madrugada, lejos del mediodía.
+ */
+function offsetOn(day: BusinessDay, timeZone: string): string {
+  const name = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'longOffset' })
+    .formatToParts(new Date(`${day}T12:00:00Z`))
+    .find((part) => part.type === 'timeZoneName')?.value;
+
+  if (name === undefined) {
+    throw new Error(`No se pudo calcular el desplazamiento de "${timeZone}".`);
+  }
+
+  // 'GMT-06:00' → '-06:00'; UTC llega como 'GMT', sin número.
+  return name === 'GMT' ? '+00:00' : name.slice(3);
+}
+```
+
+**Paso 1, leer.** El estado y la vista reciben la zona. Lo que ya se emitió con `-05:00` se lee por su **día** y se cierra en la hora del activo:
+
+```diff
+// src/app/core/domain/certificate-status.ts
+-import { BusinessDay, Instant, daysBetween, isPast, toBusinessDay } from '../time/business-day';
++import { BusinessDay, Instant, daysBetween, endOfLocalDay, isPast, toLocalDay } from '../time/business-day';
+@@
+-export function daysUntilExpiry(certificate: Certificate, now: Instant): number {
+-  return daysBetween(toBusinessDay(now), toBusinessDay(certificate.validUntil));
++export function daysUntilExpiry(certificate: Certificate, now: Instant, timeZone?: string): number {
++  return daysBetween(toLocalDay(now, timeZone), toLocalDay(certificate.validUntil, timeZone));
+ }
+@@
+ export function deriveCertificateStatus(
+   certificate: Certificate,
+   now: Instant,
++  timeZone?: string,
+ ): DerivedCertificateStatus {
+   if (certificate.revokedAt !== null) {
+     return 'revoked';
+   }
+
+-  if (isPast(certificate.validUntil, now)) {
++  // 🩹 INCIDENTE 21. Vale hasta el final del día de `validUntil` en la hora del
++  // activo. Sin zona, `validUntil` ya es ese instante y se compara como siempre.
++  // Con zona se lee su día ahí y se cierra ahí: el del Inn, emitido con -05:00,
++  // vale hasta las 23:59:59 de Puerto Ayora sin reescribir lo emitido.
++  const until =
++    timeZone === undefined
++      ? certificate.validUntil
++      : endOfLocalDay(toLocalDay(certificate.validUntil, timeZone), timeZone);
++
++  if (isPast(until, now)) {
+     return 'expired';
+   }
+
+-  const remaining = daysUntilExpiry(certificate, now);
++  const remaining = daysUntilExpiry(certificate, now, timeZone);
+@@
+-export function buildCertificateView(certificate: Certificate, now: Instant): CertificateView {
+-  const status = deriveCertificateStatus(certificate, now);
++export function buildCertificateView(
++  certificate: Certificate,
++  now: Instant,
++  timeZone?: string,
++): CertificateView {
++  const status = deriveCertificateStatus(certificate, now, timeZone);
+@@
+-    daysUntilExpiry: daysUntilExpiry(certificate, now),
+-    renewalDueOn: renewalDueOn(certificate.validUntil),
++    daysUntilExpiry: daysUntilExpiry(certificate, now, timeZone),
++    renewalDueOn: renewalDueOn(certificate.validUntil, timeZone),
+```
+
+¿De dónde sale la zona en la pantalla? Del único camino que existe: certificado → inspección → activo. El servicio de estado lo arma una vez:
+
+```diff
+// src/app/core/state/certificate-state.service.ts
+-import { BehaviorSubject, Observable, concatMap, map, tap, throwError } from 'rxjs';
++import { BehaviorSubject, Observable, combineLatest, concatMap, map, shareReplay, tap, throwError } from 'rxjs';
+
++import { AssetApiService } from '../api/asset-api.service';
+ import { CertificateApiService } from '../api/certificate-api.service';
++import { InspectionApiService } from '../api/inspection-api.service';
+@@
+   private readonly certificateApi = inject(CertificateApiService);
+   private readonly inspectionState = inject(InspectionStateService);
++  private readonly assetApi = inject(AssetApiService);
++  private readonly inspectionApi = inject(InspectionApiService);
+@@
+-  readonly views$: Observable<readonly CertificateView[]> = this.state$.pipe(
+-    map((state) => {
++  /**
++   * 🩹 INCIDENTE 21. La zona de cada certificado, por inspección y activo. Sólo
++   * entran los activos que traen `timeZone`; los demás no aparecen en el mapa y
++   * siguen por el offset de siempre.
++   */
++  private readonly timeZones$: Observable<ReadonlyMap<number, string>> = combineLatest([
++    this.inspectionApi.getAll(),
++    this.assetApi.getAll(),
++  ]).pipe(
++    map(([inspections, assets]) => {
++      const zoneByAssetId = new Map<string, string>();
++      for (const asset of assets) {
++        if (asset.timeZone !== undefined) {
++          zoneByAssetId.set(asset.id, asset.timeZone);
++        }
++      }
++
++      const zoneByInspectionId = new Map<number, string>();
++      for (const inspection of inspections) {
++        const zone = zoneByAssetId.get(inspection.assetId);
++        if (zone !== undefined) {
++          zoneByInspectionId.set(inspection.id, zone);
++        }
++      }
++
++      return zoneByInspectionId;
++    }),
++    shareReplay({ bufferSize: 1, refCount: true }),
++  );
++
++  readonly views$: Observable<readonly CertificateView[]> = combineLatest([
++    this.state$,
++    this.timeZones$,
++  ]).pipe(
++    map(([state, zones]) => {
+       const now = nowInstant();
+
+-      return state.items.map((certificate) => buildCertificateView(certificate, now));
++      return state.items.map((certificate) =>
++        buildCertificateView(certificate, now, zones.get(certificate.inspectionId)),
++      );
+     }),
+   );
+```
+
+**Paso 2, emitir.** La renovación de la semana que viene no puede volver a nacer con `-05:00`. La vigencia se calcula en la hora del activo, y el PDF lee el día en esa misma hora: si no, un `23:59:59-06:00` impreso con el día de Bogotá saldría como el **13**.
+
+```diff
+// src/app/core/domain/certificate-validity.ts
+   addDays,
+-  endOfBusinessDay,
+-  toBusinessDay,
++  endOfLocalDay,
++  toLocalDay,
+ } from '../time/business-day';
+@@
+-export function computeValidity(issuedAt: Instant): CertificateValidity {
+-  const issuedDay = toBusinessDay(issuedAt);
++export function computeValidity(issuedAt: Instant, timeZone?: string): CertificateValidity {
++  // 🩹 INCIDENTE 21. El día de emisión y el final de la vigencia, en la hora del activo.
++  const issuedDay = toLocalDay(issuedAt, timeZone);
+
+   return {
+     from: issuedAt,
+-    until: endOfBusinessDay(addMonths(issuedDay, CERTIFICATE_VALIDITY_MONTHS)),
++    until: endOfLocalDay(addMonths(issuedDay, CERTIFICATE_VALIDITY_MONTHS), timeZone),
+   };
+ }
+@@
+-export function renewalDueOn(validUntil: Instant): BusinessDay {
+-  return toBusinessDay(validUntil);
++export function renewalDueOn(validUntil: Instant, timeZone?: string): BusinessDay {
++  return toLocalDay(validUntil, timeZone);
+ }
+```
+
+```diff
+// src/app/core/state/certificate-state.service.ts
+-        return this.inspectionState.findingsOf(inspection).pipe(map(summarizeFindings));
++        // 🩹 INCIDENTE 21. El activo viaja con el resumen: su zona decide la vigencia.
++        return combineLatest({
++          summary: this.inspectionState.findingsOf(inspection).pipe(map(summarizeFindings)),
++          asset: this.assetApi.getById(inspection.assetId),
++        });
+       }),
+-      concatMap((summary) => {
++      concatMap(({ summary, asset }) => {
+@@
+-        const validity = computeValidity(issuedAt);
++        const validity = computeValidity(issuedAt, asset.timeZone);
+```
+
+```diff
+// src/app/core/pdf/certificate-document.ts
+-import { toBusinessDay } from '../time/business-day';
++import { toLocalDay } from '../time/business-day';
+@@
+-    `Vigencia: del ${formatInstant(view.validity.from)} al ${formatInstant(view.validity.until)}`,
++    `Vigencia: del ${formatInstant(view.validity.from, asset.timeZone)} ` +
++      `al ${formatInstant(view.validity.until, asset.timeZone)}`,
+@@
+-      finding.resolvedAt === null ? 'No' : formatInstant(finding.resolvedAt),
++      finding.resolvedAt === null ? 'No' : formatInstant(finding.resolvedAt, asset.timeZone),
+@@
+-function formatInstant(instant: string): string {
++function formatInstant(instant: string, timeZone?: string): string {
+   // El documento se lee donde está el activo: se imprime el día de negocio, no el
+   // instante completo, y desde luego no el UTC.
+-  return toBusinessDay(instant).split('-').reverse().join('/');
++  return toLocalDay(instant, timeZone).split('-').reverse().join('/');
+ }
+```
+
+```diff
+// src/app/features/certificates/certificate-pdf.service.ts
+-            view: buildCertificateView(parts.certificate, nowInstant()),
++            view: buildCertificateView(parts.certificate, nowInstant(), parts.asset.timeZone),
+```
+
+**La refactorización correcta**
+
+La zona es un dato del activo, así que el país termina entrando al modelo por ahí: un `timeZone` **obligatorio**, sembrado para todos los activos —`America/Bogota`, `America/Lima`, `America/Guayaquil`, `Pacific/Galapagos`—, y `CERTCORE_TIME_ZONE_OFFSET` se jubila como el respaldo de un dato que ya no falta. Es lo que el comentario de 2022 llamaba *"este archivo entero cambia"*, y no se hace un viernes: toca la semilla, la pantalla de activos de la Fase 6 y cada función que hoy da por hecho el `-05:00`.
+
+Mientras tanto, el panel de la Fase 11 sigue contando sin zona: `bucketCertificates` y `assetsWithoutCoverage` llaman a `deriveCertificateStatus` sin el tercer argumento, y durante esa misma hora del último día el Inn sale en la columna de vencidos. Queda en los pendientes.
+
+**Prueba de regresión**
+
+```ts
+// src/app/core/domain/certificate-status.spec.ts — el caso del incidente 21
+import { Certificate } from '../models/certificate.model';
+import { deriveCertificateStatus } from './certificate-status';
+import { computeValidity } from './certificate-validity';
+
+const GALAPAGOS = 'Pacific/Galapagos';
+
+function certificate(validUntil: string): Certificate {
+  return {
+    id: 'CERT-2025-000505',
+    inspectionId: 505,
+    issuedAt: '2025-03-12T20:40:00.000Z',
+    validUntil,
+    status: 'issued',
+    revokedAt: null,
+  };
+}
+
+describe('incidente 21: el certificado vence en la hora del activo', () => {
+  // Emitido antes del fix: el instante quedó en -05:00, las 22:59:59 de la isla.
+  const emittedBeforeFix = certificate('2026-03-12T23:59:59-05:00');
+  const quarterPastElevenOnTheIsland = '2026-03-12T23:15:00-06:00';
+
+  it('sigue vigente a las 23:15 de Puerto Ayora del último día', () => {
+    // Antes del fix, este caso devolvía 'expired'.
+    expect(deriveCertificateStatus(emittedBeforeFix, quarterPastElevenOnTheIsland, GALAPAGOS)).toBe('expiring');
+  });
+
+  it('vence a la medianoche de la isla, ni una hora antes ni una después', () => {
+    expect(deriveCertificateStatus(emittedBeforeFix, '2026-03-12T23:59:59-06:00', GALAPAGOS)).toBe('expiring');
+    expect(deriveCertificateStatus(emittedBeforeFix, '2026-03-13T00:00:00-06:00', GALAPAGOS)).toBe('expired');
+  });
+
+  it('sin zona, el continente sigue exactamente igual', () => {
+    // El mismo instante en Quito ya es el 13 a las 00:15: ahí sí está vencido.
+    expect(deriveCertificateStatus(emittedBeforeFix, quarterPastElevenOnTheIsland)).toBe('expired');
+  });
+
+  it('lo que se emite desde ahora ya lleva la hora de la isla', () => {
+    // Antes del fix, este caso devolvía '2026-03-12T23:59:59-05:00'.
+    expect(computeValidity('2025-03-12T20:40:00.000Z', GALAPAGOS).until).toBe('2026-03-12T23:59:59-06:00');
+  });
+});
+```
+
+**Prevención**
+
+El test de arriba, que fija los dos bordes en la hora de la isla. Y una pregunta en la lista de alta de un cliente nuevo, que es donde este bug entró: **¿el activo está en UTC−5?** Si la respuesta es no, el activo lleva su `timeZone` antes de su primera inspección, no después de su primer ticket.
+
+```bash
+# Y la alarma que ya existía, para leerla cada vez que se incorpora un país o una isla:
+grep -n "⚠️" src/app/core/time/business-day.ts
+```
+
+**Por qué llegó a producción**
+
+El supuesto era verdad cuando se escribió. En 2022 los tres países de Plomada estaban en UTC−5 sin cambio de hora, y `CERTCORE_TIME_ZONE_OFFSET` era la decisión correcta: un número, en un archivo, con un aviso para el día en que dejara de serlo. Ese día llegó en 2024 por la puerta comercial —un contrato de Aurum, un cliente nuevo dado de alta desde la pantalla— y en el alta de un cliente nadie lee `business-day.ts`.
+
+Después, el síntoma hizo el resto. Dura **una hora al año por activo**, de 23:00 a 23:59 del último día y en la hora de la isla, cuando nadie de Plomada está trabajando. La primera vez que alguien miró el certificado a esa hora fue con un cliente al lado.
+
+**Si tu causa fue distinta a esta**
+
+Si cambiaste `CERTCORE_TIME_ZONE_OFFSET` a `-06:00`, arreglaste el Inn y rompiste todos los demás activos: ahora el continente vence a la una de la mañana del día siguiente. Si corregiste el `validUntil` del certificado en la base de datos, el síntoma se va, pero reescribiste un documento ya emitido, y el PDF que el administrador tiene impreso dice otra cosa que el sistema. El histórico es de la auditoría. Y si concluiste que es el incidente 15 otra vez, mira la Pista 2 de aquél: aquí no hay `toISOString()` ni navegador de por medio, y el bug se reproduce igual con todas las máquinas en Bogotá.
+
+</details>
+
+---
+
+## Incidente 22 — "No me deja crear el cliente de Galápagos: dice que el NIT son 9 o 10 dígitos"
+
+> **Fase:** 6 · **Categoría:** Formularios · **Dificultad:** 🟡
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 15-25 min · **Ruta forense:** [`forense-fase-06.md`](forense-fase-06.md)
+
+### 🎫 El ticket
+
+> *"No me deja crear el cliente de Galápagos. Pongo el RUC de la hostería y sale que el NIT son 9 o 10 dígitos, sin puntos ni guiones. No tiene puntos ni guiones: es un RUC de Ecuador y tiene 13. Se lo pedí a Patricio dos veces y está bien copiado. ¿Lo creo con los primeros diez números mientras tanto, para no atrasar la inspección?"*
+
+**Reportado por:** coordinadora de calidad, con copia a la gerencia general
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Contestar la pregunta del final antes que nada, explicar por qué Lima y Quito llevan años con clientes que tienen RUC y nadie había visto este error, y arreglar la validación sin romper el chequeo de NIT repetido que ya hace la pantalla.
+
+### 🔧 Preparación
+
+No hay nada que preparar: el bug está en el formulario desde que la Fase 6 lo escribió, y la semilla basta para verlo.
+
+```bash
+npm run mock
+npm start
+# Clientes → Nuevo cliente
+#   Razón social: Hostería Chiriboga Cía. Ltda.
+#   NIT:          2091748323001
+```
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — dónde mirar</summary>
+
+El mensaje del error lo escribió alguien, en un archivo concreto: búscalo. Y antes de cambiar nada, pregúntale al control qué le pasa, como en la ruta forense de la Fase 6: `ng.getComponent($0).form.controls.taxId.errors`.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+Los `validators` del control `taxId` en `client-form.component.ts`. ¿Cuántos países caben en esa expresión regular? Y abre Network mientras escribes los 13 dígitos: ¿sale la petición que comprueba si el NIT está repetido?
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+Los clientes de Lima y de Quito existen desde que se abrió cada filial. ¿Por qué puerta entraron a la base, si esta pantalla no los habría dejado pasar?
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+```
+```
+
+**Hipótesis**
+- ❌ Descartada:
+- ✅ Confirmada:
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
+
+**Primero, la pregunta del final: no.** Un cliente creado con los diez primeros dígitos de su RUC pasa la validación porque tiene la forma de un NIT colombiano, y eso es lo peor que le puede pasar: el certificado saldría a nombre de un número que no existe en ningún registro tributario, y nadie lo notaría hasta que el cliente lo reclamara. Un dato inventado para pasar un validador es un bug en la base que ya no se ve en ninguna pantalla.
+
+**Causa raíz**
+
+Una línea del formulario de clientes, escrita con los clientes colombianos delante:
+
+```ts
+// src/app/features/clients/client-form/client-form.component.ts — la línea
+      validators: [Validators.required, Validators.pattern(/^\d{9,10}$/)],
+```
+
+Nueve dígitos y uno de verificación: el NIT de Colombia, y nada más. Los identificadores de los otros dos países no caben:
+
+| País | Identificación | Forma | Fuente |
+|---|---|---|---|
+| Colombia | NIT | 9 dígitos, o 10 con el de verificación | lo que ya validaba la Fase 6 |
+| Perú | RUC | 11 dígitos | SUNAT |
+| Ecuador | RUC | 13 dígitos; los dos primeros, la provincia; los tres últimos, `001` | Reglamento de la Ley del RUC, art. 3 |
+
+**¿Y por qué nadie lo vio en cinco años?** Porque los clientes de Lima y de Quito no entraron por esta pantalla. Cada filial llegó con su cartera, y esa cartera se cargó **por script, directo a la API**, el día en que se abrió. La validación de la pantalla nunca los vio. La hostería de Galápagos es el primer cliente fuera de Colombia que alguien crea a mano, y por eso es el primero que tropieza.
+
+Y un detalle que la Pista 2 buscaba: en Network **no sale** la petición de `existsByTaxId`. Angular corre los validadores síncronos primero y llama al asíncrono solo si pasaron. Con el patrón fallando, el chequeo de repetidos ni siquiera arranca, así que mirar el validador asíncrono es perder el tiempo.
+
+**Parche mínimo**
+
+Un validador con nombre, al lado del asíncrono que ya existe, que reconozca por su **forma** los tres identificadores. No hay campo de país, así que no puede saber cuál de los tres es: solo que tiene la forma de uno.
+
+```ts
+// src/app/features/clients/tax-id.validator.ts — nuevo, el fix del incidente 22
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+/**
+ * 🩹 INCIDENTE 22. La identificación tributaria de un cliente de cualquiera de
+ * los tres países, reconocida por su forma:
+ *   - NIT de Colombia: 9 dígitos, o 10 con el de verificación;
+ *   - RUC de Perú: 11 dígitos (SUNAT);
+ *   - RUC de Ecuador: 13 dígitos terminados en 001 (Reglamento de la Ley del RUC).
+ *
+ * No comprueba dígitos verificadores, y es a propósito: sin país no se sabe
+ * cuál aplicar, y el que el cliente tiene impreso en su RUC vale más que
+ * nuestra cuenta. Lo que sí hace es no dejar pasar nada que no sea uno de los
+ * tres, que es lo que el patrón de antes hacía con uno solo.
+ */
+const TAX_ID_FORMATS: readonly RegExp[] = [/^\d{9,10}$/, /^\d{11}$/, /^\d{10}001$/];
+
+export const taxIdValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  // Igual que en el asíncrono: el valor llega como `any` y se estrecha.
+  const value: unknown = control.value;
+
+  if (typeof value !== 'string' || value === '') {
+    // El vacío es cosa de `Validators.required`, que ya está en el control.
+    return null;
+  }
+
+  return TAX_ID_FORMATS.some((format) => format.test(value)) ? null : { taxIdFormat: true };
+};
+```
+
+```diff
+// src/app/features/clients/client-form/client-form.component.ts
+ import { uniqueTaxIdValidator } from '../unique-tax-id.validator';
++import { taxIdValidator } from '../tax-id.validator';
+@@
+-      validators: [Validators.required, Validators.pattern(/^\d{9,10}$/)],
++      // 🩹 INCIDENTE 22. NIT, RUC de Perú o RUC de Ecuador: ver tax-id.validator.ts.
++      validators: [Validators.required, taxIdValidator],
+       // El validador asíncrono va en su propio parámetro, no mezclado con los
+       // síncronos. Angular corre los síncronos primero y sólo llama al
+-      // asíncrono si aquéllos pasaron: no se pregunta al servidor por un NIT
+-      // que ni siquiera tiene nueve dígitos.
++      // asíncrono si aquéllos pasaron: no se pregunta al servidor por un
++      // número que no tiene la forma de ninguno de los tres.
+       asyncValidators: [uniqueTaxIdValidator(this.clientApi, this.clientId)],
+```
+
+```diff
+<!-- src/app/features/clients/client-form/client-form.component.html -->
+-    <mat-label>NIT</mat-label>
++    <mat-label>NIT o RUC</mat-label>
+@@
+-    <mat-error *ngIf="form.controls.taxId.hasError('pattern')">
+-      El NIT son 9 o 10 dígitos, sin puntos ni guiones.
++    <mat-error *ngIf="form.controls.taxId.hasError('taxIdFormat')">
++      Sin puntos ni guiones: NIT de 9 o 10 dígitos, RUC de Perú de 11, o RUC de Ecuador de 13 terminado en 001.
+     </mat-error>
+```
+
+El asíncrono no se toca: `uniqueTaxIdValidator` compara el texto con lo que ya hay en la base, y le da igual de qué país sea.
+
+**La refactorización correcta**
+
+El país del cliente, como dato. Con él, el validador sabe cuál de los tres formatos exigir, puede comprobar el dígito verificador donde la norma lo pida, y la pantalla puede decir "RUC" o "NIT" según corresponda en vez de "NIT o RUC". Es la misma conversación que el incidente 21 abre con la zona del activo, y no se tiene un viernes.
+
+Y una que no es de Angular: los clientes de 2019 entraron sin pasar por esta validación, y cualquier otro script puede hacer lo mismo. La regla tiene que vivir también del lado de la API, donde no hay forma de saltársela.
+
+**Prueba de regresión**
+
+```ts
+// src/app/features/clients/tax-id.validator.spec.ts — el caso del incidente 22
+import { FormControl } from '@angular/forms';
+
+import { taxIdValidator } from './tax-id.validator';
+
+describe('incidente 22: la identificación tributaria de los tres países', () => {
+  const isValid = (taxId: string): boolean =>
+    new FormControl(taxId, { nonNullable: true, validators: [taxIdValidator] }).valid;
+
+  it('acepta el NIT de siempre, de 9 y de 10 dígitos', () => {
+    expect(isValid('900123456')).toBeTrue();
+    expect(isValid('9001234567')).toBeTrue();
+  });
+
+  it('acepta el RUC de Perú y el de Ecuador', () => {
+    expect(isValid('20000000001')).toBeTrue();
+    // El de la hostería. Antes del fix, este caso era inválido.
+    expect(isValid('2091748323001')).toBeTrue();
+  });
+
+  it('sigue rechazando lo que no es ninguno de los tres', () => {
+    expect(isValid('12345678')).toBeFalse(); // ocho dígitos
+    expect(isValid('123456789012')).toBeFalse(); // doce: no es de ningún país
+    expect(isValid('2091748323002')).toBeFalse(); // trece, sin 001
+    expect(isValid('900.123.456')).toBeFalse(); // con puntos
+    expect(isValid('2000000000A')).toBeFalse(); // con una letra
+  });
+});
+```
+
+**Prevención**
+
+El test de arriba, y una búsqueda que conviene repetir cada vez que el negocio cruza una frontera: las reglas de un solo país escondidas en literales.
+
+```bash
+grep -rn -e 'NIT' -e '9,10' src/app/
+```
+
+La búsqueda también encuentra la cabecera **NIT** de la tabla de clientes y el *placeholder* "Razón social o NIT" del buscador, que siguen diciendo "NIT" con un RUC debajo. No rompen nada, pero son el mismo supuesto, y entran en la refactorización del país.
+
+**Por qué llegó a producción**
+
+Porque la regla era verdad para todos los clientes que la pantalla vio. Las carteras de Lima y de Quito llegaron por script, directo a la API, y durante años la única gente que dio de alta clientes a mano en CertCore trabajaba en Bogotá con clientes colombianos. El formulario pasó sus pruebas con NIT, porque NIT era lo que había.
+
+Lo que lo hizo visible fue un cliente que no llegó con ninguna filial sino con un contrato. Y lo que casi lo esconde otra vez fue la pregunta del ticket: *"¿lo creo con los primeros diez números?"*. Cuando un validador estorba, alguien encuentra la forma de pasarlo, y el dato que entra así ya no lo detecta nadie.
+
+**Si tu causa fue distinta a esta**
+
+Si quitaste el patrón, la pantalla acepta cualquier cosa y el asíncrono le pregunta al servidor por basura. Si lo ampliaste a `/^\d{9,13}$/`, aceptas doce dígitos, que no son de ningún país, y un RUC de Ecuador sin `001`. Si te fuiste al validador asíncrono porque "es el que consulta", la Pista 2 lo descarta: con el síncrono fallando, el asíncrono no llega a correr. Y si creaste el cliente con los diez primeros dígitos, como proponía el ticket, el formulario quedó contento y la base, mal: es el único de estos caminos que no deja ningún error a la vista.
 
 </details>
 
@@ -3892,7 +4618,7 @@ Cuántos incidentes perdiste buscando en un `NgModule` algo que vivía en un sta
 Sin culpa. Es un dato sobre dónde te falta confianza, no sobre tu disciplina.
 
 **Tu checklist de hotfix**
-La de una página, reescrita con lo que aprendiste este mes. Es lo único de este archivo que te llevas al trabajo real: el `HOTFIX.md` que escribiste en la **Fase 13 §5.9**, revisado con veinte incidentes encima.
+La de una página, reescrita con lo que aprendiste este mes. Es lo único de este archivo que te llevas al trabajo real: el `HOTFIX.md` que escribiste en la **Fase 13 §5.9**, revisado con veintidós incidentes encima.
 
 > 🧭 **Y el criterio para saber si el mes hizo su trabajo:** que ante un ticket vago, tu primer movimiento ya no sea abrir el editor.
 
@@ -3914,6 +4640,8 @@ Lo que apareció investigando y no cabía en el fix.
 - **[19]** Todo lo que puede fallar en el arranque de un contenedor tiene que fallar **ruidosamente**. `set -e` y variables obligatorias en el `entrypoint.sh`. → **Fase 13**, ya incorporado en la refactorización.
 - **[20]** Los cuatro invariantes del sistema merecen un `invariants.spec.ts` propio, con nombres que se lean como el contrato. → **Fase 12**.
 - **[20]** Mutación a mano como paso de revisión: *cambia una constante y corre la suite; si sigue en verde, ese test no protege nada.* → **Checklist de revisión del equipo.**
+- **[21]** El panel de la Fase 11 cuenta sin zona: `bucketCertificates` y `assetsWithoutCoverage` no le pasan a `deriveCertificateStatus` la zona del activo, y durante la última hora del último día el Inn de Galápagos sale como vencido. → **Fase 11**, con la refactorización que hace obligatorio `timeZone` en el activo.
+- **[22]** El cliente no tiene país, así que el validador solo reconoce formas y la pantalla dice "NIT o RUC"; con el país como dato se exigiría el formato que toca y su dígito verificador. Y la regla vive solo en la pantalla: los clientes de 2019 entraron por script sin pasar por ella. → **Decisión de proyecto**, y validación del lado de la API (track de backend).
 
 ---
 

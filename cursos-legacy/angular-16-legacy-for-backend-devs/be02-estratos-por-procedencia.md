@@ -67,10 +67,10 @@ La Era 0 de [`00-historia-del-sistema.md`](00-historia-del-sistema.md) explica e
 
 | Quién | Cuándo | De dónde venía | Qué dejó |
 |---|---|---|---|
-| El fundador técnico | 2016–2018 | La intranet PHP de la empresa, sin framework | El esqueleto y las decisiones que nadie revisó |
-| La segunda | 2018–2019 | **Laravel** | La mitad del código actual, y la última subida de Lumen |
+| El fundador técnico | 2016–2018 | **.NET**; PHP con Lumen para el servicio de emisión, por licencias y hosting | El esqueleto y las decisiones que nadie revisó |
+| El segundo | 2018–2019 | **Laravel** | La mitad del código actual, y la última subida de Lumen |
 | El tercero | 2020–2021 | **CakePHP** | El módulo de plantillas y certificados, con sus convenciones de tabla |
-| La cuarta | 2022–2024 | **Symfony** | La reescritura que se quedó a medias (be06) |
+| La cuarta | 2023–2024 | **Symfony** | La reescritura que se quedó a medias (be06) |
 
 Ninguno duró más de dieciocho meses, y no es casualidad: **nadie quiere "Lumen 2018" en su CV.** Quien entra sabe que lo que aprenda aquí no se cotiza fuera, así que se va en cuanto puede — y la empresa paga el onboarding otra vez.
 
@@ -95,6 +95,7 @@ Los cuatro devuelven las plantillas vigentes. Los cuatro funcionan. Léelos ante
 
 namespace App\Http\Controllers;
 
+use App\Models\Template;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class LegacyTemplateController extends BaseController
@@ -184,7 +185,7 @@ class CertificateController extends BaseController
 ```php
 <?php
 // server/app/Http/Controllers/HealthLegacyController.php   ← procedencia: NINGUNA
-// El fundador técnico, 2016. Venía de la intranet, no de un framework.
+// El fundador técnico, 2016. Venía de .NET: escribe PHP con hábitos de C#.
 
 namespace App\Http\Controllers;
 

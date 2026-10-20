@@ -1,0 +1,10 @@
+### 1. smoke.sh contra el mock limpio
+OK: 26/26
+### 2. prueba de fuego: id de v2 cambiado a 7
+  ❌ el id de plantilla es compuesto
+     esperado: elevator-annual-v2
+     recibido: 7
+FALLOS: 1 de 26
+### 3. db.json restaurado a la semilla
+### 4. CHAOS con modo desconocido
+Error: Fallos de caos desconocidos: latencia. Los válidos son: latency, error, malformed, cors, expired, timeout.

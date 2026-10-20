@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService } from '../../core/auth.service';
+import { AppConfigService } from '../../core/config/app-config.service';
 import { AccessTokenPayload } from '../../core/models/auth.model';
-import { environment } from '../../../environments/environment';
 
 interface NavigationItem {
   readonly path: string;
@@ -30,8 +30,8 @@ export class ShellComponent {
     { path: '/certificates', label: 'Certificados', icon: 'verified' },
   ];
 
-  // Se lee del archivo de entorno, que el build sustituye. Ver 5.11 de la Fase 1.
-  readonly environmentName = environment.environmentName;
+  // Desde la Fase 13 se lee de la configuración de arranque, no del build.
+  readonly environmentName: string;
 
   readonly currentUser$: Observable<AccessTokenPayload | null>;
 
@@ -41,8 +41,10 @@ export class ShellComponent {
   constructor(
     private readonly authService: AuthService,
     private readonly router: Router,
+    appConfig: AppConfigService,
   ) {
     this.currentUser$ = authService.currentUser$;
+    this.environmentName = appConfig.current.environmentName;
   }
 
   logout(): void {

@@ -6,7 +6,7 @@
 > [Incidentes asociados](cuaderno-incidentes.md): ninguno
 > Estilo de esta fase: infraestructura. **La aplicación no se toca ni una línea**
 
-> 🔥 **Esta fase no es requisito del onboarding.** El curso se completa sin abrirla y el líder la asigna a quien tenga interés. No tiene horas en el calendario de 122h y no hay ninguna fase que dependa de ella.
+> 🔥 **Esta fase no es requisito del onboarding.** El curso se completa sin abrirla y el líder la asigna a quien tenga interés. No tiene horas en el calendario de 123h y no hay ninguna fase que dependa de ella.
 
 ---
 
@@ -25,7 +25,7 @@ Lo demás es vocabulario. Pod, Deployment, Service, ConfigMap, Ingress: cinco pa
 ## ✅ 2. Qué queda listo al terminar
 
 - [ ] `kind get clusters` lista un cluster llamado `certcore`, creado con los mapeos de puerto que el Ingress necesita.
-- [ ] `kubectl get pods` muestra dos pods corriendo: la aplicación y el mock.
+- [ ] `kubectl get pods` muestra tres pods corriendo: dos de la aplicación (`replicas: 2`) y el mock.
 - [ ] `http://localhost/` abre CertCore servido desde el cluster, y la toolbar dice el ambiente que el ConfigMap le dio.
 - [ ] Cambias el ConfigMap, reinicias el Deployment, y la toolbar dice otra cosa — **sin reconstruir la imagen y sin tocar el `entrypoint.sh`**.
 - [ ] `docker inspect` de la imagen local y la que corre en el cluster dan el mismo digest. Es la misma, no una parecida.
@@ -109,7 +109,7 @@ Por eso este capítulo usa el ConfigMap como variables de entorno. El ejercicio 
 
 Hay un atajo de la Fase 13 que aquí se acaba, y es un buen recordatorio de qué cambia al subir un escalón.
 
-Allí, el mock se levantó **montando tu directorio de trabajo** dentro de un contenedor de Node: `-v "$(pwd)/mock:/app/mock"`. Funciona, es cómodo y evita escribir un Dockerfile más. Aquí no sirve: los pods corren en un nodo que es otro contenedor, tu directorio no existe ahí, y aunque se pudiera montar —kind tiene `extraMounts` para eso— estarías atando el cluster a la máquina que lo levantó, que es justo lo que un orquestador existe para evitar.
+Allí, el mock se levantó **montando tu directorio de trabajo** dentro de un contenedor de Node: `-v "$(pwd):/app"`. Funciona, es cómodo y evita escribir un Dockerfile más. Aquí no sirve: los pods corren en un nodo que es otro contenedor, tu directorio no existe ahí, y aunque se pudiera montar —kind tiene `extraMounts` para eso— estarías atando el cluster a la máquina que lo levantó, que es justo lo que un orquestador existe para evitar.
 
 Así que el mock necesita su propia imagen. Son cinco líneas y es 5.2. La lección que va debajo es más general: **los atajos que dependen de tu máquina son los primeros que se caen al mover algo de tu máquina.**
 
@@ -167,20 +167,25 @@ kubectl get nodes
 # mock/Dockerfile
 # Cinco líneas, y existen sólo porque en un cluster no puedes montar tu
 # directorio de trabajo. En la Fase 13 el mock se levantó con
-# `-v "$(pwd)/mock:/app/mock"` y eso bastaba; aquí el nodo es otro contenedor y
-# tu disco no está ahí.
+# `-v "$(pwd):/app"` y eso bastaba; aquí el nodo es otro contenedor y tu disco
+# no está ahí.
 FROM node:18.18.2-alpine
 
 WORKDIR /app
 
-# Se copia el mock entero: el servidor, el caos, la semilla y el db.json. No
-# hay `npm ci` porque el mock usa express, json-server y jsonwebtoken, que ya
-# están en el package.json del proyecto — así que las dependencias se instalan
-# desde la raíz y sólo se copia lo que hace falta.
+# Las dependencias del mock —express, jsonwebtoken y json-server— se instalan
+# como devDependencies en las Fases 2 y 3. Por eso se hace `npm ci` completo y
+# no con `--omit=dev`: con ese flag el contenedor arrancaría sin sus módulos.
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 COPY mock/ ./mock/
+
+# El `.dockerignore` de la Fase 13 deja fuera `mock/db.json` —con razón: es un
+# archivo de trabajo—, así que la imagen llega sin él y json-server arranca con
+# una base vacía: `/clients` da 404. Se regenera aquí desde la semilla, igual
+# que `npm run seed` en tu máquina.
+RUN node mock/seed.js
 
 EXPOSE 3000
 
@@ -193,7 +198,7 @@ docker build -f mock/Dockerfile -t certcore-mock:fase-14 .
 
 **Detalles con intención**
 
-- **El `db.json` viaja dentro de la imagen y se pierde al reiniciar el pod.** Es correcto para un mock y sería un bug para un backend. El ejercicio 13 te hace decidir qué harías con datos que importan, y la respuesta —un `PersistentVolumeClaim`— está fuera de alcance a propósito: es un capítulo entero.
+- **El `db.json` se genera dentro de la imagen y se pierde al reiniciar el pod.** Sin el `RUN node mock/seed.js` no habría ni eso: medido, el mock arranca, el login funciona, y `/clients` responde 404 porque la base está vacía. Es correcto para un mock y sería un bug para un backend. El ejercicio 13 te hace decidir qué harías con datos que importan, y la respuesta —un `PersistentVolumeClaim`— está fuera de alcance a propósito: es un capítulo entero.
 - **La imagen del mock se etiqueta `fase-14` y no `latest`**, por la misma razón que la de la aplicación en la Fase 13.
 
 ### 5.3 ⭐ Cargar la imagen al nodo: el tropiezo de todo el mundo
@@ -203,13 +208,15 @@ Aquí es donde tropieza absolutamente todo el que llega a kind por primera vez, 
 ```bash
 # Aplica el Deployment de 5.4 sin cargar nada y mira qué pasa:
 kubectl get pods
-# NAME                        READY   STATUS             RESTARTS   AGE
-# certcore-7d4b8f9c5-x2klm    0/1     ErrImagePull       0          15s
+# NAME                       READY   STATUS              RESTARTS   AGE
+# certcore-59cd657bb-64n7n   0/1     ErrImageNeverPull   0          20s
+kubectl describe pod -l app=certcore | tail -2
+# Container image "certcore:fase-13" is not present with pull policy of Never
 ```
 
-`ErrImagePull`, o su hermano `ImagePullBackOff`. Y la causa desconcierta porque la imagen **existe**: la acabas de construir y `docker images` la lista.
+`ErrImageNeverPull`. Y la causa desconcierta porque la imagen **existe**: la acabas de construir y `docker images` la lista.
 
-La explicación es de una frase: **el nodo del cluster no ve tus imágenes**. kind corre el cluster dentro de un contenedor, con su propio almacén de imágenes, y ese almacén no es el de tu demonio de Docker. Cuando el kubelet no encuentra `certcore:fase-13` localmente, hace lo único que sabe: intentar descargarla de un registro público, donde por supuesto no está.
+La explicación es de una frase: **el nodo del cluster no ve tus imágenes**. kind corre el cluster dentro de un contenedor, con su propio almacén de imágenes, y ese almacén no es el de tu demonio de Docker. Con el `imagePullPolicy: Never` del manifiesto, el kubelet ni siquiera lo intenta: mira su almacén, no la encuentra, y lo dice. Sin esa línea —con la política por defecto, `IfNotPresent`— el estado sería `ErrImagePull` y después `ImagePullBackOff`, porque el kubelet sí saldría a buscarla a Docker Hub, donde por supuesto no está.
 
 ```bash
 # La solución, si tienes un demonio de Docker escuchando:
@@ -377,7 +384,7 @@ kubectl exec deploy/certcore -- cat /usr/share/nginx/html/assets/config.json
 # {"apiBaseUrl": "/api", "environmentName": "UAT"}
 
 # 2. Y lo dijo en su log de arranque, igual que en la Fase 13.
-kubectl logs deploy/certcore | grep certcore
+kubectl logs deploy/certcore | grep '\[certcore\]'
 # [certcore] configuración de arranque: UAT -> /api
 
 # 3. Ahora cambia el ConfigMap y reinicia. SIN reconstruir la imagen.
@@ -393,8 +400,14 @@ kubectl exec deploy/certcore -- cat /usr/share/nginx/html/assets/config.json
 El archivo cambió, la imagen no. **Compruébalo**, que es lo que separa creerlo de saberlo:
 
 ```bash
-docker exec certcore-control-plane crictl images --digests | grep certcore
+# El de tu máquina y el del nodo, uno debajo del otro.
+docker image inspect certcore:fase-13 --format '{{.Id}}'
+docker exec certcore-control-plane ctr -n k8s.io images ls name==docker.io/library/certcore:fase-13
 ```
+
+Con el almacén de imágenes de containerd —el de Docker Desktop reciente—, el `Id` de `docker image inspect` es el digest del índice de la imagen, y es exactamente el que lista `ctr` en el nodo: medido, `sha256:f5a23f87…` en los dos. No uses `crictl images` para esto: enseña el ID del *config* y un digest de importación, dos números que no coinciden con el tuyo aunque la imagen sea la misma.
+
+> ⚠️ **El orden de los tres `apply` no es cosmético.** El nginx de la imagen resuelve `certcore-mock` al arrancar (Fase 13 §5.5): si el Service del mock no existe todavía, los pods de la aplicación mueren con *"host not found in upstream "certcore-mock""* y entran en `CrashLoopBackOff`. Medido borrando el Service y reiniciando el Deployment.
 
 > ⚠️ **El `rollout restart` no sobra.** Un ConfigMap consumido como variables de entorno se lee **una sola vez, al arrancar el proceso**. Cambiarlo no toca los pods que ya están corriendo: siguen con los valores de cuando nacieron, tan tranquilos, y `kubectl get configmap` te enseña los nuevos. Esa desincronización —el ConfigMap dice una cosa y el pod hace otra— es el equivalente exacto del incidente 18 de la Fase 13, con otro mecanismo y el mismo desconcierto.
 
@@ -402,8 +415,10 @@ docker exec certcore-control-plane crictl images --digests | grep certcore
 
 ```bash
 # El controlador NO viene con kind: hay que instalarlo, y por eso el cluster se
-# creó con la etiqueta `ingress-ready=true` que este manifiesto busca.
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+# creó con la etiqueta `ingress-ready=true` que este manifiesto busca. Fijado a
+# una etiqueta del proyecto y no a `main`: es la única descarga del capítulo, y
+# fijada es la misma hoy y dentro de un año.
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.15.1/deploy/static/provider/kind/deploy.yaml
 
 # Se espera a que esté listo antes de aplicar ninguna regla: un Ingress creado
 # sin controlador no da error, simplemente no hace nada, que es peor.
@@ -413,7 +428,7 @@ kubectl wait --namespace ingress-nginx \
   --timeout=90s
 ```
 
-> ⚠️ Ese manifiesto apunta a `main` y **puede haber cambiado**. Si falla, busca la versión fijada del proyecto `ingress-nginx` para tu versión de Kubernetes en su documentación. Es el único punto de este capítulo que depende de algo externo al curso, y es inevitable: un controlador de Ingress no se puede escribir en veinte líneas.
+> ⚠️ **ingress-nginx está retirado.** El proyecto anunció su retirada el 11/11/2025 —mantenimiento a duras penas hasta marzo de 2026— y su README pide no desplegarlo en proyectos nuevos y usar una implementación de **Gateway API**. Aquí se usa igual, y conviene decir por qué: es el controlador que la guía de kind documentó durante años, funciona —medido con la `v1.15.1` sobre Kubernetes 1.37— y lo que este capítulo enseña son los cinco objetos de §4, no el controlador. En un cluster de verdad, el controlador lo decide plataforma, y es una de las preguntas de **A09** §8.
 
 ```yaml
 # k8s/ingress.yaml
@@ -441,7 +456,7 @@ spec:
 
 **Prueba de fuego**
 
-Abre `http://localhost/`. CertCore aparece, servido desde el cluster, con la toolbar diciendo lo que el ConfigMap dijo. Navega a una inspección, **recarga**, y comprueba que no sale un 404: el `try_files` de la Fase 13 sigue haciendo su trabajo dentro de la imagen, y ni el Ingress ni el Service saben nada de rutas de Angular.
+Abre `http://localhost/` —`localhost` y no otro nombre, por el `crypto.randomUUID()` que la Fase 13 §5.7 explica—. CertCore aparece, servido desde el cluster, con la toolbar diciendo lo que el ConfigMap dijo. Navega a una inspección, **recarga**, y comprueba que no sale un 404: el `try_files` de la Fase 13 sigue haciendo su trabajo dentro de la imagen, y ni el Ingress ni el Service saben nada de rutas de Angular.
 
 ### 5.7 El rolling update, en vivo
 
@@ -455,7 +470,7 @@ kubectl patch configmap certcore-config --type merge \
 kubectl rollout restart deployment/certcore
 ```
 
-Lo que se ve en la primera terminal es la idea entera de un Deployment: aparece un pod nuevo, se espera a que esté `Running`, **y sólo entonces** se termina uno de los viejos. Después el siguiente. Con `replicas: 2` nunca hay menos de dos disponibles, así que la página no deja de responder ni un instante — pruébalo recargando `http://localhost/` a mano mientras ocurre.
+Lo que se ve en la primera terminal es la idea entera de un Deployment: aparece un pod nuevo, se espera a que esté `Running`, **y sólo entonces** se termina uno de los viejos. Después el siguiente. Con `replicas: 2` nunca hay menos de dos disponibles, así que la página no deja de responder ni un instante — pruébalo recargando `http://localhost/` a mano mientras ocurre. Medido con un `curl` cada décima de segundo durante el reemplazo: 299 peticiones, las 299 con `200`.
 
 ```bash
 # Y si algo sale mal, el Deployment guarda el historial:
@@ -474,7 +489,10 @@ NO SE PAGA, y con todas las letras: aquí se ve **cómo funciona**, no cómo se
 pone en producción. Sin `readinessProbe`, el rolling update de 5.7 considera
 que un pod está listo en cuanto el contenedor arranca —no cuando nginx acepta
 conexiones— así que en un despliegue real habría una ventana de peticiones
-fallidas que aquí no se nota porque nginx arranca en milisegundos. Y sin
+fallidas que aquí no se nota porque nginx arranca en milisegundos. Y el caso
+malo se midió: con el Service del mock borrado, los pods nuevos arrancaron, se
+murieron en un segundo, contaron como disponibles en ese segundo, y el rolling
+update terminó los dos viejos. La aplicación se quedó sin ningún pod sano. Y sin
 `resources`, el planificador no sabe dónde cabe tu pod, que en un cluster
 compartido es la diferencia entre desplegar y que te lo rechacen.
 Las dos cosas son media docena de líneas y **no están** porque escribirlas aquí
@@ -490,7 +508,7 @@ cuenta desde ese lado.
 
 ### Errores comunes
 
-**Síntoma:** `ErrImagePull` o `ImagePullBackOff`, con una imagen que `docker images` lista perfectamente.
+**Síntoma:** `ErrImageNeverPull` —o `ErrImagePull` / `ImagePullBackOff` si el manifiesto no lleva `imagePullPolicy: Never`—, con una imagen que `docker images` lista perfectamente.
 **Causa:** el nodo del cluster tiene su propio almacén y no ve el tuyo.
 **Fix mínimo:** `kind load docker-image`, o la variante con `image-archive`.
 **Lo que importa:** es el tropiezo número uno de kind y no es un fallo de la herramienta: es la primera vez que el curso te pone delante de que **una imagen local no existe fuera de tu máquina**. En un cluster real la respuesta no es cargarla a mano, es subirla a un registro — y entonces aparece la conversación de tags, digests y quién tiene permiso para empujar, que está en **A09**.
@@ -505,10 +523,10 @@ cuenta desde ese lado.
 **Fix mínimo:** `kubectl rollout restart deployment/certcore`.
 **Lo que importa:** es el incidente 18 de la Fase 13 con otra ropa. Allí el `index.html` estaba cacheado en el navegador; aquí la configuración está "cacheada" en un proceso que arrancó hace dos horas. El síntoma es idéntico —*"lo cambié y no se ve"*— y la lección también: **cuando algo se lee una sola vez, cambiarlo no basta; hay que provocar que se vuelva a leer.**
 
-**Síntoma:** en un Mac con chip M, el pod entra en `CrashLoopBackOff` inmediatamente y `kubectl describe` no explica por qué.
-**Causa:** la imagen se construyó para `amd64` y el nodo es `arm64`.
-**Fix mínimo:** reconstruir en la arquitectura del nodo, o construir multi-arquitectura con `docker buildx`.
-**Lo que importa:** **el mensaje útil está en `kubectl logs`, no en `kubectl describe`** — dice `exec format error`, que es del kernel y no de Kubernetes. Es el mejor ejemplo del curso de por qué hay que mirar los dos y en qué orden. **A12** lo desarrolla.
+**Síntoma:** la imagen que construiste en tu Mac funciona en tu kind, pero en el cluster de la empresa el pod entra en `CrashLoopBackOff` inmediatamente y `kubectl describe` no explica por qué.
+**Causa:** la imagen es `arm64` —la de tu Mac— y los nodos de la empresa son `amd64`, sin nadie que traduzca. En tu kind no lo ves: la máquina virtual de tu runtime traduce lo que no es arm64 (Rosetta, y si no QEMU), así que una imagen de la arquitectura equivocada arranca igual, solo más lenta. En la prueba del curso, un pod con una imagen solo-amd64 quedó `Running` en un kind sobre Docker Desktop.
+**Fix mínimo:** construir para la arquitectura del destino (`--platform=linux/amd64`), o multi-arquitectura con `docker buildx`.
+**Lo que importa:** **el mensaje útil está en `kubectl logs`, no en `kubectl describe`** — dice `exec /…: exec format error`, que es del kernel y no de Kubernetes; `describe` solo muestra `Exit Code: 255`. Es el mejor ejemplo del curso de por qué hay que mirar los dos y en qué orden. **A12** lo desarrolla.
 
 ### Pieza forense de esta fase
 
@@ -529,18 +547,21 @@ kubectl get pods
 # Lo que le pasó desde fuera. Los eventos van al final.
 kubectl describe pod <nombre>
 
-# Lo que dijo el proceso. Si el contenedor ya se reinició, el log que te
-# interesa es el de la ejecución ANTERIOR, no el de la actual:
+# Lo que dijo el proceso: el último intento.
+kubectl logs <nombre>
+
+# Y el intento de ANTES del último:
 kubectl logs <nombre> --previous
 ```
 
-Ese `--previous` es la mitad del valor de esta sección. Un contenedor en `CrashLoopBackOff` arranca, falla y se reinicia; cuando tú corres `kubectl logs`, estás mirando el intento actual, que a lo mejor todavía no ha fallado. El mensaje que buscas está en el anterior.
+Cuál de los dos te da el mensaje depende de cómo esté el contenedor ahora, y conviene tenerlo claro porque casi todo lo que se lee por ahí lo simplifica. **En `CrashLoopBackOff`** el contenedor está esperando su próximo intento, así que el "último" es el que acaba de fallar: `kubectl logs` a secas ya enseña el error. Medido: el mensaje del arranque fallido sale en `kubectl logs`, y `--previous` respondió *"unable to retrieve container logs"*, porque el kubelet ya había recogido el contenedor de antes. **Con el pod `Running` y `RESTARTS` mayor que cero** pasa lo contrario: el intento actual está sano y el fallo fue el anterior, así que `kubectl logs` enseña un nginx tranquilo y `--previous` es el único sitio donde está el error. Es el caso más traicionero, porque el pod parece bien.
 
 **Los cuatro estados que vas a ver, traducidos:**
 
 - **`Pending`** — el pod no se pudo colocar en ningún nodo. Casi siempre, recursos. `describe`.
 - **`ErrImagePull` / `ImagePullBackOff`** — no consiguió la imagen. `describe`, y la causa está en los eventos.
-- **`CrashLoopBackOff`** — arrancó y se murió, varias veces, y el cluster está esperando cada vez más entre intentos. `logs --previous`.
+- **`CrashLoopBackOff`** — arrancó y se murió, varias veces, y el cluster está esperando cada vez más entre intentos. `logs`; y `logs --previous` si el pod ya se recuperó y sigue con reinicios.
+- **`ErrImageNeverPull` / `CreateContainerConfigError`** — ni siquiera llegó a crear el contenedor: la imagen no está en el nodo, o falta algo que el contenedor necesita para nacer (una clave del ConfigMap, una política que no cumple). `describe`, y la causa está en una línea del final.
 - **`Running` pero `0/1` en READY** — arrancó y no está listo. Si hubiera `readinessProbe`, sería ella; sin ella, este estado casi no aparece — que es una de las cosas que la 💸 se lleva por delante.
 
 > 📄 El recorrido completo, con los tickets literales y la salida de cada comando, en `forense-fase-14.md`.
@@ -549,11 +570,11 @@ Ese `--previous` es la mitad del valor de esta sección. Un contenedor en `Crash
 
 Tres roturas, y las tres enseñan un estado distinto.
 
-1. **Cambia la imagen del Deployment a `certcore:fase-99`** y aplica. `ErrImagePull`. Diagnostícalo con `describe` sin mirar el YAML, y anota en qué línea de la salida está la respuesta.
+1. **Cambia la imagen del Deployment a `certcore:fase-99`** y aplica. `ErrImageNeverPull`. Diagnostícalo con `describe` sin mirar el YAML, y anota en qué línea de la salida está la respuesta. Y fíjate en lo que **no** pasa: los dos pods viejos siguen sirviendo, porque el rolling update no termina ninguno hasta que el nuevo arranca.
 
-2. **Pon `command: ["sh", "-c", "exit 1"]`** en el contenedor de la aplicación. `CrashLoopBackOff`. Corre `kubectl logs` y después `kubectl logs --previous`, y anota la diferencia entre las dos salidas. Ésa es la lección entera.
+2. **Pon `command: ["sh", "-c", "echo \"[certcore] intento a las $(date +%T)\"; exit 1"]`** en el contenedor de la aplicación. `CrashLoopBackOff`. Corre `kubectl logs` y después `kubectl logs --previous`, y anota qué intento enseña cada uno (con un `exit 1` a secas no lo sabrías: no escribe nada y las dos salidas vienen vacías). Después haz que falle **sólo el primer arranque** —una marca en un `emptyDir`— y repite con el pod ya `Running`: ahora el error sólo está en `--previous`. Esas dos situaciones son la lección entera.
 
-3. **Borra la clave `API_BASE_URL` del ConfigMap** y reinicia el Deployment. El pod arranca —el `entrypoint.sh` tiene valor por defecto— pero mira qué pasa si en vez de borrarla le pones `API_BASE_URL: "http://no-existe:3000"`: la aplicación carga y ninguna petición funciona. Compara ese fallo con el `ENVIRONMENT_NAME=PRD` del 🧨 de la Fase 13 y explica por qué uno impide arrancar y el otro no.
+3. **Borra la clave `API_BASE_URL` del ConfigMap** y reinicia el Deployment. El pod **no** arranca, aunque el `entrypoint.sh` tenga valor por defecto: `CreateContainerConfigError`, *"couldn't find key API_BASE_URL in ConfigMap"*. Kubernetes se niega a crear un contenedor con una referencia rota —salvo que el `configMapKeyRef` diga `optional: true`—, así que el valor por defecto nunca llega a usarse; y el rolling update se queda a medias con los dos pods viejos sirviendo. Ahora ponle `API_BASE_URL: "http://no-existe:3000"`: la aplicación carga y ninguna petición funciona (`ERR_NAME_NOT_RESOLVED`). Compara ese fallo con el `ENVIRONMENT_NAME=PRD` del 🧨 de la Fase 13 y explica por qué uno impide arrancar y el otro no.
 
 ---
 
@@ -565,7 +586,7 @@ Tres roturas, y las tres enseñan un estado distinto.
 
 1. Crea el cluster con `kind-config.yaml` y comprueba `kubectl config current-context` y `kubectl get nodes`. Después créalo **sin** el archivo de configuración, en un cluster aparte, y anota qué falta.
 2. Escribe `mock/Dockerfile`, constrúyelo y córrelo con `docker run` antes de meterlo en el cluster. Comprueba con `curl` que responde en el 3000.
-3. **Diagnóstico.** Aplica el Deployment **sin** cargar la imagen. Copia la salida de `kubectl get pods` y de `kubectl describe pod`, y señala la línea exacta donde está la causa.
+3. **Diagnóstico.** Aplica el Deployment **sin** cargar la imagen. Copia la salida de `kubectl get pods` y de `kubectl describe pod`, y señala la línea exacta donde está la causa. Después quita el `imagePullPolicy: Never`, vuelve a aplicar, y compara el estado y los eventos: por qué ahora el kubelet sale a internet.
 4. Carga las dos imágenes con `kind load docker-image` y verifica con `crictl images` dentro del nodo. Después hazlo con la variante `image-archive` y explica en dos frases cuándo usarías cada una.
 5. **Diagnóstico.** Con los pods corriendo, ejecuta los tres comandos de la prueba de fuego de 5.5. Entrega la salida de los tres y explica qué demuestra cada uno.
 
@@ -578,7 +599,7 @@ Tres roturas, y las tres enseñan un estado distinto.
 
 **🟠 Difícil (10–13)**
 
-10. **Diagnóstico.** Provoca el 🧨 número 2 y diagnostica el `CrashLoopBackOff` usando sólo `kubectl`. Entrega la salida de `logs` y la de `logs --previous`, y explica por qué la segunda es la que sirve.
+10. **Diagnóstico.** Provoca el 🧨 número 2, en sus dos variantes, y diagnostica usando sólo `kubectl`. Entrega la salida de `logs` y la de `logs --previous` en cada una, y explica cuál de las dos sirve en cada caso y por qué.
 11. Haz el rolling update de 5.7 con `kubectl get pods -w` en una terminal y recargando `http://localhost/` a mano en el navegador. Anota el orden exacto en que aparecen y desaparecen los pods, y si la página dejó de responder en algún momento.
 12. Escribe la variante del ConfigMap **montado como volumen** con `subPath` sobre `assets/config.json`, en una rama de usar y tirar. Compruébala funcionando y después comprueba los tres problemas que §4 anuncia: que no se actualiza solo, que acopla el formato, y que rompe la paridad con el `docker run` de la Fase 13. Decide cuál de las dos formas entregarías y defiéndelo en cinco líneas.
 13. ✍️ **Diagnóstico sobre manifiesto ajeno.** Te dan `k8s/mock.yaml` con `replicas: 3`, en producción, con un ticket que dice *"a veces la inspección que acabo de guardar desaparece al recargar"*. Explica qué se rompe y por qué —piensa dónde escribe el mock— y aplica la corrección mínima. Después responde qué haría falta para que tres réplicas **sí** tuvieran sentido, sabiendo que eso está fuera del alcance de este curso.
@@ -586,7 +607,7 @@ Tres roturas, y las tres enseñan un estado distinto.
 **🔴 Muy difícil (14–15)**
 
 14. 💸 **Paga la deuda de esta fase.** Añade `resources` (peticiones y límites de CPU y memoria) y una `readinessProbe` que consulte `/` al Deployment de la aplicación. Después rómpelas a propósito de dos formas: pon un límite de memoria absurdamente bajo y observa el `OOMKilled`; y apunta la `readinessProbe` a una ruta que no existe y observa que el rolling update se queda a medias **sin terminar nunca**, que es el comportamiento correcto y el que más asusta la primera vez. Entrega las dos salidas de `kubectl describe`.
-15. **Cierra el círculo del curso.** La Fase 13 dejó una 💸 sin pagar: la imagen corre nginx como root en el puerto 80. Aplica una política que lo prohíba —un `securityContext` con `runAsNonRoot: true` en el pod basta para reproducirlo— y observa el fallo. Después arréglalo de verdad: reconstruye la imagen sobre `nginxinc/nginx-unprivileged`, ajusta el puerto en el Dockerfile, el `nginx.conf`, el Deployment y el Service, y comprueba que todo sigue funcionando. Escribe al final el párrafo que le mandarías al equipo de plataforma explicando qué cambió y por qué. Lee la nota de cierre de **A09** antes de escribirlo.
+15. **Cierra el círculo del curso.** La Fase 13 dejó una 💸 sin pagar: la imagen corre nginx como root en el puerto 80. Aplica una política que lo prohíba y observa el fallo, que son dos según cómo la escribas. Con `runAsNonRoot: true` a secas, el pod ni arranca: `CreateContainerConfigError`, *"container has runAsNonRoot and image will run as root"*. Con un usuario concreto —`runAsUser: 101`, que es lo que hacen muchas plataformas—, arranca y muere: el primer error no es el del puerto sino el del `entrypoint.sh`, *"can't create /usr/share/nginx/html/assets/config.json: Permission denied"*; detrás vendría nginx con `/var/cache/nginx`. Medido así las dos veces. Después arréglalo de verdad: reconstruye la imagen sobre `nginxinc/nginx-unprivileged`, ajusta el puerto en el Dockerfile, el `nginx.conf`, el Deployment y el Service, y comprueba que todo sigue funcionando. Escribe al final el párrafo que le mandarías al equipo de plataforma explicando qué cambió y por qué. Lee la nota de cierre de **A09** antes de escribirlo.
 
 **🔥 Opcionales**
 
@@ -609,7 +630,7 @@ Tres roturas, y las tres enseñan un estado distinto.
 - https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/ — el árbol de decisión oficial para un pod que no arranca. Es la versión larga de la pieza forense de esta fase.
 - https://kubernetes.io/docs/reference/kubectl/quick-reference/ — la chuleta de `kubectl`, que es lo que de verdad se consulta.
 
-> ⚠️ La documentación de Kubernetes se mueve más rápido que la de Angular, y el manifiesto del controlador de Ingress de 5.6 apunta a `main`: **puede haber cambiado desde que se escribió esto**. Los cinco objetos que usa este capítulo, en cambio, son estables desde hace años. Si algo falla, va a ser el controlador, no el YAML.
+> ⚠️ La documentación de Kubernetes se mueve más rápido que la de Angular, y el controlador de Ingress de 5.6 es de un proyecto retirado, fijado a la `v1.15.1`. Los cinco objetos que usa este capítulo, en cambio, son estables desde hace años. Si algo falla, va a ser el controlador, no el YAML.
 
 **Orden de lectura sugerido:** la guía rápida de kind **antes** de 5.1, entera. La página de ConfigMap **después** de tropezar con el `rollout restart` de 5.5, no antes. Y **A09** cuando termines el capítulo, no durante: está escrito para alguien que ya vio funcionar estos cinco objetos y quiere saber en qué se diferencia de un cluster real. **A12** sólo si estás en un Mac con chip M — y ahí sí, antes de empezar.
 
@@ -656,7 +677,7 @@ Y lo que **no** te llevas conviene decirlo con la misma claridad. Esto no es pro
 - **El mock necesitó su propia imagen, y la Fase 13 lo había esquivado.** Allí se levantaba montando el directorio con `-v`, que en un cluster no existe. Son cinco líneas y una lección —los atajos que dependen de tu máquina se caen al salir de tu máquina— pero significa que ahora hay **dos** Dockerfiles que mantener. → **Aviso para una segunda pasada sobre la Fase 13**: quizá convenga escribir el `mock/Dockerfile` allí y usarlo también con `docker run`, para tener una sola forma.
 - **Esta fase no reserva ningún ID de incidente**, y aun así tiene pieza forense y archivo `forense-fase-14.md`. El motivo es de alcance: un incidente del cuaderno tiene que poder reproducirlo alguien que haya hecho las fases obligatorias, y montar un cluster no lo es. Los veinte IDs quedan repartidos entre las Fases 0 a 13. → **Nota para el chat del cuaderno de incidentes**: la tabla de reservas de esta fase va vacía a propósito.
 - **A09 hereda tres cosas concretas de aquí**, además de su nota obligatoria: la traducción de los cuatro estados de pod, la conversación de registros de imágenes que el `kind load` esquiva, y el desarrollo completo de `runAsNonRoot` que el ejercicio 15 sólo hace tocar. → **Aviso para el chat de A09.**
-- **El manifiesto del controlador de Ingress apunta a `main` y es el único enlace del curso que puede romperse solo.** Todo lo demás está fijado con versión exacta; esto no se puede, porque el proyecto no publica una URL estable por versión de Kubernetes. Está advertido en el texto. → **Riesgo conocido**, sin acción posible desde aquí.
+- **El manifiesto del controlador de Ingress está fijado a `controller-v1.15.1`**, y el proyecto está retirado desde marzo de 2026. Fijarlo era posible —el proyecto publica una URL por etiqueta— y ahora es la misma descarga hoy y dentro de un año; la retirada queda advertida en 5.6. → **Decisión de proyecto**: en una segunda pasada, valorar una implementación de Gateway API en lugar de ingress-nginx, sabiendo que cambia el objeto de 5.6 y su explicación.
 - **El `hostPort: 80` va a chocar con algo en la máquina de alguien.** Está advertido en 5.1 con la salida —cambiar a `8090`—, pero significa que las URLs del capítulo no son literales para todo el mundo. → **Pendiente de revisión editorial**: si el curso hace una segunda pasada, quizá convenga usar `8090` desde el principio y evitar el choque en vez de advertirlo.
 - 🔥 **Un diagrama de los cinco objetos** —Ingress → Service → Pods, con el ConfigMap entrando por un lado y el Deployment describiendo desde arriba— es lo que más falta hace de todo este capítulo, y es exactamente lo que nadie dibuja bien. Es el duodécimo y último pendiente de ilustración del curso. Pendiente de dibujo, no de contenido.
 

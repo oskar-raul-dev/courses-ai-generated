@@ -1,15 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { AssetFormComponent } from './asset-form/asset-form.component';
 import { AssetListComponent } from './asset-list/asset-list.component';
 
-// path: '' porque el prefijo 'assets' ya lo puso la ruta padre. Repetirlo
-// aquí produciría /assets/assets, que es el segundo error más común del día.
-const routes: Routes = [{ path: '', component: AssetListComponent }];
+// 🧬 RouterModule.forChild() de 2021 apuntando a componentes standalone de
+// 2025. `component:` y no `loadComponent:` a propósito: los componentes ya viajan
+// en el chunk de este módulo, así que diferirlos otra vez no ahorraría nada.
+const routes: Routes = [
+  { path: '', component: AssetListComponent },
+  { path: 'new', component: AssetFormComponent },
+  { path: ':id/edit', component: AssetFormComponent },
+];
 
 @NgModule({
-  // forChild() en los módulos de feature: se cuelga del router que ya existe
-  // en vez de crear uno nuevo.
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })

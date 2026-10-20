@@ -1,0 +1,6 @@
+## con el fix de la solución (camino viejo valida)
+POST /legacy/findings → 422
+POST /findings        → 422
+## estado del sistema (sin el fix): el incidente
+POST /legacy/findings → 500
+POST /findings        → 422

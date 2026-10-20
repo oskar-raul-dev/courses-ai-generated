@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 
 import { EmptyStateComponent } from '../../shared/empty-state/empty-state.component';
 import { SharedModule } from '../../shared/shared.module';
+import { AssetFormComponent } from './asset-form/asset-form.component';
 import { AssetListComponent } from './asset-list/asset-list.component';
 import { AssetsRoutingModule } from './assets-routing.module';
 
@@ -10,11 +12,13 @@ import { AssetsRoutingModule } from './assets-routing.module';
   imports: [
     SharedModule,
     AssetsRoutingModule,
-    // 🧬 PUNTO DE CONTACTO ENTRE GENERACIONES
-    // Un componente standalone va en `imports`, JAMÁS en `declarations`. La
-    // razón es que ya está declarado: se declaró a sí mismo. Ponerlo abajo da
-    // un error explícito que vas a provocar en el ejercicio 6.
     EmptyStateComponent,
+    // 🧬 El formulario nuevo entra por `imports` porque es standalone. Y
+    // MatTableModule se importa aquí, directamente, porque SharedModule dejó de
+    // reexportarlo en la Fase 5: un módulo heredado importando lo que usa es
+    // exactamente el arreglo correcto, escrito en el estilo del archivo.
+    AssetFormComponent,
+    MatTableModule,
   ],
 })
 export class AssetsModule {}

@@ -1,0 +1,9 @@
+intento 1 (inspección): {"message":"Ya existe un registro con esa clave"} [409]
+intento 2 (inspección): {"message":"Ya existe un registro con esa clave"} [409]
+intento 3 (inspección): {"message":"Ya existe un registro con esa clave"} [409]
+intento 4 (inspección): {"message":"Ya existe un registro con esa clave"} [409]
+compañero (cliente):      {"id":4,"legalName":"Sucursal Sur S.A.S.","taxId":"901111111"} [201]
+Key (id)=(500) already exists
+Key (id)=(501) already exists
+Key (id)=(502) already exists
+Key (id)=(503) already exists

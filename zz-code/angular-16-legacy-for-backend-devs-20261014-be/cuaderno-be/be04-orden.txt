@@ -1,0 +1,2 @@
+panel  /legacy/templates: ["elevator-annual","boiler-annual"]
+pantalla /templates:      ["boiler-annual-v1","elevator-annual-v1","elevator-annual-v2"]

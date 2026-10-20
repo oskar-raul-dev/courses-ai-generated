@@ -2,7 +2,7 @@
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · Fase 2 de 14 · **6 horas**
 > Depende de: Fase 1 (estructura base con NgModules) · Habilita: Fases 3 a 13
-> Apéndices de apoyo: [A04 (`inject()](a04-inject-vs-constructor.md)` vs constructor) · [A06 (RxJS 7 idiomático)](a06-rxjs.md)
+> Apéndices de apoyo: [A04 (`inject()` vs constructor)](a04-inject-vs-constructor.md) · [A06 (RxJS 7 idiomático)](a06-rxjs.md)
 > [Incidentes asociados](cuaderno-incidentes.md): 03
 > Estilo de esta fase: **mixto 🧬** — la aplicación es de NgModules y aquí entra el primer código funcional moderno
 
@@ -442,7 +442,7 @@ export class LoginComponent {
     // Esta guarda no puede dispararse nunca: los dos controles son requeridos
     // y el formulario ya pasó por invalid. Está aquí porque los controles se
     // tipan como `string | null` y strict exige tratarlo. Es el costo exacto
-    // del `nonNullable` que nadie puso en 2022 — ver la nota de migración.
+    // del `nonNullable` que nadie puso en 2024 — ver la nota de migración.
     if (email === null || password === null) {
       return;
     }
@@ -592,8 +592,7 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // El login es el único endpoint que no lleva token, por razones obvias, y
-  // sobre todo es el único cuyo 401 significa "te equivocaste de contraseña"
+  // El login es el único endpoint cuyo 401 significa "te equivocaste de contraseña"
   // en vez de "tu sesión caducó". Distinguirlo evita el bucle de la sección 6.
   const isLoginRequest = request.url.endsWith('/auth/login');
   const token = authService.getToken();

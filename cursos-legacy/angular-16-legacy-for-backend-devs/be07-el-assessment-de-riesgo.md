@@ -65,7 +65,7 @@ Lo que las siete fases establecieron, y es el resumen que abre el documento:
 | **Lumen no tiene calendario de soporte** ni LTS ni avisos de deprecación | `bea-09` |
 | El código tiene **cuatro procedencias** conviviendo, medidas archivo por archivo | be02 |
 | **Tres rotaciones en ocho años**, permanencia media 18 meses, aprendizaje no transferible | be02 |
-| La base subió **cuatro veces** y la aplicación ninguna | be04 |
+| La base pasó por **cuatro escalones** (9.6 → 11 → 13 → 16) y la aplicación ninguno | be04 |
 | La invariante central **no la sostenía ninguna restricción**; 88 filas la violan | be05 |
 | Hay una **reescritura a medias** con dos caminos vivos, medida en tres números | be06 |
 | **No había una sola prueba** hasta be06 | be06 |
@@ -73,7 +73,7 @@ Lo que las siete fases establecieron, y es el resumen que abre el documento:
 Y la cita que hay que poner textual, porque es la posición oficial del producto:
 
 > *"In the years since releasing Lumen, PHP has made a variety of wonderful performance improvements. For this reason, along with the availability of Laravel Octane, we no longer recommend that you begin new projects with Lumen. Instead, we recommend always beginning new projects with Laravel."*
-> — Documentación oficial de Lumen, sección *Installation*
+> — Documentación oficial de Lumen, sección *Installation* (de la documentación vigente, la 10.x; no he comprobado que la 5.8 traiga este mismo texto, y se verifica con fecha antes de firmar)
 
 Léela con cuidado, porque **no dice lo que a todo el mundo le gustaría que dijera**: no dice que Lumen esté muerto, ni que haya que migrar, ni da una ruta. Dice *"no empieces proyectos nuevos"*. Y eso, para un sistema que ya existe y factura, significa exactamente una cosa: **estás en un producto sin recomendación oficial y sin camino de salida declarado**. Ésa es la frase que va en el documento, no *"Lumen está abandonado"*.
 
@@ -190,13 +190,13 @@ Va en el documento, y es lo que más se mira después del resumen:
 
 Sin esta sección el *assessment* no es creíble, y el track no habría entendido su propio criterio.
 
-En 2016, para una empresa mediana latinoamericana con gente de PHP de la intranet vieja, **Lumen era la decisión sensata**: aprovechaba el equipo que ya existía, la sintaxis que ya conocían, y encima era moderno y rápido. Y el beneficio **se cobró de verdad durante años**.
+En 2016, para una empresa mediana latinoamericana sin equipo de software y sin ganas de pagar licencias, **Lumen era la decisión sensata**: corría en cualquier hosting, arrancaba rápido, compartía casi todo con Laravel, y encima era moderno. Y el beneficio **se cobró de verdad durante años**.
 
 Las dos columnas, y hay que poner número en las dos:
 
 | Lo que Lumen ahorró (2016–2019) | Lo que costó (2019–2026) |
 |---|---|
-| No hubo que contratar un equipo nuevo: el de la intranet escribió la API | Tres ciclos de onboarding no amortizados (be02 §5.5) |
+| Licencias que no se pagaron: Windows Server y SQL Server, unos USD 5.000 el primer año (cifra ficticia). Hosting PHP de unos USD 30 al mes. Un solo programador, que venía de .NET, levantó la API | Tres ciclos de onboarding no amortizados (be02 §5.5) |
 | Salió a producción en semanas, no en trimestres | Ocho años sin subir de versión, y ahora el salto son cuatro mayores |
 | Sintaxis conocida: los primeros endpoints se escribieron sin formación | Familiaridad falsa: cuatro familias de bugs, medidas en be01 §5.9 |
 | Un framework ligero para una API pequeña: sin sobrecoste de arranque | Sin calendario de soporte, sin deprecaciones avisadas, sin utillaje |
@@ -352,7 +352,7 @@ Y la última frase del track es la misma con la que empezó:
 > Los commits de esta fase llevan `be07: …`. Y una última comprobación, la misma de las siete fases anteriores y la que define el track entero:
 >
 > ```bash
-> git diff fase-10-certificados-vigencia..HEAD -- src/
+> git diff fase-10..HEAD -- src/
 > ```
 >
 > **Tiene que devolver vacío.** Ochenta horas de backend, un reemplazo completo de servidor, una restricción nueva y un cambio de motor de datos — y el frontend no cambió ni una línea. La convención completa está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) §🔥.

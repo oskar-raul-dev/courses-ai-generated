@@ -380,8 +380,8 @@ BE opcional 🔥 del tutorial Angular 16 + CertCore. Su único entregable es
   envenena; `America/Bogota`; y la vigencia de un certificado, que es un intervalo
   y no un instante.
 - **Qué queda explícitamente fuera:** librerías de fecha de terceros; el horario de
-  verano en profundidad —en Colombia no aplica, se nombra para datos de proveedores
-  externos y se sigue—.
+  verano en profundidad —en Colombia, Perú y Ecuador continental no aplica; Galápagos
+  tampoco, está en UTC−6 todo el año. Se nombra para datos de proveedores externos y se sigue—.
 - **Ejercicios:** 8 cortos, con al menos dos de diagnóstico sobre un certificado
   cuya vigencia cambia según quién pregunte.
 ```

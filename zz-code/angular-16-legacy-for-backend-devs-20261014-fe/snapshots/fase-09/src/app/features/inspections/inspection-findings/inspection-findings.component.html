@@ -1,0 +1,56 @@
+<!-- src/app/features/inspections/inspection-findings/inspection-findings.component.html -->
+<ng-container *ngIf="view$ | async as view">
+  <header class="findings-header">
+    <h2>Hallazgos de la inspección {{ view.inspection.id }}</h2>
+    <p>Estado: {{ view.inspection.status }}</p>
+
+    <!-- El banner de bloqueo. Dice QUÉ bloquea, no sólo que algo bloquea. -->
+    <p class="findings-blocked" *ngIf="view.summary.blocking.length > 0">
+      Esta inspección no se puede aprobar: hay
+      {{ view.summary.blocking.length }} hallazgo(s) crítico(s) sin resolver ({{ view.summary.blocking.join(', ') }}).
+    </p>
+    <p class="findings-blocked" *ngIf="view.summary.undetermined.length > 0">
+      Hay respuestas que el sistema no pudo clasificar ({{ view.summary.undetermined.join(', ') }}). Revísalas antes de decidir.
+    </p>
+    <p *ngIf="view.summary.total === 0">Sin hallazgos. Todas las respuestas son conformes.</p>
+  </header>
+
+  <ul class="findings-list">
+    <li *ngFor="let finding of view.findings" [class.finding-resolved]="finding.resolvedAt !== null">
+      <!-- La rama con severidad. El compilador sabe que aquí `severity` no es
+           null porque `kind` lo discrimina. -->
+      <ng-container *ngIf="finding.kind === 'item'">
+        <strong>{{ severityLabel(finding.severity) }}</strong> ·
+        {{ finding.title }} — {{ finding.description }}
+        <em *ngIf="finding.resolvedAt !== null">Resuelto el {{ finding.resolvedAt }}</em>
+        <button
+          mat-button
+          *ngIf="finding.resolvedAt === null && view.editable"
+          (click)="resolve(finding)"
+        >
+          Marcar resuelto
+        </button>
+      </ng-container>
+
+      <!-- La rama sin severidad, y se ve distinta a propósito: no es un
+           hallazgo leve, es un hallazgo que no se pudo clasificar. -->
+      <ng-container *ngIf="finding.kind !== 'item'">
+        <strong>Sin clasificar</strong> · {{ finding.itemId }} — {{ finding.description }}
+      </ng-container>
+    </li>
+  </ul>
+
+  <footer *ngIf="view.inspection.status === 'completed'">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!view.summary.canApprove"
+      (click)="approve(view)"
+    >
+      Aprobar
+    </button>
+    <!-- Rechazar NUNCA está deshabilitado. Es la salida de la inspección que
+         no se puede aprobar, y bloquearla dejaría el trabajo en un limbo. -->
+    <button mat-stroked-button color="warn" (click)="reject(view)">Rechazar</button>
+  </footer>
+</ng-container>

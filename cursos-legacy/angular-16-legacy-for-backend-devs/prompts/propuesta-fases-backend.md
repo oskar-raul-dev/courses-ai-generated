@@ -189,7 +189,7 @@ Estas ya no se discuten en los chats siguientes.
 |---|---|---|
 | ¿Curso aparte o mismo curso? | **Mismo curso, mismo directorio**, track opcional | Un solo README, una sola guía de estilo, un solo diccionario |
 | ¿Numeración? | Fases `beNN-tema.md` (be00–be07), apéndices `bea-NN-tema.md` | No colisiona con `NN-`, `aNN-` ni `forense-fase-NN` del track base |
-| ¿Obligatorio? | **No.** El track base se completa con el mock y las 122h no cambian | Se marca 🔥 en el README; sus horas se declaran aparte |
+| ¿Obligatorio? | **No.** El track base se completa con el mock y las 123h no cambian | Se marca 🔥 en el README; sus horas se declaran aparte |
 | ¿Prerrequisito? | **Fase 10 del track base terminada** | Es el corte exacto: ahí existen certificados con vigencia, y con ellos el contrato completo. El dashboard (Fase 11) queda fuera del contrato obligatorio |
 | ¿Lenguaje? | **PHP 7.4 + Lumen**, monolito | Ver §5. PHP 7.4 está EOL desde noviembre de 2022, **y eso no es un problema: es la premisa** |
 | ¿Base de datos? | **`postgres:16.9`**, con historia de upgrade **9.6 → 11 → 13 → 16** | La versión moderna se justifica sola: *a la infraestructura la actualizan, a la aplicación no* |
@@ -256,8 +256,8 @@ ejercicio de diez minutos:
 ### 3.2 Y la defensa obligatoria: Lumen no fue una tontería
 
 Sería traicionar el criterio del repositorio. En 2016, para una empresa mediana
-latinoamericana con gente de PHP del intranet viejo, Lumen era **la decisión
-sensata**: aprovechas el equipo que tienes, la sintaxis que ya conocen, y encima es
+latinoamericana sin equipo de software y sin ganas de pagar licencias, Lumen era **la decisión
+sensata**: corre en cualquier hosting, arranca rápido, comparte casi todo con Laravel, y encima es
 moderno y rápido. El beneficio se cobró de verdad durante años.
 
 > 🧭 **El pecado no fue elegirlo. Fue elegirlo para *un servicio*, acertar, y que
@@ -272,7 +272,7 @@ moderno y rápido. El beneficio se cobró de verdad durante años.
 **El frontend no se toca.** Ni un componente, ni un servicio, ni un
 `BehaviorSubject`, ni el interceptor, ni `environment.apiUrl`. El backend se adapta
 al contrato existente, nunca al revés.
-`git diff fase-10-certificados-vigencia..HEAD -- src/` devuelve vacío, y ese
+`git diff fase-10..HEAD -- src/` devuelve vacío, y ese
 comando es un ítem del checklist de `be00`.
 
 **El contrato manda sobre la elegancia.** json-server tiene un dialecto y el
@@ -508,7 +508,7 @@ escribiendo pruebas.
 
 ## ⏱️ 6. Presupuesto de horas
 
-El track base **sigue siendo de 122h** (108h de fases + 14h de cuaderno) y no
+El track base **sigue siendo de 123h** (108h de fases + 15h de cuaderno) y no
 cambia. El track BE declara las suyas aparte, y son menos porque el alumno ya trae
 el dominio aprendido: no hay que explicarle qué es una plantilla versionada ni por
 qué un certificado tiene vigencia.
@@ -864,7 +864,7 @@ alumno. El frontend sigue en la raíz, sin moverse.
 
 **Tags de git:** `be-fase-` + el mismo slug del archivo, en un namespace propio para
 que `git tag -l 'fase-*'` siga siendo el índice limpio del track base
-(`be00-el-contrato.md` → `be-fase-00-el-contrato`). Los commits llevan prefijo
+(`be00-el-contrato-auditoria-del-mock.md` → `be-fase-00-el-contrato-auditoria-del-mock`). Los commits llevan prefijo
 `be00: …`, y los de ejercicio `be00 ej17: …`.
 
 ---
@@ -877,7 +877,7 @@ Ninguna altera el contenido del track base; todas son adiciones de encuadre. Se
 hacen **antes** de escribir `be00`.
 
 1. **`README.md`** — sección nueva del track opcional 🔥, con su tabla de ocho
-   fases, su tabla de once apéndices, sus 72h + 8h declaradas **aparte de las 122**,
+   fases, su tabla de once apéndices, sus 72h + 8h declaradas **aparte de las 123**,
    y el prerrequisito (Fase 10 terminada).
 2. **`prompts/guia-de-estilo-y-convenciones.md`** — registrar la convención `beNN-` /
    `bea-NN-`, el anexo PHP del diccionario de código (`Client`, `Asset`,
@@ -909,7 +909,7 @@ en 2021**. Este track necesita que la API sea de **2016–2018**, porque ahí es
 boom de Lumen, ahí arranca la cadena `9.6 → 11 → 13 → 16`, y de ahí sale la premisa
 entera. Tal como está publicado, hay contradicción.
 
-**La salida, que no inventa nada y mejora la historia.** Andina de Certificaciones
+**La salida, que no inventa nada y mejora la historia.** Plomada Ingeniería de Inspección
 S.A.S. **certificaba antes de tener una app Angular**. Lo que nació en 2021 fue el
 piloto de campo con dos clientes; el servicio de emisión de certificados existía
 desde 2016, cuando la empresa dejó el Excel. La frase que hay que poder decir es:
@@ -918,8 +918,7 @@ desde 2016, cuando la empresa dejó el Excel. La frase que hay que poder decir e
 > es de 2016 y nadie la revisó nunca.** Eso es lo que pasa de verdad en las
 > empresas, y es la razón de que la forma del contrato sea rara.
 
-**Qué cuesta.** Una frase en el README y un párrafo en `00-historia-del-sistema.md`,
-antes de la "Era 1 (2021)": una **Era 0** de dos párrafos. No contradice ninguna de
+**Qué costó.** Una Era 0 en `00-historia-del-sistema.md`, antes de la "Era 1 (2021)". No contradice ninguna de
 las tres eras publicadas —las tres hablan del *código Angular*— y de hecho explica
 mejor por qué el piloto de 2021 salió en unos meses: había una API esperándolo.
 

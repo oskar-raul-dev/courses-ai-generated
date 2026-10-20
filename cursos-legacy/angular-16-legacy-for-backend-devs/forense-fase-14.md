@@ -33,7 +33,7 @@ La fase resume la regla. Aquí están los tickets literales y la salida de cada 
 
 De ahí sale el orden, y es toda la regla:
 
-> 🧭 **Si el pod nunca llegó a `Running`, empieza por `describe`. Si arrancó y se murió, empieza por `logs --previous`.** Y el estado te dice cuál es cuál.
+> 🧭 **Si el pod nunca llegó a `Running`, empieza por `describe`. Si arrancó y se murió, empieza por `logs`, y por `logs --previous` si ya volvió a `Running` con reinicios.** Y el estado te dice cuál es cuál.
 
 ```bash
 kubectl get pods
@@ -46,6 +46,8 @@ kubectl get pods
 ## 🧭 Ruta A — `ImagePullBackOff` con la imagen delante
 
 ### Paso 1 — Los eventos, que están al final de `describe`
+
+Con el manifiesto de la Fase 14, que lleva `imagePullPolicy: Never`, el estado no es éste sino `ErrImageNeverPull`, y el evento lo dice en una línea: *"Container image "certcore:fase-13" is not present with pull policy of Never"* (medido en el laboratorio del curso). El ticket dice `ImagePullBackOff` porque quien lo abre escribió el Deployment sin esa línea, y entonces el kubelet sí sale a buscarla:
 
 ```bash
 kubectl describe pod certcore-7d4b8f9c5-x2klm | tail -12
@@ -145,48 +147,43 @@ kubectl logs certcore-7d4b8f9c5-x2klm
 ```
 
 ```
-(vacío, o dos líneas de arranque)
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/40-certcore-config.sh
+/docker-entrypoint.d/40-certcore-config.sh: line 29: can't create /usr/share/nginx/html/assets/config.json: Permission denied
 ```
+
+**Qué descarta.** En `CrashLoopBackOff` el contenedor está esperando su próximo intento, así que el "último" es el que acaba de fallar y `kubectl logs` a secas ya enseña el error. `--previous` sirve para el caso contrario, el más traicionero: el pod volvió a `Running`, con `RESTARTS` mayor que cero, y el intento actual está sano; entonces `kubectl logs` enseña un nginx tranquilo y el fallo sólo está en el anterior. Medido las dos cosas en el laboratorio del curso, y una tercera que conviene saber: tras varios reinicios, `--previous` puede responder *"unable to retrieve container logs"* porque el kubelet ya recogió ese contenedor.
+
+Y lo que dice ese log es el cierre del curso: **el contenedor no puede escribir donde escribe**, porque una política de seguridad lo obliga a correr con un usuario sin privilegios (`runAsUser: 101`, medido). Es el primero de una fila: si el script pudiera escribir, el siguiente en quejarse sería nginx con *"mkdir() "/var/cache/nginx/client_temp" failed (13: Permission denied)"*, y después el puerto 80. Con `runAsNonRoot: true` a secas, en cambio, no llegas aquí: el pod ni arranca, `CreateContainerConfigError`, con un mensaje que sí nombra la política. Es la 💸 que la Fase 13 dejó abierta, y su arreglo completo —imagen `nginx-unprivileged`, puerto 8080, Deployment y Service ajustados— está en **A09** §8.
+
+### Paso 3 — El caso de la arquitectura, que en tu kind no vas a ver
 
 ```bash
-kubectl logs certcore-7d4b8f9c5-x2klm --previous
-```
-
-```
-/docker-entrypoint.sh: /docker-entrypoint.d/40-certcore-config.sh: line 12:
-  can't create /usr/share/nginx/html/assets/config.json: Permission denied
-nginx: [emerg] bind() to 0.0.0.0:80 failed (13: Permission denied)
-```
-
-**Qué descarta.** El primer comando muestra **el intento actual**, que puede llevar dos segundos de vida y no haber llegado todavía al error. El mensaje que buscas está en el anterior, y `--previous` es la única forma de verlo.
-
-Y lo que dice ese log es el cierre del curso: **el contenedor no puede escribir donde escribe ni escuchar en el puerto 80**, porque una política de seguridad lo obliga a correr sin privilegios. Es la 💸 que la Fase 13 dejó abierta, y su arreglo completo —imagen `nginx-unprivileged`, puerto 8080, Deployment y Service ajustados— está en **A09** §8.
-
-### Paso 3 — El caso sin logs, que en un Mac con chip M es casi siempre el mismo
-
-```bash
-kubectl logs certcore-… --previous
-# (vacío)
-
 kubectl describe pod certcore-… | grep -A3 "Last State"
 ```
 
 ```
     Last State:     Terminated
       Reason:       Error
-      Exit Code:    1
+      Exit Code:    255
 ```
 
-Logs vacíos, código de salida 1, y ninguna explicación. En un Mac con Apple Silicon, **eso es casi siempre una imagen amd64 en un nodo arm64**:
+Código de salida 255 y ninguna explicación en `describe`. El mensaje está en los logs, y es una sola línea:
+
+```bash
+kubectl logs certcore-…
+# exec /docker-entrypoint.sh: exec format error
+```
+
+Es una imagen de otra arquitectura que el nodo, sin nadie que la traduzca: el proceso ni llega a arrancar, y lo único que queda escrito es la queja del kernel. **En tu kind de Apple Silicon no lo vas a ver**: la VM de tu runtime traduce amd64 (Rosetta, y si no QEMU), así que una imagen amd64 arranca, más lenta. Aparece en el cluster de la empresa, con una imagen arm64 construida en un Mac:
 
 ```bash
 docker image inspect certcore:fase-13 --format '{{.Architecture}}'
-# amd64          ← y tu nodo es arm64
+# arm64          ← y los nodos de la empresa son amd64
 ```
 
-El proceso no llega a ejecutarse, así que no escribe nada. Es un segundo de comprobación y descarta la causa más desconcertante del capítulo. El diagnóstico completo está en **A12** §6.
+Es un segundo de comprobación y descarta la causa más desconcertante del capítulo. El diagnóstico completo está en **A12** §6.
 
-**Qué descarta.** Si la arquitectura de la imagen no es la del nodo, ahí termina la búsqueda y el resto de la ruta sobra. Si coinciden, descarta la arquitectura y quedan dos posibilidades, las dos del **Paso 4**: que el pod ya se reciclara y sus logs se fueran con él, o que nunca escribiera nada por otro motivo.
+**Qué descarta.** Si la arquitectura de la imagen no es la del nodo, ahí termina la búsqueda y el resto de la ruta sobra. Si coinciden, descarta la arquitectura; y si los logs vienen vacíos, quedan dos posibilidades, las dos del **Paso 4**: que el pod ya se reciclara y sus logs se fueran con él, o que nunca escribiera nada por otro motivo.
 
 ### Paso 4 — Cuando el pod ya se recicló y no queda nada
 
@@ -222,10 +219,13 @@ kubectl run debug --rm -it --image=certcore:fase-13 --command -- sh
 |---|---|---|
 | `Pending` | el cluster no lo ha colocado | `describe`: recursos o restricciones |
 | `ContainerCreating` (más de un minuto) | bajando imagen o montando volúmenes | `describe` |
+| `ErrImageNeverPull` | la imagen no está en el nodo y el manifiesto prohíbe descargarla | ruta A, paso 2 |
 | `ErrImagePull` / `ImagePullBackOff` | no consiguió la imagen | ruta A |
+| `CreateContainerConfigError` | falta algo para crear el contenedor: una clave del ConfigMap, una política que no cumple | `describe`, la última línea |
 | `ImagePullBackOff` con `imagePullPolicy: Always` | es el `:latest` | ruta A, paso 3 |
 | `Running` con `READY 0/1` | arrancó y su probe no pasa | el endpoint de la probe |
-| `CrashLoopBackOff` con logs | arrancó y se murió | `logs --previous` |
+| `CrashLoopBackOff` con logs | arrancó y se murió | `logs` |
+| `Running` con `RESTARTS` > 0 | falló antes y se recuperó | `logs --previous` |
 | `CrashLoopBackOff` **sin** logs, en Mac M | arquitectura de la imagen | `docker image inspect --format '{{.Architecture}}'` |
 | `Permission denied` en el 80 o en `html/` | no puede correr como root | **A09** §8 |
 | `Completed` en un Deployment | tu proceso no se queda vivo | el `CMD` de la imagen |
@@ -265,7 +265,7 @@ Y el `/tmp/certcore.tar` del `docker save`, si lo generaste.
 
 > **En un cluster hay dos narradores y cuentan cosas distintas.** `describe` cuenta lo que el cluster hizo con tu pod; `logs` cuenta lo que tu proceso dijo. Preguntarle al equivocado es la mitad del tiempo perdido en Kubernetes, y el estado del pod te dice cuál es cuál sin ambigüedad.
 
-Y el segundo, que es el que vale fuera de este curso: **`--previous` no es una bandera avanzada, es la bandera por defecto de cualquier `CrashLoopBackOff`.** El intento que estás mirando todavía no ha fallado; el que te lo va a explicar ya murió. Quien no conoce esa bandera concluye que "los logs no dicen nada" y se pone a adivinar.
+Y el segundo, que es el que vale fuera de este curso: **`kubectl logs` enseña el último intento, y hay que saber cuál es.** En `CrashLoopBackOff`, el último es el que falló, y ahí está el mensaje. En un pod `Running` con reinicios, el último está sano y el que te lo va a explicar es el anterior: `--previous`. Quien no distingue los dos concluye que "los logs no dicen nada" y se pone a adivinar.
 
 **Incidentes del cuaderno que usan esta ruta:** ninguno directamente — la Fase 14 es opcional y el cuaderno no depende de ella. Pero el ticket B es el final del hilo que empieza en el incidente 19.
 **Amplía:** **A09** §5 a §8 para la caja de herramientas, los estados de pod y la advertencia sobre el cluster real, **A12** §6 para el diagnóstico por síntoma en Apple Silicon, y `forense-fase-13.md` para cuando el mismo despliegue vive en un contenedor suelto.

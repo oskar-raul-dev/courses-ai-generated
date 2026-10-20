@@ -1,5 +1,31 @@
-/* Tema prefabricado provisional (Fase 1). El theming de verdad llega en la Fase 6. */
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@use '@angular/material' as mat;
+
+// mat.core() va una sola vez en todo el proyecto: trae los estilos base que
+// comparten todos los componentes. Repetirlo duplica CSS sin avisar.
+@include mat.core();
+
+// Se mantienen Indigo y Pink, que son las de la Fase 1: cambiar la marca de
+// color no aporta nada al curso y obligaría a rehacer cualquier captura.
+$certcore-primary: mat.define-palette(mat.$indigo-palette);
+$certcore-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$certcore-warn: mat.define-palette(mat.$red-palette);
+
+$certcore-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $certcore-primary,
+      accent: $certcore-accent,
+      warn: $certcore-warn,
+    ),
+    typography: mat.define-typography-config(),
+    // Densidad −1: una muesca más compacto que el valor de fábrica. Con 0, un
+    // formulario de seis campos no cabe en una pantalla de portátil. Con −2 se
+    // gana espacio y se pierde área táctil, que en tablet en campo importa.
+    density: -1,
+  )
+);
+
+@include mat.all-component-themes($certcore-theme);
 
 html,
 body {

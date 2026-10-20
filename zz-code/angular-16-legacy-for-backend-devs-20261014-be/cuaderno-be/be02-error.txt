@@ -1,0 +1,15 @@
+Rama incidente-be/02 aplicada a mano (TimingServiceProvider + TimingMiddleware + $app->register), 15/10/2026.
+
+1. Con el pegote completo:
+   docker compose ps api        → Exited (255)
+   log                          → Call to undefined method Laravel\Lumen\Routing\Router::aliasMiddleware()
+
+2. Quitando sólo el aliasMiddleware (el arreglo del primer bug):
+   docker compose ps api        → Exited (255)
+   log                          → A facade root has not been set.
+
+3. Versión que funciona (app('log') en el proveedor y el middleware en $app->middleware([...])):
+   docker compose ps api        → Up
+   GET /health                  → cabecera X-Response-Time-Ms: 12
+
+Rama revertida: bootstrap/app.php idéntico al de antes (cmp), proveedor y middleware borrados.

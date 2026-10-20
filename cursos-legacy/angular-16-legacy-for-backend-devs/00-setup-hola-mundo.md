@@ -2,7 +2,7 @@
 
 > Tutorial Angular 16 — Inspecciones y certificaciones · Fase 0 de 14 · **6 horas**
 > Depende de: ninguna · Habilita: Fase 1 (estructura base con NgModules)
-> Apéndices de apoyo: [A03 (Node y npm)](a03-node-npm.md) · [A04 (`inject()](a04-inject-vs-constructor.md)` vs constructor) · [A12 (Apple Silicon 🔥)](a12-arm64-m1.md)
+> Apéndices de apoyo: [A03 (Node y npm)](a03-node-npm.md) · [A04 (`inject()` vs constructor)](a04-inject-vs-constructor.md) · [A12 (Apple Silicon 🔥)](a12-arm64-m1.md)
 > [Incidentes asociados](cuaderno-incidentes.md): 01
 > Estilo de esta fase: **nuevo** (standalone + `inject()`)
 
@@ -418,7 +418,13 @@ export class InspectionRequestFormComponent {
     // getRawValue() devuelve el objeto tipado y completo. Con controles
     // deshabilitados, value los omitiría y getRawValue no: por eso es el que
     // usamos siempre que armamos un payload.
-    const payload: InspectionRequest = this.form.getRawValue();
+    // <input type="date"> entrega YYYY-MM-DD, sin hora ni zona. La regla del
+    // curso es ISO 8601 con offset, así que el día se fija a medianoche de -05:00.
+    const raw = this.form.getRawValue();
+    const payload: InspectionRequest = {
+      ...raw,
+      requestedFor: `${raw.requestedFor}T00:00:00-05:00`,
+    };
 
     this.status = 'sending';
 
@@ -518,7 +524,7 @@ npx json-server@0.17.4 --watch mock/db.json --port 3000
 
 Con las dos terminales corriendo (`ng serve` y json-server), llena el formulario con `ASC-CENTRAL-03`, envía, y **mira las dos cosas a la vez**: la pantalla debería decir "Solicitud registrada con el número 2", y `mock/db.json` en tu disco debería tener ahora dos entradas. Si la pantalla dice que sí y el archivo no cambió, no estás hablando con el servidor que crees.
 
-Y ahora la parte incómoda: abre el `db.json` y mira el `requestedFor` que guardó. El `<input type="date">` entrega `"2024-03-20"` a secas, sin hora y sin offset. Lo que dice el modelo —ISO con `-05:00` explícito— **no es lo que estás mandando**. Es un bug real, y está puesto a propósito: el ejercicio 16 te hace arreglarlo, y la Fase 10 te cobra la factura completa cuando un certificado venza "ayer" para el servidor y "hoy" para el usuario.
+Y ahora mira el `requestedFor` que guardó: `"2024-03-20T00:00:00-05:00"`. El `<input type="date">` entrega `"2024-03-20"` a secas, sin hora y sin zona, y es la línea que añadimos en `submit()` la que le pone la medianoche de `-05:00` antes de enviarlo. Esa línea no es un detalle: si alguien la quita, el dato queda sin zona y cada lector lo interpreta en la suya. Es la misma clase de error que la Fase 10 te cobra la factura completa cuando un certificado venza "ayer" para el servidor y "hoy" para el usuario.
 
 ### 5.9 El primer `Object is possibly 'null'`
 
@@ -622,7 +628,7 @@ Tres fuentes de verdad, y las tres mienten en algún momento. Aprender **en qué
 
 **La consola.** Miente por omisión. Un `subscribe` sin callback de `error` traga el fallo entero: la petición falló, el usuario vio la pantalla congelada, y la consola está limpia. Por eso el código de 5.7 tiene el `error` puesto desde el primer día. Y miente por ilegibilidad: en producción, sin source maps, el stack apunta a un bundle minificado y da igual leerlo.
 
-**La pestaña Network.** Miente por status. Un `201` significa que el servidor contestó, no que hizo lo que crees. Mira siempre tres cosas y en este orden: la **Request URL** completa (¿el puerto es 3000 o te olvidaste y quedó 4200?), el **payload** enviado (¿el `requestedFor` lleva offset o va pelado, como en 5.8?), y el **body** de la respuesta. Y hay un caso donde Network no miente pero se malinterpreta: un fallo de CORS aparece como `(failed)` sin código de estado, y se confunde con "el servidor está caído" — son cosas distintas y en la Fase 3 vas a provocar las dos a propósito.
+**La pestaña Network.** Miente por status. Un `201` significa que el servidor contestó, no que hizo lo que crees. Mira siempre tres cosas y en este orden: la **Request URL** completa (¿el puerto es 3000 o te olvidaste y quedó 4200?), el **payload** enviado (¿el `requestedFor` lleva offset o va pelado, como en la versión sin la conversión de 5.7?), y el **body** de la respuesta. Y hay un caso donde Network no miente pero se malinterpreta: un fallo de CORS aparece como `(failed)` sin código de estado, y se confunde con "el servidor está caído" — son cosas distintas y en la Fase 3 vas a provocar las dos a propósito.
 
 **Los source maps.** Mienten cuando están desactualizados: un `.map` de un build anterior te lleva a la línea equivocada del archivo correcto, que es la peor clase de pista falsa. Ante una línea que "no tiene sentido", reconstruye el build antes de dudar de tu código.
 
@@ -662,7 +668,7 @@ Los tres síntomas se parecen desde la silla del usuario —"no se guardó"— y
 13. Con el bug de 12 puesto, cambia `ChangeDetectionStrategy.OnPush` a `Default` y comprueba que la pantalla se actualiza. Después revierte y explica por qué ese **no** es el fix del curso, aunque funcione.
 14. **Diagnóstico.** Apaga json-server y envía. Describe qué aparece en consola, qué aparece en Network, y cómo distinguirías esto de un servidor que sí respondió pero con un `500`.
 15. Cambia el tipo genérico del `post<...>` a `CreatedInspectionRequest` (si aún no lo está) e intenta leer `created.status` en el `next`. Explica el error de compilación y qué te está protegiendo exactamente.
-16. Arregla el bug de 5.8: haz que `requestedFor` se envíe como ISO con offset `-05:00` explícito a partir de lo que entrega el `<input type="date">`. Criterio: la fila nueva del `db.json` tiene el mismo formato que la sembrada.
+16. Quita de `submit()` la conversión a medianoche de `-05:00` y envía un registro. Anota qué guarda el `db.json` y por qué la pantalla se ve bien aunque el dato esté mal. Después restaura la línea y explica en dos frases qué te protege. Criterio: la fila sin conversión tiene `requestedFor` sin zona, y la restaurada tiene el mismo formato que la sembrada.
 17. Crea un segundo componente standalone `cc-app-version` que muestre la versión de la aplicación, e impórtalo desde `AppComponent`. Criterio: aparece en pantalla y sigues sin tener un solo `NgModule` en `src/`.
 
 **🟠 Difícil (18–23)**

@@ -1,0 +1,58 @@
+# k8s/certcore.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certcore
+spec:
+  replicas: 2
+  # El selector dice qué pods son "de este Deployment". Tiene que coincidir con
+  # las etiquetas de la plantilla de abajo: si no coinciden, el Deployment crea
+  # pods que después no reconoce como suyos y los vuelve a crear, para siempre.
+  selector:
+    matchLabels:
+      app: certcore
+  template:
+    metadata:
+      labels:
+        app: certcore
+    spec:
+      containers:
+        - name: certcore
+          # La MISMA imagen de la Fase 13, con el mismo tag, sin reconstruir.
+          image: certcore:fase-13
+          # ⚠️ `Never` es obligatorio aquí. Con la política por defecto
+          # (`IfNotPresent` para tags normales, `Always` para `:latest`), el
+          # kubelet podría intentar descargarla igualmente. Y es la segunda
+          # razón por la que este curso no usa `:latest`: con esa etiqueta, la
+          # política por defecto cambia sola y el pod deja de arrancar.
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 80
+          # ⭐ Aquí está todo el capítulo: dos variables de entorno leídas de un
+          # ConfigMap y entregadas al mismo proceso al que la Fase 13 se las
+          # daba con `-e`. El contenedor no nota la diferencia.
+          env:
+            - name: ENVIRONMENT_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: certcore-config
+                  key: ENVIRONMENT_NAME
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: certcore-config
+                  key: API_BASE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: certcore
+spec:
+  # Un nombre estable delante de unos pods que van y vienen. El Ingress de 5.6
+  # apunta a este nombre y nunca a una IP: las IP de los pods cambian en cada
+  # rolling update y el Service es lo único que no se mueve.
+  selector:
+    app: certcore
+  ports:
+    - port: 80
+      targetPort: 80

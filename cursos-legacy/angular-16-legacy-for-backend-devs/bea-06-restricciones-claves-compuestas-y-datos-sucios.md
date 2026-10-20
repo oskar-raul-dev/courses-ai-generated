@@ -79,7 +79,7 @@ Qué hace exactamente cada uno:
 
 | | `ADD ... NOT VALID` | `VALIDATE CONSTRAINT` |
 |---|---|---|
-| Filas nuevas y modificadas | **Se comprueban** desde el primer segundo | Ya se comprobaban |
+| Filas nuevas y modificadas (en las columnas de clave) | **Se comprueban** desde el primer segundo | Ya se comprobaban |
 | Filas viejas que violan | **Se quedan**, intactas | Hacen fallar el comando |
 | ¿Lee la tabla entera? | **No** | Sí |
 | Bloqueo (foránea) | `SHARE ROW EXCLUSIVE` sobre ambas tablas, breve | `SHARE UPDATE EXCLUSIVE`: **no bloquea lecturas ni escrituras normales** |
@@ -87,7 +87,7 @@ Qué hace exactamente cada uno:
 
 Y los tres efectos que sorprenden y hay que anunciar antes de desplegar:
 
-- **Un `UPDATE` sobre una fila vieja inválida falla**, aunque el `UPDATE` no toque las columnas de la restricción. La fila entera se revalida al modificarse. Es correcto, y es lo que rompe el primer proceso masivo que alguien corra después.
+- **Un `UPDATE` sobre una fila vieja inválida puede fallar, y depende del tipo de restricción.** Un `CHECK` se reevalúa sobre la fila entera en cada modificación, así que falla aunque no toques sus columnas. Una foránea sólo se comprueba si cambian sus columnas de clave: un `UPDATE` que sólo toca otra columna pasa. Es correcto, y el primer proceso masivo que alguien corra después se encuentra con los dos casos.
 - **Una foránea `NOT VALID` sí impide borrar filas del padre** referenciadas por hijos válidos, y también por los inválidos existentes. La protección "hacia el otro lado" es completa desde el primer día, y suele ser el motivo principal para ponerla.
 - **`VALIDATE` se puede correr en cualquier momento** y, si falla, no deja la restricción peor de lo que estaba: sigue existiendo como `NOT VALID`.
 
@@ -254,7 +254,7 @@ ALTER TABLE inspections ADD CONSTRAINT ... NOT VALID;
 Todos con un criterio de éxito numérico: **el número de filas que violan la restricción**, antes y después.
 
 1. Cuenta las filas que violan la invariante de `inspections`. Añade la foránea **sin** `NOT VALID` y pega el error. Después con `NOT VALID` y comprueba que el número de filas malas **no cambió**.
-2. **Diagnóstico.** Con la restricción `NOT VALID` puesta, intenta tres operaciones: insertar una fila mala, actualizar una fila vieja mala, y actualizar una fila vieja buena. Anota cuáles fallan y explica por qué.
+2. **Diagnóstico.** Con la restricción `NOT VALID` puesta, intenta cuatro operaciones: insertar una fila mala; actualizar una fila vieja mala tocando sólo una columna que no es de la clave; actualizar esa misma fila cambiando la columna de la clave; y actualizar una fila vieja buena. Anota cuáles fallan y explica por qué. Repite la segunda con un `CHECK` en lugar de la foránea y compara.
 3. Implementa la misma regla con `CHECK` y función. Después borra una plantilla referenciada y cuenta las filas huérfanas que aparecieron. Repite con la foránea: el número tiene que ser cero.
 4. **Diagnóstico.** Intenta crear la columna generada con `now()` y pega el error. Después resuélvelo con una vista y comprueba que el resultado cambia con el paso del tiempo sin que nadie escriba.
 5. Crea el índice único parcial de "una sola plantilla vigente por `templateId`". Cuenta cuántas filas lo violan hoy; si son cero, provoca una violación y comprueba que la base la impide.

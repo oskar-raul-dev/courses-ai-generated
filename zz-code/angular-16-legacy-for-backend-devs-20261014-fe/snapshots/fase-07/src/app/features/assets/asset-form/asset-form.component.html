@@ -1,0 +1,49 @@
+<!-- src/app/features/assets/asset-form/asset-form.component.html -->
+<h2>{{ isEdit ? 'Editar activo' : 'Nuevo activo' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()" class="asset-form">
+  <mat-form-field appearance="outline">
+    <mat-label>Identificador</mat-label>
+    <input matInput formControlName="id" placeholder="ASC-CENTRAL-03" />
+    <mat-error *ngIf="form.controls.id.hasError('required')">El identificador es obligatorio.</mat-error>
+    <mat-error *ngIf="form.controls.id.hasError('pattern')">
+      Formato AAA-BBBB-00, como está pintado en el equipo.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Cliente</mat-label>
+    <mat-select formControlName="clientId">
+      <mat-option *ngFor="let client of clients$ | async" [value]="client.id">
+        {{ client.legalName }}
+      </mat-option>
+    </mat-select>
+    <mat-hint *ngIf="isEdit">Un activo no cambia de cliente.</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Tipo</mat-label>
+    <mat-select formControlName="type">
+      <mat-option *ngFor="let type of assetTypes" [value]="type">{{ type }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Descripción</mat-label>
+    <input matInput formControlName="description" />
+    <mat-error *ngIf="form.controls.description.hasError('required')">La descripción es obligatoria.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Fecha de instalación</mat-label>
+    <input matInput type="date" formControlName="installedAt" />
+    <mat-error *ngIf="form.controls.installedAt.hasError('required')">La fecha es obligatoria.</mat-error>
+  </mat-form-field>
+
+  <div class="asset-form-actions">
+    <a mat-button routerLink="/assets">Cancelar</a>
+    <button mat-raised-button color="primary" type="submit" [disabled]="submitting">
+      {{ submitting ? 'Guardando…' : 'Guardar' }}
+    </button>
+  </div>
+</form>

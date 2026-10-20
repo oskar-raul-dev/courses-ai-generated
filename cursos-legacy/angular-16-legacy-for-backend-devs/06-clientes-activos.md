@@ -3,7 +3,7 @@
 > Tutorial Angular 16 — Inspecciones y certificaciones · Fase 6 de 14 · **8 horas**
 > Depende de: Fase 5 (standalone conviviendo con NgModules) · Habilita: Fases 7 a 11
 > Apéndices de apoyo: [A01 (Angular Material 16)](a01-material.md) · [A05 (Formularios reactivos tipados)](a05-formularios-tipados.md)
-> [Incidentes asociados](cuaderno-incidentes.md): 07
+> [Incidentes asociados](cuaderno-incidentes.md): 07, 22
 > Estilo de esta fase: **nuevo** en todo lo que se crea; toca dos archivos heredados de refilón 🧬
 
 ---
@@ -541,11 +541,12 @@ interface ClientListView {
     MatPaginatorModule,
     MatProgressSpinnerModule,
     // MatDialogModule y MatSnackBarModule no aportan ninguna directiva a esta
-    // plantilla: se importan porque MatDialog y MatSnackBar son servicios
-    // declarados con `providedIn: <su módulo>`, así que sin el import el
-    // inject() de arriba sería un NullInjectorError. Es el caso exacto que la
-    // Fase 5 §4 anunciaba: importar un NgModule desde un standalone también
-    // trae sus providers.
+    // plantilla: están aquí por los servicios MatDialog y MatSnackBar que el
+    // componente inyecta arriba. Pruébalo quitando uno de los dos imports:
+    // si el inject() sigue funcionando, el import sobraba; si falla con
+    // NullInjectorError, es el que lo provee. Es el caso que la Fase
+    // 5 §4 anunciaba: importar un NgModule desde un standalone también trae sus
+    // providers.
     MatSnackBarModule,
     MatTableModule,
     EmptyStateComponent,
@@ -725,7 +726,7 @@ Un solo componente para alta y edición. La diferencia entre los dos modos es si
 ```ts
 // src/app/features/clients/client-form/client-form.component.ts
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -773,6 +774,7 @@ export class ClientFormComponent implements OnInit {
   private readonly clientState = inject(ClientStateService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly changeDetector = inject(ChangeDetectorRef);
 
   /** `null` en alta, el id del cliente en edición. Decide todo lo demás. */
   private readonly clientId: number | null = this.readClientId();
@@ -798,6 +800,14 @@ export class ClientFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    // OnPush y validador asíncrono: cuando la consulta del NIT termina no cambia
+    // ninguna referencia, no hay evento en la plantilla y no emite ningún async.
+    // Ninguna de las cuatro cosas que despiertan a OnPush. Sin esta suscripción,
+    // la pantalla se queda en «Verificando el NIT…» hasta que el usuario toca otra cosa.
+    this.form.controls.taxId.statusChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.changeDetector.markForCheck());
+
     if (this.clientId === null) {
       return;
     }
@@ -1124,7 +1134,19 @@ Lo que sí merece verse es el formulario, porque trae la deuda de la fase:
 @Component({
   selector: 'cc-asset-form',
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule],
+  // ⚠️ NgFor y AsyncPipe porque los dos `mat-select` pintan sus opciones con
+  // `*ngFor` (los clientes con `| async`). Si falta NgFor, el build no da ni un
+  // warning: los selects salen vacíos y sólo la consola dice NG0303.
+  imports: [
+    AsyncPipe,
+    NgFor,
+    NgIf,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: './asset-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -1288,7 +1310,7 @@ La salida dice el nombre del control, si está `INVALID` o `PENDING`, y qué err
 
 Quita el `first()` del validador asíncrono de 5.7 y guarda. Escribe un NIT válido y mira el control: se queda en `PENDING` **para siempre**. El botón nunca se habilita, no hay ningún error en consola, la petición en Network aparece completada con 200, y el formulario es correcto en todos los sentidos menos en el que importa.
 
-Ahora compáralo con quitar el `catchError`: apaga el mock y escribe un NIT. El control queda `INVALID` con un error que no tiene mensaje, y el usuario ve un campo en rojo sin explicación por un fallo que no es suyo.
+Ahora compáralo con quitar el `catchError`: apaga el mock y escribe un NIT. El control se queda `PENDING`: el `mat-hint` de «Verificando el NIT…» no desaparece nunca, y en consola aparece un error sin capturar que no viene del formulario. El usuario ve una comprobación que no termina, por un fallo que no es suyo.
 
 Dos líneas quitadas, dos formas de romper el mismo formulario, y ninguna de las dos aparece en un test que sólo compruebe que el validador marca los NIT repetidos.
 
@@ -1407,7 +1429,7 @@ La **Fase 7** es el corazón del curso ⭐ y es donde todo esto deja de ser cóm
 - 🪦 **La 💸 de inmutabilidad de la Fase 4, pagada.** `FeatureState<T>` es `readonly` de punta a punta y el borde HTTP ya lo era desde la Fase 3. Sin acción pendiente, salvo que la Fase 7 —que va a necesitar un estado con forma propia— respete la misma regla.
 - **La trazabilidad de los cambios sigue sin dueño, y esta fase la difirió a propósito.** Un `audit` en el mock alimentado por un interceptor es media fase de trabajo y toca un dominio —quién hizo qué— que el curso nombra pero no construye. El ejercicio 30 lo diseña sin implementarlo. → **Decisión de proyecto**: o entra como apéndice 🔥, o se declara fuera de alcance en `alcance-del-proyecto.md` para que ninguna fase posterior lo prometa.
 - **Los activos no se borran y el modelo no tiene cómo darlos de baja.** `Asset` no tiene `decommissionedAt` ni `status`, así que hoy un activo vive para siempre. Añadir ese campo toca `db.seed.json`, y la Fase 3 avisó de lo caro que se vuelve eso con las fases encima. → **Aviso para el chat de la Fase 9**, que es donde el ciclo de vida de las entidades vuelve a aparecer.
-- **Esta fase no reserva ningún ID de incidente.** Hereda el **07** de la Fase 5 como asociado, y el 08 y el 09 pertenecen a la Fase 7. El CRUD produjo al menos dos candidatos buenos —el control `PENDING` eterno del ejercicio 19 y el doble guardado del 29— que hoy viven sólo como ejercicios. Meterlos en el cuaderno exige renumerar de la Fase 7 en adelante. → **Decisión de proyecto**, no de este chat.
+- **Esta fase reserva el ID 22** (la validación del NIT en Galápagos). Hereda el **07** de la Fase 5 como asociado, y el 08 y el 09 pertenecen a la Fase 7. El CRUD produjo al menos dos candidatos buenos —el control `PENDING` eterno del ejercicio 19 y el doble guardado del 29— que hoy viven sólo como ejercicios. Meterlos en el cuaderno exige renumerar de la Fase 7 en adelante. → **Decisión de proyecto**, no de este chat.
 - **`ClientStateService` y `AssetStateService` empiezan a parecerse demasiado**, y son los servicios tres y cuatro del mismo molde. La Fase 4 defendió la repetición con un argumento concreto: que la Fase 7 iba a necesitar uno distinto. Cuando esa fase llegue, conviene volver aquí y comprobar si el argumento se sostuvo. → **Aviso para el chat de la Fase 7.**
 - **El `CanDeactivate` del ejercicio 🔥 deja de ser opcional en la Fase 8.** Un formulario dinámico de veinte controles que se pierde al navegar es un ticket garantizado, y escribirlo entonces desde cero cuesta más que heredarlo hecho. → **Aviso para el chat de la Fase 8.**
 - **El tema de Material queda cerrado hoy** (5.1). Cualquier fase posterior que necesite un color nuevo lo saca de la paleta existente o de una clase propia. Si alguna necesita una paleta más, hay que volver aquí y no improvisar allá. → **Regla de proyecto, ya escrita.**
@@ -1419,4 +1441,4 @@ Los enunciados ya están escritos en el índice de [`cuaderno-incidentes.md`](cu
 
 | ID | Título | Categoría | Dif. |
 |---|---|---|---|
-| — | Esta fase no reserva ID nuevo: hereda el **07** de la Fase 5 y le da la pantalla real donde reproducirlo | Integración | 🟡 |
+| 22 | "No me deja crear el cliente de Galápagos: dice que el NIT son 9 o 10 dígitos" | Formularios | 🟡 |
