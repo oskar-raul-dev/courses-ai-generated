@@ -1,0 +1,14 @@
+// 1) Primero nuestros tokens, para que estén disponibles abajo.
+@import "./styles/tokens";
+
+// 2) Bootstrap completo. En un proyecto real se importa solo lo que
+//    se usa para achicar el bundle 💸 (deuda: lo optimizamos en A1),
+//    pero en Fase 0 traemos todo y seguimos.
+@import "~bootstrap/scss/bootstrap";
+
+// 3) Un estilo propio que usa un token, para PROBAR que Sass compila
+//    de verdad y no solo que Bootstrap se coló.
+.wheel-card {
+  border-top: 4px solid $esclusa-primary;
+  margin-bottom: $esclusa-spacing * 2;
+}

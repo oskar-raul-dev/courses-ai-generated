@@ -1,0 +1,8 @@
+// Tokens del mini design system de La Esclusa.
+// Acá centralizamos los valores que después Bootstrap y nuestros
+// componentes reutilizan. En Fase 0 son cuatro; en A2 crecen.
+
+$esclusa-primary: #0066cc;  // azul de marca, para acciones principales
+$esclusa-success: #28a745;  // verde "rueda en vivo"
+$esclusa-danger:  #dc3545;  // rojo "terminada / agotado"
+$esclusa-spacing: 0.5rem;   // unidad base de espaciado
