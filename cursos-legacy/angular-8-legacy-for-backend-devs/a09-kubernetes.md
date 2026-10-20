@@ -369,7 +369,7 @@ Qué significa: está esperando a cerrar, o a que se libere algo.
 Qué no significa: que tu proceso esté colgado, necesariamente.
 Dónde miras: `describe`. Suele ser un finalizador pendiente o un cierre lento.
 
-**Los códigos de salida que aparecen en `describe`:** `0` terminó bien, `1` error genérico de la aplicación, `137` lo mataron con SIGKILL —casi siempre OOM—, `143` recibió SIGTERM y se cerró, `126`/`127` no pudo ejecutar el comando de arranque. Y uno que en este curso tiene nombre propio: si los logs dicen **`exec format error`**, la imagen es de otra arquitectura que el nodo —el caso de Apple Silicon de la **Fase 14 §5.1**—, y el mensaje no menciona la palabra arquitectura por ningún lado.
+**Los códigos de salida que aparecen en `describe`:** `0` terminó bien, `1` error genérico de la aplicación, `137` lo mataron con SIGKILL —casi siempre OOM—, `143` recibió SIGTERM y se cerró, `126`/`127` no pudo ejecutar el comando de arranque. Y uno que en este curso tiene nombre propio: si los logs dicen **`exec format error`**, la imagen es de otra arquitectura que el nodo y nadie la traduce —el caso típico es una imagen arm64 construida en un Mac que llega a un cluster amd64, **Fase 14 §5.1**—, y el mensaje no menciona la palabra arquitectura por ningún lado.
 
 > 🧠 **La mentira que te va a contar la pantalla:** `CrashLoopBackOff` parece una causa y es un comportamiento. Significa literalmente *"esto se murió varias veces, voy a esperar un poco antes de volver a intentarlo"*. La causa está siempre una capa más abajo: en los Events del `describe`, o en los logs del contenedor **anterior**. Quien te lo reporta cree que te está dando un diagnóstico; te está dando un síntoma.
 

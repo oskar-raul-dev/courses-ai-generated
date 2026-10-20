@@ -120,3 +120,7 @@ Todo se ejecuta **dentro de contenedores**, con etiqueta `curso=angular-8-legacy
 - Plan de edición: se conserva (no se borra hasta que lo autorices).
 
 **Pendiente, para Oskar:** (1) decidir si el lockfile de LabCore se versiona y de dónde sale (hoy se genera en A14 §6.4); (2) el breakpoint en la interfaz de VS Code (A15 §5, manual) y los breakpoints de specs en Chromium (A15 §4, sin probar); (3) el Dockerfile de A13 §6 tiene las trampas de apt y certificados y un `sudo` sin instalar: no se tocó, fuera del puntero; (4) camino B de node-sass (compilación) sin probar; (5) los commits los haces tú.
+
+**19/10/2026:** los pendientes (3) y (4) pasan a `_desechable-plan-apple-silicon.md`; esa misma noche, también
+(1) y (2), al final de su §8. **Este plan ya no tiene trabajo abierto: T0–T9 cerradas y sus pendientes absorbidos.
+Se puede borrar con permiso del autor.**

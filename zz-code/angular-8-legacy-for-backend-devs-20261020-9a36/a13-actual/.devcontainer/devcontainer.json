@@ -1,0 +1,21 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "clinical-lab (Angular 8)",
+  "build": { "dockerfile": "Dockerfile" },
+
+  // node_modules fuera del bind mount: es la §5 y no es opcional.
+  "mounts": [
+    "source=lab-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ],
+
+  // 4200 es ng serve; 3000 es json-server (Fase 4). Se publican para poder
+  // abrirlos desde el navegador del Mac, que es donde corre la aplicación.
+  "forwardPorts": [4200, 3000],
+
+  // El volumen de node_modules nace vacío y pertenece a root: hay que darselo
+  // al usuario 'node' antes de instalar nada. Este es el paso que falta en el
+  // 90% de los devcontainer.json que encontraras copiados por ahí.
+  "postCreateCommand": "sudo chown -R node:node node_modules && npm ci",
+
+  "remoteUser": "node"
+}

@@ -205,7 +205,7 @@ Es la misma lección de la Fase 13 con otro envoltorio: **la configuración entr
 | `port-forward` funciona y `lab.local` no | el problema está del Ingress hacia fuera | hosts, ingress controller, `extraPortMappings` |
 | El ConfigMap cambió y la aplicación no | las variables se leen al arrancar | `rollout restart` |
 | `kubectl apply` rechaza el ConfigMap por un tipo | un valor sin comillas: `true` se volvió booleano | el YAML del ConfigMap |
-| Un pod que muere sin logs, en un Mac con chip M | casi siempre una imagen amd64 | [**A12**](./a12-arm64-m1.md) §6 |
+| Un pod que muere con `exec format error` en el cluster de la empresa | una imagen arm64 construida en un Mac con chip M | [**A13**](./a13-docker-colima.md) §7 |
 
 ---
 

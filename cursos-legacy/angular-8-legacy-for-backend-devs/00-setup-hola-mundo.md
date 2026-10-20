@@ -145,6 +145,51 @@ npm --version    # 6.14.x
 
 En Linux y macOS con `nvm`, `nvm use` sin argumentos lee el `.nvmrc` directo.
 
+**🍎 En un Mac con chip M, el Node x64 se instala a propósito.** Node 14 no
+publica binarios para `darwin-arm64`; el primero que los trae es Node 16. nvm lo
+sabe a medias: por debajo de la 14.17.0 cambia a x64 por su cuenta, pero para
+la **14.21.3** pide el binario arm64, no lo encuentra y se pone a **compilar
+Node desde fuente**. El resultado, si termina, es un Node arm64 que no es el del
+curso. La salida es pedir el x64 desde una shell que corra bajo **Rosetta 2**:
+
+```bash
+# Rosetta 2, si nunca la instalaste (una vez por máquina)
+softwareupdate --install-rosetta --agree-to-license
+
+# Instalar Node 14 desde una shell traducida: ahí 'uname -m' dice x86_64
+# y nvm descarga el binario x64 en vez de compilar
+arch -x86_64 zsh -c 'source ~/.nvm/nvm.sh && nvm install 14.21.3'
+
+# De vuelta en tu terminal de siempre, el binario sigue siendo x64
+nvm use 14.21.3
+node -p process.arch   # x64
+```
+
+Si `node -p process.arch` dice `arm64`, Node se compiló desde fuente: corre
+`nvm uninstall 14.21.3` y repite la instalación desde la shell traducida. El
+porqué —un Node x64 pide binarios de Intel, y esos sí existen— está en el
+**Apéndice A12 §1**.
+
+> 📝 **Cómo se verificó.** La receta se corrió en un Mac con chip M (macOS 26,
+> nvm 0.40.3): descargó `node-v14.21.3-darwin-x64.tar.xz`, `node -p process.arch`
+> respondió `x64` y `file` sobre el ejecutable dijo `Mach-O 64-bit executable
+> x86_64`.
+
+> ⚠️ **Un `gyp ERR!` que no es tuyo.** En el Mac, al instalar el proyecto vas a
+> ver cuatro bloques de `gyp ERR!` que terminan en una carpeta `…/fsevents` y en
+> `ValueError: invalid mode: 'rU' while trying to load binding.gyp`. Es
+> `fsevents` 1.2.13, el vigilante de archivos de macOS, que el lockfile trae
+> cuatro veces como dependencia **opcional** y que no compila con un Python 3.11
+> o más nuevo. npm sigue y la instalación termina bien: el que importa es un
+> `npm ERR!` que corta la instalación. El detalle está en el **Apéndice A12 §2**.
+
+> 📝 **Y una espera que parece un cuelgue.** En la prueba del curso, en un Mac con
+> chip M y este Node x64, el `npm ci` completo tardó 4 minutos, y más de 3 de
+> ellos sin consumir CPU, hasta que npm clonó `file-saver` desde GitHub (la
+> dependencia de `jspdf`; **A14 §3**, trampa 3). `node-sass` descargó su binario
+> `darwin-x64-83` sin compilar nada. Si tu `npm ci` se queda quieto un rato,
+> espera antes de cortarlo.
+
 **Detalles con intención**
 
 - Fijamos `14.21.3` y no "la 14": una versión parcheada distinta puede traer un

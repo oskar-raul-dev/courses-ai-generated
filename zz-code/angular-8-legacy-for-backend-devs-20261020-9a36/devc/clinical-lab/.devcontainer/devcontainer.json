@@ -1,0 +1,21 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "clinical-lab (Angular 8)",
+  "build": { "dockerfile": "Dockerfile" },
+
+  // El repositorio se monta en /workspace, la carpeta que prepara el Dockerfile.
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+
+  // node_modules fuera del bind mount: es la §5 y no es opcional.
+  "mounts": [
+    "source=lab-node-modules,target=/workspace/node_modules,type=volume"
+  ],
+
+  // 4200 es ng serve; 3000 es json-server (Fase 4). Se publican para poder
+  // abrirlos desde el navegador del Mac, que es donde corre la aplicación.
+  "forwardPorts": [4200, 3000],
+
+  "postCreateCommand": "npm ci",
+  "remoteUser": "node"
+}

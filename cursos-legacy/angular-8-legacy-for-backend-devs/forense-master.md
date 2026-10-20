@@ -98,7 +98,7 @@ Cada fila te manda **a la fase**, que es donde está el código y el contexto. E
 | Un pod en `CrashLoopBackOff` 🔥 | [Fase 14](14-casi-prod-kind.md) — `describe` si nunca llegó a `Running`, `logs --previous` si arrancó y murió |
 | Un Service con `ENDPOINTS: <none>` 🔥 | [Fase 14](14-casi-prod-kind.md) — siempre es un problema de etiquetas, nunca de red |
 | `ERR_OSSL_EVP_UNSUPPORTED` al arrancar | [**A03**](./a03-node-npm.md) — estás en Node 17 o superior; el CLI 8 no llega ahí |
-| `node-sass` que no compila, o un contenedor que muere sin decir nada en un Mac con chip M | [**A12**](./a12-arm64-m1.md) y [**A13**](./a13-docker-colima.md) — arquitectura antes que código |
+| `node-sass` que no compila en un Mac con chip M, o un pod que muere con `exec format error` tras construir la imagen en uno | [**A12**](./a12-arm64-m1.md) y [**A13**](./a13-docker-colima.md) — arquitectura antes que código |
 
 ---
 

@@ -179,7 +179,7 @@ sin explicar por qué. Enlaza directo con los apéndices A12 (dependencias en ar
 | **A10 Migración 8 → 9** (opcional) | Ivy en lo que se nota, `ng update` y sus schematics, `ngcc`, los errores nuevos, la ficha de validación por dependencia, el ensayo en rama desechable, cómo estimar el costo y cuándo NO migrar | 3h |
 | **A11 Migración 9 → 16** (opcional) | Las cuatro puertas del camino largo, standalone, `inject()`, `strict`, NgRx siete versiones después, signals, y la tabla para traducir un ejemplo moderno al stack del curso. El control flow es de la 17 y se declara como horizonte | 2h |
 | **A12 Dependencias problemáticas en arm64 / M1** | Dónde estás parado (máquina contra Node), por qué un `npm install` compila C++, las tres salidas de `node-sass`, `node-gyp` y Python en las tres plataformas, el Chromium de Karma, diagnóstico por síntoma e higiene de arquitectura | 2h |
-| **A13 Docker + Colima en Apple Silicon** | La decisión en dos ejes (runtime y arquitectura), los dos Rosetta y su fecha de retirada, perfiles arm64 y amd64+vz-rosetta, dónde vive `node_modules`, un devcontainer para el proyecto, construir para la arquitectura correcta, y cambiar de runtime sin romper nada | 2h |
+| **A13 Docker + Colima en Apple Silicon** | La decisión en dos ejes (runtime y arquitectura), los dos Rosetta y su fecha de retirada, VM arm64 con Rosetta y amd64 por contenedor (`--platform`), dónde vive `node_modules`, un devcontainer para el proyecto, construir para la arquitectura correcta, y cambiar de runtime sin romper nada | 2h |
 
 A12 y A13 quedan marcados como **opcionales por plataforma**: el curso se toma
 completo sin abrirlos. Existen para que cualquiera con Mac pueda seguirlo.

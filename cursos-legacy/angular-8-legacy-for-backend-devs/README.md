@@ -234,6 +234,7 @@ que es exactamente lo que el track viene a enseñar.
   [`prompts/propuesta-fases-backend.md`](prompts/propuesta-fases-backend.md), y su cuaderno de incidentes es **un
   archivo aparte del base**: quien haga solo el track base no recibe incidentes
   de MongoDB mezclados con los suyos.
+- [`LICENSE.md`](LICENSE.md) — la licencia del curso, CC BY-SA 4.0.
 
 Con eso, **el curso está completo**: las catorce fases obligatorias y la 14 opcional, los quince apéndices, el
 track forense —[`forense-master.md`](forense-master.md) y las quince piezas, de
@@ -290,3 +291,13 @@ fase por debajo de ese mínimo es la 14, que es 🔥 opcional y se queda en 15. 
 se suma una pieza de forma fija: **cada fase y cada apéndice cierran con el
 bloque 🏷️ del tag de git** —el tag de la fase, o la nota de por qué el apéndice
 no lleva uno— enlazando a [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) sin reexplicarla.
+
+---
+
+## 📜 Licencia y ficción
+
+Texto y código, bajo **CC BY-SA 4.0**. Los detalles y los enlaces están en [`LICENSE.md`](LICENSE.md).
+
+Andina Laboratories Inc., LabCore, sus clientes y su gente son **inventados** para este curso
+([`00-historia-del-sistema.md`](00-historia-del-sistema.md)). Si un nombre se parece al de una empresa,
+un producto o una persona reales, es coincidencia.

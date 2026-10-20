@@ -6,7 +6,7 @@
 
 Esto es una receta, no una lección. Sigues los pasos en orden, copias los bloques y compruebas cada paso con la salida que se describe. **Lo que resuelve:** un contenedor `linux/amd64` dentro de Docker Desktop, con **Node 14.21.3** (la misma base que la Fase 13), donde levantas la base de LabCore y la pruebas, y desde el que trabajas con VS Code.
 
-Es la ruta de **Docker Desktop**. La ruta de **Colima** —arm64 por defecto, amd64 como perfil aparte— está en el **Apéndice A13**, y el criterio para elegir entre las dos está en su §1. Las dos pueden convivir en el mismo repositorio, cada una con su devcontainer (§5).
+Es la ruta de **Docker Desktop**. La ruta de **Colima** —una VM arm64 con Rosetta, y amd64 por contenedor cuando hace falta— está en el **Apéndice A13**, y el criterio para elegir entre las dos está en su §1. Las dos pueden convivir en el mismo repositorio, cada una con su devcontainer (§5).
 
 > 🧰 **Esto es la receta. El porqué está en el curso de contenedores.** Si quieres entender por qué `platform` va en el servicio y no en `runArgs`, o qué hace Rosetta frente a QEMU, eso vive en [Docker Legacy Node](../../cursos-contenedores-cloud-infra/docker-container-legacy/README.md): el devcontainer se abre por dentro en el capítulo [19 · Dev containers](../../cursos-contenedores-cloud-infra/docker-container-legacy/19-dev-containers.md), la depuración en el [10 · VS Code y debugging](../../cursos-contenedores-cloud-infra/docker-container-legacy/10-vscode-y-debugging.md), y la emulación y la arquitectura en el [21 · Arquitecturas y emulación](../../cursos-contenedores-cloud-infra/docker-container-legacy/21-arquitecturas-y-emulacion.md).
 
@@ -86,7 +86,7 @@ Hoy la salida trae `E: Failed to fetch … 404 Not Found`. El arreglo es apuntar
 
 Después de la instalación, el lockfile fija `file-saver` a un **commit de GitHub**. Eso tiene consecuencia: cualquier `npm ci` futuro en un equipo necesita acceso a GitHub (§8 y **Advertencias**).
 
-> 🧭 **El Dockerfile de A13 §6 tiene las mismas trampas 1 y 2**, y además su `postCreateCommand` usa `sudo` sin que esa imagen lo instale. No lo corregimos aquí para no tocar su contenido; la receta de §4 es la versión que pasó todas las pruebas. Si usas Colima, el arreglo es el mismo.
+> 🧭 **El devcontainer arm64 de A13 §6 resuelve las mismas tres trampas** con los mismos arreglos, y el volumen de otra forma: en vez de `sudo`, crea `/workspace/node_modules` en la imagen con dueño `node` (**A13 §5**). Los dos se probaron sobre la misma base del proyecto (§6). Si usas Colima, el arreglo es el mismo.
 
 ---
 
@@ -176,7 +176,8 @@ El proyecto queda así:
 ```
 clinical-lab/
 ├── .devcontainer/
-│   ├── devcontainer.json      ← A13 (Colima, arm64)
+│   ├── Dockerfile             ← A13 (arm64, Colima o Docker Desktop)
+│   ├── devcontainer.json      ← A13
 │   └── amd64/                 ← A14 (Docker Desktop, amd64)
 │       ├── Dockerfile
 │       ├── devcontainer.json

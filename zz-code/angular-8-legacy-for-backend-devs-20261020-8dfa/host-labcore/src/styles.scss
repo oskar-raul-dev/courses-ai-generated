@@ -1,0 +1,22 @@
+// A02 §5.1 y §5.2, tal cual: los colores de Bootstrap alineados con indigo-pink
+// y las tres claves de la Fase 8, antes del @import de Bootstrap.
+$primary: #3f51b5;
+$secondary: #ff4081;
+$danger: #f44336;
+
+$theme-colors: (
+  "critical": #f44336,
+  "out": #ffa000,
+  "norange": #757575
+);
+
+@import "~bootstrap/scss/bootstrap";
+
+// Reglas globales propias, con aritmética y funciones de Sass, para ver
+// diferencias de redondeo y de color entre los dos compiladores.
+.lab-banner {
+  padding: $spacer * 1.5 $spacer / 3;
+  background: lighten($primary, 37.5%);
+  border-left: 4px solid darken(theme-color("out"), 7%);
+  &:hover { background: mix($primary, $secondary, 33%); }
+}

@@ -93,7 +93,7 @@ Todos los manifiestos viven en una carpeta `k8s/` en la raíz del proyecto, junt
 - Imagen de nodo **`kindest/node:v1.27.3`**
 - **kubectl** `v1.27.x` (una versión menor de diferencia con el cluster es tolerable; dos, no)
 - **ingress-nginx** `controller-v1.8.2`, manifiesto del proveedor `kind`
-- Cualquier runtime de contenedores que ya tengas: Docker Desktop, Colima o Podman. kind no se ata a ninguno. En Apple Silicon, **el nodo hereda la arquitectura de la máquina virtual de tu runtime**, así que la imagen tiene que construirse para esa misma arquitectura: el **Apéndice A13 §7** explica cómo se elige al construir y el **§1** cómo se decide el perfil.
+- Cualquier runtime de contenedores que ya tengas: Docker Desktop, Colima o Podman. kind no se ata a ninguno. En Apple Silicon, **el nodo hereda la arquitectura de la máquina virtual de tu runtime**, así que conviene construir la imagen para esa misma arquitectura: el **Apéndice A13 §7** explica cómo se elige al construir y el **§1** cómo se decide la arquitectura.
 
 ### 5.1 El punto de partida: la imagen de la Fase 13, intacta
 
@@ -108,7 +108,7 @@ Lo único que cambia es que ahora la etiquetamos con una versión explícita, po
 docker build -t lab-frontend:1.0.0 .
 ```
 
-> ⚠️ **Apple Silicon.** kind corre el nodo sobre tu mismo runtime, así que el nodo es de la arquitectura de tu máquina. Si construiste la imagen para `amd64` estando en un Mac con chip M —o al revés—, el pod arranca, muere al instante y queda en `CrashLoopBackOff`, y el mensaje que vas a encontrar en los logs es `exec format error`, que no menciona la palabra "arquitectura" por ningún lado. Construye en nativo o revisa el **Apéndice A13 (Docker + Colima en Apple Silicon)**; si además tienes dependencias que no compilan en arm64, el **Apéndice A12** es el que necesitas — y su §1 es la primera parada, porque en una máquina con chip M la arquitectura de tu Node no es necesariamente la de tu procesador.
+> ⚠️ **Apple Silicon.** kind corre el nodo sobre tu mismo runtime, así que el nodo es arm64, como tu máquina. Si construiste la imagen para `amd64`, **el pod arranca igual**: el kernel de la VM del runtime tiene registrado Rosetta (y QEMU) para los binarios x86, y el contenedor corre traducido, más lento y sin avisar. En la prueba del curso, con Docker Desktop 4.92.0 y `kindest/node:v1.27.3`, un pod con una imagen solo-amd64 quedó `Running`, respondió `x86_64`, y desde el nodo su proceso aparecía como `/run/rosetta/rosetta /bin/sleep`. El fallo de verdad llega en el otro sentido y en otra máquina: una imagen **arm64** construida en tu Mac que aterriza en un cluster **amd64** de la empresa, donde nadie traduce. Ahí el pod arranca, muere al instante y queda en `CrashLoopBackOff`, y el mensaje de los logs es `exec format error`, que no menciona la palabra "arquitectura" por ningún lado. Construye en nativo para kind, construye `linux/amd64` para el servidor, y revisa el **Apéndice A13 (Docker + Colima en Apple Silicon)**; si además tienes dependencias que no compilan en arm64, el **Apéndice A12** es el que necesitas — y su §1 es la primera parada, porque en una máquina con chip M la arquitectura de tu Node no es necesariamente la de tu procesador.
 
 ### 5.2 `k8s/kind-cluster.yaml` — el cluster, decidido antes de crearlo
 
