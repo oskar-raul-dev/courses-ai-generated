@@ -136,7 +136,7 @@ db.tickets.find({ title: { $regex: /impresora/i } })
 db.tickets.find({ title: { $regex: /^La/ } })
 ```
 
-> ⚡ **Adelanto para tu memoria de DBA:** el regex **anclado al inicio**
+> 💡 **Adelanto para tu memoria de DBA:** el regex **anclado al inicio**
 > (`/^La/`) puede usar índice; el `/impresora/` flotante, no — es tu
 > `LIKE '%...%'` de siempre con el mismo full scan de siempre. Los números en
 > la Fase 7. 🩻 Este instinto viaja intacto.
@@ -267,7 +267,7 @@ Los documentos del seed no tienen arrays todavía, pero el idioma los trata con
 una naturalidad que a un cerebro SQL le parece brujería:
 
 ```js
-db.tickets.updateOne({ title: "hola" }, { $set: { tags: ["hardware", "urgente"] } })
+db.tickets.updateOne({ title: "La impresora no imprime" }, { $set: { tags: ["hardware", "urgente"] } })
 
 db.tickets.find({ tags: "hardware" })
 // ✅ matchea si el array CONTIENE "hardware". Sin unnest, sin tabla puente.
@@ -392,8 +392,8 @@ mete en producción.
 ## 🧪 Ejercicios (32)
 
 Todos sobre la base `tiquetera` (re-siembra cuando la ensucies:
-`npm run seed`). Para los que piden volumen, usa el generador del ejercicio
-27 de la Fase 1.
+`npm run seed`). Para los que piden volumen, usa `scripts/generate.js` de la
+Fase 1 (`node scripts/generate.js --tickets 100000`).
 
 **🟢 Fácil (1–8)**
 
@@ -445,13 +445,13 @@ Todos sobre la base `tiquetera` (re-siembra cuando la ensucies:
 
 **Documentación oficial (4.4 / driver 3.6)**
 
-- Manual 4.4 — `db.collection.find()`: https://www.mongodb.com/docs/v4.4/reference/method/db.collection.find/
-- Manual 4.4 — Query and Projection Operators (el arsenal completo): https://www.mongodb.com/docs/v4.4/reference/operator/query/
-- Manual 4.4 — Query for Null or Missing Fields (la Trampa 1, versión oficial): https://www.mongodb.com/docs/v4.4/tutorial/query-for-null-fields/
-- Manual 4.4 — Comparison/Sort Order (la Trampa 2, versión oficial): https://www.mongodb.com/docs/v4.4/reference/bson-type-comparison-order/
-- Manual 4.4 — Query an Array: https://www.mongodb.com/docs/v4.4/tutorial/query-arrays/
-- Manual 4.4 — Iterate a Cursor: https://www.mongodb.com/docs/v4.4/tutorial/iterate-a-cursor/
-- Manual 4.4 — `countDocuments`: https://www.mongodb.com/docs/v4.4/reference/method/db.collection.countDocuments/
+- Manual 4.4 — `db.collection.find()`: https://www.mongodb.com/docs/manual/reference/method/db.collection.find/
+- Manual 4.4 — Query and Projection Operators (el arsenal completo): https://www.mongodb.com/docs/manual/reference/mql/query-predicates/
+- Manual 4.4 — Query for Null or Missing Fields (la Trampa 1, versión oficial): https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/
+- Manual 4.4 — Comparison/Sort Order (la Trampa 2, versión oficial): https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/
+- Manual 4.4 — Query an Array: https://www.mongodb.com/docs/manual/tutorial/query-arrays/
+- Manual 4.4 — Iterate a Cursor: https://www.mongodb.com/docs/manual/tutorial/iterate-a-cursor/
+- Manual 4.4 — `countDocuments`: https://www.mongodb.com/docs/manual/reference/method/db.collection.countdocuments/
 - Driver 3.6 — Collection API (find, cursores): https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html
 
 **Libros**
@@ -461,7 +461,7 @@ Todos sobre la base `tiquetera` (re-siembra cuando la ensucies:
 
 **Web / apoyo**
 
-- SQL to MongoDB Mapping Chart (revisítala: ahora la vas a leer distinto): https://www.mongodb.com/docs/v4.4/reference/sql-comparison/
+- SQL to MongoDB Mapping Chart (revisítala: ahora la vas a leer distinto): https://www.mongodb.com/docs/manual/reference/sql-comparison/
 - MongoDB University — M001, unidades de CRUD/query: https://learn.mongodb.com/
 
 **Video (YouTube)**

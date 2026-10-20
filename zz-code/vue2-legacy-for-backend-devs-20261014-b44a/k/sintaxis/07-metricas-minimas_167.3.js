@@ -1,0 +1,3 @@
+var __a = [
+this.$refs.canvas // → HTMLCanvasElement, listo para dárselo a chart.js
+];

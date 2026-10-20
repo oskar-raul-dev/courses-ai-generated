@@ -112,7 +112,7 @@ en la ecuación, lo que hace que tu `created()` corra donde no hay `window`, lo 
 rompe la auth de F2. Todo lo interesante de esta ruta nace de haber elegido
 `universal`. Los otros dos modos existen; los nombramos y seguimos.
 
-> 🔎 **Qué hace `universal`:** en el primer request, el servidor Node ejecuta tu
+> 🧠 **Qué hace `universal`:** en el primer request, el servidor Node ejecuta tu
 > app, genera el HTML **ya pintado** y se lo manda al navegador. El usuario ve
 > contenido al instante (bueno para SEO y para el *time-to-first-byte*). Luego el
 > JS carga y el navegador "revive" ese HTML — eso es la **hidratación**, y es la
@@ -130,18 +130,16 @@ mundo que existía.
 
 En Nuxt `universal`, tu componente **nace dos veces**:
 
-```
-        ┌─────────────── SERVIDOR (Node) ───────────────┐   ┌──── CLIENTE (navegador) ────┐
-        │                                                │   │                             │
-  ►─────┤  beforeCreate()   ✅ corre aquí                │   │  beforeCreate()  ✅ otra vez │
-        │  created()        ✅ corre aquí                │   │  created()       ✅ otra vez │
-        │                                                │   │  beforeMount()   ✅          │
-        │  (NO hay mounted en el servidor)               │   │  mounted()       ✅ SOLO aquí│
-        │  (NO hay window, document, localStorage)       │   │  (aquí SÍ hay window)        │
-        └────────────────────────────────────────────────┘   └─────────────────────────────┘
-                     │                                                    ▲
-                     └──────── manda el HTML ya pintado ──────────────────┘
-                                    (hidratación)
+```mermaid
+flowchart TD
+    subgraph SRV["SERVIDOR (Node)"]
+        S1["beforeCreate: corre aquí"] --> S2["created: corre aquí"]
+        S2 --> S3["NO hay mounted; NO hay window, document ni localStorage"]
+    end
+    subgraph CLI["CLIENTE (navegador)"]
+        C1["beforeCreate: corre otra vez"] --> C2["created: corre otra vez"] --> C3["beforeMount"] --> C4["mounted: SOLO aquí, y aquí SÍ hay window"]
+    end
+    SRV -- "manda el HTML ya pintado (hidratación)" --> CLI
 ```
 
 Lo que tienes que grabarte:
@@ -155,7 +153,7 @@ Lo que tienes que grabarte:
 
 De ahí sale la **regla de oro** de toda la ruta:
 
-> 🌟 **Todo lo que toque `window`, `document`, `localStorage`, `navigator` o
+> 🔑 **Todo lo que toque `window`, `document`, `localStorage`, `navigator` o
 > cualquier API del navegador va en `mounted()`. Nunca en `created()`.**
 
 Ejemplos de lo que rompe si lo pones en `created()`:
@@ -189,15 +187,31 @@ Este es el mapa. Léelo como quien aprende a moverse por una ciudad nueva.
 ### `create-nuxt-app` — de dónde sale todo esto
 
 ```bash
-npx create-nuxt-app tiquetera-nx
+# create-nuxt-app 3.x es la línea que genera Nuxt 2. Un `npx create-nuxt-app` a secas trae hoy la 6,
+# que es el generador de Nuxt 3 y ni arranca en Node 14. Y con npx, la 3.7.1 falla en el
+# postinstall de una dependencia (ejs): se instala global, sin scripts.
+npm install -g create-nuxt-app@3.7.1 --ignore-scripts
+create-nuxt-app tiquetera-nx
 # En el asistente, elige:
-#   Rendering mode:  Universal (SSR / SSG)   ← la lección
-#   Vuex:            Yes
-#   Axios:           Yes  (@nuxtjs/axios)
-#   Testing:         Jest
+#   Programming language:  JavaScript
+#   Package manager:       Npm
+#   UI framework:          None
+#   Nuxt.js modules:       Axios
+#   Testing framework:     Jest
+#   Rendering mode:        Universal (SSR / SSG)   ← la lección
+#   Deployment target:     Server (Node.js hosting)
+#   (lo demás, vacío o None. No pregunta por Vuex: store/ existe siempre)
+
+cd tiquetera-nx
+# nuxt ^2.15.7 resuelve hoy a la 2.18, y arrastra Vue 2.7. El curso es Nuxt 2.15 con Vue 2.6.14:
+npm install --save-exact nuxt@2.15.8 vue@2.6.14 vue-template-compiler@2.6.14 vue-server-renderer@2.6.14
+# y el plugin de Babel que el preset de Nuxt 2.15 importa sin declararlo (si no, el build falla):
+npm install --save-dev --save-exact @babel/plugin-proposal-private-property-in-object@7.21.11
 ```
 
-Y la estructura que te genera — **fíjate en lo que NO está**:
+Y la estructura del proyecto — **fíjate en lo que NO está**. El generador crea `pages/`,
+`components/`, `static/`, `store/` (con un README, vacía) y `test/`; `layouts/`, `plugins/` y
+`middleware/` **no** los crea: Nuxt los reconoce en cuanto existen, y los vas a crear tú en esta ruta:
 
 ```
 tiquetera-nx/
@@ -246,7 +260,7 @@ export default {
 }
 ```
 
-> 🔎 **Qué hace:** es el panel de control central. No hay `new Vue({...}).$mount()`
+> 🧠 **Qué hace:** es el panel de control central. No hay `new Vue({...}).$mount()`
 > por ningún lado — Nuxt hace ese arranque por ti, leyendo esta config. Cuando
 > busques "dónde se registra X globalmente" en un repo Nuxt, empieza siempre aquí.
 
@@ -271,7 +285,7 @@ pages/
   `_id.vue` → `:id`. Ese `_id` de F5 (`/tickets/:id`) que definías a mano en el
   router, ahora es literalmente el nombre del archivo.
 
-> ✅ **Buenas prácticas de lectura:** para saber qué URLs existen en un proyecto
+> 💡 **Buenas prácticas de lectura:** para saber qué URLs existen en un proyecto
 > Nuxt, no busques un archivo de rutas — **mira el árbol de `pages/`**. El árbol
 > es el mapa de rutas. Punto.
 
@@ -388,23 +402,19 @@ Y se activa en una página con `middleware: 'auth'`, o global desde
 Esta es la **tabla de equivalencias** curso-base → Nuxt. Es lo mínimo que tienes
 que llevarte para leer cualquier repo Nuxt sin perderte:
 
-```
-┌─────────────────────┬──────────────────────────────────────────────────┐
-│  CURSO BASE          │  NUXT                                             │
-├─────────────────────┼──────────────────────────────────────────────────┤
-│  main.js             │  nuxt.config.js  +  plugins/                      │
-│  App.vue             │  layouts/default.vue                              │
-│  <router-view/>      │  <Nuxt/>                                           │
-│  router/index.js     │  pages/  (las carpetas SON las rutas)             │
-│  /tickets/:id        │  pages/tickets/_id.vue                            │
-│  guards (beforeEach) │  middleware/                                       │
-│  store/index.js      │  store/  (mismo Vuex, módulos con otra sintaxis)  │
-│  apiClient + axios   │  @nuxtjs/axios  +  plugins/  (con mode client/srv)│
-│  services/           │  igual — pero axios se inyecta desde plugins/     │
-│  created()           │  created() — ¡pero corre 2 veces! (srv + cliente) │
-│  mounted()           │  mounted() — solo cliente (tu zona segura)        │
-└─────────────────────┴──────────────────────────────────────────────────┘
-```
+| Curso base | Nuxt |
+|---|---|
+| `main.js` | `nuxt.config.js` + `plugins/` |
+| `App.vue` | `layouts/default.vue` |
+| `<router-view/>` | `<Nuxt/>` |
+| `router/index.js` | `pages/` (las carpetas son las rutas) |
+| `/tickets/:id` | `pages/tickets/_id.vue` |
+| guards (`beforeEach`) | `middleware/` |
+| `store/index.js` | `store/` (mismo Vuex, módulos con otra sintaxis) |
+| `apiClient` + axios | `@nuxtjs/axios` + `plugins/` (con mode client/srv) |
+| `services/` | igual, pero axios se inyecta desde `plugins/` |
+| `created()` | `created()`, pero corre dos veces (servidor y cliente) |
+| `mounted()` | `mounted()`, solo cliente (tu zona segura) |
 
 ---
 

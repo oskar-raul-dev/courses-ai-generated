@@ -234,7 +234,7 @@ db.col.find().forEach(d => ...)          // reparación quirúrgica (pocos docs)
 // ⬆️ ¿muchos docs, o corre solo? → script con driver, no shell
 
 // Salida legible
-find({}, { campo: 1, _id: 0 })  ·  countDocuments()  ·  print(...)  ·  `it`
+find({}, { field: 1, _id: 0 })  ·  countDocuments()  ·  print(...)  ·  `it`
 
 // Reconocimiento (5 min): show collections → getCollectionInfos (validator!)
 //   → countDocuments → findOne → getIndexes → formas()
@@ -328,12 +328,12 @@ mongosh "$URI" script.js  ·  load("helpers.js")
 - mongosh — configurar y `.mongoshrc.js`: https://www.mongodb.com/docs/mongodb-shell/reference/configure-shell-settings/
 - mongosh — ejecutar scripts (`--eval`, `load`): https://www.mongodb.com/docs/mongodb-shell/write-scripts/
 - mongosh vs mongo (diferencias de compatibilidad): https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/
-- Métodos del shell (referencia, 4.4): https://www.mongodb.com/docs/v4.4/reference/method/
-- `db.collection.explain()`: https://www.mongodb.com/docs/v4.4/reference/method/db.collection.explain/
-- `$indexStats` (índices sin uso): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/indexStats/
+- Métodos del shell (referencia, 4.4): https://www.mongodb.com/docs/manual/reference/method/
+- `db.collection.explain()`: https://www.mongodb.com/docs/manual/reference/method/db.collection.explain/
+- `$indexStats` (índices sin uso): https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexstats/
 - Compass (guía): https://www.mongodb.com/docs/compass/
-- Compass — Schema tab: https://www.mongodb.com/docs/compass/current/schema/
-- Compass — Aggregation Pipeline Builder: https://www.mongodb.com/docs/compass/current/aggregation-pipeline-builder/
+- Compass — Schema tab: https://www.mongodb.com/docs/compass/schema/
+- Compass — Aggregation Pipeline Builder: https://www.mongodb.com/docs/compass/create-agg-pipeline/
 
 **Video (YouTube)**
 

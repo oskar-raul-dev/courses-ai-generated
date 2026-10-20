@@ -60,7 +60,7 @@ fila es un `GROUP BY <constante>`.
 db.tickets.aggregate([
   { $group: { _id: "$status", total: { $sum: 1 } } }
 ])
-// [ { "_id":"open", "total":41230 }, { "_id":"closed", "total":38110 }, … ]
+// [ { "_id":"closed", "total":58977 }, { "_id":"open", "total":17875 }, … ]
 ```
 
 **Qué descarta.** Cierra el caso. Sin `$`, Mongo agrupó por una constante: un

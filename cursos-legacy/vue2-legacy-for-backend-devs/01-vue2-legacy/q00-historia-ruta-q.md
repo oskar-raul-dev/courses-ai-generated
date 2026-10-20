@@ -39,8 +39,10 @@ La rama `quasar-app` tiene tres cosas, en este orden de utilidad:
 
 1. **Un proyecto Quasar CLI armado**, con su `quasar.conf.js`, los boot files
    del cliente HTTP y del interceptor de token, y el layout principal en
-   `QLayout`. Es lo más valioso de la rama: las decisiones de estructura ya
-   están tomadas.
+   `QLayout`. Felipe no lo generó de cero: copió el de un tutorial de 2020 que
+   seguía al pie de la letra, así que trae el `@quasar/app` 1.x de entonces y la
+   lista de componentes escrita a mano en `quasar.conf.js`. Es lo más valioso de
+   la rama: las decisiones de estructura ya están tomadas.
 2. **El login y la mitad del formulario de tickets migrados.** El resto de la
    aplicación sigue siendo el Bootstrap de siempre, cargado al lado de Quasar,
    con las dos hojas de estilo peleándose por clases como `.row`. Es el estado

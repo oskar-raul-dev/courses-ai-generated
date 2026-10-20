@@ -1,0 +1,10 @@
+import { mount, createLocalVue } from "@vue/test-utils";
+import Vuelidate from "vuelidate";
+import TicketWizardView from "@/views/TicketWizardView.vue";
+var localVue = createLocalVue();
+localVue.use(Vuelidate);
+it("mount real", function () {
+  var wrapper = mount(TicketWizardView, { localVue: localVue, stubs: ["router-link"] });
+  expect(wrapper.vm.currentStep).toBe(1);
+  expect(wrapper.vm.$refs.stepComponent).toBeTruthy();
+});

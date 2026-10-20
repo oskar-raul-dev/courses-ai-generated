@@ -1,0 +1,92 @@
+{
+  "tickets": [
+    {
+      "id": 1,
+      "title": "La impresora no imprime",
+      "description": "Otra vez. Tercera vez esta semana.",
+      "status": "open",
+      "priority": "high",
+      "assignee": "lmcano",
+      "reporter": "dprios",
+      "createdAt": "2020-03-10T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "No me llega el correo",
+      "description": "Desde ayer en la tarde no recibo nada.",
+      "status": "in_progress",
+      "priority": "medium",
+      "assignee": "jpmesa",
+      "reporter": "cvelez",
+      "createdAt": "2020-03-11T09:30:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Solicitud de acceso a carpeta compartida",
+      "description": "Necesito acceso a la carpeta de Finanzas.",
+      "status": "resolved",
+      "priority": "low",
+      "assignee": "lmcano",
+      "reporter": "mrestrepo",
+      "createdAt": "2020-03-08T14:15:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "name": "Andrés Felipe Ríos",
+      "role": "agent"
+    },
+    {
+      "id": 2,
+      "username": "lmcano",
+      "name": "Laura Marcela Cano",
+      "role": "agent"
+    },
+    {
+      "id": 3,
+      "username": "dprios",
+      "name": "Diana Patricia Ríos",
+      "role": "reporter"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "ticketId": 1,
+      "author": "lmcano",
+      "body": "¿Probaste apagarla y prenderla?",
+      "createdAt": "2020-03-10T10:30:00Z"
+    }
+  ],
+  "activity": [
+    {
+      "id": 1,
+      "ticketId": 1,
+      "type": "status_change",
+      "actor": "lmcorrea",
+      "from": "open",
+      "to": "in_progress",
+      "at": "2020-03-10T11:00:00Z"
+    },
+    {
+      "id": 2,
+      "ticketId": 1,
+      "type": "assigned",
+      "actor": "admin",
+      "from": null,
+      "to": "lmcorrea",
+      "at": "2020-03-10T11:02:00Z"
+    },
+    {
+      "id": 3,
+      "ticketId": 1,
+      "type": "comment",
+      "actor": "lmcorrea",
+      "from": null,
+      "to": "¿Probaste apagarla y prenderla?",
+      "at": "2020-03-10T11:05:00Z"
+    }
+  ]
+}

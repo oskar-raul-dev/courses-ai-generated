@@ -177,8 +177,8 @@ una promesa rechazada no es un 500, es un silencio.
 ## 6. 📌 Síntomas sin pieza (pendientes)
 
 Dos se consideraron para el índice y **no entraron**, porque ninguna fase los produce como
-síntoma. Se anotan acá en vez de inventarles una fase, que es lo que manda
-[`formato-piezas-forenses.md`](../prompts/formato-piezas-forenses.md) §9. Si alguna fase
+síntoma. Se anotan acá en vez de inventarles una fase, para que el índice no prometa lo que el
+curso no cubre. Si alguna fase
 llega a cubrirlos, suben a §3.
 
 | Síntoma | Por qué no tiene pieza |

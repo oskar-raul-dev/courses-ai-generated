@@ -18,8 +18,8 @@ se lee antes de la Fase 0 de cualquiera de los dos cursos.
 >
 > El Curso 01 construye el frontend y lo deja viviendo de un mock. El Curso 02
 > construye el backend real que reemplaza a ese mock **honrando el mismo
-> contrato**. Si al final cambias una sola línea y todo sigue funcionando, los
-> dos cursos cumplieron.
+> contrato**. Si al final cambias, a lo sumo, una línea y todo sigue
+> funcionando, los dos cursos cumplieron.
 
 ---
 
@@ -35,7 +35,8 @@ encima del Vue hay un framework?* Tres rutas opcionales y excluyentes —
 **Quasar 1**, **Vuetify 2** o **Nuxt 2** — enseñan a distinguir qué es Vue,
 qué es el framework, y qué te está haciendo por debajo.
 
-- **12 fases de tronco** (F0–F11) + **5 apéndices** de consulta
+- **12 fases de tronco** (F0–F11) + **7 apéndices** de consulta (dos, solo
+  para Mac con chip M)
 - **3 rutas × 5 fases** (Q0–Q4 · VU0–VU4 · NX0–NX4)
 - Termina con la Tiquetera completa, testeada, y hablándole a un mock
 
@@ -57,31 +58,21 @@ reemplaza al mock del Curso 01.
 
 ## 🗺️ Cómo se enganchan
 
-```
-        ┌──────────────────────── CURSO 01 · Vue 2 Legacy ────────────────────────┐
-        │                                                                         │
-        │  F0 ─ F1 ─ F2 ─ F3 ─ F4 ─ F5 ─ F6 ─ F7 ─ F8 ─ F9 ─ F10 ─ F11            │
-        │ setup base auth mock dash crud wiz chart ws panel vuex test             │
-        │                                              │                          │
-        │                            ✅ Tiquetera "a pelo", contra json-server    │
-        │                                              │                          │
-        │                        ┌─────────────────────┼──────────────────┐       │
-        │                        ▼                     ▼                  ▼       │
-        │                    RUTA Q                RUTA VU            RUTA NX     │
-        │                   Quasar 1              Vuetify 2            Nuxt 2     │
-        │                   Q0 → Q4               VU0 → VU4          NX0 → NX4    │
-        │                        ⚠️ elige UNA. No se acumulan.                     │
-        └─────────────────────────────────────────────────────────────────────────┘
-                                          │
-                        el contrato de API (02-.../00-audit-contrato.md)
-                                          │
-        ┌──────────────────── CURSO 02 · MongoDB para cerebros SQL ───────────────┐
-        │                                                                         │
-        │  F0 ─ F1 ─ F2 ─ F3 ─ F4 ─ F5 ─ F6 ─ F7 ─ F8 ─ F9 ─ F10 ─ … ─ F15        │
-        │ setup mql find embeber esquema lookup atom índices autopsia agg express │
-        │                                              │                          │
-        │                            🪦 json-server se apaga. El backend responde. │
-        └─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph C1["Curso 01: Vue 2 legacy"]
+        T["Tronco F0 a F11: setup, base, auth, mock, dashboard, CRUD, wizard, métricas, websockets, panel, Vuex, testing"]
+        T --> OK["Tiquetera a pelo, contra json-server"]
+        OK --> Q["Ruta Q: Quasar 1, Q0 a Q4"]
+        OK --> VU["Ruta VU: Vuetify 2, VU0 a VU4"]
+        OK --> NX["Ruta NX: Nuxt 2, NX0 a NX4"]
+    end
+    OK -. "elige UNA: no se acumulan" .- NOTA["Las rutas son excluyentes"]
+    C1 -- "el contrato de API, 02-complement-mongodb-backend/00-audit-contrato.md" --> C2
+    subgraph C2["Curso 02: MongoDB para cerebros SQL"]
+        M["F0 a F15: setup, mql, find, embeber, esquema, lookup, atomicidad, índices, autopsia, agregación, express, auth, sockets, tests, operación, veredicto"]
+        M --> JS["json-server se apaga: el backend responde"]
+    end
 ```
 
 El Curso 01 deja **deudas declaradas** (💸) que el Curso 02 paga: el cliente
@@ -148,30 +139,25 @@ si aplican. Es el recorrido para el que está diseñado el paquete.
 
 | Archivo | Qué es |
 |---|---|
-| [`prompts/guia-de-estilo-y-convenciones.md`](prompts/guia-de-estilo-y-convenciones.md) | ✍️ **Fuente de verdad editorial de los dos cursos.** Tono, tuteo, idioma del código, callouts, plantilla, ejercicios, referencias |
-| [`prompts/plantilla-de-fase.md`](prompts/plantilla-de-fase.md) | 🧩 Esqueleto rellenable de las nueve secciones de una fase |
+| [`00-historia-del-sistema.md`](00-historia-del-sistema.md) | 📖 **La ficha del sistema**: de dónde viene la Tiquetera, quién la escribió y por qué está como está |
 | [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md) | 🏷️ **Cómo versionas tu código mientras haces los cursos.** Dos repos, un tag por fase, tags de ejercicio y los comandos que te dicen dónde te quedaste |
-| [`prompts/formato-piezas-forenses.md`](prompts/formato-piezas-forenses.md) | 🕵️ La especificación de las piezas forenses: qué es un paso, qué descarta, y dónde está la frontera con la fase |
-| [`prompts/formato-cuaderno-incidentes.md`](prompts/formato-cuaderno-incidentes.md) | 📓 La especificación del cuaderno de incidentes: la plantilla, las cuotas, las tres formas de preparación y la convención de commits de una investigación |
+| [`LICENSE.md`](LICENSE.md) | 📜 La licencia del paquete |
 
-| [`prompts/diccionario-codigo.md`](prompts/diccionario-codigo.md) | 📖 El diccionario de código del dominio, compartido por los dos cursos |
-| [`prompts/instrucciones-proyecto-track-b.md`](prompts/instrucciones-proyecto-track-b.md) | 📋 Alcance del Curso 02 y su realidad en disco |
 
-> 🧭 **Un paquete, dos cursos, un solo `prompts/`.** Lo normal en este
-> repositorio es que cada curso tenga su `prompts/`. Este paquete es la
-> excepción: nació como **un curso con dos capas** —la pantalla y la base del
-> mismo sistema— que se partió en dos subcursos, y por eso comparte una guía,
-> un contrato y un diccionario. Toda la maquinaria vive aquí; los dos cursos no
-> tienen `prompts/` propio. La decisión está declarada en la guía de estilo,
-> §13.3. El contrato de API no es maquinaria —se publica y lo lee el alumno—, y
-> por eso sigue en
+> 🧭 **Un paquete, dos cursos, un solo material de autoría.** Este paquete nació como **un curso con dos
+> capas** —la pantalla y la base del mismo sistema— que se partió en dos subcursos, y por eso comparten una
+> guía, un contrato y un diccionario. El contrato de API se publica y lo lee el alumno: está en
 > [`02-complement-mongodb-backend/00-audit-contrato.md`](02-complement-mongodb-backend/00-audit-contrato.md).
+>
+> El resto del material de autoría (la guía de estilo, las plantillas de fase, los formatos de las piezas
+> forenses y del cuaderno, y el diccionario de código) vive aparte y no se publica. Lo que el lector necesita
+> de él está escrito en cada curso.
 
 ---
 
 ## ✍️ Las reglas de forma, en cinco líneas
 
-Están completas en la guía de estilo, pero estas cuatro no se negocian:
+Estas cinco no se negocian, en ninguno de los dos cursos:
 
 0. **Un repo por curso, y un tag por fase cerrada** — `fase-04-dashboard-tickets`
    y sus hermanos. No ocupan espacio, no cuestan nada, y son la diferencia
@@ -184,6 +170,20 @@ Están completas en la guía de estilo, pero estas cuatro no se negocian:
    versiones fijadas. Lo moderno aparece como comparación, no como norma.
 4. **Deuda técnica explícita** — se marca 💸, se dice por qué se acepta y en
    qué fase se paga. Aunque la fase sea del otro curso.
+
+---
+
+## ✅ Estado del paquete
+
+Los dos cursos están completos, y su código **se ejecutó** entre el 14 y el 18 de octubre de 2026,
+en contenedores, tal como está escrito: el repositorio del alumno construido fase a fase, las
+suites en verde, los incidentes de los dos cuadernos reproducidos con su prueba en rojo y luego en
+verde, y la promesa del `baseURL` probada llamada por llamada contra json-server y contra el
+backend. Cada fragmento publicado se comparó con el código que corrió. El detalle de cada curso está
+en la sección «Cómo se validó» de su `README.md`.
+
+Para el Curso 01 necesitas **Node 14** con NVM y **git**; el Curso 02 suma **Docker** para MongoDB.
+La Fase 0 de cada curso dice qué instalar y cómo.
 
 ---
 
@@ -205,3 +205,13 @@ Están completas en la guía de estilo, pero estas cuatro no se negocian:
 
 > "Apagué el mock, apunté el frontend al backend que escribí, y ninguna vista
 > se enteró."
+
+---
+
+## 📜 Licencia y ficción
+
+Texto y código, bajo **CC BY-SA 4.0**. Los detalles y los enlaces están en [`LICENSE.md`](LICENSE.md).
+
+Cuadre Software, la Tiquetera, sus clientes y su gente son **inventados** para estos cursos. Si un
+nombre se parece al de una empresa, un producto o una persona reales, es coincidencia; *tiquetera*
+es, además, una palabra común en Colombia.

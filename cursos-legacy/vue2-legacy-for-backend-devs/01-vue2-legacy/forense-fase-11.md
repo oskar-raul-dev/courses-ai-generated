@@ -22,9 +22,11 @@ sobrevive de un test a otro**, o promesas que nadie esperó.
 >
 > — un compañero del equipo, en el canal de dev · **Ambiente:** local y CI
 
-"Toqué el de al lado" es el dato que orienta todo el recorrido: si un cambio en
-otro archivo altera este resultado, la suite comparte algo entre archivos, y ese
-algo es el sospechoso.
+"Toqué el de al lado" parece el dato que orienta todo el recorrido, y es una pista
+falsa que vale la pena desarmar primero: Jest corre **cada archivo** con su propio
+registro de módulos, así que un archivo no le hereda mocks ni estado a otro. Lo que
+cambia entre "solo" y "con toda la suite" es qué tests corren **antes, dentro del
+mismo archivo**. Ahí está el sospechoso.
 
 ---
 
@@ -35,34 +37,38 @@ comandos), después se busca qué se comparte, y solo al final se lee el test.
 
 ### Paso 1 — ¿de verdad depende del orden?
 
-Corre el test solo, y después toda la suite en serie:
+Corre el test solo, y después el archivo entero en serie:
 
 ```bash
-npx vue-cli-service test:unit -t "fetchTickets"
+npx vue-cli-service test:unit tests/unit/store-tickets.spec.js -t "con caché"
 ```
 
 ```
-PASS  tests/unit/store-tickets.spec.js
-  ✓ fetchTickets guarda los tickets en el state (12 ms)
+PASS tests/unit/store-tickets.spec.js
+      ✓ con caché: si hay items y no hay force, NO toca la red (19ms)
 ```
 
 ```bash
-npx vue-cli-service test:unit --runInBand
+npx vue-cli-service test:unit tests/unit/store-tickets.spec.js --runInBand
 ```
 
 ```
-FAIL  tests/unit/store-tickets.spec.js
-  ✕ fetchTickets guarda los tickets en el state (8 ms)
+FAIL tests/unit/store-tickets.spec.js
+      ✓ en éxito: enciende loading, guarda tickets, apaga loading (1ms)
+      ✓ en error: guarda el mensaje, apaga loading y RE-LANZA (1ms)
+      ✕ con caché: si hay items y no hay force, NO toca la red (48ms)
 
-    expect(jest.fn()).toHaveBeenCalledTimes(expected)
-    Expected number of calls: 1
-    Received number of calls: 3
+    expect(jest.fn()).not.toHaveBeenCalled()
+
+    Expected mock function not to be called but it was called with:
+      [{"_order": "desc", "_sort": "createdAt"}], [{"_order": "desc", "_sort": "createdAt"}]
 ```
 
-**Qué descarta.** Descarta el código de producción por completo: el store hace
+**Qué descarta.** Descarta el código de producción por completo: la action hace
 lo mismo en los dos casos. Y el mensaje de fallo trae el diagnóstico casi
-regalado — **tres llamadas donde esperabas una** no es un bug de tu store, es un
-contador que venía con cuentas de antes.
+regalado — **dos llamadas donde esperabas ninguna**, con los parámetros de las
+pruebas anteriores, no es un bug de tu store: es un espía que venía con cuentas
+de antes.
 
 ### Paso 2 — ¿qué se comparte entre tests?
 
@@ -73,9 +79,10 @@ grep -rn "jest.mock\|clearAllMocks\|resetModules" tests/unit/
 ```
 
 ```
-tests/unit/store-tickets.spec.js:4:jest.mock("@/services/ticketService");
-tests/unit/store-tickets.spec.js:22:    jest.clearAllMocks();
-tests/unit/ticketService.spec.js:3:jest.mock("@/services/apiClient");
+tests/unit/ticketService.spec.js:4:jest.mock("@/services/apiClient"); // el cable a axios, cortado
+tests/unit/ticketService.spec.js:8:    jest.clearAllMocks();
+tests/unit/store-tickets.spec.js:4:jest.mock("@/services/ticketService"); // el cable a HTTP, cortado
+tests/unit/store-tickets.spec.js:34:      jest.clearAllMocks(); // que un test no herede llamadas del anterior
 ```
 
 **Qué descarta.** Si `clearAllMocks` está y el fallo persiste, descarta la causa
@@ -84,70 +91,67 @@ terminaste: los mocks son objetos vivos que acumulan llamadas, y sin limpieza
 entre tests el segundo hereda el historial del primero. Es exactamente el
 "falla en conjunto pero no solo" del reporte.
 
-### Paso 3 — ¿o es un módulo que guarda estado?
+### Paso 3 — ¿o es estado que sobrevive entre tests?
 
-Si los mocks están limpios, el sospechoso es cualquier módulo con memoria. En
-este proyecto hay dos con nombre y apellido: la **caché de la action** de la
-Fase 10 y el **singleton del socket** de la Fase 8.
+Si los mocks están limpios, el sospechoso es cualquier cosa con memoria que se
+cree una sola vez. En este archivo, el `context` falso de la action: si se crea
+fuera del `beforeEach`, su `commit` espía acumula lo de todos.
 
 ```js
-// en el test, antes de nada:
-console.log(store.state.tickets.items.length);
+// al principio del test de caché, antes de nada:
+console.log("commits heredados:", context.commit.mock.calls.length);
 ```
 
 ```
-0      // corrido solo
-8      // corrido después del test que puebla el store
+commits heredados: 0      // corrido solo, con -t
+commits heredados: 8      // corrido después de las pruebas de éxito y de error
 ```
 
-**Qué descarta.** Cierra el caso cuando el culpable es estado de módulo: un
-store creado una vez para todo el archivo —o peor, importado del `store/index.js`
-real— arrastra lo que hicieron los tests anteriores, y la action con caché
-decide no llamar al servicio porque "ya tiene datos". De ahí el contador de
-llamadas que no cuadra. La fase lo resuelve creando el store dentro del
-`beforeEach`, con `createLocalVue`.
+**Qué descarta.** Cierra el caso cuando el culpable es estado compartido: un
+`context` —o un store— creado una vez para todo el archivo arrastra lo que
+hicieron los tests anteriores, y la prueba que exige "ningún commit" recibe los
+de las demás. La fase lo resuelve creándolo dentro del `beforeEach`, y en los
+tests de componentes, con un `createLocalVue` por test.
 
 ### Paso 4 — el caso peor: el test que nunca falla
 
 Aprovecha que estás acá y comprueba lo contrario, que es más grave y no reporta
-nadie:
+nadie. Quítale el `return` al test de `getTickets` de `ticketService.spec.js`:
 
 ```js
-it("guarda los tickets", function () {
-  store.dispatch("tickets/fetchTickets");        // ⚠️ sin return, sin await
-  expect(store.state.tickets.items).toHaveLength(3);
+it("getTickets pide /tickets con los params y devuelve res.data", function () {
+  apiClient.get.mockResolvedValue({ data: [{ id: 1 }], status: 200 });
+  ticketService.getTickets({ status: "open" }).then(function (result) {   // ⚠️ sin return
+    expect(result).toEqual([{ id: 1 }]);
+  });
 });
 ```
 
-```
-PASS  tests/unit/store-tickets.spec.js
-  ✓ guarda los tickets (3 ms)
-```
-
-Rompe el store a propósito —cambia la mutation para que no guarde nada— y vuelve
-a correr:
+Rompe el servicio a propósito —que `getTickets` devuelva `res` en vez de
+`res.data`— y corre:
 
 ```
-PASS  tests/unit/store-tickets.spec.js
-  ✓ guarda los tickets (3 ms)
+PASS tests/unit/ticketService.spec.js
+  ✓ getTickets pide /tickets con los params y devuelve res.data (2ms)
 ```
 
 **Qué descarta.** Descarta la idea de que "verde" signifique algo. El test
-termina antes de que la promesa se resuelva, así que la aserción corre sobre el
-state inicial y nunca falla. **Un test que sigue en verde con el código roto no
-está probando nada**, y la única forma de descubrirlo es la que acabas de hacer:
-romper a propósito lo que dice probar.
+termina antes de que la promesa se resuelva, así que la aserción corre cuando ya
+nadie la escucha y nunca falla. Con el `return` puesto, el mismo servicio roto da
+`FAIL`. **Un test que sigue en verde con el código roto no está probando nada**, y
+la única forma de descubrirlo es la que acabas de hacer: romper a propósito lo
+que dice probar.
 
 ### Paso 5 — ¿es el test o es la maquetación?
 
-Si el fallo apareció después de un cambio de plantilla y no de lógica:
+Si el fallo apareció después de un cambio de plantilla y no de lógica, el mensaje
+de un selector acoplado al DOM se ve así:
 
 ```
-FAIL  tests/unit/TicketsTable.spec.js
-  ✕ muestra el estado del ticket
+FAIL tests/unit/TicketsTable.spec.js
+  ✕ muestra el estado del ticket (28ms)
 
-    Cannot read property 'text' of undefined
-      wrapper.find(".col-md-6 > div:nth-child(2)")
+    [vue-test-utils]: find did not return .col-md-6 > div:nth-child(2), cannot call text() on empty Wrapper
 ```
 
 **Qué descarta.** Descarta el componente: hace lo que debe, y lo que se rompió
@@ -162,7 +166,7 @@ que no altera el comportamiento tumba un test, el test estaba mal escrito.
 | Lo que ves | Dónde empezar |
 |---|---|
 | Pasa solo, falla en conjunto | Estado compartido: mocks sin limpiar, o módulo con memoria |
-| "Expected 1 call, received 3" | Un mock que arrastra llamadas de tests anteriores |
+| "Expected mock function not to be called", con parámetros de otro test | Un mock que arrastra llamadas de tests anteriores |
 | Un test que nunca falla, aunque rompas el código | Async sin `return`/`await`: la aserción corre antes de tiempo |
 | Falla al cambiar la maquetación, sin tocar lógica | Selectores acoplados al DOM en vez de `data-testid` |
 | Falla solo en CI | Orden distinto, paralelismo, o zona horaria de la máquina |
@@ -192,10 +196,10 @@ saltarlo, que sea con un comentario que diga qué invariante quedó sin cubrir.
 
 ## 🧨 Deshacer
 
-El paso 4 te pide romper el store a propósito. Para volver:
+El paso 4 te pide romper el servicio a propósito y quitar un `return`. Para volver:
 
 ```bash
-git checkout -- src/store/modules/tickets.js
+git checkout -- src/services/ticketService.js tests/unit/ticketService.spec.js
 npx vue-cli-service test:unit
 ```
 

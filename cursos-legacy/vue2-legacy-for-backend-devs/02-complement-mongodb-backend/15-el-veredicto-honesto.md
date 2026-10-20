@@ -314,8 +314,8 @@ La pendiente > la capacidad: elige el motor por el error que cometerás por grav
 
 **Los ensayos del debate (léelos en este orden)**
 
-- Sarah Mei — *Why You Should Never Use MongoDB* (2013, el clásico crítico): http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/
-- William Zola — *6 Rules of Thumb* (la respuesta implícita: era el modelado): https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design
+- Sarah Mei — *Why You Should Never Use MongoDB* (2013, el clásico crítico): https://web.archive.org/web/20231226122943/http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/ (copia de archive.org: el blog original ya no responde)
+- William Zola — *6 Rules of Thumb* (la respuesta implícita: era el modelado): https://www.mongodb.com/company/blog/mongodb/6-rules-of-thumb-for-mongodb-schema-design
 - Jepsen — MongoDB 4.2.6 (2020, el análisis duro de consistencia): https://jepsen.io/analyses/mongodb-4.2.6
 - Martin Fowler — *NosqlDistilled* / bliki NoSQL (el marco sereno de la época): https://martinfowler.com/books/nosql.html
 

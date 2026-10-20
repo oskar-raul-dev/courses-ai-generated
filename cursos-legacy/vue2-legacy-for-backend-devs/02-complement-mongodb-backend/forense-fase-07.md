@@ -1,11 +1,11 @@
-# 🕵️ Forense Fase 07 — "El índice está creado y `explain()` sigue diciendo COLLSCAN"
+# 🕵️ Forense Fase 07 — "El índice está creado y la consulta sigue igual de lenta"
 
 > **Sale de:** [Fase 7 — Índices](07-indices.md) ·
 > **Herramientas:** `explain("executionStats")`, `getIndexes()` y `currentOp()`
 > · **Recorrido:** cinco pasos
 >
-> **El síntoma, en una línea:** el índice existe, la consulta no lo usa, y nadie
-> explica por qué.
+> **El síntoma, en una línea:** el índice existe, el plan hasta dice que lo usa,
+> y la consulta no mejora.
 
 Todo lo que sabes de índices en tu motor relacional sigue valiendo acá:
 selectividad, prefijo izquierdo, el coste en las escrituras. Lo que cambia es la
@@ -52,19 +52,23 @@ Nunca el `explain()` a secas: siempre con estadísticas de ejecución.
 > db.tickets.find({ status: "open" }).sort({ createdAt: -1 })
     .explain("executionStats").executionStats
 {
-  nReturned: 41230,
-  executionTimeMillis: 1874,
-  totalKeysExamined: 0,
+  nReturned: 17875,
+  executionTimeMillis: 85,
+  totalKeysExamined: 100000,
   totalDocsExamined: 100000,
-  executionStages: { stage: 'COLLSCAN', … }
+  executionStages: { stage: 'FETCH', inputStage: { stage: 'IXSCAN',
+    indexName: 'createdAt_-1_status_1', … } }
 }
 ```
 
-**Qué descarta.** Descarta la sensación y la reemplaza por dos números. La razón
-que importa es **`totalDocsExamined` frente a `nReturned`**: examinar 100.000
-para devolver 41.230 es un COLLSCAN, y el `stage` lo confirma. Si el `stage`
-dijera `IXSCAN` pero la razón siguiera siendo mala, el diagnóstico sería otro —
-paso 4.
+*(La base de 100k de `scripts/generate.js`; los milisegundos son los de tu
+máquina, los conteos no.)*
+
+**Qué descarta.** Descarta la sensación y la reemplaza por dos números. El
+`stage` dice `IXSCAN`, que es lo que el compañero quería leer, y la razón que
+importa dice otra cosa: **`totalDocsExamined` frente a `nReturned`**, 100.000
+examinados para devolver 17.875. Un `IXSCAN` que toca toda la colección es un
+COLLSCAN con corbata.
 
 ### Paso 3 — ¿el compuesto está en el orden correcto?
 
@@ -76,27 +80,39 @@ Consulta: filtra por status, ordena por createdAt
 ```
 
 **Qué descarta.** Cierra el caso más común. El prefijo izquierdo del índice es
-`createdAt`, y la consulta no filtra por ese campo: el índice no puede arrancar
-por ahí, así que no se usa. Con `{ status: 1, createdAt: -1 }` el filtro entra
-por el prefijo y el orden sale gratis del propio índice — sin etapa `SORT`, que
-es la otra pista que el `explain()` te grita cuando el compuesto está al revés.
+`createdAt`, y la consulta no filtra por ese campo: el índice no puede acotar
+por `status`. Mongo igual lo elige, porque le sirve para **ordenar** (por eso no
+hay etapa `SORT`), y entonces recorre el índice entero y descarta los que no son
+`open` documento por documento. Con `{ status: 1, createdAt: -1 }` el filtro
+entra por el prefijo y el orden sale gratis:
+
+```js
+{ nReturned: 17875, executionTimeMillis: 13,
+  totalKeysExamined: 17875, totalDocsExamined: 17875 }
+```
+
 Es exactamente la regla de prefijo izquierdo que ya conoces; lo nuevo es dónde
-leerla.
+leerla. (El `COLLSCAN` con el índice creado aparece cuando la consulta filtra
+**solo** por un campo que no es prefijo: un `find({ createdAt: { $gte: … } })`
+contra `{ status: 1, createdAt: -1 }` lo da.)
 
 ### Paso 4 — usa el índice y sigue lento
 
 El caso que más despista, porque el `stage` dice lo que querías leer:
 
 ```js
+> db.tickets.createIndex({ title: 1 })
 > db.tickets.find({ title: /impresora/i }).explain("executionStats").executionStats
-{ nReturned: 20, totalKeysExamined: 100000, totalDocsExamined: 90000,
-  executionStages: { stage: 'IXSCAN', … } }
+{ nReturned: 11202, executionTimeMillis: 40,
+  totalKeysExamined: 100000, totalDocsExamined: 11202,
+  executionStages: { stage: 'FETCH', inputStage: { stage: 'IXSCAN', indexName: 'title_1', … } } }
 ```
 
-**Qué descarta.** Descarta la etapa como criterio: **un IXSCAN que examina 90.000
-documentos para devolver 20 es un COLLSCAN con corbata.** Un regex no anclado
-—y encima insensible a mayúsculas— recorre el índice entero; solo un
-`^impresora` puede aprovecharlo. La regla es la misma que la del `LIKE '%algo%'`
+**Qué descarta.** Descarta la etapa como criterio: un regex no anclado —y encima
+insensible a mayúsculas— recorre **las 100.000 claves** del índice; el `IXSCAN`
+solo le ahorra traer los documentos que no coinciden. Sin el índice, el mismo
+`find` hace COLLSCAN en 24 ms: el índice lo volvió **más lento**. Solo un
+`/^La impresora/` acota: 11.203 claves y 7 ms. La regla es la misma que la del `LIKE '%algo%'`
 de siempre, con la diferencia de que acá el plan no te dice "no puedo": te dice
 que usó el índice.
 
@@ -109,7 +125,7 @@ letras:
 > db.tickets.find({ status: "open" }).sort({ createdAt: -1 }).limit(20)
     .explain("executionStats").executionStats
 { nReturned: 20, totalKeysExamined: 20, totalDocsExamined: 20,
-  executionTimeMillis: 3 }
+  executionTimeMillis: 0 }
 ```
 
 Y la pantalla sigue tardando cuatro segundos.
@@ -129,7 +145,8 @@ está en el número de consultas o en la forma de los datos — que es la
 | El índice existe y el plan dice COLLSCAN | Prefijo izquierdo, o tipos que no coinciden |
 | IXSCAN y sigue lento | `totalDocsExamined` contra `nReturned`: la razón es el diagnóstico |
 | Aparece una etapa SORT | El compuesto está al revés para esa consulta |
-| Un regex que no usa el índice | Solo el anclado (`^…`) puede: el flotante recorre todo |
+| Un regex que "usa" el índice y va más lento | El flotante recorre todas las claves; solo el anclado (`^…`) acota |
+| El índice está y el plan ordena con él, pero examina todo | Compuesto al revés: sirve para el `sort`, no para el filtro |
 | El TTL no borra nada y no avisa | Está sobre fechas guardadas como string (Fase 1) |
 | Un índice unique que rechaza documentos legítimos | Los documentos **sin** el campo también compiten por el `null` |
 | Los inserts se volvieron lentos | Índices nuevos en una colección de escritura intensa |

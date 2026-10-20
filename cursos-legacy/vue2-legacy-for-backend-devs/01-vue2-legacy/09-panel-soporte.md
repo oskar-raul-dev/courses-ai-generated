@@ -292,6 +292,27 @@ axios, ordena en el servidor. Cero sorpresas — y esa monotonía es una
 virtud: el tercer servicio del proyecto se lee en diez segundos porque es
 idéntico en forma a los otros dos.)
 
+### `services/userService.js` (graduación oficial)
+
+```js
+import apiClient from "./apiClient";
+
+function getUsers(params) {
+  return apiClient.get("/users", { params: params }).then(function (res) {
+    return res.data;
+  });
+}
+
+export default { getUsers: getUsers };
+```
+
+(El cuarto servicio, mismo molde. Sin parámetros trae a todos los usuarios, que es
+lo que necesita la cola para pintar nombres; el ejercicio 9 de la Fase 5 lo usaba
+con `{ role: "agent" }`. Es el `userService` que anunciaba la 💸 de la Fase 7: desde
+aquí, `MetricsView` puede cambiar su llamada directa a `/users` por `userService.getUsers()`.
+El curso no lo hace por ti, y a propósito: la 💸 queda abierta en el código, como quedan casi todas
+en un sistema real cuando la herramienta para pagarlas llega después. Pagarla es una línea.)
+
 ### `components/support/SupportQueue.vue` — el master
 
 ```vue

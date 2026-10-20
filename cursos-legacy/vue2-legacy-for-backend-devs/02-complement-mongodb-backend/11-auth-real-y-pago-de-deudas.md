@@ -60,6 +60,30 @@ Ocho fases con driver nativo te dieron algo que el que empieza por Mongoose
 nunca tiene: **sabes qué hace por debajo**. Ahora el azúcar se disfruta sin
 adicción.
 
+Las tres dependencias de la fase, en versiones de la época (Mongoose 5 convive con
+el driver 3.6 que ya usas; se conecta aparte, con `mongoose.connect`, al arrancar):
+
+```bash
+npm install --save-exact mongoose@5.13.20 bcryptjs@2.4.3 jsonwebtoken@8.5.1
+```
+
+```js
+// src/server.js — las dos conexiones, antes del listen
+const mongoose = require("mongoose");
+
+Promise.all([
+  connect(),                          // el driver de la Fase 10, igual
+  mongoose.connect(config.mongoUri, {
+    dbName: config.dbName,            // la base va como opción: el MONGO_URL del compose (F14) ya la trae en la URI
+    useNewUrlParser: true, useUnifiedTopology: true
+  })
+]).then(function () {
+  app.listen(config.port, function () {
+    console.log("Tiquetera backend en :" + config.port);
+  });
+});
+```
+
 ```js
 // src/models/User.js
 const mongoose = require("mongoose");
@@ -156,7 +180,11 @@ function verify(token) {
 async function login(req, res, next) {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });   // ⚠️ ver inyección NoSQL abajo
+    // ⚠️ primero los TIPOS: sin esta línea, el login de abajo es inyectable (ver abajo)
+    if (typeof username !== "string" || typeof password !== "string") {
+      return res.status(400).json({ error: "username y password son texto" });
+    }
+    const user = await User.findOne({ username });
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return res.status(401).json({ error: "Credenciales inválidas" });
       // mismo mensaje para "no existe" y "clave mala": no filtres cuál falló
@@ -206,12 +234,30 @@ a alguien que lo escucha.
 Llevas años defendiéndote de `' OR 1=1 --`. Ese ataque **no existe** aquí (no
 hay SQL que envenenar). Pero hay uno gemelo que tu reflejo no ve venir:
 
-```js
-// El login espera username y password como STRINGS. ¿Y si el cliente manda?
-//   POST /auth/login   { "username": "admin", "password": { "$ne": null } }
+Quítale al `login` de arriba su primera validación y mándale un objeto donde
+espera un string:
 
-// Tu código:  User.findOne({ username, password })  ← si compararas password directo
-//   se convierte en:  { username: "admin", password: { $ne: null } }
+```bash
+curl -s -H "Content-Type: application/json" localhost:3000/auth/login \
+  -d '{"username": {"$ne": null}, "password": "admin123"}'
+# 200 {"token":"eyJ…","user":{"username":"admin", …}}
+```
+
+`User.findOne({ username })` recibió `{ username: { $ne: null } }`: "el primer
+usuario que tenga username", que es `admin`. La contraseña la adivinó el atacante
+probando la de un solo usuario, y entró **como ese usuario sin haber escrito su
+nombre**. Y Mongoose no te salvó: el schema dice `username: String`, y aun así
+deja pasar el operador. El mismo truco en el campo de la contraseña no entra
+—bcrypt no sabe comparar un objeto—, pero tampoco se rechaza bien: el servidor
+responde `500` con `Error: Illegal arguments: object, string` en el log. Con la
+validación de tipos, los dos intentos son un `400` antes de tocar la base.
+
+La versión clásica del mismo ataque, la que vas a encontrar en código heredado,
+compara la contraseña dentro del filtro:
+
+```js
+User.findOne({ username, password })
+//   { username: "admin", password: { $ne: null } }
 //   → "cualquier admin cuya password no sea null" → LOGIN SIN CONTRASEÑA 💀
 ```
 
@@ -240,15 +286,41 @@ hay SQL que envenenar). Pero hay uno gemelo que tu reflejo no ve venir:
 ```js
 // ANTES (F10, paridad con el mock): reporter salía del body. Cualquiera reportaba como cualquiera.
 // AHORA: el reporter es QUIÉN ESTÁS AUTENTICADO SIENDO.
+// src/controllers/tickets.controller.js — create()
+const { whitelist } = require("../lib/whitelist");
+
 async function create(req, res, next) {
-  const ticket = await service.create({
-    ...whitelist(req.body, ["title", "description", "priority"]),
-    reporter: req.user.sub,       // ⬅️ del token, no del body. Innegociable.
-    status: "open", createdAt: new Date(), history: []
-  });
-  res.status(201).json(serializeTicket(ticket));
+  try {
+    const doc = await service.create({
+      ...whitelist(req.body, ["title", "description", "priority", "assignee"]),
+      reporter: req.user.sub,       // ⬅️ del token, no del body. Innegociable.
+      status: "open", createdAt: new Date()
+    });
+    res.status(201).json(serializeTicket(doc));
+  } catch (err) { next(err); }    // async sin catch = el /boom de la Fase 10
 }
 ```
+
+```js
+// src/lib/whitelist.js — solo pasan los campos que el cliente PUEDE decidir
+function whitelist(obj, keys) {
+  var out = {};
+  keys.forEach(function (k) { if (obj[k] !== undefined) out[k] = obj[k]; });
+  return out;
+}
+
+module.exports = { whitelist };
+```
+
+`assignee` está en la lista porque el formulario del frontend lo manda desde la
+Fase 5 (quitarlo rompería el contrato); `status` y `reporter`, no. El `history`
+vacío lo sella el servicio, como en la Fase 10. Y `req.user` solo existe si la ruta
+pasa por `authenticate`: sin él, esta función revienta con un `TypeError` y un 500.
+
+La regla alcanza a todo lo que lleve autor, no solo a los tickets: el `author` de `POST
+/comments` también sale de `req.user.sub`, con `authenticate` en la ruta. Si se queda en el
+body, cualquiera comenta en nombre de otro, o sin nombre: en la prueba del curso, un `POST
+/comments` sin `author` se guardó con `author: null`.
 
 ### 💸 → ✅ El guard de roles de teatro
 
@@ -260,9 +332,20 @@ function requireRole(role) {
     next();
   };
 }
-// En las rutas: solo agentes toman/transicionan/comentan-como-agente
-router.patch("/:id", authenticate, requireRole("agent"), ctrl.patch);
+
+module.exports = { requireRole };
 ```
+
+```js
+// src/routes/tickets.routes.js — quién puede qué
+const authenticate = require("../middleware/authenticate");
+const { requireRole } = require("../middleware/authorize");
+
+router.post("/", authenticate, ctrl.create);                        // reporter = req.user.sub
+router.patch("/:id", authenticate, requireRole("agent"), ctrl.patch); // solo agentes transicionan
+```
+
+Los `GET` se quedan abiertos en esta fase: protegerlos es el ejercicio 4.
 
 Editar el `localStorage` ya no otorga nada: el rol vive en el token firmado,
 que el cliente no puede forjar sin el secreto.
@@ -270,6 +353,7 @@ que el cliente no puede forjar sin el secreto.
 ### 💸 → ✅ Las transiciones solo respetadas por el cliente
 
 ```js
+// src/lib/transitions.js
 // La máquina de estados, server-side, sobre la primitiva atómica de la Fase 6.
 const LEGAL = {
   open: ["in_progress"], in_progress: ["resolved", "open"],
@@ -277,7 +361,7 @@ const LEGAL = {
 };
 
 async function changeStatus(db, ticketId, to, byUser) {
-  const ticket = await getById(ticketId);
+  const ticket = await db.collection("tickets").findOne({ _id: ticketId });
   if (!ticket) return { notFound: true };
   if (!LEGAL[ticket.status].includes(to))
     return { illegal: true, from: ticket.status, to };
@@ -291,7 +375,33 @@ async function changeStatus(db, ticketId, to, byUser) {
   if (!result.value) return { conflict: true };   // alguien transicionó primero → 409
   return { ok: true, ticket: result.value };
 }
+
+module.exports = { LEGAL, changeStatus };
 ```
+
+Y se engancha donde ya pasan todos los PATCH, con el usuario que trae el token:
+
+```js
+// src/services/tickets.service.js — dentro de patch(oid, body, byUser), antes del $set
+if (changes.status && changes.status !== current.status) {
+  const t = await changeStatus(getDb(), oid, changes.status, byUser);
+  if (t.notFound) return { doc: null };
+  if (t.illegal || t.conflict) return t;
+  delete changes.status;                      // el resto de los campos sigue su camino
+  if (Object.keys(changes).length === 0) return { doc: t.ticket };
+}
+```
+
+```js
+// src/controllers/tickets.controller.js — patch(): la llamada y el código nuevo
+const result = await service.patch(oid, req.body, req.user.sub);
+if (result.conflict) return res.status(409).json({ error: "El ticket ya fue tomado" });
+if (result.illegal) return res.status(422)
+  .json({ error: "Transición no permitida: " + result.from + " → " + result.to });
+```
+
+Medido contra Mongo 4.4: `open → resolved` da **422**; dos `open → in_progress` a la
+vez dan **200 y 409**, y en `history` queda **una** entrada, con `by` tomado del token.
 
 Las tres deudas de estado convergen: la transición es **legal** (máquina de
 estados server-side), **atómica** (findOneAndUpdate), **sin carrera**
@@ -353,7 +463,7 @@ Régimen: "el contrato CRECE, no se rompe" · POST /auth/login = la ruptura pact
 1. Instala Mongoose 5, conéctalo sobre la MISMA conexión/URI del driver, y crea el modelo `User` del capítulo. Verifica que lee los usuarios que el driver sembró (coexistencia demostrada).
 2. Migración de contraseñas: script que asigne a cada usuario del seed un `passwordHash` de bcrypt (contraseña = username + "123", solo para el curso). Idempotente (Fase 4).
 3. `POST /auth/login` completo: 200 + token + user con credenciales buenas, 401 con malas. Curl a ambos. Luego decodifica el token en jwt.io (solo el payload, sin el secreto): ¿qué claims viajan? ¿Hay algo que NO debería estar ahí (dato sensible)?
-4. Middleware `authenticate`: protégelo sobre `GET /tickets` y verifica los tres casos (sin token 401, token basura 401, token válido 200). Después `requireRole("agent")` sobre `PATCH /tickets/:id`: loguéate como reporter e intenta editar (403), como agente pasa.
+4. Middleware `authenticate`: protégelo sobre `GET /tickets` y verifica los tres casos (sin token 401, token basura 401, token válido 200). Después comprueba el `requireRole("agent")` que ya protege `PATCH /tickets/:id`: loguéate como reporter e intenta editar (403), como agente pasa.
 5. El serializer de user: confirma con curl que `passwordHash` NO aparece en ninguna respuesta de `/users` ni en el `user` del login.
 6. Documenta la frontera Mongoose/driver: tabla de qué componente usa cuál y por qué. A `SECURITY-NOTES.md` o `DATA-MODEL.md`.
 7. Tacha en `SECURITY-NOTES.md` la primera deuda (token mock) con el commit que la resolvió referenciado. El ritual importa.
@@ -402,14 +512,14 @@ Régimen: "el contrato CRECE, no se rompe" · POST /auth/login = la ruptura pact
 - jsonwebtoken (8.5.x): https://github.com/auth0/node-jsonwebtoken
 - bcryptjs: https://github.com/dcodeIO/bcrypt.js
 - express-validator 6.x: https://express-validator.github.io/docs/
-- MongoDB — NoSQL Injection (defensa oficial): https://www.mongodb.com/docs/v4.4/faq/fundamentals/#how-does-mongodb-address-sql-or-query-injection-
+- MongoDB — NoSQL Injection (defensa oficial): https://www.mongodb.com/docs/manual/faq/fundamentals/#how-does-mongodb-address-sql-or-query-injection-
 - JWT — Introduction: https://jwt.io/introduction
 
 **Seguridad (léelas, son la fase)**
 
-- OWASP — NoSQL Injection: https://owasp.org/www-community/Injection_Flaws
+- OWASP — NoSQL Injection: https://community.owasp.org/Injection_Flaws
 - OWASP — Authentication Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
-- OWASP — JWT Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html
+- OWASP — JWT Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html
 - OWASP — Password Storage (por qué bcrypt y qué cost): https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
 
 **Video (YouTube)**

@@ -600,7 +600,7 @@ Para volver: `localStorage.clear()` y entra de nuevo con `admin` / `1234`.
 - Vue Router 3 — Navigation Guards: https://v3.router.vuejs.org/guide/advanced/navigation-guards.html
 - Vuex 3 — Actions: https://v3.vuex.vuejs.org/guide/actions.html
 - Vuex 3 — Modules: https://v3.vuex.vuejs.org/guide/modules.html
-- Axios — Interceptors: https://axios-http.com/docs/interceptors
+- Axios — Interceptors: https://axios.rest/pages/advanced/interceptors
 - MDN — Authorization header: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Authorization
 - MDN — Web Storage API: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API
 
@@ -613,7 +613,7 @@ Para volver: `localStorage.clear()` y entra de nuevo con `admin` / `1234`.
 
 - OWASP Session Management Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
 - OWASP HTML5 Security Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html
-- OWASP Testing JSON Web Tokens — https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/10-Testing_JSON_Web_Tokens
+- OWASP Testing JSON Web Tokens — https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/10-JSON_Web_Tokens/
 
 **Video / cursos (apoyo)**
 

@@ -1,0 +1,25 @@
+// .devcontainer/devcontainer.json
+{
+  "name": "tiquetera-legacy (Vue 2)",
+  "build": { "dockerfile": "Dockerfile" },
+
+  // El repositorio se monta en /workspace, la carpeta que prepara el Dockerfile.
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+
+  // node_modules fuera del bind mount: vive en un volumen dentro de la VM,
+  // y sus binarios de Linux no se mezclan con los de tu Mac.
+  "mounts": [
+    "source=tiquetera-node-modules,target=/workspace/node_modules,type=volume"
+  ],
+
+  // 8080 Vue CLI, 8888 Stubby (F0), 3000 json-server (F3), 4000 socket.io (F8).
+  "forwardPorts": [8080, 8888, 3000, 4000],
+
+  // Los avisos de cambio de archivo no siempre cruzan del Mac a la VM
+  // (en Colima, no por defecto): que el dev server pregunte por los archivos.
+  "containerEnv": { "CHOKIDAR_USEPOLLING": "true" },
+
+  "postCreateCommand": "npm ci",
+  "remoteUser": "node"
+}

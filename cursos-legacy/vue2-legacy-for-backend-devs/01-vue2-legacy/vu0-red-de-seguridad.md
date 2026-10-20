@@ -3,17 +3,17 @@
 > **Prerequisito duro: F11 (Testing).** Si no tienes Jest corriendo, esta fase no
 > existe. Vuelve.
 
-> 📖 **Antes de esta fase, lee la historia de tu rama:**
+> 📚 **Antes de esta fase, lee la historia de tu rama:**
 > [`vu00-historia-ruta-vu.md`](vu00-historia-ruta-vu.md). Cuenta quién empezó la rama
 > `vuetify-redesign`, en qué estado quedó, por qué paró y qué le pide hoy PizzaPaisa. Son
 > ocho minutos, y son los que convierten esta ruta en un rescate en vez de un
 > ejercicio.
 
-> 🧩 **Núcleo común X0.** El ~85% de este capítulo es agnóstico al framework
+> 🧭 **Núcleo común X0.** El ~85% de este capítulo es agnóstico al framework
 > destino: sirve igual para Quasar, Vuetify o Nuxt. Lo específico de Vuetify vive
 > encapsulado en las secciones marcadas **🅥**. Si vienes de la ruta Q y estás
-> hojeando esto por curiosidad: el cuerpo lo reconocerás casi entero. **Salta a la
-> 🅥. Ahí está lo que Quasar no te contó** — y esta vez no es una divergencia, son
+> hojeando esto por curiosidad: el cuerpo lo reconocerás casi entero. **Salta a
+> la 🅥. Ahí está lo que Quasar no te contó** — y esta vez no es una divergencia, son
 > **dos**.
 
 ---
@@ -154,7 +154,7 @@ Y "mentir" aquí tiene dos direcciones, ambas caras:
 
 El objetivo de esta fase es una suite donde **rojo signifique rojo**.
 
-> 🅥 **Y un aviso que Quasar no necesita dar:** en Vuetify hay una tercera clase de
+> 📝 **Y un aviso que Quasar no necesita dar:** en Vuetify hay una tercera clase de
 > falso rojo, y es traicionera precisamente porque **no es culpa de tu código ni de
 > tu selector**. Es culpa de que montaste un componente Vuetify **sin `<v-app>`**.
 > El test se pone rojo, tú miras tu código, tu código está bien, tu selector está
@@ -234,7 +234,7 @@ Comparado con las alternativas:
 > refactor. (Y si te molesta de verdad: existen plugins de Babel que los eliminan en
 > build de producción. En 2020, casi nadie se molestaba.)
 
-> 🅥 **Un matiz Vuetify sobre dónde cae el `data-testid`.** Cuando pongas
+> 📝 **Un matiz Vuetify sobre dónde cae el `data-testid`.** Cuando pongas
 > `data-testid` en un `<v-text-field>`, Vuetify lo cuelga del **elemento raíz del
 > componente** (un `<div>` contenedor), **no del `<input>` interno**. Para la mayoría
 > de aserciones (`.exists()`, `.text()`) da igual. Pero `setValue` necesita el
@@ -255,26 +255,11 @@ Tu aplicación tiene fronteras. Una migración de UI **no debería cruzar ningun
 eso, que es una afirmación de arquitectura, se convierte aquí en algo mucho mejor:
 **una aserción ejecutable**.
 
-```
-   ┌──────────────────────────────────────────┐
-   │  CAPA DE PRESENTACIÓN                    │
-   │  Bootstrap hoy · Vuetify mañana          │  ← TODO esto se puede caer
-   │  <tr> .modal(jQuery) .form-control        │
-   └────────────┬─────────────────────────────┘
-                │  ⬇️ CONTRATO 1: el store
-                │  dispatch("tickets/fetchTickets")
-   ┌────────────▼─────────────────────────────┐
-   │  STORE (F10)  — NO SE TOCA               │
-   └────────────┬─────────────────────────────┘
-                │
-   ┌────────────▼─────────────────────────────┐
-   │  services/ — NO SE TOCA                  │
-   └────────────┬─────────────────────────────┘
-                │  ⬇️ CONTRATO 2: la API
-                │  GET /tickets?_sort=createdAt&_order=desc
-   ┌────────────▼─────────────────────────────┐
-   │  apiClient → json-server                 │
-   └──────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    P["CAPA DE PRESENTACIÓN: Bootstrap hoy, Vuetify mañana. TODO esto se puede caer"] -- "CONTRATO 1: dispatch tickets/fetchTickets" --> S["STORE (F10): NO SE TOCA"]
+    S --> SV["services/: NO SE TOCA"]
+    SV -- "CONTRATO 2: GET /tickets?_sort=createdAt&_order=desc" --> A["apiClient, json-server"]
 ```
 
 **Contrato 1 — con el store.** La vista, sea cual sea el framework, tiene que seguir
@@ -411,7 +396,7 @@ Lo que NO es una respuesta válida: borrar un test, .skip()arlo, o
 Antes de escribir un test, siembra las anclas. Es el **único** momento de la ruta en
 que tocas el código a pelo, y es un cambio de cero riesgo.
 
-> 🔒 **Contrato de IDs — el prefijo es `ticket-`, no `form-`.** Los `data-testid` que
+> ⚠️ **Contrato de IDs — el prefijo es `ticket-`, no `form-`.** Los `data-testid` que
 > siembras aquí son un **contrato que VU2 y VU3 van a reutilizar tal cual**. El
 > formulario usa exactamente estos: `ticket-title`, `ticket-description`,
 > `ticket-priority`, `ticket-assignee`, `ticket-submit`, `ticket-cancel` (más los
@@ -527,10 +512,10 @@ comportamiento. El ejercicio 14 vive de esto.
 
 <input id="assignee" v-model.trim="form.assignee" data-testid="ticket-assignee" ... />
 
-<button type="submit" data-testid="ticket-submit" :disabled="saving">
+<button type="submit" class="btn btn-primary" data-testid="ticket-submit" :disabled="saving">
   {{ saving ? "Guardando..." : submitLabel }}
 </button>
-<button type="button" data-testid="ticket-cancel" @click="$emit('cancel')">Cancelar</button>
+<button type="button" class="btn btn-link" data-testid="ticket-cancel" @click="$emit('cancel')">Cancelar</button>
 ```
 
 **🔎 Qué hace:** nada. Literalmente. Los `data-testid` no tienen efecto en runtime —
@@ -889,10 +874,10 @@ describe("REGRESIÓN · Dashboard de tickets", function () {
       return ctx.wrapper.find('[data-testid="tickets-search"]')
         .setValue("impresora")
         .then(function () {
-          const texto = ctx.wrapper.find('[data-testid="tickets-count"]').text();
+          const text = ctx.wrapper.find('[data-testid="tickets-count"]').text();
           // NO se afirma la frase exacta: se afirman los DOS NÚMEROS.
-          expect(texto).toMatch(/\b2\b/);
-          expect(texto).toMatch(/\b4\b/);
+          expect(text).toMatch(/\b2\b/);
+          expect(text).toMatch(/\b4\b/);
         });
     });
   });
@@ -963,7 +948,7 @@ function fill(wrapper, values) {
   return Promise.all(p);
 }
 
-const VALIDO = {
+const VALID = {
   title: "Impresora no imprime",
   description: "La del piso 3 lleva dos días muerta",
   priority: "high",
@@ -976,11 +961,11 @@ describe("REGRESIÓN · TicketForm", function () {
     it("con datos válidos, el submit emite 'submit' con el payload limpio", function () {
       const wrapper = build();
 
-      return fill(wrapper, VALIDO)
+      return fill(wrapper, VALID)
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toHaveLength(1);
-          expect(wrapper.emitted("submit")[0][0]).toEqual(VALIDO);
+          expect(wrapper.emitted("submit")[0][0]).toEqual(VALID);
         });
     });
 
@@ -997,7 +982,7 @@ describe("REGRESIÓN · TicketForm", function () {
     it("el payload NO incluye status ni reporter ni createdAt (los pone la vista)", function () {
       const wrapper = build();
 
-      return fill(wrapper, VALIDO)
+      return fill(wrapper, VALID)
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           const payload = wrapper.emitted("submit")[0][0];
@@ -1019,28 +1004,28 @@ describe("REGRESIÓN · TicketForm", function () {
   describe("las reglas de validación, una por una", function () {
     // Se afirma "no emite" — NO se afirma la clase .is-invalid ni el texto
     // del mensaje. La regla es comportamiento; el mensaje es copy.
-    function rechaza(valores) {
+    function rejects(values) {
       const wrapper = build();
-      return fill(wrapper, Object.assign({}, VALIDO, valores))
+      return fill(wrapper, Object.assign({}, VALID, values))
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toBeUndefined();
         });
     }
 
-    it("título vacío: rechaza", function () { return rechaza({ title: "" }); });
-    it("título de 4 caracteres: rechaza (mínimo 5)", function () { return rechaza({ title: "abcd" }); });
+    it("título vacío: rechaza", function () { return rejects({ title: "" }); });
+    it("título de 4 caracteres: rechaza (mínimo 5)", function () { return rejects({ title: "abcd" }); });
     it("título de 81 caracteres: rechaza (máximo 80)", function () {
-      return rechaza({ title: "x".repeat(81) });
+      return rejects({ title: "x".repeat(81) });
     });
     it("descripción de 9 caracteres: rechaza (mínimo 10)", function () {
-      return rechaza({ description: "123456789" });
+      return rejects({ description: "123456789" });
     });
-    it("prioridad vacía: rechaza", function () { return rechaza({ priority: "" }); });
+    it("prioridad vacía: rechaza", function () { return rejects({ priority: "" }); });
 
     it("asignado vacío: ACEPTA (es opcional — congela esta decisión)", function () {
       const wrapper = build();
-      return fill(wrapper, Object.assign({}, VALIDO, { assignee: "" }))
+      return fill(wrapper, Object.assign({}, VALID, { assignee: "" }))
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toHaveLength(1);
@@ -1049,7 +1034,7 @@ describe("REGRESIÓN · TicketForm", function () {
 
     it("el título de exactamente 80 caracteres: ACEPTA (el borde exacto)", function () {
       const wrapper = build();
-      return fill(wrapper, Object.assign({}, VALIDO, { title: "x".repeat(80) }))
+      return fill(wrapper, Object.assign({}, VALID, { title: "x".repeat(80) }))
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toHaveLength(1);
@@ -1125,9 +1110,9 @@ describe("REGRESIÓN · TicketForm", function () {
   describe("estado de guardado", function () {
     it("con saving=true el botón se deshabilita (anti doble submit de F5)", function () {
       const wrapper = build({ saving: true });
-      const boton = wrapper.find('[data-testid="ticket-submit"]');
+      const button = wrapper.find('[data-testid="ticket-submit"]');
 
-      expect(boton.attributes("disabled")).toBeDefined();
+      expect(button.attributes("disabled")).toBeDefined();
     });
 
     it("submitLabel se respeta", function () {
@@ -1168,7 +1153,11 @@ qué es un `<v-app>`. Es el más portable de toda la ruta — y por eso es el mi
 tres.
 
 ```js
-jest.mock("@/services/apiClient"); // auto-mock: get/post/patch/delete → jest.fn()
+// Fábrica explícita y no auto-mock: con el babel-jest 23 del plugin de Vue CLI 3, el
+// auto-mock de la instancia de axios depende del orden de los import. Así no depende de nada.
+jest.mock("@/services/apiClient", function () {
+  return { get: jest.fn(), post: jest.fn(), put: jest.fn(), patch: jest.fn(), delete: jest.fn() };
+});
 
 import apiClient from "@/services/apiClient";
 import ticketService from "@/services/ticketService";
@@ -1816,7 +1805,7 @@ Si sigue verde, el agujero está en tu red y hoy es barato taparlo. Deshaz con
   https://testing-library.com/docs/guiding-principles/
 - Kent C. Dodds — *Testing Implementation Details*:
   https://kentcdodds.com/blog/testing-implementation-details
-- Martin Fowler — *Refactoring*, cap. 4 "Building Tests" (esta fase escrita en 1999):
+- Martin Fowler — *Refactoring*, 1.ª ed. (Addison-Wesley, 1999; 2.ª ed. 2018), cap. 4 "Building Tests" (esta fase escrita en 1999):
   https://martinfowler.com/books/refactoring.html
 
 **Para el ejercicio 25 (e2e), si te animas**

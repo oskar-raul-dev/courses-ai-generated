@@ -36,7 +36,7 @@ del servidor está escrito, y el código es lo último.
 ### Paso 1 — pon los dos canales lado a lado
 
 ```bash
-curl -s http://localhost:4000/tickets/5f8a1c2e4b3d2f0012a4e991
+curl -s http://localhost:3000/tickets/5f8a1c2e4b3d2f0012a4e991
 ```
 
 ```json
@@ -103,7 +103,7 @@ lsof -i :4000
 ```
 
 ```
-node    2211  oskar  … TCP *:4000 (LISTEN)
+node    2211  dev    … TCP *:4000 (LISTEN)
 ```
 
 **Qué descarta.** Si hay un solo proceso escuchando y el evento igual llega

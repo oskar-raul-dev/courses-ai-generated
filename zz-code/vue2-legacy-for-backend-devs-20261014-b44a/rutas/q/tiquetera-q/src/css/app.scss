@@ -1,0 +1,45 @@
+// app global css in SCSS form
+
+// Cortafuegos Bootstrap 4 → Quasar 1 (Q3). Los componentes de Quasar usan .row, .col y
+// .col-auto en su propio HTML (botones, campos, chips, ítems, banners, la tabla), y el grid
+// de Bootstrap les pone gutter negativo, padding y wrap; su reboot, además, les da márgenes
+// a <label> y <ul>. Todo elemento interno de Quasar lleva una clase q-…; las filas de
+// Bootstrap de las vistas viejas, no. Con eso se los separa.
+
+// 1. Las filas internas, sin el gutter negativo (los grids de Quasar con gutter, aparte).
+//    :where() no suma especificidad: así las reglas 4 y 6 pueden devolver lo que es de Quasar.
+.row[class*="q-"]:where(:not([class*="q-col-gutter"]):not([class*="q-gutter"])) {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+// 2. Las columnas internas, sin el padding. El de q-btn__wrapper es de Quasar y se queda.
+.col[class*="q-"]:not(.q-btn__wrapper),
+.col-auto[class*="q-"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+// 3. no-wrap es de Quasar; el .row de Bootstrap lo pisaba con flex-wrap: wrap.
+.row.no-wrap {
+  flex-wrap: nowrap;
+}
+
+// 4. Los márgenes laterales que Quasar sí pone y la regla 1 se come.
+.q-chip.row { margin: 4px; }
+.q-table__bottom-item.row { margin-right: 16px; }
+.q-table--dense .q-table__bottom-item.row { margin-right: 8px; }
+.q-gutter-xs > .row[class*="q-"], .q-gutter-x-xs > .row[class*="q-"] { margin-left: 4px; }
+.q-gutter-sm > .row[class*="q-"], .q-gutter-x-sm > .row[class*="q-"] { margin-left: 8px; }
+.q-gutter-md > .row[class*="q-"], .q-gutter-x-md > .row[class*="q-"] { margin-left: 16px; }
+.q-gutter-lg > .row[class*="q-"], .q-gutter-x-lg > .row[class*="q-"] { margin-left: 24px; }
+.q-gutter-xl > .row[class*="q-"], .q-gutter-x-xl > .row[class*="q-"] { margin-left: 48px; }
+
+// 5. El reboot de Bootstrap sobre etiquetas que Quasar usa como componente.
+label.q-field { margin-bottom: 0; }
+ul.q-timeline { margin-top: 14px; margin-bottom: 14px; } // el 1em de Quasar, sobre su letra de 14px
+
+// 6. Los grids de Quasar con gutter (q-col-gutter-md, el que usa la Tiquetera): sus medidas,
+//    no las de Bootstrap. Otros tamaños (sm, lg…) siguen el mismo molde.
+.row.q-col-gutter-md { margin-left: -16px; margin-right: 0; }
+.row.q-col-gutter-md > [class*="col"] { padding-left: 16px; padding-right: 0; }

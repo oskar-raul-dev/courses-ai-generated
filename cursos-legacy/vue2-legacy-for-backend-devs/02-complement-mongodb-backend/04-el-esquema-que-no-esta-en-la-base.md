@@ -230,6 +230,13 @@ tipo doble `["string", "null"]`: el null explícito del contrato es legal, la
 ausencia del campo también (no está en `required`) — decisión consciente que
 viene de la trampa 1 de la Fase 2.
 
+> ⚠️ **`bsonType: "int"` y los dos shells.** `mongosh` guarda un `3` como entero
+> de 32 bits y el validator lo acepta; el shell clásico `mongo` —el que trae la
+> imagen 4.4 por dentro— guarda el mismo `3` como `double`, y el insert falla con
+> `Document failed validation`. En el clásico se escribe `NumberInt(3)`. Es una de
+> las diferencias entre shells que F0 prometió avisar. (El driver de Node, como
+> `mongosh`, manda los enteros como `int`.)
+
 Las dos perillas que cambian todo:
 
 | Perilla | Valores | Qué decide |
@@ -270,8 +277,8 @@ db.runCommand({ collMod: "tickets", validator: {...},
 db.createCollection("users", { validator: {...} })
 
 // Migración
-updateMany(filtro-de-no-migrados, cambio)     // idempotente o no es migración
-updateMany(filtro, [ { $set: { b: "$a" } } ]) // pipeline: copiar campo a campo
+updateMany(notMigratedFilter, update)       // idempotente o no es migración
+updateMany(filter, [ { $set: { b: "$a" } } ]) // pipeline: copiar campo a campo
 
 // Los 3 tiempos del despliegue: warn → reparar → error (moderate → strict)
 ```
@@ -282,6 +289,9 @@ updateMany(filtro, [ { $set: { b: "$a" } } ]) // pipeline: copiar campo a campo
 
 ### Errores comunes
 
+- **Activar el validator y volver a sembrar con el seed de la Fase 1** → el seed
+  hace `dropDatabase()` y el validator se va con la colección: la base queda
+  aceptando cualquier cosa y nadie avisa. El seed tiene que volver a ponerlo.
 - Confundir el schema de Mongoose (Fase 11) con validación del motor: el ODM
   valida **en tu proceso Node**; cualquier otro cliente (mongosh, otro
   servicio, el script de un compañero) escribe lo que quiere. El validator
@@ -313,18 +323,33 @@ sistema heredado.
 
 **🧨 Rompe a propósito**
 
-Pide el error completo, que es lo que casi nadie hace:
+Inserta un documento inválido y pide todo lo que el motor te devuelve:
 
 ```js
 try {
   db.tickets.insertOne({ title: "sin estado" });
 } catch (e) {
-  printjson(e.errInfo);      // ← acá está la regla que falló, no en e.message
+  print(e.message);            // Document failed validation
+  printjson(e.errInfo);        // en 4.4: nada
 }
 ```
 
-Compáralo con lo que imprime `e.message` a secas. Un `Document failed
-validation` no es un diagnóstico; `errInfo` sí.
+En MongoDB 4.4 eso es todo: código 121 y `Document failed validation`, sin decir
+qué regla falló (el detalle en `errInfo` llegó con la 5.0, y vas a leer muchos
+tutoriales que lo dan por hecho). El diagnóstico lo haces tú, preguntándole al
+mismo `$jsonSchema` por partes sobre una colección de ensayo sin validator:
+
+```js
+var schema = db.getCollectionInfos({ name: "tickets" })[0].options.validator.$jsonSchema;
+db.scratch.insertOne({ title: "sin estado" });   // colección de ensayo, sin validator
+schema.required.filter(function (field) {
+  return db.scratch.countDocuments({ $nor: [{ $jsonSchema: { required: [field] } }] }) > 0;
+});
+// [ 'status', 'priority', 'reporter', 'createdAt' ]
+db.scratch.drop();
+```
+
+Un `Document failed validation` no es un diagnóstico; esa lista sí.
 
 > 📄 El recorrido completo, con las salidas literales, en
 > [`forense-fase-04.md`](forense-fase-04.md).
@@ -385,21 +410,21 @@ validation` no es un diagnóstico; `errInfo` sí.
 
 **Documentación oficial (4.4)**
 
-- Schema Validation (el capítulo central): https://www.mongodb.com/docs/v4.4/core/schema-validation/
-- `$jsonSchema` (sintaxis y keywords soportadas): https://www.mongodb.com/docs/v4.4/reference/operator/query/jsonSchema/
-- `collMod` (aplicar validación a colección existente): https://www.mongodb.com/docs/v4.4/reference/command/collMod/
-- Updates with Aggregation Pipeline (el update de corchetes): https://www.mongodb.com/docs/v4.4/tutorial/update-documents-with-aggregation-pipeline/
-- `updateMany`: https://www.mongodb.com/docs/v4.4/reference/method/db.collection.updateMany/
+- Schema Validation (el capítulo central): https://www.mongodb.com/docs/manual/core/schema-validation/
+- `$jsonSchema` (sintaxis y keywords soportadas): https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/
+- `collMod` (aplicar validación a colección existente): https://www.mongodb.com/docs/manual/reference/command/collmod/
+- Updates with Aggregation Pipeline (el update de corchetes): https://www.mongodb.com/docs/manual/tutorial/update-documents-with-aggregation-pipeline/
+- `updateMany`: https://www.mongodb.com/docs/manual/reference/method/db.collection.updatemany/
 - Data Modeling — Schema Versioning pattern (en Building with Patterns, abajo)
 
 **La serie de la época**
 
-- Building with Patterns: The Schema Versioning Pattern (Alger & Coupal): https://www.mongodb.com/blog/post/building-with-patterns-the-schema-versioning-pattern
+- Building with Patterns: The Schema Versioning Pattern (Alger & Coupal): https://www.mongodb.com/company/blog/building-with-patterns-the-schema-versioning-pattern
 - The Outlier Pattern y The Document Versioning Pattern de la misma serie — lectura lateral que redondea.
 
 **JSON Schema (el estándar detrás)**
 
-- Understanding JSON Schema (guía canónica): https://json-schema.org/understanding-json-schema
+- Understanding JSON Schema (guía canónica): https://json-schema.org/understanding-json-schema/reference
 - ajv (validador para el lado Node, ej. 26–27): https://ajv.js.org/
 
 **Libros**

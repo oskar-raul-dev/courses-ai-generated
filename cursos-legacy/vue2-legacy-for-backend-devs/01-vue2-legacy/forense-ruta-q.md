@@ -7,8 +7,9 @@
 > Vuex y Network
 >
 > **El eje:** en Quasar casi nada grita. La mitad de los fallos de esta ruta
-> **no producen error**, y la otra mitad produce uno que habla de Vuex cuando
-> el problema es de la tabla.
+> **no producen error**, y la otra mitad produce un warning de desarrollo que
+> habla de otra cosa —un elemento desconocido, un computed sin setter— cuando el
+> problema es de configuración o de quién manda en el estado.
 
 Una sola pieza para las cinco fases, porque las rutas son excluyentes: si
 elegiste Quasar, esto es todo tu track de ruta y se lee solo. Y porque el
@@ -19,8 +20,9 @@ dueño de un estado que tu store ya controla**, y todo lo demás son variaciones
 
 ## 🎫 Los tres tickets de esta ruta
 
-> **1.** "Copié el template del panel de otro archivo y no se ve nada. No sale
-> ningún error. En la máquina de Ana el mismo código funciona."
+> **1.** "Copié el template del panel de otro archivo y se ve el texto suelto,
+> sin la tarjeta. No sale ningún error. En la máquina de Ana el mismo código
+> funciona."
 >
 > **2.** "El formulario de ticket guarda aunque deje campos vacíos. Antes no
 > dejaba."
@@ -38,7 +40,7 @@ parecen bugs de tu código.
 
 ### Paso 1 — ¿el componente está declarado?
 
-Ante cualquier "no se ve nada y no hay error", antes que nada:
+Ante cualquier "se ve a medias y no hay error", antes que nada:
 
 ```bash
 grep -n "components:" -A 12 quasar.conf.js
@@ -53,14 +55,15 @@ framework: {
 ```
 
 **Qué descarta.** Descarta tu template, tus datos y tu store de una sola vez.
-Un componente de Quasar 1 que no está en `framework.components` **no renderiza y
-no avisa**: en el mejor de los casos verás un `[Vue warn]: Unknown custom
-element`, y muchas veces ni eso. Si el componente tenía `<slot>`, el contenido de
-adentro también desaparece. Y explica el "en la máquina de Ana funciona":
+Con `all: false`, un componente de Quasar 1 que no está en `framework.components`
+**no renderiza**: queda la etiqueta cruda (`<q-card>`) con su contenido adentro,
+visible pero sin nada de lo que pinta el componente. El único aviso es, en
+desarrollo, un `[Vue warn]: Unknown custom element: <q-card>` entre los demás
+mensajes; en producción, ninguno. Y explica el "en la máquina de Ana funciona":
 copiaste el template, no la configuración.
 
-Es el error nº 1 de Q1 y reaparece en Q3 (con `QTd` y los slots `body-cell-*`
-que no pintan) y en Q4 (con `QTimeline` y `QChip`). **Tres fases, un solo
+Es el error nº 1 de Q1 y reaparece en Q3 (con `QTd`, y lo de los slots
+`body-cell-*` suelto fuera de su celda) y en Q4 (con `QTimeline` y `QChip`). **Tres fases, un solo
 diagnóstico.**
 
 ### Paso 2 — ¿el método del framework devuelve lo que crees?
@@ -88,24 +91,26 @@ Compruébalo en la consola mirando qué tiene el modelo, no qué se ve en pantal
 
 ### Paso 3 — ¿quién es dueño del estado, el componente o tu store?
 
-El conflicto central de la ruta, y estalla en Q3. El síntoma llega de dos formas
-según dónde estés corriendo:
+El conflicto central de la ruta, y estalla en Q3. El síntoma es una tabla que
+no obedece: clicas "página 2" o una cabecera para ordenar, y no pasa nada. En
+desarrollo, la consola lo explica:
 
 ```
-[vuex] do not mutate vuex store state outside mutation handlers
+[Vue warn]: Computed property "pagination" was assigned to but it has no setter.
 ```
 
-o —peor— nada en absoluto:
+y en producción, nada en absoluto:
 
 ```
-(en el build de producción: sin error, sin time travel, y el estado cambiado)
+(en el build de producción: sin mensaje, y la tabla clavada en la página 1)
 ```
 
-**Qué descarta.** Descarta a Vuex como culpable, aunque sea quien grita.
-`QTable` con `:pagination.sync` **escribe** en lo que le des: si le das un
-computed sin `set`, escribe directamente en el state del store, y `strict` lo
-caza en desarrollo. En producción `strict` está apagado (Fase 10) y la mutación
-ocurre en silencio — de ahí el reporte "en producción se comporta distinto".
+**Qué descarta.** Descarta a la tabla y a Vuex a la vez. `QTable` con
+`:pagination.sync` no toca el store: emite un objeto de paginación nuevo y `.sync`
+intenta **asignarlo** a lo que le diste. Si es un computed sin `set` que lee del
+store, la asignación se pierde y la tabla, que es controlada, se queda donde
+estaba. Por eso el reporte llega como "la tabla no pagina", y por eso en
+producción no hay ni una pista.
 
 La pregunta que resuelve toda esta familia: **¿este estado lo controla mi store
 o lo controla el componente?** Con `.sync` la respuesta tiene que ser una sola, y
@@ -138,16 +143,20 @@ no en tu componente. 💸
 
 | Lo que ves | Dónde empezar |
 |---|---|
-| Copiaste un template y no se ve nada, sin error | `framework.components` en `quasar.conf.js` (Q1) |
-| Los slots `body-cell-*` no pintan | Falta `QTd` declarado, o el `name` de la columna no coincide (Q3) |
+| Copiaste un template y se ve a medias, sin estilo y sin error | `framework.components` en `quasar.conf.js` (Q1) |
+| Lo de los slots `body-cell-*` sale fuera de su celda | Falta `QTd` declarado (Q3) |
+| El slot no se aplica: sale la celda por defecto | El `name` de la columna no coincide con `body-cell-<name>` (Q3) |
 | El formulario guarda con campos vacíos | `validate()` devuelve una promesa: siempre truthy (Q2) |
 | Al guardar, la prioridad se corrompe o se borra | `q-select` sin `emit-value` + `map-options` (Q2) |
 | Dos POST de un solo clic | `@click` **y** `type="submit"` en el mismo botón (Q2) |
 | El formulario grita desde la primera tecla | Es el default: te falta `lazy-rules` (Q2) |
-| Formulario válido pintado en rojo al abrir en modo edición | Falta `resetValidation()` en `$nextTick` (Q2) |
-| `this.$q` es `undefined` | Falta el plugin en `framework.plugins`, no es un bug de Quasar (Q2) |
-| `do not mutate vuex store state…` al ordenar la tabla | `:pagination.sync` contra un computed sin `set` (Q3) |
-| En producción no da ese error y el estado igual cambia | `strict` apagado en prod: la mutación es silenciosa (Q3 · F10) |
+| Un submit que no emite nada justo al abrir el formulario | `resetValidation()` en `mounted`: descarta la validación en curso (Q2) |
+| Tras cancelar, el formulario vacío sigue con el error pintado | Falta `resetValidation()` después de vaciar (Q2) |
+| Con el formulario vacío, solo un campo marca error | `QForm` se detiene en el primero; `greedy` los marca todos (Q2) |
+| `this.$q.notify is not a function` | Falta el plugin en `framework.plugins`, no es un bug de Quasar (Q2) |
+| La tabla no pagina ni ordena; `…was assigned to but it has no setter` | `:pagination.sync` contra un computed sin `set` (Q3) |
+| Lo mismo en producción, sin ningún mensaje | Los warnings de Vue no salen en el build de producción (Q3) |
+| La tabla dice "No data available" con el store lleno | `:rows` es Quasar 2; en Quasar 1, `:data` (Q3) |
 | La tabla pagina dos veces | Falta `rowsNumber`: cree que está en modo cliente (Q3) |
 | `x-total-count` es `undefined` | axios normaliza a minúsculas; si aun así falta, es CORS 💸 (Q3) |
 | Página 2 muestra la página 1 | La action paginada heredó la caché de F10: no debe cachear (Q3) |
@@ -155,7 +164,7 @@ no en tu componente. 💸
 | El evento del timeline aparece en el ticket equivocado | Falta filtrar por `ticketId` en el handler del socket (Q4) |
 | El cuarto evento aparece tres veces | `.bind(this)` distinto en el `on` y en el `off`: zombis de F8 (Q4) |
 | El layout se descuadra al meter `QTable` | `.row` de Bootstrap contra `.row` de Quasar en el mismo subárbol (Q3) |
-| El `q-select` se abre detrás del modal | z-index: Bootstrap 1050 contra los portales de Quasar (Q3) |
+| El modal de Bootstrap abierto desde un `q-dialog` queda debajo | z-index: Bootstrap 1050 contra los 6000 de Quasar (Q3) |
 | Los tests de Q0 fallan buscando `.table` | No es un bug: `QTable` renderiza `.q-table`. Tu test estaba acoplado al DOM |
 
 ---
@@ -164,9 +173,9 @@ no en tu componente. 💸
 
 **"Quasar está roto."** Casi nunca. Tres de los cuatro pasos de esta pieza
 terminan en configuración o en una firma de API que no era la que suponías. La
-señal para distinguirlo: si el fallo es **silencioso**, sospecha de la
-declaración de componentes; si el fallo **grita sobre Vuex**, sospecha del dueño
-del estado.
+señal para distinguirlo: si algo **se ve a medias**, sospecha de la declaración
+de componentes; si algo **no obedece** (la tabla no pagina, el formulario no
+emite), sospecha del dueño del estado o de una promesa que nadie esperó.
 
 **"Reescribo el test de Q0 para que pase."** Es la peor decisión de toda la ruta
 y la más tentadora, porque el rojo aparece justo cuando estás migrando. Un test
@@ -191,7 +200,7 @@ es cambiar etiquetas, es **negociar propiedades**: decidir, campo por campo, si
 la verdad vive en tu store o en el componente, y no dejar ninguna en el medio.
 
 Y la segunda, que en Quasar 1 duele especialmente: **el silencio es un modo de
-fallo**. Un componente que no renderiza y no avisa entrena un reflejo que sirve
+fallo**. Un componente que no renderiza y apenas avisa entrena un reflejo que sirve
 para cualquier librería configurable — antes de depurar tu código, comprueba que
 la pieza que estás usando esté registrada, declarada y encendida.
 

@@ -47,6 +47,17 @@ git switch -c incidente/07 fase-07-metricas-minimas   # 3 · una rama, solo si h
 > y se lleva por delante tus escenarios. La diferencia está en
 > [la convención de git §🧹](../00-convencion-de-git-y-tags.md).
 
+> 📝 **Lo que el cuaderno da por montado.** Tres piezas que en sus fases eran
+> opcionales: el inyector de caos (la sección 🔥 de la Fase 3: `mock/chaos.js` y
+> el `--middlewares` en el script `mock`), el script `mock:reset` (ejercicio 14
+> de la Fase 3) y el plugin de pruebas de la Fase 11. Las pruebas de regresión
+> en Jest de los incidentes 02 a 10 se escriben al cerrarlos y se corren con la
+> suite de la Fase 11; si haces el incidente antes, instala ya el plugin
+> (`npm install --save-dev @vue/cli-plugin-unit-jest@3.12.1` y
+> `vue invoke unit-jest`). Y con el `@vue/test-utils` de la época, el DOM se
+> repinta **después** de `$nextTick()`: una aserción sobre el texto justo
+> después de `setData` lee el DOM viejo.
+
 ### La convención de commits
 
 El asunto sigue este formato, para que `git log --oneline` se lea como la línea
@@ -196,11 +207,12 @@ vuelve peligroso:
 ```
 Vue packages version mismatch:
 
-- vue@2.6.14
-- vue-template-compiler@2.6.12
+- vue@2.6.14 (…/tiquetera-legacy/node_modules/vue/dist/vue.runtime.common.js)
+- vue-template-compiler@2.6.12 (…/tiquetera-legacy/node_modules/vue-template-compiler/package.json)
 
-This may cause things to work incorrectly. Make sure to use the same version
-for both.
+This may cause things to work incorrectly. Make sure to use the same version for both.
+If you are using vue-loader@>=10.0, simply update vue-template-compiler.
+If you are using vue-loader@<10.0 or vueify, re-installing vue-loader/vueify should bump vue-template-compiler to the latest.
 ```
 
 Fíjate en *"may cause things to work incorrectly"*: a veces compila igual y el
@@ -382,11 +394,18 @@ pero no resuelve la ambigüedad del segundo síntoma. La vista necesita tres
 estados y hoy tiene dos:
 
 ```js
-// views/TicketsView.vue — en el .then del servicio
+// views/TicketsView.vue — en data, loaded: false; y en el .then del servicio
 .then(function (tickets) {
   self.tickets = tickets;
   self.loaded = true;      // "sí hubo respuesta", distinto de "hay datos"
 })
+```
+
+```vue
+<!-- y en el template, antes de la lista -->
+<p v-else-if="loaded && tickets.length === 0" class="text-muted">
+  No hay tickets registrados.
+</p>
 ```
 
 Con `loaded` y `tickets.length` la plantilla puede decir tres cosas distintas:
@@ -398,14 +417,35 @@ ambigua.
 
 ```js
 // tests/unit/TicketsView.spec.js
-it("distingue lista vacía de fallo de carga", function () {
-  var wrapper = shallowMount(TicketsView, { … });
-  wrapper.setData({ loading: false, loaded: true, tickets: [] });
-  expect(wrapper.text()).toContain("No hay tickets");
-  wrapper.setData({ loading: false, loaded: false, error: "…" });
-  expect(wrapper.text()).not.toContain("No hay tickets");
+import { shallowMount } from "@vue/test-utils";
+import TicketsView from "@/views/TicketsView.vue";
+import ticketService from "@/services/ticketService";
+
+jest.mock("@/services/ticketService");
+
+describe("TicketsView", function () {
+  it("distingue lista vacía de fallo de carga", function () {
+    // la carga no termina nunca: el test pone el estado a mano con setData
+    ticketService.getTickets.mockReturnValue(new Promise(function () {}));
+    var wrapper = shallowMount(TicketsView, { stubs: ["router-link"] });
+
+    wrapper.setData({ loading: false, loaded: true, tickets: [] });
+    return wrapper.vm.$nextTick()
+      .then(function () {
+        expect(wrapper.text()).toContain("No hay tickets");
+        wrapper.setData({ loading: false, loaded: false, error: "No se pudieron cargar los tickets." });
+        return wrapper.vm.$nextTick();
+      })
+      .then(function () {
+        expect(wrapper.text()).not.toContain("No hay tickets");
+      });
+  });
 });
 ```
+
+Escrita para el `TicketsView` de la Fase 3. Desde la Fase 10 la vista lee
+`loading` y `tickets` del store: el `loaded` se muda al módulo `tickets` y el
+test monta la vista con un store de prueba (`createLocalVue`, Fase 11).
 
 **Prevención.** El inyector de caos de la Fase 3 pasa a ser parte del ritual:
 antes de dar por cerrada una vista que hace HTTP, se prueba con `CHAOS=timeout`,
@@ -533,7 +573,10 @@ una 💸 deuda declarada, y este incidente es su factura.
 
 ```js
 // router/index.js
-router.beforeEach(function (to, from, next) {
+import store from "../store";
+
+// con nombre y exportado: así la prueba de regresión puede llamarlo
+export function authGuard(to, from, next) {
   var token = localStorage.getItem("token");
   var requiresAuth = to.matched.some(function (record) {
     return record.meta.requiresAuth;
@@ -545,8 +588,16 @@ router.beforeEach(function (to, from, next) {
     next({ path: "/login", query: { reason: "session-expired" } });
     return;
   }
+
+  if (to.path === "/login" && token) {
+    next("/");
+    return;
+  }
+
   next();
-});
+}
+
+router.beforeEach(authGuard);
 ```
 
 Con eso el header deja de mentir y el login puede mostrar *"Tu sesión se cerró,
@@ -569,18 +620,24 @@ falta un servidor que conteste 401.
 
 ```js
 // tests/unit/router-guard.spec.js
-it("limpia el store cuando expulsa por falta de token", function () {
-  localStorage.setItem("token", "mock-jwt-token-123");
-  store.commit("auth/SET_SESSION", { token: "mock-jwt-token-123", user: { … } });
+import { authGuard } from "@/router";
+import store from "@/store";
 
-  localStorage.removeItem("token");
-  var next = jest.fn();
-  guard({ path: "/tickets", matched: [{ meta: { requiresAuth: true } }] }, {}, next);
+describe("guard de autenticación", function () {
+  it("limpia el store cuando expulsa por falta de token", function () {
+    localStorage.setItem("token", "mock-jwt-token-123");
+    store.commit("auth/SET_SESSION", {
+      token: "mock-jwt-token-123",
+      user: { username: "admin", name: "Andrés Felipe Ríos" }
+    });
 
-  expect(store.state.auth.token).toBe(null);
-  expect(next).toHaveBeenCalledWith(
-    expect.objectContaining({ path: "/login" })
-  );
+    localStorage.removeItem("token");
+    var next = jest.fn();
+    authGuard({ path: "/tickets", matched: [{ meta: { requiresAuth: true } }] }, {}, next);
+
+    expect(store.state.auth.token).toBe(""); // CLEAR_SESSION deja "", no null
+    expect(next).toHaveBeenCalledWith(expect.objectContaining({ path: "/login" }));
+  });
 });
 ```
 
@@ -659,6 +716,14 @@ watch: {
 }
 ```
 
+Y en el `.then` de `loadTickets`, la copia inicial que hace el legacy, para que
+la tabla arranque llena:
+
+```js
+self.tickets = tickets;
+self.filteredTickets = tickets; // la copia inicial
+```
+
 ---
 
 <details><summary>💡 <b>Pista 1</b> — dónde mirar</summary>
@@ -720,6 +785,16 @@ dos coincide.
 watch: {
   search: function () { this.applyFilters(); },
   statusFilter: function () { this.applyFilters(); }   // el que faltaba
+},
+methods: {
+  // el cuerpo del watcher original, movido a un método para no repetirlo
+  applyFilters: function () {
+    var self = this;
+    this.filteredTickets = this.tickets.filter(function (t) {
+      return t.title.toLowerCase().indexOf(self.search.toLowerCase()) !== -1 &&
+             (self.statusFilter === "" || t.status === self.statusFilter);
+    });
+  }
 }
 ```
 
@@ -731,12 +806,17 @@ del ejercicio 9— vuelve el mismo ticket con otra ropa.
 watchers desaparecen:
 
 ```js
+// el computed de la Fase 4, tal cual
 computed: {
   filteredTickets: function () {
     var self = this;
+    var term = this.search.trim().toLowerCase();
+
     return this.tickets.filter(function (t) {
-      var matchesSearch = t.title.toLowerCase().indexOf(self.search.toLowerCase()) !== -1;
-      var matchesStatus = self.statusFilter === "" || t.status === self.statusFilter;
+      var matchesSearch =
+        !term || t.title.toLowerCase().indexOf(term) !== -1;
+      var matchesStatus =
+        !self.statusFilter || t.status === self.statusFilter;
       return matchesSearch && matchesStatus;
     });
   }
@@ -752,15 +832,36 @@ garantiza Vue— sino el **comportamiento** que se rompió:
 
 ```js
 // tests/unit/TicketsView.spec.js
-it("refleja el filtro de estado sin necesidad de tocar la búsqueda", function () {
-  var wrapper = shallowMount(TicketsView, { … });
-  wrapper.setData({ tickets: fixtures.mixed, search: "", statusFilter: "" });
-  expect(wrapper.vm.filteredTickets).toHaveLength(8);
+import { shallowMount } from "@vue/test-utils";
+import TicketsView from "@/views/TicketsView.vue";
+import ticketService from "@/services/ticketService";
 
-  wrapper.setData({ statusFilter: "open" });
-  expect(wrapper.vm.filteredTickets).toHaveLength(3);
+jest.mock("@/services/ticketService");
+
+// ocho tickets, tres abiertos
+var mixed = ["open", "open", "open", "in_progress", "in_progress", "resolved", "resolved", "closed"]
+  .map(function (status, i) {
+    return { id: i + 1, title: "Ticket " + (i + 1), status: status };
+  });
+
+describe("TicketsView", function () {
+  it("refleja el filtro de estado sin necesidad de tocar la búsqueda", function () {
+    ticketService.getTickets.mockReturnValue(new Promise(function () {})); // la carga real no importa aquí
+    var wrapper = shallowMount(TicketsView, { stubs: ["router-link"] });
+
+    wrapper.setData({ tickets: mixed, search: "", statusFilter: "" });
+    expect(wrapper.vm.filteredTickets).toHaveLength(8);
+
+    wrapper.setData({ statusFilter: "open" });
+    expect(wrapper.vm.filteredTickets).toHaveLength(3);
+  });
 });
 ```
+
+Fíjate en qué la pone verde: el `computed`, no el parche. Con los dos watchers
+sigue roja, porque un cambio de `tickets` no lo escucha nadie. Es la forma de que
+la suite te empuje a la refactorización en lugar de dejarte con la sincronización
+a mano.
 
 **Prevención.** Una pregunta en la revisión de código, que cabe en una línea:
 **¿este valor es un hecho o es una consecuencia?** Los hechos van a `data`; las
@@ -797,10 +898,10 @@ vieja y convierte un bug reproducible en uno intermitente.
 
 ### 🎫 El ticket
 
-> "Abro el ticket #3, le agrego la etiqueta 'facturación' desde el formulario de
-> edición, le doy guardar y me dice que se guardó. Pero en la tabla el ticket
-> sigue sin etiqueta. Si recargo con F5 ahí sí aparece. A veces me pasa y a veces
-> no, no sé de qué depende."
+> "En la lista de tickets, al #3 le doy al botón de la etiqueta 'facturación' y
+> no pasa nada: la fila sigue sin etiqueta. Si recargo con F5 ahí sí aparece.
+> Con el #2 funciona a la primera. A veces me pasa y a veces no, no sé de qué
+> depende."
 
 **Reportado por:** agente de soporte · **Ambiente:** desarrollo y UAT
 
@@ -814,16 +915,52 @@ con otros.
 
 ### 🔧 Preparación
 
-Un `db.json` alterno: el bug solo se ve con tickets que **no traen** el campo
-`tags` desde el mock, y la semilla actual se lo pone a todos.
+Una rama con el **etiquetado rápido** que el legacy le agregó a la lista, tal como
+llegó a producción:
 
 ```bash
-git checkout -- db.json          # guarda antes lo que tengas
-cp mock/db.incidente-05.json db.json
+git switch -c incidente/05 fase-05-crud-tickets
 ```
 
-El archivo alterno es el `db.seed.json` con una sola diferencia: a los tickets
-1 y 3 se les quitó por completo la clave `tags` (no vacía: **ausente**).
+En `components/tickets/TicketsTable.vue`, dos columnas más: la cabecera, después de
+`<th>Asignado</th>`, y las celdas, después de la del `assignee`:
+
+```html
+<th>Etiquetas</th>
+<th></th>
+```
+
+```html
+<td>
+  <span v-for="tag in ticket.tags" :key="tag" class="ticket-tag badge badge-light border mr-1">{{ tag }}</span>
+</td>
+<td>
+  <!-- etiquetado rápido: .stop para que el clic no abra el detalle -->
+  <button class="btn btn-sm btn-outline-info" @click.stop="$emit('add-tag', ticket)">
+    🏷️ facturación
+  </button>
+</td>
+```
+
+En `views/TicketsView.vue`, el evento en la tabla y su método:
+
+```html
+<tickets-table :tickets="filteredTickets" @select="goToDetail" @add-tag="addBillingTag" />
+```
+
+```js
+// etiquetado rápido: guarda en la Mock API y actualiza la fila sin recargar la lista
+addBillingTag: function (ticket) {
+  var tags = (ticket.tags || []).concat("facturación");
+  ticketService.updateTicket(ticket.id, { tags: tags }).then(function (saved) {
+    ticket.tags = saved.tags;
+  });
+},
+```
+
+Y en `db.json`, agrega `"tags": ["correo"]` **solo al ticket 2**. Los demás se
+quedan sin la clave: no vacía, **ausente**. Al terminar, `git checkout -- db.json`
+deja la semilla como estaba.
 
 ---
 
@@ -870,8 +1007,9 @@ no en el que arma el formulario.
 
 **Causa raíz.** Vue 2 hace reactivas las propiedades que **existen en el momento
 en que el objeto entra en `data`**. Los tickets que el mock devuelve sin `tags`
-entran sin esa propiedad, y el `ticket.tags = […]` posterior crea una propiedad
-que ningún getter/setter vigila. El dato está —por eso DevTools lo muestra— y la
+entran sin esa propiedad, y el `ticket.tags = saved.tags` posterior crea una
+propiedad que ningún getter/setter vigila. En el #2 la misma línea funciona porque
+`tags` ya existía y tenía su setter. El dato está —por eso DevTools lo muestra— y la
 tabla nunca se entera. Con F5 el ticket vuelve a entrar, esta vez con `tags`
 porque el mock ya lo guardó, y todo funciona: de ahí el "a veces".
 
@@ -881,18 +1019,21 @@ Proxies, y la que explica que exista `Vue.set`.
 **Parche mínimo** — el del viernes a las seis:
 
 ```js
-// views/TicketsView.vue — al aplicar el ticket actualizado
-onTicketUpdated: function (updated) {
-  var index = this.tickets.findIndex(function (t) { return t.id === updated.id; });
-  // splice y no tickets[index] = updated: la asignación por índice en un array
-  // tampoco es reactiva en Vue 2. Son las dos caras de la misma limitación.
-  if (index === -1) {
-    this.tickets.push(updated);
-  } else {
-    this.tickets.splice(index, 1, updated);
-  }
-}
+// views/TicketsView.vue
+addBillingTag: function (ticket) {
+  var self = this;
+  var tags = (ticket.tags || []).concat("facturación");
+  ticketService.updateTicket(ticket.id, { tags: tags }).then(function (saved) {
+    // $set y no ticket.tags = …: una propiedad que no existía cuando el ticket
+    // entró a data no es reactiva en Vue 2
+    self.$set(ticket, "tags", saved.tags);
+  });
+},
 ```
+
+La misma limitación tiene otra cara: asignar por índice en un array
+(`this.tickets[i] = x`) tampoco es reactivo: por eso la Fase 8 enseña `splice`, y el
+`onTicketUpdated` del panel de la Fase 9 reemplaza con él.
 
 **La refactorización correcta.** El problema de fondo no es el `splice`: es que
 el frontend acepta del mock tickets con **forma incompleta**. Normalizar en la
@@ -900,16 +1041,18 @@ frontera hace que la limitación de reactividad no pueda dispararse nunca:
 
 ```js
 // services/ticketService.js
+// lo que un ticket tiene que tener siempre; lo demás que traiga (createdAt, reporter…) se conserva
+var TICKET_DEFAULTS = {
+  title: "",
+  description: "",
+  status: "open",
+  priority: "medium",
+  assignee: null
+};
+
 function normalizeTicket(raw) {
-  return {
-    id: raw.id,
-    title: raw.title || "",
-    description: raw.description || "",
-    status: raw.status || "open",
-    priority: raw.priority || "medium",
-    assignee: raw.assignee || null,
-    tags: raw.tags || []          // ← el campo existe SIEMPRE
-  };
+  // tags va aparte: un arreglo nuevo por ticket, nunca uno compartido entre todos
+  return Object.assign({}, TICKET_DEFAULTS, raw, { tags: raw.tags || [] });
 }
 
 function getTickets(params) {
@@ -919,12 +1062,18 @@ function getTickets(params) {
 }
 ```
 
+> ⚠️ **No reconstruyas el ticket campo por campo.** Un `return { id: raw.id,
+> title: raw.title || "", … }` deja fuera todo lo que no listaste —`createdAt`,
+> `reporter`— y la columna de fecha del dashboard se queda vacía sin un solo error.
+> Completar con valores por defecto (`Object.assign`) normaliza sin perder nada.
+
 Con eso, cada ticket entra al estado con todas sus propiedades declaradas, y la
 tabla se entera de cualquier cambio sin ceremonias. **Es la misma idea que un
 DTO en tu backend de siempre:** la frontera es el sitio donde los datos ajenos se
 convierten en datos con forma conocida.
 
-**Prueba de regresión.**
+**Prueba de regresión.** Va dentro de `tests/unit/ticketService.spec.js` de la
+Fase 11, que ya corta el cable con `jest.mock("@/services/apiClient")`:
 
 ```js
 // tests/unit/ticketService.spec.js
@@ -937,15 +1086,19 @@ it("normaliza los tickets que llegan sin tags", function () {
 });
 ```
 
+Y la prueba de `getTickets` de la Fase 11, que esperaba `res.data` intacta
+(`toEqual([{ id: 1 }])`), pasa a `toEqual([expect.objectContaining({ id: 1 })])`:
+el servicio ya no devuelve los datos tal cual, y eso es justamente el cambio.
+
 **Prevención.** Dos hábitos, los dos baratos: normalizar en el servicio todo lo
 que venga de fuera, y desconfiar de cualquier `objeto.campoNuevo = valor` sobre
 algo que ya vive en el estado. El segundo se puede buscar a ojo en una revisión;
 el primero se escribe una vez por servicio y protege para siempre.
 
-**Por qué llegó a producción.** Porque en desarrollo la semilla es completa: todos
-los tickets del `db.json` traen todos los campos, así que la propiedad siempre
-existía cuando el objeto entraba y el bug era invisible. El primer ticket sin
-`tags` lo creó un usuario meses después, por un camino que no ponía el campo.
+**Por qué llegó a producción.** Porque la función se probó con el ticket que ya
+tenía etiquetas, que era el que todos usaban para probar: la propiedad existía
+cuando el objeto entraba y el bug era invisible. Los tickets sin `tags` eran casi
+todos los demás, y nadie los etiquetó hasta producción.
 Nadie se equivocó al escribir el código; el sistema confiaba en una forma de dato
 que nadie hacía cumplir.
 
@@ -1057,16 +1210,18 @@ la misma pantalla:
 
 ```vue
 <keep-alive>
-  <component :is="currentStepComponent" ref="stepComponent" />
+  <component :is="currentStepComponent" ref="stepComponent" :draft="draft" />
 </keep-alive>
 ```
 
 ```js
-goNext: function () {
+next: function () {
   var step = this.$refs.stepComponent;
-  if (step.validate && !step.validate()) { return; }   // valida por paso
-  this.draft = Object.assign({}, this.draft, step.getData());
-  this.currentStep = this.currentStep + 1;
+  if (step && step.validate && !step.validate()) {
+    return; // valida por paso: el paso pinta sus propios errores
+  }
+  this.mergeCurrentStep();   // lo que el paso entrega pasa al draft del padre
+  this.currentStep++;
 }
 ```
 
@@ -1084,16 +1239,50 @@ experiencias posibles — atrapas al usuario en un paso que no sabe arreglar.
 
 ```js
 // tests/unit/TicketWizardView.spec.js
-it("no avanza si el paso actual es inválido", function () {
-  var wrapper = shallowMount(TicketWizardView, { … });
-  wrapper.vm.$refs.stepComponent = { validate: function () { return false; },
-                                     getData: function () { return {}; } };
-  wrapper.vm.goNext();
-  expect(wrapper.vm.currentStep).toBe(1);
-});
+import { mount, createLocalVue } from "@vue/test-utils";
+import Vuelidate from "vuelidate";
+import TicketWizardView from "@/views/TicketWizardView.vue";
 
-it("conserva lo entregado al volver atrás", function () { … });
+// mount, con Vuelidate en un localVue: los pasos reales usan $v
+var localVue = createLocalVue();
+localVue.use(Vuelidate);
+
+function montar() {
+  return mount(TicketWizardView, { localVue: localVue, stubs: ["router-link"] });
+}
+
+describe("TicketWizardView", function () {
+  it("no avanza si el paso actual es inválido", function () {
+    var wrapper = montar();
+    wrapper.vm.$refs.stepComponent = {
+      validate: function () { return false; },
+      getData: function () { return {}; }
+    };
+    wrapper.vm.next();
+    expect(wrapper.vm.currentStep).toBe(1);
+  });
+
+  it("al volver atrás encuentra el mismo paso, no uno nuevo (keep-alive)", function () {
+    var wrapper = montar();
+    var first = wrapper.vm.$refs.stepComponent;
+    first.validate = function () { return true; };   // el paso 1 vacío no pasaría su validación
+    wrapper.vm.next();
+    return wrapper.vm.$nextTick()
+      .then(function () {
+        wrapper.vm.back();
+        return wrapper.vm.$nextTick();
+      })
+      .then(function () {
+        // booleano a propósito: si toBe falla entre dos instancias de Vue, Jest intenta
+        // imprimir la diferencia de dos objetos enormes y circulares y se queda sin memoria
+        expect(wrapper.vm.$refs.stepComponent === first).toBe(true);
+      });
+  });
+});
 ```
+
+La segunda prueba es la que vigila el `keep-alive`: sin él, `back()` monta un
+paso 1 nuevo, y lo que no se había entregado al `draft` ya no está.
 
 **Prevención.** Cuando una pantalla intercambie componentes dinámicamente,
 escribe en el código —en un comentario de dos líneas— **qué muere con cada
@@ -1208,8 +1397,9 @@ otro después de entrar y salir cinco veces. Filtra por `Chart`.
    cuesta CPU en cada cambio y puede romper la librería, que no espera que sus
    propiedades internas estén interceptadas.
 2. *La ausencia de `beforeDestroy`.* Nadie llama a `chart.destroy()`, así que
-   cada visita a la vista deja un gráfico vivo: con sus listeners de `resize`
-   atados a `window`, sus animaciones agendadas y su canvas referenciado, de modo
+   cada visita a la vista deja un gráfico vivo: con su monitor de tamaño (los
+   `div` ocultos `chartjs-size-monitor` que chart.js 2 inserta junto al canvas)
+   escuchando, sus animaciones agendadas y su canvas referenciado, de modo
    que el recolector de basura no puede llevarse nada. Cinco visitas, cinco
    charts trabajando en cada repintado. Ése es el ventilador.
 
@@ -1219,7 +1409,11 @@ otro después de entrar y salir cinco veces. Filtra por `Chart`.
 // components/metrics/StatusDoughnut.vue
 mounted: function () {
   // Propiedad de instancia FUERA de data: Vue no la observa.
-  this.chart = new Chart(this.$refs.canvas, this.buildConfig());
+  this.chart = new Chart(this.$refs.canvas, {
+    type: "doughnut",
+    data: this.buildData(),
+    options: { responsive: true, legend: { position: "bottom" }, cutoutPercentage: 65 }
+  });
 },
 beforeDestroy: function () {
   if (this.chart) {
@@ -1253,6 +1447,10 @@ export default {
 };
 ```
 
+Cada gráfico pone su parte: `createChart()` y `buildData()`, y un computed
+`chartData` que devuelve su prop —`counts` en la dona, `rows` en las barras—
+para que el `watch` del mixin tenga qué vigilar.
+
 Y una advertencia que hay que dejar escrita en el mixin: si algún día el
 componente vive dentro de un `<keep-alive>` (Fase 6), `beforeDestroy` **no
 corre** y hay que usar `deactivated`. Es exactamente el mismo bug con otro ciclo
@@ -1262,19 +1460,32 @@ de vida.
 
 ```js
 // tests/unit/StatusDoughnut.spec.js
-it("destruye la instancia del chart al desmontarse", function () {
-  var destroy = jest.fn();
-  Chart.mockImplementation(function () { return { destroy: destroy, update: jest.fn() }; });
+import { shallowMount } from "@vue/test-utils";
+import Chart from "chart.js";
+import StatusDoughnut from "@/components/metrics/StatusDoughnut.vue";
 
-  var wrapper = shallowMount(StatusDoughnut, { propsData: { tickets: [] } });
-  wrapper.destroy();
+jest.mock("chart.js"); // jsdom no tiene canvas de verdad: el chart es un doble
 
-  expect(destroy).toHaveBeenCalledTimes(1);
-});
+describe("StatusDoughnut", function () {
+  beforeEach(function () {
+    Chart.mockReset();
+  });
 
-it("no expone la instancia como dato reactivo", function () {
-  var wrapper = shallowMount(StatusDoughnut, { propsData: { tickets: [] } });
-  expect(Object.keys(wrapper.vm.$data)).not.toContain("chart");
+  it("destruye la instancia del chart al desmontarse", function () {
+    var destroy = jest.fn();
+    Chart.mockImplementation(function () { return { destroy: destroy, update: jest.fn() }; });
+
+    var wrapper = shallowMount(StatusDoughnut, { propsData: { counts: {} } });
+    wrapper.destroy();
+
+    expect(destroy).toHaveBeenCalledTimes(1);
+  });
+
+  it("no expone la instancia como dato reactivo", function () {
+    Chart.mockImplementation(function () { return { destroy: jest.fn(), update: jest.fn() }; });
+    var wrapper = shallowMount(StatusDoughnut, { propsData: { counts: {} } });
+    expect(Object.keys(wrapper.vm.$data)).not.toContain("chart");
+  });
 });
 ```
 
@@ -1296,9 +1507,10 @@ donde uno pondría cualquier otra cosa.
 **Si tu causa fue distinta a ésta.** Si tu conclusión fue "son demasiados
 tickets", el snapshot lo desmiente: lo que crece son instancias de `Chart`, no
 filas — y el sistema va peor con **los mismos datos** que hace diez minutos. Si
-te encontraste con `Canvas is already in use`, encontraste la versión ruidosa del
-mismo bug y llegaste por el camino corto: es igual de válido, dilo así en el
-post-mortem.
+te encontraste con `Canvas is already in use`, tu proyecto no está en chart.js
+2.9: ese error es de la versión 3, que obliga a destruir antes de reusar el
+canvas. Es la versión ruidosa del mismo bug y llegaste por el camino corto:
+igual de válido, dilo así en el post-mortem.
 
 </details>
 
@@ -1446,20 +1658,39 @@ verdad.
 
 ```js
 // tests/unit/TicketsView.spec.js
-it("da de baja el handler al desmontarse", function () {
-  var wrapper = shallowMount(TicketsView, { … });
-  var handler = wrapper.vm.onCreatedHandler;
-  wrapper.destroy();
-  expect(socketService.off).toHaveBeenCalledWith("ticket:created", handler);
-});
+import { shallowMount } from "@vue/test-utils";
+import TicketsView from "@/views/TicketsView.vue";
+import ticketService from "@/services/ticketService";
+import socketService from "@/services/socketService";
 
-it("no duplica un ticket que ya está en la lista", function () {
-  var wrapper = shallowMount(TicketsView, { … });
-  wrapper.setData({ tickets: [{ id: 7, title: "X" }] });
-  wrapper.vm.onTicketCreated({ id: 7, title: "X" });
-  expect(wrapper.vm.tickets).toHaveLength(1);
+jest.mock("@/services/ticketService");
+jest.mock("@/services/socketService");
+
+function montar() {
+  ticketService.getTickets.mockReturnValue(new Promise(function () {})); // la carga no importa aquí
+  return shallowMount(TicketsView, { stubs: ["router-link"] });
+}
+
+describe("TicketsView y el socket", function () {
+  it("da de baja el handler al desmontarse", function () {
+    var wrapper = montar();
+    var handler = wrapper.vm.onCreatedHandler;
+    wrapper.destroy();
+    expect(socketService.off).toHaveBeenCalledWith("ticket:created", handler);
+  });
+
+  it("no duplica un ticket que ya está en la lista", function () {
+    var wrapper = montar();
+    wrapper.setData({ tickets: [{ id: 7, title: "X" }] });
+    wrapper.vm.onTicketCreated({ id: 7, title: "X" });
+    expect(wrapper.vm.tickets).toHaveLength(1);
+  });
 });
 ```
+
+La primera vigila el `off`; la segunda, la defensa idempotente. Ojo: el handler
+que publica la Fase 8 no es idempotente, así que la segunda está roja hasta que
+agregues el `some(...)` de arriba.
 
 **Prevención.** La regla del [incidente 07](#incidente-07--a-la-media-hora-la-laptop-suena-como-un-avión)
 otra vez, y no es casualidad: **alta y baja simétricas, con la misma
@@ -1536,7 +1767,13 @@ entregable completo y de los más útiles que vas a escribir.
 
 ### 🔧 Preparación
 
-Sin romper nada: los tres síntomas están en el sistema tal como lo dejó la fase.
+Los síntomas 1 y 3 están en el sistema tal como lo dejó la fase. El 2, no: la
+Fase 9 ya guarda `selectedId` y deriva `selectedTicket` con un computed, que es
+el parche mínimo de abajo. Para verlo, una rama donde el panel guarda el objeto,
+como lo escribió el legacy: en `views/SupportView.vue`, `selectedTicket: null` en
+`data` en lugar de `selectedId` y del computed, y `this.selectedTicket = ticket`
+en `selectTicket`.
+
 Necesitas dos navegadores (uno normal y uno en incógnito), los dos con sesión.
 
 ```bash
@@ -1617,28 +1854,58 @@ asignación, ¿qué impide que pase algo?
 **Parche mínimo:**
 
 ```js
-// views/SupportView.vue — el panel deja de guardar el objeto
+// views/SupportView.vue — el panel deja de guardar el objeto (así lo publica la Fase 9)
 data: function () {
-  return { tickets: [], selectedId: null };
+  return { tickets: [], users: [], selectedId: null, loading: true, error: "" };
 },
 computed: {
   selectedTicket: function () {
-    var id = this.selectedId;
-    return this.tickets.find(function (t) { return t.id === id; }) || null;
+    var self = this;
+    return this.tickets.find(function (t) {
+      return t.id === self.selectedId;
+    }) || null;
   }
 }
 ```
 
 ```js
-// tras el PATCH de tomar, anunciar el cambio como se anuncia el alta
+// components/support/TicketWorkspace.vue — en patchTicket, que es por donde pasan
+// "Tomar" y los cambios de estado. Arriba: import socketService from "../../services/socketService";
 .then(function (updated) {
-  self.onTicketUpdated(updated);
-  socketService.emit("ticket:updated", updated);
+  self.$emit("updated", updated); // el padre actualiza la lista maestra
+  socketService.emit("ticket:updated", updated); // y las otras pantallas se enteran
 })
 ```
 
-Y el oyente correspondiente en las vistas que muestran listas, con la misma
-disciplina de alta y baja del [incidente 08](#incidente-08--se-me-duplican-los-tickets-cuando-entra-uno-nuevo).
+El aviso sale del componente que hizo el PATCH, no de `onTicketUpdated` de la vista:
+ese método también va a recibir los avisos de los demás, y si anunciara lo que recibe,
+dos navegadores se pasarían el mismo ticket para siempre.
+
+```js
+// server/socket-server.js — sin esto el aviso no llega a nadie: el relé de la
+// Fase 8 solo reenvía ticket:created (es el ejercicio 10 de esa fase)
+socket.on("ticket:updated", function (ticket) {
+  socket.broadcast.emit("ticket:updated", ticket);
+});
+```
+
+Y el oyente en la vista, con la misma disciplina de alta y baja del
+[incidente 08](#incidente-08--se-me-duplican-los-tickets-cuando-entra-uno-nuevo):
+
+```js
+// views/SupportView.vue
+mounted: function () {
+  this.loadData();
+  this.onCreatedHandler = this.onTicketCreated.bind(this);
+  socketService.on("ticket:created", this.onCreatedHandler);
+  this.onUpdatedHandler = this.onTicketUpdated.bind(this); // UNA referencia, la misma para el off
+  socketService.on("ticket:updated", this.onUpdatedHandler);
+},
+beforeDestroy: function () {
+  socketService.off("ticket:created", this.onCreatedHandler);
+  socketService.off("ticket:updated", this.onUpdatedHandler);
+}
+```
 
 **La refactorización correcta.** El parche del `ticket:updated` funciona y
 **consolida una deuda**: ahora hay dos eventos que emite el cliente, o sea dos
@@ -1664,14 +1931,33 @@ lo tiene que ofrecer el servidor; json-server no lo hace.
 
 ```js
 // tests/unit/SupportView.spec.js
-it("el detalle refleja el ticket actualizado sin cambiar de selección", function () {
-  var wrapper = shallowMount(SupportView, { … });
-  wrapper.setData({ tickets: [{ id: 12, status: "open", assignee: null }], selectedId: 12 });
+import { shallowMount } from "@vue/test-utils";
+import SupportView from "@/views/SupportView.vue";
+import ticketService from "@/services/ticketService";
+import userService from "@/services/userService";
 
-  wrapper.vm.onTicketUpdated({ id: 12, status: "in_progress", assignee: "lmcano" });
+jest.mock("@/services/ticketService");
+jest.mock("@/services/userService");
+jest.mock("@/services/socketService");
 
-  expect(wrapper.vm.selectedTicket.status).toBe("in_progress");
-  expect(wrapper.vm.selectedTicket.assignee).toBe("lmcano");
+describe("SupportView", function () {
+  it("el detalle refleja el ticket actualizado sin cambiar de selección", function () {
+    // la carga no termina: el test pone la lista a mano
+    ticketService.getTickets.mockReturnValue(new Promise(function () {}));
+    userService.getUsers.mockReturnValue(new Promise(function () {}));
+    var wrapper = shallowMount(SupportView, {
+      mocks: { $store: { getters: { "auth/currentUser": { username: "lmcano", role: "agent" } } } }
+    });
+
+    var ticket = { id: 12, status: "open", assignee: null };
+    wrapper.setData({ tickets: [ticket] });
+    wrapper.vm.selectTicket(ticket); // por la acción, no por el estado: vale para las dos versiones
+
+    wrapper.vm.onTicketUpdated({ id: 12, status: "in_progress", assignee: "lmcano" });
+
+    expect(wrapper.vm.selectedTicket.status).toBe("in_progress");
+    expect(wrapper.vm.selectedTicket.assignee).toBe("lmcano");
+  });
 });
 ```
 
@@ -1732,7 +2018,9 @@ git switch -c incidente/10 fase-10-vuex-a-fondo
 ```
 
 1. En `store/index.js`, pon `strict: false`.
-2. En `store/modules/ui.js`, comenta `namespaced: true`.
+2. En `store/modules/ui.js` —donde el legacy agregó un indicador de carga global:
+   `loading: false` en el state y su mutation `SET_LOADING`, con el mismo nombre que
+   la de `tickets`—, comenta `namespaced: true`.
 3. En el componente del menú lateral, escribe el contador directamente contra el
    estado: `this.$store.state.tickets.items.push(...)` en algún punto de carga —o
    más simple, haz que una vista modifique `state.tickets.items` sin pasar por
@@ -1804,10 +2092,11 @@ espacio de nombres. ¿A cuál de los dos le llega el commit?
 **Parche mínimo:**
 
 ```js
-// store/index.js
+// store/index.js — el de la Fase 10, con strict de vuelta
 export default new Vuex.Store({
-  modules: { tickets: tickets, ui: ui },
-  strict: process.env.NODE_ENV !== "production"   // caro: solo en desarrollo
+  strict: process.env.NODE_ENV !== "production",   // caro: solo en desarrollo
+  modules: { auth: auth, tickets: tickets, ui: ui },
+  plugins: [socketPlugin]
 });
 ```
 
@@ -1842,18 +2131,38 @@ produce el mismo tipo de reporte ("la pantalla no reacciona después de guardar"
 
 ```js
 // tests/unit/store-ui.spec.js
-it("el módulo ui está namespaced", function () {
-  var store = new Vuex.Store({ modules: { ui: ui, tickets: tickets }, strict: true });
-  store.commit("ui/SET_LOADING", true);
-  expect(store.state.ui.loading).toBe(true);
-  expect(store.state.tickets.loading).toBe(false);   // no se pisaron
-});
+import Vue from "vue";
+import Vuex from "vuex";
+import store from "@/store";
+import ui from "@/store/modules/ui";
+import tickets from "@/store/modules/tickets";
 
-it("strict caza la escritura directa", function () {
-  var store = new Vuex.Store({ modules: { tickets: tickets }, strict: true });
-  expect(function () { store.state.tickets.items.push({ id: 1 }); }).toThrow();
+Vue.use(Vuex);
+
+describe("store", function () {
+  it("el módulo ui está namespaced", function () {
+    var local = new Vuex.Store({ modules: { ui: ui, tickets: tickets } });
+    local.commit("ui/SET_LOADING", true);
+    expect(local.state.ui.loading).toBe(true);
+    expect(local.state.tickets.loading).toBe(false);   // no se pisaron
+  });
+
+  it("el store del proyecto caza la escritura directa (strict)", function () {
+    // strict avisa desde un watcher, y Vue atrapa los errores de los watchers: no le
+    // llegan a quien escribió, así que un toThrow() no los ve. Se recogen con el
+    // errorHandler global.
+    var capturado = null;
+    var anterior = Vue.config.errorHandler;
+    Vue.config.errorHandler = function (err) { capturado = err; };
+    store.state.tickets.items.push({ id: 1 });
+    Vue.config.errorHandler = anterior;
+    expect(capturado && capturado.message).toMatch("do not mutate vuex store state");
+  });
 });
 ```
+
+La segunda prueba usa el store **del proyecto**, no uno armado en el test: así
+vigila la configuración que este incidente rompió, y no al propio Vuex.
 
 **Prevención.** Tres líneas en la revisión de código, y ninguna cuesta tiempo:
 
@@ -1918,12 +2227,12 @@ Una rama, con las dos roturas:
 git switch -c incidente/11 fase-11-testing-minimo
 ```
 
-1. En `tests/unit/store-tickets.spec.js`, comenta el `jest.clearAllMocks()` del
-   `beforeEach` y mueve la creación del store fuera del `beforeEach` (que se
-   cree una sola vez para todo el archivo).
-2. En `tests/unit/TicketsView.spec.js`, quita el `return` de la Promise en el
-   test de carga:
-   `it("carga tickets", function () { wrapper.vm.loadTickets(); expect(...); })`.
+1. En `tests/unit/store-tickets.spec.js`, en el bloque `actions/fetchTickets`,
+   comenta el `jest.clearAllMocks()` del `beforeEach` y saca la creación de
+   `context` del `beforeEach`: que haya un solo `context` para todo el bloque.
+2. En `tests/unit/ticketService.spec.js`, quita el `return` de la Promise en el
+   test de `getTickets`:
+   `ticketService.getTickets({ status: "open" }).then(function (result) { … });`
 
 ---
 
@@ -1978,12 +2287,11 @@ qué estado está afirmando?
 debía**— y síntomas opuestos:
 
 1. *El test que depende del orden.* Los mocks son objetos vivos que acumulan
-   llamadas: sin `jest.clearAllMocks()` entre tests, el segundo hereda el
-   historial del primero y `toHaveBeenCalledTimes(1)` recibe 3. Y el store creado
-   una sola vez para todo el archivo arrastra los datos que dejaron los tests
-   anteriores, así que la action con caché decide **no** llamar al servicio
-   —"ya tengo datos"— y el contador vuelve a no cuadrar. Corrido solo, el archivo
-   empieza limpio y todo pasa.
+   llamadas: sin `jest.clearAllMocks()` entre tests, cada uno hereda el historial
+   de los anteriores. Y el `context` compartido trae el mismo `commit` espía para
+   todos. La prueba de caché exige que ni el servicio ni `commit` se hayan
+   llamado, y recibe las llamadas de las dos pruebas que corrieron antes: falla.
+   Corrida sola (`-t "con caché"`), empieza limpia y pasa.
 
 2. *El test que nunca falla.* No hay `return` de la Promise, así que Jest da el
    test por terminado antes de que se resuelva: la aserción corre sobre el estado
@@ -1993,23 +2301,28 @@ debía**— y síntomas opuestos:
 **Parche mínimo:**
 
 ```js
-// tests/unit/store-tickets.spec.js
-var store;
+// tests/unit/store-tickets.spec.js — bloque actions/fetchTickets
+var context;
+
 beforeEach(function () {
-  jest.clearAllMocks();          // que un test no herede llamadas del anterior
-  store = createStore();         // ni estado del anterior
+  jest.clearAllMocks(); // que un test no herede llamadas del anterior
+  context = {           // ni estado del anterior: un contexto nuevo por test
+    commit: jest.fn(),
+    state: { items: [] }
+  };
 });
 ```
 
 ```js
-// tests/unit/TicketsView.spec.js
-it("carga los tickets al montarse", function () {
-  ticketService.getTickets.mockResolvedValue([{ id: 1, title: "X", status: "open" }]);
-  var wrapper = shallowMount(TicketsView, { … });
+// tests/unit/ticketService.spec.js
+it("getTickets pide /tickets con los params y devuelve res.data", function () {
+  apiClient.get.mockResolvedValue({ data: [{ id: 1 }], status: 200 });
 
-  return wrapper.vm.loadTickets().then(function () {   // ← el return que faltaba
-    expect(wrapper.vm.tickets).toHaveLength(1);
-    expect(wrapper.vm.loading).toBe(false);
+  return ticketService.getTickets({ status: "open" }).then(function (result) {   // ← el return que faltaba
+    expect(apiClient.get).toHaveBeenCalledWith("/tickets", {
+      params: { status: "open" }
+    });
+    expect(result).toEqual([{ id: 1 }]);
   });
 });
 ```
@@ -2031,12 +2344,12 @@ entenderla: **el test de que el test funciona** es romper el código de producci
 y comprobar que se pone rojo.
 
 ```bash
-# rompe a propósito el filtro y corre la suite
+# rompe a propósito el servicio y corre su test
 git stash list                      # asegúrate de poder volver
-# … edita computed filteredTickets para que devuelva siempre this.tickets …
-npx vue-cli-service test:unit
-# debe FALLAR. Si pasa, el test no prueba nada.
-git checkout -- src/views/TicketsView.vue
+# … edita getTickets para que devuelva res en vez de res.data …
+npx vue-cli-service test:unit tests/unit/ticketService.spec.js
+# debe FALLAR. Si pasa, el test no prueba nada: es el verde falso de este incidente.
+git checkout -- src/services/ticketService.js
 ```
 
 **Prevención.** Dos hábitos:
@@ -2153,9 +2466,11 @@ avisa**. En `store/index.js`:
 strict: process.env.NODE_ENV !== "production",   // caro: solo en dev
 ```
 
-En desarrollo, `strict` lanza un error inmediato en cuanto alguien escribe en el
-state fuera de una mutation, así que el bug se caza al primer intento y nunca
-llega a manifestarse como dato incorrecto. En el build de producción `strict`
+En desarrollo, `strict` reporta un error en la consola en cuanto alguien escribe en
+el state fuera de una mutation —`[vuex] do not mutate vuex store state outside
+mutation handlers`—, así que el bug se caza al primer intento. Ojo con lo que
+`strict` **no** hace: no impide la escritura, la denuncia; el dato queda igual de
+mal, solo que con un error rojo al lado. En el build de producción `strict`
 está apagado —cuesta caro, y por eso se apaga—, la escritura furtiva ocurre en
 silencio, y sus consecuencias aparecen mucho después y lejos: contadores que no
 cuadran, listas que se reordenan solas, y una consola impecable.
@@ -2188,8 +2503,8 @@ línea: el ritual de despliegue tiene que incluir una pasada por el build.
    los source maps— pegada en el README. Esa lista es lo que convierte "en mi
    máquina funciona" en una hipótesis comprobable en vez de una discusión.
 
-**Prueba de regresión.** El test del incidente 10 (`strict` caza la escritura
-directa) cubre la causa. Para el entorno, lo que corresponde no es un test sino
+**Prueba de regresión.** El test del incidente 10 (el store del proyecto caza la
+escritura directa) cubre la causa. Para el entorno, lo que corresponde no es un test sino
 una comprobación en el pipeline: que el build se genere y se sirva en CI, y que
 al menos un recorrido básico se ejecute contra `dist`, no contra el dev server.
 
@@ -2257,9 +2572,10 @@ cp mock/db.incidente-13.json db.json
 
 El archivo alterno es el `db.seed.json` con tres diferencias: el usuario
 `{ "username": "lmcorrea", "name": "Laura Milena Correa", "role": "agent" }`,
-cuatro tickets `resolved` con `assignee: "lmcano"` y tres con
-`assignee: "lmcorrea"`, y un ticket `closed` asignado a `jpmesa`, que no existe
-en `users`.
+tickets `resolved` hasta sumar cuatro de `lmcano` —la semilla ya trae uno, el
+#3— y tres de `lmcorrea`, y un ticket `closed` asignado a `jpmesa`, que no existe
+en `users`. Con eso la tabla dice lo que dice el ticket: una sola fila `LMC` con
+siete resueltos, y un `???` con uno.
 
 ---
 
@@ -2350,7 +2666,8 @@ Sobre `???`: el parche lo hace legible, no lo resuelve. Mientras los usuarios se
 borren en vez de desactivarse, va a haber tickets que apuntan a nadie. Eso se
 anota en los pendientes del cuaderno.
 
-**Prueba de regresión.**
+**Prueba de regresión.** Dentro del `describe("ticketStats")` de la Fase 11,
+que ya importa `scoreBoard`:
 
 ```js
 // tests/unit/ticketStats.spec.js

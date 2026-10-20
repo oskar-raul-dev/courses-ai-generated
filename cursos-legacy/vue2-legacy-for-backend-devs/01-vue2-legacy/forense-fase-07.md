@@ -41,15 +41,16 @@ Antes de medir nada, delimita. Entra y sal de `/metrics` cinco veces y mira la
 consola.
 
 ```
-Uncaught Error: Canvas is already in use. Chart with ID '0' must be destroyed
-before the canvas with ID 'statusChart' can be reused.
+(consola limpia)
 ```
 
-**Qué descarta.** Si ese error aparece, la investigación prácticamente terminó
-en el primer paso: alguien está creando un chart nuevo sobre un canvas que
-todavía cree tener uno vivo. Es la forma **ruidosa** del problema, y hay que
-agradecerla. Si la consola está limpia y la lentitud igual crece, sigue al
-paso 2: estás ante la forma silenciosa, que es la que trae el ticket de hoy.
+**Qué descarta.** Descarta el atajo: con chart.js 2.9, olvidar `chart.destroy()`
+**no** produce ningún error, así que la consola limpia no prueba que todo esté
+bien. Si en cambio ves `Canvas is already in use. Chart with ID '0' must be
+destroyed before the canvas … can be reused`, tu proyecto ya está en chart.js 3,
+que sí lo exige y lo avisa: la investigación terminó en el primer paso. Con la
+consola limpia y la lentitud creciendo, sigue al paso 2: es la forma silenciosa,
+la de chart.js 2, y la que trae el ticket de hoy.
 
 ### Paso 2 — ¿qué componente lo dispara?
 
@@ -89,7 +90,8 @@ undefined
 
 **Qué descarta.** Confirma la segunda mitad. Si no hay `beforeDestroy`, nadie
 llama a `chart.destroy()`, y cada visita a la vista deja un gráfico zombi: sus
-listeners de resize siguen atados a `window`, sus animaciones siguen agendadas y
+monitor de tamaño (los `div` ocultos `chartjs-size-monitor` que chart.js 2 inserta
+junto al canvas, con sus listeners) sigue escuchando, sus animaciones siguen agendadas y
 su canvas sigue referenciado, así que el recolector de basura no puede llevarse
 nada. **Ese es el ventilador.** Cinco visitas, cinco charts vivos, cinco veces
 el trabajo por cada repintado.
@@ -139,7 +141,7 @@ existiera el DOM. No degrada nada; simplemente no funciona. El hook correcto es
 | Lo que ves | Dónde empezar |
 |---|---|
 | La pestaña se degrada con el uso, sin errores | Instancias de librería que nadie destruye |
-| `Canvas is already in use` al volver a la vista | Falta `chart.destroy()` en `beforeDestroy` |
+| Lentitud que crece al volver a la vista, sin errores en consola | Falta `chart.destroy()` en `beforeDestroy` |
 | Todo va lento apenas se pinta el primer gráfico | La instancia está en `data`: reactividad recursiva sobre un objeto enorme |
 | El gráfico no se ve, o mide una barbaridad de alto | Canvas dentro de un contenedor sin dimensiones, con `responsive: true` |
 | `this.$refs.canvas` es `undefined` | Se pidió en `created`: todavía no hay DOM |
@@ -168,7 +170,7 @@ cualquier otra.
 **"Le pongo `Object.freeze` y listo."** `Object.freeze` sí resuelve la
 reactividad recursiva de un objeto de datos —la fase lo enseña como escape— pero
 no resuelve el leak: un chart congelado que nadie destruye sigue vivo, sigue
-escuchando `resize` y sigue consumiendo. Son dos problemas, y arreglar uno deja
+escuchando cambios de tamaño y sigue consumiendo. Son dos problemas, y arreglar uno deja
 el ventilador encendido.
 
 ---

@@ -2,7 +2,7 @@
 
 > El error que define el framework. Y la fase que define la ruta.
 
-> 🅝 **Ruta Nuxt.** No hay núcleo común aquí: esta fase **no existe** en Q ni en
+> 🧭 **Ruta Nuxt.** No hay núcleo común aquí: esta fase **no existe** en Q ni en
 > VU. Donde ellos migran un formulario, tú descubres que tu código corre en dos
 > sitios distintos y que hasta hoy solo probaste uno. Si vienes de leer que "X2
 > es migrar el CRUD", olvídalo: en Nuxt migrar el CRUD no enseña nada. El
@@ -83,22 +83,16 @@ código corre: el navegador.**
 
 Nuxt en modo `universal` (el que elegimos en NX1) rompe esa suposición de raíz:
 
-```
-        ┌─────────────────── SERVIDOR (Node) ───────────────────┐
-Petición │  1. Nuxt ejecuta tu componente                        │
-  GET   →│  2. Corre beforeCreate() y created()                  │
-/tickets │  3. Renderiza el HTML final                           │  →  HTML
-        │     ⚠️ AQUÍ NO HAY window, document, localStorage      │
-        └───────────────────────────────────────────────────────┘
-                                    │
-                                    ▼ (el navegador recibe el HTML pintado)
-        ┌─────────────────── CLIENTE (navegador) ───────────────┐
-        │  4. El navegador muestra el HTML (rápido, ya viene)   │
-        │  5. Vue arranca OTRA VEZ sobre ese HTML                │
-        │  6. Corre beforeCreate() y created()  ← ¡DE NUEVO!    │
-        │  7. Corre mounted()  ← ESTA VEZ SÍ, y solo aquí       │
-        │     ✅ AQUÍ SÍ hay window, document, etc.             │
-        └───────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    REQ["Petición GET /tickets"] --> SRV
+    subgraph SRV["SERVIDOR (Node)"]
+        S1["1. Nuxt ejecuta tu componente"] --> S2["2. Corre beforeCreate y created"] --> S3["3. Renderiza el HTML final. AQUÍ NO HAY window, document ni localStorage"]
+    end
+    S3 -- "HTML" --> CLI
+    subgraph CLI["CLIENTE (navegador)"]
+        C1["4. El navegador muestra el HTML: ya se ve"] --> C2["5. Vue arranca OTRA VEZ sobre ese HTML"] --> C3["6. Corre beforeCreate y created DE NUEVO"] --> C4["7. Corre mounted: AQUÍ SÍ hay window"]
+    end
 ```
 
 Dos consecuencias que hay que interiorizar antes de tocar una línea:
@@ -208,23 +202,12 @@ DOM al DOM real que ya estaba ahí.
 
 Ese proceso de "revivir el HTML muerto del servidor" se llama **hidratación**.
 
-```
-SERVIDOR                          CLIENTE
-────────                          ───────
-render → HTML "muerto"    ──►    el navegador lo pinta (ya se ve)
-                                          │
-                                          ▼
-                                  Vue arranca y HIDRATA:
-                                  "¿el HTML que hay coincide con
-                                   el que YO habría generado?"
-                                          │
-                        ┌─────────────────┴─────────────────┐
-                        ▼                                     ▼
-                  ✅ COINCIDE                          ❌ NO COINCIDE
-             Vue reutiliza el DOM               Vue tira el HTML del server
-             existente. Perfecto.               y re-renderiza en cliente.
-             Rápido y sin parpadeo.             → parpadeo, o peor: el DOM
-                                                  se rompe EN SILENCIO.
+```mermaid
+flowchart TD
+    A["SERVIDOR: render, HTML muerto"] -- "el navegador lo pinta, ya se ve" --> B["CLIENTE: Vue arranca y HIDRATA"]
+    B --> Q{"¿El HTML que hay coincide con el que YO habría generado?"}
+    Q -- "sí" --> OK["✅ COINCIDE: Vue reutiliza el DOM existente. Rápido y sin parpadeo"]
+    Q -- "no" --> NO["❌ NO COINCIDE: Vue tira el HTML del server y re-renderiza. Parpadeo, o el DOM se rompe en silencio"]
 ```
 
 ### La condición que no puedes violar
@@ -326,27 +309,40 @@ mundos comparten**. En Nuxt 2 el paquete de la época es
 
 ### El punto de partida: el dashboard, tal cual, reventando
 
-Copia `TicketsView.vue` de F4 a `pages/tickets/index.vue` **sin cambiar nada** y
-arranca `npm run dev`. Vas a ver esto en la **terminal** (no en el navegador — esa
+Copia `TicketsView.vue` de F4 a `pages/tickets/index.vue` **sin cambiar nada** —bueno,
+casi: copia también `components/` y `services/` a la raíz del proyecto Nuxt, y cambia los
+imports relativos de F4 (`../components/…`, `../services/…`), que desde `pages/tickets/` ya no
+apuntan a nada, por `~/components/…` y `~/services/…`— y arranca `npm run dev`.
+
+La API no se muda: la ruta NX usa la Mock API y el servidor de sockets **del tronco**.
+Déjalos corriendo en otra terminal, desde `tiquetera-legacy`, con `npm run mock` y
+`npm run sockets` (F3 y F8). El `db.json` que lee json-server es el del tronco, y es ahí
+donde NX4 agrega la colección `activity`. Como json-server ya ocupa el `:3000`, que es
+también el puerto por defecto de Nuxt, `npm run dev` arranca en otro puerto: NX3 explica
+por qué y lo fija en el 8080.
+
+Vas a ver esto en la **terminal** (no en el navegador — esa
 es la primera pista de que algo cambió):
 
 ```
- ERROR  window is not defined
+ ERROR  [Vue warn]: Error in created hook: "ReferenceError: window is not defined"
 
-  at pages/tickets/index.vue:XX
-  at Object.created (pages/tickets/index.vue)
-  at callHook (node_modules/vue/dist/vue.runtime.common.dev.js)
-  at Watcher.get (...)
-  ...
-  at renderToString (node_modules/vue-server-renderer/...)
+found in
+
+---> <TicketsPage> at pages/tickets/index.vue
+       <Nuxt>
+         <.nuxt/layouts/default.vue> at .nuxt/layouts/default.vue
+           <Root>
 ```
 
-> 🔎 **Qué hace este stack trace.** Léelo de abajo arriba: `renderToString` es Nuxt
-> pidiéndole al servidor que convierta tu componente en HTML. Sube y encuentras
-> `callHook → created`. Es decir: **el error salió en `created()`, ejecutándose en
-> el servidor.** La línea `XX` es donde tu código tocó `window`. Si el mismo
-> componente funcionaba en F4, es porque en F4 `created()` solo corría en el
-> navegador. Ahora corre en Node primero, y Node no tiene `window`.
+Y el navegador recibe un **500**, no la página.
+
+> 🧠 **Qué dice este aviso.** Léelo en dos partes. La primera línea nombra el hook —**`created`**—
+> y el error de verdad: `ReferenceError: window is not defined`. La segunda es el árbol de
+> componentes, de abajo arriba: `<Root>` → el layout → `<Nuxt>` → **tu página**. Es decir: **el
+> error salió en `created()` de `TicketsPage`, ejecutándose en el servidor** (por eso lo ves en la
+> terminal y no en la consola del navegador). Si el mismo componente funcionaba en F4, es porque en
+> F4 `created()` solo corría en el navegador. Ahora corre en Node primero, y Node no tiene `window`.
 
 *(Si tu `TicketsView` de F4 no toca `window` directamente, lo hará en cuanto le
 enganches el gráfico de F7 o el socket de F8, o en cuanto un ejercicio de F4 —el
@@ -358,14 +354,16 @@ verdad ninguna línea toca `window`, mete tú una a propósito para verlo:
 
 ```vue
 <!-- pages/tickets/index.vue -->
+<!-- el <template> es el de F4, sin cambios -->
 <script>
+import PageTitle from "~/components/common/PageTitle.vue";
 import TicketsTable from "~/components/tickets/TicketsTable.vue";
 import TicketsSummary from "~/components/tickets/TicketsSummary.vue";
 import ticketService from "~/services/ticketService";
 
 export default {
   name: "TicketsPage",
-  components: { TicketsTable, TicketsSummary },
+  components: { PageTitle, TicketsTable, TicketsSummary },
   data: function () {
     return {
       tickets: [],
@@ -418,7 +416,33 @@ export default {
 </script>
 ```
 
-> ✅ **Buenas prácticas.** Nada en `created()` que huela a navegador. Si necesitas
+Y el filtro `formatDate`, que en F4 se registraba en `main.js` y aquí no tiene dónde vivir, se muda a
+un plugin. Sin él, la tabla deja la columna de fecha vacía en cuanto lleguen tickets:
+
+```js
+// plugins/filters.js — el filtro global que en F4 vivía en main.js
+import Vue from "vue";
+
+Vue.filter("formatDate", function (value) {
+  if (!value) return "";
+  var d = new Date(value);
+  return d.toLocaleDateString("es-CO", {
+    year: "numeric", month: "short", day: "numeric"
+  });
+});
+```
+
+```js
+// nuxt.config.js
+plugins: [
+  "~/plugins/filters.js"
+],
+```
+
+(Sin registrar `PageTitle` en `components`, el servidor deja `<page-title …>` tal cual en el HTML y
+el título no aparece: el auto-import de Nuxt lo conoce como `<CommonPageTitle>`, por su carpeta.)
+
+> 💡 **Buenas prácticas.** Nada en `created()` que huela a navegador. Si necesitas
 > una decisión temprana (antes del render) que dependa de datos, esa NO va en
 > `mounted()` sino en `asyncData` — pero eso es NX3. Aquí, la regla mínima: mueve a
 > `mounted()` y respira.
@@ -430,13 +454,13 @@ Añade esto al `<template>` de la página:
 
 ```html
 <!-- 💣 A PROPÓSITO: esto pinta distinto en servidor y cliente -->
-<p class="text-muted small">Dashboard cargado a las {{ ahora }}</p>
+<p class="text-muted small">Dashboard cargado a las {{ loadedAt }}</p>
 ```
 
 ```js
 // y en el componente:
 computed: {
-  ahora: function () {
+  loadedAt: function () {
     return new Date().toLocaleTimeString();  // 💣 no determinista
   }
 }
@@ -451,7 +475,7 @@ for example nesting block-level elements inside <p>, or missing <tbody>.
 Bailing hydration and performing full client-side render.
 ```
 
-> 🔎 **Qué pasó.** El servidor renderizó `10:00:00`. Para cuando el navegador
+> 🧠 **Qué pasó.** El servidor renderizó `10:00:00`. Para cuando el navegador
 > hidrató, eran `10:00:00` + 300 ms → `10:00:01`. No coinciden → Vue **abandona la
 > hidratación** (*"Bailing hydration"*) y re-renderiza toda la página en cliente.
 > Perdiste el SSR de esa página entera por un reloj en el template.
@@ -460,10 +484,10 @@ El arreglo: si de verdad quieres mostrar la hora, que la ponga el cliente.
 
 ```js
 data: function () {
-  return { ahora: "" };  // el servidor pinta vacío
+  return { loadedAt: "" };  // el servidor pinta vacío
 },
 mounted: function () {
-  this.ahora = new Date().toLocaleTimeString();  // el cliente la rellena
+  this.loadedAt = new Date().toLocaleTimeString();  // el cliente la rellena
   this.loadTickets();
 }
 ```
@@ -499,13 +523,17 @@ beforeDestroy: function () {
 }
 ```
 
-> 🔎 Regla rápida: **¿es un componente visual que necesita el DOM?** → `<client-only>`.
+> 💡 Regla rápida: **¿es un componente visual que necesita el DOM?** → `<client-only>`.
 > **¿es lógica (un socket, un timer, leer `navigator`)?** → `mounted()` +
 > `process.client`, y limpia en `beforeDestroy`.
 
 ### La auth a cookies 💸
 
 **1. Instalar y registrar el módulo** (`nuxt.config.js`):
+
+```bash
+npm install --save-exact cookie-universal-nuxt@2.2.2
+```
 
 ```js
 // nuxt.config.js
@@ -568,13 +596,23 @@ export default {
 };
 ```
 
+Y el interceptor viejo **sale** de `services/apiClient.js`: la instancia se queda con su `baseURL`
+y nada más. Si lo dejas, hoy no lo notas —el dashboard de esta fase pide desde `mounted()`, en el
+navegador—, pero el día que el servidor haga la primera petición por `apiClient` (NX3) la página
+llega vacía y la terminal dice `Error in fetch(): localStorage is not defined`. Con eso, el Bearer
+viaja solo por el `$axios` del plugin; los `services/` del tronco siguen usando `apiClient`, sin
+token. A json-server no le importa; a un backend con auth sí, y NX3 dice dónde se paga.
+
 **4. El módulo Vuex de auth guarda/limpia la cookie** (a través del contexto, no
 de `localStorage`). En un store de Nuxt, `this` dentro de una action **es el
 propio store**, y ahí `cookie-universal-nuxt` deja colgado `this.$cookies` —el
 mismo objeto que funciona en servidor y en cliente:
 
 ```js
-// store/modules/auth.js
+// store/auth.js — en Nuxt, el nombre del archivo ES el módulo: store/auth.js es "auth".
+// (Un store/modules/auth.js sería el módulo "modules/auth", y tu dispatch("auth/login")
+// no lo encontraría.) El state y las mutations SET_SESSION/CLEAR_SESSION son los de F2,
+// exportados sueltos: export const state = function () { return { token: "", user: null }; }
 import authService from "~/services/authService";
 
 export const actions = {
@@ -602,7 +640,7 @@ export const actions = {
 > login la sesión persiste en cliente; la recarga con SSR "completo" es deuda
 > abierta de una fase.
 
-> 🔎 **Lo que cambió de fondo:** en F2 la sesión vivía en un almacén que solo el
+> 🧠 **Lo que cambió de fondo:** en F2 la sesión vivía en un almacén que solo el
 > cliente veía. Ahora vive en uno que **viaja en cada request**, y por eso el
 > servidor puede renderizar la página **sabiendo ya quién eres**. Ese es el
 > desbloqueo real de la migración a cookies — no es "otro storage", es "el storage
@@ -614,8 +652,8 @@ export const actions = {
 
 ### Errores comunes
 
-- **dejar `loadTickets()` en `created()`** "porque en F4 estaba ahí": en F4
-  `created`/`mounted` daba casi igual porque solo había cliente. Aquí `created`
+- **pasar `loadTickets()` a `created()`** "porque así carga antes": en F4 está en
+  `mounted`, y `created`/`mounted` daba casi igual porque solo había cliente. Aquí `created`
   corre en Node y si algo de la cadena toca `window`, revienta;
 - **envolver el `<template>` raíz entero en `<client-only>`** para que deje de
   petar: funciona, y acabas de convertir tu app SSR en una SPA con un servidor
@@ -807,12 +845,12 @@ HTML distintos, y uno de los dos perdió.
 - Vue 2 SSR Guide — Writing Universal Code (qué evitar en el servidor):
   https://v2.ssr.vuejs.org/guide/universal.html
 - MDN — HTTP Cookies (por qué viajan en cada request):
-  https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies
+  https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies
 
 **Seguridad (para el ejercicio 25)**
 
-- OWASP — HttpOnly: https://owasp.org/www-community/HttpOnly
-- OWASP — SameSite: https://owasp.org/www-community/SameSite
+- OWASP — HttpOnly: https://community.owasp.org/HttpOnly
+- OWASP — SameSite: https://community.owasp.org/SameSite
 
 **Orden de lectura sugerido:** Nuxt Lifecycle → Vue SSR "Writing Universal Code"
 (quince minutos y es medio concepto 1) → Vue SSR Hydration → volver al código y

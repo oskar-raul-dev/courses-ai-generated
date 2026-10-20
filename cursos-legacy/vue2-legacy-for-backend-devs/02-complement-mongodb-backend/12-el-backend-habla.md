@@ -237,18 +237,33 @@ socket igual que los demás, y su UI ya está preparada para reconciliar por
 ### `src/server.js` — dos puertas, un proceso
 
 ```js
+// src/server.js
 const http = require("http");
+const mongoose = require("mongoose");
 const app = require("./app");            // el Express de la Fase 10
+const { connect } = require("./db");
+const config = require("./config");
 const realtime = require("./realtime/io");
 
-// Puerta 1: la API donde siempre (:3000)
-app.listen(3000, function () { console.log("API en :3000"); });
+// las dos conexiones de la Fase 11, antes de abrir ninguna puerta
+Promise.all([
+  connect(),
+  mongoose.connect(config.mongoUri, { dbName: config.dbName, useNewUrlParser: true, useUnifiedTopology: true })
+]).then(function () {
+  // Puerta 1: la API donde siempre (:3000)
+  app.listen(config.port, function () { console.log("API en :" + config.port); });
 
-// Puerta 2: los sockets donde el cliente ya escucha (:4000)
-const socketServer = http.createServer();   // http pelado: solo transporta al io
-realtime.init(socketServer);
-socketServer.listen(4000, function () { console.log("Sockets en :4000"); });
+  // Puerta 2: los sockets donde el cliente ya escucha (:4000)
+  const socketServer = http.createServer();   // http pelado: solo transporta al io
+  realtime.init(socketServer);
+  socketServer.listen(4000, function () { console.log("Sockets en :4000"); });
+});
 ```
+
+Las conexiones no se van: es el `server.js` de la Fase 11 con una puerta más. Si
+reescribes el archivo desde cero y te olvidas del `Promise.all`, el proceso arranca,
+los dos puertos responden y cada request a la API muere con
+`DB no conectada: llama a connect() al arrancar`.
 
 🔎 **Qué hace:** un solo proceso Node, dos listeners. El contrato fija ambos
 puertos (`baseURL :3000`, socket `:4000`) y los respetamos a rajatabla — el
@@ -264,15 +279,16 @@ verdad.
 // src/services/tickets.service.js (el create de la Fase 10, completado)
 const realtime = require("../realtime/io");
 const { serializeTicket } = require("../lib/serializers");
-const { buildTicket } = require("../lib/tickets");   // helper de la Fase 11
-const { getDb } = require("../db");
 
-async function createTicket(data, user) {
-  const doc = buildTicket(data, user);                       // Fase 11: reporter del token
-  await getDb().collection("tickets").insertOne(doc);        // 1.º persistir
-  const ticket = serializeTicket(doc);                       // 2.º MISMA forma que la API
-  realtime.emit("ticket:created", ticket);                   // 3.º y solo entonces, hablar
-  return ticket;
+// data llega ya armado por el controller de la Fase 11:
+// whitelist del body + reporter del token + status "open" + createdAt
+async function create(data) {
+  const doc = Object.assign({}, data, { createdAt: new Date(data.createdAt || Date.now()), history: [] });
+  delete doc.id;
+  const r = await getDb().collection("tickets").insertOne(doc);   // 1.º persistir
+  const saved = await getById(r.insertedId);
+  realtime.emit("ticket:created", serializeTicket(saved));        // 2.º MISMA forma que la API, 3.º y solo entonces, hablar
+  return saved;                                                   // el controller serializa su respuesta igual
 }
 ```
 
@@ -290,7 +306,7 @@ El token de la Fase 11 existe; los sockets pueden pedirlo:
 
 ```js
 // dentro de init(), antes de io.on("connection"):
-const { verifyToken } = require("../lib/jwt");     // Fase 11
+const { verify: verifyToken } = require("../lib/auth");     // el verify de la Fase 11
 
 io.use(function (socket, next) {
   const token = socket.handshake.query && socket.handshake.query.token;
@@ -353,7 +369,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }           // 10 MB: límite DECLARADO
 });
 const controller = require("../controllers/attachments.controller");
-const { requireAuth } = require("../middleware/auth");   // Fase 11
+const requireAuth = require("../middleware/authenticate");   // el guard de la Fase 11
 
 router.post("/", requireAuth, upload.single("file"), controller.upload);
 router.get("/:id", controller.download);
@@ -403,12 +419,25 @@ async function download(id, res) {
 > no un binario. Dos representaciones del mismo recurso, dos rutas: el `:id` a
 > secas te dice qué es el archivo; el `/download` te lo da.
 
+```js
+// src/app.js — el manejador central de la Fase 10, con la traducción de multer
+app.use(function (err, req, res, next) {
+  if (err.code === "LIMIT_FILE_SIZE") {                   // MulterError
+    return res.status(413).json({ error: "Archivo demasiado grande" });
+  }
+  console.error(err);
+  res.status(500).json({ error: "Internal error" });
+});
+```
+
 🔎 **Qué hace:** subir = stream de escritura al bucket con la metadata que
 liga el archivo a su ticket y a su autor (`req.user`, no el body — lección de
 la Fase 11 aplicada a archivos); descargar = **pipe** del stream de lectura a
 la respuesta, sin cargar el archivo en memoria. ✅ **Buenas prácticas
-sembradas:** límite de tamaño declarado en multer (el error del cliente es un
-413, no un server caído), `memoryStorage` porque el destino es otro stream
+sembradas:** límite de tamaño declarado en multer (el error del cliente debe ser un
+413, no un server caído — pero ojo: multer lo **lanza** como `MulterError` con
+`code: "LIMIT_FILE_SIZE"`, y si nadie lo traduce llega al manejador central de la
+Fase 10 y sale como `500`; la traducción es una línea en ese manejador, abajo), `memoryStorage` porque el destino es otro stream
 (nada toca el disco del server), y la metadata como ciudadana de primera —
 `GET /attachments?ticketId=X` es un `find` sobre `attachments.files`
 (ejercicio 6).
@@ -433,7 +462,8 @@ io.use(middleware)                     // handshake: token en query → socket.u
 // GridFS: fs.files (metadata) + fs.chunks (255 KB) vía GridFSBucket
 openUploadStream(name, { contentType, metadata }) ← stream.end(buffer)
 openDownloadStream(id).pipe(res)       // streaming: la RAM no es tu buffer
-multer({ memoryStorage, limits: { fileSize } })  // límite DECLARADO = 413
+multer({ memoryStorage, limits: { fileSize } })  // límite DECLARADO…
+//   …y traducido en el manejador central: LIMIT_FILE_SIZE → 413 (si no, 500)
 ```
 
 ---
@@ -487,7 +517,7 @@ socket.on("ticket:updated", function (t) { console.log("socket:", t); });
 Y en la terminal, sobre el mismo ticket:
 
 ```bash
-curl -s localhost:4000/tickets/<id> | head -c 300
+curl -s localhost:3000/tickets/<id> | head -c 300
 ```
 
 Si uno trae `_id` y fechas crudas y el otro `id` y fechas ISO, acabas de
@@ -561,22 +591,22 @@ encontrar el bug que solo pasa "cuando llega en vivo".
 
 - socket.io 2.x — documentación archivada del servidor: https://socket.io/docs/v2/
 - socket.io 2.x — Migración 2↔3 (léela para entender por qué NO migras): https://socket.io/docs/v4/migrating-from-2-x-to-3-0/
-- GridFS (manual 4.4): https://www.mongodb.com/docs/v4.4/core/gridfs/
+- GridFS (manual 4.4): https://www.mongodb.com/docs/manual/core/gridfs/
 - Driver 3.6 — GridFSBucket: https://mongodb.github.io/node-mongodb-native/3.6/api/GridFSBucket.html
   > ⚠️ **Aviso de versión:** GridFS va por el **driver nativo 3.6** (`require("mongodb")`), no por Mongoose 5 (Fase 11). Tener Mongoose para los modelos no obliga a canalizar los streams de archivos por él; el bucket es cosa del driver.
 - multer 1.x: https://github.com/expressjs/multer/tree/v1.4.4
-- `$unionWith` (nuevo en 4.4 — para el ej. 33): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/unionWith/
+- `$unionWith` (nuevo en 4.4 — para el ej. 33): https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionwith/
 - Node.js streams (v14): https://nodejs.org/docs/latest-v14.x/api/stream.html
 
 **Web / apoyo**
 
-- MDN — Range requests: https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests
+- MDN — Range requests: https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Range_requests
 - OWASP — File Upload Cheat Sheet (el ej. 27 sale de aquí): https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
 
 **Video (YouTube)**
 
 - WebSockets in 100 Seconds — Fireship: https://www.youtube.com/watch?v=1BfCnjr_Vjg
-- Socket.io Crash Course — Traversy Media (verifica que use 2.x, o mira las diferencias con ojo crítico): https://www.youtube.com/watch?v=ZKEqqIO7n-k
+- Learn Socket.io In 30 Minutes — Web Dev Simplified (verifica que use 2.x, o mira las diferencias con ojo crítico): https://www.youtube.com/watch?v=ZKEqqIO7n-k
 
 **Orden de lectura sugerido para perfil senior:**
 el diagrama del cambio arquitectónico (arriba — es la fase entera) →

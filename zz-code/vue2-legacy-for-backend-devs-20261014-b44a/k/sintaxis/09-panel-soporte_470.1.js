@@ -1,0 +1,15 @@
+function __f(){
+module.exports = {
+  name: "CommentBox",
+  props: {
+    value: { type: String, default: "" },   // ← mitad 1 del contrato v-model
+    sending: { type: Boolean, default: false }
+  },
+  methods: {
+    submit: function () {
+      if (this.value.trim()) this.$emit("submit");
+    }
+  }
+};
+
+}

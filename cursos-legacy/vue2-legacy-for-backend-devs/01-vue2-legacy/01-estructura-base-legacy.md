@@ -215,6 +215,32 @@ export default { name: "AppSidebar" };
 
 ---
 
+### `components/common/PageTitle.vue`
+
+Lo usan todas las vistas desde la Fase 2 (el login, el dashboard, el CRUD, las
+métricas), así que se publica aquí y no como ejercicio. Es el componente más
+pequeño del proyecto a propósito: un `<h1>` con una prop obligatoria (`title`) y
+una opcional (`subtitle`), que piden las fases 4, 6, 7 y 9.
+
+```vue
+<template>
+  <h1 class="h3 mb-3">
+    {{ title }}
+    <small v-if="subtitle" class="text-muted">{{ subtitle }}</small>
+  </h1>
+</template>
+
+<script>
+export default {
+  name: "PageTitle",
+  props: {
+    title: { type: String, required: true },
+    subtitle: { type: String, default: "" }
+  }
+};
+</script>
+```
+
 ## 🛣️ Router mínimo
 
 Rutas de la fase:
@@ -454,7 +480,7 @@ más que el fix.
 3. Agrega el enlace a `/about` en el sidebar.
 4. Cambia `HomeView.vue` para que hable de la Tiquetera y no del Hello World.
 5. Cambia el título del header por "Tiquetera — Soporte" y agrega un emoji.
-6. Crea el componente `common/PageTitle.vue` que reciba un prop `title` y lo pinte en un `<h1>`.
+6. Quita la prop `title` de un `<page-title>` y observa la consola. ¿Qué advierte Vue, y en qué línea de `PageTitle.vue` se decide?
 7. Usa `PageTitle` en dos vistas distintas.
 8. Navega a `/tickets/999` y verifica qué muestra el detalle. ¿Por qué no da 404?
 
@@ -465,7 +491,7 @@ más que el fix.
 11. Haz que cada fila tenga un `router-link` al detalle del ticket.
 12. En `TicketDetailView.vue`, usa `ticketService.getTicketById($route.params.id)` para mostrar los datos reales del ticket.
 13. Si el id no existe, muestra un mensaje "Ticket no encontrado" en vez de romper.
-14. Agrega un prop opcional `subtitle` a `PageTitle` que solo se muestre si viene.
+14. `PageTitle` ya acepta `subtitle`. Compara en el navegador la vista de tickets con y sin subtítulo, y di qué cambia en el DOM cuando la prop no viene.
 15. Agrega un tercer ticket mock con estado `resolved` y verifica que aparece en la tabla.
 16. Marca el enlace activo del sidebar con la clase de Vue Router (`router-link-active`) y dale un estilo visible.
 
@@ -507,7 +533,7 @@ más que el fix.
 **Libros (consulta selectiva)**
 
 - *Vue.js in Action* — Hanchett & Listwon
-- *Vue.js 2 Design Patterns and Best Practices*
+- *Vue.js 2 Design Patterns and Best Practices* (Paul Halliday, Packt, 2018)
 
 > 💡 Usa estos materiales para fundamentos, pero implementa siguiendo la
 > estructura de este curso, no copiando la arquitectura de los cursos externos.

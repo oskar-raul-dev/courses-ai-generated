@@ -9,7 +9,7 @@
 
 ## 🎯 Propósito
 
-> 🔗 **Vienes de VU3**, que cerró migrando el dashboard a `v-data-table` y peleándose
+> 📚 **Vienes de VU3**, que cerró migrando el dashboard a `v-data-table` y peleándose
 > con Vuex por quién controla la paginación. La última frase de VU3 fue: *"ya migraste
 > lo que existía. Ahora te toca construir algo que no existía — Vuetify puro, sin un
 > original al que mirar de reojo. Y ahí es donde el theming, que en VU3 solo tocaba
@@ -171,10 +171,12 @@ Tu `src/plugins/vuetify.js` tiene, desde VU1, algo así:
 // src/plugins/vuetify.js
 import Vue from "vue";
 import Vuetify from "vuetify/lib"; // /lib para a-la-carte (deuda de VU1, pagada en VU3)
+import es from "vuetify/lib/locale/es";
 
 Vue.use(Vuetify);
 
 export default new Vuetify({
+  lang: { locales: { es: es }, current: "es" },
   theme: {
     dark: false, // ← el interruptor global. Lo vamos a tocar en vivo.
     themes: {
@@ -313,7 +315,7 @@ crea el riesgo de duplicados del ejercicio 24. Un solo "sí" no es cero.
 > Mismo dominio, distinto estado, **distinto veredicto**. Eso es criterio y no dogma:
 > "el timeline es local" es falso como regla; es verdadero **para este estado**.
 
-> 🔌 **¿Y por qué `activity:created` NO va al `socketPlugin` de F10?** En F10 sacaste
+> 🧠 **¿Y por qué `activity:created` NO va al `socketPlugin` de F10?** En F10 sacaste
 > los handlers de socket de las vistas y los centralizaste en un **plugin de Vuex**
 > (`store/plugins/socketPlugin.js`) que escucha `ticket:created`/`ticket:updated` y
 > commitea `tickets/UPSERT_TICKET` **una sola vez** para todas las vistas. Ese patrón
@@ -443,7 +445,8 @@ sitio limpio para registrar la actividad es **la action de F10
 // store/modules/tickets.js — la action YA EXISTE en F10. Le añadimos la línea 💸.
 updateTicket: function (context, payload) {
   // payload: { id, changes }  ← firma de F10, no la inventamos
-  var before = context.getters.ticketById(payload.id); // getter-función de F10
+  // || {}: si el ticket no está en el store (llegó por otra vía), no hay "antes" que comparar
+  var before = context.getters.ticketById(payload.id) || {}; // getter-función de F10
 
   return ticketService
     .updateTicket(payload.id, payload.changes)
@@ -483,7 +486,7 @@ intereses.
 > vez (el `takeTicket` de F9 manda los dos). Por eso derivamos **cero, uno o dos**
 > eventos del mismo PATCH, no uno fijo por llamada.
 
-### 5. `TicketActivity.vue` — Vuetify puro, color por rol
+### 5. `src/components/TicketActivity.vue` — Vuetify puro, color por rol
 
 Aquí está el corazón de la fase. Lee el `TYPE_META` con lupa: **cada `color` es un rol
 del tema, no un hex.** Compáralo mentalmente con el de Q4, donde ponía
@@ -493,8 +496,8 @@ roles semánticos que el tema resuelve y el dark mode reinterpreta.
 ```vue
 <template>
   <!-- Nada de <div class="card"> de Bootstrap: aquí manda <v-card>.
-       ⚠️ Este componente ASUME que hay un <v-app> ancestro (VU1). Sin él,
-       v-timeline no calcula sus estilos y el detalle es sutil de diagnosticar. -->
+       ⚠️ Este componente ASUME que hay un <v-app> ancestro (VU1). Sin él, los
+       colores por rol no pintan y el modo oscuro no llega: los dos cuelgan de <v-app>. -->
   <v-card outlined class="pa-4">
     <div class="d-flex align-center mb-4">
       <span class="text-h6">Actividad</span>
@@ -605,7 +608,7 @@ export default {
     },
 
     formatDate: function (iso) {
-      return new Date(iso).toLocaleString();
+      return new Date(iso).toLocaleString("es-CO"); // la fecha en español, no en el idioma del navegador
     },
 
     load: function () {
@@ -641,6 +644,7 @@ export default {
 
     this.onActivityHandler = this.onActivity.bind(this);
     socketService.on("activity:created", this.onActivityHandler);
+    // foto del momento: si el socket todavía se está abriendo, dice false
     this.live = socketService.isConnected();
   },
 
@@ -665,24 +669,40 @@ export default {
 | filtro por `ticketId` en `onActivity` | el socket es global; el componente es de UN ticket |
 | `unshift` | método parcheado de Vue 2 → dispara reactividad. `entries[0] = x` **no** (F4) |
 | `v-skeleton-loader` en loading | el patrón loading/error/data de F3, con la caja de Vuetify |
-| `<v-card outlined>` asume `<v-app>` | VU1: sin `<v-app>` ancestro, los estilos de `v-timeline` fallan de forma sutil |
+| `<v-card outlined>` asume `<v-app>` | VU1: sin `<v-app>` ancestro, los roles del tema no pintan y el modo oscuro no llega |
 
 ### 6. Uso desde el detalle (dentro del `<v-app>` de VU1)
 
 ```html
-<!-- src/views/TicketDetail.vue — TODO cuelga de <v-app> (en App.vue, VU1) -->
-<v-container>
-  <v-row>
-    <v-col cols="12" md="7">
-      <!-- 🤝 el formulario de VU2. Firma REAL de F5: prop initialTicket, evento @submit -->
-      <ticket-form :initial-ticket="ticket" @submit="onSubmit" @cancel="onCancel" />
-    </v-col>
-    <v-col cols="12" md="5">
-      <!-- :key fuerza el remount al cambiar de ticket: la lista muere y renace. A propósito. -->
-      <ticket-activity :key="ticket.id" :ticket-id="ticket.id" />
-    </v-col>
-  </v-row>
-</v-container>
+<!-- src/views/TicketDetailView.vue — la de F5; TODO cuelga de <v-app> (en App.vue, VU1).
+     El formulario NO está aquí: vive en TicketEditView. Al detalle se le suma la columna. -->
+<!-- ...el spinner y el error de carga de F5, igual... -->
+<v-row v-else-if="ticket">
+  <v-col cols="12" md="7">
+    <page-title :title="'#' + ticket.id + ' — ' + ticket.title" />
+    <p>{{ ticket.description }}</p>
+    <p>
+      <strong>Estado:</strong> {{ ticket.status }} ·
+      <strong>Prioridad:</strong> {{ ticket.priority }} ·
+      <strong>Asignado a:</strong> {{ ticket.assignee }}
+    </p>
+    <div class="mt-4">
+      <router-link
+        :to="'/tickets/' + ticket.id + '/edit'"
+        class="btn btn-outline-primary mr-2"
+      >
+        ✏️ Editar
+      </router-link>
+      <button class="btn btn-outline-danger" :disabled="deleting" @click="removeTicket">
+        {{ deleting ? "Eliminando..." : "🗑️ Eliminar" }}
+      </button>
+    </div>
+  </v-col>
+  <v-col cols="12" md="5">
+    <!-- :key fuerza el remount al cambiar de ticket: la lista muere y renace. A propósito. -->
+    <ticket-activity :key="ticket.id" :ticket-id="ticket.id" />
+  </v-col>
+</v-row>
 ```
 
 ### 7. ⭐ El toggle de dark mode — el theming demostrado (y la radiografía)
@@ -693,36 +713,38 @@ toca ningún color. Solo cambia un flag global, y **todo el timeline se recolore
 porque sus colores son roles.
 
 ```vue
-<!-- AppHeader.vue -->
-<template>
-  <v-app-bar app>
-    <v-toolbar-title>Tiquetera</v-toolbar-title>
-    <v-spacer />
-    <!-- el interruptor. Un flag. Nada más. -->
-    <v-btn icon @click="toggleDark" :title="dark ? 'Modo claro' : 'Modo oscuro'">
-      <v-icon>{{ dark ? "mdi-weather-sunny" : "mdi-weather-night" }}</v-icon>
-    </v-btn>
-    <!-- ⚠️ MIRA ESTE de al lado cuando enciendas el dark: es Bootstrap, NO migrado -->
-    <span class="badge badge-primary ml-3">v2.6-legacy</span>
-  </v-app-bar>
-</template>
+<!-- components/layout/AppHeader.vue — el de F8, con el interruptor AÑADIDO.
+     No se reescribe el header: el usuario, el "en vivo" y Salir siguen ahí. -->
+<div v-if="currentUser" class="text-white">
+  <span class="mr-3 small" :title="live ? 'Conectado en tiempo real' : 'Sin conexión en vivo'">
+    {{ live ? "🟢 en vivo" : "🔴" }}
+  </span>
+  <!-- VU4: el interruptor. Un flag. Nada más. -->
+  <v-btn icon dark small class="mr-2" @click="toggleDark" :title="dark ? 'Modo claro' : 'Modo oscuro'">
+    <v-icon>{{ dark ? "mdi-weather-sunny" : "mdi-weather-night" }}</v-icon>
+  </v-btn>
+  <span class="mr-3">{{ currentUser.name }}</span>
+  <button class="btn btn-sm btn-outline-light" @click="logout">Salir</button>
+</div>
+```
 
-<script>
-export default {
-  name: "AppHeader",
-  computed: {
-    dark: function () {
-      return this.$vuetify.theme.dark; // lectura reactiva del flag global
-    }
+```js
+// en el <script> del mismo AppHeader.vue
+computed: {
+  currentUser: function () {
+    return this.$store.getters["auth/currentUser"];
   },
-  methods: {
-    toggleDark: function () {
-      this.$vuetify.theme.dark = !this.$vuetify.theme.dark; // una línea. Toda la app responde.
-      // (persistir en localStorage → ejercicio 🟢 5)
-    }
+  dark: function () {
+    return this.$vuetify.theme.dark; // lectura reactiva del flag global
   }
-};
-</script>
+},
+methods: {
+  toggleDark: function () {
+    this.$vuetify.theme.dark = !this.$vuetify.theme.dark; // una línea. Toda la app responde.
+    // (persistir en localStorage → ejercicio 🟢 5)
+  },
+  logout: function () { /* el de F2, igual */ }
+}
 ```
 
 **🔎 Qué demuestra este botón, en dos actos:**
@@ -736,11 +758,13 @@ es el pago de haber escrito roles en vez de hexes. Si en `TYPE_META` hubieras pu
 hex no sabe que existe el dark mode.
 
 **Acto 2 — lo que NO se adapta (la radiografía, la lección de convivencia).** Mira el
-resto de la app con el dark encendido. El `<span class="badge badge-primary">` del
-header sigue con su fondo azul de Bootstrap sobre... nada, porque Bootstrap no sabe que
-hay un modo oscuro. Peor: las pantallas que nunca migraste — el wizard de F6, las
+resto de la app con el dark encendido. El sidebar de F1 (`bg-light`) sigue gris claro,
+porque Bootstrap no sabe que hay un modo oscuro; el header no cambia, pero solo porque
+ya era `navbar-dark` desde F1 (engaña: parece migrado y no lo está). Peor: las pantallas que nunca migraste — el wizard de F6, las
 métricas de F7, el modal de Bootstrap — se quedan con **fondo blanco cristalizado** en
-mitad de una app oscura. Cajas blancas flotando en negro.
+mitad de una app oscura. Cajas blancas flotando en negro. Y el caso extremo está en el
+dashboard: las tarjetas de resumen de Bootstrap se quedan blancas, pero el texto hereda
+el color claro del tema oscuro, y el número queda **blanco sobre blanco**, invisible.
 
 > **Eso no es un bug que tengas que arreglar. Es el mapa de tu propia deuda.** El dark
 > mode es una radiografía gratis: enciéndelo y ve **exactamente** qué componentes son
@@ -756,41 +780,28 @@ sabe qué está dentro de él y qué se quedó fuera.
 
 ### 8. El flujo completo, evento por evento
 
+```mermaid
+sequenceDiagram
+    participant A as Pestaña A (lmcorrea cambia el estado)
+    participant S as Server (json-server en el puerto 3000, y socket)
+    participant B as Pestaña B (mira el mismo ticket)
+    A->>A: 1. click en En progreso
+    A->>A: 2. dispatch tickets/updateTicket
+    A->>S: 3. PATCH /tickets/1
+    S-->>A: 200 con status in_progress
+    A->>A: 4. commit UPSERT_TICKET: la v-data-table de VU3 se repinta (Vuex)
+    A->>A: 5. 💸 activityEmitter.record
+    A->>S: 6. POST /activity
+    S-->>A: 201 con id 42
+    A->>S: 7. socket emit activity:created
+    S->>B: 8. socket.broadcast.emit
+    Note over B: 9. onActivity: ¿a.ticketId === mío? SÍ, entries.unshift(a). v-timeline-item nuevo, arriba, con :color warning: lo resuelve el tema ACTIVO de esa pestaña (si B tiene dark, sale en variante oscura)
+    Note over A: A no recibe el broadcast: ya lo tiene del .then del POST. Cero duplicados
 ```
-PESTAÑA A (lmcorrea cambia el estado)         SERVER            PESTAÑA B (mira el mismo ticket)
-        │                                        │                        │
-1. click en "En progreso"                        │                        │
-        │                                        │                        │
-2. dispatch("tickets/updateTicket", {id:1, changes:{status:"in_progress"}})
-        │                                        │                        │
-3. PATCH /tickets/1 ────────────────────► json-server (:3000)             │
-        │◄──────────────── 200 {..., status:"in_progress"}                │
-        │                                        │                        │
-4. commit("UPSERT_TICKET") → la v-data-table de VU3 se repinta (Vuex)     │
-        │                                        │                        │
-5. 💸 activityEmitter.record(...)                │                        │
-        │                                        │                        │
-6. POST /activity ───────────────────────► json-server                    │
-        │◄──────────────── 201 { id: 42, ... }                            │
-        │                                        │                        │
-7. socket.emit("activity:created", saved) ──────►│                        │
-        │                                        │                        │
-8.      │                     socket.broadcast.emit(...) ────────────────►│
-        │                                        │                        │
-9.      │                                        │      onActivity(a) → ¿a.ticketId === mío?
-        │                                        │      SÍ → entries.unshift(a)
-        │                                        │      🎨 v-timeline-item nuevo, arriba
-        │                                        │         con :color="warning" → lo resuelve
-        │                                        │         el tema ACTIVO de esa pestaña.
-        │                                        │         (¡si B tiene dark, sale en variante oscura!)
-        │                                        │
-   (A no recibe el broadcast — ya lo tiene       │
-    del .then del POST. Cero duplicados.)        │
 
-⚠️ Detalle bonito del theming: el MISMO evento, pintado en A (claro) y en B (oscuro),
-   sale con el rol `warning` resuelto DISTINTO en cada pestaña. El dato viaja igual;
-   el color lo decide el tema local. Eso es color-por-rol trabajando de verdad.
-```
+> ⚠️ Detalle bonito del theming: el MISMO evento, pintado en A (claro) y en B (oscuro), sale con el rol
+> `warning` resuelto DISTINTO en cada pestaña. El dato viaja igual; el color lo decide el tema local. Eso es
+> color-por-rol trabajando de verdad.
 
 ---
 
@@ -802,11 +813,14 @@ PESTAÑA A (lmcorrea cambia el estado)         SERVER            PESTAÑA B (mir
   eso es la trampa más peligrosa de la fase. Cambia el tema: el chip no cambia. Enciende
   el dark mode: el chip se queda chillón. **Un hex es un color; un rol es una decisión.**
   Si escribiste hexes, tu componente no es *themable* aunque parezca que va bien.
-- **Timeline sin `<v-app>` ancestro** → los estilos de `v-timeline` fallan de forma
-  sutil (la línea vertical desaparece o se descoloca) y **no hay error en consola**. El
-  clásico de VU1, tercera víctima. Si montas `TicketActivity` en un test aislado, tienes
-  que envolverlo en `<v-app>` — exactamente el problema que VU0 te avisó (`mount()` roto
-  por `v-app`).
+- **Timeline sin `<v-app>` ancestro** → la línea sigue ahí (es CSS del propio
+  `v-timeline`), pero los puntos y los chips pierden su color —las reglas del tema
+  empiezan por `.v-application`, la clase que pone `<v-app>`— y el modo oscuro **no los
+  alcanza**: el `theme.dark` lo reparte `<v-app>`, y sin él cada componente se queda en
+  `theme--light`. Y esta vez **no hay ni el warning de `data-app`**: aquí nada se
+  desprende. El clásico de VU1, tercera víctima. En las pruebas pasa lo mismo: el
+  `div` con `data-app` del `mountView` basta para diálogos y menús, pero para probar el
+  modo oscuro hay que montar dentro de un `<v-app>` de verdad.
 - **`v-skeleton-loader` no registrado / a-la-carte mal configurado** → no renderiza y
   no avisa. Si hiciste el a-la-carte de VU3 (ejercicio del bundle), asegúrate de que los
   componentes nuevos (`VTimeline`, `VTimelineItem`, `VChip`, `VSkeletonLoader`) entran.

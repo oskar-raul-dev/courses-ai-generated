@@ -116,8 +116,9 @@ grep -rn "namespaced" src/store/modules/
 ```
 
 ```
-src/store/modules/tickets.js:4:  namespaced: true,
-src/store/modules/ui.js:3:  // namespaced: true,
+src/store/modules/ui.js:14:  // namespaced: true,
+src/store/modules/auth.js:49:  namespaced: true,
+src/store/modules/tickets.js:90:  namespaced: true,
 ```
 
 **Qué descarta.** Descarta el módulo que sí está bien y explica los efectos

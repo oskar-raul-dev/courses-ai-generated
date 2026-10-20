@@ -70,6 +70,16 @@ Express que no hayas visto ya en tu stack de siempre.
 
 ### La estructura (tu arquitectura de capas, acento JavaScript)
 
+Las tres dependencias de la fase, en las versiones de la época:
+
+```bash
+npm install --save-exact express@4.17.1 cors@2.8.5 morgan@1.10.0
+```
+
+Abajo van las piezas que importan —la conexión, la frontera, el servicio y el
+controlador de tickets, el ensamblaje—; `config.js`, los archivos de `routes/` y
+los servicios de usuarios y comentarios siguen el mismo patrón y son tuyos.
+
 ```
 tiquetera-backend/
   src/
@@ -101,16 +111,33 @@ services conocen el driver; **nadie más** toca `db`. Y la regla espejo del
 frontend heredado ("ninguna vista importa axios") aquí es "ningún controller
 importa mongodb".
 
+### `src/config.js` — lo único que no es tuyo: el nombre de la variable
+
+```js
+// src/config.js
+module.exports = {
+  port: Number(process.env.PORT || 3000),
+  // MONGO_URL, como los scripts de la Fase 1 y el compose de la Fase 14:
+  // si aquí lees otra variable, en el contenedor la API cae a localhost y no conecta
+  mongoUri: process.env.MONGO_URL || "mongodb://localhost:27017",
+  dbName: process.env.DB_NAME || "tiquetera"
+};
+```
+
+La Fase 11 le suma `jwtSecret: process.env.JWT_SECRET`, y su ejercicio 17 lo vuelve
+fail-fast.
+
 ### `src/db.js` — la conexión, una sola vez
 
 ```js
 const { MongoClient } = require("mongodb");
 const config = require("./config");
 
+let client = null;
 let db = null;
 
 async function connect() {
-  const client = await MongoClient.connect(config.mongoUri, {
+  client = await MongoClient.connect(config.mongoUri, {
     useUnifiedTopology: true
   });
   db = client.db(config.dbName);
@@ -122,7 +149,13 @@ function getDb() {
   return db;
 }
 
-module.exports = { connect, getDb };
+async function close() {
+  if (client) await client.close();
+  client = null;
+  db = null;
+}
+
+module.exports = { connect, getDb, close };
 ```
 
 🔎 El singleton por módulo (los módulos de Node se evalúan una vez — el mismo
@@ -553,11 +586,14 @@ app.get("/boom", async function (req, res) { throw new Error("sin captura"); });
 ```
 
 ```bash
-curl -m 5 localhost:4000/boom     # se cuelga y el timeout lo corta
+curl -m 5 localhost:3000/boom     # se cuelga y el timeout lo corta
+# curl: (28) Operation timed out after 5000 milliseconds with 0 bytes received
 ```
 
 Mira las dos cosas a la vez: el navegador (o `curl`) esperando, y morgan **sin
-imprimir la línea**. Añade ahora `try/catch` + `next(err)` y repítelo: aparece
+imprimir la línea**. Lo único que queda es un `UnhandledPromiseRejectionWarning:
+Error: sin captura` en la terminal del servidor, entre todo lo demás, y ninguna
+respuesta para el cliente. Añade ahora `try/catch` + `next(err)` y repítelo: aparece
 el 500 y aparece la línea. Ese "no hay línea" es el diagnóstico entero.
 
 > 📄 El recorrido completo, con las salidas literales, en
@@ -631,10 +667,10 @@ el 500 y aparece la línea. Ese "no hay línea" es el diagnóstico entero.
 
 **Documentación oficial (Express 4.17 / driver 3.6)**
 
-- Express 4.x — API Reference: https://expressjs.com/en/4x/api.html
-- Express — Routing: https://expressjs.com/en/guide/routing.html
-- Express — Using middleware: https://expressjs.com/en/guide/using-middleware.html
-- Express — Error handling (la página del async, léela dos veces): https://expressjs.com/en/guide/error-handling.html
+- Express 4.x — API Reference: https://expressjs.com/en/4x/api/
+- Express — Routing: https://expressjs.com/en/guide/routing/
+- Express — Using middleware: https://expressjs.com/en/guide/using-middleware/
+- Express — Error handling (la página del async, léela dos veces): https://expressjs.com/en/guide/error-handling/
 - Driver 3.6 — Connection pooling / MongoClient: https://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html
 - cors: https://github.com/expressjs/cors
 - morgan: https://github.com/expressjs/morgan
@@ -644,9 +680,9 @@ el 500 y aparece la línea. Ese "no hay línea" es el diagnóstico entero.
 
 **Libros / apoyo**
 
-- *Node.js Design Patterns* (Casciaro & Mammino) — caps. de módulos y
+- *Node.js Design Patterns*, 3.ª ed. (Casciaro & Mammino, Packt, 2020) — caps. de módulos y
   arquitectura, para el fundamento del singleton y las capas.
-- MDN — HTTP response status codes (el repaso de 200/201/404/409): https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+- MDN — HTTP response status codes (el repaso de 200/201/404/409): https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status
 
 **Video (YouTube)**
 

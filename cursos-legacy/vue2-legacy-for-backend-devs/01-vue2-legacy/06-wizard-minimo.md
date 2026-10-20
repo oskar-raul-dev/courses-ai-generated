@@ -707,7 +707,11 @@ export default {
 - El guard `beforeRouteLeave` consulta `hasChanges` (computed) en vez de
   comparar campos a mano ahí dentro: la pregunta "¿hay cambios?" tiene UN
   dueño, y quien la necesite (el guard hoy, un asterisco en el título mañana)
-  la reutiliza.
+  la reutiliza. Ojo con lo que mira: `draft`, que se llena al pasar de paso
+  (`mergeCurrentStep`). Si escribes en el paso 1 y te vas sin tocar
+  «Siguiente», el borrador sigue vacío y el guard no pregunta. Es coherente con
+  el código y es un límite real: lo escrito en el paso actual todavía vive
+  solo dentro del componente del paso.
 - El `catch` de `finish()` dice la verdad útil: "Tu borrador sigue aquí" —
   y es cierto por diseño (draft intacto + pasos cacheados). Mensajes de error
   que informan qué NO se perdió reducen el pánico del usuario más que

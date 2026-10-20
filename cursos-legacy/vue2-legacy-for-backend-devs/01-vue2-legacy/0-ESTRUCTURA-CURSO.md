@@ -20,46 +20,33 @@ es opcional**, y **en qué orden se puede estudiar cada cosa**.
 
 ## 📊 Grafo de dependencias
 
-```
-                    ┌─────────────────────────────────────┐
-                    │        TRONCO (obligatorio)         │
-                    └─────────────────────────────────────┘
-
-  F0 ── F1 ── F2 ── F3 ── F4 ── F5 ── F6 ── F7 ── F8 ── F9 ── F10 ── F11
- setup  base  auth  mock  dash  crud  wiz  chart  ws   panel  vuex   test
-                                                                       │
-                                                                       │
-                                              ✅ Tiquetera "a pelo" completa
-                                                                       │
-                    ┌──────────────────────────────────────────────────┤
-                    │           RUTAS (opcionales, EXCLUYENTES)        │
-                    └──────────────────────────────────────────────────┘
-                                                                       │
-              ┌────────────────────────┬─────────────────────┬─────────┘
-              │                        │                     │
-              ▼                        ▼                     ▼
-        ╔═══════════╗           ╔═══════════╗         ╔═══════════╗
-        ║  RUTA Q   ║           ║  RUTA VU  ║         ║  RUTA NX  ║
-        ║ Quasar 1  ║           ║ Vuetify 2 ║         ║  Nuxt 2   ║
-        ╚═══════════╝           ╚═══════════╝         ╚═══════════╝
-              │                        │                     │
-             Q0 ─── red de seguridad ─ VU0 ────────────────  NX0
-              │      (núcleo común)    │                     │
-             Q1                       VU1                   NX1
-              │                        │                     │
-             Q2                       VU2                   NX2
-              │                        │                     │
-             Q3                       VU3                   NX3
-              │                        │                     │
-             Q4                       VU4                   NX4
+```mermaid
+flowchart TD
+    subgraph TRONCO["TRONCO obligatorio"]
+        F0["F0 setup"] --> F1["F1 base"] --> F2["F2 auth"] --> F3["F3 mock"] --> F4["F4 dash"] --> F5["F5 crud"] --> F6["F6 wizard"] --> F7["F7 chart"] --> F8["F8 ws"] --> F9["F9 panel"] --> F10["F10 vuex"] --> F11["F11 test"]
+    end
+    F11 --> TIQ["Tiquetera a pelo completa"]
+    TIQ -- "elige UNA ruta, excluyentes" --> X0["X0: red de seguridad, núcleo común"]
+    subgraph RQ["RUTA Q: Quasar 1"]
+        Q0["Q0"] --> Q1["Q1"] --> Q2["Q2"] --> Q3["Q3"] --> Q4["Q4"]
+    end
+    subgraph RVU["RUTA VU: Vuetify 2"]
+        VU0["VU0"] --> VU1["VU1"] --> VU2["VU2"] --> VU3["VU3"] --> VU4["VU4"]
+    end
+    subgraph RNX["RUTA NX: Nuxt 2"]
+        NX0["NX0"] --> NX1["NX1"] --> NX2["NX2"] --> NX3["NX3"] --> NX4["NX4"]
+    end
+    X0 --> Q0
+    X0 --> VU0
+    X0 --> NX0
 ```
 
 ### Lectura del grafo
 
-- **Flecha `──`** = dependencia dura. No puedes hacer F5 sin F3.
+- **Cada flecha** = dependencia dura. No puedes hacer F5 sin F3.
 - **Bifurcación tras F11** = el dev elige **una** ruta. No se acumulan.
 - **`X0` (red de seguridad)** = misma lección en las tres rutas, con puerta propia.
-  Ver [nota de producción](#-nota-de-producción-el-núcleo-común-de-x0).
+  Ver [nota de producción](#️-nota-de-producción-el-núcleo-común-de-x0).
 
 ---
 
@@ -86,9 +73,10 @@ es opcional**, y **en qué orden se puede estudiar cada cosa**.
 particular son los cimientos de las rutas: sin Vuex no entiendes la tensión con
 `QTable`/`v-data-table`; sin testing no puedes escribir la red de seguridad.
 
-### Apéndices (A1–A5) — consulta, no lectura
+### Apéndices (A1–A7) — consulta, no lectura
 
 Opcionales y no secuenciales. Se leen cuando el tema aparece o algo suena flojo.
+A6 y A7 son **por plataforma**: solo tocan a quien trabaja en un Mac con chip M.
 
 ---
 
@@ -145,15 +133,16 @@ temas propios.
 
 Cada fase de ruta **consume** una fase del tronco. Nada se inventa:
 
-```
-F5  (CRUD + vuelidate) ──────► Q2 / VU2   "migrar el formulario"
-F4  (Dashboard)        ──────► Q3 / VU3   "migrar la tabla"
-F10 (Vuex)             ──────► Q3 / VU3   "¿quién manda, el store o el componente?"
-F8  (WebSockets)       ──────► Q4 / VU4   "alimentar el timeline nuevo"
-F11 (Testing)          ──────► Q0/VU0/NX0 "escribir la red de seguridad"
-F6  (Wizard)           ──────► ejercicio 🔴 de Q4 / VU4
-F9  (Panel soporte)    ──────► ejercicio 🔴 de Q3 / VU3
-F2  (Auth/interceptor) ──────► Q1 (boot files) / NX1 (plugins)
+```mermaid
+flowchart LR
+    F5["F5 CRUD y vuelidate"] -- "migrar el formulario" --> Q2["Q2 / VU2"]
+    F4["F4 Dashboard"] -- "migrar la tabla" --> Q3["Q3 / VU3"]
+    F10["F10 Vuex"] -- "¿quién manda, el store o el componente?" --> Q3
+    F8["F8 WebSockets"] -- "alimentar el timeline nuevo" --> Q4["Q4 / VU4"]
+    F11["F11 Testing"] -- "escribir la red de seguridad" --> X0["Q0 / VU0 / NX0"]
+    F6["F6 Wizard"] -- "ejercicio 🔴" --> Q4
+    F9["F9 Panel soporte"] -- "ejercicio 🔴" --> Q3
+    F2["F2 Auth e interceptor"] -- "Q1 boot files / NX1 plugins" --> Q1["Q1 / NX1"]
 ```
 
 ---
@@ -242,6 +231,7 @@ escribe una vez y se adapta.
 
 # Apéndices (existentes)
 a1-bootstrap.md  …  a5-webpack-babel.md
+a6-arm64-m1.md  a7-docker-colima.md    (por plataforma: Apple Silicon)
 
 # Rutas
 q0-red-de-seguridad.md
@@ -274,13 +264,13 @@ forense-ruta-q.md · forense-ruta-vu.md · forense-ruta-nx.md
 cuaderno-incidentes.md
 ```
 
-> 📐 **Los nombres del track no son libres.** Se comparten con los cursos de
+> 🧭 **Los nombres del track no son libres.** Se comparten con los cursos de
 > Angular del repositorio para que los tres paquetes se lean igual:
 > `forense-master.md`, `forense-fase-NN.md` y `cuaderno-incidentes.md`. Lo único
 > propio de este curso es `forense-ruta-<código>.md`, que nace de que las rutas
 > son excluyentes y cinco fases comparten una sola pieza.
 > `<código>00-historia-ruta-<código>.md` sigue el mismo criterio: es la excepción a la ficha
-> única del sistema, declarada en la guía de estilo (§ "Historias de ruta").
+> única del sistema, y la única.
 
 ---
 
@@ -322,8 +312,9 @@ hecho:
 - [x] `README.md` — bloques "🕵️ Track forense" y "📓 Cuaderno de incidentes"
 - [x] `0-plan-del-curso.md` — plantilla de capítulo actualizada y sección propia
       del track
-- [x] Los **5 apéndices** — sin tocar, y es la decisión: explican lo que ya está
-      ahí, no producen código de fase (guía §9.1)
+- [x] Los **5 apéndices** de consulta — sin tocar, y es la decisión: explican lo
+      que ya está ahí, no producen código de fase (a6 y a7, de plataforma, llegaron
+      después y tampoco)
 
 ---
 
@@ -339,3 +330,4 @@ hecho:
 | Fases VU0–VU4 (contenido) | ✅ escritas |
 | Fases NX0–NX4 (contenido) | ✅ escritas |
 | Actualizar tronco (`FASES`, `0-plan`, `README`, F11) | ✅ hecho |
+| Validación por ejecución, tronco y rutas (14–18/10/2026) | ✅ hecha: el detalle está en el `README.md`, sección «Cómo se validó»; el navegador queda a mano |

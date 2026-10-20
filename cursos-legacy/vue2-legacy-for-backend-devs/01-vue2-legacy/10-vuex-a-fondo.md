@@ -50,14 +50,12 @@ de **v-model contra el store**.
 
 El flujo unidireccional de Vuex, con todos sus actores:
 
-```
-            dispatch                commit
-COMPONENTE ─────────→ ACTION ──────────────→ MUTATION ──→ STATE
-    ↑                 (async OK:              (SÍNCRONA:      │
-    │                  HTTP, sockets,          solo asignar)  │
-    │                  lógica, varios                         │
-    │                  commits)                               ▼
-    └──────────────────── getters (derivar) ◄─────────────────┘
+```mermaid
+flowchart LR
+    COMP["COMPONENTE"] -- "dispatch" --> ACT["ACTION: async OK (HTTP, sockets, lógica, varios commits)"]
+    ACT -- "commit" --> MUT["MUTATION: SÍNCRONA, solo asignar"]
+    MUT --> ST["STATE"]
+    ST -- "getters: derivar" --> COMP
 ```
 
 | Pieza | Qué es | Regla de oro | Su gemelo en el componente |
@@ -339,6 +337,69 @@ export default {
   servicios**, la consume. Store que hace axios directo = dos
   responsabilidades pegadas que costará separar (olor legacy frecuente).
 
+### Ajuste previo: `socketService` recuerda sus handlers
+
+El plugin que viene registra sus handlers **al crear el store**, y eso pasa antes de que el
+`watch` de `App.vue` llame a `connect()`. Con el `socketService` de la Fase 8 esos registros se
+pierden: su `on()` no hace nada si todavía no hay socket. Por eso el servicio guarda cada
+handler y lo aplica al conectar, y `off()` lo saca de la lista:
+
+```js
+// services/socketService.js — versión de la Fase 10
+import io from "socket.io-client";
+
+var SOCKET_URL = "http://localhost:4000";
+var socket = null; // singleton a nivel de módulo
+var handlers = []; // [evento, callback]: se recuerdan aunque todavía no haya socket
+
+function connect() {
+  if (socket) return; // idempotente: llamar dos veces no abre dos sockets
+  socket = io(SOCKET_URL);
+  // lo registrado antes de conectar (el plugin de Vuex, al crear el store) se aplica aquí
+  handlers.forEach(function (h) {
+    socket.on(h[0], h[1]);
+  });
+}
+
+function disconnect() {
+  if (!socket) return;
+  socket.disconnect();
+  socket = null;
+}
+
+function on(event, callback) {
+  handlers.push([event, callback]);
+  if (socket) socket.on(event, callback);
+}
+
+function off(event, callback) {
+  handlers = handlers.filter(function (h) {
+    return h[0] !== event || h[1] !== callback;
+  });
+  if (socket) socket.off(event, callback);
+}
+
+function emit(event, payload) {
+  if (socket) socket.emit(event, payload);
+}
+
+function isConnected() {
+  return !!(socket && socket.connected);
+}
+
+export default {
+  connect: connect,
+  disconnect: disconnect,
+  on: on,
+  off: off,
+  emit: emit,
+  isConnected: isConnected
+};
+```
+
+La lección de los zombis de la Fase 8 sigue en pie: un `on()` sin su `off()` se queda en la lista
+y se vuelve a aplicar en cada conexión.
+
 ### El plugin de socket — la duplicación muere aquí
 
 ```js
@@ -390,23 +451,55 @@ métricas — sin que ninguna sepa que los sockets existen.
 - El plugin **no conecta ni desconecta** el socket: eso sigue en el watch de
   `App.vue` (Fase 8), porque la *conexión* tiene vida de sesión y el
   *registro de handlers* tiene vida de aplicación. Dos ciclos de vida
-  distintos, dos dueños — como el socket registra handlers aunque esté
-  desconectado y los conserva al reconectar, registrar temprano es seguro.
+  distintos, dos dueños — y como `socketService` guarda los handlers y los
+  aplica en cada `connect()` (el ajuste previo de arriba), registrar temprano es
+  seguro.
 - ¿Y el `LiveToast`? Su suscripción directa también muere: ahora el plugin
   commitea a `ui/FLASH` y el toast se vuelve un componente tonto que pinta el
   state de `ui` — el flash-message del ejercicio 20 de la Fase 5,
   oficializado como módulo `ui` (queda como parte del refactor guiado, y su
   módulo es el ejercicio 4… de calentamiento).
 
+### `store/modules/ui.js`
+
+`store/index.js` lo registra y el plugin le hace `commit`, así que existe desde aquí. Es el
+flash-message del ejercicio 20 de la Fase 5, en su versión mínima: un estado y dos mutations.
+
+```js
+// store/modules/ui.js
+const state = { flash: null }; // { type, text } o null
+
+const mutations = {
+  FLASH: function (state, message) {
+    state.flash = message;
+  },
+  CLEAR_FLASH: function (state) {
+    state.flash = null;
+  }
+};
+
+export default {
+  namespaced: true,
+  state: state,
+  mutations: mutations
+};
+```
+
 ### El refactor de las vistas — antes y después
 
 El dashboard (F4), quirúrgicamente:
 
 ```js
-// views/TicketsView.vue — DESPUÉS
+// views/TicketsView.vue — DESPUÉS (el <script> completo). En el template cambia una
+// sola cosa: el botón Reintentar llama a fetchTickets(), porque loadTickets ya no existe
+import PageTitle from "../components/common/PageTitle.vue";
+import TicketsTable from "../components/tickets/TicketsTable.vue";
+import TicketsSummary from "../components/tickets/TicketsSummary.vue";
 import { mapGetters, mapState, mapActions } from "vuex";
 
 export default {
+  name: "TicketsView",
+  components: { PageTitle, TicketsTable, TicketsSummary },
   // data: se van tickets, loading, error → QUEDAN search y statusFilter
   data: function () {
     return { search: "", statusFilter: "" };
@@ -442,7 +535,6 @@ export default {
   )
   // beforeDestroy: ya no hay socket que dar de baja. Una preocupación menos.
 };
-</script>
 ```
 
 **🔎 La radiografía del refactor** (esto es lo que hay que saber hacer en
@@ -595,8 +687,8 @@ recarga la aplicación.
    dónde? — pista: la action de logout de auth puede despachar a otros
    módulos con `{ root: true }`... o hazlo simple desde el componente y
    compara).
-4. Crea el módulo `ui` formal: state `flash` (`{type, text}` o null),
-   mutations `FLASH`/`CLEAR_FLASH`, y refactoriza `LiveToast` para pintarlo
+4. El módulo `ui` ya existe (state `flash`, mutations `FLASH`/`CLEAR_FLASH`):
+   refactoriza `LiveToast` para pintarlo
    (con su auto-clear de 5s — ¿el setTimeout va en el componente o en una
    action? justifica).
 5. Sesión de devtools: provoca 10 mutations variadas, viaja en el tiempo a

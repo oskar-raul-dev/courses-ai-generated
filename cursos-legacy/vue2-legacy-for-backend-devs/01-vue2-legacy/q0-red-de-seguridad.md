@@ -3,13 +3,13 @@
 > **Prerequisito duro: F11 (Testing).** Si no tienes Jest corriendo, esta fase no
 > existe. Vuelve.
 
-> 📖 **Antes de esta fase, lee la historia de tu rama:**
+> 📚 **Antes de esta fase, lee la historia de tu rama:**
 > [`q00-historia-ruta-q.md`](q00-historia-ruta-q.md). Cuenta quién empezó la rama
 > `quasar-app`, en qué estado quedó, por qué paró y qué le pide hoy PizzaPaisa. Son
 > ocho minutos, y son los que convierten esta ruta en un rescate en vez de un
 > ejercicio.
 
-> 🧩 **Núcleo común X0.** El ~85% de este capítulo es agnóstico al framework
+> 🧭 **Núcleo común X0.** El ~85% de este capítulo es agnóstico al framework
 > destino: sirve igual para Quasar, Vuetify o Nuxt. Lo específico de Quasar vive
 > encapsulado en las secciones marcadas **🅠**. Si haces la ruta VU o NX, léelas
 > igual: cambia el nombre del componente, no el problema.
@@ -224,26 +224,11 @@ Tu aplicación tiene fronteras. Una migración de UI **no debería cruzar ningun
 Y eso, que es una afirmación de arquitectura, se convierte aquí en algo mucho
 mejor: **una aserción ejecutable**.
 
-```
-   ┌──────────────────────────────────────────┐
-   │  CAPA DE PRESENTACIÓN                    │
-   │  Bootstrap hoy · Quasar mañana           │  ← TODO esto se puede caer
-   │  <tr> .modal(jQuery) .form-control        │
-   └────────────┬─────────────────────────────┘
-                │  ⬇️ CONTRATO 1: el store
-                │  dispatch("tickets/fetchTickets")
-   ┌────────────▼─────────────────────────────┐
-   │  STORE (F10)  — NO SE TOCA               │
-   └────────────┬─────────────────────────────┘
-                │
-   ┌────────────▼─────────────────────────────┐
-   │  services/ — NO SE TOCA                  │
-   └────────────┬─────────────────────────────┘
-                │  ⬇️ CONTRATO 2: la API
-                │  GET /tickets?_sort=createdAt&_order=desc
-   ┌────────────▼─────────────────────────────┐
-   │  apiClient → json-server                 │
-   └──────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    P["CAPA DE PRESENTACIÓN: Bootstrap hoy, Quasar mañana. TODO esto se puede caer"] -- "CONTRATO 1: dispatch tickets/fetchTickets" --> S["STORE (F10): NO SE TOCA"]
+    S --> SV["services/: NO SE TOCA"]
+    SV -- "CONTRATO 2: GET /tickets?_sort=createdAt&_order=desc" --> A["apiClient, json-server"]
 ```
 
 **Contrato 1 — con el store.** La vista, sea cual sea el framework, tiene que
@@ -359,7 +344,7 @@ hasta que pase".
 Antes de escribir un test, siembra las anclas. Es el **único** momento de la ruta
 en que tocas el código a pelo, y es un cambio de cero riesgo.
 
-> 🔒 **Contrato de IDs — el prefijo es `ticket-`, no `form-`.** Los `data-testid`
+> ⚠️ **Contrato de IDs — el prefijo es `ticket-`, no `form-`.** Los `data-testid`
 > que siembras aquí son un **contrato que Q2 y Q3 van a reutilizar tal cual**. El
 > formulario usa exactamente estos seis: `ticket-title`, `ticket-description`,
 > `ticket-priority`, `ticket-assignee`, `ticket-submit`, `ticket-cancel` (más los
@@ -475,10 +460,10 @@ comportamiento. El ejercicio 14 vive de esto.
 
 <input id="assignee" v-model.trim="form.assignee" data-testid="ticket-assignee" ... />
 
-<button type="submit" data-testid="ticket-submit" :disabled="saving">
+<button type="submit" class="btn btn-primary" data-testid="ticket-submit" :disabled="saving">
   {{ saving ? "Guardando..." : submitLabel }}
 </button>
-<button type="button" data-testid="ticket-cancel" @click="$emit('cancel')">Cancelar</button>
+<button type="button" class="btn btn-link" data-testid="ticket-cancel" @click="$emit('cancel')">Cancelar</button>
 ```
 
 **🔎 Qué hace:** nada. Literalmente. Los `data-testid` no tienen efecto en
@@ -786,11 +771,11 @@ describe("REGRESIÓN · Dashboard de tickets", function () {
       return ctx.wrapper.find('[data-testid="tickets-search"]')
         .setValue("impresora")
         .then(function () {
-          const texto = ctx.wrapper.find('[data-testid="tickets-count"]').text();
+          const text = ctx.wrapper.find('[data-testid="tickets-count"]').text();
           // NO se afirma la frase exacta: se afirman los DOS NÚMEROS.
           // Si mañana el copy cambia a "2 de 4 resultados", esto sigue verde.
-          expect(texto).toMatch(/\b2\b/);
-          expect(texto).toMatch(/\b4\b/);
+          expect(text).toMatch(/\b2\b/);
+          expect(text).toMatch(/\b4\b/);
         });
     });
   });
@@ -862,7 +847,7 @@ function fill(wrapper, values) {
   return Promise.all(p);
 }
 
-const VALIDO = {
+const VALID = {
   title: "Impresora no imprime",
   description: "La del piso 3 lleva dos días muerta",
   priority: "high",
@@ -875,13 +860,13 @@ describe("REGRESIÓN · TicketForm", function () {
     it("con datos válidos, el submit emite 'submit' con el payload limpio", function () {
       const wrapper = build();
 
-      return fill(wrapper, VALIDO)
+      return fill(wrapper, VALID)
         .then(function () {
           return wrapper.find("form").trigger("submit");
         })
         .then(function () {
           expect(wrapper.emitted("submit")).toHaveLength(1);
-          expect(wrapper.emitted("submit")[0][0]).toEqual(VALIDO);
+          expect(wrapper.emitted("submit")[0][0]).toEqual(VALID);
         });
     });
 
@@ -898,7 +883,7 @@ describe("REGRESIÓN · TicketForm", function () {
     it("el payload NO incluye status ni reporter ni createdAt (los pone la vista)", function () {
       const wrapper = build();
 
-      return fill(wrapper, VALIDO)
+      return fill(wrapper, VALID)
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           const payload = wrapper.emitted("submit")[0][0];
@@ -920,28 +905,28 @@ describe("REGRESIÓN · TicketForm", function () {
   describe("las reglas de validación, una por una", function () {
     // Se afirma "no emite" — NO se afirma la clase .is-invalid ni el texto
     // del mensaje. La regla es comportamiento; el mensaje es copy.
-    function rechaza(valores) {
+    function rejects(values) {
       const wrapper = build();
-      return fill(wrapper, Object.assign({}, VALIDO, valores))
+      return fill(wrapper, Object.assign({}, VALID, values))
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toBeUndefined();
         });
     }
 
-    it("título vacío: rechaza", function () { return rechaza({ title: "" }); });
-    it("título de 4 caracteres: rechaza (mínimo 5)", function () { return rechaza({ title: "abcd" }); });
+    it("título vacío: rechaza", function () { return rejects({ title: "" }); });
+    it("título de 4 caracteres: rechaza (mínimo 5)", function () { return rejects({ title: "abcd" }); });
     it("título de 81 caracteres: rechaza (máximo 80)", function () {
-      return rechaza({ title: "x".repeat(81) });
+      return rejects({ title: "x".repeat(81) });
     });
     it("descripción de 9 caracteres: rechaza (mínimo 10)", function () {
-      return rechaza({ description: "123456789" });
+      return rejects({ description: "123456789" });
     });
-    it("prioridad vacía: rechaza", function () { return rechaza({ priority: "" }); });
+    it("prioridad vacía: rechaza", function () { return rejects({ priority: "" }); });
 
     it("asignado vacío: ACEPTA (es opcional — congela esta decisión)", function () {
       const wrapper = build();
-      return fill(wrapper, Object.assign({}, VALIDO, { assignee: "" }))
+      return fill(wrapper, Object.assign({}, VALID, { assignee: "" }))
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toHaveLength(1);
@@ -950,7 +935,7 @@ describe("REGRESIÓN · TicketForm", function () {
 
     it("el título de exactamente 80 caracteres: ACEPTA (el borde exacto)", function () {
       const wrapper = build();
-      return fill(wrapper, Object.assign({}, VALIDO, { title: "x".repeat(80) }))
+      return fill(wrapper, Object.assign({}, VALID, { title: "x".repeat(80) }))
         .then(function () { return wrapper.find("form").trigger("submit"); })
         .then(function () {
           expect(wrapper.emitted("submit")).toHaveLength(1);
@@ -1026,9 +1011,9 @@ describe("REGRESIÓN · TicketForm", function () {
   describe("estado de guardado", function () {
     it("con saving=true el botón se deshabilita (anti doble submit de F5)", function () {
       const wrapper = build({ saving: true });
-      const boton = wrapper.find('[data-testid="ticket-submit"]');
+      const button = wrapper.find('[data-testid="ticket-submit"]');
 
-      expect(boton.attributes("disabled")).toBeDefined();
+      expect(button.attributes("disabled")).toBeDefined();
     });
 
     it("submitLabel se respeta", function () {
@@ -1065,7 +1050,11 @@ este archivo tiene que seguir en verde el día después.
 ### Test 3 — el contrato con la API: `tests/unit/regression/ticketService.contract.spec.js`
 
 ```js
-jest.mock("@/services/apiClient"); // auto-mock: get/post/patch/delete → jest.fn()
+// Fábrica explícita y no auto-mock: con el babel-jest 23 del plugin de Vue CLI 3, el
+// auto-mock de la instancia de axios depende del orden de los import. Así no depende de nada.
+jest.mock("@/services/apiClient", function () {
+  return { get: jest.fn(), post: jest.fn(), put: jest.fn(), patch: jest.fn(), delete: jest.fn() };
+});
 
 import apiClient from "@/services/apiClient";
 import ticketService from "@/services/ticketService";
@@ -1627,7 +1616,7 @@ que descubrirlo a mitad de la migración. Deshaz con `git checkout -- src/`.
   https://testing-library.com/docs/guiding-principles/
 - Kent C. Dodds — *Testing Implementation Details*:
   https://kentcdodds.com/blog/testing-implementation-details
-- Martin Fowler — *Refactoring: the safety net of tests*:
+- Martin Fowler — *Refactoring*, 1.ª ed. (Addison-Wesley, 1999; 2.ª ed. 2018):
   https://martinfowler.com/books/refactoring.html *(el capítulo 4, "Building
   Tests", es literalmente esta fase escrita en 1999)*
 

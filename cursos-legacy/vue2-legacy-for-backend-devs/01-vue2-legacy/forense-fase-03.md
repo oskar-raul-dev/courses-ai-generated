@@ -91,8 +91,11 @@ curl -i http://localhost:3000/tickets
 
 ```
 HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
 X-Powered-By: Express
+Vary: Origin, Accept-Encoding
+Access-Control-Allow-Credentials: true
+…
+Content-Type: application/json; charset=utf-8
 ```
 
 Y en la **consola** del navegador (no en Network, no en tu `catch`):

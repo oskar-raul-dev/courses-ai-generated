@@ -25,8 +25,9 @@ Al empezar el Curso 01 haces `git init` en el proyecto que crea Vue CLI
 (`tiquetera-backend`). **Dos repos, no uno.**
 
 No es una preferencia estética. La señal de éxito del paquete se mide con git:
-se apaga json-server, se cambia el `baseURL` y **el `git diff` del frontend
-tiene exactamente una línea** —lo firmado en
+se apaga json-server, se apunta el `baseURL` al backend y **el `git diff` del
+frontend tiene a lo sumo una línea** —el `baseURL`; ninguna, si el Express
+escucha en el mismo `:3000` que json-server, como en la Fase 10—, lo firmado en
 [`../02-complement-mongodb-backend/00-audit-contrato.md`](02-complement-mongodb-backend/00-audit-contrato.md)
 y ejecutado en la Fase 10 del Curso 02. En un monorepo ese `git diff` te
 devuelve además todo el backend que acabas de escribir, y la medición se

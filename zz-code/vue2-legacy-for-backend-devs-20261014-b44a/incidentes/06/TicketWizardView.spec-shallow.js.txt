@@ -1,0 +1,29 @@
+// tests/unit/TicketWizardView.spec.js
+import { shallowMount } from "@vue/test-utils";
+import TicketWizardView from "@/views/TicketWizardView.vue";
+
+describe("TicketWizardView", function () {
+  it("no avanza si el paso actual es inválido", function () {
+    var wrapper = shallowMount(TicketWizardView);
+    wrapper.vm.$refs.stepComponent = {
+      validate: function () { return false; },
+      getData: function () { return {}; }
+    };
+    wrapper.vm.next();
+    expect(wrapper.vm.currentStep).toBe(1);
+  });
+
+  it("al volver atrás encuentra el mismo paso, no uno nuevo (keep-alive)", function () {
+    var wrapper = shallowMount(TicketWizardView);
+    var first = wrapper.vm.$refs.stepComponent;
+    wrapper.vm.next();
+    return wrapper.vm.$nextTick()
+      .then(function () {
+        wrapper.vm.back();
+        return wrapper.vm.$nextTick();
+      })
+      .then(function () {
+        expect(wrapper.vm.$refs.stepComponent).toBe(first);
+      });
+  });
+});

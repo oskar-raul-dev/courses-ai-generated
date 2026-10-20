@@ -1,0 +1,9 @@
+import Vue from "vue";
+import store from "@/store";
+it("con strict, ¿la escritura directa ocurre igual?", function () {
+  var anterior = Vue.config.errorHandler, capturado = null;
+  Vue.config.errorHandler = function (err) { capturado = err; };
+  store.state.tickets.items.push({ id: 99 });
+  Vue.config.errorHandler = anterior;
+  console.log("strict:", store.strict, "| error capturado:", !!capturado, "| items tras el push:", store.state.tickets.items.length);
+});

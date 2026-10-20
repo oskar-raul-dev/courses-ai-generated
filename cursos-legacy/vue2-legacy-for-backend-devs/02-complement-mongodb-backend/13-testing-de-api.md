@@ -48,11 +48,11 @@ El contrato deja de verificarse con fe y pasa a verificarse con `npm test`.
 
 ## 🧠 La pirámide de ESTE backend en 60 segundos
 
-```
-        ▲  contrato (supertest, ~1 suite)     ← el smoke automatizado: caro, valioso
-       ▲▲  HTTP por recurso (supertest)       ← rutas+middleware+controller+errores
-      ▲▲▲  services (memory-server)           ← la lógica contra Mongo REAL efímero
-     ▲▲▲▲  puro (sin I/O)                     ← serializers, transiciones, validadores
+```mermaid
+flowchart TB
+    CT["contrato, supertest, ~1 suite: el smoke automatizado. Caro y valioso"] --> HTTP["HTTP por recurso, supertest: rutas, middleware, controller y errores"]
+    HTTP --> SV["services con memory-server: la lógica contra Mongo real efímero"]
+    SV --> PU["puro, sin I/O: serializers, transiciones y validadores"]
 ```
 
 La decisión de época que ordena todo: **no mockeamos Mongo**. Un mock de la
@@ -108,11 +108,21 @@ cerrar un bug. Tu disciplina de testing de cualquier lenguaje viaja completa
 ## 🧰 El montaje
 
 ```bash
-npm install --save-dev jest@26 supertest@6 mongodb-memory-server@6
+npm install --save-dev --save-exact jest@26.6.3 supertest@6.1.6 mongodb-memory-server@6.9.6
 ```
 
+> ⚠️ **Apple Silicon y contenedores ARM.** mongodb-memory-server baja el `mongod`
+> que corresponde a tu sistema. En macOS (Intel o M1, este último vía Rosetta) y
+> en Linux x86 existe el 4.4.18; en **Linux arm64** —un contenedor en una Mac M1—
+> no hay binario 4.4 para Debian y la descarga falla con `Status Code is 403
+> (MongoDB's 404)`. Corre la suite en el host, o el contenedor con
+> `--platform linux/amd64`. Qué URL arma para cada plataforma, y por qué en el
+> host tiene que ser con el Node x64 de la Fase 0 del Curso 01, está en el
+> [Apéndice 6 del Curso 01](../01-vue2-legacy/a6-arm64-m1.md); los comandos del
+> contenedor amd64, en su [Apéndice 7](../01-vue2-legacy/a7-docker-colima.md).
+
 > ⚠️ **Fijar el binario a la época:** mongodb-memory-server descarga un
-> `mongod` — por defecto, uno moderno. El curso testea contra **4.4**, el
+> `mongod` — por defecto, en la v6, el 4.0.14: ni siquiera el del curso. El curso testea contra **4.4**, el
 > motor real del proyecto:
 
 ```js
@@ -135,7 +145,9 @@ module.exports = async function () {
   const mongod = await MongoMemoryServer.create({
     binary: { version: "4.4.18" }          // ← el motor del curso, no "latest"
   });
-  process.env.MONGO_URL = mongod.getUri();
+  // en la v6, getUri() devuelve una PROMESA: sin el await, MONGO_URL vale
+  // "[object Promise]" y cada suite cae con MongoParseError: Invalid connection string
+  process.env.MONGO_URL = await mongod.getUri();
   global.__MONGOD__ = mongod;
 };
 ```
@@ -294,7 +306,12 @@ testeabilidad acaba de detectar el acople, tal como prometía la tesis.
 ```js
 // test/http/tickets.routes.test.js
 const request = require("supertest");
+const app = require("../../src/app");               // app.js sin listen: por eso se separó en F10
+const { connect, close } = require("../../src/db");
 const { mintToken } = require("../helpers/auth");   // acuña JWT de utilería (F11)
+
+beforeAll(function () { return connect(); });       // el singleton de F10, contra el memory-server
+afterAll(close);   // sin esto Jest no termina: "Jest did not exit one second after the test run has completed"
 
 test("GET /tickets/:id inexistente → 404 real (manía del contrato)", async function () {
   const res = await request(app)
@@ -374,7 +391,7 @@ vivo; la pregunta correcta es *contra qué está corriendo cada entorno*, porque
 test que da resultados distintos en dos sitios no es inestable: **está midiendo
 dos sistemas.** El sospechoso número uno acá es el binario de
 `mongodb-memory-server` sin `binary.version` fijado —tu laptop tiene 4.4
-cacheado desde la Fase 0 y el runner descarga lo último—, y el número dos es el
+cacheado desde la Fase 0 y el runner descarga el default del paquete, el 4.0.14 en la v6—, y el número dos es el
 aislamiento entre suites. La regla que se lleva uno del recorrido: **lo que no
 está escrito en el repositorio, no existe**; el binario cacheado en la máquina de
 quien corrió la suite primero es configuración invisible, y la configuración
@@ -453,22 +470,22 @@ fácil de leer: el que habla de versiones, o el que habla de negocio.
 
 **Documentación oficial (versiones de la época)**
 
-- Jest 26: https://jestjs.io/docs/26.x/getting-started
-- supertest: https://github.com/ladjs/supertest
-- mongodb-memory-server (v6, la de la época — configuración de binario): https://github.com/nodkz/mongodb-memory-server/tree/v6.9.6
+- Jest 26 (el sitio ya no publica la 26; la documentación de la época, en su tag): https://github.com/jestjs/jest/blob/v26.6.3/docs/GettingStarted.md
+- supertest: https://github.com/forwardemail/supertest
+- mongodb-memory-server (v6, la de la época — configuración de binario): https://github.com/typegoose/mongodb-memory-server/tree/v6.9.6
 - socket.io-client 2.x: https://socket.io/docs/v2/client-api/
-- Jest — fake timers (26.x): https://jestjs.io/docs/26.x/timer-mocks
+- Jest — fake timers (26.x): https://github.com/jestjs/jest/blob/v26.6.3/docs/TimerMocks.md
 
 **Web / apoyo**
 
-- Testing Node.js + Mongo con mongodb-memory-server (el README versionado es la mejor guía práctica, incluida la configuración de binario): https://github.com/nodkz/mongodb-memory-server/blob/v6.9.6/README.md
+- Testing Node.js + Mongo con mongodb-memory-server (el README versionado es la mejor guía práctica, incluida la configuración de binario): https://github.com/typegoose/mongodb-memory-server/blob/v6.9.6/README.md
 - Martin Fowler — Test Pyramid (el original, para discutirlo): https://martinfowler.com/articles/practical-test-pyramid.html
 - Kent C. Dodds — Write tests. Not too many. Mostly integration. (la contracorriente de la época, pertinente a ESTE backend): https://kentcdodds.com/blog/write-tests
 
 **Video (YouTube)**
 
 - Jest Crash Course — Traversy Media: https://www.youtube.com/watch?v=7r4xVDI2vho
-- Test-Driven Development // Fun TDD in 100 seconds — Fireship: https://www.youtube.com/watch?v=Jv2uxzhPFl4
+- Test-Driven Development // Fun TDD Introduction with JavaScript — Fireship: https://www.youtube.com/watch?v=Jv2uxzhPFl4
 
 **Orden de lectura sugerido para perfil senior:**
 la pirámide del capítulo → montar el esqueleto (ej. 1) ANTES de leer más →

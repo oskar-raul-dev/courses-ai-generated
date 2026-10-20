@@ -142,7 +142,7 @@ un read-modify-write con carrera clásica: dos procesos leyendo a la vez, el
 último pisa al primero. Con `$push`/`$inc`/`$pull` **el motor hace la
 aritmética**: dos `$inc: 1` concurrentes suman 2, siempre.
 
-> 💥 Y con esto queda cerrada la **carrera del contador** (Fase 5, ej. 26):
+> 💸 Y con esto queda cerrada la **carrera del contador** (Fase 5, ej. 26):
 > `commentsCount` se incrementa con `$inc`, no con leer-sumar-escribir. La
 > reconciliación nocturna queda como red de seguridad, no como mecanismo.
 
@@ -150,8 +150,8 @@ aritmética**: dos `$inc: 1` concurrentes suman 2, siempre.
 
 ```js
 const result = await col.findOneAndUpdate(
-  filtro,                          // puede incluir CONDICIONES (ahora viene lo bueno)
-  cambio,
+  filter,                          // puede incluir CONDICIONES (ahora viene lo bueno)
+  update,
   { returnOriginal: false }        // devuélveme el documento YA modificado
 );
 // result.value === null  →  ningún documento cumplía el filtro
@@ -160,7 +160,10 @@ const result = await col.findOneAndUpdate(
 > 📝 **Nota legacy honesta:** en el driver 3.6 la opción se llama
 > `returnOriginal: false`; en drivers modernos verás `returnDocument:
 > "after"`. Mismo concepto, época distinta — al auditar legacy encontrarás
-> la primera.
+> la primera. El 3.6.12 que instala `mongodb@3.6` ya entiende las dos y avisa
+> en cada arranque (`DeprecationWarning: collection.findOneAndUpdate option
+> [returnOriginal] is deprecated`): funciona, y es la señal de por dónde
+> empezará la próxima migración.
 
 Lee-y-modifica **en una operación atómica del servidor**: nadie puede colarse
 entre tu lectura y tu escritura, porque no hay "entre". Es el equivalente
@@ -238,7 +241,7 @@ técnica sirve para las transiciones de la máquina de estados
 (`{ _id, status: "open" }` como precondición de pasar a `in_progress`) — la
 primitiva que la Fase 11 usará para validar transiciones server-side.
 
-> 💥 Segunda carrera cerrada: el **bucket** (Fase 3, ej. 25). "Push al cubo
+> 💸 Segunda carrera cerrada: el **bucket** (Fase 3, ej. 25). "Push al cubo
 > abierto si no está lleno" es un update condicional de manual:
 > `findOneAndUpdate({ ticketId, count: { $lt: 100 } }, { $push: ..., $inc:
 > { count: 1 } })` — y si devuelve `null`, insertas cubo nuevo (con upsert y
@@ -260,7 +263,7 @@ perillas — cuánta durabilidad exiges a cambio de latencia:
 | `readConcern` | `"majority"` | lees solo lo que ya es mayoría — no verás datos que puedan desaparecer |
 
 ```js
-await col.updateOne(filtro, cambio, { writeConcern: { w: "majority", j: true } });
+await col.updateOne(filter, update, { writeConcern: { w: "majority", j: true } });
 ```
 
 **Para la Tiquetera** (un nodo, una empresa chica): los defaults son razonables
@@ -275,12 +278,20 @@ responde *¿cuántos lo tienen?*, `j` responde *¿sobrevive un apagón?*,
 ## 🔄 El replica set de un nodo (peaje de las transacciones)
 
 Las transacciones multi-documento **requieren replica set** — en standalone
-no funcionan, ni en 4.4 ni hoy. Para desarrollo, el estándar de la época: RS
-de un solo nodo. Ajuste al compose de la Fase 0:
+no funcionan, ni en 4.4 ni hoy. Y el error no lo dice así. Con el driver 3.6
+contra el `mongod` de la Fase 0, el `withTransaction` de abajo revienta con:
+
+```
+This MongoDB deployment does not support retryable writes. Please add retryWrites=false to your connection string.
+```
+
+No le hagas caso al consejo: `retryWrites=false` no te da transacciones, solo
+cambia el mensaje. Lo que falta es el replica set. Para desarrollo, el estándar
+de la época: RS de un solo nodo. Ajuste al compose de la Fase 0:
 
 ```yaml
-# docker-compose.yml — el servicio mongo gana dos cosas:
-    command: ["mongod", "--replSet", "rs0"]
+# docker-compose.yml — el servicio mongo cambia su command:
+    command: ["mongod", "--replSet", "rs0", "--wiredTigerCacheSizeGB", "0.5"]
 ```
 
 ```js
@@ -494,16 +505,16 @@ operaciones simultáneas con `Promise.all` desde Node. La base: `tiquetera`.
 
 **Documentación oficial (4.4 / driver 3.6)**
 
-- Atomicity and Transactions (la página que ordena todo): https://www.mongodb.com/docs/v4.4/core/write-operations-atomicity/
-- Update Operators (el arsenal completo): https://www.mongodb.com/docs/v4.4/reference/operator/update/
-- `findOneAndUpdate`: https://www.mongodb.com/docs/v4.4/reference/method/db.collection.findOneAndUpdate/
-- `arrayFilters` (Update with filtered positional): https://www.mongodb.com/docs/v4.4/reference/operator/update/positional-filtered/
-- Transactions (requisitos, límites, sintaxis): https://www.mongodb.com/docs/v4.4/core/transactions/
-- Transactions — Production Considerations (la etiqueta de precio oficial): https://www.mongodb.com/docs/v4.4/core/transactions-production-consideration/
-- Write Concern: https://www.mongodb.com/docs/v4.4/reference/write-concern/
-- Read Concern: https://www.mongodb.com/docs/v4.4/reference/read-concern/
+- Atomicity and Transactions (la página que ordena todo): https://www.mongodb.com/docs/manual/core/write-operations-atomicity/
+- Update Operators (el arsenal completo): https://www.mongodb.com/docs/manual/reference/mql/update/
+- `findOneAndUpdate`: https://www.mongodb.com/docs/manual/reference/method/db.collection.findoneandupdate/
+- `arrayFilters` (Update with filtered positional): https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered/
+- Transactions (requisitos, límites, sintaxis): https://www.mongodb.com/docs/manual/core/transactions/
+- Transactions — Production Considerations (la etiqueta de precio oficial): https://www.mongodb.com/docs/manual/core/transactions-production-consideration/
+- Write Concern: https://www.mongodb.com/docs/manual/reference/write-concern/
+- Read Concern: https://www.mongodb.com/docs/manual/reference/read-concern/
 - Driver 3.6 — Transactions / sessions: https://mongodb.github.io/node-mongodb-native/3.6/api/ClientSession.html
-- Deploy a Replica Set (para el RS de 1 nodo basta la parte de `rs.initiate`): https://www.mongodb.com/docs/v4.4/tutorial/deploy-replica-set/
+- Deploy a Replica Set (para el RS de 1 nodo basta la parte de `rs.initiate`): https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set/
 
 **Libros**
 
@@ -513,8 +524,8 @@ operaciones simultáneas con `Promise.all` desde Node. La base: `tiquetera`.
 
 **Web / apoyo**
 
-- Building with Patterns: The Bucket Pattern (relectura, ahora con la carrera resuelta): https://www.mongodb.com/blog/post/building-with-patterns-the-bucket-pattern
-- How To SELECT ... FOR UPDATE inside MongoDB Transactions (findAndModify como lock — artículo clásico del blog de MongoDB, escrito para 4.0): https://www.mongodb.com/blog/post/how-to-select-for-update-inside-mongodb-transactions
+- Building with Patterns: The Bucket Pattern (relectura, ahora con la carrera resuelta): https://www.mongodb.com/company/blog/building-with-patterns-the-bucket-pattern
+- How To SELECT ... FOR UPDATE inside MongoDB Transactions (findAndModify como lock — artículo clásico del blog de MongoDB, escrito para 4.0): https://www.mongodb.com/company/bloghow-to-select-for-update-inside-mongodb-transactions
 
 **Video (YouTube)**
 

@@ -256,7 +256,8 @@ services:
     build: .
     container_name: tiquetera-api
     environment:
-      - MONGO_URL=mongodb://mongo:27017/tiquetera?replicaSet=rs0
+      # SIN ?replicaSet: el RS de la Fase 6 se inició como "localhost:27017" (ver nota abajo)
+      - MONGO_URL=mongodb://mongo:27017/tiquetera
       - JWT_SECRET=${JWT_SECRET:?definelo_en_.env}
       - NODE_ENV=production
     ports:
@@ -271,9 +272,29 @@ services:
     profiles: ["ops"]              # solo corre cuando lo invocas
     volumes: ["./backups:/backups"]
     entrypoint: >
-      mongodump --uri="mongodb://mongo:27017/?replicaSet=rs0"
+      mongodump --uri="mongodb://mongo:27017/"
       --oplog --gzip --out=/backups/manual
 ```
+
+> ⚠️ **El `?replicaSet=rs0` que no llega.** El replica set de la Fase 6 se inició
+> con `host: "localhost:27017"`, y con `?replicaSet=rs0` el driver no se queda con
+> la dirección que le diste: le pregunta al RS por sus miembros y se conecta a la
+> que el RS anuncia. Desde el host, `localhost:27017` es el contenedor de Mongo;
+> desde el contenedor `api`, es el propio `api`, y el arranque muere con
+> `MongoServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017` (lo mismo le
+> pasa al `mongodump` del servicio `backup`). Sin el parámetro, el driver se conecta
+> directo al nodo, que es el primario, y las transacciones siguen funcionando. Con
+> más de un nodo, la salida de verdad es iniciar el RS con los nombres de la red
+> de Docker (`mongo:27017`) y que el host los resuelva.
+>
+> **Y desde cero, el RS no existe.** Con un `mongo-data` nuevo, `mongod --replSet rs0`
+> arranca, el healthcheck pasa (el `ping` no pregunta por el replica set) y la API
+> levanta sus dos puertas… pero cada `GET /tickets` devuelve `500` y su log dice
+> `MongoError: not master and slaveOk=false` (`NotPrimaryNoSecondaryOk`). Falta el
+> `rs.initiate` de la Fase 6, una sola vez por volumen:
+> `docker compose exec mongo mongo --quiet --eval 'rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "localhost:27017" }] })'`.
+> Después, `docker compose exec api node scripts/seed.js` y el sistema responde; el
+> ejercicio 28 es convertir esa secuencia en un arranque que no dependa de acordarse.
 
 🔎 **Qué hace:** tres decisiones operativas encarnadas — el **healthcheck**
 de mongo hace que la API espere a un motor vivo, no a un contenedor
@@ -286,9 +307,9 @@ shell es `mongo` (el clásico legacy) — por eso el healthcheck usa `mongo` y n
 `mongosh`. `mongosh` es el shell nuevo que instalas aparte (Compass lo trae, y
 es el que usas en tu host para inspeccionar el oplog arriba); ambos conviven en
 la época y no es una errata. Otra nota fina: dentro de la red de compose, la
-URI dice `mongo:27017`
-— y el `rs.initiate` del RS debe declarar ese host (ejercicio 28 pelea y
-documenta ese detalle, el clásico de la época).
+URI dice `mongo:27017` y va sin `?replicaSet` (la nota de arriba); reiniciar el
+RS declarando ese host, para poder usar el parámetro, es el ejercicio 28 —el
+clásico de la época—.
 
 ---
 
@@ -399,19 +420,19 @@ db.currentOp({ secs_running: { $gt: 10 } }) → db.killOp(id)
 
 **Documentación oficial (4.4 y herramientas)**
 
-- MongoDB Backup Methods (el mapa, releído con ojos de operador): https://www.mongodb.com/docs/v4.4/core/backups/
+- MongoDB Backup Methods (el mapa, releído con ojos de operador): https://www.mongodb.com/docs/manual/core/backups/
 - mongodump — `--oplog`: https://www.mongodb.com/docs/database-tools/mongodump/
 - mongorestore — `--oplogReplay`, `--oplogLimit`, `--nsInclude`: https://www.mongodb.com/docs/database-tools/mongorestore/
-- Replica Set Oplog: https://www.mongodb.com/docs/v4.4/core/replica-set-oplog/
-- Index Builds on Populated Collections (el build híbrido de 4.2+): https://www.mongodb.com/docs/v4.4/core/index-creation/
-- Rolling Index Builds (el mundo multi-nodo, para el ej. 33): https://www.mongodb.com/docs/v4.4/tutorial/build-indexes-on-replica-sets/
-- Database Profiler: https://www.mongodb.com/docs/v4.4/tutorial/manage-the-database-profiler/
-- Profiler output (leer `system.profile`): https://www.mongodb.com/docs/v4.4/reference/database-profiler/
+- Replica Set Oplog: https://www.mongodb.com/docs/manual/core/replica-set-oplog/
+- Index Builds on Populated Collections (el build híbrido de 4.2+): https://www.mongodb.com/docs/manual/core/index-creation/
+- Rolling Index Builds (el mundo multi-nodo, para el ej. 33): https://www.mongodb.com/docs/manual/tutorial/build-indexes-on-replica-sets/
+- Database Profiler: https://www.mongodb.com/docs/manual/tutorial/manage-the-database-profiler/
+- Profiler output (leer `system.profile`): https://www.mongodb.com/docs/manual/reference/database-profiler/
 - mongostat / mongotop: https://www.mongodb.com/docs/database-tools/mongostat/ · https://www.mongodb.com/docs/database-tools/mongotop/
-- `db.currentOp` / `db.killOp` (y qué NO matar): https://www.mongodb.com/docs/v4.4/reference/method/db.currentOp/ · https://www.mongodb.com/docs/v4.4/reference/method/db.killOp/
-- `compact` (y su comportamiento en 4.4): https://www.mongodb.com/docs/v4.4/reference/command/compact/
-- `fsyncLock`: https://www.mongodb.com/docs/v4.4/reference/method/db.fsyncLock/
-- Compose — healthchecks y profiles: https://docs.docker.com/compose/compose-file/
+- `db.currentOp` / `db.killOp` (y qué NO matar): https://www.mongodb.com/docs/manual/reference/method/db.currentop/ · https://www.mongodb.com/docs/manual/reference/method/db.killop/
+- `compact` (y su comportamiento en 4.4): https://www.mongodb.com/docs/manual/reference/command/compact/
+- `fsyncLock`: https://www.mongodb.com/docs/manual/reference/method/db.fsynclock/
+- Compose — healthchecks y profiles: https://docs.docker.com/reference/compose-file/
 
 > ⚠️ **Aviso de versión:** los enlaces de **Database Tools** (`mongodump`,
 > `mongorestore`, `mongostat`, `mongotop`) y de **Compose** no están fijados a

@@ -88,9 +88,10 @@ grep -rn "socketService.emit\|socketService.on" src/
 ```
 
 ```
-src/views/TicketCreateView.vue:64:      socketService.emit("ticket:created", created);
-src/views/TicketWizardView.vue:212:     socketService.emit("ticket:created", created);
-src/views/TicketsView.vue:38:          socketService.on("ticket:created", this.onCreatedHandler);
+src/components/common/LiveToast.vue:27:    socketService.on("ticket:created", this.handler);
+src/views/TicketWizardView.vue:136:          socketService.emit("ticket:created", created); // 📣 anunciar a los demás
+src/views/TicketCreateView.vue:43:          socketService.emit("ticket:created", created); // 📣 anunciar a los demás
+src/views/TicketsView.vue:100:    socketService.on("ticket:created", this.onCreatedHandler);
 ```
 
 **Qué descarta.** Cierra el caso técnico: el sistema tiene **un** evento,

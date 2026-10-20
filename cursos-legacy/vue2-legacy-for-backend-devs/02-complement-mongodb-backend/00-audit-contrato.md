@@ -19,7 +19,7 @@
 
 | Régimen | Fases | Regla |
 |---|---|---|
-| **Promesa estricta** | 1 → 10 | El frontend cambia **una sola línea** (`baseURL`). Ningún otro archivo se toca. El backend imita a json-server hasta en sus manías. |
+| **Promesa estricta** | 1 → 10 | El frontend cambia **a lo sumo una línea** (`baseURL`; ninguna si el backend escucha en el `:3000` de json-server, como en la Fase 10). Ningún otro archivo se toca. El backend imita a json-server hasta en sus manías. |
 | **El contrato crece** | 11 → 15 | Se permiten **extensiones** (endpoints nuevos, códigos de estado nuevos, eventos nuevos). Se prohíben **rupturas** (cambiar la forma de una respuesta existente, renombrar un campo, exigir un header que antes no existía… con una excepción declarada abajo: el login). |
 
 ---
@@ -149,7 +149,7 @@ entre número y string, **ahí se rompe**. Mitigación:
 
 > ⚠️ **El nombre del evento es `activity:created`, no `activity:new`.** El
 > Curso 01 llegó a usar las dos formas en distintas rutas; la convención
-> `recurso:acción` de la guía de estilo (§5.4) resuelve a favor de
+> `recurso:acción` de los nombres de evento del paquete resuelve a favor de
 > `activity:created`, y así quedó unificado en las tres.
 
 ---
@@ -161,6 +161,7 @@ entre número y string, **ahí se rompe**. Mitigación:
 | `POST /auth/login` → `{ token, user }` con JWT real | 11 | ⚠️ **La excepción declarada:** el login mock del frontend heredado es client-side; conectarlo exige tocar una función de su `authService.js`. Es la única ruptura admitida, se anuncia con nombre y apellido, y el frontend ya dejó el terreno preparado (el login ya devuelve una Promise). |
 | `401` en cualquier endpoint con token inválido/ausente | 11 | Extensión. Si el frontend tiene interceptor de respuesta lo aprovecha; sin él, el usuario ve errores genéricos — feo pero no roto. |
 | `403` por rol insuficiente | 11 | Extensión. |
+| `422` en una transición de estado ilegal (p. ej. `open → resolved`) | 11 | Extensión. El frontend solo ofrece las transiciones legales (`ticketTransitions.js`, Curso 01 · F9), así que en uso normal no lo ve; lo ve quien llama a la API saltándose la UI. |
 | `409` en el doble "tomar" (update condicional falló) | 6/11 | Extensión. El PATCH del frontend recibe un error donde antes recibía un éxito silencioso mentiroso. El manejo fino es ejercicio. |
 | `GET /stats` (agregaciones server-side) | 9 | Endpoint nuevo, ya previsto por el contrato heredado como pendiente. ⚠️ **Su forma NO es libre:** `byStatus`, `activeByAgent` y `resolvedPercent` replican exactamente las tres funciones puras de `utils/ticketStats.js` (Curso 01 · F7), porque el ejercicio 25 de esa fase exige poder hacer fallback al cálculo local. Ver la tabla de abajo. |
 | `POST /attachments` (multipart) + `GET /attachments/:id/download` | 12 | Endpoint nuevo, ya previsto como pendiente. La ruta de descarga la fija el frontend: el apéndice de axios del Curso 01 ya la escribe así, con `responseType: "blob"`. Los adjuntos **no** son feature del tronco (viven en ese apéndice y como draft local del wizard), así que no hay más forma heredada que honrar. |
@@ -276,4 +277,4 @@ Con json-server apagado y `baseURL` apuntando al Express:
 - [ ] Las métricas del dashboard siguen calculando en cliente sin errores
 - [ ] *(si ya montaste `/stats`)* su respuesta es **idéntica** a lo que devuelven las funciones puras del cliente sobre los mismos datos
 - [ ] Recarga de página con sesión activa: todo lo anterior sobrevive
-- [ ] `git diff` del frontend: **exactamente una línea**
+- [ ] `git diff` del frontend: **a lo sumo una línea** (el `baseURL`)

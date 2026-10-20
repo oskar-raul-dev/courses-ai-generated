@@ -31,7 +31,6 @@ real que reemplaza al mock— vive en
 | [`0-plan-del-curso.md`](0-plan-del-curso.md) | 🗺️ Plan, alcance, stack unificado fijado, convenciones y autodiagnóstico inicial |
 | [`0-ESTRUCTURA-CURSO.md`](0-ESTRUCTURA-CURSO.md) | 🏛️ **Arquitectura**: qué es obligatorio, qué opcional, grafo de dependencias, reglas de exclusión, notas de producción |
 | [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio, un tag por fase, tags de ejercicio, y cómo volver a un estado sano cuando el ejercicio 22 te deje el proyecto irreconocible |
-| [`../prompts/guia-de-estilo-y-convenciones.md`](../prompts/guia-de-estilo-y-convenciones.md) | ✍️ Guía editorial compartida con el Curso 02 |
 | [`forense-master.md`](forense-master.md) | 🕵️ **La puerta del track forense**: el método de cuatro preguntas y el 🩺 índice de síntomas. Se entra por lo que ves, no por la fase |
 | [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **13 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |
 
@@ -74,6 +73,8 @@ flojo. Todos sus ejercicios son opcionales.
 | [`a3-npm.md`](a3-npm.md) | 📦 npm — dependencies contra devDependencies, lockfile, scripts |
 | [`a4-axios.md`](a4-axios.md) | 🌐 axios — instancia, interceptores, errores, multipart. *El interceptor cambia de casa en las rutas* |
 | [`a5-webpack-babel.md`](a5-webpack-babel.md) | ⚙️ Webpack y Babel — qué hace Vue CLI por debajo. *`vue.config.js` no existe en Quasar ni en Nuxt* |
+| [`a6-arm64-m1.md`](a6-arm64-m1.md) | 🍎 Apple Silicon — por qué `npm ci` compila C++ en arm64, `deasync`, `node-sass` y el `403` de mongodb-memory-server. *Solo si tienes un Mac con chip M* |
+| [`a7-docker-colima.md`](a7-docker-colima.md) | 🐳 Docker y Colima en Apple Silicon — devcontainer de la Tiquetera, `node_modules` en volumen, contenedores amd64. *Solo si tienes un Mac con chip M* |
 
 ---
 
@@ -157,8 +158,7 @@ se leen solas: como las rutas son excluyentes, solo vas a abrir una.
 
 Cada fase enlaza a la suya desde su sección **⚠️ Errores comunes y pieza
 forense**, donde además hay un bloque 🧨 **Rompe a propósito** para provocar el
-fallo en tu propia máquina. La especificación del formato vive en
-[`../prompts/formato-piezas-forenses.md`](../prompts/formato-piezas-forenses.md).
+fallo en tu propia máquina. Las reglas de forma de estas piezas son internas del paquete y no se publican: lo que el lector necesita está en la pieza misma.
 
 ---
 
@@ -185,23 +185,13 @@ abrirla antes de escribir la tuya no te ahorra tiempo — te ahorra el ejercicio
 
 ## 🗺️ El mapa de un vistazo
 
-```
- F0 ─ F1 ─ F2 ─ F3 ─ F4 ─ F5 ─ F6 ─ F7 ─ F8 ─ F9 ─ F10 ─ F11
-setup base auth mock dash crud wiz chart ws  panel vuex  test
-                                                           │
-                                     ✅ Tiquetera "a pelo" completa
-                                                           │
-                            ┌──────────────┼───────────────┐
-                            ▼              ▼               ▼
-                        ╔═══════╗      ╔════════╗      ╔═══════╗
-                        ║ RUTA  ║      ║  RUTA  ║      ║ RUTA  ║
-                        ║   Q   ║      ║   VU   ║      ║  NX   ║
-                        ║Quasar ║      ║Vuetify ║      ║ Nuxt  ║
-                        ║  1.x  ║      ║  2.x   ║      ║  2.x  ║
-                        ╚═══════╝      ╚════════╝      ╚═══════╝
-                        Q0 → Q4        VU0 → VU4       NX0 → NX4
-
-                        ⚠️ elige UNA. No se acumulan.
+```mermaid
+flowchart TD
+    T["Tronco F0 a F11, la Tiquetera a pelo"] --> OK["Tiquetera completa"]
+    OK --> Q["RUTA Q: Quasar 1.x, Q0 a Q4"]
+    OK --> VU["RUTA VU: Vuetify 2.x, VU0 a VU4"]
+    OK --> NX["RUTA NX: Nuxt 2.x, NX0 a NX4"]
+    OK -. "elige UNA: no se acumulan" .- NOTA["Las rutas son excluyentes"]
 ```
 
 ---
@@ -263,7 +253,7 @@ si un capítulo dice otra cosa, gana esa tabla. El resumen:
 
 **Tronco:** Node 14.21.3 · Vue 2.6.14 · Vue Router 3 · Vuex 3 · axios 0.21.1 ·
 Bootstrap 4.6.2 · vuelidate 0.7.7 · chart.js 2.9 · socket.io 2.x ·
-json-server 0.16 · Jest 26 + vue-test-utils 1.x
+json-server 0.16 · Jest 23 (el del plugin de Vue CLI 3) + vue-test-utils 1.3.6
 
 **Rutas:** Quasar 1.22 · Vuetify 2.6 · Nuxt 2.15. **Bootstrap 4.6 se queda en
 las tres** — la convivencia es contenido, no un descuido.
@@ -272,13 +262,13 @@ las tres** — la convivencia es contenido, no un descuido.
 
 ## 📊 El material en números
 
-- **12 fases de tronco** + **5 apéndices** + **15 fases de ruta** (3 × 5)
+- **12 fases de tronco** + **7 apéndices** (dos solo para Apple Silicon) + **15 fases de ruta** (3 × 5)
 - **15 piezas forenses** (12 de tronco + 3 de ruta) y **13 incidentes** en el
   cuaderno
-- **911 ejercicios** graduados 🟢 fácil → 🟡 intermedio → 🟠 difícil →
+- **945 ejercicios** graduados 🟢 fácil → 🟡 intermedio → 🟠 difícil →
   🔴 muy difícil, más los 🔥 opcionales
-- 25–30 ejercicios por fase de tronco y de ruta; 34–40 por apéndice (todos
-  opcionales)
+- 25–30 ejercicios por fase de tronco y de ruta; 34–40 por apéndice de
+  consulta y 15 en cada apéndice de plataforma (todos opcionales)
 - Al menos un tercio de los ejercicios son de **diagnóstico**: se entrega algo
   roto y se pide reproducir, localizar y explicar
 
@@ -286,12 +276,41 @@ las tres** — la convivencia es contenido, no un descuido.
 |---|---|
 | Tronco F0–F11 | ✅ terminado |
 | Apéndices a1–a5 | ✅ terminado |
+| Apéndices a6–a7 (Apple Silicon) | ✅ terminados el 19/10/2026 |
 | `0-ESTRUCTURA-CURSO.md` y `0-plan-del-curso.md` | ✅ terminado |
 | Ruta Q (q0–q4) | ✅ terminada |
 | Ruta VU (vu0–vu4) | ✅ terminada |
 | Ruta NX (nx0–nx4) | ✅ terminada |
 | Track forense (`forense-*.md`) | ✅ terminado |
-| `cuaderno-incidentes.md` | ✅ terminado |
+| `cuaderno-incidentes.md` | ✅ terminado, los 13 reproducidos |
+
+### Cómo se validó
+
+Entre el 14 y el 18 de octubre de 2026 se ejecutó el código del curso tal como está escrito, en
+contenedores (`node:14.21.3`, Docker Desktop sobre Apple Silicon), y cada fragmento publicado se
+comparó con el que corrió. Lo que no coincidía se corrigió en la fase.
+
+- **Tronco:** el repositorio se construyó fase a fase, de F0 a F11; cada fase compila, la Mock API
+  responde lo que la fase dice, `npm run lint` (ESLint 5.16 con `eslint-plugin-vue` 5.2, los del
+  andamio) sale sin errores y la suite de F11 da 26/26. El inyector de caos de F3 se probó en sus
+  siete modos y el broadcast de F8 con dos clientes.
+- **Rutas:** la red de X0 da 64/64 en Q y VU antes y después de cada migración, y 40/40 en NX. Q se armó con Quasar 1.22.10
+  sobre `@quasar/app` 1.9.6, VU con Vuetify 2.6 y NX con Nuxt 2.15; las tres compilan, y en NX el
+  SSR se comprobó con `curl`.
+- **Cuaderno y forense:** los 13 incidentes, preparados desde el estado de su fase, con su prueba
+  de regresión en rojo y luego en verde. El 05 se rediseñó el 20/10/2026 con una rama de preparación y
+  se reprodujo con ella.
+  Las salidas de terminal de las piezas forenses son las de esa corrida.
+
+- **Apple Silicon (19/10/2026):** los apéndices 6 y 7 y la sección 🍎 de F0 salieron de corridas en
+  contenedores arm64 y amd64: el `npm ci` de F11 y de la ruta Q, con y sin build tools; la ruta Q con
+  Dart Sass; el devcontainer de A7, con la suite de F11 26/26 dentro; y la imagen de la API del Curso 02
+  en las dos arquitecturas. Después, en un Mac con chip M: Node 14.21.3 x64 con nvm bajo Rosetta, el
+  `npm ci` de F11 con `deasync` precompilado y la suite 26/26, y Colima 0.10.3 con `vz` y Rosetta, con la
+  suite de F13 6/6 en amd64. Lo que falta, cada apéndice lo marca como no verificado.
+
+Lo que queda para hacer a mano es lo que solo se ve en el navegador: cada pantalla, las salidas de
+DevTools y lo visual de las rutas (z-index, modo oscuro, layout).
 
 ---
 

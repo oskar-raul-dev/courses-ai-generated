@@ -1,0 +1,39 @@
+# 'version' es informativa en Compose v2+; se conserva por costumbre de la época
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:${MONGO_VERSION:-4.4}
+    container_name: ${MONGO_CONTAINER:-tiquetera-mongo}
+    command: ["mongod", "--replSet", "rs0", "--oplogSize", "512"]
+    ports: ["${MONGO_PORT:-27017}:27017"]
+    volumes:
+      - ${MONGO_DATA_PATH:-./mongo-data}:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: tiquetera-api
+    environment:
+      # SIN ?replicaSet: el RS de la Fase 6 se inició como "localhost:27017" (ver nota abajo)
+      - MONGO_URL=mongodb://mongo:27017/tiquetera
+      - JWT_SECRET=${JWT_SECRET:?definelo_en_.env}
+      - NODE_ENV=production
+    ports:
+      - "3000:3000"     # API
+      - "4000:4000"     # sockets
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  backup:
+    image: mongo:${MONGO_VERSION:-4.4}
+    profiles: ["ops"]              # solo corre cuando lo invocas
+    volumes: ["./backups:/backups"]
+    entrypoint: >
+      mongodump --uri="mongodb://mongo:27017/"
+      --oplog --gzip --out=/backups/manual

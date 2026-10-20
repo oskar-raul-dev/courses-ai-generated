@@ -7,8 +7,9 @@
 > `plugins/vuetify.js`, Vue DevTools y Network
 >
 > **El eje:** Vuetify falla **sutilmente**. No desaparecen componentes enteros:
-> se descoloca una línea, un color no cambia con el tema, un diálogo no abre. Y
-> la consola, limpia.
+> un color no cambia con el tema, el modo oscuro no llega a un componente, un
+> diálogo se pinta donde no debe. Y la consola, casi limpia: a lo sumo un warning
+> sobre un `data-app` que nunca escribiste.
 
 Una sola pieza para las cinco fases, porque las rutas son excluyentes: si
 elegiste Vuetify, esto es todo tu track de ruta y se lee solo. El conflicto de
@@ -22,7 +23,8 @@ mitad de los casos.
 ## 🎫 Los tres tickets de esta ruta
 
 > **1.** "Los colores de la aplicación no son los que definimos y los diálogos
-> no abren. No sale ningún error en la consola."
+> salen raros. En la consola no hay ningún error, solo un aviso amarillo que
+> nadie entiende."
 >
 > **2.** "Guardé un ticket y la prioridad quedó rara; ahora el badge del
 > dashboard sale en blanco para ese ticket."
@@ -39,7 +41,7 @@ resuelve la familia de síntomas más desconcertante.
 
 ### Paso 1 — ¿hay `<v-app>` en la raíz?
 
-Ante cualquier cosa "casi bien" con la consola limpia:
+Ante cualquier cosa "casi bien", o ante un `[Vuetify] Unable to locate target [data-app]`:
 
 ```bash
 grep -n "v-app" src/App.vue
@@ -51,13 +53,14 @@ grep -n "v-app" src/App.vue
 
 **Qué descarta.** Descarta el tema, los componentes y tu código. Vuetify 2
 necesita un `<v-app>` ancestro para dos cosas que parecen no tener relación: la
-**inyección del tema** (por eso los colores "no son los que pusiste") y el
-**punto de anclaje de los portales** (por eso los diálogos, menús y overlays no
-aparecen). Sin él nada explota: se degrada en silencio. Es el error que más
+**clase `v-application`** de la que cuelga todo el CSS del tema (por eso los
+colores "no son los que pusiste") y el **punto de anclaje de los portales** (el
+`data-app` del aviso: sin él, diálogos, menús y overlays se pintan donde están,
+recortados o tapados). Sin él nada explota: se degrada con un solo warning. Es el error que más
 horas cuesta de toda la ruta.
 
-Reaparece en VU4 con otra cara —la línea vertical del `v-timeline` que se
-descoloca— y sobre todo **en los tests**: un componente montado sin `<v-app>` y
+Reaparece en VU4 con otra cara —chips sin color y un modo oscuro que no llega a
+la línea de tiempo— y sobre todo **en los tests**: un componente montado sin `<v-app>` y
 sin la instancia de Vuetify inyectada falla de formas que no se parecen a nada.
 VU0 avisa y VU2 lo resuelve dentro del helper `mountView`.
 
@@ -108,18 +111,22 @@ significa vaciarle el formulario al usuario para "limpiar unos mensajes".
 
 ### Paso 4 — ¿quién manda en la tabla?
 
-El conflicto central, en VU3. Empieza por el síntoma mudo:
+El conflicto central, en VU3. Empieza por el síntoma mudo —clicas la cabecera,
+la flecha cambia y las filas no se mueven— y mira qué modo cree la tabla que
+tiene:
 
 ```js
-> $vm0.sortBy
-"createdAt"        // ⚠️ string
+> $vm0.$props.serverItemsLength
+43                 // ⚠️ definido: modo servidor
 ```
 
-**Qué descarta.** Descarta la tabla, los datos y el orden del backend: en
-Vuetify 2 `sortBy` y `sortDesc` son **arrays**, y con un string la tabla no
-ordena y no avisa. La misma familia de fallos silenciosos por contrato mal leído
-incluye `align: "left"` (Vuetify usa `start`/`end`, pensando en RTL) y el header
-escrito con `label` en vez de `text`, que deja la cabecera vacía.
+**Qué descarta.** Descarta la tabla y los datos: con `server-items-length`, la
+tabla **no ordena ni pagina** por su cuenta; emite `update:options` con el orden
+pedido y espera que **tú** traigas las filas ordenadas. Si tu código no escucha
+ese evento (o tu store espera que ordene ella), nadie ordena. Del mismo contrato
+mal leído: `sortBy` como string dentro de `options` no es silencioso —la tabla
+ni se pinta: `TypeError: this.options.sortBy.findIndex is not a function`—, y el
+header escrito con `label` en vez de `text` deja la cabecera vacía.
 
 Y la parte que sí es de propiedad del estado: si estás en modo servidor,
 `@update:options` ya pide los datos al montar, así que un fetch en `created()`
@@ -142,8 +149,8 @@ que ya tienes en pantalla, porque la búsqueda tiene que viajar como parámetro.
 
 | Lo que ves | Dónde empezar |
 |---|---|
-| Colores del tema que no aplican y diálogos que no abren, consola limpia | Falta `<v-app>` en la raíz (VU1) |
-| La línea del timeline desaparece o se descoloca | Lo mismo: falta el `<v-app>` ancestro (VU4) |
+| Colores del tema que no aplican, diálogos raros, `Unable to locate target [data-app]` | Falta `<v-app>` en la raíz (VU1) |
+| Los chips y puntos del timeline sin color, y el modo oscuro que no los alcanza | Lo mismo: falta el `<v-app>` ancestro (VU4) |
 | Un test monta el componente y todo se comporta raro | Sin `<v-app>` y sin instancia de Vuetify inyectada (VU0 · VU2) |
 | El color `primary` "no es el que puse" | Vive en `plugins/vuetify.js`, no en el CSS (VU1) |
 | El icono no aparece | Fuente MDI no cargada, o nombre/prefijo mal (VU1) |
@@ -155,8 +162,9 @@ que ya tienes en pantalla, porque la búsqueda tiene que viajar como parámetro.
 | Llamaste `reset()` y le borraste el formulario al usuario | Querías `resetValidation()` (VU2) |
 | `wrapper.find()` no encuentra un campo del diálogo | El `<v-dialog>` se teletransporta: usa `attach` o `document.querySelector` (VU2) |
 | Clic fuera del diálogo y se pierde lo escrito | Falta `persistent` (VU2) |
-| La tabla no ordena y no da error | `sortBy` como string en vez de array (VU3) |
-| `align: "left"` que se ignora | Vuetify usa `start`/`end` (VU3) |
+| La tabla no ordena y no da error | `server-items-length` puesto: modo servidor, ordenar es tuyo (VU3) |
+| `TypeError: this.options.sortBy.findIndex is not a function` | `sortBy` como string dentro de `options`; va en array (VU3) |
+| La tabla cambia de página y el store no se entera | `:options.sync` contra un computed sin `set` (VU3) |
 | Dos peticiones al montar la tabla | Fetch en `created()` estando en server-side (VU3) |
 | `x-total-count` es `undefined` | axios normaliza los headers a minúsculas (VU3) |
 | La búsqueda solo encuentra en la página actual | En server-side, `:search` no viaja: hay que mandarlo como param (VU3) |

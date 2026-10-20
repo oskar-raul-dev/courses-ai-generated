@@ -32,7 +32,11 @@ Y como siempre, los gráficos son la excusa. Lo que realmente se aprende:
   de los badges del dashboard (coherencia visual);
 - gráfico de barras horizontales: tickets abiertos/en progreso por agente;
 - tarjetas con indicadores numéricos (total, % resueltos, sin asignar);
-- los gráficos se **actualizan** al recargar datos sin recrearse;
+- los gráficos se **actualizan** con `chart.update()` cuando cambian sus datos,
+  sin recrearse. Ojo: el enlace «actualizar» pasa por `loading`, y el `v-if` de
+  la vista los desmonta y los vuelve a montar; el `update()` actúa cuando los
+  datos cambian sin pasar por `loading` (desde la Fase 10, cuando el tiempo real
+  cambia el store);
 - cero memory leaks: instancias destruidas al salir de la vista;
 - un componente de gráfico reutilizable con la frontera bien trazada;
 - la tabla de puntajes de la casa (🕹️), construida tal como se heredó y con
@@ -144,10 +148,12 @@ La regla de oro que el legacy viola sistemáticamente:
 > **Todo lo que se crea en `mounted` y vive fuera de Vue,
 > se destruye en `beforeDestroy`.**
 
-¿Qué pasa si no? Dos síntomas clásicos: memory leaks acumulativos (cada
-visita a la vista deja un chart zombie en memoria) y el error de chart.js
-`"Canvas is already in use"` al volver a montar sobre un canvas reciclado.
-El ejercicio 6 te hace provocar ambos a propósito.
+¿Qué pasa si no? Un memory leak acumulativo —cada visita a la vista deja un
+chart zombie en memoria, con su monitor de tamaño escuchando y su canvas
+referenciado—, y
+**en silencio**: chart.js 2 no lanza ningún error. El `"Canvas is already in
+use"` que vas a encontrar en foros es de chart.js 3, que sí obliga a destruir
+antes de reusar el canvas. El ejercicio 6 te hace provocar el leak a propósito.
 
 Ojo al cruce con la Fase 6: si el componente está dentro de `keep-alive`,
 `beforeDestroy` **no corre** al salir — corre `deactivated`. La limpieza
@@ -175,11 +181,14 @@ El watch simple de la Fase 6 observaba un número. Para observar cambios
 **dentro** de un objeto o arreglo:
 
 ```js
+// StatusDoughnut.vue
 watch: {
-  chartData: {
-    deep: true,          // observa mutaciones internas, no solo reemplazo
+  counts: {
+    deep: true, // observa mutaciones internas, no solo reemplazo
     handler: function () {
-      this.refreshChart();
+      if (!this.chart) return;
+      this.chart.data = this.buildData();
+      this.chart.update(); // actualizar, NO recrear
     }
   }
 }
@@ -220,6 +229,7 @@ src/
       ScoreBoard.vue        ← la tabla de puntajes (la rareza de la casa)
   utils/
     ticketStats.js          ← agregaciones puras (¡testeables gratis en Fase 11!)
+    statusColors.js         ← colores compartidos de estado (dona y badges)
   views/
     MetricsView.vue
 ```
@@ -853,8 +863,9 @@ las animaciones, parpadea y desperdicia trabajo. `update()` existe para esto.
 ```
 
 Sin el paso 2, la instancia queda viva referenciando el canvas muerto:
-memoria que no se libera, y si vuelves a `/metrics`, el famoso
-`"Canvas is already in use"`. El ejercicio 6 te lo hace vivir.
+memoria que no se libera, y cada vuelta a `/metrics` suma otra, con la consola
+limpia (chart.js 2 no avisa; el `"Canvas is already in use"` de los foros es de
+la versión 3). El ejercicio 6 te lo hace vivir.
 
 ---
 
@@ -1020,8 +1031,8 @@ gráficos zombi viven en la memoria del navegador, no en tu código.
 - Vue 2 — Reactivity in Depth (por qué la instancia no va en data):
   https://v2.vuejs.org/v2/guide/reactivity.html
 - Vue 2 — hooks de destrucción: https://v2.vuejs.org/v2/api/#beforeDestroy
-- Lodash — countBy: https://lodash.com/docs/4.17.15#countBy
-- Lodash — orderBy: https://lodash.com/docs/4.17.15#orderBy
+- Lodash — countBy: https://lodash.com/docs/4.18.1#countBy
+- Lodash — orderBy: https://lodash.com/docs/4.18.1#orderBy
 - vue-chartjs 3.x (la de la época, para el ej. 19): https://vue-chartjs.org/
 
 **Video / apoyo**

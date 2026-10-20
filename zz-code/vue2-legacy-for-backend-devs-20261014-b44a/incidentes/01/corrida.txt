@@ -1,0 +1,15 @@
+ci=0
+--- estado sano de F0 (vue y compiler fijados a mano, como pide la fase):
+check_sano=0
+--- preparación del incidente:
+build_roto=1
+Vue packages version mismatch:
+       
+- vue@2.6.14 (/app/node_modules/vue/dist/vue.runtime.common.js)
+- vue-template-compiler@2.6.12 (/app/node_modules/vue-template-compiler/package.json)
+vue 2.6.14 != vue-template-compiler 2.6.12
+check_roto=1
+--- parche mínimo:
+build_arreglado=0
+check_arreglado=0
+vue 2.6.14 | compiler (dev) 2.6.14 | compiler en dependencies: -

@@ -1,0 +1,1 @@
+// beforeDestroy: function () { this.chart.destroy(); }

@@ -145,7 +145,7 @@ añaden una colección más** (`activity`), para el timeline de X4.
 
 | Herramienta | Versión | Nota |
 |---|---|---|
-| Node.js | **14.21.3** (16.20.2 en macOS Apple Silicon) | Documentada en `.nvmrc` |
+| Node.js | **14.21.3** (en macOS Apple Silicon, la x64 bajo Rosetta 2) | Documentada en `.nvmrc` |
 | Vue | **2.6.14** | Última 2.6; el Vue real de las bases 2018–2021 |
 | vue-template-compiler | **2.6.14** | Siempre igual a la versión de Vue |
 | Vue CLI | 3.x | Modo clásico |
@@ -160,13 +160,13 @@ añaden una colección más** (`activity`), para el timeline de X4.
 | json-server | 0.16.x | Mock API oficial **desde Fase 3** |
 | chart.js | 2.9.x | Métricas en Fase 7 |
 | socket.io | 2.x | WebSockets en Fase 8 |
-| Jest + vue-test-utils | 26.x / 1.x | Testing en Fase 11 |
+| Jest + vue-test-utils | 23.x / 1.3.6 | Testing en Fase 11: Jest del `@vue/cli-plugin-unit-jest@3.12.1`; test-utils fijado aparte |
 
 ### Rutas (solo si eliges una)
 
 | Ruta | Paquete | Versión | Por qué esa |
 |---|---|---|---|
-| 🅠 **Q** | `quasar` + `@quasar/app` | **1.22.x** | Última v1. Vue 2.6 + Options API. v2 es Vue 3 → fuera |
+| 🅠 **Q** | `quasar` + `@quasar/app` | **1.22.10** + **1.9.6** | Última v1, con el CLI de app de 2020 (lista de componentes a mano). Ese `@quasar/app` trae Vue **2.6.11**. Se crea con `@quasar/cli@1.2.2` y `--branch app-v1`. v2 es Vue 3 → fuera |
 | 🅥 **VU** | `vuetify` + `vue-cli-plugin-vuetify` | **2.6.x** | Última v2. v3 es Vue 3 → fuera |
 | 🅝 **NX** | `nuxt` + `@nuxtjs/axios` | **2.15.x** | Última v2. Nuxt 3 es Vue 3 → fuera. **EOL desde junio 2024** — y eso lo hace *más* relevante para un curso de legacy, no menos |
 
@@ -218,6 +218,8 @@ añaden una colección más** (`activity`), para el timeline de X4.
 3. 📦 **npm** — dependencies vs devDependencies, lockfile, scripts
 4. 🌐 **axios** — instancia, interceptores, manejo de errores
 5. ⚙️ **Webpack y Babel** — qué hace Vue CLI por debajo
+6. 🍎 **Apple Silicon** — dependencias nativas en arm64 (solo Mac con chip M)
+7. 🐳 **Docker y Colima** — el devcontainer de la Tiquetera en Apple Silicon (solo Mac con chip M)
 
 ---
 

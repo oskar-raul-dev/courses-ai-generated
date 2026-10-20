@@ -1,0 +1,6 @@
+function __f(){
+// router/index.js
+
+// ...
+{ path: "/metrics", name: "metrics", component: MetricsView, meta: { requiresAuth: true } }
+}

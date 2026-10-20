@@ -1,0 +1,1546 @@
+{
+ "https://github.com/nvm-windows/nvm": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:135",
+  "01-vue2-legacy/00-setup-hola-mundo.md:1167",
+  "01-vue2-legacy/a2-node.md:284"
+ ],
+ "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:165"
+ ],
+ "https://cdn.jsdelivr.net/npm/vue@2.6.14": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1139"
+ ],
+ "https://v2.vuejs.org/v2/guide/": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1160",
+  "01-vue2-legacy/01-estructura-base-legacy.md:519"
+ ],
+ "https://v2.vuejs.org/v2/guide/installation": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1161"
+ ],
+ "https://cli.vuejs.org/guide/installation.html": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1162"
+ ],
+ "https://axios.rest/pages/getting-started/first-steps": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1163",
+  "01-vue2-legacy/a4-axios.md:494"
+ ],
+ "https://getbootstrap.com/docs/4.6/getting-started/introduction/": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1164",
+  "01-vue2-legacy/01-estructura-base-legacy.md:524",
+  "01-vue2-legacy/a1-bootstrap.md:352"
+ ],
+ "https://getbootstrap.com/docs/4.6/components/forms/#validation": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1165",
+  "01-vue2-legacy/05-crud-tickets.md:922"
+ ],
+ "https://github.com/mrak/stubby4node": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1166"
+ ],
+ "https://github.com/nvm-sh/nvm": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1167",
+  "01-vue2-legacy/a2-node.md:283"
+ ],
+ "https://prettier.io/docs/options.html": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1168"
+ ],
+ "https://editorconfig.org/": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1169"
+ ],
+ "https://vuejs.github.io/vetur/": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1170"
+ ],
+ "https://www.jetbrains.com/help/webstorm/vue-js.html": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1171"
+ ],
+ "https://v2.vuejs.org/v2/style-guide/": [
+  "01-vue2-legacy/00-setup-hola-mundo.md:1181"
+ ],
+ "https://v2.vuejs.org/v2/guide/components": [
+  "01-vue2-legacy/01-estructura-base-legacy.md:520"
+ ],
+ "https://v3.router.vuejs.org/": [
+  "01-vue2-legacy/01-estructura-base-legacy.md:521"
+ ],
+ "https://v3.vuex.vuejs.org/": [
+  "01-vue2-legacy/01-estructura-base-legacy.md:522",
+  "01-vue2-legacy/10-vuex-a-fondo.md:788"
+ ],
+ "https://cli.vuejs.org/guide/": [
+  "01-vue2-legacy/01-estructura-base-legacy.md:523"
+ ],
+ "https://www.vuemastery.com/courses/intro-to-vue-js/vue-instance/": [
+  "01-vue2-legacy/01-estructura-base-legacy.md:528",
+  "01-vue2-legacy/04-dashboard-tickets.md:856",
+  "01-vue2-legacy/06-wizard-minimo.md:981"
+ ],
+ "https://vueschool.io/courses/vue-router-for-everyone": [
+  "01-vue2-legacy/01-estructura-base-legacy.md:529"
+ ],
+ "https://v3.router.vuejs.org/guide/advanced/navigation-guards.html": [
+  "01-vue2-legacy/02-autenticacion-minima.md:600"
+ ],
+ "https://v3.vuex.vuejs.org/guide/actions.html": [
+  "01-vue2-legacy/02-autenticacion-minima.md:601",
+  "01-vue2-legacy/10-vuex-a-fondo.md:792"
+ ],
+ "https://v3.vuex.vuejs.org/guide/modules.html": [
+  "01-vue2-legacy/02-autenticacion-minima.md:602",
+  "01-vue2-legacy/10-vuex-a-fondo.md:794"
+ ],
+ "https://axios.rest/pages/advanced/interceptors": [
+  "01-vue2-legacy/02-autenticacion-minima.md:603",
+  "01-vue2-legacy/a4-axios.md:498"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Authorization": [
+  "01-vue2-legacy/02-autenticacion-minima.md:604"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API": [
+  "01-vue2-legacy/02-autenticacion-minima.md:605"
+ ],
+ "https://jwt.io/introduction": [
+  "01-vue2-legacy/02-autenticacion-minima.md:609",
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:435"
+ ],
+ "https://datatracker.ietf.org/doc/html/rfc7519": [
+  "01-vue2-legacy/02-autenticacion-minima.md:610"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html": [
+  "01-vue2-legacy/02-autenticacion-minima.md:614"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html": [
+  "01-vue2-legacy/02-autenticacion-minima.md:615"
+ ],
+ "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/06-Session_Management/10-JSON_Web_Tokens/": [
+  "01-vue2-legacy/02-autenticacion-minima.md:616"
+ ],
+ "https://www.vuemastery.com/courses/token-based-authentication/intro-to-authentication/": [
+  "01-vue2-legacy/02-autenticacion-minima.md:620"
+ ],
+ "https://www.youtube.com/watch?v=UBUNrFtufWo": [
+  "01-vue2-legacy/02-autenticacion-minima.md:621"
+ ],
+ "https://www.youtube.com/watch?v=6LyagkoRWYA": [
+  "01-vue2-legacy/02-autenticacion-minima.md:622",
+  "01-vue2-legacy/03-mock-api-minima.md:1009"
+ ],
+ "https://v2.vuejs.org/v2/guide/instance.html": [
+  "01-vue2-legacy/03-mock-api-minima.md:85",
+  "01-vue2-legacy/03-mock-api-minima.md:1001"
+ ],
+ "https://v2.vuejs.org/v2/guide/computed.html": [
+  "01-vue2-legacy/03-mock-api-minima.md:86",
+  "01-vue2-legacy/03-mock-api-minima.md:1002",
+  "01-vue2-legacy/04-dashboard-tickets.md:838"
+ ],
+ "https://github.com/typicode/json-server/tree/v0.16.3": [
+  "01-vue2-legacy/03-mock-api-minima.md:995",
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:656"
+ ],
+ "https://www.npmjs.com/package/json-server": [
+  "01-vue2-legacy/03-mock-api-minima.md:996"
+ ],
+ "https://axios.rest/pages/advanced/error-handling": [
+  "01-vue2-legacy/03-mock-api-minima.md:997",
+  "01-vue2-legacy/a4-axios.md:497"
+ ],
+ "https://axios.rest/pages/advanced/request-config": [
+  "01-vue2-legacy/03-mock-api-minima.md:998",
+  "01-vue2-legacy/a4-axios.md:496"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises": [
+  "01-vue2-legacy/03-mock-api-minima.md:999"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises": [
+  "01-vue2-legacy/03-mock-api-minima.md:1000"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally": [
+  "01-vue2-legacy/03-mock-api-minima.md:1003"
+ ],
+ "https://v3.vuex.vuejs.org/guide/actions.html#composing-actions": [
+  "01-vue2-legacy/03-mock-api-minima.md:1005"
+ ],
+ "https://www.youtube.com/watch?v=RboyQ6IQDyI": [
+  "01-vue2-legacy/03-mock-api-minima.md:1010"
+ ],
+ "https://www.youtube.com/watch?v=yNrqlxn0nc0": [
+  "01-vue2-legacy/03-mock-api-minima.md:1011"
+ ],
+ "https://v2.vuejs.org/v2/guide/reactivity.html": [
+  "01-vue2-legacy/04-dashboard-tickets.md:840",
+  "01-vue2-legacy/07-metricas-minimas.md:1025"
+ ],
+ "https://v2.vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats": [
+  "01-vue2-legacy/04-dashboard-tickets.md:842",
+  "01-vue2-legacy/09-panel-soporte.md:1179"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-props.html": [
+  "01-vue2-legacy/04-dashboard-tickets.md:843",
+  "01-vue2-legacy/05-crud-tickets.md:918",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1655",
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1266"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-custom-events.html": [
+  "01-vue2-legacy/04-dashboard-tickets.md:844",
+  "01-vue2-legacy/05-crud-tickets.md:915",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1654",
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1265"
+ ],
+ "https://v2.vuejs.org/v2/guide/filters.html": [
+  "01-vue2-legacy/04-dashboard-tickets.md:845"
+ ],
+ "https://v2.vuejs.org/v2/guide/list.html": [
+  "01-vue2-legacy/04-dashboard-tickets.md:846"
+ ],
+ "https://v2.vuejs.org/v2/guide/class-and-style.html": [
+  "01-vue2-legacy/04-dashboard-tickets.md:847"
+ ],
+ "https://getbootstrap.com/docs/4.6/content/tables/": [
+  "01-vue2-legacy/04-dashboard-tickets.md:848"
+ ],
+ "https://getbootstrap.com/docs/4.6/components/badge/": [
+  "01-vue2-legacy/04-dashboard-tickets.md:849"
+ ],
+ "https://getbootstrap.com/docs/4.6/components/card/": [
+  "01-vue2-legacy/04-dashboard-tickets.md:850",
+  "01-vue2-legacy/a1-bootstrap.md:356"
+ ],
+ "https://lodash.com/docs/4.18.1#debounce": [
+  "01-vue2-legacy/04-dashboard-tickets.md:851"
+ ],
+ "https://vuelidate.js.org/": [
+  "01-vue2-legacy/05-crud-tickets.md:908",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1648",
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1259"
+ ],
+ "https://vuelidate.js.org/#sub-builtin-validators": [
+  "01-vue2-legacy/05-crud-tickets.md:909",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1649",
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1260"
+ ],
+ "https://v2.vuejs.org/v2/guide/instance.html#Lifecycle-Diagram": [
+  "01-vue2-legacy/05-crud-tickets.md:911",
+  "01-vue2-legacy/nx1-leer-nuxt.md:608"
+ ],
+ "https://v2.vuejs.org/v2/guide/events.html": [
+  "01-vue2-legacy/05-crud-tickets.md:913"
+ ],
+ "https://v2.vuejs.org/v2/guide/forms.html": [
+  "01-vue2-legacy/05-crud-tickets.md:917"
+ ],
+ "https://v3.router.vuejs.org/guide/advanced/navigation-guards.html#in-component-guards": [
+  "01-vue2-legacy/05-crud-tickets.md:920"
+ ],
+ "https://getbootstrap.com/docs/4.6/components/modal/": [
+  "01-vue2-legacy/05-crud-tickets.md:923",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1819",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1661"
+ ],
+ "https://www.youtube.com/watch?v=WP4-WgHqbPQ": [
+  "01-vue2-legacy/05-crud-tickets.md:927"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-dynamic-async.html": [
+  "01-vue2-legacy/06-wizard-minimo.md:967"
+ ],
+ "https://v2.vuejs.org/v2/api/#keep-alive": [
+  "01-vue2-legacy/06-wizard-minimo.md:968"
+ ],
+ "https://v2.vuejs.org/v2/api/#activated": [
+  "01-vue2-legacy/06-wizard-minimo.md:969"
+ ],
+ "https://v2.vuejs.org/v2/api/#ref": [
+  "01-vue2-legacy/06-wizard-minimo.md:970"
+ ],
+ "https://v2.vuejs.org/v2/guide/computed.html#Watchers": [
+  "01-vue2-legacy/06-wizard-minimo.md:971"
+ ],
+ "https://v2.vuejs.org/v2/guide/transitions.html": [
+  "01-vue2-legacy/06-wizard-minimo.md:973"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-slots.html": [
+  "01-vue2-legacy/06-wizard-minimo.md:974"
+ ],
+ "https://v3.router.vuejs.org/guide/essentials/nested-routes.html": [
+  "01-vue2-legacy/06-wizard-minimo.md:976"
+ ],
+ "https://www.chartjs.org/docs/2.9.4/": [
+  "01-vue2-legacy/07-metricas-minimas.md:1020"
+ ],
+ "https://www.chartjs.org/docs/2.9.4/charts/doughnut.html": [
+  "01-vue2-legacy/07-metricas-minimas.md:1021"
+ ],
+ "https://www.chartjs.org/docs/2.9.4/developers/updates.html": [
+  "01-vue2-legacy/07-metricas-minimas.md:1022"
+ ],
+ "https://www.chartjs.org/docs/2.9.4/developers/plugins.html": [
+  "01-vue2-legacy/07-metricas-minimas.md:1023"
+ ],
+ "https://v2.vuejs.org/v2/api/#beforeDestroy": [
+  "01-vue2-legacy/07-metricas-minimas.md:1026"
+ ],
+ "https://lodash.com/docs/4.18.1#countBy": [
+  "01-vue2-legacy/07-metricas-minimas.md:1027"
+ ],
+ "https://lodash.com/docs/4.18.1#orderBy": [
+  "01-vue2-legacy/07-metricas-minimas.md:1028"
+ ],
+ "https://vue-chartjs.org/": [
+  "01-vue2-legacy/07-metricas-minimas.md:1029"
+ ],
+ "https://socket.io/docs/v2/": [
+  "01-vue2-legacy/08-websockets-minimos.md:790",
+  "02-complement-mongodb-backend/12-el-backend-habla.md:578"
+ ],
+ "https://socket.io/docs/v2/client-api/": [
+  "01-vue2-legacy/08-websockets-minimos.md:791",
+  "01-vue2-legacy/q4-timeline-actividad.md:840",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1089",
+  "02-complement-mongodb-backend/13-testing-de-api.md:474"
+ ],
+ "https://socket.io/docs/v2/server-api/": [
+  "01-vue2-legacy/08-websockets-minimos.md:792"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/WebSocket": [
+  "01-vue2-legacy/08-websockets-minimos.md:794"
+ ],
+ "https://v2.vuejs.org/v2/guide/list.html#Mutation-Methods": [
+  "01-vue2-legacy/08-websockets-minimos.md:796",
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:657",
+  "01-vue2-legacy/q4-timeline-actividad.md:843",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1092"
+ ],
+ "https://v2.vuejs.org/v2/api/#watch": [
+  "01-vue2-legacy/08-websockets-minimos.md:797"
+ ],
+ "https://www.youtube.com/watch?v=1BfCnjr_Vjg": [
+  "01-vue2-legacy/08-websockets-minimos.md:801",
+  "02-complement-mongodb-backend/12-el-backend-habla.md:594"
+ ],
+ "https://v2.vuejs.org/v2/api/#key": [
+  "01-vue2-legacy/09-panel-soporte.md:1174",
+  "01-vue2-legacy/q4-timeline-actividad.md:845",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1093"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-custom-events.html#Customizing-Component-v-model": [
+  "01-vue2-legacy/09-panel-soporte.md:1176"
+ ],
+ "https://v2.vuejs.org/v2/api/#model": [
+  "01-vue2-legacy/09-panel-soporte.md:1177"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all": [
+  "01-vue2-legacy/09-panel-soporte.md:1181"
+ ],
+ "https://v3.router.vuejs.org/guide/advanced/meta.html": [
+  "01-vue2-legacy/09-panel-soporte.md:1183"
+ ],
+ "https://getbootstrap.com/docs/4.6/components/list-group/": [
+  "01-vue2-legacy/09-panel-soporte.md:1184"
+ ],
+ "https://v3.vuex.vuejs.org/guide/mutations.html": [
+  "01-vue2-legacy/10-vuex-a-fondo.md:790",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1816",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1658"
+ ],
+ "https://v3.vuex.vuejs.org/guide/plugins.html": [
+  "01-vue2-legacy/10-vuex-a-fondo.md:795"
+ ],
+ "https://v3.vuex.vuejs.org/guide/strict.html": [
+  "01-vue2-legacy/10-vuex-a-fondo.md:796",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1815",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1657"
+ ],
+ "https://v3.vuex.vuejs.org/guide/forms.html": [
+  "01-vue2-legacy/10-vuex-a-fondo.md:798"
+ ],
+ "https://github.com/vuejs/devtools": [
+  "01-vue2-legacy/10-vuex-a-fondo.md:799"
+ ],
+ "https://vueschool.io/courses/vuex-for-everyone": [
+  "01-vue2-legacy/10-vuex-a-fondo.md:803"
+ ],
+ "https://v1.test-utils.vuejs.org/": [
+  "01-vue2-legacy/11-testing-minimo.md:849",
+  "01-vue2-legacy/nx0-red-de-seguridad.md:978",
+  "01-vue2-legacy/q0-red-de-seguridad.md:1596",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1775",
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1269"
+ ],
+ "https://v1.test-utils.vuejs.org/guides/": [
+  "01-vue2-legacy/11-testing-minimo.md:850"
+ ],
+ "https://v1.test-utils.vuejs.org/api/wrapper/": [
+  "01-vue2-legacy/11-testing-minimo.md:851",
+  "01-vue2-legacy/nx0-red-de-seguridad.md:979",
+  "01-vue2-legacy/q0-red-de-seguridad.md:1599",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1780"
+ ],
+ "https://jestjs.io/docs/expect": [
+  "01-vue2-legacy/11-testing-minimo.md:852",
+  "01-vue2-legacy/nx0-red-de-seguridad.md:982",
+  "01-vue2-legacy/q0-red-de-seguridad.md:1607",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1787"
+ ],
+ "https://jestjs.io/docs/mock-functions": [
+  "01-vue2-legacy/11-testing-minimo.md:853",
+  "01-vue2-legacy/nx0-red-de-seguridad.md:983",
+  "01-vue2-legacy/q0-red-de-seguridad.md:1606",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1786"
+ ],
+ "https://jestjs.io/docs/asynchronous": [
+  "01-vue2-legacy/11-testing-minimo.md:854",
+  "01-vue2-legacy/q0-red-de-seguridad.md:1608",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1788"
+ ],
+ "https://jestjs.io/docs/timer-mocks": [
+  "01-vue2-legacy/11-testing-minimo.md:855"
+ ],
+ "https://cli.vuejs.org/core-plugins/unit-jest.html": [
+  "01-vue2-legacy/11-testing-minimo.md:856"
+ ],
+ "https://v2.vuejs.org/v2/cookbook/unit-testing-vue-components.html": [
+  "01-vue2-legacy/11-testing-minimo.md:858"
+ ],
+ "https://www.vuemastery.com/courses/": [
+  "01-vue2-legacy/11-testing-minimo.md:862"
+ ],
+ "https://getbootstrap.com/docs/4.6/layout/grid/": [
+  "01-vue2-legacy/a1-bootstrap.md:353",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1820",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1662"
+ ],
+ "https://getbootstrap.com/docs/4.6/utilities/spacing/": [
+  "01-vue2-legacy/a1-bootstrap.md:354"
+ ],
+ "https://getbootstrap.com/docs/4.6/components/forms/": [
+  "01-vue2-legacy/a1-bootstrap.md:355"
+ ],
+ "https://bootstrap-vue.org/": [
+  "01-vue2-legacy/a1-bootstrap.md:357",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1821"
+ ],
+ "https://nodejs.org/docs/latest-v14.x/api/": [
+  "01-vue2-legacy/a2-node.md:281"
+ ],
+ "https://nodejs.org/docs/latest-v14.x/api/modules.html": [
+  "01-vue2-legacy/a2-node.md:282"
+ ],
+ "https://docs.npmjs.com/cli/v6/configuring-npm/package-json": [
+  "01-vue2-legacy/a3-npm.md:290"
+ ],
+ "https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json": [
+  "01-vue2-legacy/a3-npm.md:291"
+ ],
+ "https://docs.npmjs.com/cli/v6/using-npm/scripts": [
+  "01-vue2-legacy/a3-npm.md:292"
+ ],
+ "https://semver.org/": [
+  "01-vue2-legacy/a3-npm.md:293"
+ ],
+ "https://semver.npmjs.com/": [
+  "01-vue2-legacy/a3-npm.md:293"
+ ],
+ "https://docs.npmjs.com/cli/v6/commands/npm-ci": [
+  "01-vue2-legacy/a3-npm.md:294"
+ ],
+ "https://axios.rest/pages/advanced/create-an-instance": [
+  "01-vue2-legacy/a4-axios.md:495"
+ ],
+ "https://axios.rest/pages/advanced/cancellation": [
+  "01-vue2-legacy/a4-axios.md:499"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API": [
+  "01-vue2-legacy/a4-axios.md:501"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/FormData": [
+  "01-vue2-legacy/a4-axios.md:505"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/File_API": [
+  "01-vue2-legacy/a4-axios.md:507"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications": [
+  "01-vue2-legacy/a4-axios.md:509"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static": [
+  "01-vue2-legacy/a4-axios.md:511"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Type": [
+  "01-vue2-legacy/a4-axios.md:513"
+ ],
+ "https://www.npmjs.com/package/multer": [
+  "01-vue2-legacy/a4-axios.md:514"
+ ],
+ "https://cli.vuejs.org/config/": [
+  "01-vue2-legacy/a5-webpack-babel.md:340"
+ ],
+ "https://cli.vuejs.org/guide/mode-and-env.html": [
+  "01-vue2-legacy/a5-webpack-babel.md:341"
+ ],
+ "https://v4.webpack.js.org/concepts/": [
+  "01-vue2-legacy/a5-webpack-babel.md:342"
+ ],
+ "https://vue-loader.vuejs.org/": [
+  "01-vue2-legacy/a5-webpack-babel.md:343"
+ ],
+ "https://babeljs.io/docs/babel-preset-env": [
+  "01-vue2-legacy/a5-webpack-babel.md:344"
+ ],
+ "https://github.com/browserslist/browserslist": [
+  "01-vue2-legacy/a5-webpack-babel.md:345"
+ ],
+ "https://babeljs.io/repl": [
+  "01-vue2-legacy/a5-webpack-babel.md:346"
+ ],
+ "https://v3.router.vuejs.org/guide/essentials/history-mode.html": [
+  "01-vue2-legacy/a5-webpack-babel.md:348"
+ ],
+ "https://jestjs.io/docs/configuration#testenvironment-string": [
+  "01-vue2-legacy/nx0-red-de-seguridad.md:981"
+ ],
+ "https://github.com/jsdom/jsdom#readme": [
+  "01-vue2-legacy/nx0-red-de-seguridad.md:984"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/Use_data_attributes": [
+  "01-vue2-legacy/nx0-red-de-seguridad.md:986"
+ ],
+ "https://v2.nuxt.com/docs/concepts/server-side-rendering": [
+  "01-vue2-legacy/nx0-red-de-seguridad.md:990"
+ ],
+ "https://v2.nuxt.com/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:591"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/nuxt/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:594"
+ ],
+ "https://v2.nuxt.com/docs/features/file-system-routing/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:596",
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:639"
+ ],
+ "https://v2.nuxt.com/docs/configuration-glossary/configuration-build/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:598"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/plugins/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:600"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/store/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:602"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/middleware/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:604"
+ ],
+ "https://v2.nuxt.com/docs/concepts/nuxt-lifecycle/": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:606"
+ ],
+ "https://github.com/nuxt/create-nuxt-app": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:612"
+ ],
+ "https://nuxt.com/blog/nuxt2-eol": [
+  "01-vue2-legacy/nx1-leer-nuxt.md:615"
+ ],
+ "https://v2.nuxt.com/docs/concepts/nuxt-lifecycle": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:823"
+ ],
+ "https://v2.nuxt.com/docs/features/nuxt-components#the-client-only-component": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:824"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/plugins": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:825"
+ ],
+ "https://axios.nuxtjs.org/": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:826"
+ ],
+ "https://github.com/microcipcip/cookie-universal": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:827"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/middleware": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:828"
+ ],
+ "https://v2.ssr.vuejs.org/guide/hydration.html": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:835"
+ ],
+ "https://v2.ssr.vuejs.org/guide/universal.html": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:837"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:839"
+ ],
+ "https://community.owasp.org/HttpOnly": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:843"
+ ],
+ "https://community.owasp.org/SameSite": [
+  "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:844"
+ ],
+ "https://v2.nuxt.com": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:708"
+ ],
+ "https://v2.nuxt.com/docs/features/data-fetching/#async-data": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:710"
+ ],
+ "https://v2.nuxt.com/docs/features/data-fetching/#the-fetch-hook": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:711"
+ ],
+ "https://v2.nuxt.com/docs/internals-glossary/context/": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:712",
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:641"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/store/#the-nuxtserverinit-action": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:713"
+ ],
+ "https://axios.nuxtjs.org/options/": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:715"
+ ],
+ "https://v2.nuxt.com/docs/directory-structure/layouts/#error-page": [
+  "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:717"
+ ],
+ "https://v2.nuxt.com/docs/features/data-fetching/": [
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:636"
+ ],
+ "https://v2.nuxt.com/docs/components-glossary/head/": [
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:637"
+ ],
+ "https://v2.nuxt.com/docs/components-glossary/validate/": [
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:638"
+ ],
+ "https://v2.nuxt.com/docs/features/transitions/": [
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:640"
+ ],
+ "https://ogp.me/": [
+  "01-vue2-legacy/nx4-pagina-ssr-nueva.md:659"
+ ],
+ "https://v1.test-utils.vuejs.org/api/#mount": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1597",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1776"
+ ],
+ "https://v1.test-utils.vuejs.org/guides/using-with-vuex.html": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1601",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1781"
+ ],
+ "https://v1.test-utils.vuejs.org/guides/using-with-vue-router.html": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1603",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1783"
+ ],
+ "https://v1.test-utils.vuejs.org/guides/#testing-asynchronous-behavior": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1605",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1785"
+ ],
+ "https://v3.vuex.vuejs.org/guide/testing.html": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1610",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1789"
+ ],
+ "https://testing-library.com/docs/guiding-principles/": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1616",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1805"
+ ],
+ "https://kentcdodds.com/blog/testing-implementation-details": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1618",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1807"
+ ],
+ "https://martinfowler.com/books/refactoring.html": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1620",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1809"
+ ],
+ "https://cli.vuejs.org/core-plugins/e2e-cypress.html": [
+  "01-vue2-legacy/q0-red-de-seguridad.md:1625",
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1813"
+ ],
+ "https://v1.quasar.dev/": [
+  "01-vue2-legacy/q1-leer-quasar.md:1831"
+ ],
+ "https://v1.quasar.dev/quasar-cli/quasar-conf-js": [
+  "01-vue2-legacy/q1-leer-quasar.md:1833",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1644"
+ ],
+ "https://v1.quasar.dev/quasar-cli/boot-files": [
+  "01-vue2-legacy/q1-leer-quasar.md:1834"
+ ],
+ "https://v1.quasar.dev/layout/layout": [
+  "01-vue2-legacy/q1-leer-quasar.md:1835"
+ ],
+ "https://v1.quasar.dev/layout/page": [
+  "01-vue2-legacy/q1-leer-quasar.md:1836"
+ ],
+ "https://v1.quasar.dev/quasar-cli/routing": [
+  "01-vue2-legacy/q1-leer-quasar.md:1837"
+ ],
+ "https://v1.quasar.dev/quasar-cli/vuex-store": [
+  "01-vue2-legacy/q1-leer-quasar.md:1838"
+ ],
+ "https://v1.quasar.dev/layout/grid/introduction": [
+  "01-vue2-legacy/q1-leer-quasar.md:1839"
+ ],
+ "https://v1.quasar.dev/style/spacing": [
+  "01-vue2-legacy/q1-leer-quasar.md:1840",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1806"
+ ],
+ "https://v1.quasar.dev/quasar-plugins/notify": [
+  "01-vue2-legacy/q1-leer-quasar.md:1841",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1641",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1803",
+  "01-vue2-legacy/q4-timeline-actividad.md:836"
+ ],
+ "https://v1.quasar.dev/quasar-plugins/dialog": [
+  "01-vue2-legacy/q1-leer-quasar.md:1842",
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1640",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1804"
+ ],
+ "https://v1.quasar.dev/layout-builder": [
+  "01-vue2-legacy/q1-leer-quasar.md:1843"
+ ],
+ "https://web.archive.org/web/20230131143556/https://quasar.dev/start/upgrade-guide": [
+  "01-vue2-legacy/q1-leer-quasar.md:1863"
+ ],
+ "https://github.com/quasarframework/quasar-awesome": [
+  "01-vue2-legacy/q1-leer-quasar.md:1864"
+ ],
+ "https://v1.quasar.dev/vue-components/form": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1633"
+ ],
+ "https://v1.quasar.dev/vue-components/input": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1635"
+ ],
+ "https://v1.quasar.dev/vue-components/select": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1637",
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1802"
+ ],
+ "https://v1.quasar.dev/vue-components/button": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1638"
+ ],
+ "https://v1.quasar.dev/vue-components/dialog": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1639"
+ ],
+ "https://v1.quasar.dev/vue-components/banner": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1642",
+  "01-vue2-legacy/q4-timeline-actividad.md:831"
+ ],
+ "https://v2.vuejs.org/v2/api/#vm-nextTick": [
+  "01-vue2-legacy/q2-migrar-crud-qform.md:1657",
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1267"
+ ],
+ "https://v1.quasar.dev/vue-components/table": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1793"
+ ],
+ "https://v1.quasar.dev/vue-components/table#Defining-the-columns": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1794"
+ ],
+ "https://v1.quasar.dev/vue-components/table#Pagination": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1795"
+ ],
+ "https://v1.quasar.dev/vue-components/table#Synchronizing-with-server": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1796"
+ ],
+ "https://v1.quasar.dev/vue-components/table#Slots": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1797"
+ ],
+ "https://v1.quasar.dev/vue-components/table#Filtering": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1798"
+ ],
+ "https://v1.quasar.dev/vue-components/table#QTd-API": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1801"
+ ],
+ "https://v1.quasar.dev/layout/grid/introduction-to-flexbox": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1805"
+ ],
+ "https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1807"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-custom-events.html#sync-Modifier": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1810",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1652"
+ ],
+ "https://v2.vuejs.org/v2/guide/components-slots.html#Scoped-Slots": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1811",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1653"
+ ],
+ "https://v2.vuejs.org/v2/guide/computed.html#Computed-Setter": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1812",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1654"
+ ],
+ "https://github.com/typicode/json-server/tree/v0.16.3#paginate": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1824",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1665"
+ ],
+ "https://github.com/typicode/json-server/tree/v0.16.3#full-text-search": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1825",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1666"
+ ],
+ "https://github.com/axios/axios#response-schema": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1828",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1669"
+ ],
+ "https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers": [
+  "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1831",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1670"
+ ],
+ "https://v1.quasar.dev/vue-components/timeline": [
+  "01-vue2-legacy/q4-timeline-actividad.md:827"
+ ],
+ "https://v1.quasar.dev/vue-components/chip": [
+  "01-vue2-legacy/q4-timeline-actividad.md:828"
+ ],
+ "https://v1.quasar.dev/vue-components/card": [
+  "01-vue2-legacy/q4-timeline-actividad.md:829"
+ ],
+ "https://v1.quasar.dev/vue-components/skeleton": [
+  "01-vue2-legacy/q4-timeline-actividad.md:830"
+ ],
+ "https://v1.quasar.dev/vue-components/infinite-scroll": [
+  "01-vue2-legacy/q4-timeline-actividad.md:832"
+ ],
+ "https://v1.quasar.dev/vue-components/stepper": [
+  "01-vue2-legacy/q4-timeline-actividad.md:833"
+ ],
+ "https://v1.quasar.dev/style/color-palette": [
+  "01-vue2-legacy/q4-timeline-actividad.md:834"
+ ],
+ "https://v1.quasar.dev/vue-components/icon": [
+  "01-vue2-legacy/q4-timeline-actividad.md:835"
+ ],
+ "https://socket.io/docs/v2/rooms/": [
+  "01-vue2-legacy/q4-timeline-actividad.md:841",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1090"
+ ],
+ "https://github.com/typicode/json-server#filter": [
+  "01-vue2-legacy/q4-timeline-actividad.md:846",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1094"
+ ],
+ "https://martinfowler.com/eaaDev/DomainEvent.html": [
+  "01-vue2-legacy/q4-timeline-actividad.md:851",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1098"
+ ],
+ "https://microservices.io/patterns/data/transactional-outbox.html": [
+  "01-vue2-legacy/q4-timeline-actividad.md:853",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1100"
+ ],
+ "https://v1.test-utils.vuejs.org/api/options.html#attachto": [
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1778"
+ ],
+ "https://v2.vuetifyjs.com/en/components/application/": [
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1794",
+  "01-vue2-legacy/vu1-leer-vuetify.md:760"
+ ],
+ "https://v2.vuetifyjs.com/en/getting-started/unit-testing/": [
+  "01-vue2-legacy/vu0-red-de-seguridad.md:1797"
+ ],
+ "https://v2.vuetifyjs.com/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:757"
+ ],
+ "https://v2.vuetifyjs.com/en/getting-started/installation/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:759"
+ ],
+ "https://v2.vuetifyjs.com/en/features/theme/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:761",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1643",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1080"
+ ],
+ "https://v2.vuetifyjs.com/en/components/grid/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:762"
+ ],
+ "https://v2.vuetifyjs.com/en/features/breakpoints/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:763"
+ ],
+ "https://v2.vuetifyjs.com/en/features/icons/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:764"
+ ],
+ "https://v2.vuetifyjs.com/en/features/treeshaking/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:765",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1648"
+ ],
+ "https://pictogrammers.com/library/mdi/": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:766"
+ ],
+ "https://github.com/vuetifyjs/vue-cli-plugins/tree/master/packages/vue-cli-plugin-vuetify": [
+  "01-vue2-legacy/vu1-leer-vuetify.md:767"
+ ],
+ "https://v2.vuetifyjs.com/en/components/forms/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1243"
+ ],
+ "https://v2.vuetifyjs.com/en/components/text-fields/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1245"
+ ],
+ "https://v2.vuetifyjs.com/en/components/textareas/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1246"
+ ],
+ "https://v2.vuetifyjs.com/en/components/selects/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1248",
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1638"
+ ],
+ "https://v2.vuetifyjs.com/en/components/dialogs/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1250"
+ ],
+ "https://v2.vuetifyjs.com/en/components/cards/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1251",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1077"
+ ],
+ "https://v2.vuetifyjs.com/en/components/buttons/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1253"
+ ],
+ "https://v2.vuetifyjs.com/en/components/snackbars/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1254"
+ ],
+ "https://v2.vuetifyjs.com/en/components/alerts/": [
+  "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1255",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1079"
+ ],
+ "https://v2.vuetifyjs.com/en/components/data-tables/": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1629"
+ ],
+ "https://v2.vuetifyjs.com/en/api/v-data-table/#props-headers": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1630"
+ ],
+ "https://v2.vuetifyjs.com/en/api/v-data-table/#props-options": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1631"
+ ],
+ "https://v2.vuetifyjs.com/en/components/data-tables/#server-side-paginate-and-sort": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1632"
+ ],
+ "https://v2.vuetifyjs.com/en/api/v-data-table/#slots": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1633"
+ ],
+ "https://v2.vuetifyjs.com/en/api/v-data-table/#props-custom-filter": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1634"
+ ],
+ "https://v2.vuetifyjs.com/en/components/chips/": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1637",
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1076"
+ ],
+ "https://v2.vuetifyjs.com/en/components/icons/": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1639"
+ ],
+ "https://v2.vuetifyjs.com/en/components/grids/": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1640"
+ ],
+ "https://v2.vuetifyjs.com/en/styles/colors/": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1644"
+ ],
+ "https://v2.vuetifyjs.com/en/features/theme/#customizing": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1645"
+ ],
+ "https://v2.vuetifyjs.com/en/features/treeshaking/#manual-imports": [
+  "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1649"
+ ],
+ "https://v2.vuetifyjs.com/en/components/timelines/": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1075"
+ ],
+ "https://v2.vuetifyjs.com/en/components/skeleton-loaders/": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1078"
+ ],
+ "https://v2.vuetifyjs.com/en/features/theme/#dark-mode": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1081"
+ ],
+ "https://v2.vuetifyjs.com/en/features/icon-fonts/": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1082"
+ ],
+ "https://v2.vuetifyjs.com/en/components/steppers/": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1083"
+ ],
+ "https://v2.vuetifyjs.com/en/components/color-pickers/": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1084"
+ ],
+ "https://v2.vuetifyjs.com/en/components/badges/": [
+  "01-vue2-legacy/vu4-timeline-vuetify.md:1085"
+ ],
+ "https://www.mongodb.com/docs/mongodb-shell/install/": [
+  "02-complement-mongodb-backend/00-preliminares.md:139"
+ ],
+ "https://www.mongodb.com/docs/compass/install/": [
+  "02-complement-mongodb-backend/00-preliminares.md:140"
+ ],
+ "https://www.mongodb.com/docs/database-tools/installation/": [
+  "02-complement-mongodb-backend/00-preliminares.md:142"
+ ],
+ "https://www.mongodb.com/try/download/community": [
+  "02-complement-mongodb-backend/00-preliminares.md:158"
+ ],
+ "https://www.mongodb.com/docs/manual/installation/": [
+  "02-complement-mongodb-backend/00-preliminares.md:586"
+ ],
+ "https://www.mongodb.com/docs/manual/administration/install-community-windows/": [
+  "02-complement-mongodb-backend/00-preliminares.md:587"
+ ],
+ "https://www.mongodb.com/docs/manual/administration/install-community-macos/": [
+  "02-complement-mongodb-backend/00-preliminares.md:588"
+ ],
+ "https://hub.docker.com/_/mongo": [
+  "02-complement-mongodb-backend/00-preliminares.md:589",
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:733",
+  "02-complement-mongodb-backend/a01-docker.md:300"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/program/mongod/": [
+  "02-complement-mongodb-backend/00-preliminares.md:590"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/configuration-options/": [
+  "02-complement-mongodb-backend/00-preliminares.md:591"
+ ],
+ "https://www.mongodb.com/docs/mongodb-shell/": [
+  "02-complement-mongodb-backend/00-preliminares.md:592",
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:734",
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:327"
+ ],
+ "https://www.mongodb.com/docs/database-tools/mongoexport/": [
+  "02-complement-mongodb-backend/00-preliminares.md:593"
+ ],
+ "https://www.mongodb.com/docs/database-tools/mongoimport/": [
+  "02-complement-mongodb-backend/00-preliminares.md:594"
+ ],
+ "https://www.mongodb.com/docs/database-tools/mongodump/": [
+  "02-complement-mongodb-backend/00-preliminares.md:595",
+  "02-complement-mongodb-backend/14-operacion.md:415"
+ ],
+ "https://www.mongodb.com/docs/database-tools/mongorestore/": [
+  "02-complement-mongodb-backend/00-preliminares.md:596",
+  "02-complement-mongodb-backend/14-operacion.md:416"
+ ],
+ "https://www.mongodb.com/docs/manual/core/backups/": [
+  "02-complement-mongodb-backend/00-preliminares.md:597",
+  "02-complement-mongodb-backend/14-operacion.md:414"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/backup-with-filesystem-snapshots/": [
+  "02-complement-mongodb-backend/00-preliminares.md:598"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/mongodb-extended-json/": [
+  "02-complement-mongodb-backend/00-preliminares.md:599"
+ ],
+ "https://www.mongodb.com/docs/compass/": [
+  "02-complement-mongodb-backend/00-preliminares.md:600",
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:744",
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:334"
+ ],
+ "https://docs.docker.com/compose/how-tos/environment-variables/": [
+  "02-complement-mongodb-backend/00-preliminares.md:604",
+  "02-complement-mongodb-backend/a01-docker.md:296"
+ ],
+ "https://docs.docker.com/engine/storage/": [
+  "02-complement-mongodb-backend/00-preliminares.md:605",
+  "02-complement-mongodb-backend/a01-docker.md:297"
+ ],
+ "https://www.youtube.com/watch?v=Qw9zlE3t8Ko": [
+  "02-complement-mongodb-backend/00-preliminares.md:609",
+  "02-complement-mongodb-backend/a01-docker.md:306"
+ ],
+ "https://www.mongodb.com/docs/manual/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:726"
+ ],
+ "https://www.mongodb.com/docs/manual/core/databases-and-collections/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:727"
+ ],
+ "https://www.mongodb.com/docs/manual/core/document/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:728"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/bson-types/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:729"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/objectid/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:730"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/sql-comparison/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:731",
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:464"
+ ],
+ "https://mongodb.github.io/node-mongodb-native/3.6/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:732"
+ ],
+ "https://learn.mongodb.com/": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:743",
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:465",
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:528"
+ ],
+ "https://www.youtube.com/watch?v=-bt_y4Loofg": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:748"
+ ],
+ "https://www.youtube.com/watch?v=-56x56UppqQ": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:749",
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:469"
+ ],
+ "https://www.youtube.com/watch?v=0buKQHokLK8": [
+  "02-complement-mongodb-backend/01-mongo-en-30-min.md:750"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.collection.find/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:448"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/mql/query-predicates/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:449"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:450"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:451"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/query-arrays/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:452"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/iterate-a-cursor/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:453"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.collection.countdocuments/": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:454"
+ ],
+ "https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:455"
+ ],
+ "https://www.youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA": [
+  "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:470"
+ ],
+ "https://www.mongodb.com/docs/manual/data-modeling/": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:506",
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:507"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:508"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:509"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/limits/": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:510"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/update/slice/": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:511"
+ ],
+ "https://www.mongodb.com/company/blog/building-with-patterns-a-summary": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:516",
+  "02-complement-mongodb-backend/08-la-autopsia.md:257"
+ ],
+ "https://www.mongodb.com/company/blog/mongodb/6-rules-of-thumb-for-mongodb-schema-design": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:518",
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:472",
+  "02-complement-mongodb-backend/08-la-autopsia.md:255",
+  "02-complement-mongodb-backend/15-el-veredicto-honesto.md:318",
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:261"
+ ],
+ "https://www.youtube.com/watch?v=QAqK-R9HUhc": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:529"
+ ],
+ "https://www.youtube.com/watch?v=3GHZd0zv170": [
+  "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:530"
+ ],
+ "https://www.mongodb.com/docs/manual/core/schema-validation/": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:413"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:414"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/command/collmod/": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:415"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/update-documents-with-aggregation-pipeline/": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:416"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.collection.updatemany/": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:417"
+ ],
+ "https://www.mongodb.com/company/blog/building-with-patterns-the-schema-versioning-pattern": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:422"
+ ],
+ "https://json-schema.org/understanding-json-schema/reference": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:427"
+ ],
+ "https://ajv.js.org/": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:428"
+ ],
+ "https://www.youtube.com/@MongoDB": [
+  "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:437",
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:486"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:463"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:464"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/query/expr/": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:465"
+ ],
+ "https://www.mongodb.com/docs/manual/core/aggregation-pipeline-optimization/": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:466",
+  "02-complement-mongodb-backend/09-aggregation.md:596"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.collection.explain/": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:467",
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:332"
+ ],
+ "https://www.mongodb.com/company/blog/building-with-patterns-the-extended-reference-pattern": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:471"
+ ],
+ "https://www.oreilly.com/library/view/mongodb-the-definitive/9781491954454/": [
+  "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:478"
+ ],
+ "https://www.mongodb.com/docs/manual/core/write-operations-atomicity/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:508"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/mql/update/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:509"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.collection.findoneandupdate/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:510"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:511"
+ ],
+ "https://www.mongodb.com/docs/manual/core/transactions/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:512"
+ ],
+ "https://www.mongodb.com/docs/manual/core/transactions-production-consideration/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:513"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/write-concern/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:514"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/read-concern/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:515"
+ ],
+ "https://mongodb.github.io/node-mongodb-native/3.6/api/ClientSession.html": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:516"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set/": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:517"
+ ],
+ "https://www.mongodb.com/company/blog/building-with-patterns-the-bucket-pattern": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:527"
+ ],
+ "https://www.mongodb.com/company/bloghow-to-select-for-update-inside-mongodb-transactions": [
+  "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:528"
+ ],
+ "https://www.mongodb.com/docs/manual/indexes/": [
+  "02-complement-mongodb-backend/07-indices.md:408"
+ ],
+ "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/": [
+  "02-complement-mongodb-backend/07-indices.md:409"
+ ],
+ "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/": [
+  "02-complement-mongodb-backend/07-indices.md:410"
+ ],
+ "https://www.mongodb.com/docs/manual/core/index-partial/": [
+  "02-complement-mongodb-backend/07-indices.md:411"
+ ],
+ "https://www.mongodb.com/docs/manual/core/index-ttl/": [
+  "02-complement-mongodb-backend/07-indices.md:412"
+ ],
+ "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/": [
+  "02-complement-mongodb-backend/07-indices.md:413"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/explain-results/": [
+  "02-complement-mongodb-backend/07-indices.md:414"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexstats/": [
+  "02-complement-mongodb-backend/07-indices.md:415",
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:333"
+ ],
+ "https://www.mongodb.com/docs/manual/core/query-plans/": [
+  "02-complement-mongodb-backend/07-indices.md:416"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/equality-sort-range-guideline/": [
+  "02-complement-mongodb-backend/07-indices.md:420"
+ ],
+ "https://www.mongodb.com/company/blog/performance-best-practices-indexing": [
+  "02-complement-mongodb-backend/07-indices.md:421"
+ ],
+ "https://www.mongodb.com/docs/manual/data-modeling/design-patterns/data-versioning/schema-versioning/": [
+  "02-complement-mongodb-backend/08-la-autopsia.md:271"
+ ],
+ "https://www.mongodb.com/docs/manual/core/aggregation-pipeline/": [
+  "02-complement-mongodb-backend/09-aggregation.md:590"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/mql/aggregation-stages/": [
+  "02-complement-mongodb-backend/09-aggregation.md:591"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/mql/expressions/": [
+  "02-complement-mongodb-backend/09-aggregation.md:592"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/": [
+  "02-complement-mongodb-backend/09-aggregation.md:593"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/": [
+  "02-complement-mongodb-backend/09-aggregation.md:594"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/": [
+  "02-complement-mongodb-backend/09-aggregation.md:595"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/": [
+  "02-complement-mongodb-backend/09-aggregation.md:597"
+ ],
+ "https://www.mongodb.com/docs/manual/core/aggregation-pipeline-limits/": [
+  "02-complement-mongodb-backend/09-aggregation.md:598"
+ ],
+ "https://www.practical-mongodb-aggregations.com/": [
+  "02-complement-mongodb-backend/09-aggregation.md:606"
+ ],
+ "https://expressjs.com/en/4x/api/": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:647",
+  "02-complement-mongodb-backend/a03-express.md:327"
+ ],
+ "https://expressjs.com/en/guide/routing/": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:648",
+  "02-complement-mongodb-backend/a03-express.md:324"
+ ],
+ "https://expressjs.com/en/guide/using-middleware/": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:649",
+  "02-complement-mongodb-backend/a03-express.md:325"
+ ],
+ "https://expressjs.com/en/guide/error-handling/": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:650",
+  "02-complement-mongodb-backend/a03-express.md:326"
+ ],
+ "https://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:651"
+ ],
+ "https://github.com/expressjs/cors": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:652",
+  "02-complement-mongodb-backend/a03-express.md:331"
+ ],
+ "https://github.com/expressjs/morgan": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:653",
+  "02-complement-mongodb-backend/a03-express.md:330"
+ ],
+ "https://express-validator.github.io/docs/": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:654",
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:433",
+  "02-complement-mongodb-backend/a04-seguridad.md:333"
+ ],
+ "https://github.com/motdotla/dotenv": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:655"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:662"
+ ],
+ "https://www.youtube.com/watch?v=L72fhGm1tfE": [
+  "02-complement-mongodb-backend/10-express-el-vehiculo.md:666",
+  "02-complement-mongodb-backend/a03-express.md:337"
+ ],
+ "https://mongoosejs.com/docs/5.x/docs/guide.html": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:429"
+ ],
+ "https://mongoosejs.com/docs/5.x/docs/validation.html": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:430"
+ ],
+ "https://github.com/auth0/node-jsonwebtoken": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:431",
+  "02-complement-mongodb-backend/a04-seguridad.md:334"
+ ],
+ "https://github.com/dcodeIO/bcrypt.js": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:432",
+  "02-complement-mongodb-backend/a04-seguridad.md:335"
+ ],
+ "https://www.mongodb.com/docs/manual/faq/fundamentals/#how-does-mongodb-address-sql-or-query-injection-": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:434"
+ ],
+ "https://community.owasp.org/Injection_Flaws": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:439"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:440",
+  "02-complement-mongodb-backend/a04-seguridad.md:321"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:441"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:442"
+ ],
+ "https://www.youtube.com/watch?v=mbsmsi7l3r4": [
+  "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:446"
+ ],
+ "https://socket.io/docs/v4/migrating-from-2-x-to-3-0/": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:579"
+ ],
+ "https://www.mongodb.com/docs/manual/core/gridfs/": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:580"
+ ],
+ "https://mongodb.github.io/node-mongodb-native/3.6/api/GridFSBucket.html": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:581"
+ ],
+ "https://github.com/expressjs/multer/tree/v1.4.4": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:583"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionwith/": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:584"
+ ],
+ "https://nodejs.org/docs/latest-v14.x/api/stream.html": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:585"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Range_requests": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:589"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:590",
+  "02-complement-mongodb-backend/a04-seguridad.md:320"
+ ],
+ "https://www.youtube.com/watch?v=ZKEqqIO7n-k": [
+  "02-complement-mongodb-backend/12-el-backend-habla.md:595"
+ ],
+ "https://github.com/jestjs/jest/blob/v26.6.3/docs/GettingStarted.md": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:471"
+ ],
+ "https://github.com/forwardemail/supertest": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:472"
+ ],
+ "https://github.com/typegoose/mongodb-memory-server/tree/v6.9.6": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:473"
+ ],
+ "https://github.com/jestjs/jest/blob/v26.6.3/docs/TimerMocks.md": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:475"
+ ],
+ "https://github.com/typegoose/mongodb-memory-server/blob/v6.9.6/README.md": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:479"
+ ],
+ "https://martinfowler.com/articles/practical-test-pyramid.html": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:480"
+ ],
+ "https://kentcdodds.com/blog/write-tests": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:481"
+ ],
+ "https://www.youtube.com/watch?v=7r4xVDI2vho": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:485"
+ ],
+ "https://www.youtube.com/watch?v=Jv2uxzhPFl4": [
+  "02-complement-mongodb-backend/13-testing-de-api.md:486"
+ ],
+ "https://www.mongodb.com/docs/manual/core/replica-set-oplog/": [
+  "02-complement-mongodb-backend/14-operacion.md:417"
+ ],
+ "https://www.mongodb.com/docs/manual/core/index-creation/": [
+  "02-complement-mongodb-backend/14-operacion.md:418"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/build-indexes-on-replica-sets/": [
+  "02-complement-mongodb-backend/14-operacion.md:419"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/manage-the-database-profiler/": [
+  "02-complement-mongodb-backend/14-operacion.md:420"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/database-profiler/": [
+  "02-complement-mongodb-backend/14-operacion.md:421"
+ ],
+ "https://www.mongodb.com/docs/database-tools/mongostat/": [
+  "02-complement-mongodb-backend/14-operacion.md:422"
+ ],
+ "https://www.mongodb.com/docs/database-tools/mongotop/": [
+  "02-complement-mongodb-backend/14-operacion.md:422"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.currentop/": [
+  "02-complement-mongodb-backend/14-operacion.md:423"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.killop/": [
+  "02-complement-mongodb-backend/14-operacion.md:423"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/command/compact/": [
+  "02-complement-mongodb-backend/14-operacion.md:424"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/db.fsynclock/": [
+  "02-complement-mongodb-backend/14-operacion.md:425"
+ ],
+ "https://docs.docker.com/reference/compose-file/": [
+  "02-complement-mongodb-backend/14-operacion.md:426"
+ ],
+ "https://web.archive.org/web/20231226122943/http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/": [
+  "02-complement-mongodb-backend/15-el-veredicto-honesto.md:317"
+ ],
+ "https://jepsen.io/analyses/mongodb-4.2.6": [
+  "02-complement-mongodb-backend/15-el-veredicto-honesto.md:319",
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:263"
+ ],
+ "https://martinfowler.com/books/nosql.html": [
+  "02-complement-mongodb-backend/15-el-veredicto-honesto.md:320"
+ ],
+ "https://www.mongodb.com/docs/manual/release-notes/": [
+  "02-complement-mongodb-backend/15-el-veredicto-honesto.md:335",
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:283"
+ ],
+ "https://www.postgresql.org/docs/current/datatype-json.html": [
+  "02-complement-mongodb-backend/15-el-veredicto-honesto.md:339",
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:282"
+ ],
+ "https://docs.docker.com/get-started/": [
+  "02-complement-mongodb-backend/a01-docker.md:294"
+ ],
+ "https://docs.docker.com/reference/compose-file/legacy-versions/": [
+  "02-complement-mongodb-backend/a01-docker.md:295"
+ ],
+ "https://docs.docker.com/compose/how-tos/networking/": [
+  "02-complement-mongodb-backend/a01-docker.md:298"
+ ],
+ "https://docs.docker.com/build/building/best-practices/": [
+  "02-complement-mongodb-backend/a01-docker.md:299"
+ ],
+ "https://hub.docker.com/_/node": [
+  "02-complement-mongodb-backend/a01-docker.md:301"
+ ],
+ "https://www.youtube.com/watch?v=Gjnup-PuquQ": [
+  "02-complement-mongodb-backend/a01-docker.md:305"
+ ],
+ "https://www.mongodb.com/docs/mongodb-shell/reference/configure-shell-settings/": [
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:328"
+ ],
+ "https://www.mongodb.com/docs/mongodb-shell/write-scripts/": [
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:329"
+ ],
+ "https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/": [
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:330"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/method/": [
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:331"
+ ],
+ "https://www.mongodb.com/docs/compass/schema/": [
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:335"
+ ],
+ "https://www.mongodb.com/docs/compass/create-agg-pipeline/": [
+  "02-complement-mongodb-backend/a02-mongosh-compass.md:336"
+ ],
+ "https://expressjs.com/en/advanced/best-practice-performance/": [
+  "02-complement-mongodb-backend/a03-express.md:328"
+ ],
+ "https://expressjs.com/en/guide/migrating-5/": [
+  "02-complement-mongodb-backend/a03-express.md:329"
+ ],
+ "https://github.com/davidbanham/express-async-errors": [
+  "02-complement-mongodb-backend/a03-express.md:332"
+ ],
+ "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS": [
+  "02-complement-mongodb-backend/a03-express.md:333"
+ ],
+ "https://api-security.owasp.org/editions/2019/en/0x00-header/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:318"
+ ],
+ "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/07-Injection/05.6-NoSQL_Injection/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:319"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html": [
+  "02-complement-mongodb-backend/a04-seguridad.md:322"
+ ],
+ "https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html": [
+  "02-complement-mongodb-backend/a04-seguridad.md:323"
+ ],
+ "https://www.mongodb.com/docs/manual/administration/security-checklist/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:327"
+ ],
+ "https://www.mongodb.com/docs/manual/tutorial/enable-authentication/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:328"
+ ],
+ "https://www.mongodb.com/docs/manual/reference/operator/query/where/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:329"
+ ],
+ "https://helmet.js.org/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:330"
+ ],
+ "https://github.com/express-rate-limit/express-rate-limit": [
+  "02-complement-mongodb-backend/a04-seguridad.md:331"
+ ],
+ "https://github.com/fiznool/express-mongo-sanitize": [
+  "02-complement-mongodb-backend/a04-seguridad.md:332"
+ ],
+ "https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/": [
+  "02-complement-mongodb-backend/a04-seguridad.md:339"
+ ],
+ "http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/": [
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:260"
+ ],
+ "https://cacm.acm.org/blogs/blog-cacm/50678-the-nosql-discussion-has-nothing-to-do-with-sql/fulltext": [
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:262"
+ ],
+ "https://jepsen.io/analyses": [
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:264"
+ ],
+ "https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/": [
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:274"
+ ],
+ "https://martinfowler.com/data/index.html#nosql": [
+  "02-complement-mongodb-backend/a05-mongo-vs-sql.md:278"
+ ]
+}

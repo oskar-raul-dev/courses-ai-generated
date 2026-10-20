@@ -52,8 +52,8 @@ de paso, la red y el frontend.
 ### Paso 2 — ¿es este handler o es el servidor entero?
 
 ```bash
-curl -i -m 5 http://localhost:4000/tickets/5f8a1c2e4b3d2f0012a4e991
-curl -i http://localhost:4000/health
+curl -i -m 5 http://localhost:3000/tickets/5f8a1c2e4b3d2f0012a4e991
+curl -i http://localhost:3000/health
 ```
 
 ```
@@ -91,7 +91,7 @@ Segundo ticket, otra rama, misma fase. Compara lo que devuelve la API con lo que
 el contrato promete:
 
 ```bash
-curl -s http://localhost:4000/tickets | head -c 200
+curl -s http://localhost:3000/tickets | head -c 200
 ```
 
 ```json
@@ -113,11 +113,19 @@ extremo del sistema.
 
 ### Paso 5 — el servidor que se degrada solo
 
-Si el síntoma no es un endpoint sino todo, a los pocos minutos:
+Si el síntoma no es un endpoint sino todo, y empeora con las horas, mira cuántas
+conexiones tiene abiertas el servidor:
 
+```js
+> db.serverStatus().connections.current
+2          // recién arrancado
+402        // después de 200 requests
 ```
-MongoServerError: connection pool exhausted
-```
+
+Dos por request, y ninguna se cierra. No hay un error que lo anuncie: la memoria
+del `mongod` y la del proceso Node crecen hasta que algo cede —el límite de
+conexiones, los descriptores del sistema operativo, un OOM—, y el fallo final
+habla de eso, no del código.
 
 ```bash
 grep -rn "MongoClient.connect" src/
@@ -128,8 +136,8 @@ src/routes/tickets.js:12:  var client = await MongoClient.connect(uri);
 ```
 
 **Qué descarta.** Descarta el código de negocio: es infraestructura. Un
-`MongoClient.connect` por request abre una conexión nueva cada vez y agota el
-pool en minutos. El cliente se crea **una vez** al arrancar y se comparte — es el
+`MongoClient.connect` por request abre un cliente nuevo cada vez —con sus
+conexiones y su monitor— y, si nadie lo cierra, se acumulan. El cliente se crea **una vez** al arrancar y se comparte — es el
 mismo principio del singleton del socket del Curso 01, con otra librería.
 
 ---

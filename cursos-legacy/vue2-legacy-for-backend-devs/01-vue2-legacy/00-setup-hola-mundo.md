@@ -21,8 +21,8 @@ más cercana a un legacy real y suficiente para dejar el ambiente andando**.
 
 ## ✅ Qué queda listo al terminar
 
-- NVM instalado y **Node 14.21.3** activo (16.20.2 en macOS Apple Silicon),
-  documentado en `.nvmrc`;
+- NVM instalado y **Node 14.21.3** activo (en macOS Apple Silicon, su versión
+  x64 bajo Rosetta 2), documentado en `.nvmrc`;
 - proyecto Vue 2 creado con Vue CLI, con **todas las dependencias del curso**
   instaladas en sus versiones exactas;
 - editor configurado (VS Code o WebStorm) con formateo automático al guardar;
@@ -64,7 +64,7 @@ permite).
 
 **La analogía que ordena todo el curso:**
 
-> 🏭 **Node es el taller. 🛣️ El navegador es la carretera.**
+> 📝 **Node es el taller. 🛣️ El navegador es la carretera.**
 > El coche (tu app) anda por la carretera — pero se fabrica en el taller.
 
 En este proyecto, Node es el taller donde viven:
@@ -96,7 +96,7 @@ heredar. La tabla completa y oficial vive en el
 | Herramienta | Versión | Por qué |
 |---|---|---|
 | Node.js | **14.21.3** | la era del stack; el tooling viejo rompe con Node modernos |
-| Node (Apple Silicon) | 16.20.2 | binarios nativos para M1/M2/M3; evita compilaciones fallidas |
+| Node (Apple Silicon) | 14.21.3 **x64**, bajo Rosetta 2 | Node 14 no tiene binario arm64; el x64 encuentra los precompilados de Intel |
 | npm | el que trae Node 14 (v6) | no se fija a mano |
 | @vue/cli | 3.x (global) | el generador de proyectos de la época |
 | **vue** | **2.6.14** | última 2.6: 100% legacy, sin los bugs de la era 2.4 |
@@ -132,7 +132,7 @@ combinaciones de versiones activas.
 
 ### Windows (nvm-windows)
 
-1. Descarga el instalador: https://github.com/coreybutler/nvm-windows
+1. Descarga el instalador: https://github.com/nvm-windows/nvm
 2. Instala, **cierra y reabre la terminal**, verifica: `nvm version`
 
 ```bash
@@ -175,17 +175,53 @@ node -v && npm -v
 
 ### 🍎 macOS Apple Silicon (M1/M2/M3)
 
-Node 14 no tiene binarios nativos ARM: `nvm install 14.21.3` puede intentar
-**compilar desde fuente** y fallar con murallas de `gyp ERR!`. La alternativa
-oficial del curso:
+Node 14 no publica binarios para `darwin-arm64`: el primero que los trae es
+Node 16. nvm lo sabe a medias. Para las versiones anteriores a la 14.17.0 cambia
+a x64 por su cuenta, pero para la **14.21.3** pide el binario arm64, no lo
+encuentra y se pone a **compilar Node desde fuente**, que es la muralla de
+`gyp ERR!` que no quieres ver en tu primer día. La salida es pedirle tú el
+binario x64, instalando desde una shell que corra bajo **Rosetta 2**, el
+traductor de Intel a ARM que trae macOS:
 
 ```bash
-nvm install 16.20.2
-nvm use 16.20.2
+# Rosetta 2, si nunca la instalaste (una vez por máquina)
+softwareupdate --install-rosetta --agree-to-license
+
+# Instalar Node 14 desde una shell traducida: ahí 'uname -m' dice x86_64
+# y nvm descarga el binario x64 en vez de compilar
+arch -x86_64 zsh -c 'source ~/.nvm/nvm.sh && nvm install 14.21.3'
+
+# De vuelta en tu terminal de siempre, el binario sigue siendo x64
+nvm use 14.21.3
+node -p process.arch   # x64
 ```
 
-Para este taller (Vue 2 + axios + mocks) no hay diferencia funcional relevante.
-El proyecto **sigue documentando 14.21.3 en `.nvmrc`** por fidelidad legacy.
+Si `node -p process.arch` dice `arm64`, Node se compiló desde fuente: corre
+`nvm uninstall 14.21.3` y repite la instalación desde la shell traducida.
+
+¿Por qué no usar un Node nativo más nuevo? Porque el proyecto vive en la
+14.21.3 que dice el `.nvmrc`, igual que en Windows y Linux, con el npm 6 que
+escribe el `package-lock.json` en el formato del curso. Y porque un Node x64
+pide binarios de Intel, que sí existen: `deasync`, que llega con las pruebas
+de la Fase 11, trae dentro su versión precompilada para `darwin-x64` con
+Node 14, y no la trae para `darwin-arm64`. El precio es que todo Node corre
+traducido por Rosetta. El porqué completo, y qué hacer cuando aun así algo se
+rompe, está en el [Apéndice 6](a6-arm64-m1.md). Si prefieres trabajar dentro
+de un contenedor, el [Apéndice 7](a7-docker-colima.md) trae el ambiente armado.
+
+> 📝 **Cómo se verificó.** La receta se corrió en un Mac con chip M (macOS 26,
+> nvm 0.40.3): descargó `node-v14.21.3-darwin-x64.tar.xz`, `node -p process.arch`
+> respondió `x64` y `file` sobre el ejecutable dijo `Mach-O 64-bit executable
+> x86_64`. Lo que elige la 0.39.7 de esta fase se comprobó corriendo su código
+> con el sistema simulado (`darwin/arm64` pide `node-v14.21.3-darwin-arm64`,
+> `darwin/x64` pide `node-v14.21.3-darwin-x64`).
+
+> ⚠️ **Un `gyp ERR!` que no es tuyo.** En el Mac, al instalar el proyecto vas a
+> ver un bloque de `gyp ERR!` que termina en `cwd …/fsevents` y
+> `ValueError: invalid mode: 'rU'`. Es `fsevents` 1.2.13, una dependencia
+> opcional que no compila con un Python 3.11 o más nuevo; npm sigue y la
+> instalación termina bien. El detalle está en el
+> [Apéndice 6](a6-arm64-m1.md).
 
 ### `.nvmrc` — la versión, por escrito
 
@@ -197,7 +233,8 @@ una sola línea:
 ```
 
 En Linux/macOS, entrar a la carpeta y correr `nvm use` (sin argumentos) lee el
-archivo solo. Si la versión no está instalada: `nvm install && nvm use`.
+archivo solo. Si la versión no está instalada: `nvm install && nvm use` (en
+Apple Silicon, no: la instalación va por la shell traducida de la sección 🍎).
 
 ---
 
@@ -387,6 +424,10 @@ tiquetera-legacy/
 Las carpetas `components/`, `views/`, `services/`, `router/`, `store/` llegan
 en la Fase 1 — hoy no hacen falta, y crearlas vacías "por si acaso" es
 exactamente el reflejo que este curso combate.
+
+> 🪦 `vue create` deja además `src/components/HelloWorld.vue` y
+> `src/assets/logo.png`, de la plantilla de bienvenida. Bórralos antes de seguir:
+> `App.vue` los reemplaza y ninguna fase los usa.
 
 **✅ Aclaración importante:** a diferencia de otros frameworks que imponen una
 estructura de carpetas ("opinionados" — te obligan a organizar tu código de
@@ -755,6 +796,7 @@ Agrega el script al `package.json`:
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "mock": "stubby -d stubby.yml -s 8888"
   }
 }
@@ -1023,7 +1065,8 @@ Si este flujo te quedó claro, ya entendiste el 60% del patrón que las Fases
 - en WebStorm, olvidar apuntar el Node interpreter al de NVM → la terminal
   integrada usa otro Node y "en mi IDE no funciona";
 - crear carpetas/estructura "para después" → hoy solo `main.js` y `App.vue`;
-- puerto 8888 ocupado (`EADDRINUSE`) → un Stubby zombie de otra terminal.
+- puerto ocupado (`EADDRINUSE` en el 8888, o en el 8889 o el 7443 que Stubby abre
+  por su cuenta) → un Stubby zombie de otra terminal.
 
 ### Pieza forense de esta fase
 
@@ -1155,12 +1198,12 @@ Para volver: `npm install vue@2.6.14 vue-template-compiler@2.6.14 --save-exact`.
 - Vue 2 — guía: https://v2.vuejs.org/v2/guide/
 - Vue 2 — instalación: https://v2.vuejs.org/v2/guide/installation
 - Vue CLI: https://cli.vuejs.org/guide/installation.html
-- axios: https://axios-http.com/docs/intro
+- axios: https://axios.rest/pages/getting-started/first-steps
 - Bootstrap 4.6 — introducción: https://getbootstrap.com/docs/4.6/getting-started/introduction/
 - Bootstrap 4.6 — forms (la validación visual): https://getbootstrap.com/docs/4.6/components/forms/#validation
 - Stubby4node: https://github.com/mrak/stubby4node
-- NVM: https://github.com/nvm-sh/nvm · nvm-windows: https://github.com/coreybutler/nvm-windows
-- Prettier: https://prettier.io/docs/en/options.html
+- NVM: https://github.com/nvm-sh/nvm · nvm-windows: https://github.com/nvm-windows/nvm
+- Prettier: https://prettier.io/docs/options.html
 - EditorConfig: https://editorconfig.org/
 - Vetur: https://vuejs.github.io/vetur/
 - WebStorm + Vue: https://www.jetbrains.com/help/webstorm/vue-js.html

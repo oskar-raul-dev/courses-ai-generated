@@ -47,7 +47,7 @@ Ya usamos `computed` de pasada. Ahora es la herramienta central.
 ```js
 computed: {
   filteredTickets: function () {
-    // se recalcula SOLO si cambia this.tickets, this.search o this.statusFilter
+    // se recalcula SOLO si cambia algo que lee: this.tickets o this.search
     var self = this;
     return this.tickets.filter(function (t) {
       return t.title.toLowerCase().indexOf(self.search.toLowerCase()) !== -1;
@@ -128,14 +128,10 @@ Vue **anota qué propiedades leyó** — esas son sus dependencias. Cuando algun
 cambia (se ejecuta su setter), Vue marca el computed como sucio y lo
 recalcula en el próximo acceso.
 
-```
-data: tickets, search, statusFilter        ← observados por Vue
-                 │
-                 ▼ (los LEE al ejecutarse → quedan registrados)
-computed: filteredTickets
-                 │
-                 ▼ (el template lo lee)
-render de la tabla
+```mermaid
+flowchart TD
+    D["data: tickets, search, statusFilter"] -- "observados por Vue: los LEE al ejecutarse" --> C["computed: filteredTickets"]
+    C -- "el template lo lee" --> R["render de la tabla"]
 ```
 
 Consecuencias prácticas:
@@ -852,7 +848,7 @@ Para volver: `git checkout -- src/views/TicketsView.vue`.
 - Bootstrap 4.6 — Tables: https://getbootstrap.com/docs/4.6/content/tables/
 - Bootstrap 4.6 — Badges: https://getbootstrap.com/docs/4.6/components/badge/
 - Bootstrap 4.6 — Cards: https://getbootstrap.com/docs/4.6/components/card/
-- Lodash — debounce: https://lodash.com/docs/4.17.15#debounce
+- Lodash — debounce: https://lodash.com/docs/4.18.1#debounce
 
 **Video / apoyo**
 

@@ -40,13 +40,15 @@ En la suite, o en el log del arranque del `globalSetup`:
 ```
 
 ```
-CI  ›  mongodb-memory-server: downloading mongod 7.0.5 …
+CI  ›  Downloading MongoDB 4.0.14: 12 % (8mb / 67mb)
 ```
 
 **Qué descarta.** Descarta el código, los tests y la lógica de negocio de una
-sola vez. Los dos entornos están midiendo **motores distintos**, y el
-comportamiento de precondiciones atómicas e índices únicos —justo lo que fallaba—
-cambia entre versiones. El test no es *flaky*: es correcto, y está midiendo dos
+sola vez. Los dos entornos están midiendo **motores distintos**: tu equipo, el
+4.4.18 de la Fase 0; el CI, el 4.0.14 que mongodb-memory-server 6 baja cuando
+nadie le dice otra cosa —más **viejo** que el del curso, no más nuevo—. Y lo que
+llegó en 4.2 o 4.4 no existe allá: el `updateMany` con pipeline de la migración
+de la Fase 4, por ejemplo, falla en CI y pasa en tu máquina. El test no es *flaky*: es correcto, y está midiendo dos
 cosas.
 
 ### Paso 2 — reproducirlo en tu propia máquina
@@ -78,8 +80,8 @@ module.exports = async function () {
 };
 ```
 
-**Qué descarta.** Cierra el caso: el default del paquete es traer lo último, y
-nadie lo declaró. El arreglo no es un `retry` ni marcar el test como flaky, es
+**Qué descarta.** Cierra el caso: el default del paquete es el que traiga su
+versión —en la v6, el 4.0.14—, y nadie declaró otro. El arreglo no es un `retry` ni marcar el test como flaky, es
 **fijar el binario en el repositorio** —no en la máquina de quien lo corrió
 primero— y cachearlo en CI por su versión exacta, nunca por "latest".
 

@@ -55,15 +55,15 @@ Toma documentos concretos de los dos lados y compáralos:
 
 ```js
 > var sample = db.getSiblingDB("soporte_v1").tickets.find().limit(5).toArray()
-> sample.map(function (t) { return { id: t.ticket_id, status: t.status_id, who: t.assignee_id }; })
-[ { id: 1, status: 4, who: 12 }, { id: 2, status: 1, who: null }, … ]
+> sample.map(function (t) { return { id: t._id, status: t.statusId, who: t.assigneeId }; })
+[ { id: 1, status: 4, who: 2 }, { id: 2, status: 1, who: null }, … ]
 
 > db.tickets.find({ legacyId: { $in: [1, 2] } }, { legacyId: 1, status: 1, assignee: 1 }).toArray()
 [ { legacyId: 1, status: 'open',   assignee: 'ana' },
   { legacyId: 2, status: 'closed', assignee: null } ]
 ```
 
-**Qué descarta.** Ahí está el caso: el ticket 1 era `status_id: 4` y quedó como
+**Qué descarta.** Ahí está el caso: el ticket 1 era `statusId: 4` y quedó como
 `open`; el 2 era `1` y quedó `closed`. **El mapa de estados está corrido una
 posición** — el clásico off-by-one de todo diccionario de traducción, casi
 siempre por indexar un arreglo desde 0 cuando los ids del origen empiezan en 1.
@@ -76,14 +76,15 @@ Si además hay referencias que no resuelven:
 
 ```js
 > db.tickets.countDocuments({ assignee: null })
-41210
-> db.getSiblingDB("soporte_v1").tickets.countDocuments({ assignee_id: null })
-7
+100000
+> db.getSiblingDB("soporte_v1").tickets.countDocuments({ assigneeId: null })
+14589
 ```
 
 **Qué descarta.** Descarta el mapa de estados y apunta al **orden de ejecución**:
 si `tickets` se migró antes que `users`, el script no tenía todavía el mapa de
-traducción `user_id → username` y resolvió a `null` sin quejarse. Por eso la
+traducción `assigneeId → username` y resolvió **todos** a `null` sin quejarse:
+los 14.589 sin asignar de v1 eran legítimos, los otros 85.411 son el bug. Por eso la
 fase migra usuarios primero y no por gusto: **las referencias se resuelven contra
 algo que ya existe, o no se resuelven.**
 

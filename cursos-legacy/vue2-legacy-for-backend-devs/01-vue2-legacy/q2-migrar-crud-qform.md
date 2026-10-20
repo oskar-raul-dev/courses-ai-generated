@@ -5,23 +5,165 @@
 
 ---
 
-## 🧷 Antes de empezar: lo que esta fase da por hecho
+## 🧷 Antes de empezar: el traslado
 
-Esta fase se apoya en cosas que **Q0 y Q1 ya dejaron listas**. Si algo de esto no
-está, no sigas: vuelve a la fase que lo entrega. No es burocracia — es que Q2
-borra código y confía en piezas que otro puso.
+Q1 te dejó `tiquetera-q` recién creado (modo manual, sin ESLint) y Q0 te dejó la red
+de regresión en el tronco. Esta fase empieza juntándolos: la Tiquetera de F11 entra
+a Quasar **sin cambiar una línea de lógica**, y la red de Q0 tiene que pasar ahí,
+en verde, **antes** de migrar nada. Si no pasa, el problema es el traslado, no
+Quasar. No es burocracia: Q2 borra código y confía en que la red mida lo mismo
+que medía en el tronco.
 
-**Q1 te dejó** (si falta, es un bug de Q1, no de tu setup):
+**1. Dependencias y código.** Desde la carpeta que contiene los dos proyectos:
 
-- el proyecto Quasar CLI creado (`quasar create tiquetera-q`) — **no hay
-  `main.js`**;
-- `src/boot/axios.js` con el `apiClient` y el interceptor de token de F2;
-- **`src/boot/vuelidate.js`** con el `Vue.use(Vuelidate)` que en el tronco vivía
-  en `main.js`. **Sí, Q1 lo portó a propósito** — para que tú lo veas vivo antes
-  de matarlo aquí;
-- `framework.plugins: ["Notify", "Dialog"]` declarados en `quasar.conf.js`. Sin
-  esto, `this.$q.notify` y `this.$q.dialog` son `undefined` y **no dan error
-  claro** (fricción nº6 de Q1).
+```bash
+cd tiquetera-q
+npm install --save-exact axios@0.21.1 vuelidate@0.7.7 bootstrap@4.6.2 chart.js@2.9.4 socket.io-client@2.4.0 lodash@4.17.21
+cp -R ../tiquetera-legacy/src/components ../tiquetera-legacy/src/views src/
+cp -R ../tiquetera-legacy/src/services ../tiquetera-legacy/src/utils src/
+mkdir -p src/store/modules src/store/plugins
+cp ../tiquetera-legacy/src/store/modules/*.js src/store/modules/
+cp ../tiquetera-legacy/src/store/plugins/*.js src/store/plugins/
+rm -r src/store/module-example
+cp ../tiquetera-legacy/db.json . && cp -R ../tiquetera-legacy/server .
+npm install --save-dev --save-exact json-server@0.16.3 socket.io@2.4.1 concurrently@5.3.0
+```
+
+Las dos últimas líneas traen la Mock API de F3 y el servidor de sockets de F8 con sus
+dependencias de desarrollo: sin ellas, `db.json` y `server/` son copias muertas. Y en el
+`package.json`, los mismos tres scripts del tronco, con `quasar dev` en lugar de
+`vue-cli-service serve`:
+
+```json
+{
+  "scripts": {
+    "mock": "json-server --watch db.json --port 3000",
+    "sockets": "node server/socket-server.js",
+    "dev": "concurrently \"npm run mock\" \"npm run sockets\" \"quasar dev\""
+  }
+}
+```
+
+El tronco importa todo con rutas relativas (`../services/…`), así que nada de lo
+copiado choca con que Quasar no tenga el alias `@/` (Q1, 6.6). Y el interceptor
+de F2 se queda donde estaba, en `services/apiClient.js`: funciona igual dentro de
+Quasar. Pasarlo a un boot file, como muestra Q1 en 4.5, es una mejora, no un
+requisito del traslado.
+
+**2. Lo que hacía `main.js`, en boot files.** Cada línea de configuración del
+`main.js` del tronco pasa a un archivo de `src/boot/`:
+
+```js
+// src/boot/bootstrap.js — el CSS de Bootstrap 4 (convive con Quasar: Q3)
+import "bootstrap/dist/css/bootstrap.min.css";
+```
+
+```js
+// src/boot/vuelidate.js — vive aquí hasta que esta misma fase lo saque
+import Vue from "vue";
+import Vuelidate from "vuelidate";
+Vue.use(Vuelidate);
+```
+
+```js
+// src/boot/filters.js — el filtro global de F3
+import Vue from "vue";
+Vue.filter("formatDate", function (value) {
+  if (!value) return "";
+  var d = new Date(value);
+  return d.toLocaleDateString("es-CO", { year: "numeric", month: "short", day: "numeric" });
+});
+```
+
+```js
+// src/boot/auth-guard.js — el router.beforeEach de F2, copiado tal cual dentro de:
+export default function ({ router }) {
+  router.beforeEach(function (to, from, next) {
+    // … el cuerpo del guard de src/router/index.js del tronco, sin tocar …
+  });
+}
+```
+
+```js
+// quasar.conf.js
+boot: ["axios", "bootstrap", "vuelidate", "filters", "auth-guard"],
+build: { vueRouterMode: "history" /* , … */ },   // las URL de F1, sin #
+framework: {
+  // …
+  plugins: ["Notify", "Dialog"]   // los $q.* que usan Q2 y Q3
+}
+```
+
+**3. Store y rutas.** Los módulos de F10 entran sin tocarlos; lo único que cambia
+es que Quasar espera una **fábrica** (Q1, 4.7):
+
+```js
+// src/store/index.js
+import Vue from "vue";
+import Vuex from "vuex";
+import auth from "./modules/auth";
+import tickets from "./modules/tickets";
+import ui from "./modules/ui";
+import socketPlugin from "./plugins/socketPlugin";
+
+Vue.use(Vuex);
+
+export default function () {
+  return new Vuex.Store({
+    modules: { auth: auth, tickets: tickets, ui: ui },
+    plugins: [socketPlugin],
+    strict: process.env.DEV
+  });
+}
+```
+
+En `src/router/routes.js`, las rutas de F1 pasan a ser hijas del `MainLayout` de
+Q1 (con sus `meta`, que el guard sigue leyendo), salvo `/login`, que queda fuera
+para no llevar navbar, y el `*` de `NotFoundView`. Al `MainLayout` de Q1 súmale lo
+que hacía el `App.vue` del tronco: el `<live-toast />` de F8 y el `watch` de
+`isAuthenticated` que conecta y desconecta el socket.
+
+**4. La red de Q0, dentro de Quasar.** Quasar 1 no trae Jest. Se instala el mismo
+plugin del tronco y se corre `jest` a pelo:
+
+```bash
+npm install --save-dev --save-exact @vue/cli-plugin-unit-jest@3.12.1 @vue/test-utils@1.3.6 babel-core@7.0.0-bridge.0
+cp -R ../tiquetera-legacy/tests . && cp ../tiquetera-legacy/jest.config.js .
+```
+
+Tres archivos más: `"test:unit": "jest"` en los `scripts` de `package.json`; en
+`jest.config.js`, `setupFiles: ["<rootDir>/tests/unit/setup-quasar.js"]`; y ese
+archivo, que hace en las pruebas lo que `quasar.conf.js` hace en la app:
+
+```js
+// tests/unit/setup-quasar.js — lo que una fase migra a Quasar se registra aquí
+import Vue from "vue";
+import { Quasar } from "quasar";
+
+Vue.use(Quasar, { components: {} });
+```
+
+Y en `babel.config.js`, un entorno `test` para que Jest reciba CommonJS (el preset
+de Quasar deja los `import` para webpack):
+
+```js
+module.exports = {
+  presets: ["@quasar/babel-preset-app"],
+  env: {
+    test: { presets: [["@babel/preset-env", { targets: { node: "current" } }]] }
+  }
+};
+```
+
+**El punto de control:**
+
+```bash
+quasar build          # → Build succeeded
+npm run test:unit     # → Test Suites: 9 passed · Tests: 64 passed
+```
+
+La misma red, los mismos 64 verdes del tronco, ahora dentro de Quasar. Desde aquí,
+cada rojo es tuyo.
 
 **Q0 te dejó** (si falta, tus tests van a mentir):
 
@@ -74,7 +216,7 @@ Lo que se aprende hoy:
 - **`QForm` es la fuente de la verdad**: tu flag `formError` sobra, tu
   `$v.$invalid` sobra, tu `<div v-if="error">` sobra;
 - **`this.$refs.form.validate()` devuelve una PROMESA**, no un booleano — y
-  si no lo sabes, tu `if (esValido)` pasa siempre;
+  si no lo sabes, tu `if (isValid)` pasa siempre;
 - **`q-select` con objetos**: `emit-value` + `map-options` + `option-value` +
   `option-label`. Media tarde. Como mínimo. Le dedicamos una sección entera
   porque se la merece;
@@ -194,8 +336,12 @@ debajo. Antes de emitir su propio `@submit` hacia ti, **corre todas las reglas
 de todos los hijos con `:rules`**. Si alguna falla:
 
 - no emite `@submit`;
-- marca los campos en error (los pinta rojos, con su mensaje);
+- marca el campo en error (lo pinta rojo, con su mensaje);
 - hace scroll y foco al primer campo inválido (gratis, y en F5 no lo tenías).
+
+Ojo con el singular: `QForm` valida en orden y **se detiene en el primer campo
+inválido**. Con el formulario vacío pinta un error, no tres; F5, con `$v.$touch()`,
+los pintaba todos. Si quieres el comportamiento de F5, `<q-form greedy>`.
 
 Si todas pasan, **entonces** te llama a `handleSubmit`.
 
@@ -243,9 +389,9 @@ dignidad.
 
 ```js
 // ❌ MAL — y lo peor: "funciona"
-var esValido = this.$refs.ticketForm.validate();
-if (esValido) {
-  this.enviar();  // ← SIEMPRE entra aquí
+var isValid = this.$refs.ticketForm.validate();
+if (isValid) {
+  this.save();  // ← SIEMPRE entra aquí
 }
 ```
 
@@ -258,7 +404,7 @@ formulario vacío pasa la validación con nota.
 var self = this;
 this.$refs.ticketForm.validate().then(function (success) {
   if (success) {
-    self.enviar();
+    self.save();
   } else {
     // hay campos inválidos; QForm ya los pintó
   }
@@ -299,12 +445,17 @@ $v.$reset()          →   resetValidation()
 form = {...vacío}    →   lo sigues haciendo tú a mano
 ```
 
-**El caso donde `resetValidation()` te salva la vida:** rellenas el formulario
-programáticamente (modo edición: llega la prop `initialTicket` y clonas), y
-Quasar te pinta errores de campos que el usuario ni ha tocado. Solución:
-`this.$nextTick(function () { self.$refs.ticketForm.resetValidation(); })`.
-El `nextTick` es obligatorio — hay que dejar que el DOM se actualice con los
-valores nuevos antes de decirle "olvida los errores".
+**El caso donde `resetValidation()` te salva la vida:** el usuario intentó
+enviar, `QForm` pintó el error, y tú limpias el formulario por código (un
+"Cancelar" que vacía, o volver a empezar después de crear). Los valores vuelven
+a vacío, pero **el error pintado se queda**: vaciar no revalida. Ahí va
+`this.$refs.ticketForm.resetValidation()`, después de vaciar.
+
+Lo que **no** necesita es el modo edición. Con `lazy-rules`, un formulario que
+nace con los valores de `initialTicket` no tiene ningún error pintado que limpiar,
+y un `resetValidation()` "por si acaso" en `mounted` tiene un costo: sube el
+contador interno de `QForm` y descarta cualquier validación en curso. Un submit
+en ese mismo tick no emite nada. La red de Q0 lo caza (ver la sección 4️⃣).
 
 ---
 
@@ -401,31 +552,18 @@ y las medias soluciones aquí duelen más que ninguna.
 
 ### El diagrama, porque hace falta
 
-```
-        SIN emit-value + map-options          CON emit-value + map-options
-        ────────────────────────────          ───────────────────────────
-
-store/API                                     store/API
-  "high"                                        "high"
-    │                                             │
-    │ (v-model in)                                │ (v-model in)
-    ▼                                             ▼
- QSelect ─── busca {label,value}              QSelect ─── map-options:
- en options que sea === "high"                busca la opción cuyo
-    │                                         option-value === "high"
-    ▼                                             │
- ❌ no lo encuentra                               ▼
-    SELECT VACÍO                              ✅ pinta "Alta"
-
- usuario elige "Alta"                          usuario elige "Alta"
-    │                                             │
-    │ (v-model out)                               │ (v-model out) emit-value:
-    ▼                                             ▼
- {label:"Alta", value:"high"}                   "high"
-    │                                             │
-    ▼                                             ▼
- ❌ POST con objeto anidado                    ✅ POST con string
-    db.json corrupto                              db.json intacto
+```mermaid
+flowchart TD
+    subgraph SIN["SIN emit-value ni map-options"]
+        A1["store/API: high"] --> B1["QSelect busca {label, value} que sea === high"]
+        B1 --> C1["❌ no lo encuentra: SELECT VACÍO"]
+        C1 --> D1["el usuario elige Alta"] --> E1["❌ POST con objeto anidado: db.json corrupto"]
+    end
+    subgraph CON["CON emit-value + map-options"]
+        A2["store/API: high"] --> B2["QSelect (map-options) busca la opción cuyo option-value es high"]
+        B2 --> C2["✅ pinta Alta"]
+        C2 --> D2["el usuario elige Alta"] --> E2["✅ emit-value: POST con string, db.json intacto"]
+    end
 ```
 
 ### Y si el store guardara objetos...
@@ -544,10 +682,10 @@ exacto del UX de F5, y así **los tests de Q0 comparan comportamiento, no
 temperamento**. Si el test hacía "escribo 2 letras, hago blur, espero ver el
 error", con `lazy-rules` sigue pasando.
 
-💡 Y si lo dejas por defecto (sin `lazy-rules`), un test de Q0 que verificaba
-"al montar el formulario vacío no hay errores visibles" puede ponerse **rojo**.
-Eso no es un bug: es el test cumpliendo su función. **Lo cambiaste. Decide si
-querías cambiarlo.**
+💡 Y si lo dejas por defecto (sin `lazy-rules`), la red de Q0 **sigue en verde**:
+Quasar no valida al montar, sino cuando el valor cambia, y las pruebas de Q0
+miran el submit, no cada tecla. El cambio de UX es real y la red no lo ve. **Lo
+cambiaste. Decide si querías cambiarlo** — y si sí importa, esa prueba es tuya.
 
 ---
 
@@ -632,7 +770,7 @@ dolor legacy más auténtico del curso.
 `QDialog` mata el jQuery de un plumazo.
 
 ```vue
-<q-dialog v-model="confirmandoBorrado">
+<q-dialog v-model="confirmingDelete">
   <q-card>
     <q-card-section class="row items-center">
       <q-avatar icon="warning" color="negative" text-color="white" />
@@ -657,18 +795,18 @@ dolor legacy más auténtico del curso.
 
 🔎 **Qué hace**
 
-- `v-model="confirmandoBorrado"` — el diálogo es **estado**, no una llamada
+- `v-model="confirmingDelete"` — el diálogo es **estado**, no una llamada
   imperativa. Ese es el cambio conceptual: en Bootstrap+jQuery decías
   `.modal('show')`; en Quasar pones un booleano en `true` y Vue hace el resto.
 - `v-close-popup` es una **directiva** de Quasar: cierra el diálogo padre al
-  hacer clic. Sin `@click="confirmandoBorrado = false"`.
+  hacer clic. Sin `@click="confirmingDelete = false"`.
 - `<q-card>` dentro del diálogo no es decoración: `QDialog` es solo el overlay.
   Lo que va dentro lo pones tú.
 
 **El atajo imperativo** (para cuando no quieres un componente entero):
 
 ```js
-removeTicketConDialogo: function () {
+removeTicketWithDialog: function () {
   var self = this;
   this.$q.dialog({
     title: "Confirmar",
@@ -686,9 +824,9 @@ removeTicketConDialogo: function () {
 encadenable. Perfecto para acciones destructivas simples. Para un diálogo con
 formulario dentro (¿motivo del cierre?), usa el componente `<q-dialog>`.
 
-⚠️ **Ojo con el `this.$q`:** solo existe si Quasar está bien inicializado
-(Q1). Si `this.$q` es `undefined`, no es que el diálogo esté roto — es que
-tu boot file no está cargando el plugin `Dialog` en `quasar.conf.js`:
+⚠️ **Ojo con el `this.$q`:** existe siempre, pero sus métodos los ponen los
+plugins. Si sale `TypeError: this.$q.dialog is not a function`, no es que el
+diálogo esté roto: falta el plugin `Dialog` en `quasar.conf.js`:
 
 ```js
 // quasar.conf.js
@@ -697,7 +835,8 @@ framework: {
 }
 ```
 
-Y **no hay error claro.** Es la fricción nº6 que anunciaba Q1. 🎁
+Al menos este error **sí** es claro: una excepción, en desarrollo y en
+producción. El silencioso es el del componente sin declarar (Q1, 6.1). 🎁
 
 ---
 
@@ -709,14 +848,14 @@ Y **no hay error claro.** Es la fricción nº6 que anunciaba Q1. 🎁
 npm uninstall vuelidate
 ```
 
-Y borrar el boot file **que Q1 creó a propósito** para este momento. Recuerda:
-no hay `main.js` (Quasar CLI se comió el proyecto), así que el `Vue.use(Vuelidate)`
-del tronco no vive donde vivía en F5 — Q1 lo portó a `src/boot/vuelidate.js`
-justamente para que lo vieras vivo antes de matarlo:
+Y borrar el boot file **que creaste en el traslado** para este momento.
+Recuerda: no hay `main.js` (Quasar CLI se comió el proyecto), así que el
+`Vue.use(Vuelidate)` del tronco no vive donde vivía en F5 — lo pusiste en
+`src/boot/vuelidate.js` justamente para verlo vivo antes de matarlo:
 
 ```js
 // ❌ src/boot/vuelidate.js  ← BORRAR EL ARCHIVO ENTERO
-// (lo creó Q1 al portar el main.js del tronco; su único destino era este)
+// (lo creó el traslado al portar el main.js del tronco; su único destino era este)
 import Vue from "vue";
 import Vuelidate from "vuelidate";
 Vue.use(Vuelidate);
@@ -733,9 +872,30 @@ boot: [
 
 **Hazlo AHORA, antes de escribir el `QForm`.** ¿Por qué? Porque si dejas
 vuelidate instalado "por si acaso", vas a acabar con un `TicketForm` que valida
-con `:rules` y un `LoginView` que valida con `$v`, y en seis meses nadie sabrá
-cuál es el patrón del proyecto. **Sacar la dependencia primero convierte la
-migración del login (ejercicio 10 🟡) en obligatoria, no en opcional.**
+con `:rules` y un wizard que valida con `$v`, y en seis meses nadie sabrá cuál
+es el patrón del proyecto. Y el build te lo dice en cuanto lo sacas:
+
+```
+Module not found: Error: Can't resolve 'vuelidate/lib/validators' in '…/src/components/tickets/wizard'
+ App · ⚠️  [FAIL] Build failed with 2 errors. Check log above.
+```
+
+Los dos errores son `StepData.vue` y `StepClassification.vue`, los pasos del
+wizard de F6: el otro consumidor de vuelidate. (El login de F2 no lo usa.)
+**Sacar la dependencia primero convierte la migración del wizard (ejercicio 10
+🟡) en obligatoria, no en opcional**: hasta que la hagas, el build no pasa.
+
+La red también se entera, y no por un bug tuyo:
+
+```
+FAIL tests/unit/regression/ticketForm.spec.js
+  ● Test suite failed to run
+
+    Cannot find module 'vuelidate' from 'ticketForm.spec.js'
+```
+
+La prueba de Q0 importaba vuelidate para montar el formulario de F5. Es el primer
+rojo de la sección 4️⃣, y el más fácil de leer.
 
 Eso no es crueldad. Es cómo se hace en serio.
 
@@ -767,9 +927,9 @@ export function maxLen(n) {
 }
 
 // El oneOf de F5, portado tal cual. Cambia la firma, no la idea.
-export function oneOf(valores, mensaje) {
+export function oneOf(values, message) {
   return function (val) {
-    return valores.indexOf(val) !== -1 || (mensaje || "Valor no permitido.");
+    return values.indexOf(val) !== -1 || (message || "Valor no permitido.");
   };
 }
 
@@ -851,6 +1011,7 @@ sabe cuál arreglar.
         type="submit"
         :label="submitLabel"
         :loading="saving"
+        :disable="saving"
         color="primary"
         data-testid="ticket-submit"
       />
@@ -902,17 +1063,6 @@ export default {
       this.form = Object.assign({}, this.form, this.initialTicket);
     }
   },
-  mounted: function () {
-    // 🔎 Modo edición: los valores llegaron en created, el DOM se acaba de
-    //    pintar. Limpiamos los errores que Quasar pudo marcar al montar.
-    //    Sin esto, un ticket con priority válida puede aparecer en rojo.
-    var self = this;
-    this.$nextTick(function () {
-      if (self.$refs.ticketForm) {
-        self.$refs.ticketForm.resetValidation();
-      }
-    });
-  },
   methods: {
     handleSubmit: function () {
       // 🔎 Si estás aquí, QForm YA validó todo. No hay if, no hay $touch,
@@ -930,7 +1080,13 @@ export default {
   IDs que Q0 fijó** sobre el F5 a pelo (`ticket-title`, `ticket-description`,
   `ticket-priority`, `ticket-assignee`, `ticket-submit`, `ticket-cancel`). Por
   eso los tests de Q0 pueden encontrar los campos aunque la clase de Bootstrap
-  (`.form-control`, `.btn-primary`) haya desaparecido. Si en Q0 hubieras testeado
+  (`.form-control`, `.btn-primary`) haya desaparecido. Quasar pasa el atributo
+  al elemento nativo de adentro: el `<input>` en `QInput`, el `<textarea>` con
+  `type="textarea"`, y en `QSelect` un `div.q-field__native`, que no es un
+  control: ahí `setValue` ya no sirve (sección 4️⃣).
+- `:loading` **y** `:disable` en el botón de guardar. `:loading` pinta el
+  spinner y deja de escuchar clics, pero no pone `disabled` en el `<button>`;
+  `:disable` sí. Sin él, la prueba "anti doble submit" de Q0 se pone roja. Si en Q0 hubieras testeado
   por clase en vez de por `data-testid`, aquí se te pondría todo rojo de golpe —
   y eso no sería la lección, sería ruido. Q0 te ahorró ese ruido a propósito.
 - `priority: null` en vez de `""`. `QSelect` con `emit-value` emite `null` al
@@ -938,6 +1094,24 @@ export default {
   "vacío" y `rules.required` las trata igual, pero un `===` en otro sitio no.
 - El `Object.assign({}, this.form)` del `$emit`: **sigue siendo necesario**.
   Quasar no te salva de emitir una referencia al objeto reactivo.
+
+Y lo que Q1 te enseñó a no olvidar: en modo manual, cada `<q-*>` nuevo va a la
+lista. Esta fase estrena cuatro:
+
+```js
+// quasar.conf.js
+framework: {
+  components: [
+    // … los del kit …
+    "QForm", "QInput", "QSelect", "QBanner"
+  ],
+  // …
+}
+```
+
+Si te saltas este paso, el formulario no falla: se ve a medias, con los textos
+sueltos y sin campos (Q1, 6.1). Y en `tests/unit/setup-quasar.js`, los mismos
+cuatro más `QBtn` y `QPage`, para que las pruebas monten lo mismo que la app.
 
 ### 3️⃣ Las vistas: lo que NO cambia (y una cosa que sí)
 
@@ -970,6 +1144,7 @@ Lo único que cambia es el chrome (spinners, alertas) y el feedback:
 <script>
 import TicketForm from "../components/tickets/TicketForm.vue";
 import ticketService from "../services/ticketService";
+import socketService from "../services/socketService";
 
 export default {
   name: "TicketCreateView",
@@ -994,6 +1169,7 @@ export default {
       ticketService
         .createTicket(payload)
         .then(function (created) {
+          socketService.emit("ticket:created", created); // 📣 anunciar a los demás, como en F8
           self.$q.notify({ type: "positive", message: "Ticket creado ✅" });
           self.$router.push("/tickets/" + created.id);
         })
@@ -1013,10 +1189,71 @@ export default {
 (el flash-message global con módulo Vuex `ui`, `FlashMessage.vue` y su
 auto-ocultado a los 4 segundos). **Todo eso: una línea.** Bórralo del store.
 
-> ⚠️ Si `this.$q` es `undefined` aquí, **no es este archivo**: es que
-> `quasar.conf.js` no tiene `Notify` en `framework.plugins`. Eso lo dejó listo
-> Q1 — vuelve allí. Y no esperes un error claro; ese es justo el punto (fricción
-> nº6 de Q1).
+> ⚠️ Si sale `this.$q.notify is not a function` aquí, **no es este archivo**:
+> es que `quasar.conf.js` no tiene `Notify` en `framework.plugins`. Lo
+> declaraste en el traslado — vuelve allí.
+
+### 4️⃣ La red de Q0, corrida
+
+Con el `TicketForm` nuevo, `npm run test:unit` **sin tocar nada**. Esto es lo que
+sale, y de qué tipo es cada rojo:
+
+| Rojo | Mensaje | Tipo | Qué se hace |
+|---|---|---|---|
+| La suite entera | `Cannot find module 'vuelidate' from 'ticketForm.spec.js'` | la prueba importaba la librería que sacaste | se borran el `import` y el `localVue.use(Vuelidate)`: Quasar se registra en `setup-quasar.js` |
+| Todo lo que llena la prioridad | `[vue-test-utils]: wrapper.setValue() cannot be called on this element` | acoplado al DOM: el `data-testid` de `QSelect` cae en un `div` | `fill()` elige la opción como el usuario, con `toggleOption` |
+| Los envíos válidos | `expect(wrapper.emitted("submit")).toHaveLength(1)` recibe `undefined` | de **tiempo**: `QForm` valida con una promesa (Concepto 3) y emite cuando se vacía la cola, no en el tick siguiente | el submit espera esa cola |
+| "aparece el error del título" | `Expected: true · Received: false` | acoplado al DOM: el ancla `ticket-title-error` la ponía la vista de F5 | se busca el `role="alert"` que `QInput` pinta dentro del campo |
+| "precarga los campos" | el `value` del select es `undefined` | acoplado al DOM: `QSelect` muestra la etiqueta ("Alta"), no guarda un `value` | se compara el texto visible |
+| "con saving=true el botón se deshabilita" | `expect(received).toBeDefined()` | **de comportamiento**: `:loading` no pone `disabled` | se arregla el **componente**: `:disable="saving"` |
+
+Los cinco primeros son confesiones: se tocan **las ayudas** de la prueba (`fill`,
+un `submitForm` que espera la promesa, un `field` que encuentra el componente que
+contiene el ancla), no lo que la prueba afirma, y cada una se anota en
+`MIGRATION-CHECKLIST.md`. El sexto es la red haciendo su trabajo: el botón de F5
+quedaba deshabilitado mientras guardaba, el de Quasar no, y nadie lo habría visto
+en una demo.
+
+```js
+// tests/unit/regression/ticketForm.spec.js — las tres ayudas nuevas
+function field(wrapper, testid, name) {
+  // Quasar pone el data-testid en un elemento interior: se busca el componente que lo contiene
+  return wrapper.findAllComponents({ name: name }).filter(function (w) {
+    return w.find('[data-testid="' + testid + '"]').exists();
+  }).at(0);
+}
+
+function pick(wrapper, testid, value) {
+  // como el usuario: QSelect emite lo que su configuración diga (sin emit-value, el objeto)
+  const select = field(wrapper, testid, "QSelect");
+  const option = select.vm.options.filter(function (o) {
+    return (o !== null && typeof o === "object" ? o.value : o) === value;
+  })[0];
+  if (option === undefined) {
+    select.vm.$emit("input", value); // "" o null: limpiar el campo
+  } else {
+    select.vm.toggleOption(option);
+  }
+  return wrapper.vm.$nextTick();
+}
+
+function submitForm(wrapper) {
+  // QForm valida con una promesa: el "submit" llega cuando se vacía la cola
+  return wrapper.find("form").trigger("submit").then(function () {
+    return new Promise(function (resolve) { setTimeout(resolve, 0); });
+  });
+}
+```
+
+Con eso y el `:disable`: **9 suites, 64 pruebas en verde**. Y la red sigue
+mordiendo donde importa: quita `emit-value` y `map-options` del `q-select` y se
+ponen rojas dos —"el payload limpio" y "precarga los campos"—, que es el bug del
+Concepto 4 atrapado antes de llegar a `db.json`.
+
+> 🧠 **Lo que la red no ve.** Quita `lazy-rules` o pásalo a `"ondemand"`: las 64
+> siguen verdes. Q0 congela lo que pasa **al enviar**; cuándo se pintan los
+> errores mientras escribes no está congelado en ninguna parte. Si para ti es
+> comportamiento, la prueba falta, y escribirla es tuyo.
 
 ---
 
@@ -1193,16 +1430,24 @@ usuario escribe → :rules evalúa (lazy-rules: desde el 1er blur)
   sistemas de validación conviviendo y nadie sabe cuál es el bueno.
 - **No poner `lazy-rules`** y sorprenderte de que el formulario grite desde la
   primera tecla. No es un bug: es el default. Decide si lo quieres.
-- **Modo edición sin `resetValidation()` en `$nextTick`** — formulario válido
-  pintado en rojo al abrir.
+- **`resetValidation()` en `mounted` "por si acaso"** — con `lazy-rules`, un
+  formulario recién montado no tiene errores que limpiar, y el reset descarta la
+  validación en curso: un submit en ese tick no emite nada. Q0 lo caza.
+- **Vaciar el formulario sin `resetValidation()`** — después de un envío
+  inválido, el error pintado sobrevive al vaciado.
 - **Reglas async sin `debounce`** — un `GET /tickets?title=X` por cada tecla.
   Tu json-server te lo perdona; un backend real, no.
 - **Poner la regla async antes que la de `required`** — interrogas al servidor
   con el campo vacío.
-- **`this.$q` es `undefined`** → no es Quasar, es tu `quasar.conf.js`: falta el
-  plugin `Dialog` o `Notify` en `framework.plugins`. Y no da error claro.
+- **`this.$q.notify is not a function`** → no es Quasar, es tu `quasar.conf.js`:
+  falta el plugin `Dialog` o `Notify` en `framework.plugins`.
+- **Un `<q-*>` nuevo sin declarar en `framework.components`** → se ve a medias,
+  sin estilo, y solo avisa un warning de desarrollo (Q1, 6.1).
+- **`:loading` sin `:disable` en el botón de guardar** → spinner, sí;
+  `disabled`, no. La prueba anti doble submit de Q0 se pone roja.
 - **Reescribir los tests de Q0 para que pasen.** Si haces eso, acabas de tirar la
-  red de seguridad. **Los tests no se tocan. Se leen los rojos.**
+  red de seguridad. **Las aserciones no se tocan; se leen los rojos.** Lo que se
+  adapta, y se anota, son las ayudas que hablan con el DOM (sección 4️⃣).
 - **`priority: ""` en vez de `null`** — `QSelect` emite `null` al limpiar; tienes
   dos "vacíos" y algún `===` te va a morder.
 
@@ -1249,8 +1494,9 @@ exactamente el modo en que esta ruta rompe las cosas.
 3. Agrega `counter` y `maxlength="80"` al `q-input` del título. Compara con el
    ejercicio 1 de F5 (que pedía escribir el contador a mano). Cuenta las líneas
    que te ahorraste.
-4. Cambia `:disabled="saving"` del botón por `:loading="saving"`. ¿Qué se ve
-   distinto? ¿Qué prefieres para una acción que tarda 2 segundos?
+4. Quita el `:disable="saving"` del botón y deja solo `:loading="saving"`. Corre
+   Q0: ¿qué prueba se pone roja? ¿Es un rojo de DOM o de comportamiento? Mira el
+   `<button>` en las DevTools con `saving` en `true` y explica la diferencia.
 5. Agrega un `hint` al campo asignado: "Username del agente, ej. lmcano".
    Compara con el `placeholder` de F5: ¿cuándo usarías cada uno?
 6. Agrega un `q-btn type="reset"` y un `@reset="handleReset"` en el `QForm`.
@@ -1259,9 +1505,9 @@ exactamente el modo en que esta ruta rompe las cosas.
 7. Reemplaza el `window.confirm` del borrado por `this.$q.dialog({...})` con
    `.onOk()`. Una línea contra el ejercicio 18 🟠 de F5 (que pedía jQuery).
    Escribe dos frases sobre eso.
-8. Corre `npm uninstall vuelidate` y luego `npm run dev`. ¿Arranca? Si no,
-   busca qué archivo sigue importándolo. **Ese archivo es tu deuda de
-   migración** (pista: `LoginView`).
+8. Antes de hacer el ejercicio 10, corre `quasar dev` sin vuelidate. ¿Arranca?
+   Lee el error y encuentra los archivos que siguen importándolo con un `grep`.
+   **Esos archivos son tu deuda de migración** (pista: no están en `views/`).
 
 ### 🟡 Intermedio (9–17)
 
@@ -1269,14 +1515,17 @@ exactamente el modo en que esta ruta rompe las cosas.
    del dashboard de F4 (que aún está en Bootstrap). **Un componente Quasar y uno
    Bootstrap compartiendo la misma constante.** Eso es el legacy híbrido de Q3,
    asomando.
-10. 🎯 **OBLIGATORIO — migración transversal.** Migra el **login (F2)** a
-    `QForm`. Reglas: `required` en usuario y contraseña, `q-input` con
-    `type="password"`, botón `type="submit"` con `:loading`. **Usa los tests de
-    Q0. No escribas ninguno nuevo.** Si alguno se pone rojo, no lo cambies:
-    documenta si rompiste el comportamiento o si el test estaba acoplado al DOM
-    de Bootstrap. (Este ejercicio no es opcional: sin él, vuelidate sigue en el
-    proyecto.)
-11. Agrega el toggle "ver contraseña" al login con
+10. 🎯 **OBLIGATORIO — migración transversal.** Migra los dos pasos del
+    **wizard de F6** (`StepData` y `StepClassification`) a `QForm` con las
+    reglas de `utils/rules.js`. El punto delicado no está en los pasos sino en el
+    wizard: hoy hace `if (step && step.validate && !step.validate())`, y el
+    `validate()` de cada paso pasa a devolver la **promesa** de `QForm`. Si no
+    cambias ese `if`, el wizard avanza siempre: es el Concepto 3 en su forma más
+    pura. Q0 no cubre el wizard, así que aquí sí escribes una prueba nueva: que
+    `next()` no avance con el paso vacío y avance con el paso lleno. (Este
+    ejercicio no es opcional: sin él, el build no pasa.)
+11. Migra el login (F2) a `QForm` —no usa vuelidate, así que es solo la vista—
+    y agrégale el toggle "ver contraseña" con
     `:type="verPass ? 'text' : 'password'"` y un `<template v-slot:append>` con
     un `q-icon` clicable. Los slots de `QInput` son la puerta a todo lo bonito.
 12. Agrega el campo `status` **solo en modo edición** (deriva el modo de
@@ -1307,14 +1556,15 @@ exactamente el modo en que esta ruta rompe las cosas.
 ### 🟠 Difícil (18–24)
 
 18. **El bug de la promesa, en vivo.** Escribe un método `guardarSiValido` que
-    haga `if (this.$refs.ticketForm.validate()) { this.enviar(); }`. Llámalo
+    haga `if (this.$refs.ticketForm.validate()) { this.save(); }`. Llámalo
     desde un botón (`type="button"`). Con el formulario **vacío**, dale.
     Documenta qué pasa y por qué. Luego arréglalo con `.then()`. **No borres el
     código malo: coméntalo con una lápida.** 🪦
 19. Migra el `TicketForm` a `lazy-rules="ondemand"` (validar solo al submit).
-    Corre los tests de Q0. ¿Alguno se pone rojo? Diagnostica: ¿rompiste el
-    comportamiento (sí, lo hiciste) o el test estaba mal? **Esta es una regresión
-    de verdad, causada por ti.** Escríbelo, luego revierte.
+    Corre los tests de Q0: siguen verdes. ¿Rompiste algo? Sí: el usuario ya no ve
+    el error al salir del campo, solo al enviar. **Es un cambio de comportamiento
+    que la red no ve**, porque Q0 congela el submit y no el blur. Escribe la
+    prueba que lo atrapa, mírala ponerse roja con `ondemand`, y revierte.
 20. Reemplaza el flash-message del ejercicio 20 🟠 de F5 (módulo Vuex `ui` +
     `FlashMessage.vue` + auto-oculto) por `this.$q.notify()`. **Borra el módulo
     `ui` del store entero.** Cuenta las líneas eliminadas. Y luego responde: ¿qué
@@ -1378,9 +1628,9 @@ exactamente el modo en que esta ruta rompe las cosas.
     **Compara con el ejercicio 8 🟢 de F5:** el mismo bug, en un framework
     supuestamente más seguro. Moraleja para `SECURITY-NOTES.md`.
 28. **La migración a medias, y por qué es un desastre.** Deja `TicketForm` en
-    Quasar y `LoginView` en vuelidate (revierte el ejercicio 10). Ahora agrega
-    una regla nueva — "el username no puede tener espacios" — a **ambos**
-    formularios. Cronométralo. Escribe cuántos contextos mentales tuviste que
+    Quasar y el wizard en vuelidate (revierte el ejercicio 10 y reinstala
+    vuelidate). Ahora agrega una regla nueva — "el título no puede decir
+    URGENTE" — a **los dos** formularios que piden título. Cronométralo. Escribe cuántos contextos mentales tuviste que
     cargar. **Ahora completa la migración y hazlo otra vez.** Este ejercicio no
     enseña Quasar: enseña **por qué una migración a medias cuesta más que
     cualquiera de los dos estados puros**, y por qué el "lo dejamos así por ahora"

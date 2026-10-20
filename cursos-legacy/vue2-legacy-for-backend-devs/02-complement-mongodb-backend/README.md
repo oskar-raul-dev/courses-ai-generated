@@ -30,19 +30,13 @@ reemplaza al mock.
 |---|---|
 | **Este `README.md`** | 📑 **Índice del curso** — empieza aquí |
 | [`00-audit-contrato.md`](00-audit-contrato.md) | 📜 **El contrato que el backend debe honrar.** Dialecto de json-server a reimplementar, regímenes estricto y de crecimiento, checklist de smoke test. Fuente de verdad de la costura entre los dos cursos |
-| [`../prompts/diccionario-codigo.md`](../prompts/diccionario-codigo.md) | 📖 Diccionario de código del dominio, compartido con el Curso 01 |
-| [`../prompts/instrucciones-proyecto-track-b.md`](../prompts/instrucciones-proyecto-track-b.md) | 📋 Alcance del curso y realidad en disco |
 | [`../00-convencion-de-git-y-tags.md`](../00-convencion-de-git-y-tags.md) | 🏷️ **Cómo llevas el progreso en git**: repo propio (separado del frontend, y por qué), un tag por fase, y el mensaje del tag como cuaderno de mediciones |
-| [`../prompts/guia-de-estilo-y-convenciones.md`](../prompts/guia-de-estilo-y-convenciones.md) | ✍️ Guía editorial compartida con el Curso 01 |
 | [`forense-master.md`](forense-master.md) | 🕵️ **La puerta del track forense**: el método de cuatro preguntas y el 🩺 índice de síntomas. Se entra por lo que ves, no por la fase |
 | [`cuaderno-incidentes.md`](cuaderno-incidentes.md) | 📓 **12 incidentes** con el ticket como llegó, pistas plegadas y solución de referencia |
 
-> 📝 Este curso **no tiene `prompts/` propio**: todo el material de autoría del
-> paquete vive en [`../prompts/`](../prompts/), que es uno solo para los dos
-> cursos (la razón está en la guía de estilo, §13.3). Lo que fue de este curso y
-> ya no es fuente de verdad —el plan de formación descartado, la guía superada
-> del Track B y los prompts de revisión de 2026-09— quedó allí con el prefijo
-> `_desechable-`.
+> 📝 Este curso **no lleva material de autoría propio**: el de los dos cursos es uno solo y vive aparte,
+> sin publicarse. Los planes y las guías que se descartaron durante la escritura no son fuente de verdad
+> y no se citan.
 
 ---
 
@@ -147,8 +141,7 @@ en la sección **⚠️ Errores comunes** de cada una.
 
 Cada fase con pieza la enlaza desde su sección **⚠️ Errores comunes y pieza
 forense**, donde además hay un bloque 🧨 **Rompe a propósito** para provocar el
-fallo en tu propia máquina. El formato está especificado en
-[`../prompts/formato-piezas-forenses.md`](../prompts/formato-piezas-forenses.md).
+fallo en tu propia máquina. Las reglas de forma de estas piezas son internas del paquete y no se publican: lo que el lector necesita está en la pieza misma.
 
 ---
 
@@ -174,18 +167,23 @@ antes de escribir la tuya no te ahorra tiempo — te ahorra el ejercicio.**
 
 ## 🗺️ El arco del curso
 
-```
-  F0 ── F1 ── F2 ─────── F3 ── F4 ── F5 ── F6 ── F7 ── F8
-setup  MQL  consultar  embeber esquema lookup atom índices AUTOPSIA
-                          ⭐                     ⭐        │
-                          └──── el hilo `soporte_v1` ──────┘
-                                                            │
-  F9 ─── F10 ─── F11 ─── F12 ─── F13 ─── F14 ─── F15
- agg   EXPRESS   auth   sockets  tests  operar  veredicto
-         │        │       │
-         │        └───────┴── se pagan las deudas 💸 del Curso 01
-         │
-   🪦 json-server se apaga. El frontend no se entera.
+```mermaid
+flowchart TD
+    subgraph DATOS["F0 a F9: datos"]
+        direction LR
+        F0["F0 setup"] --> F1["F1 MQL"] --> F2["F2 consultar"] --> F3["F3 embeber ⭐"]
+        F3 --> F4["F4 esquema"] --> F5["F5 lookup"] --> F6["F6 atomicidad ⭐"] --> F7["F7 índices"] --> F8["F8 AUTOPSIA"]
+        F8 --> F9["F9 aggregation"]
+    end
+    F3 -. "el hilo soporte_v1" .-> F8
+    subgraph SISTEMA["F10 a F15: el sistema"]
+        direction LR
+        F10["F10 EXPRESS"] --> F11["F11 auth"] --> F12["F12 sockets"] --> F13["F13 tests"] --> F14["F14 operar"] --> F15["F15 veredicto"]
+    end
+    F9 --> F10
+    F10 --- APAGA["🪦 json-server se apaga: el frontend no se entera"]
+    F11 --- DEUDAS["se pagan las deudas 💸 del Curso 01"]
+    F12 --- DEUDAS
 ```
 
 Las fases 0 a 9 son **datos**: modelar, consultar, medir, rediseñar. La 10 es
@@ -241,7 +239,7 @@ un apéndice:
    de relleno: `INSTINTOS.md` es el registro de tus recalibraciones, y es lo
    que te vas a llevar cuando el curso se olvide.
 
-> 🔀 **¿Hiciste una ruta del Curso 01?** Entonces tu frontend pide dos cosas
+> 🧭 **¿Hiciste una ruta del Curso 01?** Entonces tu frontend pide dos cosas
 > que el tronco no pide, y las dos están cubiertas como secciones y ejercicios
 > **condicionales**, marcados con 🔀:
 >
@@ -265,13 +263,13 @@ un apéndice:
 
 | Herramienta | Versión | Nota |
 |---|---|---|
-| MongoDB | **4.4** | La época. Transacciones existen pero piden replica set |
+| MongoDB | **4.4** | La época. Transacciones existen pero piden replica set. Su documentación ya no se publica: los enlaces del curso llevan al manual actual |
 | Node.js | **14** | El mismo del Curso 01 |
 | Driver `mongodb` | **3.6** | **Primero a mano.** Mongoose entra recién en F11 |
-| Mongoose | **5.x** | El wrapper, después de entender qué envuelve |
-| Express | **4.x** | Con sus promesas no atrapadas y su `asyncHandler` |
-| socket.io | **2.x** | ⚠️ Tiene que coincidir con el cliente del Curso 01 |
-| Jest · supertest · mongodb-memory-server | — | La red de F13 |
+| Mongoose | **5.13.20** | El wrapper, después de entender qué envuelve |
+| Express | **4.17.1** | Con sus promesas no atrapadas y su `asyncHandler` |
+| socket.io | **2.4.1** | ⚠️ Tiene que coincidir con el cliente del Curso 01 (2.4) |
+| Jest · supertest · mongodb-memory-server | **26.6.3 · 6.1.6 · 6.9.6** | La red de F13, con el binario de `mongod` 4.4.18 |
 | Docker · Docker Compose | — | Desde la primera línea de F0 |
 
 ⚠️ **Fuera del código principal:** MongoDB 5 o superior, driver `mongodb` 4/5/6,
@@ -293,11 +291,36 @@ secciones 🔥.
 
 | Bloque | Estado |
 |---|---|
-| Fases F0–F15 | ✅ terminado |
+| Fases F0–F15 | ✅ terminado y ejecutado |
 | Apéndices a01–a05 | ✅ terminado |
-| `00-audit-contrato.md` | ✅ firmado |
+| `00-audit-contrato.md` | ✅ firmado y probado por diferencial |
 | Track forense (`forense-*.md`) | ✅ terminado |
-| `cuaderno-incidentes.md` | ✅ terminado |
+| `cuaderno-incidentes.md` | ✅ terminado, los 12 reproducidos |
+
+### Cómo se validó
+
+Entre el 14 y el 18 de octubre de 2026 se ejecutó el código del curso tal como está escrito, en
+contenedores (`mongo:4.4` y `node:14.21.3`, Docker Desktop sobre Apple Silicon), y cada fragmento
+publicado se comparó con el que corrió. Lo que no coincidía se corrigió en la fase.
+
+- **F0 a F9:** la semilla, las consultas, el validator, la transacción en un replica set de un
+  nodo, los índices con `explain()`, la autopsia de `soporte_v1` y los pipelines de agregación,
+  con las cifras de las fases medidas en esa corrida.
+- **La promesa del `baseURL`:** las doce llamadas que hace el frontend del Curso 01, contra
+  json-server y contra el backend de F10 sobre los mismos datos, con el mismo status y la misma
+  forma de respuesta.
+- **F10 a F14:** el backend completo (auth con 401, 403 y 422, el `409` del doble «tomar», la
+  paginación con `X-Total-Count`, sockets del servidor, multer), la suite de F13 con 6/6 en verde y
+  el `docker-compose.yml` de F14 levantado con su backup.
+- **Cuaderno:** los 12 incidentes preparados, con su prueba de regresión en rojo y luego en verde.
+
+Lo que queda para hacer a mano es el smoke test en navegador del contrato.
+
+> 📝 **mongodb-memory-server 6 no trae binario de MongoDB 4.4 para Linux arm64.** En una Mac con
+> Apple Silicon, la suite de F13 corre dentro de un contenedor con `--platform linux/amd64`; con la
+> emulación de Docker Desktop tarda unos segundos más, y nada cambia. Los apéndices 6 y 7 del
+> Curso 01 ([arm64](../01-vue2-legacy/a6-arm64-m1.md), [Docker y Colima](../01-vue2-legacy/a7-docker-colima.md))
+> explican el porqué y traen los comandos.
 
 ---
 

@@ -422,9 +422,20 @@ en cada ejecución, en vez de vivir en un párrafo que se lee una vez.
   la tentación de "normalizarlo" a un ObjectId de `users` la discutimos con
   números en la Fase 3, no por reflejo.
 
+Y en `package.json`, el atajo que el resto del curso usa cada vez que ensucies la
+base:
+
+```json
+"scripts": {
+  "seed": "node scripts/seed.js"
+}
+```
+
 ```bash
-node scripts/seed.js
-# Seed OK: 6 users, 14 tickets, 23 comments
+npm run seed
+# Seed OK: 3 users, 3 tickets, 1 comments
+# (los de la semilla de la Fase 3 del Curso 01; si creaste tickets desde la
+#  aplicación, tu db.json trae más y los números son los tuyos)
 ```
 
 Verifica en Compass o mongosh:
@@ -438,6 +449,138 @@ db.comments.findOne()      // mira el ticketId: es un ObjectId, no un número
 > 💸 **Deuda declarada:** las fechas viajan a Mongo como `Date`, pero el
 > contrato de la API exige devolverlas como string ISO. Esa ida y vuelta la
 > paga la capa API en la Fase 10. Está firmado en `00-audit-contrato.md`.
+
+### El generador de volumen: `scripts/generate.js`
+
+Tres tickets sirven para aprender el idioma; para medir, no. Desde la Fase 2,
+los ejercicios que piden volumen y varios incidentes del cuaderno usan este
+generador: rehace `users`, `tickets` y `comments` de la base `tiquetera` con
+datos sintéticos y la forma del seed (usernames en `assignee`/`reporter`,
+`Date` en las fechas). La distribución no es uniforme a propósito: casi 60 %
+`closed`, 20 % `open`, `assignee` en `null` en la mitad de los abiertos y
+**ausente** en un 5 % (la trampa 1 de la Fase 2, a escala), y dos reporteros que
+no están en `users` (las referencias rotas del `db.json` heredado).
+
+```js
+// Generador de volumen: reconstruye users, tickets y comments de la base
+// `tiquetera` con datos sintéticos. Node 14 + mongodb@3.6, como el seed.
+// Uso: node scripts/generate.js --tickets 100000 [--comments 400000]
+const { MongoClient, ObjectId } = require("mongodb");
+
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017";
+const DB_NAME = "tiquetera";
+const BATCH = 1000;
+
+function arg(name, fallback) {
+  const i = process.argv.indexOf("--" + name);
+  return i === -1 ? fallback : Number(process.argv[i + 1]);
+}
+const N_TICKETS = arg("tickets", 100000);
+const N_COMMENTS = arg("comments", N_TICKETS * 4);
+
+// Aleatorio con semilla: dos corridas con los mismos argumentos dan la misma base
+let seed = 20200310;
+function rand() {
+  seed = (seed * 1103515245 + 12345) % 2147483648;
+  return seed / 2147483648;
+}
+function pick(list) { return list[Math.floor(rand() * list.length)]; }
+function weighted(pairs) { // [[valor, peso], ...]
+  let r = rand() * pairs.reduce(function (s, p) { return s + p[1]; }, 0);
+  for (const p of pairs) { if ((r -= p[1]) < 0) return p[0]; }
+  return pairs[pairs.length - 1][0];
+}
+
+const AGENTS = ["admin", "lmcano", "lmcorrea", "aegomez", "jfortiz", "kmarin", "dhenao", "vrestrepo"];
+const REPORTERS = ["dprios", "cvelez", "mrestrepo", "sbotero", "pzapata", "lgiraldo", "acardona", "jarango"];
+const SUBJECTS = ["La impresora", "El datáfono", "La caja", "El cuadre de caja", "La factura electrónica",
+  "El correo", "El inventario", "El cierre de turno", "La tablet de pedidos", "El lector de código"];
+const PROBLEMS = ["no imprime", "no conecta", "no cuadra", "se reinicia sola", "no sale con el NIT",
+  "está lenta", "no abre", "muestra un error", "no sincroniza", "se congela"];
+
+const FROM = new Date("2019-06-01T00:00:00Z").getTime();
+const SPAN = 2 * 365 * 24 * 3600 * 1000; // dos años
+
+async function insertInBatches(col, docs) {
+  for (let i = 0; i < docs.length; i += BATCH) {
+    await col.insertMany(docs.slice(i, i + BATCH), { ordered: false });
+  }
+}
+
+async function main() {
+  const t0 = Date.now();
+  const client = await MongoClient.connect(MONGO_URL, { useUnifiedTopology: true });
+  const db = client.db(DB_NAME);
+  for (const name of ["users", "tickets", "comments"]) {
+    await db.collection(name).deleteMany({});
+  }
+
+  // users: los agentes y una parte de los reporteros. cvelez y mrestrepo
+  // quedan fuera a propósito: las referencias rotas del db.json heredado, a escala.
+  const users = AGENTS.map(function (u) { return { _id: new ObjectId(), username: u, name: u, role: "agent" }; })
+    .concat(REPORTERS.filter(function (u) { return u !== "cvelez" && u !== "mrestrepo"; })
+      .map(function (u) { return { _id: new ObjectId(), username: u, name: u, role: "reporter" }; }));
+  await db.collection("users").insertMany(users);
+
+  const ids = [];
+  const created = [];
+  const tickets = [];
+  for (let i = 0; i < N_TICKETS; i++) {
+    const _id = new ObjectId();
+    const status = weighted([["closed", 60], ["open", 20], ["in_progress", 10], ["resolved", 10]]);
+    const createdAt = new Date(FROM + Math.floor(rand() * SPAN));
+    const t = {
+      _id,
+      title: pick(SUBJECTS) + " " + pick(PROBLEMS),
+      description: "Generado para pruebas de volumen.",
+      status,
+      priority: weighted([["low", 40], ["medium", 40], ["high", 20]]),
+      reporter: pick(REPORTERS),
+      createdAt
+    };
+    // assignee: username, null explícito o ausente (la trampa 1 de la Fase 2)
+    const a = rand();
+    if (status === "open" && a < 0.5) t.assignee = null;
+    else if (a < 0.05) { /* sin campo */ } else t.assignee = pick(AGENTS);
+    tickets.push(t);
+    ids.push(_id);
+    created.push(createdAt.getTime());
+  }
+  await insertInBatches(db.collection("tickets"), tickets);
+
+  const comments = [];
+  for (let i = 0; i < N_COMMENTS; i++) {
+    const k = Math.floor(rand() * ids.length);
+    comments.push({
+      _id: new ObjectId(),
+      ticketId: ids[k],
+      author: rand() < 0.6 ? pick(AGENTS) : pick(REPORTERS),
+      body: "Comentario de prueba " + (i + 1) + ".",
+      createdAt: new Date(created[k] + Math.floor(rand() * 7 * 24 * 3600 * 1000))
+    });
+  }
+  await insertInBatches(db.collection("comments"), comments);
+
+  console.log("Generado:", users.length, "users,", tickets.length, "tickets,", comments.length,
+    "comments en", ((Date.now() - t0) / 1000).toFixed(1), "s");
+  await client.close();
+}
+
+main().catch(function (err) {
+  console.error("El generador falló:", err.message);
+  process.exit(1);
+});
+```
+
+```bash
+node scripts/generate.js --tickets 100000
+# Generado: 14 users, 100000 tickets, 400000 comments en 3.0 s
+```
+
+El tiempo es el de tu máquina (ese es el de un contenedor en un portátil de
+2026). La semilla del aleatorio es fija: dos corridas con los mismos argumentos
+dan la misma base, y eso vuelve comparables las mediciones de una fase a otra.
+Para volver a la base de juguete, `npm run seed`.
 
 ### 📡 El contrato en el horizonte
 
@@ -561,11 +704,11 @@ el segundo caso te llega en un ticket a las seis de la tarde.
 23. Haz el seed **transaccionalmente honesto sin transacciones**: si falla la carga de `comments`, la base no debe quedar a medias. (Pista de época: escribir a colecciones temporales y renombrar, o validar todo antes de escribir nada. Elige, implementa y defiende tu elección en un comentario.)
 24. Escribe `scripts/export.js`: el camino inverso, de Mongo a un `db.json` válido para json-server (ObjectId → string en `id`, `Date` → ISO string, y `ticketId` retraducido). Verifica que json-server arranca con el archivo exportado.
 25. El `db.json` heredado trae fechas en ISO con `Z`. Modifica una a `"2020-03-10T10:00:00"` (sin zona) y observa qué `Date` produce `new Date(...)` en tu máquina. Documenta el peligro y haz que el seed rechace fechas sin zona horaria.
-26. Empaqueta el seed como comando npm (`npm run seed`) y agrega `npm run seed:verify` que encadene seed + verify. Deja el README con las 4 líneas exactas para que otra persona levante todo desde cero.
+26. Agrega `npm run seed:verify`, que encadene el `npm run seed` de la fase con el verify. Deja el README con las 4 líneas exactas para que otra persona levante todo desde cero.
 
 **🔴 Muy difícil (27–30)**
 
-27. Genera un `db.json` sintético de **100.000 tickets y 400.000 comentarios** (script generador con faker o aleatorios a mano, distribución realista: 60% closed, 20% open, fechas repartidas en 2 años). Siembra y cronometra. ¿`insertMany` de golpe o por lotes? Experimenta con tamaños de lote (100, 1.000, 10.000) y grafica/tabula los tiempos.
+27. Con `scripts/generate.js` y `--tickets 100000`: ¿`insertMany` de golpe o por lotes? Cambia `BATCH` (100, 1.000, 10.000, y todo de una vez) y tabula los tiempos, con la máquina y la fecha al lado. ¿Dónde se aplana la curva, y por qué no sigue mejorando?
 28. Sobre esa base grande: mide cuánto tarda `verify.js`. Propón e implementa una versión que no cargue todos los tickets en memoria (pista: un `Set` de ids sigue siendo memoria; piensa en recorrer comments con cursor y consultar en lotes).
 29. Investiga y documenta (1 página en `INSTINTOS.md`): ¿por qué MongoDB eligió que el cliente genere los ids? Conéctalo con sistemas distribuidos: ¿qué pasa con una secuencia central cuando hay sharding? No necesitas sharding para responder; necesitas el argumento.
 30. **La decisión de las referencias rotas.** Corre el seed, lee el aviso, y escribe en `DATA-MODEL.md` cuál de las dos opciones tomas (conservar o sanear) con tu argumento en tres líneas. Después implementa la que elegiste. Si conservas: añade al `verify.js` una comprobación que cuente las referencias colgantes y **no falle** por ellas, pero las liste — la diferencia entre "roto" y "conocido". Si saneas: crea los tres usuarios en el seed con un `name` explícitamente marcado (`"(recuperado del legacy)"`), para que dentro de un año nadie crea que siempre estuvieron.
@@ -580,12 +723,12 @@ el segundo caso te llega en un ticket a las seis de la tarde.
 
 **Documentación oficial (MongoDB 4.4 y driver 3.6 — tus versiones)**
 
-- Manual MongoDB 4.4 — Introducción: https://www.mongodb.com/docs/v4.4/introduction/
-- Manual 4.4 — Databases and Collections: https://www.mongodb.com/docs/v4.4/core/databases-and-collections/
-- Manual 4.4 — Documents: https://www.mongodb.com/docs/v4.4/core/document/
-- Manual 4.4 — BSON Types: https://www.mongodb.com/docs/v4.4/reference/bson-types/
-- Manual 4.4 — ObjectId: https://www.mongodb.com/docs/v4.4/reference/method/ObjectId/
-- Manual 4.4 — SQL to MongoDB Mapping Chart (la tabla oficial equivalente a nuestro diccionario): https://www.mongodb.com/docs/v4.4/reference/sql-comparison/
+- Manual MongoDB 4.4 — Introducción: https://www.mongodb.com/docs/manual/
+- Manual 4.4 — Databases and Collections: https://www.mongodb.com/docs/manual/core/databases-and-collections/
+- Manual 4.4 — Documents: https://www.mongodb.com/docs/manual/core/document/
+- Manual 4.4 — BSON Types: https://www.mongodb.com/docs/manual/reference/bson-types/
+- Manual 4.4 — ObjectId: https://www.mongodb.com/docs/manual/reference/method/objectid/
+- Manual 4.4 — SQL to MongoDB Mapping Chart (la tabla oficial equivalente a nuestro diccionario): https://www.mongodb.com/docs/manual/reference/sql-comparison/
 - Driver Node.js 3.6 — Quick Start y API: https://mongodb.github.io/node-mongodb-native/3.6/
 - Imagen Docker oficial: https://hub.docker.com/_/mongo
 - mongosh: https://www.mongodb.com/docs/mongodb-shell/

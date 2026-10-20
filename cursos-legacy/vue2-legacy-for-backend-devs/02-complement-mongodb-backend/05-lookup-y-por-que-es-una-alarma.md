@@ -59,7 +59,7 @@ db.tickets.aggregate([
 ])
 ```
 
-> ⚡ Regla robada a tu instinto de DBA (🩻 viaja intacto): **filtra antes de
+> 🔑 Regla robada a tu instinto de DBA (🩻 viaja intacto): **filtra antes de
 > unir**. `$match` primero reduce lo que `$lookup` debe procesar — el mismo
 > "predicado antes del join" que llevas años aplicando.
 
@@ -259,7 +259,7 @@ decentemente porque el texto está en una colección y los filtros en otra).
 Números a la tabla "autopsia (antes)" de `DATA-MODEL.md` — la que la
 **autopsia de la Fase 8** leerá para dictar el veredicto.
 
-> 🎯 La lección la sella la Fase 8; el intento intermedio es la Fase 7,
+> 🧭 La lección la sella la Fase 8; el intento intermedio es la Fase 7,
 > donde indexarás los `foreignField` de este horror y mejorará… algo. Pero
 > seguirá siendo 4 uniones por render contra 0. **El índice acelera el plan;
 > no arregla el modelo.**
@@ -460,16 +460,16 @@ sembrada (Fase 3). Cronometra con `console.time` o el shell.
 > enlaces de abajo apuntan a la doc `/v4.4/`; si caes en otra versión, cambia
 > el segmento de la URL.
 
-- `$lookup` (referencia completa, ambas formas): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/lookup/
-- `$unwind` (y `preserveNullAndEmptyArrays`): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/unwind/
-- `$expr` y variables `$$` (la correlación del pipeline): https://www.mongodb.com/docs/v4.4/reference/operator/query/expr/
-- Aggregation Pipeline Optimization (qué SÍ reordena el motor — spoiler: `$match`, no joins): https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline-optimization/
-- `explain` de aggregations: https://www.mongodb.com/docs/v4.4/reference/method/db.collection.explain/
+- `$lookup` (referencia completa, ambas formas): https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
+- `$unwind` (y `preserveNullAndEmptyArrays`): https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
+- `$expr` y variables `$$` (la correlación del pipeline): https://www.mongodb.com/docs/manual/reference/operator/query/expr/
+- Aggregation Pipeline Optimization (qué SÍ reordena el motor — spoiler: `$match`, no joins): https://www.mongodb.com/docs/manual/core/aggregation-pipeline-optimization/
+- `explain` de aggregations: https://www.mongodb.com/docs/manual/reference/method/db.collection.explain/
 
 **La serie de la época**
 
-- Building with Patterns: The Extended Reference Pattern (la denormalización con nombre): https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern
-- 6 Rules of Thumb for MongoDB Schema Design (releer la parte de referencing — ahora con números tuyos): https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design
+- Building with Patterns: The Extended Reference Pattern (la denormalización con nombre): https://www.mongodb.com/company/blog/building-with-patterns-the-extended-reference-pattern
+- 6 Rules of Thumb for MongoDB Schema Design (releer la parte de referencing — ahora con números tuyos): https://www.mongodb.com/company/blog/mongodb/6-rules-of-thumb-for-mongodb-schema-design
 
 **Libros**
 

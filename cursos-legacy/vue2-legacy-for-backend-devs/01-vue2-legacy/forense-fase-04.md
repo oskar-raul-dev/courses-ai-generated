@@ -94,10 +94,15 @@ grep -n "filteredTickets" src/views/TicketsView.vue
 ```
 
 ```
-42:      filteredTickets: [],
-88:    search: function (value) {
-93:        this.filteredTickets = this.tickets.filter(…);
+48:        Mostrando {{ filteredTickets.length }} de {{ tickets.length }} tickets
+51:      <tickets-table :tickets="filteredTickets" @select="goToDetail" />
+70:      filteredTickets: [],
+78:      this.filteredTickets = this.tickets.filter(function (t) {
+97:          self.filteredTickets = tickets; // la copia inicial
 ```
+
+Dos asignaciones y nada más: la copia inicial al cargar (97) y la del watcher
+(78). El watcher, en la línea 75, vigila `search`.
 
 **Qué descarta.** Cierra el caso: hay **un** watcher, y vigila **una** entrada.
 `search` tiene quien lo escuche; `statusFilter` no. Por eso teclear en el
@@ -128,7 +133,7 @@ grep -rn "watch:" src/views src/components
 ```
 
 ```
-src/views/TicketsView.vue:87:  watch: {
+src/views/TicketsView.vue:75:  watch: {
 ```
 
 **Qué descarta.** Descarta —o confirma— que sea un incidente aislado. Un

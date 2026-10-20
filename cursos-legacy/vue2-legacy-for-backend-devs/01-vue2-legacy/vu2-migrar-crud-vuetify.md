@@ -218,12 +218,12 @@ Confundir los dos últimos es el error nº1 de esta migración: gente que borra 
 servidor devuelve 500. **Vuetify valida el formulario. El servidor sigue siendo tu
 problema.**
 
-⚠️ **El matiz del `valid` que muerde:** al montar el formulario, `valid` arranca en
-`false` **aunque los campos aún no se hayan evaluado**. En modo edición, donde
-llegas con datos válidos, el botón puede aparecer deshabilitado un instante hasta
-que Vuetify corra las reglas. Si `:disabled="!valid"` te deja el botón muerto al
-abrir el diálogo de edición, no es un bug tuyo: es que las reglas aún no corrieron.
-Se arregla llamando a `this.$refs.form.validate()` tras rellenar (ver Concepto 3).
+⚠️ **El matiz del `valid`:** al montar el formulario, `valid` arranca en el
+`false` de tu `data()`, y `v-form` lo corrige en el tick siguiente, cuando sus
+campos le reportan: `true` en modo edición con datos válidos, `false` con el
+formulario vacío. Ese tick es el único momento en que el botón de edición sale
+deshabilitado. Si en una prueba miras `valid` justo después de montar, espera un
+`$nextTick()`.
 
 ---
 
@@ -248,7 +248,7 @@ objeto truthy). En **Vuetify 2, `validate()` devuelve un booleano síncrono.**
 ```js
 // ✅ En Vuetify esto funciona tal cual — nada de .then()
 if (this.$refs.form.validate()) {
-  this.enviar();
+  this.save();
 }
 ```
 
@@ -275,35 +275,24 @@ validación"**. `reset()` es un reset **total**: te vacía los campos. Si lo que
 querías era solo quitar los rojos y dejar lo que el usuario escribió, `reset()` te
 acaba de borrar el formulario delante de sus narices.
 
-**El caso donde `resetValidation()` te salva la tarde** (idéntico problema que en
-Q2, distinto método): rellenas el formulario programáticamente en modo edición
-—llega `initialTicket`, lo clonas a `form`— y Vuetify te pinta en rojo campos que
-el usuario **ni ha tocado**, porque las reglas corrieron sobre el estado
-intermedio. Solución:
+**El caso donde `resetValidation()` te salva la tarde** (el mismo que en Q2,
+distinto método): el usuario intentó enviar, `v-form` pintó los errores, y tú
+vacías el formulario por código (un "Cancelar" que limpia, o volver a empezar
+después de crear). Vacío sigue siendo inválido, así que los rojos se quedan.
+Después de vaciar, `this.$refs.form.resetValidation()`. O, si lo que quieres es
+justo eso —vaciar y olvidar—, `reset()` hace las dos cosas.
 
-```js
-created: function () {
-  var self = this;
-  if (this.initialTicket) {
-    this.form = Object.assign({}, this.form, this.initialTicket);
-    // deja que el DOM se pinte con los valores nuevos, LUEGO olvida los errores
-    this.$nextTick(function () {
-      self.$refs.form.resetValidation();
-    });
-  }
-}
-```
-
-El `$nextTick` es **obligatorio**: hay que dejar que el DOM se actualice con los
-valores nuevos antes de decirle "olvida los errores". Sin él, limpias errores que
-aún no existen y vuelven a aparecer en el siguiente tick.
+Lo que **no** lo necesita es el modo edición. Un formulario que nace con los
+valores de `initialTicket` (copiados en `created`, antes de montar) abre sin un
+solo error pintado y con `valid` en `true`: Vuetify no muestra errores de campos
+que nadie tocó ni validó.
 
 **Mnemónico para la nevera:**
 
 ```
 reset()            →  BORRA TODO (valores + errores). El botón nuclear.
-resetValidation()  →  borra solo los rojos, conserva lo escrito. El que casi
-                      siempre quieres tras rellenar en modo edición.
+resetValidation()  →  borra solo los rojos, conserva lo escrito. El que
+                      quieres tras limpiar a mano un formulario ya validado.
 validate()         →  fuerza correr las reglas ahora (síncrono, devuelve bool).
 ```
 
@@ -419,26 +408,18 @@ llega el mismo drama de la comparación por referencia.
 
 ### El diagrama, porque hace falta
 
-```
-        v-select SIN item-value bien puesto      v-select con item-text/value OK
-        ──────────────────────────────────       ───────────────────────────────
-
-store/API                                         store/API
-  "high"                                            "high"
-    │ (v-model in)                                    │ (v-model in)
-    ▼                                                 ▼
- v-select busca en items un objeto             v-select: por item-value mapea
- que sea === "high"                            "high" → la opción {text:"Alta"}
-    │                                             │
-    ▼                                             ▼
- ❌ no lo encuentra → SELECT VACÍO             ✅ pinta "Alta"
-
- usuario elige "Alta"                          usuario elige "Alta"
-    │ (v-model out)                               │ (v-model out, SIN return-object)
-    ▼                                             ▼
- objeto entero                                 "high"
-    ▼                                             ▼
- ❌ POST con objeto → db.json corrupto         ✅ POST con string → db.json intacto
+```mermaid
+flowchart TD
+    subgraph SIN["v-select sin item-value bien puesto"]
+        A1["store/API: high"] --> B1["v-select busca en items un objeto que sea === high"]
+        B1 --> C1["❌ no lo encuentra: SELECT VACÍO"]
+        C1 --> D1["el usuario elige Alta"] --> E1["❌ POST con objeto: db.json corrupto"]
+    end
+    subgraph CON["v-select con item-text e item-value"]
+        A2["store/API: high"] --> B2["v-select mapea high, por item-value, a la opción Alta"]
+        B2 --> C2["✅ pinta Alta"]
+        C2 --> D2["el usuario elige Alta (SIN return-object)"] --> E2["✅ POST con string: db.json intacto"]
+    end
 ```
 
 ### Y si el store guardara objetos...
@@ -533,18 +514,16 @@ container, cerca del `<v-app>` raíz). Es el equivalente de lo que en el mundo
 moderno se llama "portal" o "teleport" — pero esto es Vuetify 2, y lo hace por su
 cuenta, sin que se lo pidas.
 
-```
-Tu template dice:                    El DOM real acaba así:
-
-<v-app>                              <v-app>
-  <ticket-list>                        <ticket-list>
-    <v-dialog>          ─┐               (aquí ya NO está el contenido) │
-      <ticket-form/>     │  teletransporte                             │
-    </v-dialog>         ─┘             </ticket-list>                   │
-  </ticket-list>                       <div class="v-dialog__content"> ◄┘
-</v-app>                                 <ticket-form/>   ← ¡acá vive ahora!
-                                       </div>
-                                     </v-app>
+```mermaid
+flowchart TD
+    subgraph TPL["Tu template dice"]
+        A1["v-app"] --> B1["ticket-list"] --> C1["v-dialog"] --> D1["ticket-form"]
+    end
+    subgraph DOM["El DOM real acaba así"]
+        A2["v-app"] --> B2["ticket-list, sin el contenido del diálogo"]
+        A2 --> C2["div.v-dialog__content"] --> D2["ticket-form: acá vive ahora"]
+    end
+    C1 -. "teletransporte" .-> C2
 ```
 
 **Por qué te importa a ti, hoy, con los tests de VU0:**
@@ -634,7 +613,7 @@ src/
     tickets/
       TicketForm.vue        ← reescrito (v-form, sin vuelidate)
   views/
-    TicketListView.vue      ← hospeda los <v-dialog> de crear/editar/borrar
+    TicketsView.vue         ← hospeda los <v-dialog> de crear/editar/borrar
   utils/
     rules.js                ← nuevo: reglas reutilizables
 ```
@@ -771,15 +750,9 @@ export default {
     };
   },
   created: function () {
-    var self = this;
     if (this.initialTicket) {
       // copia local: NUNCA editamos la prop directamente (patrón de F5)
       this.form = Object.assign({}, this.form, this.initialTicket);
-      // rellenamos programáticamente → Vuetify pinta errores de campos
-      // no tocados. Los limpiamos DESPUÉS de que el DOM tenga los valores.
-      this.$nextTick(function () {
-        self.$refs.form.resetValidation();
-      });
     }
   },
   methods: {
@@ -806,21 +779,27 @@ Detalles con intención:
   ($v.$invalid)` se fue. La red la pone `v-form`;
 - `data-testid` en cada campo: son los que VU0 fijó. **No los cambies** o rompes
   los tests de regresión por tu cuenta;
-- la copia local + `resetValidation` en `nextTick` es el patrón del Concepto 3, en
-  vivo.
+- la copia local en `created`, antes de montar: por eso el formulario de edición
+  abre limpio y no necesita `resetValidation()` (Concepto 3);
+- `handleSubmit` puede hacer `if (!this.$refs.form.validate())` porque en Vuetify
+  `validate()` es **síncrono** y devuelve un booleano. El mismo `if` en Quasar
+  entraba siempre (Q2, Concepto 3).
 
-### `views/TicketListView.vue` (fragmento: los diálogos)
+### `views/TicketsView.vue` (fragmento: los diálogos)
+
+La vista del dashboard de F10 se queda como está —el listado sigue en Bootstrap
+hasta VU3— y suma el botón, los dos diálogos y sus métodos. El `<router-link>` a
+`/tickets/new` pasa a ser un `v-btn` que abre el diálogo.
 
 ```vue
 <template>
   <section>
-    <div class="d-flex align-center mb-3">
-      <h1 class="text-h5">Tickets</h1>
-      <v-spacer />
-      <v-btn color="primary" data-testid="ticket-new" @click="openCreate">
-        Nuevo ticket
-      </v-btn>
-    </div>
+    <page-title title="Tickets" subtitle="Mesa de soporte" />
+
+    <!-- el <router-link> a /tickets/new pasa a ser este botón -->
+    <v-btn color="primary" class="mb-3" data-testid="ticket-new" @click="openCreate">
+      Nuevo ticket
+    </v-btn>
 
     <!-- ... aquí sigue el listado de F4 (todavía Bootstrap; se migra en VU3) ... -->
 
@@ -829,11 +808,10 @@ Detalles con intención:
       <v-card>
         <v-card-title>{{ editing ? "Editar ticket" : "Nuevo ticket" }}</v-card-title>
         <v-card-text>
-          <div v-if="error" class="mb-3">
-            <v-alert type="error" dense text>{{ error }}</v-alert>
-          </div>
+          <v-alert v-if="saveError" type="error" dense text>{{ saveError }}</v-alert>
           <!-- :key fuerza remontar el form al cambiar de ticket → clon limpio -->
           <ticket-form
+            v-if="formDialog"
             :key="editingId || 'new'"
             :initial-ticket="editingTicket"
             :saving="saving"
@@ -864,14 +842,19 @@ Detalles con intención:
 </template>
 
 <script>
+// los imports de F10 (PageTitle, TicketsTable, TicketsSummary y los map* de vuex), más:
 import TicketForm from "../components/tickets/TicketForm.vue";
 import ticketService from "../services/ticketService";
+import socketService from "../services/socketService";
 
 export default {
-  name: "TicketListView",
-  components: { TicketForm },
+  name: "TicketsView",
+  // components: los de F10, más TicketForm
+  components: { PageTitle, TicketsTable, TicketsSummary, TicketForm },
   data: function () {
     return {
+      search: "",
+      statusFilter: "",
       formDialog: false,
       confirmDelete: false,
       editing: false,
@@ -880,22 +863,27 @@ export default {
       toDelete: null,
       saving: false,
       deleting: false,
-      error: ""
+      // NO "error": en F10 ese nombre ya es el mapState del store (el error de carga)
+      saveError: ""
     };
   },
-  methods: {
+  // computed y mounted: los de F10, sin cambios
+  methods: Object.assign(
+    {},
+    mapActions("tickets", ["fetchTickets"]),
+    {
     openCreate: function () {
       this.editing = false;
       this.editingId = null;
       this.editingTicket = null;
-      this.error = "";
+      this.saveError = "";
       this.formDialog = true;
     },
     openEdit: function (ticket) {
       this.editing = true;
       this.editingId = ticket.id;
       this.editingTicket = ticket;
-      this.error = "";
+      this.saveError = "";
       this.formDialog = true;
     },
     closeForm: function () {
@@ -904,28 +892,32 @@ export default {
     onSubmit: function (formData) {
       var self = this;
       this.saving = true;
-      this.error = "";
+      this.saveError = "";
 
-      // reglas de negocio: las pone la VISTA, no el form (igual que en F5)
+      // reglas de negocio: las pone la VISTA, no el form (igual que en F5);
+      // y el resultado entra al store, que es de donde lee la lista (F10)
       var request;
       if (this.editing) {
-        request = ticketService.updateTicket(this.editingId, formData);
+        request = this.$store.dispatch("tickets/updateTicket", { id: this.editingId, changes: formData });
       } else {
         var payload = Object.assign({}, formData, {
           status: "open",
           reporter: this.$store.getters["auth/currentUser"].username,
           createdAt: new Date().toISOString()
         });
-        request = ticketService.createTicket(payload);
+        request = ticketService.createTicket(payload).then(function (created) {
+          self.$store.commit("tickets/UPSERT_TICKET", created);
+          socketService.emit("ticket:created", created); // 📣 anunciar a los demás, como en F8
+          return created;
+        });
       }
 
-      request
+      return request
         .then(function () {
           self.formDialog = false;
-          self.$emit("refresh"); // o recargar la lista
         })
         .catch(function () {
-          self.error = "No se pudo guardar. Intenta de nuevo.";
+          self.saveError = "No se pudo guardar. Intenta de nuevo.";
         })
         .finally(function () {
           self.saving = false;
@@ -938,24 +930,29 @@ export default {
     doDelete: function () {
       var self = this;
       this.deleting = true;
-      ticketService
+      return ticketService
         .deleteTicket(this.toDelete.id)
         .then(function () {
           self.confirmDelete = false;
-          self.$emit("refresh");
+          return self.fetchTickets({ force: true });
         })
         .catch(function () {
-          self.error = "No se pudo eliminar.";
+          self.saveError = "No se pudo eliminar.";
           self.confirmDelete = false;
         })
         .finally(function () {
           self.deleting = false;
         });
     }
-  }
+    }
+  )
 };
 </script>
 ```
+
+Es un fragmento: en la vista real se suman al `data()`, a los `components` y a los
+`methods` de F10. La firma de `ticketService.updateTicket(id, changes)` es la de
+F3, y lo que devuelve (el ticket guardado) es lo que entra al store.
 
 Detalles con intención:
 
@@ -965,9 +962,13 @@ Detalles con intención:
   Truco barato, resuelve un bug caro;
 - el `payload` (`status`, `reporter`, `createdAt`) lo arma **la vista**, igual que
   en F5. El formulario no decide que un ticket nace "abierto";
-- el `error` de red vive en la vista y se pinta con `<v-alert type="error">`. **Ese
-  `error` sobrevivió** a la migración (Concepto 2) — no lo confundas con la validez
-  del form, que ahora la lleva `v-form`.
+- el error de red vive en la vista y se pinta con `<v-alert type="error">`. **Ese
+  error sobrevivió** a la migración (Concepto 2) — no lo confundas con la validez
+  del form, que ahora la lleva `v-form`. Aquí se llama `saveError`: desde F10,
+  `error` en esta vista es el `mapState` del store (el error de *carga*), y
+  declararlo también en `data` hace que Vue descarte el computed: avisa
+  `The computed property "error" is already defined in data.` y el error de
+  carga deja de verse.
 
 ### Quitar vuelidate del proyecto
 
@@ -983,10 +984,72 @@ import Vuelidate from "vuelidate";
 Vue.use(Vuelidate);
 ```
 
-Arranca la app y busca en consola cualquier `$v` huérfano. Si algo revienta, es un
-formulario que aún dependía de vuelidate y no migraste. **Encuéntralos todos antes
-de dar la fase por cerrada** — una dependencia a medio quitar es peor que no
-haberla tocado.
+No hace falta buscar en la consola: el build te los dice.
+
+```
+This dependency was not found:
+
+* vuelidate/lib/validators in ./node_modules/cache-loader/dist/cjs.js??ref--12-0!…!./src/components/tickets/wizard/StepData.vue?vue&type=script&lang=js
+```
+
+`StepData.vue` y `StepClassification.vue`, los pasos del wizard de F6, son el otro
+consumidor de vuelidate (el login de F2 nunca lo usó). Migrarlos es el ejercicio
+10, y hasta entonces el build no pasa. La buena noticia, comparada con Q2: el
+`validate()` de `v-form` es síncrono, así que el `if (!step.validate())` del
+wizard sigue funcionando tal cual. Solo cambian los pasos.
+
+### La red de VU0, corrida
+
+`npm run test:unit`, sin tocar nada:
+
+```
+  ● Test suite failed to run
+
+    Cannot find module 'vuelidate' from 'ticketForm.spec.js'
+```
+
+La prueba de VU0 importaba vuelidate para montar el F5. Se borran esas dos líneas,
+y entra Vuetify donde VU0 dejó el hueco: `helpers/mount.js`.
+
+```js
+// tests/unit/regression/helpers/mount.js — la ZONA VUETIFY, ya llena
+import Vue from "vue";
+import Vuetify from "vuetify";
+import { mount, createLocalVue } from "@vue/test-utils";
+
+// Vuetify se registra en Vue (no en el localVue: Vuetify 2 lo pide así),
+// y cada montaje recibe su propia instancia.
+Vue.use(Vuetify);
+
+export function mountView(Component, options) {
+  options = options || {};
+  const localVue = options.localVue || createLocalVue();
+
+  // El <v-app> que Vuetify exige: diálogos y menús buscan un ancestro con
+  // data-app para colgarse. En la app lo pone <v-app>; aquí, un div en el body.
+  if (!document.querySelector("[data-app]")) {
+    var app = document.createElement("div");
+    app.setAttribute("data-app", "true");
+    document.body.appendChild(app);
+  }
+
+  return mount(Component, Object.assign({}, options, { localVue: localVue, vuetify: new Vuetify() }));
+}
+```
+
+Con eso, **16 de 18** del formulario en verde a la primera, sin tocar `fill()`:
+`setValue` sigue sirviendo sobre los `data-testid`, que Vuetify pasa al `<input>`.
+Los dos rojos son de DOM:
+
+| Prueba | Por qué | Qué se hace |
+|---|---|---|
+| "tras un submit inválido, aparece el error del título" | el ancla `ticket-title-error` la ponía la vista de F5; `v-text-field` pinta su mensaje en su propio `role="alert"` | buscar el `.v-messages__message` dentro del `.v-input` del título |
+| "con initialTicket, precarga los campos" | el `<input>` de `v-select` no guarda el `value`: la opción elegida se pinta como texto | comparar el `.v-select__selection` ("Alta") |
+
+Las aserciones no cambian; cambia cómo se encuentra lo que afirman. **9 suites, 64
+pruebas en verde.** (Y, de paso, la diferencia con Q2 en números: aquí no hay rojo
+de tiempo, porque el submit es síncrono, y `v-form` pinta los tres errores del
+formulario vacío, no solo el primero.)
 
 ---
 
@@ -1089,12 +1152,14 @@ ya sabes qué pantalla va a romperse después. Restaura con `npm run mock:reset`
 9. Migra el `assignee` a un `<v-select>` poblado desde `GET /users?role=agent`
    (reutiliza el `userService` del ej. 9 de F5). Emite el username (string), no el
    objeto de usuario. ¿`return-object` sí o no?
-10. **Migra el login (F2) a `v-form`.** Reescribe `LoginView` con `<v-text-field>`
-    + `:rules`, sin vuelidate. **Usa los tests de VU0, no escribas nuevos.** Si
-    fallan, diagnostica: ¿es la migración o el test estaba acoplado? ⚠️
-    *(migración transversal obligatoria)*
+10. **Migra los dos pasos del wizard de F6 a `v-form`.** `StepData` y
+    `StepClassification`, con las reglas de `utils/rules.js` y sin vuelidate; el
+    `validate()` público de cada paso devuelve el `this.$refs.form.validate()`.
+    VU0 no cubre el wizard: escribe la prueba de que `next()` no avanza con el paso
+    vacío y sí con el paso lleno. ⚠️ *(migración transversal obligatoria: sin
+    ella, el build no pasa)*
 11. Extrae los mensajes de error repetidos a `utils/rules.js` (si no lo hiciste ya)
-    y reutilízalos en el login del ej. 10 y en el `TicketForm`. Cuenta cuántas
+    y reutilízalos en los pasos del wizard del ej. 10 y en el `TicketForm`. Cuenta cuántas
     líneas de reglas compartes.
 12. Añade una regla custom `noSoloMayusculas` al título (nadie quiere tickets que
     GRITAN): rechaza títulos 100% mayúsculas de más de 10 caracteres. Es una
@@ -1116,7 +1181,7 @@ ya sabes qué pantalla va a romperse después. Restaura con `npm run mock:reset`
 
 **🟠 Difícil (18–24)**
 
-18. **El teletransporte, en carne viva.** Escribe un test que monte `TicketListView`,
+18. **El teletransporte, en carne viva.** Escribe un test que monte `TicketsView`,
     abra el diálogo de crear y busque `[data-testid="ticket-title"]` con
     `wrapper.find()`. Míralo **fallar**. Ahora arréglalo de las tres formas del
     Concepto 5 (`attach`, `document.querySelector`, montar el form suelto). Escribe
@@ -1169,9 +1234,9 @@ ya sabes qué pantalla va a romperse después. Restaura con `npm run mock:reset`
     *aplicadas* al campo correcto solo lo prueba un test de componente —y ahí vuelve
     el teletransporte del ej. 18. Escríbelo también.)
 27. **La migración a medias, y por qué es un desastre.** Deja `TicketForm` en
-    Vuetify y revierte `LoginView` a vuelidate (deshaz el ej. 10). Ahora añade la
-    misma regla nueva —"el username no puede tener espacios"— a **ambos**
-    formularios. Cronométralo y cuenta cuántos contextos mentales cargaste (dos
+    Vuetify y revierte el wizard a vuelidate (deshaz el ej. 10 y reinstala
+    vuelidate). Ahora añade la misma regla nueva —"el título no puede decir
+    URGENTE"— a **los dos** formularios que piden título. Cronométralo y cuenta cuántos contextos mentales cargaste (dos
     APIs de validación, dos filosofías). **Ahora completa la migración y hazlo otra
     vez.** Este ejercicio no enseña Vuetify: enseña **por qué una migración a medias
     cuesta más que cualquiera de los dos estados puros**, y por qué "lo dejamos así

@@ -176,24 +176,30 @@ De todo eso, `QTable` hace:
 **El borrado neto es real.** No es "escribes menos". Es: **borras código que
 funcionaba, borras sus bugs, y borras los watchers que parcheaban esos bugs.**
 
-> 🔎 **Lo que se va contigo:** también se va tu control. Ese `page = 1` del
+> ⚠️ **Lo que se va contigo:** también se va tu control. Ese `page = 1` del
 > watcher lo escribiste **porque un tester lo reportó**. `QTable` lo hace por
 > defecto. Genial — hasta el día que **no** quieras resetear la página al
 > filtrar. Entonces vas a pelearte con el componente para deshacer un
 > comportamiento que ni pediste ni puedes ver.
 
-### 4.2 `QTable`: columns, rows, row-key
+### 4.2 `QTable`: columns, data, row-key
 
 Tres props obligatorias. Ninguna es opcional en la práctica.
 
 ```js
-// El contrato mínimo de QTable
+// El contrato mínimo de QTable (Quasar 1)
 {
-  rows: Array,     // los datos. Uno por fila.
+  data: Array,     // los datos. Uno por fila.
   columns: Array,  // la definición de columnas. NO es markup: es un objeto.
   "row-key": String // qué campo identifica a la fila. Único. Vital.
 }
 ```
+
+> ⚠️ **`data`, no `rows`.** En Quasar 2 la prop se llama `rows`, y casi todo lo que
+> encuentres hoy en la documentación y en los foros es Quasar 2. Si copias
+> `:rows="allTickets"` en Quasar 1, el array entra como atributo suelto y la tabla
+> dice **"No data available"**, sin error ni warning. Es la primera trampa de
+> datación de Q1 (4.1) con la que te vas a topar en esta fase.
 
 **`row-key` no es decorativo.** Es el `:key` del `v-for` de F4 — el mismo
 concepto, el mismo problema si te lo saltas. `QTable` lo usa para:
@@ -299,7 +305,7 @@ los slots.
 
 ```html
 <q-table
-  :rows="allTickets"
+  :data="allTickets"
   :columns="columns"
   row-key="id"
 >
@@ -392,7 +398,7 @@ No pasas nada. `QTable` se lo gestiona todo internamente.
 ```html
 <!-- No hay :pagination. No hay data(). QTable se apaña. -->
 <q-table
-  :rows="allTickets"
+  :data="allTickets"
   :columns="columns"
   row-key="id"
   :rows-per-page-options="[10, 25, 50]"
@@ -473,7 +479,7 @@ const mutations = {
 ```html
 <!-- TicketsView.vue -->
 <q-table
-  :rows="allTickets"
+  :data="allTickets"
   :columns="columns"
   row-key="id"
   :pagination.sync="pagination"
@@ -504,13 +510,18 @@ con setter, la asignación **corre el `set`** → commit → mutation → store.
 Exactamente el patrón de `v-model` contra el store de F10. **No es magia nueva:
 es el mismo truco.**
 
-> ⚠️ **Sin el `set`, `strict: true` te mata.** Si `pagination` es un computed
-> solo-lectura que devuelve `state.ui.ticketsPagination`, `QTable` va a intentar
-> mutarlo directamente y Vuex va a lanzar
-> `Error: [vuex] do not mutate vuex store state outside mutation handlers`.
-> **En dev.** En producción `strict` está apagado (F10) → **muta el store en
-> silencio, sin commit, sin devtools, sin time travel.** El peor bug posible:
-> funciona.
+> ⚠️ **Sin el `set`, la tabla se queda clavada.** Si `pagination` es un computed
+> solo-lectura que devuelve `state.ui.ticketsPagination`, `QTable` no toca el store:
+> emite `update:pagination` con un objeto nuevo, `.sync` intenta asignarlo al
+> computed, y como no tiene `set` la asignación no va a ninguna parte. El usuario
+> clica "página 2" y la tabla sigue en la 1. En desarrollo, la consola lo dice:
+>
+> ```
+> [Vue warn]: Computed property "pagination" was assigned to but it has no setter.
+> ```
+>
+> En producción, ni eso: una tabla que no pagina y ningún mensaje. Vuex no grita
+> porque nadie lo mutó; el error es de Vue, y el síntoma es de la tabla.
 
 **Qué ganas:**
 - El estado es **visible**: devtools de Vuex, time travel, cada cambio de página
@@ -590,7 +601,7 @@ En modo server-side, `QTable` deja de paginar y **te pide** los datos:
 
 ```html
 <q-table
-  :rows="allTickets"
+  :data="allTickets"
   :columns="columns"
   row-key="id"
   :loading="loading"
@@ -600,8 +611,8 @@ En modo server-side, `QTable` deja de paginar y **te pide** los datos:
 ```
 
 **🔎 El interruptor es `rowsNumber`.** No hay una prop `server-side="true"`.
-Si `pagination.rowsNumber` está definido y es > 0, `QTable` entra en modo
-servidor. Si no lo está, pagina en cliente. **Esto no está en la doc en letras
+Si `pagination.rowsNumber` está **definido** —aunque valga `0`—, `QTable` entra en
+modo servidor. Si no lo está, pagina en cliente. **Esto no está en la doc en letras
 grandes y es la fuente nº1 de "¿por qué me pagina dos veces?"**.
 
 ```js
@@ -675,7 +686,7 @@ export default {
 8. La action commitea SET_TICKETS(items) + SET_LOADING(false)
 9. onRequest() (en el .then) asigna pagination.rowsNumber = 43
      ↳ QTable ya sabe: página 2 de 5. Pinta el footer bien.
-10. :rows="allTickets" ya tiene los 10 nuevos → la tabla se repinta
+10. :data="allTickets" ya tiene los 10 nuevos → la tabla se repinta
 ```
 
 **✅ Buenas prácticas:**
@@ -786,7 +797,7 @@ actions: {
 }
 ```
 
-> 🔎 **Ojo con la caché de `fetchTickets` (F10).** La action original tenía un
+> ⚠️ **Ojo con la caché de `fetchTickets` (F10).** La action original tenía un
 > `if (context.state.items.length > 0 && !options.force) return ...`. Esa caché
 > **no vale en server-side**: cada página es un fetch nuevo, siempre. Si copias
 > el patrón sin pensar, el usuario clica "página 2" y ve la página 1 otra vez,
@@ -913,9 +924,99 @@ selector está definido dos veces y una gana.**
 Si esto te parece frágil, es porque **lo es**. Bienvenido al legacy a medio
 migrar.
 
+#### Y Quasar usa `.row` y `.col` por dentro
+
+La regla de supervivencia protege **tus** grids, pero no alcanza: los componentes de Quasar
+también usan `.row`, `.col` y `.col-auto` **en su propio HTML**. Un `q-btn` se pinta como
+`q-btn__wrapper col row` con un `q-btn__content … col … row` adentro; un `q-input` es una
+`q-field row no-wrap` con un `q-field__control-container col` adentro; y lo mismo pasa con
+`q-chip`, `q-item`, `q-toolbar`, `q-banner`, el pie de `q-table` y hasta `q-icon`. Con Bootstrap 4
+cargado, esos elementos reciben su gutter negativo, su padding y su `flex-wrap: wrap` (que le gana
+al `no-wrap` de Quasar), y su reboot les pone margen a los `<label>` y a los `<ul>`. El resultado se
+ve en la primera pantalla: el texto de «Nuevo ticket» se desborda del botón, las etiquetas del
+asistente salen cortadas por la izquierda («ítulo *»), el chip del timeline tapa la primera letra
+del nombre que tiene al lado, y un banner de error pone una palabra por renglón.
+
+El arreglo es un cortafuegos en `src/css/app.scss`. Todo elemento interno de Quasar lleva una clase
+`q-…`, y las filas de Bootstrap de las vistas que todavía no migraste, no: con eso se los separa, y
+dentro de Quasar `.row` y `.col` vuelven a ser de Quasar.
+
+```scss
+// src/css/app.scss
+// Cortafuegos Bootstrap 4 → Quasar 1 (Q3). Los componentes de Quasar usan .row, .col y
+// .col-auto en su propio HTML (botones, campos, chips, ítems, banners, la tabla), y el grid
+// de Bootstrap les pone gutter negativo, padding y wrap; su reboot, además, les da márgenes
+// a <label> y <ul>. Todo elemento interno de Quasar lleva una clase q-…; las filas de
+// Bootstrap de las vistas viejas, no. Con eso se los separa.
+
+// 1. Las filas internas, sin el gutter negativo (los grids de Quasar con gutter, aparte).
+//    :where() no suma especificidad: así las reglas 4 y 6 pueden devolver lo que es de Quasar.
+.row[class*="q-"]:where(:not([class*="q-col-gutter"]):not([class*="q-gutter"])) {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+// 2. Las columnas internas, sin el padding. El de q-btn__wrapper es de Quasar y se queda.
+.col[class*="q-"]:not(.q-btn__wrapper),
+.col-auto[class*="q-"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+// 3. no-wrap es de Quasar; el .row de Bootstrap lo pisaba con flex-wrap: wrap.
+.row.no-wrap {
+  flex-wrap: nowrap;
+}
+
+// 4. Los márgenes laterales que Quasar sí pone y la regla 1 se come.
+.q-chip.row { margin: 4px; }
+.q-table__bottom-item.row { margin-right: 16px; }
+.q-table--dense .q-table__bottom-item.row { margin-right: 8px; }
+.q-gutter-xs > .row[class*="q-"], .q-gutter-x-xs > .row[class*="q-"] { margin-left: 4px; }
+.q-gutter-sm > .row[class*="q-"], .q-gutter-x-sm > .row[class*="q-"] { margin-left: 8px; }
+.q-gutter-md > .row[class*="q-"], .q-gutter-x-md > .row[class*="q-"] { margin-left: 16px; }
+.q-gutter-lg > .row[class*="q-"], .q-gutter-x-lg > .row[class*="q-"] { margin-left: 24px; }
+.q-gutter-xl > .row[class*="q-"], .q-gutter-x-xl > .row[class*="q-"] { margin-left: 48px; }
+
+// 5. El reboot de Bootstrap sobre etiquetas que Quasar usa como componente.
+label.q-field { margin-bottom: 0; }
+ul.q-timeline { margin-top: 14px; margin-bottom: 14px; } // el 1em de Quasar, sobre su letra de 14px
+
+// 6. Los grids de Quasar con gutter (q-col-gutter-md, el que usa la Tiquetera): sus medidas,
+//    no las de Bootstrap. Otros tamaños (sm, lg…) siguen el mismo molde.
+.row.q-col-gutter-md { margin-left: -16px; margin-right: 0; }
+.row.q-col-gutter-md > [class*="col"] { padding-left: 16px; padding-right: 0; }
+```
+
+**Detalles con intención.**
+
+- **El selector `[class*="q-"]` es la frontera.** Una fila de Bootstrap de una vista vieja
+  (`<div class="row">` del modal) no lleva clases `q-`, y el cortafuegos no la toca. Si algún día le
+  pones una clase de Quasar a una fila de Bootstrap (`row q-mb-md`), deja de serlo: no lo hagas.
+- **`:where()` en la regla 1.** Los `:not()` suben la especificidad, y sin `:where()` la regla 1
+  le ganaría a las reglas 4 y 6, que devuelven los márgenes que Quasar sí pone (el `4px` del chip,
+  los gutters).
+- **No se toca `position`.** Bootstrap les pone `position: relative` a sus columnas, y Quasar no;
+  pero los campos de Quasar ya son `relative-position` y dependen de eso para su etiqueta flotante.
+- **Lo que queda distinto, a propósito:** el relleno del `q-btn__wrapper` estándar es de 15 px en
+  vez de 16 (devolverlo pisaría las variantes `dense` y `round` de Quasar), y las columnas internas
+  conservan matices de `flex` que no cambian lo que se ve.
+- **Es un parche de convivencia, y se nota.** El día que Bootstrap se vaya, este bloque se borra
+  entero.
+
+> 📝 **Cómo se verificó.** Sobre el árbol de la ruta Q, con una página de prueba que monta todos los
+> componentes que registra la Tiquetera (barra, lista, botones, campos, select, banner, tabla con
+> paginación, tarjeta, timeline con chips, skeleton, badge y un grid de Quasar con gutter) y, al lado,
+> un grid de Bootstrap como el del modal. Se construyó tres veces —sin el CSS de Bootstrap, con
+> Bootstrap, y con Bootstrap y el cortafuegos— y en cada una se midieron con Chromium headless los
+> estilos computados de cada elemento. Bootstrap cambiaba márgenes, rellenos o `wrap` en 60 elementos
+> de Quasar; con el cortafuegos quedan los 3 `q-btn__wrapper` del píxel de arriba, y el grid de
+> Bootstrap no cambia en nada.
+
 #### El modal de crear ticket sigue siendo Bootstrap. Y funciona.
 
-Tu `TicketsView` post-Q3:
+El esqueleto de tu `TicketsView` post-Q3, recortado a lo que importa aquí (la versión
+completa, con el error, las tarjetas, los filtros y las anclas de Q0, es la de la sección 5):
 
 ```html
 <template>
@@ -933,7 +1034,7 @@ Tu `TicketsView` post-Q3:
 
     <!-- Tabla: QUASAR -->
     <q-table
-      :rows="allTickets"
+      :data="allTickets"
       :columns="columns"
       row-key="id"
       :loading="loading"
@@ -1018,33 +1119,52 @@ Bootstrap. El navegador solo ve HTML y CSS.
 Este es el punto que hay que ver con las manos.
 
 ```js
-// TicketsView.vue — methods
+// TicketsView.vue — methods (los de la sección 5, tal cual)
 methods: {
-  // Lo llama el @click de un <q-btn>. Un botón de QUASAR.
+  // Lo llama el @click de un <q-btn>. Un botón de QUASAR. null = crear.
   openModal: function (ticket) {
-    this.selected = ticket && ticket.id ? ticket : null;
-    this.editing = !!(ticket && ticket.id);
-
-    // Abre el modal de BOOTSTRAP 4 con jQuery. El patrón imperativo de A1,
-    // encapsulado en esta vista (o mejor, en un ConfirmModal.vue frontera).
-    // eslint-disable-next-line no-undef
-    $("#ticket-modal").modal("show");
+    this.selected = ticket;
+    this.modalOpen = true;
+    $("#ticket-modal").modal("show"); // 🅱️ Bootstrap 4 + jQuery
   },
 
   closeModal: function () {
-    // eslint-disable-next-line no-undef
     $("#ticket-modal").modal("hide");
+    this.modalOpen = false;
+    this.selected = null;
   },
 
   // Lo emite el <ticket-form>, que por dentro es un <q-form> (Q2).
-  onSaved: function (ticket) {
-    this.closeModal();
-    // Y esto va al store. Que no sabe nada de nada.
-    this.$store.commit("tickets/UPSERT_TICKET", ticket);
-    this.$store.commit("ui/FLASH", {
-      type: "success",
-      text: "Ticket #" + ticket.id + " guardado"
-    });
+  // El formulario no habla con la API (F5): guarda la vista.
+  onSaved: function (formData) {
+    var self = this;
+    var ticket = this.selected;
+    this.saving = true;
+
+    // crear completa los campos que pone la vista; editar va por la action de F10
+    var request = ticket
+      ? this.$store.dispatch("tickets/updateTicket", { id: ticket.id, changes: formData })
+      : ticketService.createTicket(Object.assign({}, formData, {
+        status: "open",
+        reporter: this.$store.getters["auth/currentUser"].username,
+        createdAt: new Date().toISOString()
+      })).then(function (created) {
+        self.$store.commit("tickets/UPSERT_TICKET", created);
+        socketService.emit("ticket:created", created); // 📣 anunciar a los demás, como en F8
+        return created;
+      });
+
+    return request
+      .then(function (saved) {
+        self.closeModal();
+        self.$q.notify({ type: "positive", message: "Ticket #" + saved.id + " guardado" });
+      })
+      .catch(function () {
+        self.$q.notify({ type: "negative", message: "No se pudo guardar el ticket." });
+      })
+      .finally(function () {
+        self.saving = false;
+      });
   }
 }
 ```
@@ -1058,14 +1178,14 @@ methods: {
 4. Dentro del modal: <ticket-form>    📦 tu componente (Q2)
 5. Dentro del form: <q-input :rules>  🅠 QUASAR valida
 6. Usuario da a Guardar
-7. → $refs.form.validate()            🅠 QUASAR devuelve una Promise
-8. → ticketService.updateTicket()     📦 tu service. axios. F3.
-9. → this.$emit("submit", ticket)     💚 VUE. Solo Vue. Un evento.
-10. → onSaved() en TicketsView        📦 tu código
-11. → $("#ticket-modal").modal("hide") 🅱️ BOOTSTRAP+jQuery cierra
-12. → commit("tickets/UPSERT_TICKET") 🗂️ VUEX
+7. → QForm valida (una Promise)       🅠 QUASAR
+8. → this.$emit("submit", formData)   💚 VUE. Solo Vue. Un evento.
+9. → onSaved() en TicketsView         📦 tu código
+10. → dispatch("tickets/updateTicket") 🗂️ VUEX → ticketService → axios (F3/F10)
+11. → commit("tickets/UPSERT_TICKET") 🗂️ VUEX, dentro de la action
+12. → $("#ticket-modal").modal("hide") 🅱️ BOOTSTRAP+jQuery cierra
 13. → el getter allTickets cambia     🗂️ VUEX
-14. → :rows="allTickets" se repinta   🅠 QUASAR redibuja la tabla
+14. → :data="allTickets" se repinta   🅠 QUASAR redibuja la tabla
 ```
 
 **Cuenta los saltos de framework.** Seis. En un solo flujo de "guardar un ticket".
@@ -1121,7 +1241,32 @@ estás parado en cada momento**, y no romper la otra.
 
 ## 💻 5. Código de la fase
 
+### Antes del código: jQuery para el modal
+
+El modal de Bootstrap se abre con `$("#ticket-modal").modal("show")`, y ese
+`.modal()` lo pone el JS de Bootstrap 4 sobre jQuery. El traslado de Q2 solo trajo
+el CSS. Para esta fase:
+
+```bash
+npm install --save-exact jquery@3.6.0 popper.js@1.16.1
+```
+
+```js
+// src/boot/jquery.js — el JS de Bootstrap 4 (el modal). Lo que en A1/F5 era un <script>.
+import "bootstrap";
+```
+
+Y `"jquery"` al final de `boot` en `quasar.conf.js`. La vista importa `$` de
+`jquery`: es el mismo módulo al que Bootstrap le colgó `.modal()`.
+
 ### `TicketsView.vue` — versión final (modo cliente, Opción A)
+
+Lleva las anclas que Q0 sembró en la vista de F10 (`tickets-loading`,
+`tickets-error`, `tickets-retry`, `tickets-search`, `tickets-status-filter`,
+`tickets-clear-filters`, `tickets-count`, `ticket-row-<id>`, `ticket-title-<id>`,
+`tickets-empty`) y el mismo comportamiento: reintentar, los dos filtros
+combinados, limpiar, el contador "N de M" y el clic en la fila que lleva al
+detalle. Lo nuevo de Q3 es el modal para crear y editar desde el dashboard.
 
 ```html
 <template>
@@ -1135,6 +1280,14 @@ estás parado en cada momento**, y no romper la otra.
       </div>
     </div>
 
+    <!-- El error de carga de F3/F10, con su reintento: no es de la tabla, es de la vista. -->
+    <q-banner v-if="error" class="bg-negative text-white q-mb-md" data-testid="tickets-error">
+      {{ error }}
+      <template v-slot:action>
+        <q-btn flat label="Reintentar" data-testid="tickets-retry" @click="fetchTickets()" />
+      </template>
+    </q-banner>
+
     <!-- Las tarjetas resumen de F4: se quedan. Grid de Quasar. -->
     <div class="row q-col-gutter-md q-mb-md">
       <div class="col-6 col-md-3" v-for="card in summaryCards" :key="card.status">
@@ -1147,8 +1300,12 @@ estás parado en cada momento**, y no romper la otra.
       </div>
     </div>
 
+    <p class="text-grey-7 q-mb-sm" data-testid="tickets-count">
+      Mostrando {{ filteredCount }} de {{ allTickets.length }} tickets
+    </p>
+
     <q-table
-      :rows="allTickets"
+      :data="allTickets"
       :columns="columns"
       row-key="id"
       :loading="loading"
@@ -1157,9 +1314,10 @@ estás parado en cada momento**, y no romper la otra.
       :rows-per-page-options="[10, 25, 50]"
       flat
       bordered
+      @row-click="goToDetail"
     >
       <template v-slot:top-right>
-        <q-input dense debounce="300" v-model="filter.search" placeholder="Buscar…">
+        <q-input dense v-model="filter.search" placeholder="Buscar…" data-testid="tickets-search">
           <template v-slot:append><q-icon name="search" /></template>
         </q-input>
         <q-select
@@ -1172,7 +1330,18 @@ estás parado en cada momento**, y no romper la otra.
           label="Estado"
           style="min-width: 150px"
           class="q-ml-sm"
+          data-testid="tickets-status-filter"
         />
+        <q-btn flat label="Limpiar filtros" class="q-ml-sm" data-testid="tickets-clear-filters" @click="clearFilters" />
+      </template>
+
+      <!-- Las anclas de Q0 viajan en las celdas: una por fila, y el título aparte. -->
+      <template v-slot:body-cell-id="props">
+        <q-td :props="props" :data-testid="'ticket-row-' + props.row.id">{{ props.value }}</q-td>
+      </template>
+
+      <template v-slot:body-cell-title="props">
+        <q-td :props="props" :data-testid="'ticket-title-' + props.row.id">{{ props.value }}</q-td>
       </template>
 
       <template v-slot:body-cell-status="props">
@@ -1189,21 +1358,23 @@ estás parado en cada momento**, y no romper la otra.
 
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
-          <q-btn flat dense round icon="edit" @click="openModal(props.row)" />
-          <q-btn flat dense round icon="delete" color="negative" @click="onDelete(props.row)" />
+          <q-btn flat dense round icon="edit" @click.stop="openModal(props.row)" />
         </q-td>
+      </template>
+
+      <template v-slot:loading>
+        <q-linear-progress indeterminate color="primary" data-testid="tickets-loading" />
       </template>
 
       <!-- El "no hay resultados" de F4. Slot no-data. -->
       <template v-slot:no-data>
-        <div class="full-width row flex-center q-pa-md text-grey">
+        <div class="full-width row flex-center q-pa-md text-grey" data-testid="tickets-empty">
           🔍 No hay tickets que coincidan con los filtros.
         </div>
       </template>
     </q-table>
 
-    <!-- 🅱️ BOOTSTRAP 4 crudo (jQuery). Aquí. Al lado. Funcionando.
-         No es bootstrap-vue: el curso no lo usa (A1). -->
+    <!-- 🅱️ BOOTSTRAP 4 crudo (jQuery). Aquí. Al lado. Funcionando. -->
     <div class="modal fade" id="ticket-modal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -1212,7 +1383,14 @@ estás parado en cada momento**, y no romper la otra.
             <button type="button" class="close" @click="closeModal">&times;</button>
           </div>
           <div class="modal-body">
-            <ticket-form :initial-ticket="selected" @submit="onSaved" @cancel="closeModal" />
+            <ticket-form
+              v-if="modalOpen"
+              :key="selected ? selected.id : 'nuevo'"
+              :initial-ticket="selected"
+              :saving="saving"
+              @submit="onSaved"
+              @cancel="closeModal"
+            />
           </div>
         </div>
       </div>
@@ -1221,12 +1399,14 @@ estás parado en cada momento**, y no romper la otra.
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import $ from "jquery";
+import { mapGetters, mapState, mapActions } from "vuex";
 import TicketStatusBadge from "../components/tickets/TicketStatusBadge.vue";
 import TicketPriorityBadge from "../components/tickets/TicketPriorityBadge.vue";
 import TicketForm from "../components/tickets/TicketForm.vue";
+import ticketService from "../services/ticketService";
+import socketService from "../services/socketService";
 
-// Constantes del módulo. NO en data(): no son reactivas, no cambian nunca.
 const COLUMNS = [
   { name: "id",        label: "#",         field: "id",        align: "left",   sortable: true },
   { name: "title",     label: "Título",    field: "title",     align: "left",   sortable: true },
@@ -1245,9 +1425,8 @@ const COLUMNS = [
     field: "createdAt",
     align: "right",
     sortable: true,
-    format: function (val) { return new Date(val).toLocaleDateString("es-ES"); }
+    format: function (val) { return new Date(val).toLocaleDateString("es-CO"); }
   },
-  // La columna de acciones DEBE existir aquí o no hay cabecera.
   { name: "actions", label: "", field: "id", align: "right", sortable: false }
 ];
 
@@ -1271,124 +1450,142 @@ export default {
     return {
       columns: COLUMNS,
       statusOptions: STATUS_OPTIONS,
-      // El filtro sigue siendo local (decisión de F10, no cambia).
-      // Es un OBJETO porque QTable pasa `filter` entero a filter-method.
       filter: { search: "", status: null },
       selected: null,
-      editing: false
-      // ⛔ NO hay: sortKey, sortOrder, page, perPage.
-      // ⛔ NO hay: filteredTickets, sortedTickets, pagedTickets, totalPages.
-      // ⛔ NO hay: toggleSort(), goToPage().
-      // ⛔ NO hay: watch { search() { this.page = 1 } }.
-      // QTable los hace. Los ~150 de F4 están BORRADOS.
+      modalOpen: false,
+      saving: false
     };
   },
 
-  computed: {
-    ...mapGetters("tickets", ["allTickets"]),
-    ...mapState("tickets", ["loading"]),
-
-    modalTitle: function () {
-      return this.editing ? "Editar ticket" : "Nuevo ticket";
-    },
-
-    // Las tarjetas resumen de F4. Este computed SE QUEDA:
-    // no es filtro, ni orden, ni paginación. QTable no lo hace.
-    summaryCards: function () {
-      var items = this.allTickets;
-      return STATUS_OPTIONS.map(function (opt) {
-        return {
-          status: opt.value,
-          label: opt.label,
-          count: items.filter(function (t) { return t.status === opt.value; }).length
-        };
-      });
-    }
-  },
-
-  created: function () {
-    this.$store.dispatch("tickets/fetchTickets");
-  },
-
-  methods: {
-    // filter-method: QTable llama a esto con (rows, terms).
-    // `terms` es lo que hay en :filter. Nuestro objeto {search, status}.
-    // QTable vigila :filter con deep watch → cambiar filter.status re-filtra
-    // Y resetea la página a 1. GRATIS. El watcher de F4 no hace falta.
-    filterTickets: function (rows, terms) {
-      var term = (terms.search || "").trim().toLowerCase();
-      var status = terms.status;
-
-      return rows.filter(function (t) {
-        var matchesText = !term || t.title.toLowerCase().indexOf(term) !== -1;
-        var matchesStatus = !status || t.status === status;
-        return matchesText && matchesStatus;
-      });
-    },
-
-    openModal: function (ticket) {
-      this.selected = ticket;
-      this.editing = !!(ticket && ticket.id);
-      // eslint-disable-next-line no-undef
-      $("#ticket-modal").modal("show"); // 🅱️ Bootstrap 4 + jQuery
-    },
-
-    closeModal: function () {
-      // eslint-disable-next-line no-undef
-      $("#ticket-modal").modal("hide");
-      this.selected = null;
-    },
-
-    onSaved: function (ticket) {
-      this.closeModal();
-      this.$store.commit("tickets/UPSERT_TICKET", ticket);
-      // this.$q.notify de Quasar (Q1) — sustituye al flash de F10.
-      // Y coexiste con el módulo `ui`: elige UNO. (Ejercicio 20.)
-      this.$q.notify({ type: "positive", message: "Ticket #" + ticket.id + " guardado" });
-    },
-
-    onDelete: function (ticket) {
-      var self = this;
-      this.$q
-        .dialog({
-          title: "Confirmar",
-          message: "¿Eliminar el ticket #" + ticket.id + "?",
-          cancel: true
-        })
-        .onOk(function () {
-          // ⚠️ `deleteTicket` como action es el ejercicio 13 de F10.
-          //    Si no lo hiciste, aquí tienes DELETE en el service +
-          //    commit("tickets/REMOVE_TICKET", id). Hazlo action ahora: es
-          //    exactamente el mismo refactor y te lo vas a encontrar igual.
-          self.$store.dispatch("tickets/deleteTicket", ticket.id);
+  computed: Object.assign(
+    {},
+    mapGetters("tickets", ["allTickets"]),
+    mapState("tickets", ["loading", "error"]),
+    {
+      modalTitle: function () {
+        return this.selected ? "Editar ticket #" + this.selected.id : "Nuevo ticket";
+      },
+      // el contador de F4 reusa el mismo filterTickets que usa la tabla: una sola regla
+      filteredCount: function () {
+        return this.filterTickets(this.allTickets, this.filter).length;
+      },
+      summaryCards: function () {
+        var items = this.allTickets;
+        return STATUS_OPTIONS.map(function (opt) {
+          return {
+            status: opt.value,
+            label: opt.label,
+            count: items.filter(function (t) { return t.status === opt.value; }).length
+          };
         });
+      }
     }
-  }
+  ),
+
+  mounted: function () {
+    this.fetchTickets(); // el caché de la action decide si hay red o no
+  },
+
+  methods: Object.assign(
+    {},
+    mapActions("tickets", ["fetchTickets"]),
+    {
+      filterTickets: function (rows, terms) {
+        var term = (terms.search || "").trim().toLowerCase();
+        var status = terms.status;
+        return rows.filter(function (t) {
+          var matchesText = !term || t.title.toLowerCase().indexOf(term) !== -1;
+          var matchesStatus = !status || t.status === status;
+          return matchesText && matchesStatus;
+        });
+      },
+
+      clearFilters: function () {
+        this.filter = { search: "", status: null };
+      },
+
+      goToDetail: function (evt, row) {
+        this.$router.push("/tickets/" + row.id);
+      },
+
+      openModal: function (ticket) {
+        this.selected = ticket;
+        this.modalOpen = true;
+        $("#ticket-modal").modal("show"); // 🅱️ Bootstrap 4 + jQuery
+      },
+
+      closeModal: function () {
+        $("#ticket-modal").modal("hide");
+        this.modalOpen = false;
+        this.selected = null;
+      },
+
+      onSaved: function (formData) {
+        var self = this;
+        var ticket = this.selected;
+        this.saving = true;
+
+        // Lo mismo que hacían TicketCreateView y TicketEditView de F5:
+        // crear completa los campos que pone la vista; editar va por la action de F10.
+        var request = ticket
+          ? this.$store.dispatch("tickets/updateTicket", { id: ticket.id, changes: formData })
+          : ticketService.createTicket(Object.assign({}, formData, {
+            status: "open",
+            reporter: this.$store.getters["auth/currentUser"].username,
+            createdAt: new Date().toISOString()
+          })).then(function (created) {
+            self.$store.commit("tickets/UPSERT_TICKET", created);
+            socketService.emit("ticket:created", created); // 📣 anunciar a los demás, como en F8
+            return created;
+          });
+
+        return request
+          .then(function (saved) {
+            self.closeModal();
+            self.$q.notify({ type: "positive", message: "Ticket #" + saved.id + " guardado" });
+          })
+          .catch(function () {
+            self.$q.notify({ type: "negative", message: "No se pudo guardar el ticket." });
+          })
+          .finally(function () {
+            self.saving = false;
+          });
+      }
+    }
+  )
 };
 </script>
 ```
 
 **🔎 Qué hace, en tres frases:**
-1. `QTable` recibe **todas** las filas del store y se encarga de filtrar, ordenar
-   y paginar en memoria. El componente **no tiene ni una línea** de eso.
-2. Los slots `body-cell-*` inyectan los componentes de F4 sin modificarlos.
-3. El modal de Bootstrap (jQuery) convive en la misma vista, y el store no se entera.
+1. `QTable` recibe **todas** las filas del store (`:data`) y se encarga de filtrar,
+   ordenar y paginar en memoria; el componente solo le da la regla de filtro
+   (`filterTickets`), que también usa el contador para no tener dos.
+2. Los slots `body-cell-*` inyectan los componentes de F4 sin modificarlos, y
+   llevan las anclas de Q0: la red del dashboard no tiene que saber que ya no hay
+   `<table class="table">`.
+3. El modal de Bootstrap (jQuery) convive en la misma vista; guardar va por el
+   servicio y la action de F10, como en las vistas de F5, y el store no se entera
+   de que hay dos frameworks.
 
 **✅ Buenas prácticas aplicadas:**
 - `COLUMNS` y `STATUS_OPTIONS` **fuera de `data()`**. No son reactivos. Meterlos
   en `data()` pone un observer de Vue sobre arrays inmutables: coste sin
   beneficio, y en tablas grandes se nota.
-- `:filter` es un **objeto**, no un string. `QTable` lo vigila con deep watch, así
-  que cambiar `filter.status` re-filtra y **resetea la página**. El watcher
-  anti-bug de F4 (`watch: { statusFilter() { this.page = 1 } }`) **se borra**:
-  el componente ya lo hace.
-- `debounce="300"` en el `q-input` de búsqueda. En F4 no lo tenías (filtrabas en
-  memoria, daba igual). Aquí tampoco hace falta… **hasta que pases a server-side
-  y cada tecla sea un `GET`.** Ponlo ahora, gratis.
-- `loading` viene del store (F3 → F10). **No se crea uno nuevo.**
+- `:filter` es un **objeto** declarado entero en `data()`. `QTable` lo vigila con
+  deep watch, así que cambiar `filter.status` re-filtra y **vuelve a la página 1**
+  (probado: de la 2 a la 1). El watcher anti-bug de F4
+  (`watch: { statusFilter() { this.page = 1 } }`) **se borra**.
+- **Sin `debounce` en la búsqueda.** En modo cliente filtrar en memoria no cuesta
+  nada, y el `debounce` no es gratis: la prueba de Q0 que escribe y cuenta filas
+  en el tick siguiente se pone roja. Ponlo el día que pases a server-side y cada
+  tecla sea un `GET`.
+- `loading` y `error` vienen del store (F3 → F10). **No se crea uno nuevo.**
 - El `summaryCards` computed **se queda**. Es derivación de datos, no
-  presentación de tabla. `QTable` no compite con él. **Migrar no es borrar todo:
-  es borrar lo que el framework hace mejor.**
+  presentación de tabla. **Migrar no es borrar todo: es borrar lo que el
+  framework hace mejor.**
+- `@click.stop` en el botón de editar: sin él, el clic también llega a la fila y
+  el `@row-click` te saca al detalle a la vez que abre el modal.
 
 ### El registro de componentes (⚠️ el fallo de Q1 que vuelve)
 
@@ -1396,26 +1593,57 @@ export default {
 // quasar.conf.js
 framework: {
   components: [
-    "QLayout", "QPageContainer", "QPage", "QBtn", "QInput", "QForm", // de Q1/Q2
+    // … los del kit y los de Q2 (QForm, QInput, QSelect, QBanner) …
     "QTable",     // ← Q3
-    "QTd",        // ← Q3. SIN ESTO LOS SLOTS NO PINTAN. Y no hay error.
-    "QSelect",    // ← Q3 (el filtro de estado)
-    "QIcon",
+    "QTd",        // ← Q3. SIN ESTO, LOS SLOTS SE DESCOLOCAN.
     "QCard", "QCardSection",
-    "QLinearProgress" // ← lo usa QTable para la barra de :loading
+    "QLinearProgress" // ← el slot loading de la vista lo usa
   ],
-  directives: ["Ripple", "ClosePopup"],
   plugins: ["Notify", "Dialog"]  // ← this.$q.notify / this.$q.dialog
 }
 ```
 
+Y los mismos en `tests/unit/setup-quasar.js`, más `QIcon`, para que las pruebas
+monten lo mismo que la app.
+
 > ⚠️ **El clásico de la fase:** declaras `QTable`, te olvidas de `QTd`. La tabla
-> renderiza. Las columnas normales se ven. **Las celdas de tus slots salen
-> vacías.** Sin error en consola. Sin warning. **Nada.** Y tú mirando el
-> `body-cell-status` durante 40 minutos, convencido de que el `name` está mal.
+> renderiza y las columnas normales se ven. Lo de tus slots también, pero suelto:
+> el badge queda dentro de un `<q-td>` crudo que el navegador no trata como celda,
+> y la fila se descuadra. El único aviso, en desarrollo:
 >
-> Es el mismo fallo de Q1, con otro componente. **Cuando algo de Quasar no
-> renderiza y no hay error: es `framework.components`.** Siempre.
+> ```
+> [Vue warn]: Unknown custom element: <q-td> - did you register the component correctly?
+> ```
+>
+> Es el mismo fallo de Q1, con otro componente. **Cuando algo de Quasar se ve a
+> medias y no hay error: es `framework.components`.** Siempre.
+
+### La red de Q0 contra la vista nueva
+
+`npm run test:unit` con la vista de arriba y la red sin tocar: **las 14 pruebas
+del dashboard en rojo**, todas con el mismo mensaje:
+
+```
+TypeError: Cannot read property 'header' of undefined
+```
+
+No es la tabla: es `QPage`, que necesita un `QLayout` ancestro y le lee el
+`header` para calcular su alto. En la app siempre lo tiene; en la prueba, la
+vista se monta sola. Es un ajuste del helper `build()`, como anticipó Q0:
+
+```js
+const wrapper = mount(TicketsView, {
+  localVue: localVue,
+  store: store,
+  router: router,
+  // QPage necesita un QLayout ancestro: la vista se prueba sola, la página es un div
+  stubs: { "q-page": { template: "<div><slot /></div>" } }
+});
+```
+
+Con eso, 12 de 14. Las dos que quedan hacen `setValue("open")` sobre el filtro de
+estado, que ahora es un `QSelect`: el mismo `pick()` de Q2. Las aserciones no
+cambian. **9 suites, 64 pruebas en verde.**
 
 ---
 
@@ -1425,7 +1653,8 @@ framework: {
 
 | # | Síntoma | Causa | Arreglo |
 |---|---|---|---|
-| 1 | Los slots `body-cell-*` no pintan nada. Sin error. | `QTd` no está en `framework.components`. | Declararlo. |
+| 0 | La tabla dice "No data available" y el store tiene tickets. | `:rows` es Quasar 2. En Quasar 1 la prop es `data`. | `:data="allTickets"`. |
+| 1 | Lo de los slots `body-cell-*` sale suelto, fuera de su celda. Solo un warning en desarrollo. | `QTd` no está en `framework.components`. | Declararlo. |
 | 2 | El slot no se aplica, sale la celda por defecto. | El `name` de la columna no coincide con `body-cell-<name>`. Typo. | `name: "status"` ↔ `v-slot:body-cell-status`. |
 | 3 | La tabla se descuadra en móvil, las celdas custom se solapan. | Usaste `<td>` en vez de `<q-td :props="props">`. | `<q-td :props="props">`. Siempre. |
 | 4 | Ninguna columna ordena al clicar la cabecera. | `sortable` es `false` por defecto. | `sortable: true` en cada columna. |
@@ -1435,12 +1664,13 @@ framework: {
 | 8 | Server-side: tabla vacía, sin loading, sin error, al entrar. | `QTable` no dispara `@request` al montarse. | Llamar a `onRequest()` en `created()`. |
 | 9 | Server-side: la tabla pagina **dos veces** (recibes 10 filas y te enseña 10 de 10, pero el footer dice "1-10 de 10"). | `rowsNumber` no está en el objeto de paginación → `QTable` cree que es modo cliente. | `rowsNumber: 0` en el `data()` desde el principio, y asignarlo tras el fetch. |
 | 10 | Server-side: clicas "página 2" y ves la página 1 otra vez. | Copiaste la caché de `fetchTickets` (F10) a `fetchTicketsPaged`. | La action paginada **no cachea**. |
-| 11 | `[vuex] do not mutate vuex store state outside mutation handlers` al ordenar. | `:pagination.sync` contra un computed **sin setter**. | Computed con `get`/`set` → commit. (§4.5, Opción B.) |
-| 12 | Lo mismo que el 11 pero **en producción no da error** — y el time travel de las devtools no muestra nada. | `strict` está apagado en prod (F10). Vuex muta en silencio. | El mismo arreglo. Y **nunca** confíes en que "en prod va bien". |
+| 11 | La tabla no cambia de página ni de orden; en la consola, `Computed property "pagination" was assigned to but it has no setter`. | `:pagination.sync` contra un computed **sin setter**. | Computed con `get`/`set` → commit. (§4.5, Opción B.) |
+| 12 | Lo mismo que el 11 pero **en producción sin ningún mensaje**: una tabla que no pagina. | Los warnings de Vue no salen en el build de producción. | El mismo arreglo. Y **nunca** confíes en que "en prod va bien". |
 | 13 | El layout se rompe al meter `QTable`: márgenes raros, columnas pegadas. | `.row` de Bootstrap vs `.row` de Quasar. | No mezcles grids en el mismo subárbol. §4.7. |
-| 14 | El `<q-select>` dentro del modal Bootstrap se abre **detrás** del modal. | z-index. Bootstrap `1050` vs los portales de Quasar. | Ajustar z-index, o usar `<q-dialog>` en esa vista. |
+| 14 | Abres el modal de Bootstrap desde un `<q-dialog>` y queda **debajo**, con la pantalla bloqueada. | z-index: el modal de Bootstrap está en `1050`; los diálogos y menús de Quasar, en `6000`. (Al revés no pasa: un `q-select` dentro del modal de Bootstrap abre su menú encima.) | No anides un framework dentro del otro en la misma pila de modales; o `<q-dialog>` en esa vista. |
 | 15 | `:filter="search"` (string) funciona, pero al añadir el filtro de estado deja de resetear la página. | `QTable` vigila `:filter` con deep watch. Un objeto nuevo cada vez → OK. Mutar una propiedad de un objeto que Vue no observa → no dispara. | `filter: { search: "", status: null }` declarado en `data()` desde el inicio (así Vue lo observa entero). |
-| 16 | Los tests de Q0 fallan: `wrapper.find(".table")` → no existe. | `QTable` renderiza `.q-table`, no `.table`. | **Este no es un bug: es la lección de Q0.** Si tu test buscaba una clase de Bootstrap, tu test estaba acoplado al DOM. Reescríbelo con `data-testid`. |
+| 16 | Los tests de Q0 fallan al montar: `Cannot read property 'header' of undefined`. | `QPage` necesita un `QLayout` ancestro, y la prueba monta la vista sola. | Stub de `q-page` en el `build()` de la prueba (sección 5). |
+| 17 | Los tests de Q0 fallan: `wrapper.find(".table")` → no existe. | `QTable` renderiza `.q-table`, no `.table`. | **Este no es un bug: es la lección de Q0.** Si tu test buscaba una clase de Bootstrap, tu test estaba acoplado al DOM. Reescríbelo con `data-testid`. |
 
 ### Pieza forense de esta fase
 
@@ -1532,9 +1762,11 @@ slots `body-cell-*` **dejan de aplicarse**. Averigua qué slot los sustituye.
 Genera 5.000 tickets falsos en el `db.json` y compara el rendimiento con la
 paginación normal. Mide con la pestaña Performance.
 
-**16.** El `q-input` de búsqueda tiene `debounce="300"`. Quítalo y añade un
-`console.log` en `filterTickets`. Teclea "urgente". ¿Cuántas veces se ejecuta?
-Ahora ponlo. ¿Cuántas?
+**16.** Añade un `console.log` en `filterTickets` y teclea "urgente". ¿Cuántas
+veces se ejecuta? Ahora pon `debounce="300"` en el `q-input` de búsqueda.
+¿Cuántas? Corre la red de Q0: ¿qué prueba se pone roja y por qué es de tiempo,
+no de comportamiento? Decide si lo dejas (y cómo cambias la ayuda de la prueba)
+o lo quitas.
 
 ---
 
@@ -1648,7 +1880,7 @@ Reglas:
   **di por qué eso es la nota más importante del documento.**
 - **Qué dejaste en Bootstrap y por qué.** Sin decir "por falta de tiempo".
 
-> 🎯 **Este ejercicio es el examen de la ruta.** Q0 te enseñó a escribir la red.
+> 🧭 **Este ejercicio es el examen de la ruta.** Q0 te enseñó a escribir la red.
 > Q1, a leer. Q2 y Q3, a migrar con guía. Aquí no hay red que no hayas tejido tú,
 > ni guía que no seas tú.
 >
@@ -1702,7 +1934,7 @@ Reglas:
 - Headers de respuesta (normalizados a minúsculas) — https://github.com/axios/axios#response-schema
 
 **CORS (el fallo #7)**
-- `Access-Control-Expose-Headers` — https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Access-Control-Expose-Headers
+- `Access-Control-Expose-Headers` — https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers
 
 ---
 

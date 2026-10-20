@@ -1,0 +1,6 @@
+ci=0
+plugin=0
+test_antes_del_fix=1
+    ✕ distingue lista vacía de fallo de carga (14ms)
+    Expected string:
+Tests:       1 failed, 1 total

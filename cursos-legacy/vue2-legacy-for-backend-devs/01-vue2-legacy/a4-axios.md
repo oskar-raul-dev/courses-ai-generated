@@ -491,12 +491,12 @@ ejercicio 32 monta un endpoint de subida real con un middleware Node.
 
 ## 📚 Referencias
 
-- axios — docs: https://axios-http.com/docs/intro
-- Instancias: https://axios-http.com/docs/instance
-- Config de request: https://axios-http.com/docs/req_config
-- Manejo de errores: https://axios-http.com/docs/handling_errors
-- Interceptores: https://axios-http.com/docs/interceptors
-- Cancelación (CancelToken, la de la época): https://axios-http.com/docs/cancellation
+- axios — docs: https://axios.rest/pages/getting-started/first-steps
+- Instancias: https://axios.rest/pages/advanced/create-an-instance
+- Config de request: https://axios.rest/pages/advanced/request-config
+- Manejo de errores: https://axios.rest/pages/advanced/error-handling
+- Interceptores: https://axios.rest/pages/advanced/interceptors
+- Cancelación (CancelToken, la de la época): https://axios.rest/pages/advanced/cancellation
 - MDN — fetch (para la comparación honesta):
   https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 
@@ -508,7 +508,7 @@ ejercicio 32 monta un endpoint de subida real con un middleware Node.
 - MDN — usar archivos desde aplicaciones web:
   https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications
 - MDN — URL.createObjectURL / revokeObjectURL:
-  https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
+  https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static
 - MDN — multipart/form-data (spec del enctype):
   https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Type
 - multer (para el endpoint real del ej. 32): https://www.npmjs.com/package/multer

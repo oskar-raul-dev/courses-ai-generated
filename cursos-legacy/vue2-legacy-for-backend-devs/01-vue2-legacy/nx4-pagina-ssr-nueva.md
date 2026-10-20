@@ -50,6 +50,9 @@ transiciones de página de Nuxt.
   HTML con los eventos dentro, sin ejecutar una línea de JS en el cliente.
 - El timeline **se actualiza en vivo**: si otro usuario cambia el estado del ticket,
   aparece una entrada nueva arriba, sin recargar — pero **solo tras hidratar**.
+  El indicador, en cambio, se queda en «🔴 histórico» en la primera visita aunque los
+  eventos lleguen: lee la conexión una sola vez, antes de que termine el handshake. Es
+  una deuda declarada, y pagarla es el ejercicio 12.
 - `head()` inyectando `<title>` y `<meta>` dinámicos con el título del ticket.
   Demostrado con `curl`: los meta ya vienen en el HTML del servidor.
 - `validate()` rechazando `/tickets/abc/activity` con un 404 **antes** de tocar la
@@ -142,13 +145,19 @@ head: function () {
 }
 ```
 
-**La demostración de la fase** (hazla, no la creas): levanta Nuxt en modo servidor y
+**La demostración de la fase** (hazla, no la creas): levanta Nuxt en modo servidor
+—en el 8080 que fijaste en NX3; el 3000 es de json-server— y
 
 ```bash
-curl -s http://localhost:3000/tickets/1/activity | grep -i "<title>\|description"
+curl -s http://localhost:8080/tickets/1/activity | grep -o "<title>[^<]*</title>\|<meta[^>]*description[^>]*>"
 ```
 
-Verás el `<title>` y el `<meta name="description">` **con el título real del ticket
+```
+<title>Actividad · La impresora no imprime</title>
+<meta data-n-head="ssr" data-hid="description" name="description" content="Historial del ticket #1: La impresora no imprime">
+```
+
+Ahí están el `<title>` y el `<meta name="description">` **con el título real del ticket
 dentro del HTML crudo**, sin que el navegador haya ejecutado nada. Eso es
 literalmente imposible en la Tiquetera a pelo. Guárdate ese `curl`: es la prueba
 tangible de por qué alguien elige pagar el coste de SSR.
@@ -182,7 +191,7 @@ pinta de válida, no que el recurso exista (de eso se encarga `asyncData` con su
 
 ### 1. El modelo nuevo — `db.json`
 
-Añade la colección `activity` (json-server la sirve en `/activity` automáticamente):
+Añade la colección `activity` al `db.json` del tronco, el que sirve el json-server que corre desde `tiquetera-legacy` (NX2); json-server la sirve en `/activity` automáticamente:
 
 ```json
 {
@@ -225,8 +234,8 @@ navegador el trabajo del servidor."*
 
 ### 2. El servicio — `services/activityService.js`
 
-Idéntico en forma a los servicios del tronco. axios se inyecta desde el plugin de
-Nuxt (NX1), pero el servicio no lo sabe ni le importa:
+Idéntico en forma a los servicios del tronco, y por el mismo camino: `apiClient`, el
+de una sola `baseURL` y sin interceptor desde NX2 (la deuda de NX3 sigue ahí):
 
 ```js
 // services/activityService.js
@@ -249,6 +258,15 @@ el orden lo decide el `ORDER BY` del servidor; lo dejamos aquí para que el time
 llegue ya ordenado desde el mock. 💸 (deuda menor, mencionar y seguir).
 
 ### 3. La página — `pages/tickets/_id/activity.vue`
+
+Usa el `socketService` de F8 (con el registro de handlers de F10), que todavía no
+copiaste porque NX2 y NX3 no lo necesitaban, y su librería, que el proyecto Nuxt no
+trae:
+
+```bash
+cp ../tiquetera-legacy/src/services/socketService.js services/
+npm install --save-exact socket.io-client@2.4.0
+```
 
 Aquí vive **todo el híbrido**. Léela entera antes de escribirla:
 
@@ -277,9 +295,9 @@ Aquí vive **todo el híbrido**. Léela entera antes de escribirla:
 </template>
 
 <script>
-import activityService from "@/services/activityService";
-import ticketService from "@/services/ticketService";
-import socketService from "@/services/socketService";
+import activityService from "~/services/activityService";
+import ticketService from "~/services/ticketService";
+import socketService from "~/services/socketService";
 
 export default {
   // ── 1. PORTERO: corre antes que nada. Rechaza ids no numéricos sin tocar la API.
@@ -293,7 +311,7 @@ export default {
     try {
       // dos llamadas en paralelo: el ticket (para el título/head) y su historial
       var results = await Promise.all([
-        ticketService.getById(id),
+        ticketService.getTicketById(id),
         activityService.getByTicket(id)
       ]);
       return {
@@ -332,17 +350,22 @@ export default {
   mounted: function () {
     // ❗ NO re-fetcheamos el historial: asyncData ya lo trajo y ya está pintado.
     // mounted SOLO se suscribe a lo que llegue DE AHORA EN ADELANTE.
-    socketService.on("activity:created", this.onNuevaActividad);
+    socketService.on("activity:created", this.onNewActivity);
+    // en Nuxt no hay App.vue que conecte al iniciar sesión, como en F8: lo hace la
+    // página. connect() es idempotente, así que volver a la página no abre otro.
+    socketService.connect();
+    // foto del momento: la conexión tarda, y en la primera visita esto todavía
+    // dice false. El ejercicio 12 lo vuelve reactivo.
     this.isLive = socketService.isConnected();
   },
 
   // baja simétrica: todo lo que se suscribe, se desuscribe (regla de F8).
   beforeDestroy: function () {
-    socketService.off("activity:created", this.onNuevaActividad);
+    socketService.off("activity:created", this.onNewActivity);
   },
 
   methods: {
-    onNuevaActividad: function (ev) {
+    onNewActivity: function (ev) {
       // solo eventos de ESTE ticket (el socket difunde los de todos)
       if (String(ev.ticketId) !== String(this.ticket.id)) return;
       // unshift = reactivo en Vue 2 (F8). Reasignar por índice NO lo sería.
@@ -391,20 +414,20 @@ o en el panel de soporte de F9):
 
 ```js
 // al confirmar un cambio de estado del ticket:
-var evento = {
+var activity = {
   id: Date.now(),          // 💸 id de mentira; el backend real daría uno de verdad
   ticketId: this.ticket.id,
   type: "status_change",
-  actor: this.usuarioActual.username,
-  from: estadoAnterior,
-  to: nuevoEstado,
+  actor: this.$store.getters["auth/currentUser"].username,
+  from: previousStatus,
+  to: newStatus,
   at: new Date().toISOString()
 };
-socketService.emit("activity:created", evento); // el server lo rebota (broadcast, F8)
+socketService.emit("activity:created", activity); // el server lo rebota (broadcast, F8)
 ```
 
-Y una línea en el server socket de F8 para rebotarlo (mismo patrón que
-`ticket:created`):
+Y una línea en el server socket de F8 (`server/socket-server.js` del tronco) para
+rebotarlo (mismo patrón que `ticket:created`):
 
 ```js
 socket.on("activity:created", function (ev) {
@@ -447,7 +470,7 @@ andamio, no arquitectura.
   (NX2). Formatea de forma determinista o hazlo en `mounted`.
 - **Suscribir sin `beforeDestroy`.** Zombis de F8: navegas dentro/fuera del timeline
   y acumulas handlers. Alta y baja simétricas, con la **misma referencia**
-  (`this.onNuevaActividad`, no una arrow inline distinta en cada lado).
+  (`this.onNewActivity`, no una arrow inline distinta en cada lado).
 
 ### Pieza forense de esta fase
 
@@ -481,7 +504,7 @@ parecen, ya sabes por qué "en local va bien" nunca fue un diagnóstico.
 
 ### 🟢 Fácil (1–8)
 
-1. Levanta la página y hazle `curl -s http://localhost:3000/tickets/1/activity | grep -i title`.
+1. Levanta la página y hazle `curl -s http://localhost:8080/tickets/1/activity | grep -i title`.
    Pega la salida. Confirma que el `<title>` con el nombre del ticket **viaja en el
    HTML del servidor**. Ahora hazlo contra la Tiquetera a pelo (`vue-cli-service serve`)
    y compara: ¿qué `<title>` sale ahí?

@@ -220,12 +220,26 @@ pero es la pieza que necesitas para testear componentes que leen del store
 ### Instalación — la vía Vue CLI (la de la época)
 
 ```bash
-vue add unit-jest
+npm install --save-dev @vue/cli-plugin-unit-jest@3.12.1
+vue invoke unit-jest
+rm tests/unit/example.spec.js
+npm install --save-dev @vue/test-utils@1.3.6
 ```
 
+> ⚠️ **Fija la versión del plugin a la de tu `@vue/cli-service` (3.x).** Un `vue add unit-jest` a secas
+> resuelve hoy la versión 5 del plugin, que es de Vue CLI 5: se instala, pero su generador no termina en
+> este proyecto y no deja ni el script ni la carpeta de tests. Con la 3.12.1, `vue invoke` corre el
+> generador de la época. Y el `example.spec.js` que deja prueba el `HelloWorld.vue` que borraste en la
+> Fase 0: sin el `rm`, tu primera suite empieza en rojo por un test que no es tuyo.
+>
+> La última línea es la única versión que se sube a mano, y por una razón concreta: el plugin 3.12.1
+> trae `@vue/test-utils` 1.0.0-beta.29, donde `setValue` y `trigger` no devuelven una promesa. La
+> 1.3.6 —la última de la línea 1.x, la de Vue 2— sí, y es el API que usan las redes de seguridad de
+> las rutas (X0). Corre con el mismo Jest 23.
+
 El plugin `@vue/cli-plugin-unit-jest` instala y configura todo el combo
-compatible entre sí — Jest, `vue-jest` (compila los `.vue` para Jest),
-`babel-jest`, `@vue/test-utils` — y agrega:
+compatible entre sí — Jest 23, `vue-jest` 3 (compila los `.vue` para Jest),
+`babel-jest` 23 y `@vue/test-utils` (que fijas en la 1.3.6) — y agrega:
 
 ```json
 {
@@ -247,7 +261,7 @@ para desarrollar: `npm run test:unit -- --watch`.
 ### Test 1 — funciones puras: `tests/unit/ticketStats.spec.js`
 
 ```js
-import { countByStatus, resolvedPercent } from "@/utils/ticketStats";
+import { countByStatus, resolvedPercent, initialsOf, scoreBoard } from "@/utils/ticketStats";
 
 describe("ticketStats", function () {
   describe("countByStatus", function () {
@@ -287,13 +301,62 @@ describe("ticketStats", function () {
       expect(resolvedPercent(tickets)).toBe(33); // 33.33... → 33
     });
   });
+
+  describe("initialsOf", function () {
+    it("toma la primera letra de cada palabra, máximo tres", function () {
+      expect(initialsOf("Laura Marcela Cano")).toBe("LMC");
+      expect(initialsOf("Andrés Felipe Ríos Gómez")).toBe("AFR");
+    });
+
+    it("tolera nombre vacío o nulo", function () {
+      expect(initialsOf("")).toBe("");
+      expect(initialsOf(null)).toBe("");
+    });
+  });
+
+  describe("scoreBoard", function () {
+    var users = [{ username: "lmcano", name: "Laura Marcela Cano" }];
+
+    it("suma los resueltos y cerrados según la prioridad", function () {
+      var tickets = [
+        { assignee: "lmcano", status: "resolved", priority: "high" },
+        { assignee: "lmcano", status: "closed", priority: "low" },
+        { assignee: "lmcano", status: "open", priority: "high" }
+      ];
+
+      expect(scoreBoard(tickets, users)).toEqual([
+        expect.objectContaining({ initials: "LMC", solved: 2, points: 400 })
+      ]);
+    });
+
+    it("pinta ??? cuando el usuario ya no existe", function () {
+      var tickets = [{ assignee: "jpmesa", status: "resolved", priority: "medium" }];
+      expect(scoreBoard(tickets, users)).toEqual([
+        expect.objectContaining({ initials: "???", solved: 1, points: 200 })
+      ]);
+    });
+
+    it("ordena por puntos, de mayor a menor", function () {
+      var tickets = [
+        { assignee: "jpmesa", status: "resolved", priority: "low" },
+        { assignee: "lmcano", status: "resolved", priority: "high" }
+      ];
+      var order = scoreBoard(tickets, users).map(function (row) { return row.initials; });
+      expect(order).toEqual(["LMC", "???"]);
+    });
+  });
 });
 ```
 
 **🔎 Qué hace:** prueba las funciones de la Fase 7 con datos mínimos
-inventados — nota que los tickets de prueba solo tienen `status`: **el
-mínimo dato que la función necesita**, nada de objetos completos copiados de
-`db.json`.
+inventados — nota que los tickets de prueba solo tienen los campos que cada
+función lee (`status`; y `assignee` y `priority` en la tabla de puntajes):
+**el mínimo dato que la función necesita**, nada de objetos completos copiados
+de `db.json`. Lo que la suite **no** fija a propósito es la 💸 de la tabla de
+puntajes —agrupar por iniciales— ni la forma exacta de cada fila
+(`objectContaining`): esa deuda la paga el incidente 13 del cuaderno, que
+agrega campos a la fila, y un test que la congelara se pondría rojo justo con
+el arreglo.
 
 **✅ Buenas prácticas aplicadas:**
 - **Los casos borde son el test**: la lista vacía (¿división por cero?) y el
@@ -792,7 +855,7 @@ commit: el par `ej/f11/3-roto` / `ej/f11/3-fix` existe para eso.
 - Jest — timer mocks (ej. 21): https://jestjs.io/docs/timer-mocks
 - Vue CLI — plugin unit-jest: https://cli.vuejs.org/core-plugins/unit-jest.html
 - Vue 2 — Unit Testing (guía oficial de la época):
-  https://v2.vuejs.org/v2/guide/unit-testing.html
+  https://v2.vuejs.org/v2/cookbook/unit-testing-vue-components.html
 
 **Video / apoyo**
 
@@ -862,7 +925,7 @@ pelo": encima hay un framework. Por eso el curso ofrece **tres rutas**, y eliges
 
 Y todas arrancan en el mismo sitio, que es **exactamente donde acabas de llegar**:
 
-> 🛡️ **X0 — La red de seguridad.** Antes de migrar una sola línea, escribes
+> 🧭 **X0 — La red de seguridad.** Antes de migrar una sola línea, escribes
 > tests de **regresión** sobre el CRUD y el dashboard *tal como están hoy*. ¿Te
 > suena? Es este cierre hecho fase: el "test de guardia tras un bug" que
 > aprendiste aquí, aplicado a "¿esto sigue haciendo lo mismo con otro framework

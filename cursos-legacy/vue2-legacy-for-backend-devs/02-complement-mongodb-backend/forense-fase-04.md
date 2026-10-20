@@ -63,45 +63,59 @@ mongosh y la herramienta gráfica.
 
 ### Paso 2 — ¿qué tipo tiene de verdad el valor que mandas?
 
-Con la regla delante, compara tipo por tipo, no valor por valor:
+Con la regla delante, compara tipo por tipo, no valor por valor. Y fíjate en
+**desde dónde** se carga: el script del compañero corre en el servidor de
+pruebas, con el shell clásico `mongo` que trae la imagen 4.4, no con `mongosh`:
 
 ```js
 > db.tickets.insertOne({ title: "Prueba", status: "open", priority: "high",
                          createdAt: new Date(), schemaVersion: 3 })
-MongoServerError: Document failed validation
+WriteError({
+	"index" : 0,
+	"code" : 121,
+	"errmsg" : "Document failed validation",
+	"op" : { …, "schemaVersion" : 3 }
+})
 > typeof 3
-'number'
+number
 > db.tickets.insertOne({ …, schemaVersion: NumberInt(3) })
-{ acknowledged: true, insertedId: ObjectId("…") }
+{ "acknowledged" : true, "insertedId" : ObjectId("…") }
 ```
 
 **Qué descarta.** Cierra el caso más clásico de la fase, el que se lleva una
-hora y media de todo el mundo la primera vez: **JavaScript no tiene enteros**. El
-driver manda `double` por defecto, y un `bsonType: "int"` lo rechaza aunque el
-número sea `3` a la vista. Las salidas son dos, y son decisión de diseño:
-mandar `NumberInt()` desde el cliente, o relajar la regla a `"number"`.
+hora y media de todo el mundo la primera vez: **JavaScript no tiene enteros**, y
+cada cliente decide qué BSON manda. El shell clásico manda un `3` como `double`,
+y un `bsonType: "int"` lo rechaza aunque el número sea `3` a la vista; `mongosh`
+y el driver de Node mandan ese mismo `3` como `int`, y pasa. Por eso "es
+idéntico" y "a mí me funciona" son ciertos a la vez: el documento es el mismo,
+el cliente no. Las salidas son dos, y son decisión de diseño: mandar
+`NumberInt()` desde el cliente, o relajar la regla a `"number"`.
 
 La misma trampa con otra ropa: `createdAt` como string ISO contra un
 `bsonType: "date"`, que es el eco de la [Fase 1](forense-fase-01.md).
 
-### Paso 3 — ¿y si el que falla es el seed?
+### Paso 3 — ¿y si el seed pasa… y se lleva el validator?
 
-Variante que descoloca, porque parece un fallo del curso:
+Variante que descoloca, porque parece que todo va bien:
 
 ```bash
 npm run seed
+# Seed OK: 3 users, 3 tickets, 1 comments
 ```
 
-```
-MongoServerError: Document failed validation
+```js
+> db.getCollectionInfos({ name: "tickets" })[0].options
+{}
 ```
 
-**Qué descarta.** Descarta el validator como sospechoso y **le da la razón**. Si
-el seed de la [Fase 1](forense-fase-01.md) no pasa la validación que acabas de
-poner, la validación acaba de encontrarle un bug al seed: llevabas semanas
-sembrando documentos que no cumplen tus propias invariantes. Es el resultado
-correcto y el más incómodo, y por eso conviene decirlo en voz alta antes de que
-alguien "arregle" el validator para que el seed vuelva a pasar.
+**Qué descarta.** Descarta que el seed cumpla tus invariantes: no las cumple ni
+las incumple, **las borra**. El seed de la [Fase 1](forense-fase-01.md) empieza
+con `dropDatabase()`, y el validator vive en las opciones de la colección: se va
+con ella. Desde ese momento la base acepta cualquier cosa, sin un solo aviso, y
+el próximo "Document failed validation" no llega nunca. Si tu validator importa,
+el seed lo vuelve a poner después de crear las colecciones (o las crea con
+`createCollection` y su `validator`), y un `npm run seed` seguido de
+`getCollectionInfos` entra en tu verificación.
 
 ### Paso 4 — ¿por qué entonces sí entró ese documento inválido?
 

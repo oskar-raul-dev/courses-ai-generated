@@ -1,0 +1,139 @@
+{
+  "tickets": [
+    {
+      "id": 1,
+      "title": "La impresora no imprime",
+      "description": "Otra vez. Tercera vez esta semana.",
+      "status": "open",
+      "priority": "high",
+      "assignee": "lmcano",
+      "reporter": "dprios",
+      "createdAt": "2020-03-10T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "title": "No me llega el correo",
+      "description": "Desde ayer en la tarde no recibo nada.",
+      "status": "in_progress",
+      "priority": "medium",
+      "assignee": "jpmesa",
+      "reporter": "cvelez",
+      "createdAt": "2020-03-11T09:30:00Z"
+    },
+    {
+      "id": 3,
+      "title": "Solicitud de acceso a carpeta compartida",
+      "description": "Necesito acceso a la carpeta de Finanzas.",
+      "status": "resolved",
+      "priority": "low",
+      "assignee": "lmcano",
+      "reporter": "mrestrepo",
+      "createdAt": "2020-03-08T14:15:00Z"
+    },
+    {
+      "id": 4,
+      "title": "No abre el cuadre de caja del sábado",
+      "description": "",
+      "status": "resolved",
+      "priority": "high",
+      "assignee": "lmcano",
+      "reporter": "dprios",
+      "createdAt": "2022-06-06T09:00:00Z"
+    },
+    {
+      "id": 5,
+      "title": "La factura no sale con el NIT",
+      "description": "",
+      "status": "resolved",
+      "priority": "medium",
+      "assignee": "lmcano",
+      "reporter": "dprios",
+      "createdAt": "2022-06-07T10:00:00Z"
+    },
+    {
+      "id": 6,
+      "title": "El datáfono no conecta",
+      "description": "",
+      "status": "resolved",
+      "priority": "low",
+      "assignee": "lmcano",
+      "reporter": "dprios",
+      "createdAt": "2022-06-08T11:00:00Z"
+    },
+    {
+      "id": 7,
+      "title": "No llega el correo de la resolución",
+      "description": "",
+      "status": "resolved",
+      "priority": "medium",
+      "assignee": "lmcorrea",
+      "reporter": "dprios",
+      "createdAt": "2022-06-06T14:00:00Z"
+    },
+    {
+      "id": 8,
+      "title": "Error al cerrar turno",
+      "description": "",
+      "status": "resolved",
+      "priority": "high",
+      "assignee": "lmcorrea",
+      "reporter": "dprios",
+      "createdAt": "2022-06-07T15:00:00Z"
+    },
+    {
+      "id": 9,
+      "title": "Reimprimir factura de ayer",
+      "description": "",
+      "status": "resolved",
+      "priority": "low",
+      "assignee": "lmcorrea",
+      "reporter": "dprios",
+      "createdAt": "2022-06-08T16:00:00Z"
+    },
+    {
+      "id": 10,
+      "title": "Cambio de clave del cajero",
+      "description": "",
+      "status": "closed",
+      "priority": "low",
+      "assignee": "jpmesa",
+      "reporter": "dprios",
+      "createdAt": "2022-06-09T08:00:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "name": "Andrés Felipe Ríos",
+      "role": "agent"
+    },
+    {
+      "id": 2,
+      "username": "lmcano",
+      "name": "Laura Marcela Cano",
+      "role": "agent"
+    },
+    {
+      "id": 3,
+      "username": "dprios",
+      "name": "Diana Patricia Ríos",
+      "role": "reporter"
+    },
+    {
+      "id": 4,
+      "username": "lmcorrea",
+      "name": "Laura Milena Correa",
+      "role": "agent"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "ticketId": 1,
+      "author": "lmcano",
+      "body": "¿Probaste apagarla y prenderla?",
+      "createdAt": "2020-03-10T10:30:00Z"
+    }
+  ]
+}

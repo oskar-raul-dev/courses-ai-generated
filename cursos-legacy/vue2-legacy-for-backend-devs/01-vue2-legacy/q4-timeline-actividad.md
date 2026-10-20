@@ -9,7 +9,7 @@
 
 ## 🎯 Propósito
 
-> 🔗 **Vienes de Q3**, que cerró con: *"ya migraste. Ahora construye algo que no
+> 📚 **Vienes de Q3**, que cerró con: *"ya migraste. Ahora construye algo que no
 > existía — Quasar puro, sin traducir."* Esta es esa fase.
 
 Q2 y Q3 fueron traducciones: tenías un formulario, te dieron `QForm`; tenías una
@@ -200,7 +200,7 @@ lo que crea el riesgo de duplicados del ejercicio 22. Un solo "sí" no es cero.
 > Mismo dominio, distinto estado, **distinto veredicto**. Eso es criterio y no dogma:
 > "el timeline es local" es falso como regla; es verdadero **para este estado**.
 
-> 🔌 **¿Y por qué `activity:created` NO va al `socketPlugin` de F10?** Buena
+> 🧠 **¿Y por qué `activity:created` NO va al `socketPlugin` de F10?** Buena
 > pregunta, porque en F10 hiciste justo lo contrario: sacaste los handlers de
 > socket de las vistas y los centralizaste en un **plugin de Vuex**
 > (`store/plugins/socketPlugin.js`), que escucha `ticket:created` / `ticket:updated`
@@ -233,7 +233,8 @@ y los filtros (`?ticketId=1`, `_sort`, `_order`) sin escribir una línea.
 ### 2. `src/services/activityService.js`
 
 Mismo patrón de F3, misma arquitectura del curso (Componente → Store → services/ →
-apiClient → API). **El `apiClient` viene del boot file de Q1**, no de `main.js`.
+apiClient → API). El `apiClient` es el de `services/`, el que el traslado de Q2
+trajo del tronco sin tocarlo.
 
 ```js
 // src/services/activityService.js
@@ -328,7 +329,8 @@ de botella por donde pasan todos los cambios:
 // store/modules/tickets.js — la action YA EXISTE en F10. Le añadimos la línea 💸.
 updateTicket: function (context, payload) {
   // payload: { id, changes }  ← firma de F10, no la inventamos
-  var before = context.getters.ticketById(payload.id); // getter-función de F10
+  // || {}: si el ticket no está en el store (llegó por otra vía), no hay "antes" que comparar
+  var before = context.getters.ticketById(payload.id) || {}; // getter-función de F10
 
   return ticketService
     .updateTicket(payload.id, payload.changes)
@@ -371,7 +373,11 @@ por otro, y unificarlos es trabajo. Es F10 cobrando intereses.
 > manda los dos). Por eso derivamos **cero, uno o dos** eventos del mismo PATCH, en
 > vez de asumir un evento por llamada.
 
-### 5. `TicketActivity.vue` — Quasar puro
+### 5. `src/components/TicketActivity.vue` — Quasar puro
+
+Estrena cinco componentes: `QTimeline`, `QTimelineEntry`, `QChip`, `QSkeleton` y
+`QBadge` van a `framework.components` (y a `tests/unit/setup-quasar.js`) antes de
+nada.
 
 ```vue
 <template>
@@ -469,7 +475,7 @@ export default {
     },
 
     formatDate: function (iso) {
-      return new Date(iso).toLocaleString();
+      return new Date(iso).toLocaleString("es-CO"); // la fecha en español, no en el idioma del navegador
     },
 
     load: function () {
@@ -506,6 +512,7 @@ export default {
 
     this.onActivityHandler = this.onActivity.bind(this);
     socketService.on("activity:created", this.onActivityHandler);
+    // foto del momento: si el socket todavía se está abriendo, dice false
     this.live = socketService.isConnected();
   },
 
@@ -534,55 +541,60 @@ export default {
 ### 6. Uso desde el detalle (dentro del `QLayout` de Q1)
 
 ```html
-<!-- src/pages/TicketDetail.vue -->
-<q-page class="q-pa-md">
-  <div class="row q-col-gutter-md">
-    <div class="col-12 col-md-7">
-      <!-- 🤝 el formulario de Q2. Firma REAL de F5: prop initialTicket, evento @submit -->
-      <ticket-form :initial-ticket="ticket" @submit="onSubmit" @cancel="onCancel" />
-    </div>
-    <div class="col-12 col-md-5">
-      <!-- :key fuerza el remount al cambiar de ticket: la lista muere y renace. A propósito. -->
-      <ticket-activity :key="ticket.id" :ticket-id="ticket.id" />
+<!-- src/views/TicketDetailView.vue: la vista de detalle de F5, que trajo el traslado.
+     El formulario NO está aquí: vive en TicketEditView. Al detalle se le suma la columna. -->
+<!-- ...el spinner y el error de carga de F5, igual... -->
+<div v-else-if="ticket" class="row q-col-gutter-md">
+  <div class="col-12 col-md-7">
+    <page-title :title="'#' + ticket.id + ' — ' + ticket.title" />
+    <p>{{ ticket.description }}</p>
+    <p>
+      <strong>Estado:</strong> {{ ticket.status }} ·
+      <strong>Prioridad:</strong> {{ ticket.priority }} ·
+      <strong>Asignado a:</strong> {{ ticket.assignee }}
+    </p>
+    <div class="mt-4">
+      <router-link
+        :to="'/tickets/' + ticket.id + '/edit'"
+        class="btn btn-outline-primary mr-2"
+      >
+        ✏️ Editar
+      </router-link>
+      <button class="btn btn-outline-danger" :disabled="deleting" @click="removeTicket">
+        {{ deleting ? "Eliminando..." : "🗑️ Eliminar" }}
+      </button>
     </div>
   </div>
-</q-page>
+  <div class="col-12 col-md-5">
+    <!-- :key fuerza el remount al cambiar de ticket: la lista muere y renace. A propósito. -->
+    <ticket-activity :key="ticket.id" :ticket-id="ticket.id" />
+  </div>
+</div>
 ```
 
 ### 7. El flujo completo, evento por evento
 
+```mermaid
+sequenceDiagram
+    participant A as Pestaña A (lmcorrea cambia el estado)
+    participant S as Server (json-server en el puerto 3000, y socket)
+    participant B as Pestaña B (mirando el mismo ticket)
+    A->>A: 1. click en En progreso
+    A->>A: 2. dispatch tickets/updateTicket
+    A->>S: 3. PATCH /tickets/1
+    S-->>A: 200 con status in_progress
+    A->>A: 4. commit UPSERT_TICKET: la tabla de Q3 se repinta (Vuex)
+    A->>A: 5. 💸 activityEmitter.record
+    A->>S: 6. POST /activity
+    S-->>A: 201 con id 42
+    A->>S: 7. socket emit activity:created
+    S->>B: 8. socket.broadcast.emit
+    Note over B: 9. onActivity: ¿a.ticketId === mío? SÍ, entries.unshift(a). QTimelineEntry nuevo, arriba
+    Note over A: A no recibe el broadcast: ya lo tiene del .then del POST. Cero duplicados
 ```
-PESTAÑA A (lmcorrea cambia el estado)         SERVER            PESTAÑA B (mirando el mismo ticket)
-        │                                        │                        │
-1. click en "En progreso"                        │                        │
-        │                                        │                        │
-2. dispatch("tickets/updateTicket", {id:1, changes:{status:"in_progress"}})
-        │                                        │                        │
-3. PATCH /tickets/1 ────────────────────► json-server (:3000)             │
-        │◄──────────────── 200 {..., status:"in_progress"}                │
-        │                                        │                        │
-4. commit("UPSERT_TICKET") → la tabla de Q3 se repinta (Vuex)             │
-        │                                        │                        │
-5. 💸 activityEmitter.record(...)                │                        │
-        │                                        │                        │
-6. POST /activity ───────────────────────► json-server                    │
-        │◄──────────────── 201 { id: 42, ... }                            │
-        │                                        │                        │
-7. socket.emit("activity:created", saved) ──────►│                        │
-        │                                        │                        │
-8.      │                     socket.broadcast.emit(...) ────────────────►│
-        │                                        │                        │
-9.      │                                        │      onActivity(a) → ¿a.ticketId === mío?
-        │                                        │      SÍ → entries.unshift(a)
-        │                                        │      🎨 QTimelineEntry nuevo, arriba
-        │                                        │
-   (A no recibe el broadcast — ya lo tiene       │
-    del .then del POST. Cero duplicados.)        │
 
-⚠️ Pestaña C, mirando OTRO ticket: recibe el broadcast en el paso 8,
-   el filtro del paso 9 dice NO, se descarta. El evento viaja igual.
-   Eso es tráfico que no sirve → ejercicio 🟠 18 (rooms por ticket).
-```
+> ⚠️ Pestaña C, mirando OTRO ticket: recibe el broadcast en el paso 8, el filtro del paso 9 dice NO,
+> se descarta. El evento viaja igual. Eso es tráfico que no sirve → ejercicio 🟠 18 (rooms por ticket).
 
 ---
 
@@ -591,10 +603,12 @@ PESTAÑA A (lmcorrea cambia el estado)         SERVER            PESTAÑA B (mir
 ### Errores comunes
 
 - **`color="#ff9800"` en un `QChip`** → no pasa nada, literalmente. Quasar aplica
-  clases (`bg-orange`), no estilos inline. Usa la paleta o define brand colors.
+  clases, no estilos inline: el chip sale con la clase `bg-#ff9800`, que no existe.
+  Usa la paleta (`orange`) o define brand colors.
 - **Componente no declarado** en `framework.components` de `quasar.conf.js`
-  (`QTimeline`, `QTimelineEntry`, `QChip`, `QSkeleton`, `QBanner`) → **no renderiza
-  y no hay error claro**. El error clásico de Q1, cobrándose su tercera víctima.
+  (`QTimeline`, `QTimelineEntry`, `QChip`, `QSkeleton`, `QBadge`) → **no renderiza**:
+  queda la etiqueta cruda con su texto, y el único aviso es un `Unknown custom
+  element` en desarrollo. El error clásico de Q1, cobrándose su tercera víctima.
 - **No filtrar por `ticketId`** en el handler del socket → ves en el timeline del
   ticket 1 los eventos del ticket 7. Y lo peor: **parece** que funciona hasta que
   hay dos usuarios trabajando a la vez.
@@ -626,8 +640,10 @@ estas alturas ya reconoces los cuatro modos en que Quasar falla sin decir nada, 
 Comprueba el silencio una última vez, ahora que ya lo esperas: quita
 `QTimelineEntry` de `framework.components` y deja `QTimeline`.
 
-La línea de tiempo se pinta **vacía**, con su marco y sin sus entradas. Ningún
-error. Si esta vez lo diagnosticaste en menos de un minuto, la ruta cumplió.
+La línea de tiempo pierde la línea, los puntos y los títulos: el texto de cada
+entrada queda suelto dentro de un `<q-timeline-entry>` crudo. En la consola de
+desarrollo, un `Unknown custom element: <q-timeline-entry>`; en producción, nada.
+Si esta vez lo diagnosticaste en menos de un minuto, la ruta cumplió.
 
 > 📄 El recorrido completo, con las salidas literales, en
 > [`forense-ruta-q.md`](forense-ruta-q.md).

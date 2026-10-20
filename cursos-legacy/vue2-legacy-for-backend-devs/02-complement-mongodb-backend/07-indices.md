@@ -211,7 +211,8 @@ El contrato exige buscar en `title` y `description`. Dos caminos de época:
 ```js
 // Camino 1: regex — el que ya usas desde la Fase 2
 db.tickets.find({ $or: [ { title: /impresora/i }, { description: /impresora/i } ] })
-// anclado (/^impre/) usa índice; flotante e insensible: COLLSCAN. Tu LIKE '%..%'.
+// anclado (/^impre/) acota el índice; flotante o insensible: lo recorre entero
+// (o COLLSCAN si no hay índice en title). Tu LIKE '%..%'.
 
 // Camino 2: índice de texto (uno solo por colección)
 db.tickets.createIndex({ title: "text", description: "text" },
@@ -336,8 +337,11 @@ db.tickets.createIndex({ title: 1 })
 db.tickets.find({ title: /impresora/ }).explain("executionStats").executionStats
 ```
 
-Sigue en COLLSCAN, y el índice existe. Ancla ahora el regex (`/^impresora/`) y
-vuelve a medir. Los tres números juntos son la explicación entera.
+Ahora dice `IXSCAN`… y examina las 100.000 claves del índice, y en la base del
+generador tarda más que el COLLSCAN de antes (40 ms contra 24). Ancla el regex
+(`/^La impresora/`) y vuelve a medir: 11.203 claves. Los tres números juntos son
+la explicación entera, y la lección de la fase: **`IXSCAN` no quiere decir
+"bien"**.
 
 > 📄 El recorrido completo, con las salidas literales, en
 > [`forense-fase-07.md`](forense-fase-07.md).
@@ -401,20 +405,20 @@ explain antes/después — sin números no cuenta.
 
 **Documentación oficial (4.4)**
 
-- Indexes (el hub): https://www.mongodb.com/docs/v4.4/indexes/
-- Compound Indexes y prefijos: https://www.mongodb.com/docs/v4.4/core/index-compound/
-- Multikey Indexes: https://www.mongodb.com/docs/v4.4/core/index-multikey/
-- Partial Indexes: https://www.mongodb.com/docs/v4.4/core/index-partial/
-- TTL Indexes: https://www.mongodb.com/docs/v4.4/core/index-ttl/
-- Text Indexes: https://www.mongodb.com/docs/v4.4/core/index-text/
-- `explain` Results (el diccionario del plan): https://www.mongodb.com/docs/v4.4/reference/explain-results/
-- `$indexStats`: https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/indexStats/
-- Query Plans (el planner y su caché): https://www.mongodb.com/docs/v4.4/core/query-plans/
+- Indexes (el hub): https://www.mongodb.com/docs/manual/indexes/
+- Compound Indexes y prefijos: https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/
+- Multikey Indexes: https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/
+- Partial Indexes: https://www.mongodb.com/docs/manual/core/index-partial/
+- TTL Indexes: https://www.mongodb.com/docs/manual/core/index-ttl/
+- Text Indexes: https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/
+- `explain` Results (el diccionario del plan): https://www.mongodb.com/docs/manual/reference/explain-results/
+- `$indexStats`: https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexstats/
+- Query Plans (el planner y su caché): https://www.mongodb.com/docs/manual/core/query-plans/
 
 **La regla ESR (fuentes de época)**
 
-- The ESR (Equality, Sort, Range) Rule — MongoDB docs/blog: https://www.mongodb.com/docs/v4.4/tutorial/equality-sort-range-rule/
-- Performance Best Practices: Indexing (serie del blog oficial, 2020): https://www.mongodb.com/blog/post/performance-best-practices-indexing
+- The ESR (Equality, Sort, Range) Rule — MongoDB docs/blog: https://www.mongodb.com/docs/manual/tutorial/equality-sort-range-guideline/
+- Performance Best Practices: Indexing (serie del blog oficial, 2020): https://www.mongodb.com/company/blog/performance-best-practices-indexing
   (verifica que el ejemplo use sintaxis 4.4; el post se actualiza sin avisar)
 
 **Libros**

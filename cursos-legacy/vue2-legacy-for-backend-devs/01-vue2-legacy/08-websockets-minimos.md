@@ -36,7 +36,8 @@ Lo que realmente se aprende:
 - al crear un ticket (formulario o wizard), las **demás** pestañas/usuarios:
   - ven una notificación toast con el título del ticket,
   - y si están en el dashboard, la fila aparece en la tabla al instante;
-- indicador "🟢 en vivo / 🔴 sin conexión" en el header;
+- indicador "🟢 en vivo" / "🔴" en el header, con el aviso «Sin conexión en vivo» al
+  pasar el puntero;
 - listeners con alta y baja simétricas (mounted/beforeDestroy).
 
 ## 🚫 Qué NO entra todavía
@@ -255,12 +256,17 @@ del ejercicio 15 de la Fase 3 pasa de opcional a recomendado:
 {
   "scripts": {
     "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "mock": "json-server --watch db.json --port 3000",
     "sockets": "node server/socket-server.js",
     "dev": "concurrently \"npm run mock\" \"npm run sockets\" \"npm run serve\""
   }
 }
 ```
+
+Si no instalaste `concurrently` en el ejercicio 15 de la Fase 3, ahora toca:
+`npm install --save-dev concurrently@5.3.0`, la versión de la época que corre en Node 14.
 
 ### 2. `services/socketService.js` — el singleton del cliente
 
@@ -338,8 +344,11 @@ auth en el handshake, se toca un archivo.
 ### 3. Conexión ligada a la sesión: `App.vue`
 
 ```js
-// agregar al export default de App.vue
+// agregar a App.vue: los dos imports, el registro de LiveToast (sección 4) y el resto
+import LiveToast from "./components/common/LiveToast.vue";
 import socketService from "./services/socketService";
+
+components: { AppHeader, AppSidebar, LiveToast },
 
 computed: {
   showLayout: function () {

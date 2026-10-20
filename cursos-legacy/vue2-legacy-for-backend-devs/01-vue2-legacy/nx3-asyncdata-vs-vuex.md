@@ -17,8 +17,9 @@ vez sin pagar algo:
 
 - Si carga **`asyncData`** → SSR de verdad (SEO, TTFB), pero **el store no tiene
   los tickets** y el resto de la app depende de él.
-- Si carga **Vuex** → el store sigue siendo la verdad, pero **el HTML llega
-  vacío** y se rellena en cliente: perdiste el SSR que viniste a buscar.
+- Si carga **Vuex** como en F10, desde `mounted()` → el store sigue siendo la
+  verdad, pero **el HTML llega vacío** y se rellena en cliente: perdiste el SSR
+  que viniste a buscar.
 
 Esta fase **no es** "aprende `asyncData`". Es la fase donde **decides quién
 carga los datos y lo defiendes por escrito** — el mismo ejercicio de criterio de
@@ -28,7 +29,7 @@ F10, con otro eje. Allí la pregunta era *qué estado se vuelve global*. Aquí e
 > La regla de la fase: la respuesta honesta es **"depende"**, y "depende" no es
 > una excusa para no decidir — es una obligación de argumentar. Igual que en F10.
 
-> 🎯 Esta fase **sustituye** a "migrar el dashboard" de Q3/VU3. El conflicto es
+> 📝 Esta fase **sustituye** a "migrar el dashboard" de Q3/VU3. El conflicto es
 > el mismo en **espíritu** (*el framework quiere el trabajo que tu store ya
 > hace*), pero el eje es **otro**: allí peleabas la **paginación** contra
 > `QTable`; aquí no hay tabla nueva. El dashboard es el mismo HTML de NX2. Lo
@@ -68,24 +69,18 @@ F10, con otro eje. Allí la pregunta era *qué estado se vuelve global*. Aquí e
 En el tronco, un componente cargaba sus datos en `created()` o `mounted()`:
 el componente nacía, y **después** pedía. Con `asyncData` el orden se invierte:
 
-```
-         ┌──────────── SERVIDOR (Node) ────────────┐
-petición → asyncData(context)  ──→  devuelve {tickets}
-             (pide a la API)              │
-                                          ▼
-                             se FUSIONA con data()
-                                          │
-                                          ▼
-                          el componente se crea YA con los datos
-                                          │
-                                          ▼
-                          HTML renderizado CON los tickets dentro
-         └─────────────────────────────────────────┘
-                                          │  (viaja al navegador)
-                                          ▼
-         ┌──────────── CLIENTE (browser) ───────────┐
-                          hidratación: revive el HTML
-         └──────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph SRV["SERVIDOR (Node)"]
+        P["petición"] --> AD["asyncData(context) pide a la API y devuelve tickets"]
+        AD --> MER["se FUSIONA con data()"]
+        MER --> CR["el componente se crea YA con los datos"]
+        CR --> HTML["HTML renderizado con los tickets dentro"]
+    end
+    HTML -- "viaja al navegador" --> HID
+    subgraph CLI["CLIENTE (navegador)"]
+        HID["hidratación: revive el HTML"]
+    end
 ```
 
 Las cuatro cosas que tienes que interiorizar de `asyncData`:
@@ -199,13 +194,14 @@ export default {
 // store/index.js — nuxtServerInit: la sesión y lo global, una vez, en servidor
 export const actions = {
   // ⬇️ nombre reservado. Nuxt la llama sola, en el servidor, antes de renderizar.
-  nuxtServerInit: function (context, nuxtContext) {
-    // nuxtContext.req existe: aquí lees la COOKIE de sesión (la de NX2)
-    // y rehidratas auth ANTES de que cualquier guard corra.
-    // Es donde la auth de F2 (rota en NX2) queda por fin bien en SSR.
-    var token = leerCookie(nuxtContext.req, "token");
+  nuxtServerInit: function (context) {
+    // Corre en el servidor, con la request a la mano: this.$cookies (NX2) lee
+    // la COOKIE de sesión que trajo, y rehidratas auth ANTES de que cualquier
+    // guard corra. Es donde la auth de F2 (rota en NX2) queda por fin bien en SSR.
+    var token = this.$cookies.get("token");
+    var user = this.$cookies.get("user");
     if (token) {
-      context.commit("auth/SET_TOKEN", token, { root: true });
+      context.commit("auth/SET_SESSION", { token: token, user: user });
     }
   }
 };
@@ -297,11 +293,16 @@ No hay respuesta universal. Hay una **decisión defendida**:
 - ✅ el store sigue siendo la verdad. Panel, métricas y socket funcionan como en
   F10, sin tocar nada. `mapGetters` intacto.
 - ✅ el `fetch()` corre también en servidor, así que **sí hay SSR** de los
-  tickets (llegan en el HTML vía estado serializado del store — Nuxt inyecta
-  `window.__NUXT__` con el state).
-- ❌ es un SSR más "indirecto": los datos viajan como estado hidratado, no como
-  HTML semántico puro. Para SEO de contenido suele bastar; para casos extremos
-  de TTFB, `asyncData` gana por un pelo.
+  tickets: el HTML llega con la tabla pintada, igual que con `asyncData`, y
+  además Nuxt serializa el state del store en `window.__NUXT__` para que el
+  cliente no vuelva a pedir. (`asyncData` también serializa lo suyo, en
+  `__NUXT__.data`: el dato viaja dos veces en las dos opciones.)
+- ❌ un fallo de carga **no cambia el status**: con la API caída, la página
+  responde `200` con el aviso pintado. `fetch()` no tiene `error()` en la mano
+  como `asyncData`; el 503 hay que ponerlo a mano (lo verás en el código).
+- ❌ al navegar en cliente, `fetch()` **no bloquea** la navegación: la página
+  aparece y los datos llegan después. `asyncData` espera a tenerlos. Es la razón
+  de que el `loading` resucite en esta opción.
 
 **La respuesta honesta para la Tiquetera:** dado que los tickets **ya cumplían las
 cuatro preguntas de F10** (multi-vista, sobreviven navegación, multi-fuente,
@@ -319,6 +320,46 @@ honesta sería la contraria. **El criterio, no el dogma, decide.**
 
 ## 💻 Código de la fase
 
+### Antes de la página: el módulo de F10 entra a `store/`
+
+`fetch()` va a despachar `tickets/fetchTickets`, y en el proyecto Nuxt todavía no
+hay ningún módulo `tickets`. Se copia el de F10 con tres ajustes, ninguno en la
+lógica de la action:
+
+1. `src/store/modules/tickets.js` va a **`store/tickets.js`**. Como en NX2 con
+   `auth`, el nombre del archivo **es** el módulo: el `namespaced: true` de F10
+   sobra (no estorba) y `dispatch("tickets/fetchTickets")` lo encuentra.
+2. Su import pasa de `@/services/ticketService` a `~/services/ticketService`.
+3. El `state` de F10 es un objeto y en Nuxt tiene que ser una **función que lo
+   devuelve**: el servidor arma un store nuevo por cada request, y un objeto
+   compartido mezclaría los datos de un visitante con los del siguiente. Si se te
+   pasa, la terminal lo dice al arrancar:
+
+```
+ WARN  'state' should be a method that returns an object in store/tickets.js
+```
+
+```js
+// store/tickets.js — el único cambio de forma
+const state = function () {
+  return {
+    items: [],
+    loading: false,
+    error: ""
+  };
+};
+```
+
+Y una comprobación que viene de NX2: `services/apiClient.js` ya no debe tener el
+interceptor de F2. `fetchTickets` llega a `apiClient` por `ticketService`, y ahora
+la primera llamada ocurre **en el servidor**. Si el interceptor sigue leyendo
+`localStorage`, la página responde `200`, la tabla sale vacía y la terminal lo
+delata:
+
+```
+ ERROR  Error in fetch(): localStorage is not defined
+```
+
 ### El dashboard, versión "el store manda" (la decisión defendida)
 
 ```vue
@@ -327,6 +368,8 @@ honesta sería la contraria. **El criterio, no el dogma, decide.**
   <div class="container mt-3">
     <!-- loading: solo se ve al navegar en cliente; en SSR nunca. Y está bien. -->
     <div v-if="loading" class="text-muted">Cargando tickets…</div>
+
+    <div v-else-if="$fetchState.error" class="alert alert-danger">{{ storeError }}</div>
 
     <TicketTable v-else :tickets="allTickets" />
     <!-- 🔎 TicketTable es el componente TONTO de F4: recibe tickets por prop,
@@ -337,7 +380,7 @@ honesta sería la contraria. **El criterio, no el dogma, decide.**
 
 <script>
 import { mapState, mapGetters } from "vuex";
-import TicketTable from "~/components/TicketTable.vue";
+import TicketTable from "~/components/tickets/TicketsTable.vue";
 
 export default {
   components: { TicketTable: TicketTable },
@@ -345,7 +388,15 @@ export default {
   // ⬇️ fetch (con this): corre en servidor la 1ª vez, en cliente al navegar.
   //    Despacha la MISMA action de F10. La vista no sabe que está en Nuxt.
   fetch: function () {
-    return this.$store.dispatch("tickets/fetchTickets");
+    var nuxt = this.$nuxt;
+    return this.$store.dispatch("tickets/fetchTickets").catch(function (err) {
+      // la action de F10 re-lanza el error. En el servidor, que la respuesta
+      // diga la verdad: 503, no 200.
+      if (process.server) {
+        nuxt.context.res.statusCode = 503;
+      }
+      throw err; // y $fetchState.error queda puesto
+    });
   },
 
   // desde Nuxt 2.12, fetch expone su propio estado de carga:
@@ -370,6 +421,8 @@ export default {
 |---|---|
 | `fetch()` despachando `tickets/fetchTickets` | reusa la action de F10 **sin tocarla**. El store se llena en el servidor; el HTML sale con estado hidratado |
 | `this.$fetchState.pending` | el `loading` de F3, ahora provisto por Nuxt — y solo relevante en navegación cliente |
+| `$fetchState.error` + `storeError` | el `error` de F3: el aviso lo pinta la vista, con el mensaje que dejó la action de F10 |
+| el `.catch` con `statusCode = 503` | sin él, la API caída responde `200` con el aviso pintado. Es lo que `asyncData` resuelve con `error()` |
 | `allTickets` (getter de F10) | la vista lee del store, igual que en F10. Panel y métricas leen del mismo sitio: **fuente única intacta** |
 | `TicketTable` con `:tickets` | el componente tonto de F4. En Nuxt, "tonto" no es estilo: es requisito de SSR |
 
@@ -406,12 +459,21 @@ export default {
 
 ### 💸 La deuda de las dos `baseURL`
 
-json-server corre en `localhost:3000`. Tu app Nuxt, en `localhost:3000`… no,
-espera: Nuxt sirve en otro puerto. Y aquí aparece la deuda propia de la fase.
+json-server corre en `localhost:3000`, que también es el puerto por defecto de
+Nuxt. En `dev`, Nuxt no se pelea: avisa y se va a otro, distinto en cada arranque.
+
+```
+ WARN  Address localhost:3000 is already in use.
+ℹ Trying a random port...
+ℹ Listening on: http://localhost:33753/
+```
+
+Fíjalo, como el 8080 de Vue CLI en el tronco, y aparece la deuda propia de la fase:
 
 ```js
 // nuxt.config.js
 export default {
+  server: { port: 8080 },   // NX4 y los ejercicios cuentan con él
   axios: {
     // el navegador pide a esta (la PÚBLICA):
     browserBaseURL: "http://localhost:3000",
@@ -422,6 +484,10 @@ export default {
 ```
 
 En desarrollo las dos apuntan al mismo sitio y parece redundante. **No lo es.**
+Y ojo con a quién gobiernan: son del `$axios` del módulo, el que usan
+`asyncData` y el plugin de NX2. Los `services/` del tronco siguen hablando por
+`apiClient`, que tiene **una sola** `baseURL` escrita a mano y, desde NX2, ningún
+token. En la Opción B, la que elegiste, los tickets viajan por ahí.
 
 > 💸 **Deuda.** En producción el servidor Node y el navegador **no comparten
 > dirección**. El servidor habla con el backend por **red interna**
@@ -430,7 +496,9 @@ En desarrollo las dos apuntan al mismo sitio y parece redundante. **No lo es.**
 > backend. Aquí las igualamos porque todo corre en tu máquina, pero **el día que
 > despliegues, si solo configuras una, la mitad de las peticiones fallará** — y
 > el error será desconcertante porque "en mi máquina funciona". `browserBaseURL`
-> vs `baseURL` es el gancho donde se paga. *(Relacionado: el CORS de json-server
+> vs `baseURL` es el gancho donde se paga, y en esta app todavía no cubre el
+> camino de los tickets: pagarla de verdad es que los `services/` reciban el
+> `$axios` inyectado en vez de importar `apiClient` (ejercicio 23). *(Relacionado: el CORS de json-server
 > también muerde distinto según quién pida — el servidor Node no tiene política
 > de origen; el navegador sí.)*
 
@@ -440,8 +508,8 @@ En desarrollo las dos apuntan al mismo sitio y parece redundante. **No lo es.**
 
 ### Errores comunes
 
-1. **`this.$store` dentro de `asyncData`.** `TypeError: Cannot read 'store' of
-   undefined`. No hay `this`. Usa `context.store`. (Y si necesitas `this`, la
+1. **`this.$store` dentro de `asyncData`.** `TypeError: Cannot read property
+   '$store' of undefined`, y la página responde `500`. No hay `this`. Usa `context.store`. (Y si necesitas `this`, la
    herramienta es `fetch()`, no `asyncData`.)
 2. **Poner `asyncData` en un componente hijo.** No corre, y no avisa fuerte.
    `asyncData` **solo funciona en `pages/`**. El componente de F4 no puede
@@ -520,7 +588,8 @@ en tu aplicación.
 6. Desestructura el contexto de `asyncData` a `{ $axios, params }` y usa esa
    forma. Confirma que sigue funcionando. (Es cosmética, pero verás ambas en
    legacy.)
-7. Cambia `browserBaseURL` a un puerto equivocado dejando `baseURL` bien.
+7. En la página de la Opción A (la de "La alternativa"), cambia
+   `browserBaseURL` a un puerto equivocado dejando `baseURL` bien.
    ¿Qué peticiones fallan: las de recarga (SSR) o las de navegación (cliente)?
    Diagnostica por qué **solo esas**.
 8. Añade `nuxtServerInit` en `store/index.js` que haga `console.log` con la
@@ -589,8 +658,9 @@ en tu aplicación.
 23. Las dos `baseURL` de verdad: simula producción con json-server en un
     puerto "interno" (3001) y un proxy en otro "público" (3000). Configura
     `baseURL: :3001` (servidor) y `browserBaseURL: :3000` (navegador) y consigue
-    que la app funcione con AMBAS rutas activas a la vez. Documenta qué petición
-    salió por cada una.
+    que la app funcione con AMBAS rutas activas a la vez. Para que cubra los
+    tickets, los `services/` tienen que pedir por el `$axios` inyectado y no por
+    `apiClient`. Documenta qué petición salió por cada una.
 
 **🔴 Muy difícil (24–28)**
 

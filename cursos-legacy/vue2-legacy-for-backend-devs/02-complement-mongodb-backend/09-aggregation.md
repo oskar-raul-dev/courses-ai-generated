@@ -491,7 +491,7 @@ la huella dactilar del bug.
 db.tickets.aggregate([
   { $group: { _id: "$status", total: { $sum: 1 } } }   // $status = el VALOR
 ])
-// [ { "_id":"open", "total":41230 }, { "_id":"closed", "total":38110 }, ... ]
+// [ { "_id":"closed", "total":58977 }, { "_id":"open", "total":17875 }, ... ]  (la base de scripts/generate.js)
 ```
 
 **La lección de depuración** (aplica al 80% de los pipelines rotos de la
@@ -587,15 +587,15 @@ encima de cada pipeline.
 
 **Documentación oficial (4.4)**
 
-- Aggregation Pipeline (el hub): https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline/
-- Referencia de etapas (el diccionario): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation-pipeline/
-- Operadores de expresión ($cond, $subtract, fechas...): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/
-- `$group` y acumuladores: https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/group/
-- `$facet`: https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/facet/
-- `$merge` (la vista materializada): https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/merge/
-- Pipeline Optimization (releída: ahora entiendes cada línea): https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline-optimization/
-- SQL to Aggregation Mapping Chart (el diccionario oficial de esta fase): https://www.mongodb.com/docs/v4.4/reference/sql-aggregation-comparison/
-- Límites del pipeline (100 MB, allowDiskUse): https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline-limits/
+- Aggregation Pipeline (el hub): https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
+- Referencia de etapas (el diccionario): https://www.mongodb.com/docs/manual/reference/mql/aggregation-stages/
+- Operadores de expresión ($cond, $subtract, fechas...): https://www.mongodb.com/docs/manual/reference/mql/expressions/
+- `$group` y acumuladores: https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
+- `$facet`: https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
+- `$merge` (la vista materializada): https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
+- Pipeline Optimization (releída: ahora entiendes cada línea): https://www.mongodb.com/docs/manual/core/aggregation-pipeline-optimization/
+- SQL to Aggregation Mapping Chart (el diccionario oficial de esta fase): https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/
+- Límites del pipeline (100 MB, allowDiskUse): https://www.mongodb.com/docs/manual/core/aggregation-pipeline-limits/
 
 **Libros**
 
@@ -644,7 +644,7 @@ La señal de que quedó bien:
 > real aparece, crear/editar/tomar/eliminar se reflejan, los comentarios
 > listan ordenados, **las métricas del dashboard siguen calculando en cliente
 > sin errores** (la deuda 💸 aún viva: la pagará el `GET /stats` que acabas de
-> escribir), y el `git diff` del frontend es **exactamente una línea**.
+> escribir), y el `git diff` del frontend es **a lo sumo una línea**.
 > Córrelo entero: es la prueba de que la migración fue invisible.
 
 > 🏷️ **No cierres la fase sin el tag.** Con el checklist de arriba en verde y

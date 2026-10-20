@@ -43,11 +43,18 @@ Antes de mirar nada, mira **la terminal donde corre Nuxt**, no la consola del
 navegador:
 
 ```
- ERROR  window is not defined
+ ERROR  [Vue warn]: Error in created hook: "ReferenceError: window is not defined"
 
-  at ticketService.js:14
-  at TicketsPage.created (pages/tickets/index.vue:31)
+found in
+
+---> <TicketsPage> at pages/tickets/index.vue
+       <Nuxt>
+         <.nuxt/layouts/default.vue> at .nuxt/layouts/default.vue
+           <Root>
 ```
+
+(La primera línea dice el hook —`created`— y el error; el árbol, de abajo arriba, dice el
+componente. El navegador recibe un 500.)
 
 **Qué descarta.** Descarta el navegador entero y localiza el bug en un solo
 paso. `window` no existe en Node: si ese error aparece en la terminal, el código

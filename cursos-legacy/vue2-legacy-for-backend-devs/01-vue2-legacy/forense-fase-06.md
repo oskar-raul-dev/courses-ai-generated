@@ -64,12 +64,15 @@ estaría vivo y el caso sería otro — salta al paso 3.
 Mira la plantilla del wizard, solo esa línea:
 
 ```bash
-grep -n "component :is\|keep-alive" src/views/TicketWizardView.vue
+grep -n "keep-alive\|:is=" src/views/TicketWizardView.vue
 ```
 
 ```
-84:      <component :is="currentStepComponent" ref="stepComponent" />
+12:          :is="currentStepComponent"
 ```
+
+(El patrón es `:is=` y no `component :is` porque la etiqueta ocupa varias líneas:
+`<component` en una, `:is="…"` en la siguiente.)
 
 **Qué descarta.** Cierra la primera mitad del caso. `<component :is>` **destruye
 y monta** por diseño: es su contrato. `keep-alive` es lo que lo convierte en

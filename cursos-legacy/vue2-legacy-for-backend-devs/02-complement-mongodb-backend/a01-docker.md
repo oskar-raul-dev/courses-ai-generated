@@ -16,6 +16,12 @@ el bug clásico de cada una explicado desde la raíz.
 > avanzados, registries privados. Si tu legacy los tiene, este apéndice te
 > deja en condiciones de leer su doc — no de operarlos.
 
+> 🧭 **Si trabajas en un Mac con chip M**, la arquitectura agrega una capa que
+> este apéndice no cubre: imágenes arm64 y amd64, Rosetta dentro de la máquina
+> virtual de Docker, la suite de la Fase 13 con `--platform linux/amd64` y la
+> imagen de la API construida para un servidor Intel. Está en el
+> [Apéndice 7 del Curso 01](../01-vue2-legacy/a7-docker-colima.md).
+
 ---
 
 ## 🧠 Imagen, contenedor, volumen: los tres sustantivos
@@ -86,7 +92,7 @@ host→contenedor: **los contenedores entre sí no lo necesitan** (podrías
 borrar el `ports` de mongo y la API seguiría funcionando; solo perderías tu
 acceso desde mongosh).
 
-> 💥 **El bug clásico del `rs.initiate` (F14, ej. 28):** si inicias el replica
+> ⚠️ **El bug clásico del `rs.initiate` (F14, ej. 28):** si inicias el replica
 > set declarando `host: "localhost:27017"`, el propio Mongo se anuncia como
 > "localhost" — y cuando la API (desde otro contenedor) se conecta y descubre
 > la topología, intenta hablarle a *su propio* localhost y falla. La cura:
@@ -120,7 +126,7 @@ services:
   api:
     build: .                                     # ⑤ construye desde tu Dockerfile
     environment:
-      - MONGO_URL=mongodb://mongo:27017/tiquetera?replicaSet=rs0   # ⑥ hostname de red
+      - MONGO_URL=mongodb://mongo:27017/tiquetera   # ⑥ hostname de red, sin ?replicaSet (F14)
       - JWT_SECRET=${JWT_SECRET:?definelo_en_.env}                # ⑦ sin default: EXIGIDO
     ports: ["3000:3000", "4000:4000"]
     depends_on:
@@ -132,7 +138,7 @@ services:
     profiles: ["ops"]                            # ⑨ no arranca con `up`; se invoca
     volumes: ["./backups:/backups"]
     entrypoint: >
-      mongodump --uri="mongodb://mongo:27017/?replicaSet=rs0" --oplog --gzip --out=/backups/manual
+      mongodump --uri="mongodb://mongo:27017/" --oplog --gzip --out=/backups/manual
 ```
 
 **Las nueve piezas:**
@@ -292,11 +298,11 @@ docker system df / docker system prune  # cuánto ocupa / limpiar basura
 **Documentación oficial**
 
 - Docker — Get Started (conceptos): https://docs.docker.com/get-started/
-- Compose file reference (v3.8 — la del curso): https://docs.docker.com/compose/compose-file/compose-file-v3/
-- Compose — variables de entorno y `${VAR:-def}` / `${VAR:?err}`: https://docs.docker.com/compose/environment-variables/
-- Storage — volumes vs bind mounts: https://docs.docker.com/storage/
-- Networking en Compose (los hostnames de servicio): https://docs.docker.com/compose/networking/
-- Dockerfile best practices (el orden de capas está aquí): https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+- Compose file reference (v3.8 — la del curso): https://docs.docker.com/reference/compose-file/legacy-versions/
+- Compose — variables de entorno y `${VAR:-def}` / `${VAR:?err}`: https://docs.docker.com/compose/how-tos/environment-variables/
+- Storage — volumes vs bind mounts: https://docs.docker.com/engine/storage/
+- Networking en Compose (los hostnames de servicio): https://docs.docker.com/compose/how-tos/networking/
+- Dockerfile best practices (el orden de capas está aquí): https://docs.docker.com/build/building/best-practices/
 - Imagen oficial de MongoDB: https://hub.docker.com/_/mongo
 - Imagen oficial de Node: https://hub.docker.com/_/node
 

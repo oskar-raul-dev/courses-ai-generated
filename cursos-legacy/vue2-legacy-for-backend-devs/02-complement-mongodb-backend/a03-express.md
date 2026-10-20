@@ -215,7 +215,7 @@ res.set("Content-Type", ...)     // F12: los streams
 res.sendStatus(404)              // status + cuerpo de texto: OJO, rompe el contrato JSON
 ```
 
-> 💥 **`req.query` no siempre es un string.** `?status=open` te da `"open"`.
+> ⚠️ **`req.query` no siempre es un string.** `?status=open` te da `"open"`.
 > Pero `?status[$ne]=null` te da **un objeto** `{ $ne: null }` — porque el
 > parser de query strings de Express soporta sintaxis anidada. Ese objeto,
 > pasado directo a un filtro de Mongo, **es la inyección NoSQL de la Fase 11**.
@@ -321,16 +321,16 @@ const asyncHandler = fn => (req, res, next) =>
 
 **Documentación oficial**
 
-- Express 4 — Guide: https://expressjs.com/en/guide/routing.html
-- Express 4 — Using middleware: https://expressjs.com/en/guide/using-middleware.html
-- Express 4 — **Error handling** (lee "the default error handler" y llora un poco): https://expressjs.com/en/guide/error-handling.html
-- Express 4 — API reference (req, res, Router): https://expressjs.com/en/4x/api.html
-- Express — Production best practices (performance y seguridad): https://expressjs.com/en/advanced/best-practice-performance.html
-- Express 5 — Migration guide (lo que cambia, incluido el async): https://expressjs.com/en/guide/migrating-5.html
+- Express 4 — Guide: https://expressjs.com/en/guide/routing/
+- Express 4 — Using middleware: https://expressjs.com/en/guide/using-middleware/
+- Express 4 — **Error handling** (lee "the default error handler" y llora un poco): https://expressjs.com/en/guide/error-handling/
+- Express 4 — API reference (req, res, Router): https://expressjs.com/en/4x/api/
+- Express — Production best practices (performance y seguridad): https://expressjs.com/en/advanced/best-practice-performance/
+- Express 5 — Migration guide (lo que cambia, incluido el async): https://expressjs.com/en/guide/migrating-5/
 - morgan: https://github.com/expressjs/morgan
 - cors: https://github.com/expressjs/cors
 - express-async-errors (30 líneas, léelas): https://github.com/davidbanham/express-async-errors
-- MDN — CORS (la verdad sobre el preflight): https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+- MDN — CORS (la verdad sobre el preflight): https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS
 
 **Video (YouTube)**
 

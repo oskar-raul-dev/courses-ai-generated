@@ -33,13 +33,12 @@ La división del trabajo:
 - **Babel** resuelve ④: traduce (*transpila*) JavaScript moderno a JavaScript
   viejo, según qué navegadores declares soportar.
 
-```
-main.js ──import──▶ App.vue ──▶ router, store, components, axios, bootstrap.css...
-   └──────────────── webpack recorre el grafo ────────────────┘
-          cada archivo pasa por su loader ▼
-   .vue → vue-loader │ .js → babel-loader │ .css → css-loader
-                     ▼
-        dist/  →  app.[hash].js + chunk-vendors.[hash].js + css + index.html
+```mermaid
+flowchart LR
+    MAIN["main.js"] -- "import" --> APP["App.vue"]
+    APP --> DEPS["router, store, components, axios, bootstrap.css"]
+    DEPS -- "webpack recorre el grafo; cada archivo pasa por su loader" --> LOAD["vue-loader (.vue), babel-loader (.js), css-loader (.css)"]
+    LOAD --> DIST["dist: app.hash.js, chunk-vendors.hash.js, css e index.html"]
 ```
 
 ## 🚚 Los loaders — el traductor de cada dialecto

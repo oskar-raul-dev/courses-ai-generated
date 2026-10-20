@@ -42,18 +42,21 @@ null}}` en el login.
 POST /auth/login
 { "username": { "$ne": null }, "password": { "$ne": null } }
 // El findOne({username, password}) matchea al PRIMER usuario. Estás dentro.
-// ⚠️ Tu Fase 11 ya no es vulnerable a la parte del password (bcrypt compara
-//    un hash, no el filtro) — pero el `username` como objeto SIGUE entrando
-//    al filtro. Pruébalo: ¿qué usuario te devuelve?
+// ⚠️ El login de la Fase 11 corta esto en su primera línea (username y password
+//    tienen que ser strings → 400). Quítala y pruébalo: el password como objeto
+//    no entra (bcrypt no lo compara: 500), pero el `username` como objeto SÍ
+//    entra al filtro y te devuelve al primer usuario, admin.
 
 // ATAQUE 2 — Fuga de filtros por query string
-GET /tickets?status[$ne]=zzz       // trae TODOS (ningún status es "zzz")
+GET /tickets?status[$ne]=zzz       // trae TODOS (ningún status es "zzz"): contra el
+                                   // servicio de la Fase 10 tal cual, entra
 GET /tickets?status[$regex]=.*     // idem, con regex
 GET /tickets?assignee[$exists]=false   // los que nadie tomó, aunque no debas verlos
 
 // ATAQUE 3 — DoS por regex (ReDoS)
 GET /tickets?q=(a+)+$              // regex catastrófico: la CPU del server, tuya
-// (y sin índice, además: COLLSCAN + backtracking exponencial — F2/F7)
+// (y sin índice, además: COLLSCAN + backtracking exponencial — F2/F7).
+// Tu Fase 10 ya lo desactiva: escapeRegex convierte el patrón en texto literal.
 
 // ATAQUE 4 — $where: ejecución de JavaScript en el servidor
 { "$where": "sleep(5000) || true" }
@@ -312,19 +315,19 @@ proxy → `app.set("trust proxy", 1)` o limitarás al proxy, no al atacante.
 
 **OWASP (la fuente)**
 
-- OWASP API Security Top 10 (2019 — la de la época; y compara con 2023): https://owasp.org/API-Security/editions/2019/en/0x00-header/
-- OWASP — Testing for NoSQL Injection: https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection
+- OWASP API Security Top 10 (2019 — la de la época; y compara con 2023): https://api-security.owasp.org/editions/2019/en/0x00-header/
+- OWASP — Testing for NoSQL Injection: https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/07-Injection/05.6-NoSQL_Injection/
 - OWASP — File Upload Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html
 - OWASP — Authentication Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
-- OWASP — JSON Web Token Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html
+- OWASP — JSON Web Token Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html
 - OWASP — Node.js Security Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html
 
 **Documentación oficial**
 
-- MongoDB 4.4 — Security Checklist (el ej. 34 sale de aquí): https://www.mongodb.com/docs/v4.4/administration/security-checklist/
-- MongoDB 4.4 — Enable Auth: https://www.mongodb.com/docs/v4.4/tutorial/enable-authentication/
-- MongoDB — `$where` y riesgos de scripting: https://www.mongodb.com/docs/v4.4/reference/operator/query/where/
-- helmet: https://helmetjs.github.io/
+- MongoDB 4.4 — Security Checklist (el ej. 34 sale de aquí): https://www.mongodb.com/docs/manual/administration/security-checklist/
+- MongoDB 4.4 — Enable Auth: https://www.mongodb.com/docs/manual/tutorial/enable-authentication/
+- MongoDB — `$where` y riesgos de scripting: https://www.mongodb.com/docs/manual/reference/operator/query/where/
+- helmet: https://helmet.js.org/
 - express-rate-limit: https://github.com/express-rate-limit/express-rate-limit
 - express-mongo-sanitize: https://github.com/fiznool/express-mongo-sanitize
 - express-validator: https://express-validator.github.io/docs/

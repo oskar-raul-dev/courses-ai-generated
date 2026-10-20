@@ -1,0 +1,34 @@
+// TicketsView.vue — methods
+methods: {
+  // Lo llama el @click de un <q-btn>. Un botón de QUASAR.
+  openModal: function (ticket) {
+    this.selected = ticket && ticket.id ? ticket : null;
+    this.editing = !!(ticket && ticket.id);
+
+    // Abre el modal de BOOTSTRAP 4 con jQuery. El patrón imperativo de A1,
+    // encapsulado en esta vista (o mejor, en un ConfirmModal.vue frontera).
+    // eslint-disable-next-line no-undef
+    $("#ticket-modal").modal("show");
+  },
+
+  closeModal: function () {
+    // eslint-disable-next-line no-undef
+    $("#ticket-modal").modal("hide");
+  },
+
+  // Lo emite el <ticket-form>, que por dentro es un <q-form> (Q2).
+  // El formulario no habla con la API (F5): guarda la vista.
+  onSaved: function (formData) {
+    var self = this;
+    return this.$store
+      .dispatch("tickets/updateTicket", { id: this.selected.id, changes: formData })
+      .then(function (saved) {
+        self.closeModal();
+        // Y esto va al store. Que no sabe nada de nada.
+        self.$store.commit("ui/FLASH", {
+          type: "success",
+          text: "Ticket #" + saved.id + " guardado"
+        });
+      });
+  }
+}

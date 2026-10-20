@@ -86,14 +86,21 @@ Vas a googlear un error y vas a caer en un post de 2018. Aprende a datar el cód
 | Versión | Vue | Estado | Cómo la reconoces |
 |---|---|---|---|
 | **v0.x** (2016–2018) | Vue 2 | 💀 **Muerta.** Sin soporte, docs caídas | Componentes en `kebab-case` sin prefijo claro, `q-layout` con props raras, `quasar.conf.js` distinto o inexistente |
-| **v1.x** (2019–2022) | **Vue 2.6** | ✅ **La nuestra.** Options API | `QBtn`, `QLayout`, `quasar.conf.js` con `framework: { components: [...] }` |
-| **v2.x** (2021–hoy) | Vue 3 | 🔮 Actual, **fuera de scope** | `quasar.conf.js` **sin** `framework.components` (auto-import), Composition API, `createApp` |
+| **v1.x** (2019–2022) | **Vue 2.6** (2.7 desde `@quasar/app` 2.4) | ✅ **La nuestra.** Options API | `QBtn`, `QLayout`, `quasar.conf.js` con `framework: { all: false, components: [...] }` (lista a mano) o con `all: 'auto'` / `importStrategy: 'auto'` (sin lista) |
+| **v2.x** (2021–hoy) | Vue 3 | 🔮 Actual, **fuera de scope** | auto-import por defecto, Composition API, `createApp` |
 
-> 🔎 **Qué hace:** la señal más rápida para saber si estás en v1 o v2 es abrir `quasar.conf.js` y buscar `framework: { components: [...] }`.
-> - Si hay una **lista larga de componentes** → **v1.x**. Es tu curso.
-> - Si `framework` solo tiene `plugins` y `config` → **v2.x**. No es tu curso.
+> 🧠 **Qué hace:** la señal que no falla es `package.json`: `"quasar": "^1..."` es v1 y `"^2..."` es
+> v2. La de `quasar.conf.js` afina cuál v1 tienes delante:
+> - `all: false` y una **lista larga de componentes** → v1 con **`@quasar/app` 1.x en modo manual**,
+>   el de 2019–2020. Es el de esta ruta.
+> - `all: 'auto'`, o `importStrategy: 'auto'` sin lista → v1 con auto-import (`@quasar/app` 1.x o
+>   2.x). También es Vue 2; la lista y su error clásico simplemente no están.
 
-Nosotros usamos **Quasar 1.22.x**, la última v1. Vue 2.6.14. Options API. Igual que todo el curso base.
+Nosotros usamos **Quasar 1.22.10**, la última v1, sobre **`@quasar/app` 1.9.6**: el CLI de app de
+2020, con la lista a mano, que es lo que trae un repo Quasar de esa época. Ese `@quasar/app` fija
+**Vue 2.6.11**, no la 2.6.14 del tronco: dentro de la 2.6 no cambia nada de lo que el curso usa, y no
+conviene subirla a mano (`vue` y `vue-template-compiler` desparejos son el incidente 01). Options API.
+Igual que todo el curso base.
 
 ---
 
@@ -123,20 +130,28 @@ Además, seamos honestos: casi nadie usa el plugin de Vue CLI en producción. Qu
 ### 4.3 `quasar create` y lo que genera
 
 ```bash
-npm i -g @quasar/cli@1
-quasar create tiquetera-q
+npm i -g @quasar/cli@1.2.2
+quasar create tiquetera-q --branch app-v1
 ```
+
+Las dos versiones importan. `@quasar/cli@1` a secas instala la 1.4.0, que ya no crea proyectos
+oficiales: responde *"This command is now reserved only for scaffolding with CUSTOM starter kits or
+legacy v0.x projects."* Y la rama `app-v1` es el kit de `@quasar/app` 1.x; sin ella sale el de
+`@quasar/app` 2.x, con auto-import y, desde su 2.4, Vue 2.7.
 
 Te pregunta cosas. Para este curso, responde:
 
 | Pregunta | Respuesta | Por qué |
 |---|---|---|
+| Project name, product name, description, author | Enter | Los valores por defecto sirven |
 | CSS preprocessor | **Sass with SCSS syntax** | Es el default de la mayoría de repos legacy |
-| Features | **ESLint**, **Vuex**, **Axios** | Vuex 3 (F10), axios (F2). Sin TypeScript, sin Composition |
-| Icon set | **Material Icons** | Default de Quasar 1 |
-| Quasar language pack | **es** o **en-us** | Da igual |
-| ESLint preset | **Standard** | El que menos ruido hace |
-| Build mode | **SPA** | No PWA. No SSR. Q1 es SPA y punto |
+| Import strategy | **Manually specify what to import** | El modo de los repos de 2019–2020: la lista de la sección 6 |
+| Features | **Vuex**, **Axios** (desmarca ESLint, que viene marcado) | Vuex 3 (F10), axios (F2). Sin TypeScript, sin Composition. Sin ESLint: con el preset Standard, el build de la Tiquetera que Q2 trae entera falla con decenas de errores por archivo (comillas dobles y punto y coma, el estilo del tronco) |
+| Cordova/Capacitor id | Enter | Solo importa en apps móviles |
+| Install dependencies | **Yes, use NPM** | El curso usa npm |
+
+No pregunta por el icon set ni por el idioma (vienen `material-icons` y `en-us`, y se cambian en
+`framework`), ni por el modo de build: `quasar dev` sin `-m` ya es SPA, y Q1 es SPA y punto.
 
 Lo que sale:
 
@@ -144,7 +159,6 @@ Lo que sale:
 tiquetera-q/
 ├── quasar.conf.js          ← 🔥 el archivo. Acá vive todo lo de main.js + vue.config.js
 ├── package.json
-├── .eslintrc.js
 ├── src/
 │   ├── App.vue             ← existe, pero está VACÍO (solo <router-view/>)
 │   ├── boot/               ← 🔥 acá va apiClient + interceptores (F2)
@@ -153,6 +167,7 @@ tiquetera-q/
 │   ├── css/
 │   │   ├── app.scss
 │   │   └── quasar.variables.scss
+│   ├── index.template.html ← el index.html, como plantilla
 │   ├── layouts/            ← 🔥 concepto nuevo. NO existe en Vue CLI
 │   │   └── MainLayout.vue
 │   ├── pages/              ← lo que en el curso base eran "vistas"
@@ -161,12 +176,12 @@ tiquetera-q/
 │   ├── router/
 │   │   ├── index.js        ← NO lo tocas casi nunca
 │   │   └── routes.js       ← 🔥 acá SÍ. Mismo Vue Router 3 de F1
+│   ├── statics/            ← lo que en Vue CLI era public/ (favicon, íconos)
 │   └── store/              ← Vuex 3. Igual que F10. Cero sorpresas
-├── public/
-└── dist/                   ← el build
+└── dist/spa/               ← el build (`quasar build`)
 ```
 
-> 🔎 **Qué hace:** notá lo que **NO está**.
+> 🧠 **Qué hace:** fíjate en lo que **NO está**.
 > - **No hay `main.js`.** Quasar lo genera en tiempo de build.
 > - **No hay `vue.config.js`.** Su lugar lo ocupa `quasar.conf.js`.
 > - **No hay `index.html` "tuyo"** — hay `src/index.template.html`, que es un template, no el archivo final.
@@ -208,6 +223,9 @@ module.exports = function (ctx) {
     framework: {
       iconSet: 'material-icons',
       lang: 'es',
+
+      // modo manual (lo que eligió quasar create): solo entra lo de la lista
+      all: false,
 
       // ⚠️⚠️ ACÁ ESTÁ EL ERROR CLÁSICO. Ver sección 6.
       // En Quasar 1, TODO componente que uses en un <template>
@@ -252,7 +270,7 @@ module.exports = function (ctx) {
     devServer: {
       port: 8080,
       open: true,
-      proxy: {                 // el mismo proxy de json-server (F3)
+      proxy: {                 // el proxy del Apéndice 5, hacia el json-server de F3
         '/api': {
           target: 'http://localhost:3000',
           changeOrigin: true,
@@ -270,18 +288,23 @@ module.exports = function (ctx) {
 }
 ```
 
-> ✅ **Buenas prácticas al leer un `quasar.conf.js` ajeno:**
+El kit trae `lang: 'en-us'`, `plugins: []` y ningún `proxy`; lo de arriba es como queda el archivo
+cuando la Tiquetera declara lo que usa (Q2 agrega `Notify` y `Dialog`). Y deja en `package.json`
+`"productName": "Quasar App"`, que es el título de la pestaña del navegador: cámbialo por
+`"Tiquetera"`.
+
+> 💡 **Buenas prácticas al leer un `quasar.conf.js` ajeno:**
 > 1. Mira `boot:` → te dice **qué se inicializa** antes de arrancar la app.
 > 2. Mira `framework.plugins:` → te dice **qué `$q.*` puedes usar**.
 > 3. Mira `framework.components:` → si un componente **no está ahí**, no lo vas a poder usar. Es tu primera línea de debugging.
 > 4. Mira `build.vueRouterMode:` → te dice si las URLs llevan `#` o no.
 > 5. Mira `devServer.proxy:` → te dice **contra qué backend pega en dev** (acá, json-server de F3).
-> 6. El resto (`ssr`, `pwa`, `electron`, `cordova`) **ignoralo** si el proyecto es SPA.
+> 6. El resto (`ssr`, `pwa`, `electron`, `cordova`) **ignóralo** si el proyecto es SPA.
 
-> 💸 **DEUDA — El proxy de dev (heredada de F3)**
+> 💸 **DEUDA — El proxy de dev (la del Apéndice 5)**
 > `devServer.proxy` reescribe `/api` → `http://localhost:3000` **solo en dev**. El `pathRewrite` que le saca el `/api` también. En producción **no hay proxy**: el backend vive en otro dominio, y ahí aparece **CORS** — que en dev el proxy te tapaba.
 >
-> Es **exactamente** la deuda de **F3**, mudada de `vue.config.js` a `quasar.conf.js`. No cambió el problema, cambió el archivo.
+> Es **exactamente** la deuda que el Apéndice 5 describe para `vue.config.js`, mudada a `quasar.conf.js`. No cambió el problema, cambió el archivo. (El tronco no usa proxy: su `apiClient` apunta directo a `http://localhost:3000`, y el traslado de Q2 lo deja así. Este `quasar.conf.js` es el de un proyecto Quasar típico que heredas.)
 >
 > **La frase:** *"El `pathRewrite` no viaja contigo al deploy. Eso lo arregla infra (o una `baseURL` distinta por entorno), no tú."*
 > No se paga en la ruta: es infra, igual que en el tronco.
@@ -364,7 +387,7 @@ export default function ({ app, router, store, Vue }) {
 export { apiClient }
 ```
 
-> 🔎 **Continuidad — el token se lee del STORE, no de `localStorage`.** Ojo con
+> ⚠️ **Continuidad — el token se lee del STORE, no de `localStorage`.** Ojo con
 > esto, porque **cambia respecto a F2**. En el tronco, el interceptor y el guard
 > leían `localStorage.getItem("token")` directo (F2 lo dejó así a propósito, para
 > evitar líos de orden de inicialización entre router y store; su ejercicio 24
@@ -385,14 +408,14 @@ Y para que se ejecute, tiene que estar registrado:
 boot: [ 'axios' ]   // ← el nombre del archivo, sin .js
 ```
 
-> 🔎 **Qué hace:** el boot file es un **hook de arranque**. Quasar lo llama antes de `new Vue()`, le pasa el `router` y el `store` ya construidos, y espera (puede ser `async`) a que termine.
+> 🧠 **Qué hace:** el boot file es un **hook de arranque**. Quasar lo llama antes de `new Vue()`, le pasa el `router` y el `store` ya construidos, y espera (puede ser `async`) a que termine.
 >
 > 🔑 **El equivalente mental:**
 > `main.js` (curso base) = `src/boot/*.js` (Quasar) + lo que Quasar genera solo.
 >
 > La diferencia importante: en Quasar **no tienes que importar el store** dentro del boot file. Te lo pasan. Eso mata la dependencia circular clásica de `apiClient → store → apiClient`.
 
-> ✅ **Buena práctica:** un boot file por responsabilidad. `axios.js`, `i18n.js`, `auth-guard.js`. No metas todo en uno.
+> 💡 **Buena práctica:** un boot file por responsabilidad. `axios.js`, `i18n.js`, `auth-guard.js`. No metas todo en uno.
 
 ---
 
@@ -588,11 +611,11 @@ const routes = [
 export default routes
 ```
 
-> 🔎 **Qué hace:** notá el **patrón layout-como-ruta-padre**. Esto es Vue Router 3 puro (rutas anidadas de F1) — Quasar no inventó nada. Lo que aporta es la **convención**: el padre es siempre un layout, los hijos son siempre páginas.
+> 🧠 **Qué hace:** fíjate en el **patrón layout-como-ruta-padre**. Esto es Vue Router 3 puro (rutas anidadas de F1) — Quasar no inventó nada. Lo que aporta es la **convención**: el padre es siempre un layout, los hijos son siempre páginas.
 >
 > Esto te da gratis algo que en el curso base tenías que hackear: **layouts distintos por sección**. Login sin navbar, dashboard con navbar. En F1 lo hacías con un `v-if` feo en `App.vue`. Acá es una ruta más.
 
-> ✅ **Buena práctica:** los alias `layouts/` y `pages/` son de Quasar (los define en su webpack). No son `@/layouts/`. Si copias código del curso base con `@/components/Algo.vue`, va a fallar. En Quasar el alias es `components/Algo.vue` (sin `@/`).
+> 💡 **Buena práctica:** los alias `layouts/` y `pages/` son de Quasar (los define en su webpack). No son `@/layouts/`. Si copias código del curso base con `@/components/Algo.vue`, va a fallar. En Quasar el alias es `components/Algo.vue` (sin `@/`).
 
 ---
 
@@ -670,19 +693,19 @@ En el curso base, cuando querías avisar algo, hacías esto:
 
 ```js
 // ❌ CURSO BASE — F5. Componente de alerta hecho a mano.
-this.mensaje = 'Ticket creado'
-this.tipoAlerta = 'success'
-this.mostrarAlerta = true
-setTimeout(function () { this.mostrarAlerta = false }.bind(this), 3000)
+this.message = 'Ticket creado'
+this.alertType = 'success'
+this.showAlert = true
+setTimeout(function () { this.showAlert = false }.bind(this), 3000)
 ```
 
 Y para confirmar un borrado:
 
 ```js
 // ❌ CURSO BASE — F5. Modal de Bootstrap + estado a mano.
-this.ticketAEliminar = ticket
-this.mostrarModalConfirmacion = true
-// ...y después un método confirmarEliminacion(), y otro cancelar(), y un <div class="modal">...
+this.ticketToDelete = ticket
+this.showConfirmModal = true
+// ...y después un método confirmDelete(), y otro cancel(), y un <div class="modal">...
 ```
 
 En Quasar, eso es una línea:
@@ -706,7 +729,7 @@ this.$q.dialog({
   cancel: true,
   persistent: true
 }).onOk(function () {
-  this.$store.dispatch('tickets/eliminar', ticket.id)
+  this.$store.dispatch('tickets/deleteTicket', ticket.id)
 }.bind(this))              // 🔎 .bind(this) porque NO usamos arrow (convención del curso)
  .onCancel(function () {
    // no hacemos nada
@@ -796,7 +819,7 @@ this.$q.dark.isActive        // true si dark mode
 | `services/apiClient.js` + `services/ticketService.js` | `src/boot/axios.js` (+ `services/` si quieres) | El interceptor se mueve al boot; los `service` pueden quedarse. ⚠️ Y ahora lee el token del `store`, no de `localStorage` (F2 lo leía del navegador) |
 | `Vue.prototype.$api = apiClient` | Igual, pero dentro del boot file | |
 | `vuelidate` (F5) en `package.json` | *(nada — se va en Q2)* | En Q1 sigue instalado. Q2 lo **saca** y usa `:rules` |
-| proxy de json-server en `vue.config.js` | `quasar.conf.js` → `devServer.proxy` | ✅ Misma config de F3 |
+| proxy de json-server en `vue.config.js` (Apéndice 5) | `quasar.conf.js` → `devServer.proxy` | ✅ Misma config que A5 |
 
 > ⚠️ **Nota sobre el store:** `quasar create` parte cada módulo Vuex en 4 archivos (`state.js`, `getters.js`, `mutations.js`, `actions.js`). El tronco (F10) usa **un archivo por módulo** (`store/modules/tickets.js`). Las dos formas son **Vuex 3 idéntico** — la diferencia es de organización de carpetas, no de API. En Q2 decides si adoptas el scaffold de Quasar o mantienes el estilo de F10.
 
@@ -814,24 +837,26 @@ this.$q.dark.isActive        // true si dark mode
 
 ## 💻 5. Código — La sesión de reconocimiento
 
-No hay Tiquetera acá. Hay **un proyecto scratch** que creas, miras y tiras.
+No hay Tiquetera acá. Hay **un proyecto scratch** que creas y miras; Q2 lo reutiliza para montar
+la Tiquetera encima.
 
 ```bash
-# 1. Instalar el CLI de Quasar 1 (¡el @1 importa!)
-npm i -g @quasar/cli@1
+# 1. Instalar el CLI de Quasar 1 (la versión exacta importa: ver 4.3)
+npm i -g @quasar/cli@1.2.2
 
-# 2. Crear el proyecto
-quasar create tiquetera-q
+# 2. Crear el proyecto con el kit de @quasar/app 1.x
+quasar create tiquetera-q --branch app-v1
 # Responde según la tabla de 4.3
 
 cd tiquetera-q
 
 # 3. Verificar que estás en v1
-cat package.json | grep quasar
-# Debe decir: "quasar": "^1.22.x"  y  "@quasar/app": "^2.x"
-#   (1.22.x es la versión oficial del curso: la ÚLTIMA v1. Ver 0-plan-del-curso.
-#    Un repo legacy ajeno puede traer cualquier 1.x — 1.15, 1.9… — y también es v1.)
-# ⚠️ Si dice "quasar": "^2.x" → creaste un proyecto Vue 3. Borra y vuelve a empezar con @quasar/cli@1
+grep quasar package.json
+#   "quasar": "^1.0.0"  y  "@quasar/app": "^1.0.0"  (rangos: lo instalado es otra cosa)
+npm ls quasar @quasar/app vue
+#   quasar@1.22.10, @quasar/app@1.9.6, vue@2.6.11
+#   (Un repo legacy ajeno puede traer cualquier 1.x — 1.15, 1.9… — y también es v1.)
+# ⚠️ Si dice "quasar": "^2.x" → creaste un proyecto Vue 3. Borra y vuelve a empezar (ver 6.7)
 
 # 4. Arrancar
 quasar dev
@@ -851,7 +876,9 @@ code src/App.vue
 
 # 3. El boot file de axios
 code src/boot/axios.js
-#    → mira la firma: export default function ({ app, router, store, Vue }) {...}
+#    → el del kit son tres líneas: Vue.prototype.$axios = axios
+#    → cuando un boot file necesita el contexto, exporta una función que lo recibe:
+#      export default function ({ app, router, store, Vue }) {...}  (4.5)
 #    → esto es tu main.js de F2, partido en pedazos
 
 # 4. El layout
@@ -860,7 +887,7 @@ code src/layouts/MainLayout.vue
 
 # 5. Las rutas
 code src/router/routes.js
-#    → notá: el layout es el componente PADRE, las páginas son children
+#    → fíjate: el layout es el componente PADRE, las páginas son children
 
 # 6. El store
 code src/store/index.js
@@ -886,9 +913,25 @@ Abre `src/pages/Index.vue` y agrega un componente que **no esté** en `framework
 
 Guarda. Mira el navegador. Mira la consola.
 
-**Resultado:** nada. El chip no aparece. La consola está limpia (o con un warning genérico de Vue). Nada te dice qué pasó.
+**Resultado:** el texto "Soy un chip que no vas a ver" **sí** se ve, pero pelado: sin forma de chip,
+sin color, como si fuera texto suelto. En el DOM quedó una etiqueta `<q-chip>` cruda que Vue no supo
+resolver. La consola de `quasar dev` dice:
 
-Ahora agrega `'QChip'` a `framework.components` en `quasar.conf.js`, reinicia el dev server (⚠️ **`quasar.conf.js` no tiene HMR — hay que reiniciar**), y ahí sí aparece.
+```
+[Vue warn]: Unknown custom element: <q-chip> - did you register the component correctly? For recursive components, make sure to provide the "name" option.
+
+found in
+
+---> <PageIndex> at src/pages/Index.vue
+       <QPageContainer>
+         <QLayout>
+```
+
+Y en un build de producción (`quasar build`), ni eso: la consola queda limpia.
+
+Ahora agrega `'QChip'` a `framework.components` en `quasar.conf.js` y guarda. `quasar dev` lo
+detecta solo —`quasar.conf.js changed` y `App changes detected. Updating app...`— y al recargar la
+pestaña el chip aparece. No hace falta reiniciar.
 
 **Ese experimento es Q1.** Si lo hiciste, entendiste el 60% de lo que te va a costar leer Quasar legacy.
 
@@ -915,10 +958,12 @@ Ahora agrega `'QChip'` a `framework.components` en `quasar.conf.js`, reinicia el
 ```
 
 **Qué pasa:**
-- El componente **no renderiza**. Simplemente no está en el DOM.
-- **NO hay error en consola.**
-- En el mejor de los casos, un `[Vue warn]: Unknown custom element: <q-card>` genérico — pero como Quasar registra parcialmente cosas, muchas veces **ni eso**.
-- Si el componente tenía un `<slot>`, el contenido de adentro **también desaparece**.
+- El componente **no renderiza**: en el DOM queda la etiqueta cruda (`<q-card>`), sin nada de lo
+  que el componente pinta. Lo de adentro sí se ve, como texto suelto y sin estilo, así que la página
+  queda "medio rota" en vez de vacía, que despista más.
+- En desarrollo hay un `[Vue warn]: Unknown custom element: <q-card> - did you register the component
+  correctly?`, entre los demás mensajes de la consola. En un build de producción, **ninguno**.
+- No hay error de compilación ni excepción: el build pasa.
 - Lo peor: **funciona en el proyecto del compañero** (porque él sí lo tiene declarado). Tú copiaste el template, no el `quasar.conf.js`.
 
 **Cómo lo reconoces:**
@@ -941,21 +986,21 @@ framework: {
 }
 ```
 
-Y **reiniciar `quasar dev`**. `quasar.conf.js` no tiene hot reload.
+Y guardar: `quasar dev` relee `quasar.conf.js` solo. Si la pestaña no cambia, recárgala.
 
 > ⚠️ **Sub-trampa:** un componente con sub-componentes es **varias entradas**.
-> `<q-card>` + `<q-card-section>` + `<q-card-actions>` = `'QCard'`, `'QCardSection'`, `'QCardActions'`. **Tres**. Declarar solo `'QCard'` te deja las secciones invisibles.
+> `<q-card>` + `<q-card-section>` + `<q-card-actions>` = `'QCard'`, `'QCardSection'`, `'QCardActions'`. **Tres**. Declarar solo `'QCard'` te deja las secciones como etiquetas crudas, sin padding ni estilo.
 
-> 🔎 **Por qué existe esta fricción:** es tree-shaking manual. Quasar 1 no tenía auto-import (Quasar 2 sí). Solo se empaquetan los componentes que declaras. Bundle chico a cambio de una lista que mantienes a mano.
+> 🧠 **Por qué existe esta fricción:** es tree-shaking manual. Con `all: false`, solo se empaquetan los componentes que declaras. Bundle chico a cambio de una lista que mantienes a mano. El mismo `@quasar/app` 1.x ya traía la alternativa, `all: 'auto'`, que lee tus templates; el modo manual es el que eligió quien creó el proyecto.
 
 > 💸 **DEUDA — La lista de `framework.components`**
 > Es una lista que **crece y nunca se limpia**. En un proyecto legacy de 2 años vas a encontrar 80 componentes declarados de los cuales se usan 40. Nadie los saca porque nadie sabe cuáles están vivos.
 >
-> **En producción se arregla así:** o migras a Quasar 2 (auto-import, la lista desaparece), o usas `framework: { all: 'auto' }` de `@quasar/app` 2.x — que hace auto-detección con un parser de templates y elimina el problema.
+> **En producción se arregla así:** `framework: { all: 'auto' }` en el mismo `@quasar/app` 1.x (o `importStrategy: 'auto'` en el 2.x), que detecta los `<q-*>` de tus templates y elimina la lista. El costo: un poco más de tiempo de compilación, y los componentes que solo nombras desde JS (`<component :is>`) siguen yendo a la lista.
 >
 > **La frase:** *"Si nadie borró un componente de `framework.components` en 18 meses, esa lista no es configuración: es sedimento."*
 >
-> **Deuda que NO pagamos.** No es deuda tuya: es deuda del curso. Mientras estemos en Quasar 1, **la ruta convive con la lista** — a mano, sedimento y todo. Se pagaría **fuera de scope**, el día que el proyecto migre a Quasar 2 (auto-import). Q1 solo te enseña a reconocerla.
+> **Deuda que NO pagamos.** No es deuda tuya: es deuda del curso. La ruta **convive con la lista** —a mano, sedimento y todo— porque es la que vas a encontrar en un repo de 2020, y cambiar el modo de import en medio de una migración es mezclar dos cambios. Se paga con una línea (`all: 'auto'`) el día que alguien lo decida con la suite en verde. Q1 solo te enseña a reconocerla.
 
 ---
 
@@ -963,8 +1008,8 @@ Y **reiniciar `quasar dev`**. `quasar.conf.js` no tiene hot reload.
 
 ```js
 this.$q.notify({ message: 'Hola' })
-// ❌ TypeError: Cannot read property 'notify' of undefined
-//    o: this.$q.notify is not a function
+// ❌ TypeError: this.$q.notify is not a function
+//    ($q existe siempre; lo que falta es el método que pone el plugin)
 ```
 
 Falta `'Notify'` en `framework.plugins`. Este al menos **explota con un error claro**. Gracias, Quasar.
@@ -1000,7 +1045,11 @@ Funciona… hasta que notas que la página no llena el viewport, el footer sube,
 
 ### 6.5 Editar `quasar.conf.js` y esperar HMR
 
-No. **No hay hot reload en `quasar.conf.js`.** Cambias algo, `Ctrl+C`, `quasar dev` de nuevo. Todos los días. Aceptalo.
+Casi. `quasar dev` vigila `quasar.conf.js`: al guardar escribe `quasar.conf.js changed` y, según lo
+que tocaste, `App changes detected. Updating app...` (la lista de componentes, los plugins, los boot
+files) o `Build changes detected. Rebuilding app...` (`build`, `devServer`). Lo que no hace es
+recargar la pestaña por ti en todos los casos. Si guardaste y no ves el cambio, recarga; si después
+de eso tampoco, ahí sí `Ctrl+C` y `quasar dev` de nuevo.
 
 ---
 
@@ -1011,15 +1060,16 @@ import Ticket from '@/components/Ticket.vue'   // ❌ falla en Quasar
 import Ticket from 'components/Ticket.vue'     // ✅ correcto
 ```
 
-Copiaste un import del curso base. Quasar define sus propios alias (`components`, `layouts`, `pages`, `boot`, `assets`, `src`) y **`@` no es uno de ellos** por defecto.
+Copiaste un import del curso base. Quasar define sus propios alias (`src`, `app`, `components`, `layouts`, `pages`, `assets`, `boot`) y **`@` no es uno de ellos** por defecto.
 
 ---
 
 ### 6.7 Instalar el CLI equivocado
 
 ```bash
-npm i -g @quasar/cli       # ❌ te instala el CLI que crea proyectos Quasar 2 (Vue 3)
-npm i -g @quasar/cli@1     # ✅ Quasar 1, Vue 2
+npm i -g @quasar/cli          # ❌ la 5.x: pide Node 20 y crea proyectos Quasar 2 (Vue 3)
+npm i -g @quasar/cli@1        # ❌ la 1.4.0: su `quasar create` ya no crea proyectos oficiales
+npm i -g @quasar/cli@1.2.2    # ✅ con --branch app-v1 (o v1), Quasar 1 y Vue 2
 ```
 
 Si creaste el proyecto y `package.json` dice `"quasar": "^2.x"` → **estás en Vue 3**. Borra la carpeta y vuelve a empezar. No hay "downgrade".
@@ -1038,10 +1088,11 @@ Si creaste el proyecto y `package.json` dice `"quasar": "^2.x"` → **estás en 
 ### Pieza forense de esta fase
 
 El síntoma característico de leer Quasar por primera vez es *"copié el template
-y no se ve nada, y no sale ningún error"*. La causa está a diez segundos de
-distancia y no está en tu código: un componente de Quasar 1 que **no está
-declarado en `framework.components` de `quasar.conf.js` no renderiza y no
-avisa** —y si tenía `<slot>`, se lleva por delante el contenido de adentro—. Eso
+y se ve a medias, sin estilo, y no sale ningún error"*. La causa está a diez
+segundos de distancia y no está en tu código: un componente de Quasar 1 que **no
+está declarado en `framework.components` de `quasar.conf.js` no renderiza**: queda
+la etiqueta cruda con su texto adentro, y el único aviso es un `Unknown custom
+element` de Vue en desarrollo, mezclado con el resto de la consola. Eso
 explica también el clásico "en la máquina de Ana funciona": copiaste el
 template, no la configuración. Es el paso 1 de la pieza de ruta y conviene
 tenerlo de reflejo antes de escribir una línea.
@@ -1056,8 +1107,8 @@ grep -n "components:" -A 12 quasar.conf.js
 ```
 
 Mira la pantalla y mira la consola. Anota cuánto tarda en aparecer un mensaje
-que te sirva de algo. Vuelve a ponerlo y recarga: en `quasar.conf.js` los
-cambios exigen reiniciar el servidor de desarrollo.
+que te sirva de algo, y repítelo con `quasar build`: en producción no aparece
+ninguno. Vuelve a ponerlo y guarda: `quasar dev` relee `quasar.conf.js` solo.
 
 > 📄 El recorrido completo, con las salidas literales, en
 > [`forense-ruta-q.md`](forense-ruta-q.md).
@@ -1084,7 +1135,7 @@ cambios exigen reiniciar el servidor de desarrollo.
 | `extras` | los `<link>` de fonts/iconos de `index.html` |
 | `framework` | **nuevo**, no existe equivalente |
 | `build` | `vue.config.js` (`configureWebpack`, `publicPath`) |
-| `devServer` | `vue.config.js` → `devServer` (el proxy de F3) |
+| `devServer` | `vue.config.js` → `devServer` (el proxy del Apéndice 5) |
 </details>
 
 ---
@@ -1158,7 +1209,7 @@ import TicketCard from '@/components/TicketCard.vue'
 
 ### 🟡 Medio (9–17) — Lectura de código real
 
-**🟡 9.** Este template no renderiza nada visible. ¿Por qué?
+**🟡 9.** En este template, el banner sale como texto suelto con fondo amarillo, sin el padding ni la forma de un `QBanner`. ¿Por qué?
 
 ```vue
 <template>
@@ -1173,8 +1224,8 @@ framework: { components: ['QLayout', 'QPageContainer', 'QPage', 'QBtn'] }
 ```
 
 <details><summary>Solución</summary>
-`QBanner` **no está declarado** en `framework.components`. El componente no se registra, no renderiza, y **no hay error claro**. El texto "Cuidado" también desaparece (era el slot de `QBanner`).
-**Fix:** agregar `'QBanner'` a la lista y **reiniciar** `quasar dev`.
+`QBanner` **no está declarado** en `framework.components`. El componente no se registra y queda la etiqueta `<q-banner>` cruda: el texto "Cuidado" (su slot) se ve, y la clase `bg-warning` también se aplica porque va en la etiqueta, pero nada de lo que pinta el componente. El único aviso es el `Unknown custom element: <q-banner>` de Vue en desarrollo.
+**Fix:** agregar `'QBanner'` a la lista y guardar; `quasar dev` lo toma solo.
 </details>
 
 ---
@@ -1183,7 +1234,7 @@ framework: { components: ['QLayout', 'QPageContainer', 'QPage', 'QBtn'] }
 
 ```js
 methods: {
-  guardar: function () {
+  save: function () {
     this.$q.notify({ message: 'Guardado', color: 'positive' })
   }
 }
@@ -1198,7 +1249,7 @@ framework: {
 
 <details><summary>Solución</summary>
 Falta `'Notify'` en `framework.plugins`. Error: `this.$q.notify is not a function`.
-Notá que este error **sí es claro** — a diferencia del de componentes (ej. 9), que es silencioso.
+Fíjate en que este error **sí es claro**: es una excepción, en desarrollo y en producción. El de componentes (ej. 9) es un warning de desarrollo entre otros, y en producción, nada.
 </details>
 
 ---
@@ -1260,7 +1311,7 @@ const routes = [
   </div>
 </q-page>
 ```
-Notá tres cosas:
+Fíjate en tres cosas:
 1. `container mt-4` → desaparece; `<q-page padding>` da el wrapper y el spacing.
 2. `row` / `col-md-8` → **iguales**.
 3. `p-3` en cada columna → se reemplaza por `q-col-gutter-md` en el `row` (los gutters de Quasar **no son automáticos** como en Bootstrap).
@@ -1325,23 +1376,23 @@ export default function ({ Vue, store, router }) {
 
 ```js
 // versión curso base
-eliminar: function (ticket) {
-  this.ticketAEliminar = ticket
-  this.mostrarModal = true
+remove: function (ticket) {
+  this.ticketToDelete = ticket
+  this.showModal = true
 }
 ```
 
 <details><summary>Solución</summary>
 
 ```js
-eliminar: function (ticket) {
+remove: function (ticket) {
   this.$q.dialog({
     title: 'Confirmar',
     message: '¿Eliminar el ticket #' + ticket.id + '?',
     cancel: true,
     persistent: true
   }).onOk(function () {
-    this.$store.dispatch('tickets/eliminar', ticket.id)
+    this.$store.dispatch('tickets/deleteTicket', ticket.id)
   }.bind(this))
 }
 ```
@@ -1365,14 +1416,14 @@ Lo mismo aplica a `src/store/index.js`: también exporta una función.
 
 ### 🟠 Difícil (18–24) — Diagnóstico y arqueología
 
-**🟠 18.** Un compañero te dice: *"copié tu template de `TicketCard.vue` a mi proyecto y no se ve nada, ni siquiera el texto. No hay errores."*
+**🟠 18.** Un compañero te dice: *"copié tu template de `TicketCard.vue` a mi proyecto y se ve el texto suelto, sin la tarjeta. No hay errores."*
 
 Escribe las **3 preguntas** que le haces, en orden de probabilidad.
 
 <details><summary>Solución</summary>
 
-1. **"¿Copiaste también las entradas de `framework.components` de mi `quasar.conf.js`?"** — 80% de probabilidad. Es EL error. Si el componente raíz del template (ej. `QCard`) no está declarado, todo el contenido interno (que era su slot) desaparece con él.
-2. **"¿Reiniciaste `quasar dev` después de tocar `quasar.conf.js`?"** — no hay HMR en ese archivo.
+1. **"¿Copiaste también las entradas de `framework.components` de mi `quasar.conf.js`?"** — 80% de probabilidad. Es EL error. Si `QCard` no está declarado, queda `<q-card>` crudo con el texto adentro: exactamente lo que describe.
+2. **"¿Recargaste la pestaña después de tocar `quasar.conf.js`?"** — `quasar dev` relee el archivo, pero la pestaña abierta puede seguir con lo de antes.
 3. **"¿Tu proyecto es Quasar 1 o 2?"** — si es v2, `framework.components` ni existe, y otros componentes cambiaron de API.
 </details>
 
@@ -1532,19 +1583,19 @@ src/
 
 <details><summary>Solución</summary>
 
-**Quasar 1** hace tree-shaking **manual y explícito**: solo empaqueta lo que declaras en `framework.components`. El build no analiza tus templates.
+**Quasar 1 con `all: false`** hace tree-shaking **manual y explícito**: solo empaqueta lo que declaras en `framework.components`. El build no analiza tus templates. (Con `all: 'auto'`, el mismo `@quasar/app` 1.x ya los analiza: el manual es una elección del proyecto, no un límite de la v1.)
 - ✅ **Bundle:** mínimo, garantizado. Tú controlas exactamente qué entra.
 - ❌ **Mantenimiento:** una lista que hay que actualizar a mano cada vez que usas un componente nuevo. Y que **nunca se limpia** cuando dejas de usarlo. → 💸 sedimento.
-- ❌ **DX:** el error de "no declaré el componente" es **silencioso**. Es la peor clase de error.
+- ❌ **DX:** el error de "no declaré el componente" es **casi silencioso**: un warning de desarrollo entre otros, y nada en producción. Es la peor clase de error.
 
 **Quasar 2** hace tree-shaking **automático**: un parser de webpack/vite lee tus `<template>` y detecta qué `<q-*>` usas.
 - ✅ **Mantenimiento:** cero. No hay lista.
 - ✅ **DX:** no existe el error silencioso.
 - ⚠️ **Bundle:** depende de que el parser acierte. Si usas `<component :is="nombreDinamico">`, el parser **no puede detectarlo** y tienes que declararlo igual.
 
-**El trade-off en una frase:** Quasar 1 cambió DX por control de bundle. Cuando el tooling mejoró lo suficiente para hacerlo solo, v2 se lo llevó puesto.
+**El trade-off en una frase:** el modo manual cambia DX por control de bundle. Cuando el tooling mejoró lo suficiente para hacerlo solo, `@quasar/app` 2.x lo dejó como única opción junto a "todo", y Quasar 2 lo heredó.
 
-**Por qué te importa a tú:** el código de la empresa está en v1. Vas a convivir con la lista. Conocerla es la diferencia entre 5 minutos y 3 horas de debugging.
+**Por qué te importa a ti:** el código de la empresa está en v1, en modo manual. Vas a convivir con la lista. Conocerla es la diferencia entre 5 minutos y 3 horas de debugging.
 </details>
 
 ---
@@ -1553,62 +1604,24 @@ src/
 
 <details><summary>Solución</summary>
 
-```
-quasar dev
-    │
-    ▼
-[1] webpack lee quasar.conf.js
-    │   → framework.components  → registra SOLO los declarados como globales
-    │   → framework.plugins     → instala Notify, Dialog... en $q
-    │   → framework.directives  → registra v-ripple, v-close-popup
-    │   → css / extras          → inyecta CSS y fonts
-    │
-    ▼
-[2] Quasar GENERA el entry point (tu "main.js" invisible)
-    │   → import Vue, Vuex, VueRouter, Quasar
-    │   → const store = createStore()      ← src/store/index.js (función)
-    │   → const router = createRouter()    ← src/router/index.js (función)
-    │
-    ▼
-[3] EJECUTA LOS BOOT FILES, EN ORDEN, SECUENCIALMENTE
-    │   (cada uno recibe { app, router, store, Vue, ssrContext })
-    │   (si devuelve Promise, Quasar ESPERA)
-    │
-    ├─► boot/axios.js   → crea apiClient, registra interceptores, Vue.prototype.$api
-    ├─► boot/auth.js    → hidrata token desde LocalStorage, registra router.beforeEach
-    └─► boot/i18n.js    → Vue.use(VueI18n), app.i18n = ...
-    │
-    ▼
-[4] new Vue({ router, store, render: h => h(App) }).$mount('#q-app')
-    │
-    ▼
-[5] App.vue  →  <router-view/>
-    │
-    ▼
-[6] Router resuelve la URL actual
-    │   → ¿pasa el beforeEach de boot/auth.js?
-    │      NO → redirect a /login
-    │      SÍ ↓
-    │
-    ▼
-[7] Monta el LAYOUT (ruta padre)
-    │   layouts/MainLayout.vue
-    │     └── QLayout
-    │          ├── QHeader
-    │          ├── QDrawer
-    │          └── QPageContainer
-    │               └── <router-view/>   ← ruta hija
-    │
-    ▼
-[8] Monta la PAGE (ruta hija)
-        pages/TicketsPage.vue
-          └── QPage
-               └── created() → this.$store.dispatch('tickets/cargar')
-                                  └── $api.get('/tickets')  ← el interceptor de [3] mete el Bearer
+```mermaid
+flowchart TD
+    A["quasar dev"] --> B["[1] webpack lee quasar.conf.js: components, plugins, directives, css y extras"]
+    B --> C["[2] Quasar genera el entry point: createStore y createRouter"]
+    C --> D["[3] Ejecuta los boot files, en orden y secuencialmente. Si devuelve Promise, Quasar espera"]
+    D --> E["boot/axios.js: crea apiClient, interceptores, Vue.prototype.$api"]
+    E --> F["boot/auth.js: hidrata el token, registra router.beforeEach"]
+    F --> G["boot/i18n.js: Vue.use VueI18n"]
+    G --> H["[4] new Vue con router, store y render; $mount en #q-app"]
+    H --> I["[5] App.vue: router-view"]
+    I --> J["[6] El router resuelve la URL; ¿pasa el beforeEach de boot/auth.js?"]
+    J -- "NO: redirect a /login" --> LOGIN["/login"]
+    J -- "SÍ" --> K["[7] Monta el LAYOUT (ruta padre): layouts/MainLayout.vue, QLayout con QHeader, QDrawer y QPageContainer"]
+    K --> L["[8] Monta la PAGE (ruta hija): pages/TicketsPage.vue, created dispatch tickets/cargar, $api.get /tickets; el interceptor mete el Bearer"]
 ```
 
 **Los tres puntos clave del diagrama:**
-- **[1] es donde muere tu componente** si no está en `framework.components`. Nunca llega a [7].
+- **[1] es donde muere tu componente** si no está en `framework.components`: no entra al bundle, y en [8] Vue encuentra una etiqueta que no sabe resolver.
 - **[3] es tu `main.js`.** Partido en pedazos, con el store y el router ya construidos y pasados por parámetro.
 - **[7] es lo que no existe en el curso base.** Entre el `<router-view>` de `App.vue` y tu página, hay **un layout entero**.
 </details>
@@ -1655,13 +1668,13 @@ location / {
       <div class="col-12 p-3">
         <q-card>
           <q-card-section>
-            <div class="text-h6">{{ ticket.titulo }}</div>
-            <span class="badge badge-danger">{{ ticket.prioridad }}</span>
+            <div class="text-h6">{{ ticket.title }}</div>
+            <span class="badge badge-danger">{{ ticket.priority }}</span>
           </q-card-section>
         </q-card>
       </div>
     </div>
-    <button class="btn btn-primary mt-3" @click="eliminar">Eliminar</button>
+    <button class="btn btn-primary mt-3" @click="remove">Eliminar</button>
   </q-page>
 </template>
 
@@ -1674,7 +1687,7 @@ export default {
     apiClient.get('/tickets/' + this.$route.params.id).then(r => { this.ticket = r.data })
   },
   methods: {
-    eliminar () {
+    remove () {
       if (confirm('¿Seguro?')) {
         apiClient.delete('/tickets/' + this.$route.params.id)
         this.$router.push('/tickets')
@@ -1691,14 +1704,14 @@ export default {
 
 1. **🔴 Import con alias `@/`** → `import { apiClient } from '@/boot/axios'`. En Quasar **`@` no existe**. Debería ser `'boot/axios'`. (Que "funcione" significa que alguien agregó el alias a mano en `build.extendWebpack` — deuda oculta.)
 
-2. **🔴 Bypassea el store.** Llama a `apiClient` directo desde el componente. **Rompe la arquitectura del curso**: `Componente → Store → services/ → apiClient → API`. El ticket no queda en Vuex, así que ningún otro componente se entera del borrado. Debería ser `this.$store.dispatch('tickets/cargar', id)`.
+2. **🔴 Bypassea el store.** Llama a `apiClient` directo desde el componente. **Rompe la arquitectura del curso**: `Componente → Store → services/ → apiClient → API`. El ticket no queda en Vuex, así que ningún otro componente se entera del borrado. Debería ser `this.$store.dispatch('tickets/deleteTicket', id)`.
 
 3. **🔴 `confirm()` nativo del navegador.** Feo, bloqueante, no estilizable, y hay `$q.dialog` **ya instalado** en el proyecto (o debería). Peor: `confirm()` es síncrono y bloquea el event loop.
 
 4. **🔴 Delete sin `await` / sin `.then()`.** `apiClient.delete(...)` se dispara y **acto seguido** hace `this.$router.push('/tickets')`. Si el DELETE falla (404, 500, sin red), el usuario **igual** navega y cree que borró. Error silencioso. Y encima ni siquiera hay `.catch()`.
 
 **Bonus (los que también marcaría):**
-5. Arrow functions (`data: () => ({})`, `.then(r => ...)`, `eliminar () {}` shorthand) → **rompe la convención del curso** (`function () {}`, siempre).
+5. Arrow functions (`data: () => ({})`, `.then(r => ...)`, `remove () {}` shorthand) → **rompe la convención del curso** (`function () {}`, siempre).
 6. `q-page class="container"` → mezcla Bootstrap con Quasar. Doble padding.
 7. `p-3` (Bootstrap) dentro de un template Quasar → debería ser `q-pa-md`.
 8. `badge badge-danger` (Bootstrap 4) → debería ser `<q-badge color="negative">`.
@@ -1718,14 +1731,14 @@ export default {
 1. **Hay más de un `quasar.conf.js` / estás editando el equivocado.** (monorepo, o un `quasar.conf.js` en la raíz y otro en un subpaquete)
    → `find . -name "quasar.conf.js" -not -path "*/node_modules/*"`
 
-2. **El `q-select` está dentro de un componente padre que tampoco está declarado** (ej. `<q-card>` sin `'QCard'`). El padre no renderiza → su slot desaparece → el `q-select` se va con él.
-   → Mira el template **completo** y chequea **cada** `<q-*>` contra la lista. Especialmente el **más externo**.
+2. **La pestaña sigue con el bundle de antes.** `quasar dev` relee `quasar.conf.js` al guardar, pero la pestaña abierta no siempre se recarga sola.
+   → Mira la terminal: ¿salió `quasar.conf.js changed` y `App changes detected`? Recarga con `Ctrl+Shift+R`.
 
 3. **El `q-select` está dentro de un `v-if` que es `false`.** Trivial, pero es el 20% de los casos.
    → Vue DevTools → mira el componente → chequea el estado que controla el `v-if`.
 
-4. **Error de nombre en la lista.** `'Qselect'`, `'QSelect '` (espacio), `'q-select'`. Quasar **no valida** los strings de esa lista — si pones basura, la ignora en silencio.
-   → Copia/pega el nombre exacto de la doc. Busca typos con `grep -n "QSelect" quasar.conf.js`.
+4. **Lo estás mirando en otro proyecto o en otra rama.** El `quasar.conf.js` con `'QSelect'` es el de tu rama; el servidor que corre es el de otra carpeta, o el build que miras es uno viejo de `dist/`. (Un nombre mal escrito en la lista no es candidato: `'Qselect'` tumba el build con `Unknown import from Quasar: Qselect`.)
+   → `pwd` en la terminal de `quasar dev`, y `git status` en las dos.
 
 5. **El componente falla en runtime y Vue lo desmonta.** Ej: `<q-select :options="opciones">` y `opciones` es `undefined` → error dentro del componente → Vue lo saca del árbol.
    → Consola: busca **cualquier** error de Vue, incluso los que parecen no relacionados. Y ponle `:options="[]"` hardcodeado para descartar.
@@ -1766,9 +1779,9 @@ export default {
 - [ ] `src/layouts/MainLayout.vue` → confirma la jerarquía: `QLayout > QHeader/QDrawer > QPageContainer`.
 
 #### Antes de tocar nada (5 min)
-- [ ] ⚠️ **Regla de oro:** si agregas un `<q-*>` nuevo a un template → agregarlo a `framework.components` → **reiniciar `quasar dev`**. Si no lo haces, no renderiza y **no hay error**.
+- [ ] ⚠️ **Regla de oro:** si agregas un `<q-*>` nuevo a un template → agregarlo a `framework.components` → guardar y recargar. Si no lo haces, no renderiza y **no hay error**: solo un warning en desarrollo.
 - [ ] ⚠️ Los imports son `components/X.vue`, **no** `@/components/X.vue`.
-- [ ] ⚠️ `quasar.conf.js` **no tiene HMR**. Todo cambio ahí = reiniciar.
+- [ ] ⚠️ `quasar.conf.js` se relee al guardar, pero la pestaña no siempre se recarga sola. Si no ves el cambio, recarga antes de buscar el error.
 
 #### 🚩 Red flags a reportar
 - [ ] Componentes llamando a `apiClient` directo, sin pasar por el store.
@@ -1802,7 +1815,7 @@ No hay solución única. Se evalúa:
   ```bash
   grep -ohrE "<q-[a-z-]+" src/ | sort -u | wc -l
   ```
-  Comparalo con el largo de `framework.components`. **Casi siempre hay 20–40% de sedimento.**
+  Compáralo con el largo de `framework.components`. **Casi siempre hay 20–40% de sedimento.**
 - **(7)** El mejor informe predice un bug **estructural**, no cosmético. Ejemplos de buena predicción:
   - "`vueRouterMode: 'history'` + no hay `nginx.conf` / `_redirects` / `vercel.json` en el repo → **404 al recargar en prod**" (ej. 25)
   - "Bootstrap y Quasar cargados, `.row` definido en ambos → **si alguien reordena los imports de CSS, se rompe el grid entero**" (ej. 20)
@@ -1838,7 +1851,7 @@ No hay solución única. Se evalúa:
 | Los tests de regresión que ya escribiste (y no tocas en Q1) | **Q0 — La red de seguridad** |
 | Vue Router 3, rutas anidadas, guards, `history` mode, el alias `@` | **F1 — Estructura base legacy** |
 | Bearer token, interceptores, `router.beforeEach` de auth | **F2 — Autenticación mínima** |
-| json-server, proxy de dev, `baseURL` | **F3 — Mock API mínima** |
+| json-server y `baseURL` / proxy de dev | **F3 — Mock API mínima** / **A5 — webpack y Babel** |
 | El dashboard con filtro/orden/paginación manual que **Q3** va a migrar | **F4 — Dashboard de tickets** |
 | El CRUD y el form con **vuelidate** que **Q2** va a migrar | **F5 — CRUD de tickets** |
 | Vuex 3, módulos, `mapState`, actions | **F10 — Vuex a fondo** |
@@ -1849,7 +1862,7 @@ No hay solución única. Se evalúa:
 
 ### Externos útiles
 
-- **Quasar v1 → v2 upgrade guide** (para entender qué cambió, **no** para migrar): https://quasar.dev/start/upgrade-guide
+- **Quasar v1 → v2 upgrade guide** (para entender qué cambió, **no** para migrar; ya no está en quasar.dev, queda la copia de archive.org): https://web.archive.org/web/20230131143556/https://quasar.dev/start/upgrade-guide
 - **Awesome Quasar** (repos de ejemplo, muchos v1): https://github.com/quasarframework/quasar-awesome
 
 ---
@@ -1865,7 +1878,7 @@ Puedes abrir un repo Quasar 1 y en 20 minutos armar el mapa mental completo. Sab
 - `QLayout > QPageContainer > QPage` **no es un div con router-view**: es un sistema de posicionamiento que hace cálculos, y saltearse `QPageContainer` te mete el contenido debajo del header sin decirte nada.
 - **Vue Router 3 y Vuex 3 no cambiaron.** F1 y F10 valen tal cual. Solo cambió el archivo.
 - Bootstrap y Quasar **conviven** en el proyecto, comparten `.row` y `.col-*`, y eso es una 💸 bomba de tiempo que vamos a desactivar en Q3.
-- Y sobre todo: **si un `<q-*>` no está en `framework.components`, no renderiza y nadie te avisa.** Eso solo te va a costar horas **una vez**. Después, es lo primero que miras.
+- Y sobre todo: **si un `<q-*>` no está en `framework.components`, no renderiza y casi nadie te avisa**: un warning de desarrollo entre otros, y en producción, nada. Eso solo te va a costar horas **una vez**. Después, es lo primero que miras.
 
 **Lo que NO hiciste:** tocar la Tiquetera. Ni una línea. Q1 es reconocimiento y nada más.
 
@@ -1877,11 +1890,11 @@ Puedes abrir un repo Quasar 1 y en 20 minutos armar el mapa mental completo. Sab
 
 Ahora que sabes **dónde vive cada cosa**, Q2 te hace **moverlas**.
 
-Vas a tomar la Tiquetera que construiste en F0–F11 y la vas a montar sobre `tiquetera-q`:
+Vas a tomar la Tiquetera que construiste en F0–F11 y la vas a montar sobre `tiquetera-q` (Q2 empieza con ese traslado, paso a paso):
 
 | De… (curso base) | A… (Q2) | Qué aprendes |
 |---|---|---|
-| `main.js` con el interceptor de F2 | `src/boot/axios.js` | Que el store te lo pasan por parámetro, y por qué eso mata el import circular |
+| `main.js` (`Vue.use`, el filtro de fechas, el CSS de Bootstrap) y el guard de F2 | un boot file por responsabilidad en `src/boot/` | Que `main.js` se parte en pedazos, y que el router y el store te llegan por parámetro |
 | `App.vue` con navbar + `router-view` | `layouts/MainLayout.vue` + `App.vue` vacío | Que el chrome es una ruta, no un wrapper |
 | `views/*.vue` | `pages/*.vue` con `<q-page>` de raíz | Que la raíz importa |
 | `router/index.js` de F1 | `router/routes.js` con layouts como padres | Que Vue Router 3 no cambió; el patrón sí |

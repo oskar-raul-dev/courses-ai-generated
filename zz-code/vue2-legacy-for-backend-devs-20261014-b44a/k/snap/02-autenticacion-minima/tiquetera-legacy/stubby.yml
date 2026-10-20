@@ -1,0 +1,12 @@
+- request:                        # ← el "-" dice: primer elemento de una LISTA de stubs
+    method: POST                  #    condición 1: debe ser un POST...
+    url: /api/hello               #    condición 2: ...a esta ruta exacta
+  response:                       # ← si el request calza, responde así:
+    status: 200                   #    código HTTP de éxito
+    headers:
+      content-type: application/json   # sin esto, axios no sabría que es JSON
+    latency: 400                  #    espera 400 ms antes de responder (red simulada)
+    body: >                       #    el cuerpo: bloque multilínea ↓
+      {
+        "message": "Hola desde el mock 👋"
+      }

@@ -70,8 +70,8 @@ incumben.
 
 | Ruta | Lo que investiga | Herramienta principal | Archivo |
 |---|---|---|---|
-| 🅠 Quasar 1 | El componente que no renderiza y no avisa · la tabla que pagina dos veces | Vue DevTools → Components, y `quasar.conf.js` | `forense-ruta-q.md` |
-| 🅥 Vuetify 2 | El `v-app` ausente que rompe en silencio · el hex que mata el tema | El inspector de elementos, sobre el DOM renderizado | `forense-ruta-vu.md` |
+| 🅠 Quasar 1 | El componente que no renderiza y casi no avisa · la tabla que pagina dos veces | Vue DevTools → Components, y `quasar.conf.js` | `forense-ruta-q.md` |
+| 🅥 Vuetify 2 | El `v-app` ausente que rompe casi en silencio · el hex que mata el tema | El inspector de elementos, sobre el DOM renderizado | `forense-ruta-vu.md` |
 | 🅝 Nuxt 2 | `window is not defined` · la hidratación que no cuadra | La terminal del servidor Nuxt, antes que la consola | `forense-ruta-nx.md` |
 
 ---
@@ -88,6 +88,8 @@ tabla.
 |---|---|
 | `Vue packages version mismatch` al compilar | Fase 0 — `vue` y `vue-template-compiler` desalineados |
 | `EADDRINUSE` al levantar algo | Fase 0 — un proceso zombi de otra terminal |
+| Muralla de `gyp ERR!` al instalar, en un Mac con chip M | Fase 0, 🍎 — Node arm64 en vez del x64 que pide la fase; el porqué, en el [Apéndice 6](a6-arm64-m1.md) |
+| Dentro de un contenedor: `npm ci` falla en `deasync` o `node-sass`, o el 3000 no abre desde el Mac | [Apéndice 7](a7-docker-colima.md) — faltan build tools en la imagen, o json-server escucha solo en `localhost` |
 | El editor "baila" al guardar, o el `.vue` no tiene resaltado | Fase 0 — dos formateadores compitiendo, o Volar (que es de Vue **3**) junto a Vetur |
 | `this` es `undefined` dentro de un método, y el código "es idéntico" al de al lado | Fase 0 → Fase 3 — una arrow function en las opciones del componente: `this` dejó de ser la instancia |
 | "Entré a un ticket que no existe y la pantalla no dice nada" | Fase 1 — la vista de detalle no distingue "no existe" de "todavía no cargó" |
@@ -109,7 +111,7 @@ tabla.
 | "Volví atrás y el paso salió vacío" | Fase 6 — falta `keep-alive` en el wizard |
 | "Me dejó avanzar con el paso 2 sin llenar" | Fase 6 — se validó todo al final en vez de por paso |
 | La pestaña se arrastra y el ventilador se dispara | Fase 7 — la instancia del chart guardada en `data`: reactividad recursiva sobre un objeto gigante |
-| `Canvas is already in use` al volver a una vista | Fase 7 — falta `chart.destroy()` en `beforeDestroy` |
+| La vista de gráficos va más lenta cada vez que vuelves, sin errores en consola | Fase 7 — falta `chart.destroy()` en `beforeDestroy` |
 | El gráfico no se ve, o mide treinta mil píxeles de alto | Fase 7 — canvas dentro de un contenedor sin dimensiones, con `responsive: true` |
 | `this.$refs.canvas` es `undefined` | Fase 7 — lo pediste en `created`, y ahí todavía no hay DOM |
 | Al navegar y volver, el evento del socket se aplica dos, tres veces | Fase 8 — listeners sin `off`, o `.bind(this)` distinto en el alta y en la baja |
@@ -124,9 +126,9 @@ tabla.
 | El test pasa solo, falla en conjunto | Fase 11 — mocks sin `clearAllMocks`: llamadas fantasma del test anterior |
 | Un test que nunca falla, aunque rompas lo que prueba | Fase 11 — verde falso: `async` sin `return` de la Promise |
 | Un cambio de maquetación tumbó media suite | Fase 11 — selectores acoplados al DOM en vez de `data-testid` |
-| En el build de producción se comporta distinto que en `npm run serve` | Fase 10 → ruta Q — `strict` está apagado en producción: Vuex muta en silencio |
+| En el build de producción se comporta distinto que en `npm run serve` | Fase 10 — `strict` está apagado en producción: una escritura fuera de mutation pasa sin error |
 | 🅠 Copiaste un template y no se ve nada, sin error en consola | `forense-ruta-q.md` — el componente no está en `framework.components` |
-| 🅥 Los colores del tema no aplican y los diálogos no abren, consola limpia | `forense-ruta-vu.md` — falta `<v-app>` en la raíz |
+| 🅥 Los colores del tema no aplican y los diálogos salen raros; solo `Unable to locate target [data-app]` | `forense-ruta-vu.md` — falta `<v-app>` en la raíz |
 | 🅝 `window is not defined` al recargar una página que en navegación funciona | `forense-ruta-nx.md` — `created()` corre en el servidor |
 | 🅝 El HTML del servidor y el del cliente no coinciden | `forense-ruta-nx.md` — `Date.now()`, `Math.random()` o `new Date()` en el render |
 | El header `X-Total-Count` llega `undefined` y en Network se ve | rutas Q y VU — axios normaliza los headers a minúsculas; y si en minúsculas tampoco, es CORS |
@@ -182,8 +184,8 @@ diagnostican mirando, no leyendo código.
 ## 6. 📌 Síntomas sin pieza (pendientes)
 
 Estos tres se consideraron para el índice y **no entraron**, porque ninguna fase del curso
-los produce. Se anotan acá en vez de inventarles una fase, que es lo que manda
-[`formato-piezas-forenses.md`](../prompts/formato-piezas-forenses.md) §9. Si alguna fase
+los produce. Se anotan acá en vez de inventarles una fase, para que el índice no prometa lo que el
+curso no cubre. Si alguna fase
 llega a cubrirlos, suben a §3.
 
 | Síntoma | Por qué no tiene pieza |

@@ -33,30 +33,36 @@ fue el entorno alrededor, y eso es lo que hay que buscar.
 Del más barato al más caro: el log del arranque cuesta un comando y contesta el
 90% de los casos; los puertos, otro comando; y solo al final se toca el compose.
 
-### Paso 1 — ¿qué dice el log del arranque?
+### Paso 1 — ¿qué dijo el arranque, y en qué estado quedó?
 
 Antes que nada, y antes que el cliente:
 
 ```bash
-docker compose logs -f mongo
+docker compose ps -a
+docker compose logs mongo
 ```
 
 ```
-mongo_1  | {"t":{"$date":"…"},"s":"E","c":"NETWORK","msg":"Failed to set up listener",
-mongo_1  |  "attr":{"error":"Address already in use"}}
-mongo_1  | {"t":{"$date":"…"},"s":"I","c":"CONTROL","msg":"now exiting"}
+tiquetera-mongo   created   Created
 ```
 
-**Qué descarta.** Descarta el cliente, la cadena de conexión, la red de Docker y
-tu configuración: el servidor **ni siquiera llegó a escuchar**. Y descarta la
-sensación de que "el contenedor está arriba": puede estar reiniciándose en bucle,
-cosa que `docker compose ps` confirma. Las dos pistas que resuelven la mayoría de
+Y el log, vacío. El motivo lo escribió el `up`, en la línea roja que nadie lee:
+
+```
+Error response from daemon: failed to set up container networking: driver failed programming
+external connectivity on endpoint tiquetera-mongo (…): Bind for 0.0.0.0:27017 failed: port is already allocated
+```
+
+**Qué descarta.** Descarta el cliente, la cadena de conexión y tu
+configuración: el contenedor **ni siquiera arrancó**, y por eso `mongod` no dejó
+ni una línea de log. Y descarta la sensación de que "el contenedor está arriba":
+`created` no es `running`. Las dos pistas que resuelven la mayoría de
 los tropiezos de setup viven acá — el puerto ocupado y los permisos sobre el
 `dbPath` del bind mount.
 
 ### Paso 2 — ¿quién tiene el 27017?
 
-Si el log habla de la dirección en uso:
+Si el `up` habla del puerto ya asignado:
 
 ```bash
 lsof -i :27017              # macOS / Linux
@@ -64,13 +70,13 @@ netstat -ano | findstr :27017   # Windows
 ```
 
 ```
-mongod   1284  oskar   11u  IPv4  TCP *:27017 (LISTEN)
+mongod   1284  dev     11u  IPv4  TCP *:27017 (LISTEN)
 ```
 
 **Qué descarta.** Cierra el caso más común de todos, y explica el "ayer
 funcionaba": hay **dos `mongod` peleando** — el nativo, instalado como servicio y
 que arranca solo al encender la máquina, y el del contenedor. El de Docker llega
-segundo y no puede escuchar. Apaga uno de los dos; en el Curso 02 el que manda es
+segundo y Docker no puede publicarle el puerto. Apaga uno de los dos; en el Curso 02 el que manda es
 el del compose.
 
 ### Paso 3 — el contenedor vive y aun así no entra nadie
@@ -79,12 +85,14 @@ Si el log no tiene errores y el proceso escucha, prueba desde dentro y desde
 fuera, en ese orden:
 
 ```bash
-docker compose exec mongo mongosh --eval 'db.runCommand({ ping: 1 })'
+docker compose exec mongo mongo --quiet --eval 'printjson(db.runCommand({ ping: 1 }))'
 ```
 
 ```
-{ ok: 1 }
+{ "ok" : 1 }
 ```
+
+(Adentro, el shell clásico `mongo`: la imagen 4.4 no trae `mongosh`.)
 
 ```bash
 mongosh "mongodb://localhost:27017/tiquetera" --eval 'db.runCommand({ ping: 1 })'

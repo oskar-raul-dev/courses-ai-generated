@@ -1,0 +1,31 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "seed": "node scripts/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "0.21.1",
+    "bcryptjs": "2.4.3",
+    "cors": "2.8.5",
+    "express": "4.17.1",
+    "jsonwebtoken": "8.5.1",
+    "mongodb": "^3.6.12",
+    "mongoose": "5.13.20",
+    "morgan": "1.10.0",
+    "multer": "1.4.4",
+    "socket.io": "2.4.1"
+  },
+  "devDependencies": {
+    "form-data": "4.0.0",
+    "jest": "26.6.3",
+    "mongodb-memory-server": "6.9.6",
+    "socket.io-client": "2.4.0",
+    "supertest": "6.1.6"
+  }
+}

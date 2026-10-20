@@ -139,7 +139,7 @@ Respuesta: en `MONGO_DATA_PATH`, míralos con `ls`.
 - **mongosh:** https://www.mongodb.com/docs/mongodb-shell/install/
 - **Compass:** https://www.mongodb.com/docs/compass/install/
 - **MongoDB Database Tools** (`mongoexport`, `mongoimport` — desde 4.4 se
-  distribuyen separadas del servidor): https://www.mongodb.com/docs/database-tools/installation/installation/
+  distribuyen separadas del servidor): https://www.mongodb.com/docs/database-tools/installation/
 
 ```bash
 mongosh mongodb://localhost:27017    # y estás dentro
@@ -185,9 +185,11 @@ ellas (`storage.dbPath` para moverlos).
 
 > ⚠️ **Apple Silicon:** los binarios 4.4 son x86_64 (corren vía Rosetta 2) y
 > el tap puede ponerse quisquilloso con versiones viejas. Si hay fricción, no
-> pelees: **usa Docker**, que para eso está el Camino A.
+> pelees: **usa Docker**, que para eso está el Camino A. Cómo se monta Docker en
+> un Mac con chip M, y Rosetta dentro y fuera de los contenedores, está en el
+> [Apéndice 7 del Curso 01](../01-vue2-legacy/a7-docker-colima.md).
 
-> 🎯 Regla del curso para B y C: son válidos y quedan documentados, pero los
+> 🧭 Regla del curso para B y C: son válidos y quedan documentados, pero los
 > ejemplos asumen Docker. Si vas nativo, tu única diferencia real es cómo
 > arrancas/detienes el servidor y dónde está `dbPath`.
 
@@ -229,8 +231,9 @@ formato WiredTiger, y no es algo que un repo deba cargar.
 
 > 🧭 **¿Por qué otro repo y no el del frontend?** Porque la señal de éxito de
 > este curso se mide con git y solo significa algo si el frontend tiene su
-> propia historia: en la Fase 10 apagas json-server, cambias el `baseURL` y el
-> **`git diff` del frontend tiene exactamente una línea**. En un monorepo ese
+> propia historia: en la Fase 10 apagas json-server, apuntas el `baseURL` al
+> Express y el **`git diff` del frontend tiene a lo sumo una línea** (ninguna,
+> si el Express escucha en el `:3000` de json-server, que es lo que hace la fase). En un monorepo ese
 > `git diff` te devuelve además todo el backend que acabas de escribir, y la
 > medición se convierte en humo. Lo firmado está en
 > [`00-audit-contrato.md`](00-audit-contrato.md).
@@ -359,7 +362,7 @@ encontrar en fixtures, logs y tickets de soporte de por vida — reconócelo.
 > la sección siguiente te da el menú. Si hoy alguien te pide "el backup en
 > JSON", ya sabes qué cara poner.
 
-> 🐳 **Desde Docker sin tools en el host:** `docker exec curso-mongo
+> 💡 **Desde Docker sin tools en el host:** `docker exec curso-mongo
 > mongoexport ... --out=/tmp/people.json` y luego
 > `docker cp curso-mongo:/tmp/people.json .` — el archivo nace dentro del
 > contenedor y lo copias afuera. (Ejercicio 15.)
@@ -482,7 +485,7 @@ mongorestore --uri=... [--drop] [--nsFrom="X.*" --nsTo="X_rest.*"] ./dump
   Docker): el error `port already in use` en los logs del contenedor te lo
   dirá — apaga uno.
 
-> 🔎 **Pieza forense de la fase:** cuando algo no arranca, el primer sitio a
+> 📄 **Pieza forense de la fase:** cuando algo no arranca, el primer sitio a
 > mirar son los logs del arranque — `docker compose logs -f mongo` (o el visor
 > de eventos del servicio nativo). Ahí viven las dos pistas que resuelven el
 > 90% de los tropiezos de setup: `port already in use` (hay otro `mongod`
@@ -582,30 +585,30 @@ lección.
 
 **Documentación oficial (4.4 y herramientas)**
 
-- Instalación MongoDB 4.4 (todas las plataformas): https://www.mongodb.com/docs/v4.4/installation/
-- Instalar en Windows (MSI, servicio, `mongod.cfg`): https://www.mongodb.com/docs/v4.4/tutorial/install-mongodb-on-windows/
-- Instalar en macOS (brew tap): https://www.mongodb.com/docs/v4.4/tutorial/install-mongodb-on-os-x/
+- Instalación MongoDB 4.4 (todas las plataformas): https://www.mongodb.com/docs/manual/installation/
+- Instalar en Windows (MSI, servicio, `mongod.cfg`): https://www.mongodb.com/docs/manual/administration/install-community-windows/
+- Instalar en macOS (brew tap): https://www.mongodb.com/docs/manual/administration/install-community-macos/
 - Imagen Docker oficial (variables, volúmenes): https://hub.docker.com/_/mongo
-- Referencia de `mongod` (flags para el `command`): https://www.mongodb.com/docs/v4.4/reference/program/mongod/
-- Archivo de configuración de mongod: https://www.mongodb.com/docs/v4.4/reference/configuration-options/
+- Referencia de `mongod` (flags para el `command`): https://www.mongodb.com/docs/manual/reference/program/mongod/
+- Archivo de configuración de mongod: https://www.mongodb.com/docs/manual/reference/configuration-options/
 - mongosh: https://www.mongodb.com/docs/mongodb-shell/
 - MongoDB Database Tools — mongoexport: https://www.mongodb.com/docs/database-tools/mongoexport/
 - MongoDB Database Tools — mongoimport: https://www.mongodb.com/docs/database-tools/mongoimport/
 - MongoDB Database Tools — mongodump: https://www.mongodb.com/docs/database-tools/mongodump/
 - MongoDB Database Tools — mongorestore: https://www.mongodb.com/docs/database-tools/mongorestore/
-- Manual 4.4 — MongoDB Backup Methods (el mapa completo de opciones): https://www.mongodb.com/docs/v4.4/core/backups/
-- Manual 4.4 — Back Up and Restore with Filesystem Snapshots: https://www.mongodb.com/docs/v4.4/tutorial/backup-with-filesystem-snapshots/
-- Extended JSON: https://www.mongodb.com/docs/v4.4/reference/mongodb-extended-json/
+- Manual 4.4 — MongoDB Backup Methods (el mapa completo de opciones): https://www.mongodb.com/docs/manual/core/backups/
+- Manual 4.4 — Back Up and Restore with Filesystem Snapshots: https://www.mongodb.com/docs/manual/tutorial/backup-with-filesystem-snapshots/
+- Extended JSON: https://www.mongodb.com/docs/manual/reference/mongodb-extended-json/
 - Compass: https://www.mongodb.com/docs/compass/
 
 **Docker (si te falta base)**
 
-- Compose file reference (variables y defaults `${VAR:-def}`): https://docs.docker.com/compose/environment-variables/
-- Volumes vs bind mounts: https://docs.docker.com/storage/
+- Compose file reference (variables y defaults `${VAR:-def}`): https://docs.docker.com/compose/how-tos/environment-variables/
+- Volumes vs bind mounts: https://docs.docker.com/engine/storage/
 
 **Video (YouTube)**
 
-- Docker Compose in 100 Seconds — Fireship: https://www.youtube.com/watch?v=Qw9zlE3t8Ko
+- Docker Compose in 12 Minutes — Jake Wright: https://www.youtube.com/watch?v=Qw9zlE3t8Ko
 - MongoDB with Docker (setup rápido) — Net Ninja / Traversy (cualquiera de sus setups de la época sirve; verifica que usen imagen con tag de versión)
 
 **Orden de lectura sugerido para perfil senior:**

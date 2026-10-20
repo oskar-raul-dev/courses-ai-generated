@@ -56,9 +56,10 @@ instalar, los binarios que no compilan y buena parte de los "comportamientos
 raros del tooling" que no tienen mejor nombre. Si coinciden, el entorno de Node
 queda descartado y sigues al paso 2.
 
-> ⚠️ En Apple Silicon el `.nvmrc` del curso puede decir `16.20.2` en vez de
-> `14.21.3`, y está bien: la Fase 0 lo explica. Lo que importa es que
-> `node -v` diga lo mismo que el archivo.
+> ⚠️ En Apple Silicon, `node -v` dice `v14.21.3` aunque el Node esté mal
+> instalado: un Node 14 compilado para arm64 tiene el mismo número que el x64
+> que pide la Fase 0. La segunda pregunta es `node -p process.arch`, y tiene
+> que decir `x64` (el [Apéndice 6](a6-arm64-m1.md) explica por qué).
 
 ### Paso 2 — ¿el error habla de compilar plantillas?
 
@@ -70,7 +71,7 @@ npm ls vue vue-template-compiler
 ```
 
 ```
-tiquetera@0.1.0 /Users/…/tiquetera
+tiquetera-legacy@0.1.0 /Users/…/tiquetera-legacy
 ├── vue@2.6.14
 └── vue-template-compiler@2.6.12
 ```
@@ -80,11 +81,12 @@ Y el error que lo delata, tal como sale:
 ```
 Vue packages version mismatch:
 
-- vue@2.6.14
-- vue-template-compiler@2.6.12
+- vue@2.6.14 (…/tiquetera-legacy/node_modules/vue/dist/vue.runtime.common.js)
+- vue-template-compiler@2.6.12 (…/tiquetera-legacy/node_modules/vue-template-compiler/package.json)
 
-This may cause things to work incorrectly. Make sure to use the same version
-for both.
+This may cause things to work incorrectly. Make sure to use the same version for both.
+If you are using vue-loader@>=10.0, simply update vue-template-compiler.
+If you are using vue-loader@<10.0 or vueify, re-installing vue-loader/vueify should bump vue-template-compiler to the latest.
 ```
 
 **Qué descarta.** Si los dos números no son idénticos —no "compatibles":
@@ -99,8 +101,12 @@ versiones coinciden, sigues al paso 3.
 Si el muro trae `EADDRINUSE`, no es un problema de dependencias:
 
 ```
-Error: listen EADDRINUSE: address already in use :::8888
+Error: listen EADDRINUSE: address already in use 0.0.0.0:7443
 ```
+
+El puerto que nombra puede no ser el 8888: Stubby abre tres —8888 para los stubs
+que le pediste, y por su cuenta el 8889 de administración y el 7443 de TLS—, así
+que con un Stubby zombi el choque suele salir por el 7443. Mismo diagnóstico:
 
 ```bash
 lsof -i :8888        # macOS / Linux
@@ -143,7 +149,7 @@ de archivo, y Volar desinstalado mientras estés en Vue 2.
 |---|---|
 | `Vue packages version mismatch` | `package.json` — `vue` y `vue-template-compiler` desalineados |
 | Muros de `gyp ERR!` al instalar | Node equivocado: falta `nvm use` |
-| `EADDRINUSE :::8888` | Un mock zombi de otra terminal |
+| `EADDRINUSE` en el 8888, el 8889 o el 7443 | Un Stubby zombi de otra terminal |
 | `EADDRINUSE :::8080` | Otro `npm run serve` vivo, casi siempre en otra pestaña del IDE |
 | `command not found: vue-cli-service` | No corriste `npm install`, o lo corriste con otro Node |
 | El `.vue` no tiene resaltado de sintaxis | Falta Vetur, o Volar lo está peleando |

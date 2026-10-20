@@ -188,7 +188,7 @@ De todo eso, `v-data-table` hace:
 **El borrado neto es real.** No es "escribes menos". Es: **borras código que
 funcionaba, borras sus bugs, y borras los watchers que parcheaban esos bugs.**
 
-> 🔎 **Lo que se va contigo:** también se va tu control. Ese `page = 1` del watcher
+> ⚠️ **Lo que se va contigo:** también se va tu control. Ese `page = 1` del watcher
 > lo escribiste **porque un tester lo reportó**. `v-data-table` lo hace por defecto.
 > Genial — hasta el día que **no** quieras resetear la página al filtrar (paginación
 > server-side donde el filtro viaja aparte, por ejemplo). Entonces vas a pelearte
@@ -404,10 +404,12 @@ piden **por nombre**:
 // src/plugins/vuetify.js (de VU1) — el tema define los nombres, no los componentes
 import Vue from "vue";
 import Vuetify from "vuetify/lib";
+import es from "vuetify/lib/locale/es"; // con /lib, el idioma también sale de /lib
 
 Vue.use(Vuetify);
 
 export default new Vuetify({
+  lang: { locales: { es: es }, current: "es" }, // el de VU1
   theme: {
     themes: {
       light: {
@@ -478,7 +480,7 @@ export default {
 - **Dark mode gratis.** `$vuetify.theme.dark = true` y los badges usan la paleta
   `dark`. En F4, con `badge-danger` hardcodeado, dark mode no tocaba el badge.
 
-> ✅ **Buena práctica: nombres semánticos, no nombres de color.** Llama al color
+> 💡 **Buena práctica: nombres semánticos, no nombres de color.** Llama al color
 > `error`, no `red`. El día que "urgente" pase de rojo a naranja por decisión de
 > diseño, cambias un valor y toda la app obedece. Si lo llamaste `red` y ahora es
 > naranja, tienes un color llamado "rojo" que es naranja. Bienvenido a otro legacy.
@@ -652,17 +654,25 @@ computed: {
 **corre el `set`** → commit → mutation → store. Es el patrón de `v-model` contra el
 store de F10. **No es magia nueva: es el mismo truco.**
 
-> ⚠️ **Sin el `set`, `strict: true` te mata.** Si `options` es un computed
-> solo-lectura, `v-data-table` va a intentar mutarlo y Vuex lanza
-> `Error: [vuex] do not mutate vuex store state outside mutation handlers`. **En
-> dev.** En producción `strict` está apagado (F10) → **muta el store en silencio, sin
-> commit, sin devtools, sin time travel.** El peor bug: funciona.
+> ⚠️ **Sin el `set`, la tabla y el store se separan.** Si `options` es un computed
+> solo-lectura, `v-data-table` no toca el store: guarda sus opciones por dentro,
+> emite `update:options`, y `.sync` intenta asignarlo a un computed que no tiene
+> dónde. La tabla **sí** cambia de página (a diferencia de `QTable`, que se queda
+> clavada); el store se queda en la página 1 sin enterarse. En desarrollo:
+>
+> ```
+> [Vue warn]: Computed property "options" was assigned to but it has no setter.
+> ```
+>
+> En producción, nada. El peor bug: funciona en pantalla y miente en el store.
 
 > ⚠️ **La trampa de `sortBy` como array.** En Quasar `sortBy` era un string
 > (`"createdAt"`) y `descending` un boolean. En Vuetify **`sortBy` es un array**
 > (`["createdAt"]`) y **`sortDesc` es otro array** (`[true]`), en paralelo. Si en tu
 > mutation inicializas `sortBy: "createdAt"` (string, copiando de Quasar), la tabla
-> **no ordena y no da error**. Tiene que ser `["createdAt"]`. Media tarde, aquí.
+> ni se pinta: `TypeError: this.options.sortBy.findIndex is not a function`. Tiene
+> que ser `["createdAt"]`. (La prop suelta `sort-by="createdAt"` sí acepta el
+> string: Vuetify la envuelve en un array. Dentro de `options`, no.)
 
 **Qué ganas:** visibilidad en devtools, serializable (a URL, a localStorage, a un
 assert), escribible desde fuera (`commit("ui/SET_TICKETS_OPTIONS", {...})` sin
@@ -927,7 +937,7 @@ actions: {
 }
 ```
 
-> 🔎 **Ojo con la caché de `fetchTickets` (F10).** La action original tenía un
+> ⚠️ **Ojo con la caché de `fetchTickets` (F10).** La action original tenía un
 > `if (context.state.items.length > 0 && !options.force) return ...`. Esa caché **no
 > vale en server-side**: cada página es un fetch nuevo, siempre. Si copias el patrón
 > sin pensar, el usuario clica "página 2" y ve la 1 otra vez, sin error, sin loading.
@@ -1037,7 +1047,7 @@ reglas `.row`**, con las que perdieron **tachadas**. Esa es la demostración: no
 vez y una gana**. Si además hay CSS de Vuetify 1 en el proyecto, verás una tercera
 `.row` con `flex-direction` que no cuadra con ninguna de las otras dos.
 
-> ✅ **Buena práctica de convivencia: no uses `.row`/`.col` de nadie en pantallas
+> 💡 **Buena práctica de convivencia: no uses `.row`/`.col` de nadie en pantallas
 > Vuetify.** Dentro de Vuetify, maqueta con `<v-container>` / `<v-row>` / `<v-col>`
 > (componentes, VU1), que renderizan sus propias clases prefijadas y no dependen de
 > quién ganó la cascada. Reserva `.row`/`.col` de Bootstrap para las pantallas que
@@ -1106,7 +1116,7 @@ Componente → Store → services/ → apiClient → API — la capa de UI es re
 trozos.** Bootstrap y Vuetify conviven porque ninguno de los dos es dueño del estado.
 El dueño es Vuex, y Vuex no sabe qué librería pinta los botones.
 
-> ✅ **Cierre de la sección:** esto es un legacy real a medio migrar. Dashboard y CRUD
+> 💡 **Cierre de la sección:** esto es un legacy real a medio migrar. Dashboard y CRUD
 > en Vuetify, el resto en Bootstrap, un modal jQuery en medio, y todo funcionando.
 > **Aquí vas a vivir.** No es una vergüenza que limpiar: es el estado natural de
 > cualquier proyecto que lleva cinco años en producción y ha sobrevivido a dos modas
@@ -1116,41 +1126,67 @@ El dueño es Vuex, y Vuex no sabe qué librería pinta los botones.
 
 ## 💻 5. Código de la fase (el resultado, junto)
 
-`TicketsView.vue` en **modo cliente + Opción A** (lo recomendado). Compara su tamaño
-con el de F4:
+`TicketsView.vue` en **modo cliente + Opción A** (lo recomendado), con los diálogos
+que dejó VU2 y las anclas que sembró VU0 (`tickets-loading`, `tickets-error`,
+`tickets-retry`, `tickets-search`, `tickets-status-filter`, `tickets-clear-filters`,
+`tickets-count`, `ticket-row-<id>`, `ticket-title-<id>`, `tickets-empty`). Compara
+su tamaño con el de F4:
 
 ```vue
 <template>
   <v-container fluid>
+    <div class="d-flex align-center mb-3">
+      <h1 class="text-h5">Tickets</h1>
+      <v-spacer />
+      <v-btn color="primary" data-testid="ticket-new" @click="openCreate">Nuevo ticket</v-btn>
+    </div>
+
     <!-- resumen: los cards de F4 pueden quedarse o migrarse (ejercicio 8) -->
     <tickets-summary :tickets="allTickets" />
 
-    <!-- el buscador: v-text-field de Vuetify alimenta el :search built-in -->
-    <v-text-field
-      v-model="search"
-      label="Buscar por título..."
-      prepend-inner-icon="mdi-magnify"
-      clearable
-      dense
-      class="mb-3"
-    />
-
-    <!-- error del store (F3/F10) -->
-    <v-alert v-if="error" type="error" dense>
+    <!-- error del store (F3/F10), con su reintento -->
+    <v-alert v-if="error" type="error" dense data-testid="tickets-error">
       {{ error }}
-      <v-btn small text @click="reload">Reintentar</v-btn>
+      <v-btn small text data-testid="tickets-retry" @click="fetchTickets()">Reintentar</v-btn>
     </v-alert>
+
+    <v-row dense>
+      <v-col cols="12" md="6">
+        <!-- el buscador alimenta el :search built-in -->
+        <v-text-field v-model="search" label="Buscar por título..." prepend-inner-icon="mdi-magnify" dense data-testid="tickets-search" />
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-select v-model="statusFilter" :items="statusOptions" label="Estado" dense data-testid="tickets-status-filter" />
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-btn text block data-testid="tickets-clear-filters" @click="clearFilters">Limpiar filtros</v-btn>
+      </v-col>
+    </v-row>
+
+    <p class="grey--text text--darken-1 mb-2" data-testid="tickets-count">
+      Mostrando {{ visibleCount }} de {{ allTickets.length }} tickets
+    </p>
 
     <v-data-table
       :headers="headers"
-      :items="allTickets"
+      :items="ticketsByStatus"
       item-key="id"
       :search="search"
       :loading="loading"
       :items-per-page="10"
       :footer-props="{ 'items-per-page-options': [10, 25, 50] }"
       @click:row="goToDetail"
+      @pagination="onPagination"
     >
+      <!-- las anclas de VU0 viajan en las celdas: una por fila, y el título aparte -->
+      <template v-slot:item.id="{ item }">
+        <span :data-testid="'ticket-row-' + item.id">{{ item.id }}</span>
+      </template>
+
+      <template v-slot:item.title="{ item }">
+        <span :data-testid="'ticket-title-' + item.id">{{ item.title }}</span>
+      </template>
+
       <template v-slot:item.status="{ item }">
         <ticket-status-badge :status="item.status" />
       </template>
@@ -1164,76 +1200,233 @@ con el de F4:
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn icon small @click.stop="onEdit(item)">
+        <v-btn icon small @click.stop="openEdit(item)">
           <v-icon small>mdi-pencil</v-icon>
         </v-btn>
       </template>
 
+      <template v-slot:loading>
+        <div class="py-4" data-testid="tickets-loading">Cargando tickets…</div>
+      </template>
       <template v-slot:no-data>
-        <div class="py-4 grey--text">🔍 No hay tickets.</div>
+        <div class="py-4 grey--text" data-testid="tickets-empty">🔍 No hay tickets.</div>
       </template>
       <template v-slot:no-results>
-        <div class="py-4 grey--text">Sin coincidencias para "{{ search }}".</div>
+        <div class="py-4 grey--text" data-testid="tickets-empty">Sin coincidencias para "{{ search }}".</div>
       </template>
     </v-data-table>
+
+    <!-- Diálogo CREAR / EDITAR -->
+    <v-dialog v-model="formDialog" persistent max-width="640">
+      <v-card>
+        <v-card-title>{{ editing ? "Editar ticket" : "Nuevo ticket" }}</v-card-title>
+        <v-card-text>
+          <v-alert v-if="saveError" type="error" dense text>{{ saveError }}</v-alert>
+          <!-- :key fuerza remontar el form al cambiar de ticket → clon limpio -->
+          <ticket-form
+            v-if="formDialog"
+            :key="editingId || 'new'"
+            :initial-ticket="editingTicket"
+            :saving="saving"
+            :submit-label="editing ? 'Guardar cambios' : 'Crear ticket'"
+            @submit="onSubmit"
+            @cancel="closeForm"
+          />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <!-- Diálogo BORRAR -->
+    <v-dialog v-model="confirmDelete" max-width="420">
+      <v-card>
+        <v-card-title>Eliminar ticket</v-card-title>
+        <v-card-text>
+          ¿Seguro que quieres eliminar
+          <strong>#{{ toDelete && toDelete.id }} — {{ toDelete && toDelete.title }}</strong>?
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="confirmDelete = false">Cancelar</v-btn>
+          <v-btn color="error" :loading="deleting" @click="doDelete">Eliminar</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 import TicketStatusBadge from "../components/tickets/TicketStatusBadge.vue";
 import TicketPriorityBadge from "../components/tickets/TicketPriorityBadge.vue";
 import TicketsSummary from "../components/tickets/TicketsSummary.vue";
+import TicketForm from "../components/tickets/TicketForm.vue";
+import ticketService from "../services/ticketService";
+import socketService from "../services/socketService";
 
 // headers como constante del módulo: no es reactivo, no muta nunca.
 const HEADERS = [
   { text: "#",         value: "id",        align: "start",  sortable: true },
   { text: "Título",    value: "title",     align: "start",  sortable: true },
-  { text: "Estado",    value: "status",    align: "center", sortable: true },
-  { text: "Prioridad", value: "priority",  align: "center", sortable: true },
+  { text: "Estado",    value: "status",    align: "center", sortable: true, filterable: false },
+  { text: "Prioridad", value: "priority",  align: "center", sortable: true, filterable: false },
   { text: "Asignado",  value: "assignee",  align: "start",  sortable: true },
-  { text: "Creado",    value: "createdAt", align: "end",    sortable: true },
+  { text: "Creado",    value: "createdAt", align: "end",    sortable: true, filterable: false },
   { text: "",          value: "actions",   align: "end",    sortable: false, filterable: false }
+];
+
+const STATUS_OPTIONS = [
+  { text: "Todos los estados", value: "" },
+  { text: "Abiertos",    value: "open" },
+  { text: "En progreso", value: "in_progress" },
+  { text: "Resueltos",   value: "resolved" },
+  { text: "Cerrados",    value: "closed" }
 ];
 
 export default {
   name: "TicketsView",
-  components: { TicketStatusBadge, TicketPriorityBadge, TicketsSummary },
+  components: { TicketStatusBadge, TicketPriorityBadge, TicketsSummary, TicketForm },
   data: function () {
     return {
       headers: HEADERS,
+      statusOptions: STATUS_OPTIONS,
       search: "",       // local: la auditoría de F10 no lo mandó al store
-      editing: null
+      statusFilter: "",
+      visibleCount: 0,  // lo informa la tabla, ya filtrado (@pagination)
+      formDialog: false,
+      confirmDelete: false,
+      editing: false,
+      editingId: null,
+      editingTicket: null,
+      toDelete: null,
+      saving: false,
+      deleting: false,
+      saveError: ""
     };
   },
-  computed: {
-    ...mapGetters("tickets", ["allTickets"]),
-    ...mapState("tickets", ["loading", "error"])
-  },
-  created: function () {
-    // modo CLIENTE: aquí SÍ disparas el fetch (no hay @update:options que lo haga)
-    this.$store.dispatch("tickets/fetchTickets");
-  },
-  methods: {
-    reload: function () {
-      this.$store.dispatch("tickets/fetchTickets", { force: true });
-    },
-    goToDetail: function (ticket) {
-      this.$router.push("/tickets/" + ticket.id);
-    },
-    onEdit: function (ticket) {
-      this.editing = ticket;
-      window.$("#ticketModal").modal("show"); // Bootstrap crudo, A1/F5
+  computed: Object.assign(
+    {},
+    mapGetters("tickets", ["allTickets"]),
+    mapState("tickets", ["loading", "error"]),
+    {
+      // el estado filtra antes de la tabla; el texto lo filtra ella (:search)
+      ticketsByStatus: function () {
+        var status = this.statusFilter;
+        return this.allTickets.filter(function (t) { return !status || t.status === status; });
+      }
     }
-  }
+  ),
+  mounted: function () {
+    // modo CLIENTE: aquí SÍ disparas el fetch (no hay @update:options que lo haga)
+    this.fetchTickets();
+  },
+  methods: Object.assign(
+    {},
+    mapActions("tickets", ["fetchTickets"]),
+    {
+      onPagination: function (p) {
+        this.visibleCount = p.itemsLength;
+      },
+      clearFilters: function () {
+        this.search = "";
+        this.statusFilter = "";
+      },
+      goToDetail: function (ticket) {
+        this.$router.push("/tickets/" + ticket.id);
+      },
+      openCreate: function () {
+        this.editing = false;
+        this.editingId = null;
+        this.editingTicket = null;
+        this.saveError = "";
+        this.formDialog = true;
+      },
+      openEdit: function (ticket) {
+        this.editing = true;
+        this.editingId = ticket.id;
+        this.editingTicket = ticket;
+        this.saveError = "";
+        this.formDialog = true;
+      },
+      closeForm: function () {
+        this.formDialog = false;
+      },
+      onSubmit: function (formData) {
+        var self = this;
+        this.saving = true;
+        this.saveError = "";
+
+        // reglas de negocio: las pone la VISTA, no el form (igual que en F5);
+        // y el resultado entra al store, que es de donde lee la lista (F10)
+        var request;
+        if (this.editing) {
+          request = this.$store.dispatch("tickets/updateTicket", { id: this.editingId, changes: formData });
+        } else {
+          var payload = Object.assign({}, formData, {
+            status: "open",
+            reporter: this.$store.getters["auth/currentUser"].username,
+            createdAt: new Date().toISOString()
+          });
+          request = ticketService.createTicket(payload).then(function (created) {
+            self.$store.commit("tickets/UPSERT_TICKET", created);
+            socketService.emit("ticket:created", created); // 📣 anunciar a los demás, como en F8
+            return created;
+          });
+        }
+
+        return request
+          .then(function () {
+            self.formDialog = false;
+          })
+          .catch(function () {
+            self.saveError = "No se pudo guardar. Intenta de nuevo.";
+          })
+          .finally(function () {
+            self.saving = false;
+          });
+      },
+      askDelete: function (ticket) {
+        this.toDelete = ticket;
+        this.confirmDelete = true;
+      },
+      doDelete: function () {
+        var self = this;
+        this.deleting = true;
+        return ticketService
+          .deleteTicket(this.toDelete.id)
+          .then(function () {
+            self.confirmDelete = false;
+            return self.fetchTickets({ force: true });
+          })
+          .catch(function () {
+            self.saveError = "No se pudo eliminar.";
+            self.confirmDelete = false;
+          })
+          .finally(function () {
+            self.deleting = false;
+          });
+      }
+
+    }
+  )
 };
 </script>
 ```
 
-**🔎 Lo que NO ves y es la nota importante:** no hay `filteredTickets`, no hay
-`sortedTickets`, no hay `pagedTickets`, no hay `toggleSort`, no hay `goToPage`, no hay
-watchers `search → page = 1`. **~150 líneas menos.** El `data()` tiene tres cosas y una
-es el `editing` del modal. Ese vacío es el borrado, hecho.
+**🔎 Lo que NO ves y es la nota importante:** no hay `sortedTickets`, no hay
+`pagedTickets`, no hay `toggleSort`, no hay `goToPage`, no hay watchers
+`search → page = 1`. El texto lo filtra la tabla (`:search`); el estado, un computed
+de una línea antes de ella; y el contador lo informa la tabla misma con
+`@pagination`, que trae `itemsLength` ya filtrado. **Lo que queda en `data()` es
+casi todo de los diálogos de VU2.** Ese vacío es el borrado, hecho.
+
+> 📝 `filterable: false` en estado, prioridad y fecha: el buscador es "por título"
+> (VU0 lo congeló así), y sin eso un "open" en la caja encontraría filas por su
+> estado.
+
+**La red de VU0 contra esta vista: 14 de 14 en verde, sin tocar una línea de la
+prueba.** El `mountView()` que VU2 llenó con Vuetify ya hacía todo lo que la tabla
+pide; `setValue` sirve sobre el `v-text-field` y el `v-select`, y las anclas viajan
+en los slots `item.*`. Es la junta de dilatación de VU0 cobrando lo que prometía.
 
 > ⚠️ **`@click:row` vs el botón de acciones.** `@click:row="goToDetail"` navega al
 > hacer clic en la fila. Pero el botón de editar **también** está en una fila. Sin
@@ -1249,10 +1442,11 @@ es el `editing` del modal. Ese vacío es el borrado, hecho.
 
 - **Disparar el fetch en `created()` estando en server-side** → dos peticiones al
   montar. `@update:options` ya lo pide. (En modo cliente, al revés: `created()` SÍ.)
-- **`sortBy: "createdAt"` (string) en vez de `["createdAt"]` (array)** → la tabla no
-  ordena y no da error. En Vuetify `sortBy`/`sortDesc` son arrays.
-- **`align: "left"` en vez de `"start"`** → se ignora en silencio (Vuetify usa
-  `start`/`end`, pensando en RTL). Copiado directo de Quasar (`left`/`right`).
+- **`sortBy: "createdAt"` (string) dentro de `options`** en vez de
+  `["createdAt"]` → `TypeError: this.options.sortBy.findIndex is not a function` y
+  la tabla sin pintar. En `options`, `sortBy`/`sortDesc` son arrays.
+- **`align: "left"` en vez de `"start"`** → funciona (pone `text-left`), pero en un
+  idioma de derecha a izquierda no se voltea. Vuetify prefiere `start`/`end`.
 - **`text` escrito como `label` en el header** → cabecera vacía, sin aviso.
 - **Olvidar `sortable: false`/`filterable: false` en la columna `actions`** → puedes
   "ordenar" por los botones (no-op confuso) y el buscador "encuentra" filas por esa
@@ -1477,7 +1671,7 @@ local solo mueve el síntoma de sitio.
 
 **axios / CORS (los dos fallos con nombre propio)**
 - Headers de respuesta (normalizados a minúsculas) — https://github.com/axios/axios#response-schema
-- `Access-Control-Expose-Headers` — https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Access-Control-Expose-Headers
+- `Access-Control-Expose-Headers` — https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers
 
 ---
 

@@ -40,8 +40,8 @@ primera bifurcación de todo diagnóstico.
 
 ## 🔢 Versiones y NVM (el resumen ejecutivo de la Fase 0)
 
-- La versión del curso es **Node 14.21.3** (16.20.2 en macOS Apple Silicon),
-  documentada en `.nvmrc`. No es nostalgia: el tooling de la época
+- La versión del curso es **Node 14.21.3** (en macOS Apple Silicon, la x64
+  bajo Rosetta 2), documentada en `.nvmrc`. No es nostalgia: el tooling de la época
   (Vue CLI 3, webpack 4, node-sass si aparece) **rompe** con Node modernos.
 - NVM existe porque en una misma máquina convives con proyectos que exigen
   Node distintos. Ritual al entrar a cualquier proyecto ajeno:
@@ -145,7 +145,7 @@ json-server congela **todo** el mock: un hilo es un hilo.
 | Síntoma (en la TERMINAL) | Causa probable |
 |---|---|
 | `Cannot use import statement outside a module` | archivo ESM ejecutado por Node pelado — reescribe en CJS o revisa qué estás ejecutando |
-| `gyp ERR!` / muralla de compilación al instalar | versión de Node incompatible con el paquete (o Apple Silicon con Node 14 → F0: usa 16.20.2) |
+| `gyp ERR!` / muralla de compilación al instalar | versión de Node incompatible con el paquete (o un Node arm64 en Apple Silicon → [Apéndice 6](a6-arm64-m1.md)) |
 | `The engine "node" is incompatible` | ídem: `nvm use` antes de reinstalar |
 | `EADDRINUSE: address already in use :::3000` | algo ya usa el puerto — un json-server zombie de otra terminal; mátalo o cambia el puerto |
 | `Cannot find module 'x'` | dependencia sin instalar (`npm install`), o ruta relativa mal escrita en un `require` |
@@ -281,6 +281,6 @@ json-server congela **todo** el mock: un hilo es un hilo.
 - Node.js — docs de la línea 14: https://nodejs.org/docs/latest-v14.x/api/
 - Node.js — diferencias CJS/ESM: https://nodejs.org/docs/latest-v14.x/api/modules.html
 - NVM (Linux/macOS): https://github.com/nvm-sh/nvm
-- nvm-windows: https://github.com/coreybutler/nvm-windows
+- nvm-windows: https://github.com/nvm-windows/nvm
 - El event loop, explicado (charla clásica "What the heck is the event
   loop anyway?" — Philip Roberts, JSConf): buscar en YouTube

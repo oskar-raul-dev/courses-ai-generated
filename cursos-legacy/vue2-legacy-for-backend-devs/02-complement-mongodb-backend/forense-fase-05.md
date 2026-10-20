@@ -40,12 +40,12 @@ Antes de medir ninguna consulta, cuéntalas. En el log de la API, al abrir la
 pantalla una vez:
 
 ```
-GET /tickets 200 - 38 ms
-GET /users/5f8a… 200 - 6 ms
-GET /users/5f8b… 200 - 5 ms
-GET /users/5f8c… 200 - 6 ms
-GET /comments?ticketId=… 200 - 7 ms
-GET /comments?ticketId=… 200 - 6 ms
+GET /tickets 200 38.114 ms - 738
+GET /users/5f8a… 200 6.021 ms - 98
+GET /users/5f8b… 200 5.430 ms - 96
+GET /users/5f8c… 200 6.207 ms - 101
+GET /comments?ticketId=… 200 7.118 ms - 412
+GET /comments?ticketId=… 200 6.355 ms - 2
 … (58 líneas más)
 ```
 
@@ -56,25 +56,44 @@ vieras una sola lenta, saltarías al paso 3.
 
 ### Paso 2 — ¿el pipeline sustituye al N+1 o lo esconde?
 
-Supongamos que ya lo resolvieron con un `$lookup`. Míralo antes de celebrar:
+Supongamos que ya lo resolvieron con un `$lookup`. Míralo antes de celebrar.
+Primero, el orden de las etapas, que es lo que tu instinto de SQL mira:
 
 ```js
-> db.tickets.aggregate([
+> db.tickets.explain("executionStats").aggregate([
     { $lookup: { from: "comments", localField: "_id", foreignField: "ticketId", as: "comments" } },
     { $match: { status: "open" } }
-  ]).explain("executionStats").stages[0].$cursor.executionStats
-{ nReturned: 100000, totalDocsExamined: 100000, executionTimeMillis: 3184 }
+  ]).stages.map(function (s) { return Object.keys(s)[0]; })
+[ '$cursor', '$lookup' ]
+> …stages[0].$cursor.queryPlanner.parsedQuery
+{ status: { '$eq': 'open' } }
 ```
 
-**Qué descarta.** Descarta el índice y apunta al **orden de las etapas**: el
-`$match` está después del `$lookup`, así que el motor une los 100.000 tickets
-con sus comentarios y **después** se queda con los abiertos. Es el `WHERE` que
-tu instinto jamás habría puesto al final en SQL, y acá se escribe así todos los
-días porque el pipeline se lee como una receta. Con el `$match` primero:
+El `$match` escrito después del `$lookup` ya no está después: el motor lo movió
+dentro del `$cursor`, antes de unir, porque no depende del campo `comments`. Es
+el único reordenamiento que el optimizador de 4.4 se permite, y lo hace solo.
+Escribir el `$match` primero sigue siendo la costumbre sana —deja el plan legible
+y funciona cuando el filtro **sí** depende de algo calculado antes—, pero aquí no
+es lo que está lento. Lo que el motor **no** adelanta son el `$sort` y el
+`$limit`: escritos después del `$lookup`, unen todos los que pasaron el filtro,
+no los 20 que pinta la pantalla.
+
+Lo lento está del otro lado de la unión:
 
 ```js
-{ nReturned: 41230, totalDocsExamined: 41230, executionTimeMillis: 412 }
+> // 20 tickets abiertos con sus comentarios (la base de 100k / 400k del generador)
+> db.comments.getIndexes().map(function (i) { return i.name; })
+[ '_id_' ]
+> // … el pipeline con $match, $sort, $limit: 20 y el $lookup: 1372 ms
+> db.comments.createIndex({ ticketId: 1 })
+> // … el mismo pipeline: 25 ms
 ```
+
+**Qué descarta.** Descarta el orden de las etapas y apunta a la **colección
+derecha**. Sin índice en `comments.ticketId`, cada uno de los 20 tickets hace su
+propio recorrido de los 400.000 comentarios: el N+1 no desapareció, se mudó al
+servidor y dejó de verse en el log. El `$lookup` es un nested-loop; su lado
+derecho necesita índice como cualquier FK.
 
 ### Paso 3 — ¿el resultado tiene la forma que esperas?
 

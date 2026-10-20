@@ -1,0 +1,92 @@
+{
+ "https://www.youtube.com/watch?v=-56x56UppqQ": [
+  "200",
+  "MongoDB Crash Course",
+  "Traversy Media"
+ ],
+ "https://www.youtube.com/watch?v=-bt_y4Loofg": [
+  "200",
+  "MongoDB in 100 Seconds",
+  "Fireship"
+ ],
+ "https://www.youtube.com/watch?v=0buKQHokLK8": [
+  "200",
+  "How do NoSQL databases work? Simply Explained!",
+  "Simply Explained"
+ ],
+ "https://www.youtube.com/watch?v=1BfCnjr_Vjg": [
+  "200",
+  "WebSockets in 100 Seconds & Beyond with Socket.io",
+  "Fireship"
+ ],
+ "https://www.youtube.com/watch?v=3GHZd0zv170": [
+  "200",
+  "Data Modeling with MongoDB",
+  "MongoDB"
+ ],
+ "https://www.youtube.com/watch?v=6LyagkoRWYA": [
+  "200",
+  "Axios Crash Course | HTTP Library",
+  "Traversy Media"
+ ],
+ "https://www.youtube.com/watch?v=7r4xVDI2vho": [
+  "200",
+  "Jest Crash Course - Unit Testing in JavaScript",
+  "Traversy Media"
+ ],
+ "https://www.youtube.com/watch?v=Gjnup-PuquQ": [
+  "200",
+  "Docker in 100 Seconds",
+  "Fireship"
+ ],
+ "https://www.youtube.com/watch?v=Jv2uxzhPFl4": [
+  "200",
+  "Test-Driven Development // Fun TDD Introduction with JavaScript",
+  "Fireship"
+ ],
+ "https://www.youtube.com/watch?v=L72fhGm1tfE": [
+  "200",
+  "Express JS Crash Course",
+  "Traversy Media"
+ ],
+ "https://www.youtube.com/watch?v=QAqK-R9HUhc": [
+  "200",
+  "MongoDB Schema Design Best Practices",
+  "MongoDB"
+ ],
+ "https://www.youtube.com/watch?v=Qw9zlE3t8Ko": [
+  "200",
+  "Docker Compose in 12 Minutes",
+  "Jake Wright"
+ ],
+ "https://www.youtube.com/watch?v=RboyQ6IQDyI": [
+  "200",
+  "Create A Full Fake REST API With JSON Server in a Vue application",
+  "Dan Vega"
+ ],
+ "https://www.youtube.com/watch?v=UBUNrFtufWo": [
+  "200",
+  "Session vs Token Authentication in 100 Seconds",
+  "Fireship"
+ ],
+ "https://www.youtube.com/watch?v=WP4-WgHqbPQ": [
+  "200",
+  "Form Validation in Vue.js using Vuelidate - Crash Course",
+  "The Nerdy Dev "
+ ],
+ "https://www.youtube.com/watch?v=ZKEqqIO7n-k": [
+  "200",
+  "Learn Socket.io In 30 Minutes",
+  "Web Dev Simplified"
+ ],
+ "https://www.youtube.com/watch?v=mbsmsi7l3r4": [
+  "200",
+  "JWT Authentication Tutorial - Node.js",
+  "Web Dev Simplified"
+ ],
+ "https://www.youtube.com/watch?v=yNrqlxn0nc0": [
+  "200",
+  "API Driven Application with Vue.js, JSON-Server and Axios",
+  "Paul Halliday"
+ ]
+}

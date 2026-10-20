@@ -257,8 +257,8 @@ LAS 5 PREGUNTAS son 4 de diseño de software + 1 de operación.
 
 **El canon del debate (léelo en este orden)**
 
-- Sarah Mei — *Why You Should Never Use MongoDB* (2013): http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/
-- William Zola — *6 Rules of Thumb for MongoDB Schema Design*: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design
+- Sarah Mei — *Why You Should Never Use MongoDB* (2013): https://web.archive.org/web/20231226122943/http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/
+- William Zola — *6 Rules of Thumb for MongoDB Schema Design*: https://www.mongodb.com/company/blog/mongodb/6-rules-of-thumb-for-mongodb-schema-design
 - Michael Stonebraker — *The "NoSQL" Discussion has Nothing to Do With SQL* (2010, blog de CACM): https://cacm.acm.org/blogs/blog-cacm/50678-the-nosql-discussion-has-nothing-to-do-with-sql/fulltext
 - Jepsen — *MongoDB 4.2.6* (2020): https://jepsen.io/analyses/mongodb-4.2.6
 - Jepsen — el índice completo de análisis (lee también el de Postgres: nadie sale ileso): https://jepsen.io/analyses
@@ -275,7 +275,7 @@ LAS 5 PREGUNTAS son 4 de diseño de software + 1 de operación.
 - Daniel Abadi — PACELC (el paper y su blog: "Consistency Tradeoffs in Modern
   Distributed Database System Design"): busca "PACELC Abadi"
 - Martin Fowler — bliki: NoSQL, PolyglotPersistence, AggregateOrientedDatabase:
-  https://martinfowler.com/nosql.html
+  https://martinfowler.com/data/index.html#nosql
 
 **El otro lado**
 

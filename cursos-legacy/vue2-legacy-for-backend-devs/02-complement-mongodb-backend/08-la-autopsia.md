@@ -252,9 +252,9 @@ Sin lecturas nuevas: esta fase se hace con las referencias de las fases
 3–7 abiertas. Dos relecturas rinden especialmente:
 
 - 6 Rules of Thumb for MongoDB Schema Design — releída DESPUÉS de tu
-  autopsia, es otra lectura: https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design
+  autopsia, es otra lectura: https://www.mongodb.com/company/blog/mongodb/6-rules-of-thumb-for-mongodb-schema-design
 - Building with Patterns: A Summary — ahora como checklist de lo que tu v2
-  aplicó: https://www.mongodb.com/blog/post/building-with-patterns-a-summary
+  aplicó: https://www.mongodb.com/company/blog/building-with-patterns-a-summary
 
 > ℹ️ **Nota de versión:** los dos artículos de blog son atemporales (no atan a
 > una versión de Mongo); el resto del stack de esta fase sigue fijado en Mongo
@@ -268,7 +268,7 @@ Y una pieza nueva solo si haces el ej. 29:
 
 - Data Modeling — Schema Versioning + el patrón de migración incremental
   (Fase 4 del curso, y la Fase 14 — Operación para la migración sin ventana):
-  https://www.mongodb.com/docs/v4.4/tutorial/model-data-for-schema-versioning/
+  https://www.mongodb.com/docs/manual/data-modeling/design-patterns/data-versioning/schema-versioning/
 
 ---
 

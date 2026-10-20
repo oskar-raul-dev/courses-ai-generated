@@ -44,8 +44,9 @@ git switch -c incidente/06 fase-06-atomicidad-transacciones-consistencia   # 3 �
 ```
 
 > ⚠️ Antes de sembrar un escenario, ten a mano cómo volver: `npm run seed`
-> regenera la base del curso, y `docker compose down -v && docker compose up -d`
-> la deja de cero ([A01](a01-docker.md)).
+> regenera la base del curso. Dejarla de cero es `docker compose down`, borrar a
+> mano la carpeta de `MONGO_DATA_PATH` y volver a subir: con el bind mount de la
+> Fase 0, `down -v` **no** toca los datos ([A01](a01-docker.md)).
 
 ### La convención de commits
 
@@ -108,17 +109,18 @@ git tag -a inc/f06/doble-take-fix  -m "Causa raíz, fix, y la prueba en verde."
 
 ### 🎫 El ticket
 
-> "Levanté el compose como dice el README. `docker compose ps` dice que está
-> corriendo. Pero ni Compass ni mongosh conectan, y la API tampoco arranca. Ayer
-> funcionaba, hoy reinicié la máquina y ya no. No cambié nada."
+> "Levanté el compose como dice el README. Ni Compass ni mongosh conectan, y la
+> API tampoco arranca. Ayer funcionaba, hoy reinicié la máquina y ya no. No
+> cambié nada. El `up` escupió algo en rojo, pero eso sale siempre."
 
 **Reportado por:** alguien que se incorpora al proyecto · **Ambiente:** local
 
 ### 🎯 Qué se te pide
 
 Que conecte, y una explicación de **por qué el cliente no podía saber la causa**.
-Este incidente entrena el reflejo más rentable de la operación: leer el log del
-servidor antes que el mensaje de error del cliente.
+Este incidente entrena el reflejo más rentable de la operación: leer lo que dijo
+el lado servidor —el arranque, el log— antes que el mensaje de error del
+cliente.
 
 ### 🔧 Preparación
 
@@ -135,17 +137,16 @@ docker compose up -d
 
 <details><summary>💡 <b>Pista 1</b> — dónde mirar</summary>
 
-El cliente solo sabe que no lo dejaron entrar; el motivo está del otro lado. Hay
-un comando que te enseña lo que el servidor intentó hacer al arrancar, y lo dice
-en texto plano.
+El cliente solo sabe que no lo dejaron entrar; el motivo está del otro lado. El
+`up` lo dijo en texto plano, y hay un comando que te enseña en qué estado quedó
+cada contenedor.
 
 </details>
 
 <details><summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`docker compose ps` puede decir "up" y el proceso estar reiniciándose en bucle.
-Mira el log completo desde el arranque y busca las palabras `listener` y
-`address`.
+`docker compose ps -a`: ¿el servicio está `running`, o solo `created`? Y si
+miras `docker compose logs mongo`, fíjate en lo que **no** hay.
 
 </details>
 
@@ -173,25 +174,34 @@ Mira el log completo desde el arranque y busca las palabras `listener` y
 
 <details><summary>✅ <b>Solución de referencia</b></summary>
 
-**Causa raíz.** El `mongod` del compose no llegó a escuchar porque el puerto
-27017 ya estaba ocupado. En el log:
+**Causa raíz.** El contenedor del compose nunca arrancó: Docker no pudo
+publicar el 27017 porque ya estaba ocupado. Lo dijo el `up`, en la línea roja
+que "sale siempre":
 
 ```
-mongo_1  | {"s":"E","c":"NETWORK","msg":"Failed to set up listener",
-mongo_1  |  "attr":{"error":"Address already in use"}}
-mongo_1  | {"s":"I","c":"CONTROL","msg":"now exiting"}
+Error response from daemon: failed to set up container networking: driver failed programming
+external connectivity on endpoint tiquetera-mongo (…): Bind for 0.0.0.0:27017 failed: port is already allocated
 ```
 
-Y el "ayer funcionaba" tiene explicación exacta: el reinicio de la máquina
-arrancó el `mongod` **nativo** instalado como servicio, que ayer no estaba
-levantado. Dos servidores compitiendo; el de Docker llega segundo y se va.
+```bash
+docker compose ps -a        # tiquetera-mongo   created   Created
+docker compose logs mongo   # (vacío)
+```
+
+El log de `mongod` está vacío porque `mongod` no llegó a ejecutarse: el choque
+es de Docker, antes del proceso. Y el "ayer funcionaba" tiene explicación
+exacta: el reinicio de la máquina arrancó el `mongod` **nativo** instalado como
+servicio, que ayer no estaba levantado. Dos servidores compitiendo por el
+puerto; el de Docker llega segundo y se queda en `created`. (Con un `mongod`
+nativo, Docker Desktop lo dice con otras palabras —`Ports are not available …
+address already in use`—; el diagnóstico es el mismo.)
 
 **Parche mínimo:**
 
 ```bash
 docker rm -f mongo-intruso          # o detén el servicio nativo
 docker compose up -d
-docker compose logs --tail 20 mongo
+docker compose ps -a                # ahora sí: running
 ```
 
 **La refactorización correcta.** Dos movimientos que hacen imposible la
@@ -214,9 +224,10 @@ es lo que le pasas al siguiente que reporte esto:
 
 ```bash
 # scripts/doctor.sh
-docker compose ps
-docker compose logs --tail 30 mongo | grep -i "listener\|address\|exiting" || echo "log limpio"
-docker compose exec -T mongo mongosh --quiet --eval 'db.runCommand({ping:1})'
+docker compose ps -a                                   # running, o solo created
+docker compose logs --tail 30 mongo | grep -i "error\|exiting" || echo "log limpio"
+# dentro de mongo:4.4 el shell es `mongo`: la imagen no trae mongosh
+docker compose exec -T mongo mongo --quiet --eval 'db.runCommand({ping:1}).ok'
 ```
 
 **Prevención.** En el README, la regla de oro de este incidente escrita como
@@ -773,7 +784,8 @@ filtra?
 
 <details><summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-¿Cuántos documentos se unen antes de que el filtro descarte la mayoría?
+¿Cuántos documentos se unen antes de quedarte con los 50 que pinta la pantalla?
+¿Y contra qué se une cada uno?
 
 </details>
 
@@ -797,17 +809,23 @@ filtra?
 
 **Causa raíz.** Dos capas del mismo problema, y conviene separarlas:
 
-1. *El pipeline une antes de filtrar.* El `$match` por `status` está **después**
-   del `$lookup` con comentarios, así que el motor une los 100.000 tickets con
-   sus 400.000 comentarios y luego se queda con los abiertos:
+1. *El pipeline une antes de recortar, y une contra nada indexado.* El
+   pipeline de la pantalla tiene el `$lookup` escrito primero y el `$match`,
+   el `$sort` y el `$limit: 50` después. El `$match` lo adelanta el motor solo
+   (el `explain` lo muestra dentro del `$cursor`); el `$sort` y el `$limit`, no.
+   Así que se unen **los 17.875 abiertos** con sus comentarios, y cada unión
+   recorre la colección de comentarios entera, porque `comments.ticketId` no
+   tiene índice. Medido sobre la base del generador:
 
-   ```
-   nReturned: 41230, totalDocsExamined: 100000, executionTimeMillis: 3184
-   ```
+   | Pipeline (50 abiertos con sus comentarios) | sin índice en `comments.ticketId` | con índice |
+   |---|---|---|
+   | `$lookup` escrito primero | más de 20 s (`MaxTimeMSExpired` con el tope de 20 s) | 440 ms |
+   | `$match` → `$sort` → `$limit` → `$lookup` | 3.351 ms | 44 ms |
 
-   Moviendo el `$match` al principio, la misma consulta baja a cientos de
-   milisegundos. Es el `WHERE` que tu instinto SQL jamás habría puesto al final,
-   y acá se escribe así porque el pipeline se lee como una receta.
+   Los "cuatro segundos" del ticket son la segunda fila sin índice: alguien ya
+   había reordenado el pipeline, y el tablero seguía lento. Es el `WHERE` y el
+   `LIMIT` que tu instinto SQL jamás habría puesto al final, más el índice en la
+   FK que jamás habría olvidado.
 
 2. *El modelo pide otra cosa.* Aun con el orden corregido, la pantalla necesita
    tickets **con su conteo de comentarios**, y calcularlo en cada carga es unir
@@ -817,12 +835,15 @@ filtra?
 **Parche mínimo:**
 
 ```js
+db.comments.createIndex({ ticketId: 1 })          // la FK que el $lookup consulta 50 veces
+
 db.tickets.aggregate([
   { $match: { status: "open" } },                 // primero, siempre
   { $sort: { createdAt: -1 } },
   { $limit: 50 },                                 // y solo lo que la pantalla pinta
   { $lookup: { from: "comments", localField: "_id", foreignField: "ticketId", as: "comments" } }
 ])
+// 44 ms en la base del generador (3.351 sin el índice)
 ```
 
 **La refactorización correcta.** Un contador denormalizado en el ticket:
@@ -1140,11 +1161,16 @@ Un índice compuesto se puede usar empezando por su primera clave. Tu consulta,
 
 **Causa raíz.** El compuesto está **al revés** para esta consulta. Con
 `{ createdAt: -1, status: 1 }`, el prefijo izquierdo es `createdAt`, y la consulta
-no filtra por ese campo: no hay por dónde entrar al índice. El plan lo dice:
+no filtra por ese campo: el índice no puede acotar por `status`. Mongo igual lo
+usa —le sirve para ordenar—, y por eso el plan engaña a primera vista:
 
 ```
-totalKeysExamined: 0, totalDocsExamined: 100000, stage: 'COLLSCAN'
+nReturned: 17875, totalKeysExamined: 100000, totalDocsExamined: 100000,
+executionTimeMillis: 85, stage: 'FETCH' ← 'IXSCAN' (createdAt_-1_status_1)
 ```
+
+`IXSCAN`, sí, recorriendo las 100.000 claves y trayendo los 100.000 documentos
+para descartar los que no son `open`.
 
 Es exactamente la regla de prefijo izquierdo que ya conoces de tu motor
 relacional; lo único nuevo es dónde leerla.
@@ -1156,7 +1182,7 @@ db.tickets.createIndex({ status: 1, createdAt: -1 })
 ```
 
 ```
-totalKeysExamined: 20, totalDocsExamined: 20, executionTimeMillis: 3
+totalKeysExamined: 20, totalDocsExamined: 20, executionTimeMillis: 0
 ```
 
 Con el filtro entrando por el prefijo, el orden sale gratis del propio índice: la
@@ -1227,9 +1253,9 @@ meta-error de la fase — lo lento es el modelo, y eso es el
 ### 🎫 El ticket
 
 > "La migración de `soporte_v1` a `soporte_v2` terminó anoche y el reporte dice
-> 100.000 de 100.000. Pero hoy el tablero muestra tickets cerrados como si
-> estuvieran abiertos, y a varios les cambió el agente asignado. Los totales por
-> estado no cuadran con los de la semana pasada."
+> 100.000 de 100.000. Pero hoy el tablero muestra más de la mitad de los tickets
+> sin estado, los abiertos aparecen en progreso, y ninguno tiene agente asignado.
+> Los totales por estado no cuadran con los de la semana pasada."
 
 **Reportado por:** el analista de reportes · **Ambiente:** la base migrada
 
@@ -1245,8 +1271,55 @@ este incidente es la demostración.
 Un seed de las dos bases y una migración con el bug puesto:
 
 ```bash
-node scripts/seed.soporte-v1.js
+node scripts/seed-antipattern.js         # soporte_v1, la de la Fase 3
 node scripts/migrate.incidente-08.js     # migra con el mapa de estados corrido
+```
+
+La migración, para copiarla tal cual (no la leas antes de investigar: es la
+respuesta):
+
+```js
+// scripts/migrate.incidente-08.js — la migración de anoche, con sus dos bugs puestos
+const { MongoClient } = require("mongodb");
+
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017";
+const STATUS = ["open", "in_progress", "resolved", "closed"]; // 💣 posicional, y statusId empieza en 1
+
+async function main() {
+  const client = await MongoClient.connect(MONGO_URL, { useUnifiedTopology: true });
+  const src = client.db("soporte_v1");
+  const dst = client.db("soporte_v2");
+  await dst.dropDatabase();
+  // la clave estable de la migración: sin este índice, cada corrección por legacyId es un COLLSCAN
+  await dst.collection("tickets").createIndex({ legacyId: 1 }, { unique: true });
+
+  const userMap = {}; // 💣 se llena DESPUÉS: tickets se migra primero
+  let lote = [];
+  for await (const t of src.collection("tickets").find({})) {
+    lote.push({
+      legacyId: t._id,
+      title: t.title,
+      description: t.description,
+      status: STATUS[t.statusId],
+      assignee: userMap[t.assigneeId] || null,
+      createdAt: t.createdAt
+    });
+    if (lote.length === 5000) { await dst.collection("tickets").insertMany(lote); lote = []; }
+  }
+  if (lote.length) await dst.collection("tickets").insertMany(lote);
+
+  for await (const u of src.collection("users").find({})) {
+    userMap[u._id] = u.username;
+    await dst.collection("users").insertOne({ legacyId: u._id, username: u.username, name: u.name });
+  }
+
+  const n = await dst.collection("tickets").countDocuments();
+  const total = await src.collection("tickets").countDocuments();
+  console.log("Migración OK: " + n + " de " + total + " tickets");
+  await client.close();
+}
+
+main().catch(function (e) { console.error(e); process.exit(1); });
 ```
 
 ---
@@ -1294,36 +1367,53 @@ Si los ids del origen empiezan en 1 y tu arreglo de traducción empieza en 0,
 **Causa raíz.** Dos, y la segunda solo aparece si miras las referencias:
 
 1. *El mapa de estados corrido una posición.* El script traduce
-   `status_id → status` indexando un arreglo desde 0, y los ids del origen
-   empiezan en 1. Todos los tickets quedaron con el estado anterior al suyo. Los
-   conteos globales **coinciden** porque el corrimiento es uniforme —hay la misma
-   cantidad de documentos en cada grupo, solo que con la etiqueta cambiada—, y
-   por eso ninguna verificación por cantidad lo detectó.
+   `statusId → status` indexando un arreglo desde 0, y los ids del origen
+   empiezan en 1. Cada ticket quedó con el estado **siguiente** al suyo (`1`,
+   abierto, como `in_progress`; `3`, resuelto, como `closed`), y el `4` —cerrado,
+   el 60 % de la base— apunta fuera del arreglo: `STATUS[4]` es `undefined` y el
+   documento llega con `status: null`. El conteo total **coincide** (100.000 de
+   100.000: no se perdió ni un documento, se les puso la etiqueta equivocada), y
+   por eso la verificación por cantidad lo dio por bueno.
 
    ```js
-   // origen
-   { ticket_id: 1, status_id: 4, assignee_id: 12 }
-   // destino
-   { legacyId: 1, status: 'open', assignee: 'ana' }     // status_id 4 era 'closed'
+   // origen (soporte_v1)
+   { _id: 1, statusId: 4, assigneeId: 2 }
+   // destino (soporte_v2)
+   { legacyId: 1, status: null, assignee: null }        // statusId 4 era 'closed'
    ```
 
+   Medido sobre los 100.000 de `seed-antipattern.js`:
+
+   | `status` en el destino | Tickets | Lo que era en el origen |
+   |---|---|---|
+   | `null` | 59.495 | `closed` (`statusId` 4) |
+   | `in_progress` | 13.900 | `open` (1) |
+   | `resolved` | 12.967 | `in_progress` (2) |
+   | `closed` | 13.638 | `resolved` (3) |
+
 2. *Referencias en `null`.* `tickets` se migró **antes** que `users`, así que el
-   script no tenía el mapa `user_id → username` y resolvió a `null` sin quejarse.
-   De ahí los agentes que "cambiaron".
+   script no tenía el mapa `assigneeId → username` y resolvió a `null` sin quejarse.
+   De ahí los agentes que desaparecieron: 85.411 tickets tenían `assigneeId` en el
+   origen y **cero** tienen `assignee` en el destino.
 
 **Parche mínimo.** El mapa se corrige y se vuelve a aplicar **solo sobre lo
 migrado**, sin repetir la migración entera:
 
 ```js
 // scripts/fix-08-status.js — idempotente: usa el origen como verdad
-db.getSiblingDB("soporte_v1").tickets.find({}, { ticket_id: 1, status_id: 1 })
+db.getSiblingDB("soporte_v1").tickets.find({}, { statusId: 1 })
   .forEach(function (src) {
     db.tickets.updateOne(
-      { legacyId: src.ticket_id },
-      { $set: { status: STATUS_MAP[src.status_id] } }    // mapa por CLAVE, no por índice
+      { legacyId: src._id },
+      { $set: { status: STATUS_MAP[src.statusId] } }    // mapa por CLAVE, no por índice
     );
   });
 ```
+
+`STATUS_MAP` es `{ 1: "open", 2: "in_progress", 3: "resolved", 4: "closed" }`, y el
+script corre con `mongo soporte_v2 scripts/fix-08-status.js`. Sobre los 100.000
+tarda **23 s** porque la migración dejó un índice único en `legacyId`; sin él, cada
+`updateOne` recorre la colección entera y el arreglo no termina en una tarde.
 
 Fíjate en el detalle que evita la reincidencia: el mapa deja de ser un arreglo
 posicional y pasa a ser un objeto con claves explícitas. Un off-by-one no se
@@ -1341,12 +1431,12 @@ producción** y le faltaban tres cosas que no cuestan casi nada:
 // scripts/verify-migration.js
 var sample = srcTickets.aggregate([{ $sample: { size: 50 } }]).toArray();
 sample.forEach(function (src) {
-  var dst = dstTickets.findOne({ legacyId: src.ticket_id });
-  assertEqual(STATUS_MAP[src.status_id], dst.status, "status " + src.ticket_id);
-  assertEqual(USER_MAP[src.assignee_id] || null, dst.assignee, "assignee " + src.ticket_id);
+  var dst = dstTickets.findOne({ legacyId: src._id });
+  assertEqual(STATUS_MAP[src.statusId], dst.status, "status " + src._id);
+  assertEqual(USER_MAP[src.assigneeId] || null, dst.assignee, "assignee " + src._id);
 });
 // más los extremos, que son donde viven los off-by-one:
-["min status_id", "max status_id", "assignee_id null", "createdAt más antiguo"]
+["min statusId", "max statusId", "assigneeId null", "createdAt más antiguo"]
 ```
 
 Y el orden de ejecución deja de ser implícito: **los referenciados primero**
@@ -1364,7 +1454,7 @@ it("no quedan tickets con estado fuera del enum", async function () {
 it("la distribución por estado coincide con el origen", async function () {
   for (var id in STATUS_MAP) {
     expect(await dst.countDocuments({ status: STATUS_MAP[id] }))
-      .toBe(await src.countDocuments({ status_id: Number(id) }));
+      .toBe(await src.countDocuments({ statusId: Number(id) }));
   }
 });
 ```
@@ -1489,7 +1579,7 @@ válida, solo que inútil.
 db.tickets.aggregate([
   { $group: { _id: "$status", total: { $sum: 1 } } }
 ])
-// [ { "_id":"open", "total":41230 }, { "_id":"closed", "total":38110 }, … ]
+// [ { "_id":"closed", "total":58977 }, { "_id":"open", "total":17875 }, … ]
 ```
 
 **La refactorización correcta.** El pipeline de un reporte que alguien va a
@@ -1557,7 +1647,7 @@ tenías un bug sino un batch disfrazado de consulta.
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 1,5-2 h
 
-> 🧩 **Incidente de costura, autocontenido.** No hace falta haber escrito el
+> 🧭 **Incidente de costura, autocontenido.** No hace falta haber escrito el
 > frontend ni haber hecho el Curso 01: se te entrega ya construido y solo tienes
 > que levantarlo.
 
@@ -1593,11 +1683,13 @@ npm run mock            # el mock original, en :3000 — tu referencia
 npm run serve           # el frontend, en :8080
 ```
 
-Y para el incidente, apúntalo a tu backend cambiando **solo** el `baseURL`:
+Y para el incidente, levanta tu backend en el **3001** (`PORT=3001`: el 3000 lo
+tiene el mock mientras comparas, y el 4000 es de los sockets) y apunta el
+frontend ahí cambiando **solo** el `baseURL`:
 
 ```js
 // src/services/apiClient.js — la única línea que se toca en todo el frontend
-baseURL: "http://localhost:4000"
+baseURL: "http://localhost:3001"
 ```
 
 ---
@@ -1610,7 +1702,7 @@ dos respuestas carácter por carácter.
 
 ```bash
 curl -s http://localhost:3000/tickets | head -c 300   # el mock
-curl -s http://localhost:4000/tickets | head -c 300   # el tuyo
+curl -s http://localhost:3001/tickets | head -c 300   # el tuyo
 ```
 
 </details>
@@ -1678,7 +1770,7 @@ ninguno produce un error:
 **Parche mínimo** — la frontera, que ya existía a medias:
 
 ```js
-// src/api/serializers.js
+// src/lib/serializers.js
 function serializeTicket(doc) {
   return {
     id: doc._id.toString(),                    // la base habla Mongo…
@@ -1755,7 +1847,7 @@ construir el `ObjectId`.
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 1,5-2 h
 
-> 🧩 **Incidente de costura, autocontenido.** El frontend se entrega construido;
+> 🧭 **Incidente de costura, autocontenido.** El frontend se entrega construido;
 > no hace falta haber hecho el Curso 01 ni haberlo escrito.
 
 ### 🎫 El ticket

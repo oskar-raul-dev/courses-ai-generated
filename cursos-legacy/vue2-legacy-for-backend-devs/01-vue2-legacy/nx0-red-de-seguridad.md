@@ -4,7 +4,7 @@
 > **Prerequisito duro: F11 (Testing).** Sin saber montar componentes y mockear
 > la frontera, aquí no hay nada que construir.
 
-> 📖 **Antes de esta fase, lee la historia de tu rama:**
+> 📚 **Antes de esta fase, lee la historia de tu rama:**
 > [`nx00-historia-ruta-nx.md`](nx00-historia-ruta-nx.md). Cuenta quién empezó la rama
 > `nuxt-ayuda`, en qué estado quedó, por qué paró y qué le pide hoy PizzaPaisa. Son
 > ocho minutos, y son los que convierten esta ruta en un rescate en vez de un
@@ -104,7 +104,7 @@ primer commit de Nuxt y no habrá servido de nada. La regresión se agarra de lo
 que **no** va a cambiar: qué texto ve el usuario, qué evento se emite, qué
 petición sale a la red.
 
-> 🔎 **Qué hace un test de regresión de migración:** congela el contrato
+> 🧠 **Qué hace un test de regresión de migración:** congela el contrato
 > *externo* de una pieza —lo que el resto del sistema y el usuario esperan de
 > ella— para que puedas destrozarle las tripas con red debajo.
 
@@ -149,7 +149,7 @@ testeado**, y quien lo cambie sabe que rompe un test a propósito. Un selector d
 clase es un contrato accidental —nadie prometió que `.badge-danger` iba a
 seguir ahí, y cambiarlo rompe tests sin que el autor lo sospeche.
 
-> ✅ **Buenas prácticas:**
+> 💡 **Buenas prácticas:**
 > - Interroga por `data-testid`, por **texto visible** (`wrapper.text()`), o por
 >   **evento emitido** (`wrapper.emitted()`). Los tres sobreviven al cambio de
 >   molde.
@@ -159,10 +159,17 @@ seguir ahí, y cambiarlo rompe tests sin que el autor lo sospeche.
 > - Nómbralos por **rol semántico**, no por posición: `ticket-row`, no
 >   `second-row`. El rol no cambia al reordenar.
 
-> ⚠️ Sí, `data-testid` mete atributos de test en el HTML de producción. Es un
-> trueque conocido y aceptado en la industria: unos bytes de atributo a cambio
-> de tests que no se rompen con cada retoque de maqueta. En legacy, ese trato
-> sale barato.
+> ⚠️ **La objeción de siempre:** *"pero es contaminar el HTML de producción con
+> cosas de test"*. Sí. Ese es el precio, y es baratísimo: un atributo que no pesa,
+> no renderiza y no rompe nada, a cambio de una suite que no se cae con cada
+> refactor. (Y si te molesta de verdad: existen plugins de Babel que los eliminan
+> en build de producción. En 2020, casi nadie se molestaba.)
+
+> 📝 **Los nombres de esta ruta son suyos.** Las rutas Q y VU siembran un contrato
+> con prefijo `ticket-` (`ticket-search`, `ticket-title`…); la ruta NX usa el suyo
+> (`search-input`, `status-filter`, `results-count`…), y NX1 a NX4 lo reutilizan
+> tal cual. No los mezcles: si vienes de otra ruta, los tests de esta buscan estos
+> nombres.
 
 **Qué NO testear** (porque es justo lo que vas a cambiar):
 
@@ -202,7 +209,7 @@ dos contratos, exactamente con las herramientas de F11:
   empiece a hacer estas mismas llamadas, quieres saber que la forma de la
   petición no se movió.
 
-> 🔎 **Qué hace:** cada test se enchufa a un doble de su vecina —store de
+> 🧠 **Qué hace:** cada test se enchufa a un doble de su vecina —store de
 > juguete arriba, `apiClient` mockeado abajo— y afirma que la pieza **habla el
 > mismo idioma con sus vecinos** antes y después de migrar. Es la misma lección
 > de "dónde mockear es LA decisión" de F11, ahora al servicio de la migración.
@@ -221,21 +228,14 @@ producción viven en el mismo sitio.
 
 En Nuxt **no**. Y la razón es tan simple como brutal:
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  DÓNDE CORREN TUS TESTS          DÓNDE CORRERÁ TU CÓDIGO NUXT      │
-│                                                                   │
-│  Jest + jsdom                    Node (servidor SSR)              │
-│  ┌───────────────┐               ┌───────────────┐               │
-│  │  window   ✅   │               │  window   ❌   │  ← no existe  │
-│  │  document ✅   │               │  document ❌   │               │
-│  │  localStorage✅│               │  localStorage❌│               │
-│  └───────────────┘               └───────────────┘               │
-│         │                                │                        │
-│         ▼                                ▼                        │
-│   test PASA 🟢                     app REVIENTA 💥                 │
-│                          window is not defined                    │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    subgraph JEST["Jest + jsdom: donde corren tus tests"]
+        J1["window, document y localStorage EXISTEN"] --> PASA["el test PASA"]
+    end
+    subgraph SSR["Node, servidor SSR: donde corre tu código Nuxt"]
+        S1["window, document y localStorage NO EXISTEN"] --> REV["la app REVIENTA: window is not defined"]
+    end
 ```
 
 jsdom es un DOM de mentira construido **para** los tests, y por comodidad
@@ -273,8 +273,8 @@ fallaría. Ver ese test verde, sabiendo que miente, es la lección.
 ## 💻 Código de la fase
 
 > ⚠️ **Cero Nuxt en todo lo que sigue.** Esto corre sobre la Tiquetera a pelo,
-> con el mismo `vue add unit-jest` de F11 (Jest + `@vue/test-utils` 1.x +
-> `vue-jest` + `babel-jest`). Si no tienes la suite de F11 corriendo, vuelve a
+> con el mismo plugin de pruebas de F11 (`@vue/cli-plugin-unit-jest@3.12.1`: Jest 23 +
+> `@vue/test-utils` 1.3.6 + `vue-jest` + `babel-jest`). Si no tienes la suite de F11 corriendo, vuelve a
 > F11 antes de seguir.
 
 ### Paso 0 — sembrar los `data-testid` en las piezas a migrar
@@ -307,11 +307,12 @@ En `components/tickets/TicketForm.vue` (F5), los campos y el submit:
 ```html
 <input data-testid="form-title" v-model="form.title" ... />
 <textarea data-testid="form-description" v-model="form.description" ... />
+<select data-testid="form-priority" v-model="form.priority" ...>
 <button data-testid="form-submit" type="submit">Guardar</button>
 <p data-testid="error-title" v-if="$v.form.title.$error">El título es obligatorio</p>
 ```
 
-> 🔎 **Qué hace:** no cambia nada visible ni funcional; solo deja anclas que los
+> 🧠 **Qué hace:** no cambia nada visible ni funcional; solo deja anclas que los
 > tests pueden buscar sin depender de clases de Bootstrap ni de la posición en
 > el DOM. Cuando la migración rehaga la maqueta, estos anclas viajan con el
 > elemento.
@@ -406,11 +407,12 @@ describe("REGRESIÓN · TicketsView ↔ store (F4/F10)", function () {
       modules: {
         tickets: {
           namespaced: true,
+          // lo que lee la vista de F10: loading y error del state (mapState), tickets del getter
+          // allTickets (mapGetters). Con error: así se pinta el botón de reintento.
+          state: { loading: false, error: "No se pudieron cargar los tickets." },
           actions: actions,
           getters: {
-            all: function () { return []; },
-            loading: function () { return false; },
-            error: function () { return null; }
+            allTickets: function () { return []; }
           }
         }
       }
@@ -488,25 +490,27 @@ describe("REGRESIÓN · TicketForm (F5)", function () {
 
     wrapper.find('[data-testid="form-title"]').setValue("Bug en el filtro");
     wrapper.find('[data-testid="form-description"]').setValue("No filtra por estado");
-    wrapper.find('[data-testid="form-submit"]').trigger("submit");
+    wrapper.find('[data-testid="form-priority"]').setValue("high"); // obligatoria desde F5
 
-    // Contrato con la vista padre: nombre del evento + forma del payload.
-    expect(wrapper.emitted("submit")).toHaveLength(1);
-    expect(wrapper.emitted("submit")[0][0]).toMatchObject({
-      title: "Bug en el filtro",
-      description: "No filtra por estado"
+    return wrapper.find('[data-testid="form-submit"]').trigger("submit").then(function () {
+      // Contrato con la vista padre: nombre del evento + forma del payload.
+      expect(wrapper.emitted("submit")).toHaveLength(1);
+      expect(wrapper.emitted("submit")[0][0]).toMatchObject({
+        title: "Bug en el filtro",
+        description: "No filtra por estado"
+      });
     });
   });
 
   it("sin título, NO emite 'submit' y muestra el error", function () {
     var wrapper = build();
 
-    wrapper.find('[data-testid="form-submit"]').trigger("submit");
-
-    // El negativo es tan contrato como el positivo: submit inválido no propaga.
-    expect(wrapper.emitted("submit")).toBeUndefined();
-    // El usuario VE un error (texto observable, no clase de vuelidate).
-    expect(wrapper.text()).toContain("El título es obligatorio");
+    return wrapper.find('[data-testid="form-submit"]').trigger("submit").then(function () {
+      // El negativo es tan contrato como el positivo: submit inválido no propaga.
+      expect(wrapper.emitted("submit")).toBeUndefined();
+      // El usuario VE un error (texto observable, no clase de vuelidate), tras el repintado.
+      expect(wrapper.text()).toContain("El título es obligatorio");
+    });
   });
 
   it("en modo edición, precarga los datos del ticket inicial", function () {
@@ -599,6 +603,48 @@ de que la petición no cambió de forma al mudarse de entorno.
 
 Y ahora el corazón de la fase. Este test **pasa en verde**, y esa es
 exactamente la mala noticia.
+
+Primero, el guard sale de `router/index.js` a un módulo propio, para poder
+importarlo desde el test. Es el mismo código de F2 con los roles de F9, sin
+cambiar una línea de su lógica:
+
+```js
+// src/router/authGuard.js — el guard de F2 (con los roles de F9), en un módulo propio para poder probarlo
+export function authGuard(to, from, next) {
+  var token = localStorage.getItem("token");
+  var requiresAuth = to.matched.some(function (record) {
+    return record.meta.requiresAuth;
+  });
+
+  if (requiresAuth && !token) {
+    next("/login");
+    return;
+  }
+
+  var requiredRoles = to.matched.reduce(function (acc, record) {
+    return record.meta.roles ? acc.concat(record.meta.roles) : acc;
+  }, []);
+
+  if (requiredRoles.length > 0) {
+    var user = JSON.parse(localStorage.getItem("user") || "null");
+    var role = user && user.role;
+    if (requiredRoles.indexOf(role) === -1) {
+      next("/"); // sin drama: a Home (ForbiddenView con mensaje = ejercicio 5)
+      return;
+    }
+  }
+
+  if (to.path === "/login" && token) {
+    next("/");
+    return;
+  }
+
+  next();
+}
+```
+
+Y en `router/index.js`, `import { authGuard } from "./authGuard";` y
+`router.beforeEach(authGuard);` en lugar de la función anónima.
 
 `tests/unit/regression/auth-guard.regression.spec.js`
 
@@ -944,7 +990,7 @@ el servidor y el otro no— y tu red debería cubrir los dos. Deshaz con
 - Jest — mock functions: https://jestjs.io/docs/mock-functions
 - jsdom — qué implementa (y qué finge): https://github.com/jsdom/jsdom#readme
 - MDN — `data-*` attributes (los `data-testid`):
-  https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
+  https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/Use_data_attributes
 
 **Para el concepto de entorno dual (lectura de puente, aún NO Nuxt)**
 

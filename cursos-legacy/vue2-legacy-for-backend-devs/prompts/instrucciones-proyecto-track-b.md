@@ -69,10 +69,10 @@ incidentes de IDs propios de este curso.
 el track forense y el cuaderno), `diccionario-codigo.md` (compartido con Track
 A), `README.md`.
 
-> ⚠️ **`_desechable-guia-track-b-superada.md` (antes la guía de este curso) está
-> superada.** Es la guía vieja del Track B, lleva su aviso 🪦 dentro y se conserva
-> como referencia histórica: la vigente es la del paquete, la de arriba. Los
-> duplicados `* copy.md` que había aquí se borraron el 2026-09-10.
+> ⚠️ **La guía vieja del Track B (antes la guía de este curso) está superada** por
+> la del paquete, la de arriba. Se conservó como desechable hasta el cierre y se
+> borró el 2026-10-18; el historial de git la conserva. Los duplicados `* copy.md`
+> que había aquí se borraron el 2026-09-10.
 
 > 🚫 **`plan-formacion-nosql-mongodb.md` queda descartado.** Es un documento
 > erróneo (numeración desalineada y desactualizada) y **no se usa como fuente de

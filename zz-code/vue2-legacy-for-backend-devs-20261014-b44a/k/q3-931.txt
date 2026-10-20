@@ -1,0 +1,72 @@
+<template>
+  <q-page padding>
+    <!-- Cabecera: grid de QUASAR (estamos dentro de q-page) -->
+    <div class="row items-center q-mb-md">
+      <div class="col">
+        <h5 class="q-my-none">Tickets</h5>
+      </div>
+      <div class="col-auto">
+        <!-- Botón de QUASAR -->
+        <q-btn color="primary" icon="add" label="Nuevo ticket" @click="openModal" />
+      </div>
+    </div>
+
+    <!-- Tabla: QUASAR -->
+    <q-table
+      :data="allTickets"
+      :columns="columns"
+      row-key="id"
+      :loading="loading"
+      :filter="search"
+      :rows-per-page-options="[10, 25, 50]"
+    >
+      <template v-slot:top-right>
+        <!-- Input de QUASAR -->
+        <q-input dense debounce="300" v-model="search" placeholder="Buscar…">
+          <template v-slot:append><q-icon name="search" /></template>
+        </q-input>
+      </template>
+
+      <template v-slot:body-cell-status="props">
+        <q-td :props="props">
+          <!-- Badge de BOOTSTRAP (F4), dentro de una tabla de QUASAR -->
+          <ticket-status-badge :status="props.row.status" />
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-actions="props">
+        <q-td :props="props">
+          <q-btn flat dense icon="edit" @click="openModal(props.row)" />
+        </q-td>
+      </template>
+    </q-table>
+
+    <!--
+      ⬇️ AQUÍ. El modal de F5. BOOTSTRAP 4 CRUDO (jQuery), sin tocar.
+      Es el <div class="modal"> de siempre, envuelto en el componente frontera
+      del ejercicio 18 de F5. NO es bootstrap-vue: el curso no lo usa.
+      Fuera del q-page? No: dentro. Y funciona.
+      OJO: dentro del modal NO uses grid de Quasar. El modal es territorio BS4.
+    -->
+    <div class="modal fade" id="ticket-modal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ modalTitle }}</h5>
+            <button type="button" class="close" @click="closeModal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <!-- El TicketForm de Q2: ya es QForm por dentro.
+                 QForm dentro de un modal Bootstrap. Sí. Funciona.
+                 Emite "submit" (F5), no "saved". -->
+            <ticket-form
+              :initial-ticket="selected"
+              @submit="onSaved"
+              @cancel="closeModal"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </q-page>
+</template>

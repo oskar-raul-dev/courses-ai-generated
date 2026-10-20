@@ -51,7 +51,7 @@ Eso significa que **casi todo lo que aprendiste en F0–F11 sigue valiendo tal c
 
 Y entonces, ¿dónde está la dificultad de esta ruta, si el andamiaje no cambia? En tres lugares que Bootstrap **no tiene** y que Quasar **regala sin que te enteres**:
 
-1. **`<v-app>`**: un componente raíz obligatorio que, si falta, rompe todo **sin un solo error**.
+1. **`<v-app>`**: un componente raíz obligatorio que, si falta, rompe medio Vuetify con **un solo warning** que no menciona a `v-app`.
 2. **El tema vive en JS.** El color `primary` no está en un `.scss`. Está en un objeto JavaScript. Cambias una línea de JS y cambia toda la app.
 3. **Dos sintaxis de grid conviviendo** en el mismo repo: la de Vuetify 2 (`v-row`/`v-col`) y la de Vuetify 1 (`v-layout`/`v-flex`), que **te vas a encontrar** en código de 2019.
 
@@ -102,7 +102,7 @@ Vas a googlear un componente y vas a caer en la doc equivocada. Aprende a datar 
 | **v2.x** (2019–2022) | **Vue 2.6** | ✅ **La nuestra.** Options API | Grid con **`<v-row>` / `<v-col>`**, `src/plugins/vuetify.js`, `new Vuetify({...})` |
 | **v3.x** (2021–hoy) | Vue 3 | 🔮 Actual, **fuera de scope** | `createVuetify()`, Composition API, `<script setup>` |
 
-> 🔎 **Qué hace:** la señal más rápida para datar Vuetify es abrir un template y mirar el grid.
+> 🧠 **Qué hace:** la señal más rápida para datar Vuetify es abrir un template y mirar el grid.
 > - ¿Ves `<v-flex xs12>`? → hay **v1** en el repo (o alguien migró a medias).
 > - ¿Ves `<v-col cols="12">`? → es **v2**. Es tu curso.
 > - ¿Ves `createVuetify` en el entry point? → **v3**. No es tu curso.
@@ -125,23 +125,36 @@ En Vuetify:
 vue add vuetify
 ```
 
-Y eso es todo. **No hay proyecto nuevo.** Vuetify entra sobre tu Tiquetera existente. El plugin te pregunta un preset:
+Y eso es todo. **No hay proyecto nuevo.** Vuetify entra sobre tu Tiquetera existente. El plugin
+(`vue-cli-plugin-vuetify` 2.5.8, el que instala hoy `vue add`) te pregunta:
 
 | Pregunta | Respuesta | Por qué |
 |---|---|---|
-| Choose a preset | **Configure (advanced)** | Para **ver** las opciones en vez de aceptar defaults a ciegas. Es un curso de leer, hay que ver qué se decide |
-| Use a-la-carte components? | **No** (por ahora) | Full import. Deuda 💸 consciente, se paga en VU3 |
+| Choose a preset | **Vuetify 2 - Configure Vue CLI (advanced)** | Para **ver** las opciones en vez de aceptar defaults a ciegas. Es un curso de leer, hay que ver qué se decide. Ojo: la lista ya trae opciones de Vuetify 3; esas no |
+| Use a pre-made template? (will replace App.vue and HelloWorld.vue) | **No** | Con «sí» te **borra** tu `App.vue` y pone la plantilla de bienvenida de Vuetify |
 | Use custom theme? | **Yes** | Queremos ver el objeto de tema. Es medio VU1 |
-| Icon font | **mdi** (Material Design Icons) | El default de Vuetify 2 |
+| Use custom properties (CSS variables)? | **No** | El default |
+| Select icon font | **Material Design Icons** | El default de Vuetify 2 |
+| Use fonts as a dependency (for Electron or offline)? | **No** | Las fuentes llegan por CDN, en `public/index.html` |
+| Use a-la-carte components? | **No** (por ahora) | Full import. Deuda 💸 consciente, se paga en VU3 |
+| Use babel/polyfill? | **Yes** | El default |
+| Select locale | **English** (el default) | Da igual para leer |
+
+Y después, una línea que el plugin no hace por ti: `vue add` instala `vuetify` con `^2.6.0`, y hoy
+eso resuelve a la **2.7**. El curso es 2.6, así que se fija:
+
+```bash
+npm install --save-exact vuetify@2.6.16
+```
 
 **Qué toca `vue add vuetify`:**
 
 ```
 src/main.js            ← AÑADE una línea: import vuetify + lo mete en new Vue({...})
 src/plugins/vuetify.js ← CREA este archivo (la config: tema, iconos, a-la-carte)
-src/App.vue            ← ENVUELVE tu template en <v-app>...</v-app>
-package.json           ← añade vuetify, sass, sass-loader, @mdi/font
-vue.config.js          ← puede tocar transpileDependencies
+public/index.html      ← AÑADE dos <link>: la fuente Roboto y los iconos MDI, por CDN
+package.json           ← añade vuetify y vue-cli-plugin-vuetify (sass y vuetify-loader
+                          solo si eliges a-la-carte)
 ```
 
 **Qué NO toca:**
@@ -151,6 +164,7 @@ src/router/            ← intacto. Vue Router 3 de F1, igual
 src/store/             ← intacto. Vuex 3 de F10, igual
 src/services/          ← intacto. Tu apiClient de F2/F3, igual
 src/views/, components/ ← intactos. Los migras tú, cuando quieras, en VU2/VU3
+src/App.vue            ← intacto si dijiste que no a la plantilla. El <v-app> lo pones tú (4.3)
 ```
 
 > 🔑 **El spoiler que hay que decir en voz alta:** en Quasar, tu `main.js` **desaparece**. En Vuetify, tu `main.js` **sobrevive** — solo le agregan una línea. Eso no es un atajo que te estamos dando: es **lo que Vuetify es**. Un plugin. Toda la ruta VU pesa menos en "dónde está mi código" (no se movió) y más en "qué hace este objeto de config que no entiendo".
@@ -158,7 +172,7 @@ src/views/, components/ ← intactos. Los migras tú, cuando quieras, en VU2/VU3
 Así queda `main.js` después de `vue add vuetify`:
 
 ```js
-// src/main.js
+// src/main.js — resumido: lo de F2–F5 (Bootstrap, Vuelidate, el filtro formatDate) sigue igual
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
@@ -175,13 +189,13 @@ new Vue({
 }).$mount("#app");
 ```
 
-> 🔎 **Qué hace:** `vuetify` se inyecta en la instancia raíz **exactamente igual** que `router` y `store`. Por eso todos tus componentes tienen `this.$vuetify` disponible (lo vas a usar para breakpoints y dark mode). Es el mismo mecanismo de inyección de F1 y F10 — no hay magia nueva.
+> 🧠 **Qué hace:** `vuetify` se inyecta en la instancia raíz **exactamente igual** que `router` y `store`. Por eso todos tus componentes tienen `this.$vuetify` disponible (lo vas a usar para breakpoints y dark mode). Es el mismo mecanismo de inyección de F1 y F10 — no hay magia nueva.
 
 ✅ **Buenas prácticas:** cuando abras un repo Vuetify ajeno, tu **primer archivo** es `src/plugins/vuetify.js`, no `main.js`. En `main.js` solo vas a ver la línea de import; **toda la decisión** (tema, iconos, a-la-carte) está en el plugin.
 
 ---
 
-### 4.3 ⭐ `<v-app>`: el componente raíz que rompe todo en silencio
+### 4.3 ⭐ `<v-app>`: el componente raíz que rompe todo casi en silencio
 
 Este es el bug número uno de todo el que llega a Vuetify. Vas a verlo en tu vida al menos una vez, y si leíste esta sección, lo vas a diagnosticar en 5 segundos en vez de en 2 horas.
 
@@ -198,9 +212,9 @@ Este es el bug número uno de todo el que llega a Vuetify. Vas a verlo en tu vid
 </template>
 ```
 
-> 🔎 **Qué hace `<v-app>`:** no es un `<div>` decorativo. Vuetify lo usa para:
+> 🧠 **Qué hace `<v-app>`:** no es un `<div>` decorativo. Vuetify lo usa para:
 > - montar una **capa raíz** donde se posicionan los componentes flotantes (`v-dialog`, `v-menu`, `v-snackbar`, tooltips). Sin `v-app`, esos componentes **no saben dónde renderizarse**.
-> - inyectar las **variables del tema** en el árbol (el `primary` que definiste en JS baja desde acá).
+> - darle al árbol la clase **`v-application`**: Vuetify genera el CSS del tema con reglas como `.v-application .primary { … }`, así que el `primary` que definiste en JS solo pinta debajo de un `v-app`.
 > - calcular breakpoints y aplicar los estilos base.
 
 **Y ahora la parte cruel.** Mira qué pasa si falta.
@@ -221,13 +235,17 @@ Este es el bug número uno de todo el que llega a Vuetify. Vas a verlo en tu vid
 
 **Resultado:**
 
-- El `<v-btn>` **quizás** se ve, pero **descolorido, sin el color del tema, sin elevación**. Como un botón a medio pintar.
-- El `<v-dialog>`, cuando pongas `open = true`, **no aparece**. O aparece en una esquina, roto, sin overlay.
-- **La consola no dice nada.** No hay error. No hay warning rojo. Nada.
+- El `<v-btn>` se ve y lleva su clase `primary`, pero **sin el color del tema**: la regla que lo pinta empieza por `.v-application`, y aquí no hay ninguna. Un botón a medio pintar.
+- El `<v-dialog>`, cuando pongas `open = true`, se abre, pero **donde está**: no encuentra la raíz de la que colgarse y se queda dentro del componente, a merced del `overflow` y del `z-index` de sus padres.
+- **La consola dice una sola cosa, en amarillo**, y solo cuando abres el diálogo:
 
-> ⚠️ **Este es EL error clásico de Vuetify.** La pantalla está "casi bien" pero los colores no son los del tema y los diálogos no abren, y **no hay ningún mensaje** que te apunte a la causa. En Vuetify 2 no hay un error claro tipo *"v-dialog must be inside v-app"*. Simplemente no funciona.
+```
+[Vuetify] Unable to locate target [data-app]
+```
 
-> 🔑 **El reflejo que VU1 te instala:** ¿colores del tema que no se aplican + diálogos que no abren + consola limpia? → **busca `<v-app>`.** Es lo primero que miras, siempre. Cinco segundos, no dos horas.
+> ⚠️ **Este es EL error clásico de Vuetify.** La pantalla está "casi bien" pero los colores no son los del tema y los diálogos salen raros, y el único mensaje es ese warning, que habla de un `data-app` que tú nunca escribiste (es el atributo que pone `<v-app>`). En Vuetify 2 no hay un error claro tipo *"v-dialog must be inside v-app"*.
+
+> 🔑 **El reflejo que VU1 te instala:** ¿colores del tema que no se aplican, diálogos que salen raros, o un `Unable to locate target [data-app]`? → **busca `<v-app>`.** Es lo primero que miras, siempre. Cinco segundos, no dos horas.
 
 **Y acá se cierra el círculo con VU0:** ¿te acuerdas de la segunda pregunta abierta? *"`<v-app>` obligatorio puede romper el `mount()` de tus tests."* Ahora ya sabes por qué: tus tests de VU0 montan un componente **aislado**, sin `App.vue`, o sea **sin `v-app` ancestro**. Cuando ese componente empiece a usar Vuetify, el `mount()` se va a quejar (o peor, va a pasar pero renderizar mal). VU1 no lo resuelve — pero ya entiendes el mecanismo. La solución es de **VU2**: ahí el helper `mountView` que VU0 dejó vacío se llena con la instancia de Vuetify y el wrapper `<v-app>`, y ningún test de regresión se entera.
 
@@ -242,11 +260,18 @@ Este es el archivo que Quasar tiene repartido en `quasar.conf.js`. En Vuetify es
 import Vue from "vue";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css"; // 🔎 full import: TODO el CSS de Vuetify (~la deuda 💸)
-import "@mdi/font/css/materialdesignicons.css"; // 🔎 la fuente de iconos MDI
+// 🔎 la fuente de iconos MDI llega por CDN, en public/index.html. Solo si contestaste «sí» a
+//    «fonts as a dependency», aquí va: import "@mdi/font/css/materialdesignicons.css";
+
+import es from "vuetify/es5/locale/es"; // 🔎 los textos propios de Vuetify, en español
 
 Vue.use(Vuetify); // 🔎 registra Vuetify como plugin de Vue (el mismo Vue.use de siempre)
 
 export default new Vuetify({
+  lang: {
+    locales: { es: es },
+    current: "es" // 🔎 sin esto, el pie de la tabla dice «Rows per page» en una app en español
+  },
   icons: {
     iconfont: "mdi" // 🔎 le decimos que use Material Design Icons
   },
@@ -266,11 +291,12 @@ export default new Vuetify({
 });
 ```
 
-> 🔎 **Qué hace cada bloque:**
+> 🧠 **Qué hace cada bloque:**
 > - `import "vuetify/dist/vuetify.min.css"` → mete **todo** el CSS de Vuetify de una. Eso es el **full import**. Cómodo hoy, caro en el bundle (💸, VU3).
 > - `import "@mdi/font..."` → carga la **fuente** de iconos. Si esta línea falta, "el icono no sale" (§4.7).
 > - `Vue.use(Vuetify)` → el mismo mecanismo de plugin que ya conoces.
 > - `new Vuetify({ theme, icons })` → **la instancia** que se exporta y que `main.js` inyecta.
+> - `lang` → el idioma de los textos que pone Vuetify (paginación, «No data available»). Por defecto es inglés.
 
 ✅ **Buenas prácticas:** cuando abras este archivo en un repo ajeno, mira **tres cosas**: (1) ¿es full import o a-la-carte? (busca `import Vuetify from "vuetify"` vs imports de componentes sueltos); (2) ¿qué colores tiene el tema y cuántos temas hay (`light`/`dark`)?; (3) ¿qué `iconfont` declara? Con eso ya sabes el 80% de cómo está configurada la UI.
 
@@ -296,7 +322,7 @@ En Vuetify, el color vive en **JavaScript**, en el objeto `theme` que viste arri
 <v-icon color="success">mdi-check</v-icon>
 ```
 
-> 🔎 **Qué hace:** `color="primary"` **no** es una clase CSS con ese nombre. Vuetify **resuelve** `primary` contra `theme.themes.light.primary` (ese `#1976D2`) **en tiempo de ejecución** y genera el estilo. Cambias **una línea** en `vuetify.js`:
+> 🧠 **Qué hace:** `color="primary"` **no** es una clase CSS con ese nombre. Vuetify **resuelve** `primary` contra `theme.themes.light.primary` (ese `#1976D2`) **en tiempo de ejecución** y genera el estilo. Cambias **una línea** en `vuetify.js`:
 >
 > ```js
 > primary: "#1976D2"  →  primary: "#6A1B9A"
@@ -329,7 +355,7 @@ methods: {
 }
 ```
 
-> 🔎 **Qué hace `this.$vuetify.theme.dark = true`:** cambia el modo de **toda la app** al instante. Vuetify recalcula todos los colores contra el bloque `dark` del tema. Es reactivo: no recargas nada.
+> 🧠 **Qué hace `this.$vuetify.theme.dark = true`:** cambia el modo de **toda la app** al instante. Vuetify recalcula todos los colores contra el bloque `dark` del tema. Es reactivo: no recargas nada.
 
 ✅ **Buenas prácticas de lectura:** cuando en un repo ajeno veas `color="warning"` y quieras saber **qué color es realmente**, no busques en el CSS — no está ahí. Anda a `plugins/vuetify.js` → `theme.themes.light.warning`. Ese es el mapa. Si el color se ve raro, el problema casi siempre está en el objeto de tema, no en el template.
 
@@ -361,7 +387,7 @@ En Vuetify 2, el grid son **componentes**:
 </v-container>
 ```
 
-> 🔎 **Qué hace:** `<v-col cols="12" md="6">` = "ocupa las 12 columnas en móvil, la mitad (6) de `md` para arriba". Es el mismo modelo de 12 columnas de Bootstrap, pero como **componentes con props** en vez de clases. Por dentro Vuetify les pone clases flex, pero tú trabajas con props.
+> 🧠 **Qué hace:** `<v-col cols="12" md="6">` = "ocupa las 12 columnas en móvil, la mitad (6) de `md` para arriba". Es el mismo modelo de 12 columnas de Bootstrap, pero como **componentes con props** en vez de clases. Por dentro Vuetify les pone clases flex, pero tú trabajas con props.
 
 **Y ahora la trampa que hace de esto ORO para un curso de legacy.**
 
@@ -402,7 +428,7 @@ Vuetify 2 usa **Material Design Icons (MDI)** por defecto. En el template:
 <v-text-field prepend-icon="mdi-account" />
 ```
 
-> 🔎 **Qué hace:** `mdi-magnify` es el **nombre** del glifo en la fuente MDI. Vuetify sabe que tiene que buscarlo en la fuente porque el `iconfont: "mdi"` de `vuetify.js` se lo dijo.
+> 🧠 **Qué hace:** `mdi-magnify` es el **nombre** del glifo en la fuente MDI. Vuetify sabe que tiene que buscarlo en la fuente porque el `iconfont: "mdi"` de `vuetify.js` se lo dijo.
 
 **El clásico "el icono no sale" (aparece un cuadradito □ o nada):**
 
@@ -434,7 +460,7 @@ export default {
     isMobile: function () {
       return this.$vuetify.breakpoint.smAndDown; // 🔎 true si la pantalla es sm o menor
     },
-    columnas: function () {
+    columns: function () {
       // 🔎 lógica que depende del tamaño, imposible con solo CSS
       return this.isMobile ? 1 : 3;
     }
@@ -443,7 +469,7 @@ export default {
 </script>
 ```
 
-> 🔎 **Qué hace `$vuetify.breakpoint`:** expone el breakpoint actual como **dato reactivo**. `smAndDown`, `mdAndUp`, `xs`, `name` (`"md"`), `width`… Cuando el usuario redimensiona, estos valores cambian y tus computed se recalculan. Es lo que te permite decidir en JS: "en móvil cargo 10 items, en desktop 50", cosa que una media query CSS no puede.
+> 🧠 **Qué hace `$vuetify.breakpoint`:** expone el breakpoint actual como **dato reactivo**. `smAndDown`, `mdAndUp`, `xs`, `name` (`"md"`), `width`… Cuando el usuario redimensiona, estos valores cambian y tus computed se recalculan. Es lo que te permite decidir en JS: "en móvil cargo 10 items, en desktop 50", cosa que una media query CSS no puede.
 
 ✅ **Buenas prácticas de lectura:** cuando en un repo veas `$vuetify.breakpoint.algo`, entiende que ahí hay **lógica** atada al viewport, no solo estilo. Es un punto donde el comportamiento cambia según el dispositivo — anótalo, porque los bugs "solo en móvil" suelen vivir ahí.
 
@@ -469,7 +495,7 @@ La internalizas y ya puedes mapear cualquier pantalla Bootstrap de la Tiquetera 
 | Colores en clases CSS (`badge-*`, `btn-*`) | **El tema en JS** (`theme.themes.light.*`) | VU1 (leer) / VU4 (explotar) |
 | `d-md-none` / media queries | `$vuetify.breakpoint.smAndDown` | VU1 (leer) |
 
-> 🔎 **Cómo leer esta tabla:** la columna de la derecha con "VU1" es lo que **ya puedes reconocer** al salir de esta fase. Lo de "VU2/VU3/VU4" lo reconoces pero **no lo tocas todavía**. La tabla es tu diccionario de lectura.
+> 💡 **Cómo leer esta tabla:** la columna de la derecha con "VU1" es lo que **ya puedes reconocer** al salir de esta fase. Lo de "VU2/VU3/VU4" lo reconoces pero **no lo tocas todavía**. La tabla es tu diccionario de lectura.
 
 ---
 
@@ -511,7 +537,7 @@ export default {
 
 **Lee el esqueleto por números:**
 
-1. `<v-app>` — la raíz. Si no está, §4.3 te dice qué se rompe (todo, en silencio).
+1. `<v-app>` — la raíz. Si no está, §4.3 te dice qué se rompe (casi todo, casi en silencio).
 2. `color="primary"` — **no** es una clase, es el nombre semántico que resuelve contra el tema (§4.5).
 3–4. Botón + icono MDI. Si el icono no sale, §4.7.
 5. `<v-main>` — el hueco del contenido. Reemplaza a tu `<div class="container">` de layout.
@@ -528,7 +554,7 @@ export default {
 
 | Síntoma | Causa real | Cómo lo confirmas |
 |---|---|---|
-| Pantalla "casi bien" pero **colores del tema no se aplican y los diálogos no abren**, consola limpia | Falta **`<v-app>`** en la raíz | Busca `<v-app>` en `App.vue`. §4.3 |
+| Pantalla "casi bien" pero **colores del tema no se aplican y los diálogos salen raros**; en consola, solo `Unable to locate target [data-app]` | Falta **`<v-app>`** en la raíz | Busca `<v-app>` en `App.vue`. §4.3 |
 | El color `primary` "no es el que puse" | Estás buscándolo en el CSS; vive en **`vuetify.js`** | Abre `plugins/vuetify.js` → `theme.themes.light.primary`. §4.5 |
 | **El icono no sale** (cuadradito o nada) | Fuente MDI no cargada / nombre mal / prefijo faltante | Chequea `@mdi/font` importado → `iconfont` → nombre. §4.7 |
 | `<v-flex xs12>` "no anda como esperaba" o te confunde | Es sintaxis **Vuetify 1**, no es tu v2 | Traduce a `<v-col cols="12">` mentalmente. §4.6 |
@@ -537,14 +563,15 @@ export default {
 | El bundle pesa una barbaridad (~500kb solo Vuetify) | **Full import** activado | Es la deuda 💸 consciente. Se paga en VU3. §4.4 |
 | `this.$vuetify` es `undefined` en un test | El componente se montó **sin la instancia Vuetify** inyectada | Es el mismo problema que `<v-app>` en tests. Se resuelve en **VU2**, dentro del helper `mountView` |
 
-> ⚠️ **El error que más horas cuesta y menos avisa** es el de `<v-app>`. Si internalizas una sola cosa de VU1, que sea esa: **colores del tema que no aplican + diálogos que no abren + consola en silencio = falta `v-app`.**
+> ⚠️ **El error que más horas cuesta y menos avisa** es el de `<v-app>`. Si internalizas una sola cosa de VU1, que sea esa: **colores del tema que no aplican + diálogos raros + `Unable to locate target [data-app]` = falta `v-app`.**
 
 ### Pieza forense de esta fase
 
 Dos trampas concentran la mitad de los casos de esta ruta y las dos aparecen al
 leer Vuetify por primera vez. La primera es estructural: **sin `<v-app>` en la
-raíz, muchos componentes se pintan pero no funcionan** —los diálogos no abren,
-los overlays no se posicionan— y no hay error que lo diga. La segunda es de
+raíz, muchos componentes se pintan pero no funcionan** —los diálogos se quedan
+donde están, los overlays no se posicionan— y lo único que lo dice es un warning
+sobre un `data-app` que no escribiste. La segunda es de
 documentación: buscar "vuetify data table" en Google devuelve **Vuetify 3**, y
 las props cambiaron de nombre; media hora peleando con un ejemplo que nunca fue
 para tu versión. Las dos son el paso 1 y el paso 2 de la pieza de ruta.
@@ -635,7 +662,7 @@ Todos son de **lectura y reconocimiento** — cero migración de la Tiquetera. S
 
 <details><summary>Soluciones 🟡</summary>
 
-11. Hipótesis: **falta `<v-app>`** en la raíz. Abres `App.vue` (§4.3). Colores del tema que no aplican + diálogos que no abren + consola limpia = firma de `v-app` ausente.
+11. Hipótesis: **falta `<v-app>`** en la raíz. Abres `App.vue` (§4.3). Colores del tema que no aplican + diálogos raros + `Unable to locate target [data-app]` = firma de `v-app` ausente.
 12. `plugins/vuetify.js` → `theme.themes.light` → `warning` (§4.5). No está en el CSS.
 13. (1) Fuente MDI no cargada → chequea el `import "@mdi/font..."` y `package.json`. (2) Nombre inexistente → es `mdi-delete`, no `mdi-trash`; verifica en la doc MDI. (3) `iconfont` distinto → mira si el plugin usa `md`/`fa` en vez de `mdi` (§4.7).
 14. El color es un **dato** (objeto JS), no una clase compilada. Ejemplo: cambiar `primary` en una línea recolorea toda la app al instante, o alternar dark/light en runtime — sin recompilar SCSS (§4.5).
@@ -775,7 +802,7 @@ No hay solución única. Se evalúa:
 Puedes abrir un repo Vuetify 2 y en 20 minutos armar el mapa mental completo. Sabes que:
 
 - **Tu `main.js` sigue ahí.** Vuetify es un **plugin de Vue CLI**, no un build system. El router, Vuex, el interceptor de F2, tu estructura de carpetas — **todo sobrevive**. Eso es un **dato** sobre qué es Vuetify, no un atajo.
-- **`<v-app>` es la raíz obligatoria** y su ausencia rompe todo **en silencio**: colores del tema que no aplican, diálogos que no abren, consola limpia. Es EL bug de Vuetify, y ahora te cuesta 5 segundos, no 2 horas.
+- **`<v-app>` es la raíz obligatoria** y su ausencia rompe casi todo **casi en silencio**: colores del tema que no aplican, diálogos que se quedan donde están, y un solo warning sobre `data-app`. Es EL bug de Vuetify, y ahora te cuesta 5 segundos, no 2 horas.
 - **El tema vive en JS**, en `plugins/vuetify.js`. El color `primary` no está en ningún CSS: es un objeto de datos. Cambias una línea → cambia toda la app. Eso es lo que Bootstrap no puede y Quasar no regala.
 - **El grid son componentes** (`v-container`/`v-row`/`v-col`), y en un repo legacy **conviven** con la sintaxis v1 (`v-layout`/`v-flex`). Reconoces las dos y traduces la vieja a la nueva de memoria.
 - **`$vuetify.breakpoint`** te da los breakpoints en JS, no solo en CSS — ahí vive la lógica "solo en móvil".

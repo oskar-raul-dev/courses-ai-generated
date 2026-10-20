@@ -1,0 +1,12 @@
+import { shallowMount } from "@vue/test-utils";
+import TicketsView from "@/views/TicketsView.vue";
+import ticketService from "@/services/ticketService";
+jest.mock("@/services/ticketService");
+it("depurar", function () {
+  console.log("getTickets es mock:", typeof ticketService.getTickets, !!(ticketService.getTickets && ticketService.getTickets.mock));
+  ticketService.getTickets.mockReturnValue(new Promise(function () {}));
+  var w = shallowMount(TicketsView, { stubs: ["router-link"] });
+  console.log("HTML inicial:", w.html());
+  w.setData({ loading: false, loaded: true, tickets: [] });
+  console.log("HTML tras setData:", w.html());
+});

@@ -790,13 +790,13 @@ qué leer primero.
 - **Vue Router 3:** https://v3.router.vuejs.org
 - **Vue Test Utils 1 (Vue 2):** https://v1.test-utils.vuejs.org
 - **Bootstrap 4.6:** https://getbootstrap.com/docs/4.6
-- **axios:** https://axios-http.com/docs/intro
+- **axios:** https://axios.rest/pages/getting-started/first-steps — el antiguo `axios-http.com` redirige aquí.
 - **vuelidate 0.7:** https://vuelidate-next.netlify.app — ⚠️ documenta la v2;
   para 0.7 usar https://vuelidate.js.org
 - **chart.js 2.9:** https://www.chartjs.org/docs/2.9.4
 - **socket.io 2.x:** https://socket.io/docs/v2/
 - **json-server 0.16:** https://github.com/typicode/json-server/tree/v0.16.3
-- **Jest:** https://jestjs.io
+- **Jest:** https://jestjs.io — publica solo versiones recientes; la de la época (26) se lee en su tag: https://github.com/jestjs/jest/tree/v26.6.3/docs
 
 **Curso 01 — rutas**
 
@@ -807,12 +807,15 @@ qué leer primero.
 
 **Curso 02 (MongoDB / Express)**
 
-- **MongoDB 4.4:** https://www.mongodb.com/docs/v4.4/
-- **Driver Node `mongodb` 3.6:** https://www.mongodb.com/docs/drivers/node/v3.6/
+- **MongoDB 4.4:** MongoDB ya no publica la documentación de la 4.4: `docs/v4.4/…` redirige al manual
+  actual, https://www.mongodb.com/docs/manual/. Los enlaces del curso apuntan ahí, y donde el
+  comportamiento cambió desde 4.4 (el detalle de `errInfo`, por ejemplo) lo dice la fase.
+- **Driver Node `mongodb` 3.6:** https://mongodb.github.io/node-mongodb-native/3.6/ (la de
+  mongodb.com redirige a la versión actual)
 - **Mongoose 5:** https://mongoosejs.com/docs/5.x/
-- **Express 4:** https://expressjs.com/en/4x/api.html
-- **supertest:** https://github.com/ladjs/supertest
-- **mongodb-memory-server:** https://github.com/nodkz/mongodb-memory-server
+- **Express 4:** https://expressjs.com/en/4x/api/
+- **supertest:** https://github.com/forwardemail/supertest
+- **mongodb-memory-server:** https://github.com/typegoose/mongodb-memory-server (antes `nodkz`)
 - **Docker:** https://docs.docker.com
 
 **Común**
@@ -831,6 +834,23 @@ qué leer primero.
   Mongoose ≥ 6. Aparecen solo como comparación o en secciones 🔥.
 - **socket.io 2.x y 3.x no se mezclan ni se hablan como si fueran lo mismo:**
   la versión importa y el cliente tiene que coincidir con el servidor.
+
+### 11.4 Verificación de enlaces
+
+**Última verificación: 2026-10-15** (tanda R4 del plan de edición). 466 URL únicas de lo publicado,
+comprobadas por código de estado siguiendo cada redirección a mano (una que termina en la portada
+cuenta como rota). Resultado: las rotas se cambiaron por su página actual o por la copia de
+archive.org cuando el original ya no existe; las que solo cambiaron de ruta se reemplazaron por el
+destino final; las que responden 403 por antibots (npmjs.com, O'Reilly, CACM) se confirmaron por el
+registro de npm o por archive.org y se dejaron; los videos se confirmaron con el endpoint oEmbed de
+YouTube (título y canal). El script y su salida están en el directorio de `zz-code/` de la tanda.
+
+En la misma tanda: las 46 versiones `paquete@versión` que nombran las fases existen en el registro de
+npm y coinciden con lo que se instaló en las corridas V0–V7. Donde un rango abierto resuelve hoy a
+otra versión que la probada (`supertest@6` → 6.3.4, `mongodb-memory-server@6` → 6.10.0), la línea
+de instalación fija la probada con `--save-exact`; `@quasar/cli@1` resuelve a 1.4.0, que no crea
+proyectos `app-v1`, y por eso la Q1 pide `@quasar/cli@1.2.2`. Los libros llevan edición (cuando hay
+más de una) y año.
 
 ---
 
@@ -892,11 +912,10 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" �
 6. Entregables ya aprobados de fases anteriores.
 7. Decisiones explícitas del chat actual.
 
-> 🚫 **Documentos deprecados que no cuentan como fuente:**
-> `prompts/_desechable-plan-formacion-nosql-mongodb.md`
-> (descartado y así declarado en las instrucciones del Curso 02) y
-> `prompts/_desechable-guia-track-b-superada.md`
-> (la guía del Track B, superada por ésta y con su aviso 🪦 dentro).
+> 🚫 **Documentos deprecados que no cuentan como fuente:** el plan de formación
+> NoSQL descartado y la guía vieja del Track B, superada por ésta. Los dos vivieron
+> aquí como `_desechable-*` y **se borraron el 2026-10-18**, en la tanda de cierre,
+> con el resto de los desechables; el historial de git los conserva.
 >
 > Los duplicados de respaldo `* copy.md` que vivían en ese `prompts/` **se
 > borraron el 2026-09-10**: eran copias exactas, el historial de git las
@@ -907,7 +926,8 @@ cuestión de NDA: se traduce el vocabulario del dominio pedagógico ("ticket" �
 
 - **Fases del Curso 01 (tronco):** `00-setup-hola-mundo.md` …
   `11-testing-minimo.md`.
-- **Apéndices del Curso 01:** `a1-bootstrap.md` … `a5-webpack-babel.md`
+- **Apéndices del Curso 01:** `a1-bootstrap.md` … `a5-webpack-babel.md`, y los dos de
+  plataforma, `a6-arm64-m1.md` y `a7-docker-colima.md` (§17.6)
   (minúscula, un dígito).
 - **Rutas del Curso 01:** `q0`…`q4`, `vu0`…`vu4`, `nx0`…`nx4`, en minúscula
   (`q1-leer-quasar.md`).
@@ -955,9 +975,12 @@ Qué vive en `prompts/`:
   `diccionario-codigo.md` (compartido) e `instrucciones-proyecto-track-b.md`
   (alcance del Curso 02).
 - **Desechable** (prefijo `_desechable-`, registro histórico que no se cita ni
-  se mantiene): la guía superada del Track B, el plan de formación descartado,
-  los prompts de revisión del Track B, el trabajo de traducción del código del
-  Curso 01 a inglés y los planes de producción.
+  se mantiene). Los diez que hubo —la guía superada del Track B, el plan de
+  formación descartado, los prompts de revisión del Track B, el trabajo de
+  traducción del código del Curso 01 a inglés y los planes de producción y de
+  edición— **se borraron el 2026-10-18** al cerrar el paquete. Lo que debía
+  sobrevivir del plan de edición está en §17.4 y §17.5. Un desechable nuevo lleva
+  el mismo prefijo y se borra al cerrar su trabajo.
 
 Lo que **no** se mueve a `prompts/`: el contrato de API
 (`02-complement-mongodb-backend/00-audit-contrato.md`), la ficha del sistema y
@@ -1060,6 +1083,10 @@ enlazan desde su bloque 🏷️ sin reexplicarlo.
       que esta fase no reserva ninguno. Los apéndices no lo llevan.
 - [ ] Cada ID reservado existe en el índice del `cuaderno-incidentes.md` de su
       curso, y ninguno se reasignó.
+- [ ] Respeta las excepciones declaradas en §17, y no cita `prompts/` ni la
+      guía desde un documento publicado.
+- [ ] `python3 prompts/verificar-corpus.py --publicacion` sale en 0 errores, y
+      sus avisos son solo los aceptados en §17.3.
 
 ---
 
@@ -1094,3 +1121,192 @@ La especificación completa vive en `prompts/formato-piezas-forenses.md` y
 `prompts/formato-cuaderno-incidentes.md`, que son anexos de esta guía (§13.1) y
 mandan sobre todo lo que se escriba en esos archivos. Esta sección no los
 duplica: dice que existen y para qué.
+
+## 17. 🧾 Excepciones a los lineamientos del repositorio
+
+> 📝 **Sección agregada el 14/10/2026**, en la tanda R1 del plan de edición (borrado al cerrar, el 18/10/2026).
+> Va después de §16 para no renumerar: §13.1, las fases y los anexos citan esta guía por número. Casi
+> todo lo que aquí se declara ya era la práctica del paquete; desde ahora está escrito como decisión.
+
+El `CLAUDE.md` del repositorio da **valores por defecto**, y esta guía los reemplaza donde lo declara: la
+regla general, el valor de este paquete y por qué. Lo que esta sección no menciona se hereda tal cual.
+
+| Regla general del repositorio | Lo que hace el paquete | Por qué |
+|---|---|---|
+| Comentarios dentro del código en inglés | **En español** (§5); identificadores, rutas, tablas y endpoints en inglés | El comentario es el canal del *porqué*, y el curso se escribe en español |
+| Forma setup → conceptos → antipatrones → traducción → ejercicios → veredicto | **La plantilla de nueve secciones** (§9), cerrada con «La señal de que quedó bien» y el bloque 🏷️. El veredicto honesto del paquete vive en la F15 del Curso 02 | Es un curso de mantenimiento: el veredicto no es cuándo no usar Vue 2, sino cuándo no migrarlo |
+| 20–30 ejercicios por sección | **25 a 35 por fase** (§10), en las fases del tronco y de las rutas. El Curso 02 llega a 38 en tres fases (F09, F10 y F12), **declarado**. Los apéndices de práctica traen **30 a 40**, y los dos de plataforma del Curso 01, **15** (§17.6) | Lo publicado está escrito así; declararlo es más honesto que recortar a última hora (decisión D5) |
+| Ejercicios con solución de referencia o rúbrica | **Sin solucionario en las fases**: cada enunciado se verifica por sí mismo (§10). La solución colapsada vive en los cuadernos de incidentes | El músculo que entrena el curso es el diagnóstico; los incidentes son donde una solución publicada enseña algo |
+| `0-ESTRUCTURA-CURSO.md` antes de la primera lección | **Solo en el Curso 01**, y `0-plan-del-curso.md` como documento maestro. El Curso 02 no lo tiene: su papel lo hacen su README y `prompts/instrucciones-proyecto-track-b.md` (decisión D10) | Dos cursos con un solo plan de curso cada uno; el Curso 02 se declara en su README |
+| Incidentes: 15 a 25 por curso | **13** en el Curso 01 y **12** en el Curso 02, en total 25 para el paquete (decisión D6) | Es el número que el paquete escribió, y se declara en lugar de inventar incidentes para llegar al mínimo |
+| `BENCHMARKS.md` e `INSTINTOS.md` | **No existen.** Las mediciones van en su fase, con sus condiciones (la autopsia de la F8 del Curso 02); los instintos, en las secciones §8.3 y §8.4 | El curso mide poco y en contexto; un documento aparte quedaría casi vacío |
+| Diccionario de traducción en los dos sentidos | **Dos piezas**: el diccionario de términos del dominio (§5.3) y `prompts/diccionario-codigo.md` para el código | El paradigma de origen es el backend, y la analogía se limita a abrir la puerta y decir dónde se rompe (§4.2) |
+| Diagramas a criterio de quien escribe | **Mermaid** para los diagramas de verdad, con los criterios de §17.1 (decisión D4) | Flujos, estados, secuencias y capas se leen mejor dibujados; el resto se queda en texto |
+| Apéndices `a01-…` | **`a1-…` a `a7-…`** en el Curso 01 y **`a01-…` a `a05-…`** en el Curso 02, sin mezclar dentro de un curso (§13.2) | Cada curso conserva el estilo con que empezó; §13.2 lo registra |
+| Código ejecutable en `src/` | **No hay `src/`**: el alumno construye su repositorio fase a fase, y cada fase publica sus fragmentos. Las fases se marcan con tags `fase-<slug>` que el alumno crea | Es la tesis del curso: el código se escribe y se rompe a mano |
+| Fecha de vigencia en cada encabezado | **Sin fecha**. Las versiones van fijadas en el bloque «Stack de época» del README de cada curso y en el plan del curso | Las versiones congeladas dicen más que una fecha, y la fecha no promete nada que la congelación no diga ya |
+| Callouts 📝 🧭 🧠 ⚠️ 💡 | **Los de §8.2 y §8.4, los marcadores de §8.1 y 🩻 🪞 ⚰️ 🔑 🪦**, más 🧭 🧠 y 🧪 del `CLAUDE.md`, que el paquete usa desde su primera fase, y 📄 (la línea hacia la pieza forense, §9.2) y 📌 (reservas y notas de servicio, §15) | El vocabulario visual es uno solo para los dos cursos; los que no están en esta lista se cambian en la revisión, no se agregan |
+| Emoji en los encabezados de subsección (`###`) moderado | **Emoji en `###` a propósito**: marcan el tipo de bloque (🔬 disección, 📌 reservas, 🎫 🎯 🔧 📝 en los incidentes, eras 🔧 🕹️ 🌱 de la historia) | Es el mapa visual del recorrido; el verificador lo reporta como aviso y no como error (§17.3) |
+| Tags de fase | **`fase-` + el slug del archivo `.md`** (`fase-04-dashboard-tickets`), en los dos cursos y en las rutas (`00-convencion-de-git-y-tags.md`) | La convención pública está en la raíz del paquete, junto con la ficha |
+
+### 17.1 Diagramas en Mermaid
+
+**Decidido el 14/10/2026** (decisión D4, opción a). Todo diagrama nuevo —flujo, estados, secuencia, capas o
+árbol de decisión— va en un bloque `mermaid`. Se quedan en texto, porque no son diagramas y en
+monoespaciado se leen mejor:
+
+- los **árboles de archivos** (`src/`, `mock/`, `server/`);
+- las **salidas de terminal, de DevTools y de logs** que el lector tiene que reconocer en su pantalla;
+- las **correspondencias** `a → b` (archivo → tag, fase → rama) y las **cadenas de una sola línea**.
+
+Criterios, en el orden en que se eligen:
+
+- **`stateDiagram-v2`** para los ciclos de vida (los estados de un ticket, de una reserva, de un socket).
+- **`sequenceDiagram`** para lo que pasa en el tiempo entre capas: componente → store → mock, o navegador →
+  Express → Mongo. Es el diagrama natural de una race condition.
+- **`flowchart TD`** para cadenas y árboles de decisión; **`LR`** para lo que cruza el cable frontend ↔
+  backend; **`subgraph`** para las capas que §5.5 pide distinguir.
+- **Texto de los nodos en español** y nombres de código en inglés. Entre comillas, las etiquetas con
+  paréntesis, dos puntos o barras.
+- **Cada diagrama se dibuja antes de publicarlo**, con `zz-instrucciones/herramientas/exportar-diagramas.py`
+  (motor `docker`, para no instalar Node en el host). La prosa que lo rodea lo explica, no lo repite.
+
+### 17.2 Documentos de `prompts/` y lo que hace su papel
+
+El paquete se escribió antes de la plantilla de producción y está casi cerrado, así que los documentos que
+la plantilla pide y no existen **no se crean a posteriori** (decisión D9, opción a). Esto es lo que cumple
+cada función:
+
+- **Alcance:** `01-vue2-legacy/0-plan-del-curso.md` para el Curso 01, y `prompts/instrucciones-proyecto-track-b.md`
+  para el Curso 02.
+- **Diccionario de términos:** §5.3 de esta guía, y `prompts/diccionario-codigo.md` para el código.
+- **Contrato de nombres:** `02-complement-mongodb-backend/00-audit-contrato.md`, publicado en el paquete, y
+  §5.4 de esta guía.
+- **Convención de git y tags:** `00-convencion-de-git-y-tags.md`, publicada en la raíz del paquete.
+- **Plantilla de fase:** `prompts/plantilla-de-fase.md`; el formato de apéndice, en §9 y §10.
+- **Formatos propios:** `prompts/formato-piezas-forenses.md` y `prompts/formato-cuaderno-incidentes.md`.
+- **Preparaciones de los incidentes:** `prompts/preparaciones-de-incidentes.md`, que registra cómo se arma
+  cada `mock/db.incidente-NN.json`, lo que la plantilla pide (decisión D7, opción a). Escrito en las tandas
+  V4 (Curso 01) y V7 (Curso 02), el 15/10/2026.
+- **Plan de producción:** no queda ninguno. El plan de edición rigió del 07 al 18/10/2026 y se borró al
+  cerrar; su resultado está en §17.4 y sus reglas en §17.5. Una edición futura abre su propio plan
+  desechable.
+- **Prompts de fase:** no se conservaron como documento; el registro de la escritura se borró con los
+  desechables, y git lo conserva.
+- **Manual de operación:** `prompts/README.md`.
+
+### 17.3 Verificación
+
+Desde la raíz del paquete, y ninguno de estos comandos toca nada:
+
+```bash
+python3 prompts/verificar-corpus.py                  # validaciones base del paquete
+python3 prompts/verificar-corpus.py --publicacion    # además, lo que exige la etapa E9
+python3 prompts/verificar-corpus.py 01-vue2-legacy   # solo un curso
+```
+
+- `verificar-corpus.py` es la subclase del perfil `courses-ia` de `verificador_base.py`, con los callouts y
+  las bandas de ejercicios de esta guía. Los `_desechable-*` no se verifican.
+- `--publicacion` agrega lo que exige el repositorio público: ningún enlace ni mención a `prompts/` o a
+  `_desechable-` en material publicado (`CITA-PROMPTS`), y ningún material privado.
+- **Avisos aceptados**, declarados aquí y no corregidos: `EMOJI` en `###` (§17, tabla); `SIN-SOL`, porque
+  las fases no traen solucionario (§10); `ORDEN` cuando una lista de ejercicios no va de menor a mayor
+  dificultad, que se revisa a mano porque el verificador mira la última marca de dificultad del enunciado.
+  `DIAGRAMA` está en cero desde la tanda R3.
+- **Línea base**, desde el 15/10/2026 y confirmada al cerrar el 18/10/2026: 0 errores en los dos modos; avisos solo de `EMOJI` (254), `SIN-SOL`
+  (52) y `ORDEN` (3). Desde el 19/10/2026, con `a6` y `a7` (§17.6), `SIN-SOL` es 54.
+- **Lo que el verificador no ve:** una cita a «la guía» o a una sección `§` de esta guía sin nombre de
+  archivo. Se busca a mano con `grep -rn -i "gu[ií]a de estilo\|gu[ií]a §" --include="*.md" .`, y en lo
+  publicado no puede salir ninguna (la revisión del 15/10/2026 quitó cuatro).
+
+### 17.4 La validación por ejecución: qué se corrió, con qué y cuándo
+
+Entre el 14 y el 18 de octubre de 2026 se ejecutó el código del paquete tal como está publicado, se
+comparó cada fragmento con el que corrió y se corrigieron las fases donde no coincidían. Todo corrió en
+contenedores sobre Docker Desktop en Apple Silicon (arm64), etiquetados `curso=vue2-legacy`.
+
+| Bloque | Qué se corrió | Imágenes y versiones | Resultado |
+|---|---|---|---|
+| Curso 01, F0–F11 | El repositorio del alumno, fase a fase: build, Mock API, lint y suite | `node:14.21.3`; Vue 2.6.14, Vue CLI 3.12.1, Jest 23.6.0, `@vue/test-utils` 1.3.6, ESLint 5.16.0 | Builds en verde, lint sin errores, suite 26/26; caos de F3 en sus siete modos |
+| Curso 01, rutas | X0 a X4 de las tres rutas sobre F11 | Quasar 1.22.10 + `@quasar/app` 1.9.6 (decisión D13), Vuetify 2.6, Nuxt 2.15 | Red de X0 64/64 en Q y VU (66/66 con las pruebas de X4) y 40/40 en NX; builds en verde; SSR de NX por `curl` |
+| Curso 01, cuaderno y forense | Los 13 incidentes desde la instantánea de su fase; salidas de terminal de las forenses | las del tronco | Prueba de regresión roja y verde en los 13; el 05, desde el 20/10/2026, también la reproducción con su rama |
+| Curso 02, F0–F9 | Seed, consultas, validator, transacciones, índices, autopsia, agregación | `mongo:4.4` (shell `mongo` y `mongosh`), driver 3.6 | Cifras de las fases medidas en esa corrida |
+| Curso 02, F10–F14 | El backend completo, la promesa del `baseURL` por diferencial, compose de F14 | `node:14.21.3`, `node:14.21.3-alpine` (Dockerfile de A01); Express 4.17.1, Mongoose 5.13.20 | 12 llamadas iguales contra json-server y Express; 401, 403, 409 y 422 probados; compose con backup |
+| Curso 02, F13 | Jest + supertest + mongodb-memory-server | `node:14.21.3` con `--platform linux/amd64`; Jest 26.6.3, supertest 6.1.6, mms 6.9.6 (`mongod` 4.4.18) | 6/6 en verde |
+| Curso 02, cuaderno | Los 12 incidentes con su preparación | `mongo:4.4` | Prueba de regresión roja y verde en los 12 |
+| Referencias | 466 URL, 46 `paquete@versión` y los libros | — | Rotas reemplazadas; versiones existentes; libros con edición y año |
+| Curso 01, F0 🍎, `a6` y `a7` (19/10/2026) | `npm ci` de F11 y de la ruta Q en arm64, amd64 y `bullseye-slim`; la regla de nvm 0.39.7 con el sistema simulado; Dart Sass en la ruta Q; las URL de mongodb-memory-server por plataforma; el devcontainer (build, volumen, `npm ci`, serve, suite) y su receta a mano; la imagen de la API en las dos arquitecturas; 23 URL nuevas | `node:14.21.3` (arm64 y amd64), `node:14.21.3-bullseye-slim`, `node:16.20.2`; Docker Desktop 4.92.0 | `deasync` compila en arm64 y usa su precompilado en x64; `node-sass` necesita Python 2; F11 26/26 dentro del devcontainer; F13 6/6 con `--platform linux/amd64`; el Dockerfile y el `devcontainer.json` publicados son los que corrieron |
+| Curso 01, en el Mac del autor (19/10/2026) | `nvm install 14.21.3` bajo `arch -x86_64`; `npm ci` y suite de F11; Colima con perfil aparte, contenedores amd64 y F13 | Mac con chip M, macOS 26, nvm 0.40.3, Python 3.13.4; Colima 0.10.3, lima 2.2.1 | Node `x64`; `deasync` sin compilar, 26/26; `fsevents` 1.2.13 falla con `invalid mode: 'rU'` (opcional); Colima `aarch64` con Rosetta, F13 6/6; `vz` y `virtiofs` ya son defecto; un perfil `--arch x86_64` viejo no arranca |
+
+**Lo que no se verificó por ejecución** y queda a mano del autor: todo lo que solo se ve en el navegador
+(las pantallas de F0 a F11, las salidas de DevTools, el smoke test del contrato y lo visual de las rutas:
+z-index, modo oscuro, layout). Y, desde el 19/10/2026, lo
+que exige un runtime que no se usó: el devcontainer abierto desde VS Code, el `buildx --push` y, en macOS,
+`node-sass` de la ruta Q y el `mongod` de Intel. Cada sitio lo dice con un ⚠️. La instalación de Node x64,
+el `npm ci` de F11 y Colima se corrieron en el Mac del autor el mismo 19/10 (fila de arriba).
+
+**Decisiones cerradas el 20/10/2026** (por defecto, salvo la del 05, que eligió el autor):
+
+- **D13**, confirmada: la ruta Q va sobre Quasar 1.22.10 + `@quasar/app` 1.9.6.
+- **Incidente 05 del Curso 01:** se queda en la Fase 5 con una rama de preparación (`incidente/05`) que
+  trae el etiquetado rápido del legacy; reproducido y verificado (`preparaciones-de-incidentes.md`, fila 05).
+- **H-V3-4:** la deuda de `userService` en `MetricsView` queda abierta a propósito; la Fase 9 lo dice y
+  deja el pago en una línea.
+- **Los `testid` de NX0:** la ruta NX conserva sus nombres (`search-input`, `status-filter`…), validados
+  40/40; su ⚠️ se alineó con la de Q0 y VU0, y una 📝 avisa que no se mezclan con el contrato `ticket-`.
+- **Pruebas de navegador (20/10/2026):** una sesión con Chrome recorrió F0–F11, las tres rutas, el
+  incidente 05 y el smoke test del Curso 02 (11 ✅, 7 ⚠️, ningún ❌). Lo que se corrigió con lo que
+  encontró: la ✅ de F7 (los gráficos se recrean con «actualizar»), la de F8 (el indicador), una nota
+  del guard de F6; el anuncio `ticket:created` en el diálogo de VU3, en `TicketCreateView` de Q2 y en
+  el modal de Q3; el cortafuegos CSS de Q3 para `q-btn` y `q-field`; Vuetify en español (VU1, VU3,
+  VU4) y la fecha de los timelines de VU4 y Q4 en `es-CO`; el `productName` de Q1; el blanco sobre
+  blanco del Acto 2 de VU4; y el autor de los comentarios tomado del token (Curso 02, F11).
+- **El nombre *Tiquetera* se mantiene:** existe una boletera de eventos de Medellín llamada La Tiquetera,
+  pero *tiquetera* es una palabra común en Colombia y el README del paquete declara la ficción.
+
+### 17.5 Lo que el plan de edición deja como regla
+
+Para cualquier edición futura del paquete:
+
+1. **Se ejecuta lo que el lector ejecuta**, copiado del documento tal cual. Lo que no está escrito no se
+   inventa para que funcione: es un hallazgo, y se corrige la fase.
+2. **El error se anota literal antes de arreglarlo**, con archivo y línea del documento que lo produjo.
+3. **La fase gana, salvo que esté mal.** Si la salida real difiere de la publicada, se corrige la fase con la
+   real; lo que no se pueda ejecutar se marca «no verificado por ejecución».
+4. **Todo corre en contenedores**, con la versión congelada del curso, `--label curso=vue2-legacy` y puertos
+   altos y aleatorios en `127.0.0.1` (`-p 127.0.0.1::8080` y `docker port`). Al cerrar se borra solo lo
+   creado (`docker rm -v`, `docker compose down -v`), nunca con `prune`.
+5. **El código de prueba va a `zz-code/`**, en un directorio por sesión, con su `README.md` de corrida
+   escrito mientras se prueba. Ningún documento del paquete cita `zz-code/`.
+6. **Cada fragmento publicado se compara con el que corrió** (las tandas K): un fragmento que no está en el
+   repositorio del alumno, o que difiere de él, es un hallazgo. Los identificadores en español dentro del
+   código también lo son (§5).
+7. **Git lo hace el autor.** Nada de `git mv` ni `git rm`: se mueve con `mv` y se borra con `rm`, archivo por
+   archivo. `perl` siempre con `-CSD -Mutf8`, y al cerrar `grep -rl "Ã\|â"` en cero.
+8. **Trampas del entorno que costaron tiempo:** `node_modules` montado por enlace simbólico no resuelve (se
+   monta en `/w/node_modules`); `vue add` sin versión instala el plugin de Vue CLI 5; mongodb-memory-server 6
+   no tiene binario 4.4 para Linux arm64; con `mongod --replSet` y sin `rs.initiate`, el healthcheck pasa y las
+   consultas fallan; 100.000 `updateOne` sin índice sobre la clave no terminan.
+9. **Trampas de Apple Silicon y del devcontainer** (plan del 18–19/10/2026): Debian 11 ya no instala paquetes
+   desde `deb.debian.org` (404 en `bullseye-security`): las imágenes `bullseye` van con `archive.debian.org`;
+   `bullseye-slim` no trae `sudo`, y un volumen montado en una ruta que la imagen no tiene nace de `root`
+   (`EACCES` al primer `npm ci`); `node-sass` 4.14.1 trae su propio `node-gyp` 3.8.0, que solo acepta Python 2;
+   json-server escucha en `localhost` y con `docker run -p` no se ve desde el Mac (`--host 0.0.0.0`); dentro
+   de un contenedor Linux arm64, `uname -m` dice `aarch64`; y una instantánea `.tgz` puede ser anterior a un
+   arreglo hecho después en el árbol vivo (la `backend-k6.tgz` no tenía el `close()` de F13).
+
+### 17.6 Los apéndices de plataforma: `a6` y `a7`
+
+**Agregados el 19/10/2026** por el plan de edición de Apple Silicon. El Curso 01 tiene dos apéndices que no son
+de consulta general sino **por plataforma**: `a6-arm64-m1.md` (dependencias nativas en arm64) y
+`a7-docker-colima.md` (Docker, Colima y el devcontainer de la Tiquetera). Se adaptaron de los A12 y A13 del
+curso de Angular 8 del mismo repositorio, con las salidas medidas sobre la Tiquetera.
+
+| Regla del paquete | Lo que hacen `a6` y `a7` | Por qué |
+|---|---|---|
+| 30 a 40 ejercicios por apéndice de práctica (§17, tabla) | **15** cada uno, con la escala 🟢🟡🟠🔴 completa; los que exigen un Mac con chip M van marcados 🍎 | Solo le sirven a quien trabaja en un Mac con chip M, y la mitad de sus ejercicios exige ese hardware: una batería de 30 inflaría un apéndice que la mayoría no abre |
+| La forma de los apéndices de consulta (🎯 · secciones · ⚠️ Diagnóstico rápido · 🧪 · 📚) | **La misma**, más un ⚠️ «No verificado por ejecución» donde la prueba exigía un runtime que no se usó (VS Code, `buildx --push`, la ruta Q en macOS) | Lo que se publica se corrió (§17.5.1) o lo dice |
+| Enlaces solo dentro del paquete (el verificador, `FUERA`) | El recuadro 🧭 de `a7` hacia el curso Docker Legacy Node lo **nombra sin enlazar** | El paquete se publica autocontenido; el otro curso vive en el mismo repositorio, no en el paquete |
+
+El verificador cuenta los ejercicios de `a6` y `a7` contra la banda (12, 18) y no contra la de los demás
+apéndices (§17.3).

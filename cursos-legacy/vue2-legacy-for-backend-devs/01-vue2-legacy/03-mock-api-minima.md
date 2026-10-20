@@ -202,6 +202,7 @@ npm install --save-dev json-server@0.16.3
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
     "mock": "json-server --watch db.json --port 3000"
   }
 }
@@ -992,10 +993,10 @@ Los tres son distintos, y ésa es la lección. Se apaga solo: `Ctrl+C` y
 
 **Documentación oficial**
 
-- json-server (v0.x, la de la época) — https://github.com/typicode/json-server/tree/v0
+- json-server (v0.x, la de la época) — https://github.com/typicode/json-server/tree/v0.16.3
 - json-server en npm — https://www.npmjs.com/package/json-server
-- Axios — Handling Errors: https://axios-http.com/docs/handling_errors
-- Axios — Config de request (params, etc.): https://axios-http.com/docs/req_config
+- Axios — Handling Errors: https://axios.rest/pages/advanced/error-handling
+- Axios — Config de request (params, etc.): https://axios.rest/pages/advanced/request-config
 - MDN — Using Promises: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 - MDN — async/await: https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises
 - Vue 2 — Instancia y ciclo de vida (diagrama de hooks): https://v2.vuejs.org/v2/guide/instance.html
@@ -1030,7 +1031,7 @@ La señal de que quedó bien:
 > "si mañana me cambian json-server por un backend real, solo toco el
 > `baseURL` y quizás `authService`. Ninguna vista se entera."
 
-> 🍃 **Y esto se cobra de verdad.** Esa frase no es una metáfora: el
+> ⚠️ **Y esto se cobra de verdad.** Esa frase no es una metáfora: el
 > [Curso 02](../02-complement-mongodb-backend/README.md) apaga este json-server
 > en su Fase 10 y monta un backend MongoDB + Express detrás del mismo
 > `baseURL`. Si hoy escribiste bien la capa de servicios, ese día no tocas ni

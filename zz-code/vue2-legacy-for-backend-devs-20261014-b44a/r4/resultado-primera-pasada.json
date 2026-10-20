@@ -1,0 +1,5554 @@
+[
+ {
+  "url": "http://",
+  "cadena": [
+   "000"
+  ],
+  "final": "http://",
+  "veredicto": "ROTA",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:51"
+  ]
+ },
+ {
+  "url": "http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/",
+  "cadena": [
+   "500"
+  ],
+  "final": "http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/",
+  "veredicto": "ROTA",
+  "donde": [
+   "02-complement-mongodb-backend/15-el-veredicto-honesto.md:317",
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:260"
+  ]
+ },
+ {
+  "url": "https://ajv.js.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://ajv.js.org/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:428"
+  ]
+ },
+ {
+  "url": "https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:339"
+  ]
+ },
+ {
+  "url": "https://axios-http.com/docs/cancellation",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://axios.rest/pages/advanced/cancellation",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:499"
+  ]
+ },
+ {
+  "url": "https://axios-http.com/docs/handling_errors",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://axios.rest/pages/advanced/error-handling",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:997",
+   "01-vue2-legacy/a4-axios.md:497"
+  ]
+ },
+ {
+  "url": "https://axios-http.com/docs/instance",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://axios.rest/pages/advanced/create-an-instance",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:495"
+  ]
+ },
+ {
+  "url": "https://axios-http.com/docs/interceptors",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://axios.rest/pages/advanced/interceptors",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:603",
+   "01-vue2-legacy/a4-axios.md:498"
+  ]
+ },
+ {
+  "url": "https://axios-http.com/docs/intro",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://axios.rest/pages/getting-started/first-steps",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1163",
+   "01-vue2-legacy/a4-axios.md:494"
+  ]
+ },
+ {
+  "url": "https://axios-http.com/docs/req_config",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://axios.rest/pages/advanced/request-config",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:998",
+   "01-vue2-legacy/a4-axios.md:496"
+  ]
+ },
+ {
+  "url": "https://axios.nuxtjs.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://axios.nuxtjs.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:826"
+  ]
+ },
+ {
+  "url": "https://axios.nuxtjs.org/options/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://axios.nuxtjs.org/options/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:715"
+  ]
+ },
+ {
+  "url": "https://babeljs.io/docs/babel-preset-env",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://babeljs.io/docs/babel-preset-env",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:344"
+  ]
+ },
+ {
+  "url": "https://babeljs.io/repl",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://babeljs.io/repl",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:346"
+  ]
+ },
+ {
+  "url": "https://bootstrap-vue.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://bootstrap-vue.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a1-bootstrap.md:357",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1821"
+  ]
+ },
+ {
+  "url": "https://cacm.acm.org/blogs/blog-cacm/50678-the-nosql-discussion-has-nothing-to-do-with-sql/fulltext",
+  "cadena": [
+   "403"
+  ],
+  "final": "https://cacm.acm.org/blogs/blog-cacm/50678-the-nosql-discussion-has-nothing-to-do-with-sql/fulltext",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:262"
+  ]
+ },
+ {
+  "url": "https://cdn.jsdelivr.net/npm/vue@2.6.14",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cdn.jsdelivr.net/npm/vue@2.6.14",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1139"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:440",
+   "02-complement-mongodb-backend/a04-seguridad.md:321"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:590",
+   "02-complement-mongodb-backend/a04-seguridad.md:320"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:615"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html",
+  "cadena": [
+   "404"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html",
+  "veredicto": "ROTA",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:441",
+   "02-complement-mongodb-backend/a04-seguridad.md:322"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/Nodejs_Security_Cheat_Sheet.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:323"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:442"
+  ]
+ },
+ {
+  "url": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:614"
+  ]
+ },
+ {
+  "url": "https://cli.vuejs.org/config/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cli.vuejs.org/config/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:340"
+  ]
+ },
+ {
+  "url": "https://cli.vuejs.org/core-plugins/e2e-cypress.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cli.vuejs.org/core-plugins/e2e-cypress.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1625",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1813"
+  ]
+ },
+ {
+  "url": "https://cli.vuejs.org/core-plugins/unit-jest.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cli.vuejs.org/core-plugins/unit-jest.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:856"
+  ]
+ },
+ {
+  "url": "https://cli.vuejs.org/guide/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cli.vuejs.org/guide/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/01-estructura-base-legacy.md:523"
+  ]
+ },
+ {
+  "url": "https://cli.vuejs.org/guide/installation.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cli.vuejs.org/guide/installation.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1162"
+  ]
+ },
+ {
+  "url": "https://cli.vuejs.org/guide/mode-and-env.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://cli.vuejs.org/guide/mode-and-env.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:341"
+  ]
+ },
+ {
+  "url": "https://datatracker.ietf.org/doc/html/rfc7519",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://datatracker.ietf.org/doc/html/rfc7519",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:610"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/Use_data_attributes",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx0-red-de-seguridad.md:986"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Async_JS/Promises",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:1000"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:501"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_API",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/File_API",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:507"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:509"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/FormData",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/FormData",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:505"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:511"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebSocket",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/WebSocket",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:794"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:605"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a03-express.md:333"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:839"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Range_requests",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:589"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Authorization",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Authorization",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:604"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Type",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Type",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:513"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:662"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:999"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/09-panel-soporte.md:1181"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:1003"
+  ]
+ },
+ {
+  "url": "https://developer.mozilla.org/es/docs/Web/HTTP/Headers/Access-Control-Expose-Headers",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://developer.mozilla.org/es/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1831",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1670"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/compose/compose-file/",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.docker.com/reference/compose-file/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:426"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/compose/compose-file/compose-file-v3/",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.docker.com/reference/compose-file/legacy-versions/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a01-docker.md:295"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/compose/environment-variables/",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.docker.com/compose/how-tos/environment-variables/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:604",
+   "02-complement-mongodb-backend/a01-docker.md:296"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/compose/networking/",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.docker.com/compose/how-tos/networking/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a01-docker.md:298"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.docker.com/build/building/best-practices/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a01-docker.md:299"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/get-started/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://docs.docker.com/get-started/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a01-docker.md:294"
+  ]
+ },
+ {
+  "url": "https://docs.docker.com/storage/",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.docker.com/engine/storage/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:605",
+   "02-complement-mongodb-backend/a01-docker.md:297"
+  ]
+ },
+ {
+  "url": "https://docs.npmjs.com/cli/v6/commands/npm-ci",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.npmjs.com/cli/v6/commands/npm-ci/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a3-npm.md:294"
+  ]
+ },
+ {
+  "url": "https://docs.npmjs.com/cli/v6/configuring-npm/package-json",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.npmjs.com/cli/v6/configuring-npm/package-json/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a3-npm.md:290"
+  ]
+ },
+ {
+  "url": "https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.npmjs.com/cli/v6/configuring-npm/package-lock-json/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a3-npm.md:291"
+  ]
+ },
+ {
+  "url": "https://docs.npmjs.com/cli/v6/using-npm/scripts",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://docs.npmjs.com/cli/v6/using-npm/scripts/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/a3-npm.md:292"
+  ]
+ },
+ {
+  "url": "https://editorconfig.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://editorconfig.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1169"
+  ]
+ },
+ {
+  "url": "https://express-validator.github.io/docs/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://express-validator.github.io/docs/",
+  "veredicto": "PORTADA",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:654",
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:433",
+   "02-complement-mongodb-backend/a04-seguridad.md:333"
+  ]
+ },
+ {
+  "url": "https://expressjs.com/en/4x/api.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://expressjs.com/en/4x/api/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:647",
+   "02-complement-mongodb-backend/a03-express.md:327"
+  ]
+ },
+ {
+  "url": "https://expressjs.com/en/advanced/best-practice-performance.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://expressjs.com/en/advanced/best-practice-performance/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a03-express.md:328"
+  ]
+ },
+ {
+  "url": "https://expressjs.com/en/guide/error-handling.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://expressjs.com/en/guide/error-handling/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:650",
+   "02-complement-mongodb-backend/a03-express.md:326"
+  ]
+ },
+ {
+  "url": "https://expressjs.com/en/guide/migrating-5.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://expressjs.com/en/guide/migrating-5/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a03-express.md:329"
+  ]
+ },
+ {
+  "url": "https://expressjs.com/en/guide/routing.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://expressjs.com/en/guide/routing/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:648",
+   "02-complement-mongodb-backend/a03-express.md:324"
+  ]
+ },
+ {
+  "url": "https://expressjs.com/en/guide/using-middleware.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://expressjs.com/en/guide/using-middleware/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:649",
+   "02-complement-mongodb-backend/a03-express.md:325"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/components/badge/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/components/badge/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:849"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/components/card/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/components/card/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:850",
+   "01-vue2-legacy/a1-bootstrap.md:356"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/components/forms/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/components/forms/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a1-bootstrap.md:355"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/components/forms/#validation",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/components/forms/#validation",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1165",
+   "01-vue2-legacy/05-crud-tickets.md:922"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/components/list-group/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/components/list-group/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/09-panel-soporte.md:1184"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/components/modal/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/components/modal/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:923",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1819",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1661"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/content/tables/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/content/tables/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:848"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/getting-started/introduction/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/getting-started/introduction/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1164",
+   "01-vue2-legacy/01-estructura-base-legacy.md:524",
+   "01-vue2-legacy/a1-bootstrap.md:352"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/layout/grid/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/layout/grid/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a1-bootstrap.md:353",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1820",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1662"
+  ]
+ },
+ {
+  "url": "https://getbootstrap.com/docs/4.6/utilities/spacing/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://getbootstrap.com/docs/4.6/utilities/spacing/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a1-bootstrap.md:354"
+  ]
+ },
+ {
+  "url": "https://github.com/auth0/node-jsonwebtoken",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/auth0/node-jsonwebtoken",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:431",
+   "02-complement-mongodb-backend/a04-seguridad.md:334"
+  ]
+ },
+ {
+  "url": "https://github.com/axios/axios#response-schema",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/axios/axios#response-schema",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1828",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1669"
+  ]
+ },
+ {
+  "url": "https://github.com/browserslist/browserslist",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/browserslist/browserslist",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:345"
+  ]
+ },
+ {
+  "url": "https://github.com/coreybutler/nvm-windows",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://github.com/nvm-windows/nvm",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:135",
+   "01-vue2-legacy/00-setup-hola-mundo.md:1167",
+   "01-vue2-legacy/a2-node.md:284"
+  ]
+ },
+ {
+  "url": "https://github.com/davidbanham/express-async-errors",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/davidbanham/express-async-errors",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a03-express.md:332"
+  ]
+ },
+ {
+  "url": "https://github.com/dcodeIO/bcrypt.js",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/dcodeIO/bcrypt.js",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:432",
+   "02-complement-mongodb-backend/a04-seguridad.md:335"
+  ]
+ },
+ {
+  "url": "https://github.com/express-rate-limit/express-rate-limit",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/express-rate-limit/express-rate-limit",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:331"
+  ]
+ },
+ {
+  "url": "https://github.com/expressjs/cors",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/expressjs/cors",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:652",
+   "02-complement-mongodb-backend/a03-express.md:331"
+  ]
+ },
+ {
+  "url": "https://github.com/expressjs/morgan",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/expressjs/morgan",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:653",
+   "02-complement-mongodb-backend/a03-express.md:330"
+  ]
+ },
+ {
+  "url": "https://github.com/expressjs/multer/tree/v1.4.4",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/expressjs/multer/tree/v1.4.4",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:583"
+  ]
+ },
+ {
+  "url": "https://github.com/fiznool/express-mongo-sanitize",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/fiznool/express-mongo-sanitize",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:332"
+  ]
+ },
+ {
+  "url": "https://github.com/jsdom/jsdom#readme",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/jsdom/jsdom#readme",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx0-red-de-seguridad.md:984"
+  ]
+ },
+ {
+  "url": "https://github.com/ladjs/supertest",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://github.com/forwardemail/supertest",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:472"
+  ]
+ },
+ {
+  "url": "https://github.com/microcipcip/cookie-universal",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/microcipcip/cookie-universal",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:827"
+  ]
+ },
+ {
+  "url": "https://github.com/motdotla/dotenv",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/motdotla/dotenv",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:655"
+  ]
+ },
+ {
+  "url": "https://github.com/mrak/stubby4node",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/mrak/stubby4node",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1166"
+  ]
+ },
+ {
+  "url": "https://github.com/nodkz/mongodb-memory-server/blob/v6.9.6/README.md",
+  "cadena": [
+   "301",
+   "503"
+  ],
+  "final": "https://github.com/typegoose/mongodb-memory-server/blob/v6.9.6/README.md",
+  "veredicto": "ROTA",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:479"
+  ]
+ },
+ {
+  "url": "https://github.com/nodkz/mongodb-memory-server/tree/v6.9.6",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://github.com/typegoose/mongodb-memory-server/tree/v6.9.6",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:473"
+  ]
+ },
+ {
+  "url": "https://github.com/nuxt/create-nuxt-app",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/nuxt/create-nuxt-app",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:612"
+  ]
+ },
+ {
+  "url": "https://github.com/nvm-sh/nvm",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/nvm-sh/nvm",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1167",
+   "01-vue2-legacy/a2-node.md:283"
+  ]
+ },
+ {
+  "url": "https://github.com/quasarframework/quasar-awesome",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/quasarframework/quasar-awesome",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1864"
+  ]
+ },
+ {
+  "url": "https://github.com/typicode/json-server#filter",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/typicode/json-server#filter",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:846",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1094"
+  ]
+ },
+ {
+  "url": "https://github.com/typicode/json-server/tree/v0",
+  "cadena": [
+   "404"
+  ],
+  "final": "https://github.com/typicode/json-server/tree/v0",
+  "veredicto": "ROTA",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:995"
+  ]
+ },
+ {
+  "url": "https://github.com/typicode/json-server/tree/v0.16.3",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/typicode/json-server/tree/v0.16.3",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:656"
+  ]
+ },
+ {
+  "url": "https://github.com/typicode/json-server/tree/v0.16.3#full-text-search",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/typicode/json-server/tree/v0.16.3#full-text-search",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1825",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1666"
+  ]
+ },
+ {
+  "url": "https://github.com/typicode/json-server/tree/v0.16.3#paginate",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/typicode/json-server/tree/v0.16.3#paginate",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1824",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1665"
+  ]
+ },
+ {
+  "url": "https://github.com/vuejs/devtools",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/vuejs/devtools",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/10-vuex-a-fondo.md:799"
+  ]
+ },
+ {
+  "url": "https://github.com/vuetifyjs/vue-cli-plugins/tree/master/packages/vue-cli-plugin-vuetify",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://github.com/vuetifyjs/vue-cli-plugins/tree/master/packages/vue-cli-plugin-vuetify",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:767"
+  ]
+ },
+ {
+  "url": "https://helmetjs.github.io/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://helmet.js.org/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:330"
+  ]
+ },
+ {
+  "url": "https://hub.docker.com/_/mongo",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://hub.docker.com/_/mongo",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:589",
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:733",
+   "02-complement-mongodb-backend/a01-docker.md:300"
+  ]
+ },
+ {
+  "url": "https://hub.docker.com/_/node",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://hub.docker.com/_/node",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a01-docker.md:301"
+  ]
+ },
+ {
+  "url": "https://jepsen.io/analyses",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jepsen.io/analyses",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:264"
+  ]
+ },
+ {
+  "url": "https://jepsen.io/analyses/mongodb-4.2.6",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jepsen.io/analyses/mongodb-4.2.6",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/15-el-veredicto-honesto.md:319",
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:263"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/26.x/getting-started",
+  "cadena": [
+   "404"
+  ],
+  "final": "https://jestjs.io/docs/26.x/getting-started",
+  "veredicto": "ROTA",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:471"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/26.x/timer-mocks",
+  "cadena": [
+   "404"
+  ],
+  "final": "https://jestjs.io/docs/26.x/timer-mocks",
+  "veredicto": "ROTA",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:475"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/asynchronous",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jestjs.io/docs/asynchronous",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:854",
+   "01-vue2-legacy/q0-red-de-seguridad.md:1608",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1788"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/configuration#testenvironment-string",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jestjs.io/docs/configuration#testenvironment-string",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx0-red-de-seguridad.md:981"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/expect",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jestjs.io/docs/expect",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:852",
+   "01-vue2-legacy/nx0-red-de-seguridad.md:982",
+   "01-vue2-legacy/q0-red-de-seguridad.md:1607",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1787"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/mock-functions",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jestjs.io/docs/mock-functions",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:853",
+   "01-vue2-legacy/nx0-red-de-seguridad.md:983",
+   "01-vue2-legacy/q0-red-de-seguridad.md:1606",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1786"
+  ]
+ },
+ {
+  "url": "https://jestjs.io/docs/timer-mocks",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://jestjs.io/docs/timer-mocks",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:855"
+  ]
+ },
+ {
+  "url": "https://json-schema.org/understanding-json-schema",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://json-schema.org/understanding-json-schema/reference",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:427"
+  ]
+ },
+ {
+  "url": "https://jwt.io/introduction",
+  "cadena": [
+   "307",
+   "200"
+  ],
+  "final": "https://www.jwt.io/introduction",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:609",
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:435"
+  ]
+ },
+ {
+  "url": "https://kentcdodds.com/blog/testing-implementation-details",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://kentcdodds.com/blog/testing-implementation-details",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1618",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1807"
+  ]
+ },
+ {
+  "url": "https://kentcdodds.com/blog/write-tests",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://kentcdodds.com/blog/write-tests",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:481"
+  ]
+ },
+ {
+  "url": "https://learn.mongodb.com/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://learn.mongodb.com/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:743",
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:465",
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:528"
+  ]
+ },
+ {
+  "url": "https://lodash.com/docs/4.17.15#countBy",
+  "cadena": [
+   "302",
+   "200"
+  ],
+  "final": "https://lodash.com/docs/4.18.1",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1027"
+  ]
+ },
+ {
+  "url": "https://lodash.com/docs/4.17.15#debounce",
+  "cadena": [
+   "302",
+   "200"
+  ],
+  "final": "https://lodash.com/docs/4.18.1",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:851"
+  ]
+ },
+ {
+  "url": "https://lodash.com/docs/4.17.15#orderBy",
+  "cadena": [
+   "302",
+   "200"
+  ],
+  "final": "https://lodash.com/docs/4.18.1",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1028"
+  ]
+ },
+ {
+  "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://martinfowler.com/articles/practical-test-pyramid.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:480"
+  ]
+ },
+ {
+  "url": "https://martinfowler.com/books/nosql.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://martinfowler.com/books/nosql.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/15-el-veredicto-honesto.md:320"
+  ]
+ },
+ {
+  "url": "https://martinfowler.com/books/refactoring.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://martinfowler.com/books/refactoring.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1620",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1809"
+  ]
+ },
+ {
+  "url": "https://martinfowler.com/eaaDev/DomainEvent.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://martinfowler.com/eaaDev/DomainEvent.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:851",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1098"
+  ]
+ },
+ {
+  "url": "https://martinfowler.com/nosql.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://martinfowler.com/data/index.html#nosql",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:278"
+  ]
+ },
+ {
+  "url": "https://microservices.io/patterns/data/transactional-outbox.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://microservices.io/patterns/data/transactional-outbox.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:853",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1100"
+  ]
+ },
+ {
+  "url": "https://mongodb.github.io/node-mongodb-native/3.6/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongodb.github.io/node-mongodb-native/3.6/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:732"
+  ]
+ },
+ {
+  "url": "https://mongodb.github.io/node-mongodb-native/3.6/api/ClientSession.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongodb.github.io/node-mongodb-native/3.6/api/ClientSession.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:516"
+  ]
+ },
+ {
+  "url": "https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:455"
+  ]
+ },
+ {
+  "url": "https://mongodb.github.io/node-mongodb-native/3.6/api/GridFSBucket.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongodb.github.io/node-mongodb-native/3.6/api/GridFSBucket.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:581"
+  ]
+ },
+ {
+  "url": "https://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongodb.github.io/node-mongodb-native/3.6/api/MongoClient.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:651"
+  ]
+ },
+ {
+  "url": "https://mongoosejs.com/docs/5.x/docs/guide.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongoosejs.com/docs/5.x/docs/guide.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:429"
+  ]
+ },
+ {
+  "url": "https://mongoosejs.com/docs/5.x/docs/validation.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://mongoosejs.com/docs/5.x/docs/validation.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:430"
+  ]
+ },
+ {
+  "url": "https://nodejs.org/docs/latest-v14.x/api/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://nodejs.org/docs/latest-v14.x/api/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a2-node.md:281"
+  ]
+ },
+ {
+  "url": "https://nodejs.org/docs/latest-v14.x/api/modules.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://nodejs.org/docs/latest-v14.x/api/modules.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a2-node.md:282"
+  ]
+ },
+ {
+  "url": "https://nodejs.org/docs/latest-v14.x/api/stream.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://nodejs.org/docs/latest-v14.x/api/stream.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:585"
+  ]
+ },
+ {
+  "url": "https://nuxt.com/blog/nuxt2-eol",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://nuxt.com/blog/nuxt2-eol",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:615"
+  ]
+ },
+ {
+  "url": "https://ogp.me/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://ogp.me/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:659"
+  ]
+ },
+ {
+  "url": "https://owasp.org/API-Security/editions/2019/en/0x00-header/",
+  "cadena": [
+   "308",
+   "308",
+   "301",
+   "200"
+  ],
+  "final": "https://api-security.owasp.org/editions/2019/en/0x00-header/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:318"
+  ]
+ },
+ {
+  "url": "https://owasp.org/www-community/HttpOnly",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://community.owasp.org/HttpOnly",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:843"
+  ]
+ },
+ {
+  "url": "https://owasp.org/www-community/Injection_Flaws",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://community.owasp.org/Injection_Flaws",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:439"
+  ]
+ },
+ {
+  "url": "https://owasp.org/www-community/SameSite",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://community.owasp.org/SameSite",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:844"
+  ]
+ },
+ {
+  "url": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/06-Session_Management_Testing/10-Testing_JSON_Web_Tokens",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://wstg.owasp.org/latest/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:616"
+  ]
+ },
+ {
+  "url": "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://wstg.owasp.org/latest/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:319"
+  ]
+ },
+ {
+  "url": "https://pictogrammers.com/library/mdi/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://pictogrammers.com/library/mdi/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:766"
+  ]
+ },
+ {
+  "url": "https://prettier.io/docs/en/options.html",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://prettier.io/docs/options.html",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1168"
+  ]
+ },
+ {
+  "url": "https://quasar.dev/start/upgrade-guide",
+  "cadena": [
+   "404"
+  ],
+  "final": "https://quasar.dev/start/upgrade-guide",
+  "veredicto": "ROTA",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1863"
+  ]
+ },
+ {
+  "url": "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:165"
+  ]
+ },
+ {
+  "url": "https://semver.npmjs.com/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://semver.npmjs.com/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a3-npm.md:293"
+  ]
+ },
+ {
+  "url": "https://semver.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://semver.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a3-npm.md:293"
+  ]
+ },
+ {
+  "url": "https://socket.io/docs/v2/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://socket.io/docs/v2/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:790",
+   "02-complement-mongodb-backend/12-el-backend-habla.md:578"
+  ]
+ },
+ {
+  "url": "https://socket.io/docs/v2/client-api/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://socket.io/docs/v2/client-api/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:791",
+   "01-vue2-legacy/q4-timeline-actividad.md:840",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1089",
+   "02-complement-mongodb-backend/13-testing-de-api.md:474"
+  ]
+ },
+ {
+  "url": "https://socket.io/docs/v2/rooms/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://socket.io/docs/v2/rooms/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:841",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1090"
+  ]
+ },
+ {
+  "url": "https://socket.io/docs/v2/server-api/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://socket.io/docs/v2/server-api/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:792"
+  ]
+ },
+ {
+  "url": "https://socket.io/docs/v4/migrating-from-2-x-to-3-0/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://socket.io/docs/v4/migrating-from-2-x-to-3-0/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:579"
+  ]
+ },
+ {
+  "url": "https://sockets.miempresa.com",
+  "cadena": [
+   "000"
+  ],
+  "final": "https://sockets.miempresa.com",
+  "veredicto": "ROTA",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:166"
+  ]
+ },
+ {
+  "url": "https://testing-library.com/docs/guiding-principles/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://testing-library.com/docs/guiding-principles/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1616",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1805"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1831"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/layout-builder",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/layout-builder",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1843"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/layout/grid/introduction",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/layout/grid/introduction",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1839"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/layout/grid/introduction-to-flexbox",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/layout/grid/introduction-to-flexbox",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1805"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/layout/layout",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/layout/layout",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1835"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/layout/page",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/layout/page",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1836"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-cli/boot-files",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-cli/boot-files",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1834"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-cli/quasar-conf-js",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-cli/quasar-conf-js",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1833",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1644"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1807"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-cli/routing",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-cli/routing",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1837"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-cli/vuex-store",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-cli/vuex-store",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1838"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-plugins/dialog",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-plugins/dialog",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1842",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1640",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1804"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/quasar-plugins/notify",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/quasar-plugins/notify",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1841",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1641",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1803",
+   "01-vue2-legacy/q4-timeline-actividad.md:836"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/style/color-palette",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/style/color-palette",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:834"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/style/spacing",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/style/spacing",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q1-leer-quasar.md:1840",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1806"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/banner",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/banner",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1642",
+   "01-vue2-legacy/q4-timeline-actividad.md:831"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/button",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/button",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1638"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/card",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/card",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:829"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/chip",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/chip",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:828"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/dialog",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/dialog",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1639"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/form",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/form",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1633"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/icon",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/icon",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:835"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/infinite-scroll",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/infinite-scroll",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:832"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/input",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/input",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1635"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/select",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/select",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1637",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1802"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/skeleton",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/skeleton",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:830"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/stepper",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/stepper",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:833"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1793"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table#Defining-the-columns",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table#Defining-the-columns",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1794"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table#Filtering",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table#Filtering",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1798"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table#Pagination",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table#Pagination",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1795"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table#QTd-API",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table#QTd-API",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1801"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table#Slots",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table#Slots",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1797"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/table#Synchronizing-with-server",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/table#Synchronizing-with-server",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1796"
+  ]
+ },
+ {
+  "url": "https://v1.quasar.dev/vue-components/timeline",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.quasar.dev/vue-components/timeline",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q4-timeline-actividad.md:827"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:849",
+   "01-vue2-legacy/nx0-red-de-seguridad.md:978",
+   "01-vue2-legacy/q0-red-de-seguridad.md:1596",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1775",
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1269"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/api/#mount",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/api/#mount",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1597",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1776"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/api/options.html#attachto",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/api/options.html#attachto",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1778"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/api/wrapper/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/api/wrapper/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:851",
+   "01-vue2-legacy/nx0-red-de-seguridad.md:979",
+   "01-vue2-legacy/q0-red-de-seguridad.md:1599",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1780"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/guides/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/guides/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:850"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/guides/#testing-asynchronous-behavior",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/guides/#testing-asynchronous-behavior",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1605",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1785"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/guides/using-with-vue-router.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/guides/using-with-vue-router.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1603",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1783"
+  ]
+ },
+ {
+  "url": "https://v1.test-utils.vuejs.org/guides/using-with-vuex.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v1.test-utils.vuejs.org/guides/using-with-vuex.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1601",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1781"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:708"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:591"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/components-glossary/head/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/components-glossary/head/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:637"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/components-glossary/validate/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/components-glossary/validate/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:638"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/concepts/nuxt-lifecycle",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/concepts/nuxt-lifecycle/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:823"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/concepts/nuxt-lifecycle/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/concepts/nuxt-lifecycle/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:606"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/concepts/server-side-rendering",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/concepts/server-side-rendering/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx0-red-de-seguridad.md:990"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/configuration-glossary/configuration-build/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/configuration-glossary/configuration-build/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:598"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/layouts/#error-page",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/layouts/#error-page",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:717"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/middleware",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/middleware/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:828"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/middleware/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/middleware/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:604"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/nuxt/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/nuxt/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:594"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/plugins",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/plugins/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:825"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/plugins/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/plugins/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:600"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/store/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/store/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:602"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/directory-structure/store/#the-nuxtserverinit-action",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/directory-structure/store/#the-nuxtserverinit-action",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:713"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/features/data-fetching/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/features/data-fetching/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:636"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/features/data-fetching/#async-data",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/features/data-fetching/#async-data",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:710"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/features/data-fetching/#the-fetch-hook",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/features/data-fetching/#the-fetch-hook",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:711"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/features/file-system-routing/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/features/file-system-routing/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx1-leer-nuxt.md:596",
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:639"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/features/nuxt-components#the-client-only-component",
+  "cadena": [
+   "301",
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/features/nuxt-components/",
+  "veredicto": "REDIR",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:824"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/features/transitions/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/features/transitions/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:640"
+  ]
+ },
+ {
+  "url": "https://v2.nuxt.com/docs/internals-glossary/context/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.nuxt.com/docs/internals-glossary/context/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx3-asyncdata-vs-vuex.md:712",
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:641"
+  ]
+ },
+ {
+  "url": "https://v2.ssr.vuejs.org/guide/hydration.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.ssr.vuejs.org/guide/hydration.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:835"
+  ]
+ },
+ {
+  "url": "https://v2.ssr.vuejs.org/guide/universal.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.ssr.vuejs.org/guide/universal.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/nx2-hidratacion-window-not-defined.md:837"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#activated",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#activated",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:969"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#beforeDestroy",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#beforeDestroy",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1026"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#keep-alive",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#keep-alive",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:968"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#key",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#key",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/09-panel-soporte.md:1174",
+   "01-vue2-legacy/q4-timeline-actividad.md:845",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1093"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#model",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#model",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/09-panel-soporte.md:1177"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#ref",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#ref",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:970"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#vm-nextTick",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#vm-nextTick",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1657",
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1267"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/api/#watch",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/api/#watch",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:797"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1160",
+   "01-vue2-legacy/01-estructura-base-legacy.md:519"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/class-and-style.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/class-and-style.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:847"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/01-estructura-base-legacy.md:520"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-custom-events.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-custom-events.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:844",
+   "01-vue2-legacy/05-crud-tickets.md:915",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1654",
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1265"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-custom-events.html#Customizing-Component-v-model",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-custom-events.html#Customizing-Component-v-model",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/09-panel-soporte.md:1176"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-custom-events.html#sync-Modifier",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-custom-events.html#sync-Modifier",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1810",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1652"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-dynamic-async.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-dynamic-async.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:967"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-props.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-props.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:843",
+   "01-vue2-legacy/05-crud-tickets.md:918",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1655",
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1266"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-slots.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-slots.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:974"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/components-slots.html#Scoped-Slots",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/components-slots.html#Scoped-Slots",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1811",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1653"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/computed.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/computed.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:86",
+   "01-vue2-legacy/03-mock-api-minima.md:1002",
+   "01-vue2-legacy/04-dashboard-tickets.md:838"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/computed.html#Computed-Setter",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/computed.html#Computed-Setter",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1812",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1654"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/computed.html#Watchers",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/computed.html#Watchers",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:971"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/events.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/events.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:913"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/filters.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/filters.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:845"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/forms.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/forms.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:917"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/installation",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/installation",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1161"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/instance.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/instance.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:85",
+   "01-vue2-legacy/03-mock-api-minima.md:1001"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/instance.html#Lifecycle-Diagram",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/instance.html#Lifecycle-Diagram",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:911",
+   "01-vue2-legacy/nx1-leer-nuxt.md:608"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/list.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/list.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:846"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/list.html#Mutation-Methods",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/list.html#Mutation-Methods",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:796",
+   "01-vue2-legacy/nx4-pagina-ssr-nueva.md:657",
+   "01-vue2-legacy/q4-timeline-actividad.md:843",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1092"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/reactivity.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/reactivity.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:840",
+   "01-vue2-legacy/07-metricas-minimas.md:1025"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/04-dashboard-tickets.md:842",
+   "01-vue2-legacy/09-panel-soporte.md:1179"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/transitions.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/transitions.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:973"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/guide/unit-testing.html",
+  "cadena": [
+   "404"
+  ],
+  "final": "https://v2.vuejs.org/v2/guide/unit-testing.html",
+  "veredicto": "ROTA",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:858"
+  ]
+ },
+ {
+  "url": "https://v2.vuejs.org/v2/style-guide/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuejs.org/v2/style-guide/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1181"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:757"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/api/v-data-table/#props-custom-filter",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/api/v-data-table/#props-custom-filter",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1634"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/api/v-data-table/#props-headers",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/api/v-data-table/#props-headers",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1630"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/api/v-data-table/#props-options",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/api/v-data-table/#props-options",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1631"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/api/v-data-table/#slots",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/api/v-data-table/#slots",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1633"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/alerts/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/alerts/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1255",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1079"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/application/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/application/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1794",
+   "01-vue2-legacy/vu1-leer-vuetify.md:760"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/badges/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/badges/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1085"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/buttons/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/buttons/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1253"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/cards/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/cards/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1251",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1077"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/chips/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/chips/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1637",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1076"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/color-pickers/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/color-pickers/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1084"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/data-tables/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/data-tables/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1629"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/data-tables/#server-side-paginate-and-sort",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/data-tables/#server-side-paginate-and-sort",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1632"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/dialogs/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/dialogs/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1250"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/forms/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/forms/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1243"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/grid/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/grid/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:762"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/grids/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/grids/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1640"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/icons/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/icons/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1639"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/selects/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/selects/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1248",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1638"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/skeleton-loaders/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/skeleton-loaders/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1078"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/snackbars/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/snackbars/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1254"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/steppers/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/steppers/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1083"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/text-fields/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/text-fields/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1245"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/textareas/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/textareas/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1246"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/components/timelines/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/components/timelines/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1075"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/breakpoints/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/breakpoints/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:763"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/icon-fonts/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/icon-fonts/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1082"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/icons/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/icons/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:764"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/theme/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/theme/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:761",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1643",
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1080"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/theme/#customizing",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/theme/#customizing",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1645"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/theme/#dark-mode",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/theme/#dark-mode",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu4-timeline-vuetify.md:1081"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/treeshaking/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/treeshaking/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:765",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1648"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/features/treeshaking/#manual-imports",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/features/treeshaking/#manual-imports",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1649"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/getting-started/installation/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/getting-started/installation/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu1-leer-vuetify.md:759"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/getting-started/unit-testing/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/getting-started/unit-testing/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1797"
+  ]
+ },
+ {
+  "url": "https://v2.vuetifyjs.com/en/styles/colors/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v2.vuetifyjs.com/en/styles/colors/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1644"
+  ]
+ },
+ {
+  "url": "https://v3.router.vuejs.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.router.vuejs.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/01-estructura-base-legacy.md:521"
+  ]
+ },
+ {
+  "url": "https://v3.router.vuejs.org/guide/advanced/meta.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.router.vuejs.org/guide/advanced/meta.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/09-panel-soporte.md:1183"
+  ]
+ },
+ {
+  "url": "https://v3.router.vuejs.org/guide/advanced/navigation-guards.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.router.vuejs.org/guide/advanced/navigation-guards.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:600"
+  ]
+ },
+ {
+  "url": "https://v3.router.vuejs.org/guide/advanced/navigation-guards.html#in-component-guards",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.router.vuejs.org/guide/advanced/navigation-guards.html#in-component-guards",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:920"
+  ]
+ },
+ {
+  "url": "https://v3.router.vuejs.org/guide/essentials/history-mode.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.router.vuejs.org/guide/essentials/history-mode.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:348"
+  ]
+ },
+ {
+  "url": "https://v3.router.vuejs.org/guide/essentials/nested-routes.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.router.vuejs.org/guide/essentials/nested-routes.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/06-wizard-minimo.md:976"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/01-estructura-base-legacy.md:522",
+   "01-vue2-legacy/10-vuex-a-fondo.md:788"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/actions.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/actions.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:601",
+   "01-vue2-legacy/10-vuex-a-fondo.md:792"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/actions.html#composing-actions",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/actions.html#composing-actions",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:1005"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/forms.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/forms.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/10-vuex-a-fondo.md:798"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/modules.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/modules.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:602",
+   "01-vue2-legacy/10-vuex-a-fondo.md:794"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/mutations.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/mutations.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/10-vuex-a-fondo.md:790",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1816",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1658"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/plugins.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/plugins.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/10-vuex-a-fondo.md:795"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/strict.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/strict.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/10-vuex-a-fondo.md:796",
+   "01-vue2-legacy/q3-migrar-dashboard-qtable.md:1815",
+   "01-vue2-legacy/vu3-migrar-dashboard-vdatatable.md:1657"
+  ]
+ },
+ {
+  "url": "https://v3.vuex.vuejs.org/guide/testing.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v3.vuex.vuejs.org/guide/testing.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/q0-red-de-seguridad.md:1610",
+   "01-vue2-legacy/vu0-red-de-seguridad.md:1789"
+  ]
+ },
+ {
+  "url": "https://v4.webpack.js.org/concepts/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://v4.webpack.js.org/concepts/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:342"
+  ]
+ },
+ {
+  "url": "https://vue-chartjs.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vue-chartjs.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1029"
+  ]
+ },
+ {
+  "url": "https://vue-loader.vuejs.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vue-loader.vuejs.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/a5-webpack-babel.md:343"
+  ]
+ },
+ {
+  "url": "https://vuejs.github.io/vetur/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vuejs.github.io/vetur/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1170"
+  ]
+ },
+ {
+  "url": "https://vuelidate.js.org/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vuelidate.js.org/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:908",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1648",
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1259"
+  ]
+ },
+ {
+  "url": "https://vuelidate.js.org/#sub-builtin-validators",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vuelidate.js.org/#sub-builtin-validators",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:909",
+   "01-vue2-legacy/q2-migrar-crud-qform.md:1649",
+   "01-vue2-legacy/vu2-migrar-crud-vuetify.md:1260"
+  ]
+ },
+ {
+  "url": "https://vueschool.io/courses/vue-router-for-everyone",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vueschool.io/courses/vue-router-for-everyone",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/01-estructura-base-legacy.md:529"
+  ]
+ },
+ {
+  "url": "https://vueschool.io/courses/vuex-for-everyone",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://vueschool.io/courses/vuex-for-everyone",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/10-vuex-a-fondo.md:803"
+  ]
+ },
+ {
+  "url": "https://www.chartjs.org/docs/2.9.4/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.chartjs.org/docs/2.9.4/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1020"
+  ]
+ },
+ {
+  "url": "https://www.chartjs.org/docs/2.9.4/charts/doughnut.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.chartjs.org/docs/2.9.4/charts/doughnut.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1021"
+  ]
+ },
+ {
+  "url": "https://www.chartjs.org/docs/2.9.4/developers/plugins.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.chartjs.org/docs/2.9.4/developers/plugins.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1023"
+  ]
+ },
+ {
+  "url": "https://www.chartjs.org/docs/2.9.4/developers/updates.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.chartjs.org/docs/2.9.4/developers/updates.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/07-metricas-minimas.md:1022"
+  ]
+ },
+ {
+  "url": "https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.infoq.com/articles/cap-twelve-years-later-how-the-rules-have-changed/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:274"
+  ]
+ },
+ {
+  "url": "https://www.jetbrains.com/help/webstorm/vue-js.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.jetbrains.com/help/webstorm/vue-js.html",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/00-setup-hola-mundo.md:1171"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/6-rules-of-thumb-for-mongodb-schema-design",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/blog/mongodb/6-rules-of-thumb-for-mongodb-schema-design",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:518",
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:472",
+   "02-complement-mongodb-backend/08-la-autopsia.md:255",
+   "02-complement-mongodb-backend/15-el-veredicto-honesto.md:318",
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:261"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/building-with-patterns-a-summary",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/blog/building-with-patterns-a-summary",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:516",
+   "02-complement-mongodb-backend/08-la-autopsia.md:257"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/building-with-patterns-the-bucket-pattern",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/blog/building-with-patterns-the-bucket-pattern",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:527"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/building-with-patterns-the-extended-reference-pattern",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/blog/building-with-patterns-the-extended-reference-pattern",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:471"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/building-with-patterns-the-schema-versioning-pattern",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/blog/building-with-patterns-the-schema-versioning-pattern",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:422"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/how-to-select-for-update-inside-mongodb-transactions",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/bloghow-to-select-for-update-inside-mongodb-transactions",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:528"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/blog/post/performance-best-practices-indexing",
+  "cadena": [
+   "308",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/company/blog/performance-best-practices-indexing",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:421"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/compass/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/compass/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:600",
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:744",
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:334"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/compass/current/aggregation-pipeline-builder/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/compass/create-agg-pipeline/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:336"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/compass/current/schema/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/compass/schema/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:335"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/compass/install/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/compass/install/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:140"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/installation/installation/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/installation/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:142"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/mongodump/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/mongodump/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:595",
+   "02-complement-mongodb-backend/14-operacion.md:415"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/mongoexport/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/mongoexport/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:593"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/mongoimport/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/mongoimport/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:594"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/mongorestore/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/mongorestore/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:596",
+   "02-complement-mongodb-backend/14-operacion.md:416"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/mongostat/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/mongostat/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:422"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/database-tools/mongotop/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/database-tools/mongotop/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:422"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/manual/release-notes/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/release-notes/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/15-el-veredicto-honesto.md:335",
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:283"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/mongodb-shell/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/mongodb-shell/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:592",
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:734",
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:327"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/mongodb-shell/install/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/mongodb-shell/install/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:139"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/mongodb-shell/reference/compatibility/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:330"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/mongodb-shell/reference/configure-shell-settings/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/mongodb-shell/reference/configure-shell-settings/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:328"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/mongodb-shell/write-scripts/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/mongodb-shell/write-scripts/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:329"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/administration/security-checklist/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/administration/security-checklist/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:327"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline-limits/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/aggregation-pipeline-limits/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:598"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline-optimization/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/aggregation-pipeline-optimization/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:466",
+   "02-complement-mongodb-backend/09-aggregation.md:596"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/aggregation-pipeline/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/aggregation-pipeline/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:590"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/backups/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/backups/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:597",
+   "02-complement-mongodb-backend/14-operacion.md:414"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/data-model-design/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/data-modeling/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:507"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/data-modeling-introduction/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/data-modeling/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:506"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/databases-and-collections/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/databases-and-collections/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:727"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/document/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/document/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:728"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/gridfs/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/gridfs/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:580"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/index-compound/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-compound/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:409"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/index-creation/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/index-creation/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:418"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/index-multikey/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-multikey/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:410"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/index-partial/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/index-partial/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:411"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/index-text/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/indexes/index-types/index-text/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:413"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/index-ttl/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/index-ttl/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:412"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/query-plans/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/query-plans/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:416"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/replica-set-oplog/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/replica-set-oplog/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:417"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/schema-validation/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/schema-validation/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:413"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/transactions-production-consideration/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/transactions-production-consideration/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:513"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/transactions/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/transactions/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:512"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/core/write-operations-atomicity/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/core/write-operations-atomicity/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:508"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/faq/fundamentals/#how-does-mongodb-address-sql-or-query-injection-",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/faq/fundamentals/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:434"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/indexes/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/indexes/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:408"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/installation/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/installation/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:586"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/introduction/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:726"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/bson-type-comparison-order/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:451"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/bson-types/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/bson-types/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:729"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/command/collMod/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/command/collmod/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:415"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/command/compact/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/command/compact/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:424"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/configuration-options/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/configuration-options/?pepe=414506",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:591"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/database-profiler/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/database-profiler/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:421"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/explain-results/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/explain-results/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:414"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/limits/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/limits/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:510"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:331"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/ObjectId/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/objectid/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:730"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.collection.countDocuments/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.collection.countdocuments/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:454"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.collection.explain/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.collection.explain/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:467",
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:332"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.collection.find/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.collection.find/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:448"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.collection.findOneAndUpdate/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.collection.findoneandupdate/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:510"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.collection.updateMany/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.collection.updatemany/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:417"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.currentOp/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.currentop/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:423"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.fsyncLock/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.fsynclock/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:425"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/method/db.killOp/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/method/db.killop/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:423"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/mongodb-extended-json/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/mongodb-extended-json/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:599"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation-pipeline/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/mql/aggregation-stages/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:591"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/mql/expressions/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:592"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/facet/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:594"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/group/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:593"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/indexStats/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexstats/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:415",
+   "02-complement-mongodb-backend/a02-mongosh-compass.md:333"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/lookup/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:463"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/merge/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:595"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/unionWith/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unionwith/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:584"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/aggregation/unwind/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:464"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/query/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/mql/query-predicates/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:449"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/query/expr/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/query/expr/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:465"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/query/jsonSchema/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:414"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/query/where/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/query/where/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:329"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/update/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/mql/update/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:509"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/update/positional-filtered/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:511"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/operator/update/slice/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/operator/update/slice/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:511"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/program/mongod/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/program/mongod/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:590"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/read-concern/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/read-concern/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:515"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/sql-aggregation-comparison/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/sql-aggregation-comparison/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:597"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/sql-comparison/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/sql-comparison/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:731",
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:464"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/reference/write-concern/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/reference/write-concern/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:514"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/backup-with-filesystem-snapshots/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/backup-with-filesystem-snapshots/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:598"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/build-indexes-on-replica-sets/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/build-indexes-on-replica-sets/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:419"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/deploy-replica-set/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/deploy-replica-set/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/06-atomicidad-transacciones-consistencia.md:517"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/enable-authentication/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/enable-authentication/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/a04-seguridad.md:328"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/equality-sort-range-rule/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/equality-sort-range-guideline/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/07-indices.md:420"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/install-mongodb-on-os-x/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/administration/install-community-macos/?macos-method=brew",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:588"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/install-mongodb-on-windows/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/administration/install-community-windows/?win-method=wizard",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:587"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/iterate-a-cursor/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/iterate-a-cursor/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:453"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/manage-the-database-profiler/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/manage-the-database-profiler/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/14-operacion.md:420"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/model-data-for-schema-versioning/",
+  "cadena": [
+   "301",
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/data-modeling/design-patterns/data-versioning/schema-versioning/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/08-la-autopsia.md:271"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/model-embedded-one-to-many-relationships-between-documents/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:508"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/model-referenced-one-to-many-relationships-between-documents/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:509"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/query-arrays/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/query-arrays/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:452"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/query-for-null-fields/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:450"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/docs/v4.4/tutorial/update-documents-with-aggregation-pipeline/",
+  "cadena": [
+   "301",
+   "301",
+   "200"
+  ],
+  "final": "https://www.mongodb.com/docs/manual/tutorial/update-documents-with-aggregation-pipeline/",
+  "veredicto": "REDIR",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:416"
+  ]
+ },
+ {
+  "url": "https://www.mongodb.com/try/download/community",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.mongodb.com/try/download/community",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:158"
+  ]
+ },
+ {
+  "url": "https://www.npmjs.com/package/json-server",
+  "cadena": [
+   "403"
+  ],
+  "final": "https://www.npmjs.com/package/json-server",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:996"
+  ]
+ },
+ {
+  "url": "https://www.npmjs.com/package/multer",
+  "cadena": [
+   "403"
+  ],
+  "final": "https://www.npmjs.com/package/multer",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/a4-axios.md:514"
+  ]
+ },
+ {
+  "url": "https://www.oreilly.com/library/view/mongodb-the-definitive/9781491954454/",
+  "cadena": [
+   "403"
+  ],
+  "final": "https://www.oreilly.com/library/view/mongodb-the-definitive/9781491954454/",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:478"
+  ]
+ },
+ {
+  "url": "https://www.postgresql.org/docs/current/datatype-json.html",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.postgresql.org/docs/current/datatype-json.html",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/15-el-veredicto-honesto.md:339",
+   "02-complement-mongodb-backend/a05-mongo-vs-sql.md:282"
+  ]
+ },
+ {
+  "url": "https://www.practical-mongodb-aggregations.com/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.practical-mongodb-aggregations.com/",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/09-aggregation.md:606"
+  ]
+ },
+ {
+  "url": "https://www.vuemastery.com/courses/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.vuemastery.com/courses/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/11-testing-minimo.md:862"
+  ]
+ },
+ {
+  "url": "https://www.vuemastery.com/courses/intro-to-vue-js/vue-instance/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.vuemastery.com/courses/intro-to-vue-js/vue-instance/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/01-estructura-base-legacy.md:528",
+   "01-vue2-legacy/04-dashboard-tickets.md:856",
+   "01-vue2-legacy/06-wizard-minimo.md:981"
+  ]
+ },
+ {
+  "url": "https://www.vuemastery.com/courses/token-based-authentication/intro-to-authentication/",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.vuemastery.com/courses/token-based-authentication/intro-to-authentication/",
+  "veredicto": "OK",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:620"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/@MongoDB",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.youtube.com/@MongoDB",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/04-el-esquema-que-no-esta-en-la-base.md:437",
+   "02-complement-mongodb-backend/05-lookup-y-por-que-es-una-alarma.md:486"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA",
+  "cadena": [
+   "200"
+  ],
+  "final": "https://www.youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA",
+  "veredicto": "OK",
+  "donde": [
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:470"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=-56x56UppqQ",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D-56x56UppqQ&q=EgS1PxhcGPulwtYGIjAE-oDTpFcHzcTpKU501T7x2E7LbUHlQ0RNssKX2ErrAPCXS33UIaa9_PKXjgOwXcYyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:749",
+   "02-complement-mongodb-backend/02-consultar-tu-sql-traducido.md:469"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=-bt_y4Loofg",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D-bt_y4Loofg&q=EgS1PxhcGPulwtYGIjBUlww1NPspBzJ6sCmAHCRBNHJTrPm5-NZ1QQ2FHsN4UYWqJD4Kg5ofopXjx_k2Ua4yAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:748"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=0buKQHokLK8",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D0buKQHokLK8&q=EgS1PxhcGPulwtYGIjDHwbhUpdO710RyVD5wNZjqFkLGZVg3-Et7hFDDA-AZ8Jynjc1IaLusaTJ4nEiRi4AyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/01-mongo-en-30-min.md:750"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=1BfCnjr_Vjg",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D1BfCnjr_Vjg&q=EgS1PxhcGPulwtYGIjDyXfTLf0SySIY7P3j_sELY7pHkvZYoDGS-px-CjATGlF1Vcy1wZMPjEP28hKAs-yQyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/08-websockets-minimos.md:801",
+   "02-complement-mongodb-backend/12-el-backend-habla.md:594"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=3GHZd0zv170",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D3GHZd0zv170&q=EgS1PxhcGPulwtYGIjDahw7awIHi6jE6qLFeezexnvg0EBpdXV8Gb6TPYsdgVF5urdhMr_RRtPtpiv8NNGMyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:530"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=6LyagkoRWYA",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D6LyagkoRWYA&q=EgS1PxhcGPulwtYGIjAV2vSBnzi62Yas9VBkpI5n_Qp2FFKzQ7373kuELUTSGVZxcj9aIGqzWJijx5-WuKsyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:622",
+   "01-vue2-legacy/03-mock-api-minima.md:1009"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=7r4xVDI2vho",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D7r4xVDI2vho&q=EgS1PxhcGPulwtYGIjDDu6SZKh8fueT8kei_s5s8k-WynsmXdktu3JNMuUciG4hwl-p7Ay7Seqs8tSN7lC4yAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:485"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=Gjnup-PuquQ",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DGjnup-PuquQ&q=EgS1PxhcGPulwtYGIjCe-0iLnleSFeXfJcbDKhaoCF4SrUk_1gNGHvrNfe-G37DfUV-79UrZ2lIqR9L6gD4yAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/a01-docker.md:305"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=Jv2uxzhPFl4",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DJv2uxzhPFl4&q=EgS1PxhcGPulwtYGIjBo2lygekRX1z8jjCArRBB-mdu45slLR09QDJFfbHAieAHkIrQx0dlHwVkinW7rDJ0yAnJSWgFDYOq47KKVhYj47gE",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/13-testing-de-api.md:486"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=L72fhGm1tfE",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DL72fhGm1tfE&q=EgS1PxhcGPylwtYGIjBjyFAzKaEQSpQhC9nsFEIBxID0I9lYK_gnKRsCc8NeazaQrp-mYh8oEvFcYjlkaX8yAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/10-express-el-vehiculo.md:666",
+   "02-complement-mongodb-backend/a03-express.md:337"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=QAqK-R9HUhc",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DQAqK-R9HUhc&q=EgS1PxhcGPylwtYGIjAQvCAIQxnmKbgSZaCupKu3WpzpKVEopF1ONDsmMmEsupOtmfUEeLQABU-kC3rkPWUyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/03-embeber-vs-referenciar.md:529"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=Qw9zlE3t8Ko",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DQw9zlE3t8Ko&q=EgS1PxhcGPylwtYGIjDzJgR7bbaLOZ--Jr8D8q3qR0UKvaBIw6mHootSXOD03rLlnQpXJ6O8NM96aHcDLxsyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/00-preliminares.md:609",
+   "02-complement-mongodb-backend/a01-docker.md:306"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=RboyQ6IQDyI",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DRboyQ6IQDyI&q=EgS1PxhcGPylwtYGIjCJq9hfkkIJcfCojlSCEPTYb9-5tbWGH9tzD-oFrW5yaxjE8k8_ExEMpjRuneUzCNsyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:1010"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=UBUNrFtufWo",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DUBUNrFtufWo&q=EgS1PxhcGPylwtYGIjBo7ERf1kh4Geu8bRzatwdqWLw1KZNw0-880ugOJsuw2_MDBqBn7P4AaiBnSZQOmagyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/02-autenticacion-minima.md:621"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=WP4-WgHqbPQ",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DWP4-WgHqbPQ&q=EgS1PxhcGPylwtYGIjC-2RF_KibCwhlmGeDRAZUpq0rpJO49OCm1HJ21yM5HordVxglkjbGnnLe46dZMRwYyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/05-crud-tickets.md:927"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=ZKEqqIO7n-k",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DZKEqqIO7n-k&q=EgS1PxhcGPylwtYGIjDtAXxf2OU7ohsx0UQJgWN-M-iScnOOaKFAFYLEaoJPspM--DAvzRcGuXlSerDxPcwyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/12-el-backend-habla.md:595"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=mbsmsi7l3r4",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dmbsmsi7l3r4&q=EgS1PxhcGPylwtYGIjDtmb3UGM-5vMUtU2-5PvygTnii_W8D9juiIVN5snVhurh2T-vAsG3qiGgvLy0NAp8yAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "02-complement-mongodb-backend/11-auth-real-y-pago-de-deudas.md:446"
+  ]
+ },
+ {
+  "url": "https://www.youtube.com/watch?v=yNrqlxn0nc0",
+  "cadena": [
+   "302",
+   "429"
+  ],
+  "final": "https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DyNrqlxn0nc0&q=EgS1PxhcGPylwtYGIjBdxexR313rZRfvolg6Haz4bRojN2bumMXkNt2PDasIEqJH6vCqctRewMikICGnIXgyAnJSWgFD",
+  "veredicto": "BLOQUEO?",
+  "donde": [
+   "01-vue2-legacy/03-mock-api-minima.md:1011"
+  ]
+ }
+]

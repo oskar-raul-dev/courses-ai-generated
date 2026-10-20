@@ -1,0 +1,8 @@
+# .dockerignore — sin esto, el COPY . . se lleva node_modules
+# (megas de basura, y peor: binarios compilados para TU SO, no para alpine)
+node_modules
+npm-debug.log
+mongo-data
+backups
+.env
+.git

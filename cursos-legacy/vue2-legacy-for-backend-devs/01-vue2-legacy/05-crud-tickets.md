@@ -125,16 +125,12 @@ explicado en detalle. Repaso exprés antes de leer el código:
 
 Ambos son hooks del ciclo de vida, pero corren en momentos distintos:
 
-```
-new Vue / componente creado
-   ↓
-beforeCreate
-   ↓
-created      ← ya existe this, data, props, computed. NO existe el DOM.
-   ↓
-(compila template, monta en el DOM)
-   ↓
-mounted      ← el componente ya está en la página. this.$el existe.
+```mermaid
+flowchart TD
+    A["new Vue: componente creado"] --> B["beforeCreate"]
+    B --> C["created: ya existen this, data, props y computed; NO existe el DOM"]
+    C --> D["compila el template y monta en el DOM"]
+    D --> E["mounted: el componente ya está en la página; this.$el existe"]
 ```
 
 | Hook | Cuándo usarlo | En esta fase |
