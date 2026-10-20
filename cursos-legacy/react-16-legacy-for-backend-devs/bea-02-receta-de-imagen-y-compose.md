@@ -1,29 +1,17 @@
 # 🐳 Apéndice bea-02 — Receta de imagen y compose
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
 > Lo referencian: `be02` (Postgres en contenedor), `be03` y `be09`
 
 ---
 
-Esto es **la receta**. Vienes a copiar algo que funcione, no a estudiar
-contenedores: no hay teoría de imágenes, ni capítulo sobre capas, ni comparación
-de runtimes. Hay dos archivos que puedes pegar, los comandos para levantarlos y
-tumbarlos, y los cuatro errores que salen **siempre**, con su mensaje literal.
+Esto es **la receta**. Vienes a copiar algo que funcione, no a estudiar contenedores: no hay teoría de imágenes, ni capítulo sobre capas, ni comparación de runtimes. Hay los archivos que puedes pegar, los comandos para levantarlos y tumbarlos, y los errores que salen **siempre**, con su mensaje literal.
 
-> 🧭 **Autocontención.** Todo lo que necesitas está acá. Este apéndice no remite
-> a ningún otro curso del catálogo, exista o no uno de contenedores. Si algo no
-> funciona siguiendo estos pasos, es un fallo de esta receta y hay que
-> arreglarlo acá.
+> 🧭 **Autocontención.** Todo lo que necesitas está acá. Este apéndice no remite a ningún otro curso del catálogo. Si algo no funciona siguiendo estos pasos, es un fallo de esta receta y hay que arreglarlo acá.
 
-Lo único que damos por instalado es un runtime de Docker con `docker compose`. El
-apéndice `A9` del track base ya cubre cómo tenerlo en cada sistema —incluido
-Colima en Apple Silicon, que es la opción por defecto ahí— y esa parte no se
-repite. Los comandos de abajo son idénticos con Colima o con Docker Desktop.
+Lo único que damos por instalado es un runtime de Docker con `docker compose`. El apéndice `A9` del track base cubre cómo tenerlo en cada sistema —incluido Colima en Apple Silicon— y esa parte no se repite. Los comandos de abajo son los mismos con Colima o con Docker Desktop.
 
-> 📝 **Relación con `A9`.** El `docker-compose.yml` de `A9` levanta el
-> **frontend** (Node 14 y el mock del `3001`). El de acá levanta el **backend**
-> (Go y Postgres). A partir de `be03` conviven: apagas el servicio `mock` de
-> `A9` y levantas el `api` de acá, en el mismo puerto `3001`. Ese es el 🪦.
+> 📝 **Relación con `A9`.** El compose de `A9` levanta la **consola** (Node 14 y los mocks). El de acá levanta el **backend** (Go y Postgres). A partir de `be03` conviven: apagas el mock del `3001` y levantas el `api` de acá, en el mismo puerto. Ese es el 🪦. El mock de Google Play del `3002` sigue siendo el de la consola.
 
 ---
 
@@ -31,220 +19,198 @@ repite. Los comandos de abajo son idénticos con Colima o con Docker Desktop.
 
 1. [Lo mínimo: solo Postgres](#1-lo-mínimo-solo-postgres)
 2. [El `Dockerfile`, en sus dos versiones](#2-el-dockerfile-en-sus-dos-versiones)
-3. [El `docker-compose.yml` completo](#3-el-docker-composeyml-completo)
+3. [El `docker-compose.yml`](#3-el-docker-composeyml)
 4. [Variables por ambiente](#4-variables-por-ambiente)
 5. [Comandos: arrancar, parar, resetear](#5-comandos-arrancar-parar-resetear)
-6. [Los cuatro errores que salen siempre](#6-los-cuatro-errores-que-salen-siempre)
+6. [Los errores que salen siempre](#6-los-errores-que-salen-siempre)
 7. [🧩 Cuándo usar qué](#-cuándo-usar-qué)
 
 ---
 
 ## 1. Lo mínimo: solo Postgres
 
-Durante `be02` no hace falta contenerizar el backend: lo corres con `go run` y
-solo necesitas una base. Este es el comando, y es el que usarás durante seis
-fases:
+Durante `be02` no hace falta contenerizar el backend: lo corres con `go run` y solo necesitas una base. Este es el comando, y es el que usarás durante siete fases:
 
 ```bash
-docker run -d --name rifas-pg \
-  -e POSTGRES_USER=rifas \
-  -e POSTGRES_PASSWORD=rifas \
-  -e POSTGRES_DB=rifas \
+docker run -d --name esclusa-pg \
+  -e POSTGRES_USER=esclusa \
+  -e POSTGRES_PASSWORD=esclusa \
+  -e POSTGRES_DB=esclusa \
   -p 5432:5432 \
   postgres:13
 
-export DATABASE_URL="postgres://rifas:rifas@localhost:5432/rifas?sslmode=disable"
+export DATABASE_URL="postgres://esclusa:esclusa@localhost:5432/esclusa?sslmode=disable"
 psql "$DATABASE_URL" -c 'select version();'
 ```
 
-> ⚠️ **Si el `5432` ya está ocupado** —porque tienes un Postgres instalado en el
-> sistema—, publica en otro puerto y ajusta la URL. Nada más cambia: la
-> configuración por variables de entorno lo cubre entero.
+> ⚠️ **Si el `5432` ya está ocupado** —porque tienes un Postgres instalado en el sistema—, publica en otro puerto y ajusta la URL. Nada más cambia:
 >
 > ```bash
-> docker run -d --name rifas-pg … -p 5433:5432 postgres:13
-> export DATABASE_URL="postgres://rifas:rifas@localhost:5433/rifas?sslmode=disable"
+> docker run -d --name esclusa-pg … -p 5433:5432 postgres:13
+> export DATABASE_URL="postgres://esclusa:esclusa@localhost:5433/esclusa?sslmode=disable"
 > ```
 >
-> El `-p 5433:5432` mapea **el puerto de tu máquina** al del contenedor: adentro
-> Postgres sigue en el 5432, siempre.
+> El `-p 5433:5432` mapea **el puerto de tu máquina** al del contenedor: adentro Postgres sigue en el 5432, siempre.
 
-Y la base de **pruebas**, que desde `be08` es un contenedor aparte:
+Y la base de **pruebas**. Desde `be05` las pruebas de concurrencia la necesitan, y desde `be08` es obligatoria. Puede vivir en el mismo contenedor:
 
 ```bash
-docker run -d --name rifas-pg-test \
-  -e POSTGRES_USER=rifas -e POSTGRES_PASSWORD=rifas -e POSTGRES_DB=rifas_test \
-  -p 5434:5432 postgres:13
-
-export TEST_DATABASE_URL="postgres://rifas:rifas@localhost:5434/rifas_test?sslmode=disable"
+psql "$DATABASE_URL" -c 'CREATE DATABASE esclusa_test;'
+export TEST_DATABASE_URL="postgres://esclusa:esclusa@localhost:5432/esclusa_test?sslmode=disable"
 ```
 
-📖 **Dos contenedores y dos puertos es más barato que un susto.** La suite de
-`be08` hace `TRUNCATE` antes de cada caso; apuntada a la base de desarrollo borra
-seis fases de trabajo. Por eso el *helper* de `be08` se niega a correr si la URL
-no menciona `rifas_test`.
+📖 **Una base de pruebas con otro nombre es más barata que un susto.** La suite de `be08` borra y recrea el esquema en cada caso; apuntada a la base de desarrollo, borra siete fases de trabajo. Por eso su *helper* se niega a correr si la URL no nombra `esclusa_test`.
 
 ---
 
 ## 2. El `Dockerfile`, en sus dos versiones
 
-Y acá hay que explicar algo antes de copiar, porque **la receta cambia en
-`be09`** y el motivo es contenido del curso.
+Hay que explicar algo antes de copiar, porque **la receta cambia en `be09`** y el motivo es contenido del curso.
 
-Mientras el `import` del driver de SQLite esté en un archivo normal, **todo el
-binario arrastra cgo** —aunque SQLite solo se use en pruebas— y un binario con
-cgo enlaza contra la `libc` del sistema donde se compiló. En `be09` eso se
-resuelve con una etiqueta de compilación y el binario pasa a ser estático.
+Mientras el `import` del driver de SQLite esté en un archivo normal, **todo el binario arrastra cgo** —aunque SQLite solo se use en pruebas—, y un binario con cgo enlaza contra la `libc` del sistema donde se compiló. En `be09` eso se resuelve con una etiqueta de compilación y el binario pasa a ser estático.
 
-| Versión | Cuándo | Runtime | Por qué |
-|---|---|---|---|
-| **A — con cgo** | `be02`–`be08` | `debian:bullseye-slim` | El binario necesita `glibc` |
-| **B — estática** | desde `be09` | `distroless/static` | No necesita nada |
+| Versión | Cuándo | Imagen de ejecución | Por qué | Tamaño medido |
+|---|---|---|---|---|
+| **A — con cgo** | `be02`–`be08` | distroless *base* (con glibc) | el binario necesita la `glibc` de `golang:1.19.13` (Debian 12) | 81,3 MB |
+| **B — estática** | desde `be09` | distroless *static* | no necesita nada | 21 MB |
+
+Las dos imágenes base van fijadas por digest (`D38`): una etiqueta como `nonroot` se mueve, y *"la imagen de ayer"* tiene que ser la de ayer.
 
 ### Versión A — con cgo (`be02` a `be08`)
 
 ```dockerfile
-# server/Dockerfile
+# server/Dockerfile — la versión A de bea-02: con cgo, de be02 a be08
 # ---------- etapa 1: compilar ----------
-FROM golang:1.19-bullseye AS builder
+FROM golang:1.19.13 AS builder
 WORKDIR /src
 
-# Las dependencias en su propia capa: cambian mucho menos que el código, así
-# que Docker reutiliza esta capa en casi todas las construcciones. Copiar
-# todo de una vez invalida la caché con cada edición y cada build tarda lo
-# mismo que la primera.
+# Las dependencias en su propia capa: cambian mucho menos que el código, así que
+# Docker reutiliza esta capa en casi todas las construcciones. Copiar todo de una
+# vez invalida la caché con cada edición, y cada build tarda lo de la primera.
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-# CGO_ENABLED=1 porque mattn/go-sqlite3 lo exige (D19). golang:1.19-bullseye
-# ya trae gcc, así que no hay nada más que instalar.
-RUN CGO_ENABLED=1 GOOS=linux go build -o /out/api ./cmd/api
-RUN CGO_ENABLED=1 GOOS=linux go build -o /out/migrate ./cmd/migrate
-RUN CGO_ENABLED=1 GOOS=linux go build -o /out/seed ./cmd/seed
+# CGO_ENABLED=1 porque mattn/go-sqlite3 lo exige (D19), y hasta be09 su import
+# está en el binario del API. golang:1.19.13 ya trae gcc.
+RUN CGO_ENABLED=1 go build -o /out/api ./cmd/api
+RUN CGO_ENABLED=1 go build -o /out/seed ./cmd/seed
 
 # ---------- etapa 2: ejecutar ----------
-# 🧭 debian:bullseye-slim y NO Alpine, y esto no es una preferencia.
-#
-# Alpine usa musl como libc; el builder de arriba es Debian y usa glibc. Un
-# binario con cgo compilado contra glibc NO ARRANCA en Alpine, y el error es
-# el peor que existe: "no such file or directory" sobre un binario que
-# puedes ver, listar y que tiene permisos de ejecución. El archivo que no
-# existe es la libc que el binario espera, no el binario.
-#
-# Se podría compilar sobre Alpine con musl-dev, pero entonces el binario no
-# corre en Debian. Mientras haya cgo, builder y runtime tienen que compartir
-# libc. Punto.
-FROM debian:bullseye-slim
+# 🧭 Una imagen CON glibc, y no es una preferencia. golang:1.19.13 es Debian 12
+# (glibc 2.36): un binario con cgo compilado ahí necesita esa libc al arrancar.
+# Sobre una imagen sin ella —Alpine con musl, o distroless static— el error es
+# el peor que existe: "no such file or directory" sobre un binario que puedes
+# ver y listar. El archivo que no existe es la libc, no el binario.
+# distroless base es la de static más glibc; fijada por digest (D38).
+FROM gcr.io/distroless/base-debian12:nonroot@sha256:7f0c72cd138b442ae0deeb69c08b1acf5525439ba251a49ad93c320a061567e5
 
-# ca-certificates: sin esto, cualquier llamada HTTPS de salida falla con
-# "x509: certificate signed by unknown authority". Hoy el backend no hace
-# ninguna, pero cuesta 200 KB y evita una tarde perdida.
-# tzdata: las zonas horarias que be06 necesita.
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates tzdata \
- && rm -rf /var/lib/apt/lists/*
-
-# Usuario sin privilegios. Cuesta dos líneas y es lo mínimo exigible.
-RUN useradd --uid 10001 --create-home rifas
-USER rifas
-
-COPY --from=builder /out/api /usr/local/bin/api
-COPY --from=builder /out/migrate /usr/local/bin/migrate
-COPY --from=builder /out/seed /usr/local/bin/seed
-COPY --from=builder /src/migrations /migrations
-
-EXPOSE 3001
-ENTRYPOINT ["/usr/local/bin/api"]
-```
-
-### Versión B — estática (desde `be09`)
-
-Cuando `be09` mete el driver de SQLite detrás de `//go:build sqlite`, el binario
-de producción ya no necesita cgo y el runtime puede ser una imagen prácticamente
-vacía:
-
-```dockerfile
-FROM golang:1.19-bullseye AS builder
-WORKDIR /src
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-
-# Sin cgo → binario estático. -ldflags "-s -w" quita símbolos e información
-# de depuración: unos megas menos, a cambio de perder los nombres en los
-# stack traces del pánico de be01. Es un intercambio real, no gratis.
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /out/api ./cmd/api
-RUN CGO_ENABLED=0 GOOS=linux go build -o /out/migrate ./cmd/migrate
-RUN CGO_ENABLED=0 GOOS=linux go build -o /out/seed ./cmd/seed
-
-# Sin shell, sin gestor de paquetes, sin libc. ~2 MB, y trae los
-# certificados raíz y un usuario nonroot ya definido.
-FROM gcr.io/distroless/static-debian11:nonroot
 COPY --from=builder /out/api /api
-COPY --from=builder /out/migrate /migrate
 COPY --from=builder /out/seed /seed
-COPY --from=builder /src/migrations /migrations
-USER nonroot:nonroot
+
 EXPOSE 3001
 ENTRYPOINT ["/api"]
 ```
 
-> ⚠️ **La versión B necesita `import _ "time/tzdata"` en `main.go`.** Una imagen
-> vacía no tiene `/usr/share/zoneinfo`, así que `time.LoadLocation("America/Bogota")`
-> devuelve `unknown time zone` **solo dentro del contenedor**. Funciona perfecto
-> en tu máquina y falla en el despliegue. El import embebe la base de zonas en el
-> binario (unos 450 KB) y existe desde Go 1.15.
+Antes de `be09` no hay un binario de migraciones propio: el compose usa la imagen oficial de golang-migrate, en la versión de `D20` (§3).
+
+### Versión B — estática (desde `be09`)
+
+```dockerfile
+# server/Dockerfile
+# Multi-stage: se compila con el toolchain completo y se despacha solo el
+# binario. La receta, con compose y los errores que salen siempre, está en bea-02.
+
+# ---------- etapa 1: compilar ----------
+# golang:1.19.13 y no una versión actual: el código es de 2022 y usa el
+# toolchain de 2022 (D14). El pipeline que construye esto sí es de hoy (D23).
+FROM golang:1.19.13 AS builder
+
+WORKDIR /src
+
+# Las dependencias primero y en su propia capa: cambian mucho menos que el
+# código, así que Docker reutiliza esta capa en casi todas las construcciones.
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+# CGO_ENABLED=0 es la línea que hace todo lo demás posible: sin cgo el binario
+# es estático y corre en una imagen sin libc. Se puede gracias a la etiqueta
+# sqlite de be09 §5.1: sin ella, mattn/go-sqlite3 exige cgo.
+#
+# -ldflags "-s -w" quita la tabla de símbolos y la información de depuración.
+# ⚠️ Y con eso pierdes los nombres de función en los stack traces. Acá se
+# acepta porque el pánico lo registra recover con su mensaje (be01).
+RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o /out/api ./cmd/api
+RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o /out/migrate ./cmd/migrate
+
+# ---------- etapa 2: ejecutar ----------
+# distroless static: sin shell, sin gestor de paquetes, sin libc. Solo
+# certificados raíz y los usuarios. Fijada por digest (D38): el tag nonroot se
+# mueve, y "la imagen de ayer" tiene que ser la de ayer.
+FROM gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab
+
+COPY --from=builder /out/api /api
+COPY --from=builder /out/migrate /migrate
+COPY --from=builder /src/migrations/postgres /migrations
+
+# nonroot viene de la imagen base: si el proceso se compromete, no es root.
+USER nonroot:nonroot
+
+EXPOSE 3001
+ENTRYPOINT ["/api"]
+```
+
+`be09` le agrega `cmd/migrate`, que entra en la misma imagen.
+
+> 📝 **¿Hace falta `import _ "time/tzdata"`?** Medido: distroless *static* trae la base de zonas (`time.LoadLocation("America/Panama")` funciona), y `scratch` no (*"unknown time zone America/Panama"*). Y este backend no carga zonas: la de presentación la pone Postgres (`be06`). Solo hace falta si construyes sobre `scratch` y el código llama a `LoadLocation` (§6, el bonus).
 
 Y el archivo que evita construcciones lentas y filtraciones tontas:
 
-```gitignore
-# server/.dockerignore
-.git
-*_test.go
+```
+# Lo que no viaja al contexto de la imagen.
 evidence/
 *.db
-.env
+.env*
 ```
 
 ---
 
-## 3. El `docker-compose.yml` completo
+## 3. El `docker-compose.yml`
 
-El laboratorio entero del backend. La aplicación React sigue fuera, en el `3000`,
-hablándole al `3001` exactamente como desde `be03`.
+El backend entero de la versión A. La consola sigue fuera, en el `3000`, hablándole al `3001` exactamente como desde `be03`.
 
 ```yaml
-# server/docker-compose.yml
+# server/docker-compose.yml — el backend de bea-02 (versión A). La consola sigue
+# en el 3000, fuera de esto, hablándole al 3001 como desde be03.
 services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: rifas
-      POSTGRES_PASSWORD: rifas
-      POSTGRES_DB: rifas
+      POSTGRES_USER: esclusa
+      POSTGRES_PASSWORD: esclusa
+      POSTGRES_DB: esclusa
     ports: ["5432:5432"]        # cámbialo a "5433:5432" si el 5432 está ocupado
     volumes:
-      # Volumen NOMBRADO y no un directorio del proyecto: los datos
-      # sobreviven a `down` y no ensucian tu repositorio. Para borrarlos de
-      # verdad hace falta `down -v`, que es justo la fricción que quieres
-      # antes de destruir una base.
-      - rifas-pgdata:/var/lib/postgresql/data
+      # Volumen NOMBRADO y no un directorio del proyecto: los datos sobreviven a
+      # down y no ensucian el repositorio. Para borrarlos hace falta down -v.
+      - esclusa-pgdata:/var/lib/postgresql/data
     healthcheck:
       # Sin esto, migrate arranca contra un Postgres que todavía se está
-      # inicializando y falla. `depends_on` a secas solo espera a que el
-      # CONTENEDOR exista, no a que el servicio esté listo: es el error nº 4.
-      test: ["CMD-SHELL", "pg_isready -U rifas -d rifas"]
+      # inicializando. depends_on a secas solo espera a que el CONTENEDOR exista.
+      test: ["CMD-SHELL", "pg_isready -U esclusa -d esclusa"]
       interval: 2s
       timeout: 3s
       retries: 15
 
   migrate:
-    build: .
-    entrypoint: ["/usr/local/bin/migrate", "up"]   # "/migrate" en la versión B
-    environment:
-      DATABASE_URL: postgres://rifas:rifas@db:5432/rifas?sslmode=disable
+    # golang-migrate en su imagen oficial, la misma versión de D20. El binario
+    # propio de migraciones llega en be09.
+    image: migrate/migrate:v4.15.2
+    command: ["-path", "/migrations", "-database", "postgres://esclusa:esclusa@db:5432/esclusa?sslmode=disable", "up"]
+    volumes: ["./migrations/postgres:/migrations:ro"]
     depends_on:
       db: { condition: service_healthy }
     restart: "no"                # corre una vez y termina; no es un servicio
@@ -253,43 +219,27 @@ services:
     build: .
     ports: ["3001:3001"]
     environment:
-      # "db" y NO "localhost": dentro de un contenedor, localhost es el
-      # propio contenedor. Los servicios se resuelven por su nombre.
-      DATABASE_URL: postgres://rifas:rifas@db:5432/rifas?sslmode=disable
+      # "db" y NO "localhost": dentro de un contenedor, localhost es el propio
+      # contenedor. Los servicios se resuelven por su nombre.
+      DATABASE_URL: postgres://esclusa:esclusa@db:5432/esclusa?sslmode=disable&timezone=America/Panama
       ALLOWED_ORIGIN: http://localhost:3000
-      JWT_SECRET: laboratorio-no-usar-esto-en-ningun-otro-lado-32
-      JWT_TTL: 12h
       CHAOS_LEVEL: "off"
-      SQL_DEBUG: "true"
+    volumes: ["../mock:/mock:ro"]  # para sembrar desde el db.json del lector
     depends_on:
       # Espera a que las migraciones TERMINEN, no a que arranquen.
       migrate: { condition: service_completed_successfully }
 
 volumes:
-  rifas-pgdata:
+  esclusa-pgdata:
 ```
+
+Desde `be09` el servicio `migrate` usa el binario propio de la imagen (`entrypoint: ["/migrate", "up"]`) y el API comprueba la versión del esquema al arrancar; el compose de `be09` §5.4 es esa versión.
 
 ---
 
 ## 4. Variables por ambiente
 
-Una sola imagen para todos los ambientes; lo que cambia va por configuración. Una
-imagen "de QA" y otra "de producción" significan que lo que probaste no es lo que
-desplegaste.
-
-| Variable | Desarrollo | QA | UAT | Producción |
-|---|---|---|---|---|
-| `DATABASE_URL` | local | de QA | de UAT | de producción |
-| `sslmode` | `disable` | `require` | `require` | `require` |
-| `ALLOWED_ORIGIN` | `http://localhost:3000` | el de QA | el de UAT | el real |
-| `JWT_SECRET` | el del compose | secreto de QA | secreto de UAT | secreto real |
-| `JWT_TTL` | `12h` | `12h` | `1h` | `1h` |
-| `CHAOS_LEVEL` | `low` | `high` | `off` | `off` ⚠️ |
-| `SQL_DEBUG` | `true` | `true` | `false` | `false` |
-| `PORT` | `3001` | `3001` | `3001` | `3001` |
-
-En desarrollo, todo eso vive en el `compose`. Para los demás ambientes, un
-archivo por ambiente que **no se versiona**:
+Una sola imagen para todos los ambientes; lo que cambia va por configuración. La tabla completa está en `be09` §4.3. En desarrollo, todo vive en el compose. Para los demás ambientes, un archivo por ambiente que **no se versiona**:
 
 ```bash
 # server/.env.uat  (en .gitignore, siempre)
@@ -297,22 +247,16 @@ DATABASE_URL=postgres://…?sslmode=require
 JWT_SECRET=…
 JWT_TTL=1h
 CHAOS_LEVEL=off
+PLAY_URL=…
 ```
 
 ```bash
-docker run --env-file .env.uat -p 3001:3001 rifas/raffles-api:<sha>
+docker run --env-file .env.uat -p 3001:3001 esclusa-api:<sha>
 ```
 
-> ⚠️ **`CHAOS_LEVEL=off` no es suficiente para producción.** Una ruta
-> `POST /_chaos` en un binario de producción es un endpoint para romper tu propio
-> sistema, expuesto a quien lo encuentre. La respuesta correcta es que **ese
-> código no esté en el binario**, con una etiqueta de compilación. Es el ejercicio
-> 24 de `be09`.
+> ⚠️ **`CHAOS_LEVEL=off` no es suficiente para producción.** Una ruta `POST /_chaos` en un binario de producción es un endpoint para romper tu propio sistema. La respuesta correcta es que ese código **no esté en el binario**, con una etiqueta de compilación, como SQLite en `be09`. Es el ejercicio 24 de `be09`.
 >
-> 💸 Y un recordatorio que vale para siempre: **una capa de imagen conserva lo que
-> borraste en la capa siguiente**. Un secreto copiado y luego eliminado sigue en
-> el historial de la imagen y se puede extraer. Los secretos se inyectan, nunca
-> se copian.
+> 💸 Y un recordatorio que vale para siempre: **una capa de imagen conserva lo que borraste en la capa siguiente**. Un secreto copiado y luego eliminado sigue en el historial de la imagen. Los secretos se inyectan, nunca se copian.
 
 ---
 
@@ -328,12 +272,10 @@ docker compose logs -f api         # seguir los logs del backend
 
 # --- verificar que funciona ---
 curl -i localhost:3001/health
-cd .. && ./server/smoke.sh         # el checklist de be00, sin modificar
+cd .. && ./server/smoke.sh         # el checklist de contrato, sin modificar
 
 # --- sembrar desde TU db.json (be03) ---
-docker compose run --rm api /usr/local/bin/seed -file /mock/db.json
-# ⚠️ el seed necesita ver el archivo: agrega al servicio api
-#    volumes: ["../mock:/mock:ro"]
+docker compose exec api /seed -file /mock/db.json   # el compose monta ../mock en /mock
 
 # --- parar ---
 docker compose stop                # para, conserva contenedores y datos
@@ -341,96 +283,83 @@ docker compose down                # elimina contenedores, CONSERVA el volumen
 docker compose down -v             # elimina TAMBIÉN los datos ⚠️ sin vuelta
 
 # --- resetear la base sin borrar todo ---
-docker compose exec db psql -U rifas -d rifas -c \
+docker compose exec db psql -U esclusa -d esclusa -c \
   'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'
 docker compose run --rm migrate
 
 # --- entrar a mirar ---
-docker compose exec db psql -U rifas -d rifas
+docker compose exec db psql -U esclusa -d esclusa
 #   \dt          las tablas
-#   \d raffles   la definición de una tabla
+#   \d wheels    la definición de una tabla
 #   \q           salir
 
-# --- ver el tamaño de lo que construiste (be09) ---
-docker images | grep raffles-api
+# --- el tamaño de lo que construiste ---
+docker image ls | grep api
 ```
+
+Medido con la versión A, en la rama del apéndice: `docker compose up -d --build` en 50 s (la mayor parte, compilar el SQLite en C), `migrate` hasta la versión del esquema de `be03`, la siembra en 161 ms y `smoke.sh` en verde contra el contenedor.
 
 ---
 
-## 6. Los cuatro errores que salen siempre
+## 6. Los errores que salen siempre
 
 ### 6.1 `no such file or directory` sobre un binario que existe
 
-```
-exec /usr/local/bin/api: no such file or directory
+```text
+exec /api: no such file or directory
 ```
 
-**Causa.** Binario con cgo compilado contra `glibc` ejecutándose en Alpine
-(`musl`). El archivo que falta es la biblioteca, no el binario.
+**Causa.** Un binario con cgo, compilado contra la `glibc` de `golang:1.19.13`, en una imagen que no la tiene: distroless *static*, `scratch` o Alpine (`musl`). El archivo que falta es la biblioteca, no el binario. Es el incidente `be-16`.
 
-**Cómo confirmarlo.**
+**Cómo confirmarlo.** Compila el mismo binario fuera de la imagen, en `golang:1.19.13`, y pregúntale:
 
 ```bash
-docker run --rm --entrypoint file <imagen> /usr/local/bin/api
-# "dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2" → tiene cgo
-# "statically linked"                                          → no lo tiene
+ldd /tmp/api
+#   libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6   → tiene cgo
+#   not a dynamic executable                         → no lo tiene
 ```
 
-**Arreglo.** Runtime `debian:bullseye-slim` (versión A), o quitar cgo con la
-etiqueta de compilación (versión B). Nunca mezclar builder Debian con runtime
-Alpine mientras haya cgo.
+**Arreglo.** La versión A (imagen con `glibc`) mientras haya cgo, o quitar cgo con la etiqueta de `be09` (versión B). Nunca una imagen sin `glibc` para un binario con cgo.
 
 ### 6.2 `connection refused` contra la base
 
-```
-la base no responde (postgres): dial tcp 127.0.0.1:5432: connect: connection refused
+```text
+no se pudo abrir la base: la base no responde (postgres): dial tcp [::1]:5432: connect: connection refused
 ```
 
-**Causa.** `localhost` dentro de un contenedor **es ese contenedor**. Postgres
-está en otro.
+**Causa.** `localhost` dentro de un contenedor **es ese contenedor** (el `[::1]` es su `localhost` en IPv6). Postgres está en otro.
 
-**Arreglo.** El nombre del servicio: `postgres://rifas:rifas@db:5432/rifas`. La
-misma URL con `localhost` es la correcta cuando corres el backend con `go run`
-fuera de Docker — y por eso el error aparece justo al contenerizar algo que
-funcionaba.
+**Arreglo.** El nombre del servicio: `postgres://esclusa:esclusa@db:5432/esclusa`. La misma URL con `localhost` es la correcta cuando corres el backend con `go run` fuera de Docker, y por eso el error aparece justo al contenerizar algo que funcionaba.
 
 ### 6.3 La base no está lista todavía
 
-```
-error: dial tcp 172.18.0.2:5432: connect: connection refused
-# …y a la segunda vez funciona
+```text
+error: dial tcp 172.24.0.5:5432: connect: connection refused
 ```
 
-**Causa.** `depends_on` sin `condition` solo espera a que el contenedor **exista**.
-Postgres tarda unos segundos en inicializarse la primera vez, así que el fallo es
-intermitente — el peor tipo.
+**Causa.** `depends_on` sin `condition` solo espera a que el contenedor **exista**. Postgres tarda unos segundos en inicializarse, y `migrate` arranca antes. Medido sin `healthcheck`, levantando cinco veces con `down -v` en medio: **cinco de cinco** fallaron. No es intermitente: con una base nueva, falla siempre.
 
-**Arreglo.** El `healthcheck` del §3 más `condition: service_healthy`. Compruébalo
-levantando diez veces seguidas con `down -v` en medio.
+**Arreglo.** El `healthcheck` del §3 más `condition: service_healthy`.
 
 ### 6.4 `exec format error`
 
-```
+```text
 exec /api: exec format error
 ```
 
-**Causa.** Arquitectura equivocada: imagen construida para `arm64` (un Mac con
-Apple Silicon) ejecutándose en `amd64`, o al revés.
+**Causa.** Arquitectura equivocada: una imagen construida para `arm64` (un Mac con Apple Silicon) ejecutándose en `amd64`, o al revés. Docker Desktop emula la otra arquitectura, y en el laboratorio del autor el error no apareció: no verificado por ejecución.
 
 **Arreglo.** Fijar la plataforma al construir:
 
 ```bash
-docker build --platform linux/amd64 -t rifas/raffles-api .
+docker build --platform linux/amd64 -t esclusa-api .
 ```
 
-Y prepárate: construir emulado tarda bastante más. Si vas a hacerlo seguido, mide
-cuánto y decide si prefieres construir nativo y publicar un manifiesto múltiple
-(ejercicio 🔥 de `be09`).
+Y prepárate: construir emulado tarda bastante más.
 
-### Bonus — `unknown time zone America/Bogota`
+### Bonus — `unknown time zone America/Panama`
 
-Solo con la versión B, y solo dentro del contenedor. Falta `import _ "time/tzdata"`
-en `main.go`. Ver §2.
+Solo en `scratch`, y solo si el código llama a `time.LoadLocation`. Medido con un programa de tres líneas: en distroless *static*, `<nil>`; en `scratch`, *"unknown time zone America/Panama"*. Se arregla con `import _ "time/tzdata"`, que embebe la base en el binario (unos 390 KB con Go 1.19.13).
 
 ---
 
@@ -438,18 +367,18 @@ en `main.go`. Ver §2.
 
 | Si estás en… | Levanta | Con |
 |---|---|---|
-| `be02` (capa de datos) | solo Postgres | `docker run` del §1 |
-| `be03`–`be08` (desarrollo) | Postgres + `go run` del backend | §1 y `go run ./cmd/api` |
-| `be08` (pruebas) | un Postgres **aparte** | el `rifas-pg-test` del §1 |
-| `be09` (empaquetado) | todo en contenedores | el `compose` del §3, Dockerfile B |
+| `be02` (capa de datos) | solo Postgres | el `docker run` del §1 |
+| `be03`–`be07` (desarrollo) | Postgres y `go run` del backend | §1 y `go run ./cmd/api` |
+| `be08` (pruebas) | la base `esclusa_test` | §1 |
+| `be09` (empaquetado) | todo en contenedores | el compose de `be09`, Dockerfile B |
 | Enseñarle el laboratorio a alguien | todo en contenedores | `docker compose up -d --build` |
 
 | Si necesitas… | Usa | Y no |
 |---|---|---|
 | Parar y seguir mañana | `docker compose stop` | `down -v` |
 | Empezar de cero con los datos | `down -v` y volver a sembrar | borrar tablas a mano |
-| Runtime con cgo | `debian:bullseye-slim` | Alpine |
-| Runtime sin cgo | `distroless/static` | Debian |
+| Imagen para un binario con cgo | distroless *base* (glibc) | *static*, `scratch` o Alpine |
+| Imagen para un binario sin cgo | distroless *static* | una con shell y gestor de paquetes |
 | Hablarle a la base desde otro contenedor | el nombre del servicio | `localhost` |
 | Esperar a que la base esté lista | `healthcheck` + `condition` | un `sleep` |
 | Guardar un secreto | variable de entorno inyectada | `COPY` al Dockerfile |
@@ -459,13 +388,13 @@ en `main.go`. Ver §2.
 ## 🧪 Ejercicios (8)
 
 1. **🟢** Levanta Postgres con `docker run`, conéctate con `psql` y comprueba la versión.
-2. **🟢** Construye la imagen (versión A) y comprueba que `GET /health` responde desde el contenedor.
-3. **🟡** Levanta el compose completo y comprueba que la aplicación React del `3000` funciona contra él sin cambiar un archivo.
+2. **🟢** Construye la imagen de la versión A y comprueba que `GET /health` responde desde el contenedor.
+3. **🟡** Levanta el compose completo y comprueba que la consola del `3000` funciona contra él sin cambiar un archivo.
 4. **🟡** Ejecuta `./server/smoke.sh` con `BASE_URL` apuntando al contenedor y confirma que pasa entero.
-5. **🟠 Diagnóstico.** Cambia el runtime a `alpine:3.17` con la versión A y provoca el error 6.1. Confírmalo con `file` y explica qué biblioteca falta.
-6. **🟠 Diagnóstico.** Quita el `healthcheck` y levanta diez veces con `down -v` en medio. Cuenta cuántas fallan y explica por qué el fallo es intermitente.
+5. **🟠 Diagnóstico.** Cambia la imagen de ejecución de la versión A por distroless *static* y provoca el error 6.1. Confírmalo con `ldd` y explica qué biblioteca falta.
+6. **🟠 Diagnóstico.** Quita el `healthcheck` y levanta cinco veces con `down -v` en medio. Cuenta cuántas fallan y explica por qué.
 7. **🟠** Invierte el orden de los `COPY` en el Dockerfile y mide el tiempo de dos construcciones consecutivas con y sin ese cambio.
-8. **🔴 Diagnóstico.** Construye la versión B sin `import _ "time/tzdata"`, llama desde dentro del contenedor a algo que use `time.LoadLocation`, y documenta por qué el mismo código funciona fuera. Después arréglalo y verifica.
+8. **🔴 Diagnóstico.** Construye un programa que llame a `time.LoadLocation("America/Panama")` sobre `scratch` y sobre distroless *static*, sin y con `import _ "time/tzdata"`. Documenta los cuatro resultados y por qué el mismo código funciona fuera del contenedor.
 
 ---
 
@@ -474,40 +403,29 @@ en `main.go`. Ver §2.
 **Documentación oficial**
 - https://docs.docker.com/build/building/multi-stage/ — el patrón del §2.
 - https://docs.docker.com/reference/dockerfile/ — la referencia completa de instrucciones.
-- https://docs.docker.com/compose/compose-file/05-services/#depends_on — `condition`, que es el error 6.3.
+- https://docs.docker.com/compose/compose-file/05-services/#depends_on — `condition`, el error 6.3.
 - https://docs.docker.com/compose/compose-file/05-services/#healthcheck — la otra mitad del mismo error.
-- https://hub.docker.com/_/postgres — variables de entorno de la imagen de Postgres y qué hace en el primer arranque.
-- https://github.com/GoogleContainerTools/distroless — qué traen y qué no las imágenes mínimas de la versión B.
-- https://pkg.go.dev/time/tzdata — el import de una línea del bonus del §6.
-- https://docs.docker.com/build/building/best-practices/ — el orden de las capas del ejercicio 7.
+- https://hub.docker.com/_/postgres — las variables de la imagen de Postgres y qué hace en el primer arranque.
+- https://hub.docker.com/r/migrate/migrate — la imagen de golang-migrate del §3.
+- https://github.com/GoogleContainerTools/distroless — qué traen *static* y *base*.
+- https://pkg.go.dev/time/tzdata — el import del bonus.
 
 **Video / apoyo**
 - Busca "multi-stage docker build Go" y "static vs dynamic linking cgo". Lo segundo aclara el error 6.1 mejor que cualquier texto.
 
-**Orden de lectura sugerido:** nada, si lo que quieres es levantar el laboratorio
-— copia el §1 y sigue con tu fase. Cuando algo falle, salta al §6, que está
-ordenado por frecuencia. La página de multi-stage vale la pena solo cuando
-llegues a `be09` y quieras entender qué estás copiando.
+**Orden de lectura sugerido:** nada, si lo que quieres es levantar el laboratorio: copia el §1 y sigue con tu fase. Cuando algo falle, salta al §6. La página de multi-stage vale la pena cuando llegues a `be09`.
 
-> ⚠️ **Esta es el área del curso que más rápido envejece.** Las etiquetas de
-> imagen se mueven, la sintaxis del `compose` evoluciona y las buenas prácticas
-> de Docker cambian cada pocos años. Verifica cada URL y cada etiqueta antes de
-> apoyarte en ellas. Las versiones fijas del track —`postgres:13`,
-> `golang:1.19`— salen de `00-decisiones-y-versiones.md` §7 y esas sí no se
-> mueven.
+> ⚠️ **Esta es el área del curso que más rápido envejece.** Las etiquetas de imagen se mueven, la sintaxis del compose evoluciona y las buenas prácticas cambian cada pocos años. Verifica cada URL antes de apoyarte en ella. Las versiones fijas del track —`postgres:13`, `golang:1.19.13`, los digest de distroless, `migrate/migrate:v4.15.2`— salen de `00-decisiones-y-versiones.md` §7, y esas no se mueven. Las cifras son de las corridas del 20/10/2026 en la máquina del autor (arm64).
 
 ---
 
-> 🏷️ **Este apéndice sí deja código.** El `Dockerfile`, el `.dockerignore` y el
-> `docker-compose.yml` viven en `server/`. Cuando los tengas funcionando:
+> 🏷️ **Este apéndice sí deja código.** El `Dockerfile`, el `.dockerignore` y el `docker-compose.yml` de la versión A viven en `server/`. Cuando los tengas funcionando:
 >
 > ```bash
 > git tag -a apendice-bea-02-receta-de-imagen-y-compose -m "bea-02: \
-> Dockerfile multi-stage (versión con cgo), .dockerignore y docker-compose.yml \
+> Dockerfile multi-stage con cgo (versión A), .dockerignore y docker-compose.yml \
 > con Postgres 13, migraciones como paso previo y healthcheck; \
 > smoke.sh pasando contra el contenedor"
 > ```
 >
-> Los commits van con el prefijo de la fase desde la que llegaste (`be02: …`,
-> `be09: …`), no con el del apéndice. La convención completa está en
-> [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
+> Los commits van con el prefijo de la fase desde la que llegaste (`be02: …`, `be09: …`), no con el del apéndice. La convención completa está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).

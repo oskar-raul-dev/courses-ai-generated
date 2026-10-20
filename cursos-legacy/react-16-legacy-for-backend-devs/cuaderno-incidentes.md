@@ -1,13 +1,13 @@
 # 📓 Cuaderno de incidentes
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 > Documento vivo · Se trabaja solo · El changelog es `git log -- cuaderno-incidentes.md`
-> El tiempo de los incidentes ya está contado dentro de las 96 h del track forense
+> El tiempo de los incidentes ya está contado dentro de las 98 h del track base
 > (`00-alcance-del-proyecto.md` §7); no es un bloque aparte que se suma al final.
 
 Este es el único archivo de incidentes del curso. Acá viven los enunciados, las
 pistas, las soluciones de referencia y —sobre todo— tu registro de cómo llegaste
-a cada una. Los veinte incidentes vienen reservados de antemano por las fases que
+a cada una. Los veintiún incidentes vienen reservados de antemano por las fases que
 los producen; lo que agregas tú es la parte de abajo de cada entrada: tu
 reproducción, tus hipótesis, tu causa raíz, tu fix.
 
@@ -71,11 +71,11 @@ la línea de tiempo de tu investigación:
 
 ```
 incidente(14): abre — el servidor sigue recibiendo peticiones tras el logout
-incidente(14): repro — los GET /numbers siguen saliendo cada 5s sin tablero montado
-incidente(14): hipótesis descartada — no es el componente, desmontarlo no corta nada
-incidente(14): causa — boardRefreshEpic sin takeUntil: el interval nunca se corta
-incidente(14): fix — takeUntil(STOP_BOARD_REFRESH, LOGOUT) al final del pipe interno
-incidente(14): cierre — marble test de cancelación y post-mortem
+incidente(14): repro — los GET /purchases/tok-oxxo-2 siguen saliendo cada 2 s, sin token
+incidente(14): hipótesis descartada — no es el switchMap: después del logout no llega otro startPolling
+incidente(14): causa — el takeUntil del pollingEpic no escucha el logout, y la pantalla no para al irse
+incidente(14): fix — el logout en el takeUntil, último en el pipe interno
+incidente(14): cierre — prueba de canicas de cancelación y post-mortem
 ```
 
 Los verbos son fijos: `abre`, `repro`, `hipótesis`, `hipótesis descartada`,
@@ -164,12 +164,13 @@ las dos primeras es `A5-class-components-vs-hooks.md`.
 | "A veces no carga y no dice nada" | Network: la fila **sin status** | transporte, store | 07, 10, 17 |
 | "Me saca a login sin avisar" | el `request-id`, en los dos lados | mock, interceptor | 08 |
 | "Se quedó cargando para siempre" | Redux DevTools: la última acción | store | 10, 07 |
-| "Se vendió dos veces" | Redux DevTools: la secuencia entera | store, epic | 11 |
+| "Se compensó dos veces" | Redux DevTools: la secuencia entera | store, epic | 11 |
 | "Cambió solo, nadie lo tocó" | espera sin tocar nada, mirando DevTools | temporizador, epic | 12, 14 |
 | "Falló una vez y no anda más" | Network: ¿sale **alguna** petición? | epic | 13 |
 | "Sigue pasando después de salir" | Network, en reposo | epic | 14, 12 |
 | "La cuenta no cuadra" | la función pura, en una consola de Node | cálculo | 18 |
-| "Va lento al final del día" | Profiler + `console.count` | componente, selector | 19 |
+| "Todo se arrastra desde que abrí el tablero" | la consola del navegador, y Performance | store (middleware) | 19 |
+| "La rueda no da lo que publica" | el tablero, y la bitácora por jugador | API (la regla) | 21 |
 | "Verde en mi máquina, rojo en CI" | `TZ=UTC npm test` | suite, componente | 20 |
 
 Una advertencia sobre la última columna: es una lista de **candidatos**, no un
@@ -184,8 +185,8 @@ mientras la evidencia te saque de ahí rápido; empezar por el código sí lo es
 
 Lo actualizas en el mismo commit que abre o cierra un incidente.
 
-Los veinte IDs vienen reservados por las fases que los producen, y el título es el
-que va a llegar en el ticket — con su vaguedad incluida. Los veinte enunciados
+Los veintiún IDs vienen reservados por las fases que los producen, y el título es el
+que va a llegar en el ticket — con su vaguedad incluida. Los veintiún enunciados
 están redactados más abajo; el ⬜ de la última columna es **tu** estado, no el del
 archivo, y arranca en "sin empezar". El ID **nunca** se reasigna.
 
@@ -194,70 +195,74 @@ archivo, y arranca en "sin empezar". El ID **nunca** se reasigna.
 | 01 | 0 | Bajé el repo y `npm start` explota antes de abrir nada | Entorno | 🟢 | ⬜ |
 | 02 | 0 | En la máquina de al lado compila y en la mía no | Entorno | 🟢 | ⬜ |
 | 03 | 1 | Hago clic en el menú y se recarga toda la aplicación | UI / routing | 🟢 | ⬜ |
-| 04 | 1 | Entro al detalle de otra rifa y sigo viendo la anterior | UI / routing | 🟡 | ⬜ |
-| 05 | 2 | Las peticiones salen sin token y el servidor las rebota | Autenticación | 🟡 | ⬜ |
+| 04 | 1 | Entro al detalle de otra rueda y sigo viendo la anterior | UI / routing | 🟡 | ⬜ |
+| 05 | 2 | Después de entrar, mis peticiones salen sin token | Autenticación | 🟡 | ⬜ |
 | 06 | 2 | Cerré sesión pero la pantalla sigue mostrando mi usuario | Autenticación | 🟡 | ⬜ |
-| 07 | 3 | A veces no carga y no dice nada | Integración | 🟡 | ⬜ |
+| 07 | 3 | A veces no entra y no dice nada | Integración | 🟡 | ⬜ |
 | 08 | 3 | Me saca a login al azar mientras estoy trabajando | Integración | 🟡 | ⬜ |
-| 09 | 4 | Guardo la rifa, se recarga la página y pierdo todo | Estado (store) | 🟢 | ⬜ |
-| 10 | 4 | La lista de rifas se queda cargando para siempre | Estado (store) | 🟡 | ⬜ |
-| 11 | 5 | Vendimos el número 0347 dos veces ⭐ | Concurrencia | 🔴 | ⬜ |
-| 12 | 5 | Un número que ya estaba vendido volvió solo a disponible | Concurrencia | 🟠 | ⬜ |
-| 13 | 6 | Falló una venta y desde entonces no funciona ninguna | RxJS / epics | 🟠 | ⬜ |
+| 09 | 4 | Guardo la rueda, la pantalla se recarga y pierdo lo que escribí | Estado (store) | 🟢 | ⬜ |
+| 10 | 4 | La lista de ruedas se queda cargando para siempre | Estado (store) | 🟡 | ⬜ |
+| 11 | 5 | Compensamos dos veces a la misma jugadora ⭐ | Concurrencia | 🔴 | ⬜ |
+| 12 | 5 | Un envío que ya estaba enviado volvió a «falló» | Concurrencia | 🟠 | ⬜ |
+| 13 | 6 | Falló un envío y desde entonces no sale ninguno | RxJS / epics | 🟠 | ⬜ |
 | 14 | 6 | Cerré sesión y el servidor sigue recibiendo peticiones ⭐ | RxJS / epics | 🟠 | ⬜ |
-| 15 | 6 | Escribo el número rápido y me valida uno viejo | RxJS / epics | 🟠 | ⬜ |
-| 16 | 7 | La rifa siguió vendiendo después de la hora de cierre | Tiempo | 🟠 | ⬜ |
-| 17 | 7 | El resultado nunca llega y no aparece ningún error | RxJS / epics | 🟠 | ⬜ |
-| 18 | 8 | La liquidación da un centavo de diferencia | Dinero | 🟠 | ⬜ |
-| 19 | 9 | El dashboard se arrastra al final del día | Performance | 🟠 | ⬜ |
+| 15 | 6 | Busco a la jugadora rápido y me muestra a otra | RxJS / epics | 🟠 | ⬜ |
+| 16 | 7 | Seguimos enviando giros de una rueda que ya cerró | Tiempo | 🟠 | ⬜ |
+| 17 | 7 | La compra pendiente nunca se confirma, y la consola dice que sigue consultando | RxJS / epics | 🟠 | ⬜ |
+| 18 | 8 | La conciliación da un centavo de diferencia | Dinero | 🟠 | ⬜ |
+| 19 | 9 | El dashboard se arrastra al final de la Semana del Canal | Performance | 🟠 | ⬜ |
 | 20 | 10-11 | El test pasa en mi máquina y falla en la de al lado | Testing | 🔴 | ⬜ |
+| 21 ➕ | 9 | La rueda dice 15 % y el tablero muestra 5 % | Dominio | 🟠 | ⬜ |
 
 ### 🔥 Reserva del track BE
 
 El track opcional de backend produce sus propios incidentes, y para que nunca
-choquen con los veinte de arriba tienen **rango propio: `be-01` a `be-16`**, y
-viven en su propio archivo:
+choquen con los de arriba tienen **rango propio, `be-NN`**, y viven en su propio
+archivo:
 
-> 📓🔥 **[`cuaderno-incidentes-be.md`](cuaderno-incidentes-be.md)** — los dieciséis
+> 📓🔥 **[`cuaderno-incidentes-be.md`](cuaderno-incidentes-be.md)** — los
 > incidentes del track BE, **redactados**, con la misma estructura, las mismas
 > reglas y el mismo tono que este cuaderno.
 
 **Por qué en un archivo aparte**, si arriba dice que este es el único archivo de
-incidentes del curso: porque el track BE es opcional, y quien haga solo las 96
-horas del track base no debería encontrarse dieciséis incidentes de Go y Postgres
+incidentes del curso: porque el track BE es opcional, y quien haga solo las 98
+horas del track base no debería encontrarse los incidentes de Go y Postgres
 intercalados entre los suyos. La divergencia está declarada allá y los rangos de
 IDs no colisionan. Sus enunciados siguen la misma estructura que estos, con las
 herramientas del backend en vez de las del navegador.
 
-**Seis de los dieciséis son hermanos de incidentes de este cuaderno**: mismo
+**Seis de ellos son hermanos de incidentes de este cuaderno**: mismo
 síntoma, otra capa, otra causa raíz. Resolverlos en pareja enseña más que
 resolverlos sueltos, y el cruce está en el índice de aquel archivo.
 
 | Este cuaderno | Track BE | Qué cambia |
 |---|---|---|
-| 11 — el `0347` vendido dos veces ⭐ | `be-09` ⭐ | Allá el store; acá el índice único y la transacción |
-| 16 — la rifa siguió vendiendo tras el cierre | `be-12` | Allá el reloj del navegador; acá la autoridad del servidor |
-| 18 — la liquidación da un centavo de diferencia | `be-13` | Allá el redondeo; acá el cliente calculando con datos viejos |
-| 19 — el dashboard se arrastra al final del día | `be-05` | Allá memoización; acá el pool de conexiones agotado |
-| 20 — el test pasa en mi máquina y falla en la de al lado | `be-15` ⭐ | Allá el entorno; acá el **motor** de la base |
-| 08 — la sesión se cae sola | `be-08` | Allá el `401` del caos; acá un `exp` real sin renovación | Sus categorías propias son **base de datos**,
+| 11 — la compensación doble ⭐ | `be-09` ⭐ | Acá el store y un chequeo en dos pasos; allá el mismo chequeo en dos pasos, dentro de una transacción que no excluye |
+| 16 — los giros de una rueda que ya cerró | `be-12` | Acá la consola compara mal el instante; allá, quién tiene autoridad sobre el reloj |
+| 18 — la conciliación da un centavo de diferencia | `be-13` | Acá el redondeo por fila; allá la fuente de los datos |
+| 19 — el dashboard se arrastra al final de la Semana del Canal | `be-05` | Acá los chequeos de desarrollo con el volumen del evento; allá el pool de conexiones agotado |
+| 20 — el test pasa en mi máquina y falla en la de al lado | `be-15` ⭐ | Acá la zona horaria del runner; allá el **motor** de la base |
+| 08 — la sesión se cae sola | `be-08` | Acá el `401` del caos; allá un `exp` real sin renovación |
+
+Sus categorías propias son **base de datos**,
 **transacciones**, **despliegue** y **contrato**, y se suman a las de abajo.
 
 Un incidente `be-NN` puede compartir síntoma con uno del track base y tener otra
 causa raíz: ese paralelo es deliberado y es de lo más formativo que ofrece el
-track. El caso arquetípico es el 11 —el número 0347 vendido dos veces—, que en
+track. El caso arquetípico es el 11 —la jugadora compensada dos veces—, que en
 el track base se diagnostica en el store y en el track BE se resuelve con un
 índice único y una transacción.
 
 **Categorías:** entorno · UI / routing · autenticación · integración ·
 estado (store) · concurrencia · RxJS / epics · tiempo · dinero · performance ·
-testing · 🔥 base de datos · 🔥 transacciones · 🔥 despliegue · 🔥 contrato.
+testing · dominio · 🔥 base de datos · 🔥 transacciones · 🔥 despliegue · 🔥 contrato.
 
 **Dificultad:** 🟢 fácil · 🟡 intermedio · 🟠 difícil · 🔴 muy difícil.
-**⭐** marca los dos incidentes más formativos del curso: la race condition de
-venta (11) y la suscripción zombi del epic (14).
+**⭐** marca los dos incidentes más formativos del curso: la doble compensación
+(11) y la suscripción zombi del epic (14). **➕** marca el que termina en una
+decisión y no en un commit (21).
 
-> 📝 **Por qué cinco de los veinte son de RxJS.** Los incidentes 13, 14, 15 y 17
+> 📝 **Por qué cinco de los veintiuno son de RxJS.** Los incidentes 13, 14, 15 y 17
 > —más el 12, que se resuelve con cancelación— cubren el terreno que el
 > `00-alcance-del-proyecto.md` §7 marca como mínimo obligatorio. No es capricho:
 > `catchError` faltante, `takeUntil` mal ubicado, `mergeMap` donde iba
@@ -501,6 +506,7 @@ Reproducir, y sobre todo **explicar el fenómeno del USB**: por qué copiar
 - **Rama:** `incidente/02`, que restituye `node-sass` en el `package.json`
 - **Caos:** no aplica.
 - **Datos:** no aplica.
+- **Reproducción en contenedor:** parcial. `node-sass` 4.14.1 compila en `node:14` arm64 mientras la imagen tenga Python 2 (la trae). El `node-gyp` que falla es el de una máquina sin Python 2 o con `npm_config_python=python3`, que es el caso de un Mac; el fenómeno del USB necesita dos máquinas. Ambos se verifican a mano.
 - **Hace falta un dato que no es del repositorio:** dos máquinas con arquitecturas
   distintas, o una máquina y un contenedor. Si solo tienes una, el contenedor
   hace de segunda: `docker run --rm -it -v "$PWD":/app -w /app node:14 bash`.
@@ -519,7 +525,7 @@ npm install
 
 El error no es de JavaScript. Es de un compilador de C++ que se llama `node-gyp`.
 Pregúntate qué hace un compilador de C++ dentro de un proyecto que por ahora solo
-pinta tarjetas de rifas, y qué paquete lo está invocando.
+pinta tarjetas de ruedas, y qué paquete lo está invocando.
 
 </details>
 
@@ -656,12 +662,12 @@ próxima máquina distinta.
 
 ### 🎫 El ticket
 
-Desde que tocaron el menú de arriba, cada vez que hago clic en "Rifas" la pantalla
+Desde que tocaron el menú de arriba, cada vez que hago clic en "Ruedas" la pantalla
 se pone en blanco un segundo y después carga. Antes era instantáneo. Y hay algo
-peor: si estaba llenando el formulario de una rifa y hago clic en el menú, cuando
+peor: si estaba llenando el formulario de una rueda y hago clic en el menú, cuando
 vuelvo se me borró todo lo que había escrito.
 
-**Reportado por:** supervisor de ventas
+**Reportado por:** supervisor de operación
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -674,7 +680,7 @@ frase del ticket, mucho mejor que *"se pone en blanco"*.
 
 - **Rama:** `incidente/03`
 - **Caos:** no aplica; es determinista y se reproduce el 100% de las veces.
-- **Datos:** no aplica; con las rifas de demostración alcanza.
+- **Datos:** no aplica; con las ruedas de demostración alcanza.
 
 ```bash
 git checkout incidente/03
@@ -688,8 +694,7 @@ npm start
 
 No abras el código todavía. Abre DevTools en la pestaña **Network**, marca
 *Preserve log*, y haz clic en el menú. Cuenta cuántas peticiones aparecen y de
-qué **tipo** son. Después haz lo mismo navegando desde un enlace de la tabla de
-rifas, que no tiene el problema, y compara las dos listas.
+qué **tipo** son. Después haz lo mismo navegando desde un enlace de la tabla de ruedas, que no tiene el problema, y compara las dos listas.
 
 </details>
 
@@ -706,7 +711,7 @@ las dos.
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
 ¿Qué hace el navegador, por su cuenta y antes de que React se entere de nada, con
-un `<a href="/raffles">`? ¿Y qué le queda al árbol de componentes que estaba
+un `<a href="/wheels">`? ¿Y qué le queda al árbol de componentes que estaba
 montado en memoria después de eso?
 
 </details>
@@ -744,8 +749,8 @@ montado en memoria después de eso?
 
 **Causa raíz**
 
-`src/components/Navbar.jsx`: el enlace del menú es un `<a href="/raffles">` en vez
-de un `<Link to="/raffles">`. Es el error común #3 de la Fase 1.
+`src/components/Navbar.jsx`: el enlace del menú es un `<a href="/wheels">` en vez
+de un `<Link to="/wheels">`. Es el error común #3 de la Fase 1.
 
 Un ancla común es una instrucción para el **navegador**, no para React Router: el
 navegador pide el documento al servidor, recibe el `index.html`, descarta la
@@ -760,8 +765,8 @@ Por eso *"se me borra lo que estaba escribiendo"* es la mejor pista del ticket:
 pero **perder el estado en memoria solo pasa si el árbol se destruyó**. El
 supervisor, sin saberlo, te entregó el diagnóstico.
 
-> 📝 **Nota de época.** El `Navbar` es de la Era 1 (2019), escrito por el
-> contratista contra la fecha del sorteo de diciembre
+> 📝 **Nota de época.** El `Navbar` es de la Era 1 (2019), escrito por la
+> agencia de San José contra la fecha del evento de Navidad
 > (`00-historia-del-sistema.md` §3). Un `<a href>` era lo natural para alguien que
 > venía de páginas server-side y estaba aprendiendo Router sobre la marcha.
 
@@ -777,9 +782,9 @@ no crece ni una fila: cero peticiones, porque no hay nada que pedir.
 // src/components/Navbar.jsx
 import { Link } from 'react-router-dom';
 
-// ❌ antes: <a href="/raffles">Rifas</a>
+// ❌ antes: <a href="/wheels">Ruedas</a>
 // ✅ ahora: el clic lo maneja Router, no el navegador.
-<Link to="/raffles">Rifas</Link>
+<Link to="/wheels">Ruedas</Link>
 ```
 
 **La refactorización correcta**
@@ -788,7 +793,7 @@ import { Link } from 'react-router-dom';
 cuál está activo sin comparar rutas a mano:
 
 ```javascript
-<NavLink to="/raffles" activeClassName="active">Rifas</NavLink>
+<NavLink to="/wheels" activeClassName="active">Ruedas</NavLink>
 ```
 
 Y una regla de lint que prohíba `<a href>` con rutas internas, porque este bug se
@@ -802,29 +807,23 @@ favor: el test falla antes del fix porque la ruta **no cambia**, y pasa después
 porque `Link` sí la cambia.
 
 ```javascript
-// src/components/Navbar.test.jsx
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
-import Navbar from './Navbar';
+// src/components/Navbar.test.jsx (la misma prueba que corre en el repo de prueba)
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { MemoryRouter, Route } from "react-router-dom";
+import Navbar from "./Navbar";
 
-test('el menú navega sin recargar el documento', () => {
+test("el menú navega sin recargar el documento", () => {
   let currentPath = null;
-
   render(
-    <MemoryRouter initialEntries={['/']}>
+    <MemoryRouter initialEntries={["/"]}>
       <Navbar />
-      <Route path="*" render={({ location }) => {
-        currentPath = location.pathname;
-        return null;
-      }} />
+      <Route path="*" render={({ location }) => { currentPath = location.pathname; return null; }} />
     </MemoryRouter>
   );
-
-  userEvent.click(screen.getByText('Rifas'));
-
-  // Con <a href> la ruta del router no se entera: sigue en "/".
-  expect(currentPath).toBe('/raffles');
+  userEvent.click(screen.getByText("Ruedas"));
+  expect(currentPath).toBe("/wheels");
 });
 ```
 
@@ -855,7 +854,7 @@ memoización actúa sobre lo primero y no puede hacer nada contra lo segundo.
 
 ---
 
-## Incidente 04 — Entro al detalle de otra rifa y sigo viendo la anterior
+## Incidente 04 — Entro al detalle de otra rueda y sigo viendo la anterior
 
 > **Fase:** 1 · **Categoría:** UI / routing · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -863,13 +862,9 @@ memoización actúa sobre lo primero y no puede hacer nada contra lo segundo.
 
 ### 🎫 El ticket
 
-Tengo la lista de rifas. Abro la de Navidad, la miro, vuelvo atrás y abro la de
-Año Nuevo… y me sigue mostrando la de Navidad. Arriba, en la barra del navegador,
-dice que estoy en la 2, pero abajo el nombre y los datos son los de la 1. Si
-aprieto F5 ahí sí aparece la correcta. Yo creo que se confunde por los nombres
-parecidos.
+Tengo la lista de ruedas. Abro la Esclusa de Oro, la miro, vuelvo atrás y abro la Semana del Canal… y me sigue mostrando la Esclusa de Oro. Arriba, en la barra del navegador, dice que estoy en la 2, pero abajo el nombre y los datos son los de la 1. Si aprieto F5 ahí sí aparece la correcta. Yo creo que se confunde por los nombres parecidos.
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** operadora de soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -879,7 +874,7 @@ producen exactamente este síntoma y las dos se "arreglan" con cambios distintos
 que funcionan. El entregable no es el parche: es la evidencia que descarta una de
 las dos.
 
-Y de paso, descartar la teoría del vendedor. Los tickets suelen traer una, casi
+Y de paso, descartar la teoría de los nombres parecidos. Los tickets suelen traer una, casi
 siempre es incorrecta, y desmontarla con evidencia en vez de ignorarla es parte
 del trabajo.
 
@@ -887,14 +882,12 @@ del trabajo.
 
 - **Rama:** `incidente/04`
 - **Caos:** no aplica; determinista.
-- **Datos:** hacen falta al menos dos rifas en `mock/raffles.js` con nombres bien
-  distintos —`Rifa de Navidad` con `id: 1` y `Rifa de Año Nuevo` con `id: 2`— para
-  que el síntoma sea inconfundible. La rama ya las trae.
+- **Datos:** ya están en `mock/wheels.js`: `Esclusa de Oro` con `id: 1` y `Semana del Canal` con `id: 2`. Nombres bien distintos, para que el síntoma sea inconfundible.
 
 ```bash
 git checkout incidente/04
 npm start
-# Navega: /raffles → detalle de la 1 → atrás → detalle de la 2
+# Navega: /wheels → detalle de la 1 → atrás → detalle de la 2
 ```
 
 ---
@@ -902,8 +895,8 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-React DevTools, pestaña **Components**, selecciona `RaffleDetailPage` y déjala
-seleccionada mientras navegas de una rifa a la otra. Mira dos cosas **al mismo
+React DevTools, pestaña **Components**, selecciona `WheelDetailPage` y déjala
+seleccionada mientras navegas de una rueda a la otra. Mira dos cosas **al mismo
 tiempo** en el panel derecho: lo que trae `useParams` y lo que hay en el estado.
 Uno de los dos cambia y el otro no. Cuál es cuál te dice casi todo.
 
@@ -914,7 +907,7 @@ Uno de los dos cambia y el otro no. Cuál es cuál te dice casi todo.
 
 Activa **"Highlight updates when components render"** en las opciones de React
 DevTools y navega otra vez. La pregunta que separa las dos causas es una sola:
-¿el componente **se re-renderiza** al cambiar de rifa, o ni se entera?
+¿el componente **se re-renderiza** al cambiar de rueda, o ni se entera?
 
 </details>
 
@@ -942,7 +935,7 @@ escribiendo la URL a mano: no es lo mismo y una de las dos no reproduce.}}
 navegar. Y si el borde de *highlight* se encendió o no.}}
 
 ```
-{{params.id = ...   ·   state.raffle = ...}}
+{{params.id = ...   ·   state.wheel = ...}}
 ```
 
 **Hipótesis**
@@ -963,21 +956,21 @@ un cambio que hace desaparecer el síntoma, anótalos todos: eso importa.}}
 
 **Causa raíz**
 
-`src/pages/RaffleDetailPage.jsx` guarda la rifa en estado local, inicializado con
+`src/pages/WheelDetailPage.jsx` guarda la rueda en estado local, inicializado con
 el `id` de la URL, y nadie lo vuelve a tocar:
 
 ```javascript
 // ❌ El inicializador de useState corre UNA sola vez, en el primer montaje.
 const { id } = useParams();
-const [raffle, setRaffle] = useState(findRaffle(id));
+const [wheel, setWheel] = useState(findWheel(id));
 ```
 
-Al navegar de `/raffles/1` a `/raffles/2`, Router 5 renderiza el mismo componente
+Al navegar de `/wheels/1` a `/wheels/2`, Router 5 renderiza el mismo componente
 en la misma posición del árbol, así que React **reutiliza la instancia**: no la
 desmonta, la vuelve a renderizar con parámetros nuevos. `useParams` devuelve
 `"2"`, el componente se re-renderiza… y `useState` ignora por completo el
 argumento que le pasas a partir del segundo render. El estado se quedó con la
-rifa 1, para siempre.
+rueda 1, para siempre.
 
 Es, textualmente, el "rompe a propósito" de la pieza forense de la Fase 1.
 
@@ -1010,18 +1003,18 @@ puerta de entrada.
 ```javascript
 // El estado sigue existiendo, pero ahora alguien lo sincroniza.
 useEffect(() => {
-  setRaffle(findRaffle(id));
+  setWheel(findWheel(id));
 }, [id]);
 ```
 
 **La refactorización correcta**
 
-No guardar en estado algo que es **derivado** de la URL. La rifa no es información
+No guardar en estado algo que es **derivado** de la URL. La rueda no es información
 del usuario: es una función del `id`, y se calcula en el render.
 
 ```javascript
 const { id } = useParams();
-const raffle = findRaffle(id);   // sin useState, sin useEffect, sin sincronizar
+const wheel = findWheel(id);   // sin useState, sin useEffect, sin sincronizar
 ```
 
 El estado local se reserva para lo que el usuario cambia y el sistema no puede
@@ -1031,26 +1024,23 @@ curso, y que en Fase 4 vuelve con el store de por medio.
 **Prueba de regresión**
 
 ```javascript
-// src/pages/RaffleDetailPage.test.jsx
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import RaffleDetailPage from './RaffleDetailPage';
+// src/pages/WheelDetailPage.test.jsx (la misma prueba que corre en el repo de prueba)
+import React from "react";
+import { render, act } from "@testing-library/react";
+import { MemoryRouter, Route } from "react-router-dom";
+import WheelDetailPage from "./WheelDetailPage";
 
-test('al cambiar el id de la ruta, muestra la rifa nueva', () => {
-  const { rerender } = render(
-    <MemoryRouter initialEntries={['/raffles/1']}>
-      <Route path="/raffles/:id" component={RaffleDetailPage} />
+test("al cambiar el id de la ruta, muestra la rueda nueva", () => {
+  let history = null;
+  const { container } = render(
+    <MemoryRouter initialEntries={["/wheels/1"]}>
+      <Route path="/wheels/:id" component={WheelDetailPage} />
+      <Route render={(props) => { history = props.history; return null; }} />
     </MemoryRouter>
   );
-  expect(screen.getByText('Rifa de Navidad')).toBeInTheDocument();
-
-  // Sin desmontar: es exactamente lo que hace Router al navegar.
-  rerender(
-    <MemoryRouter initialEntries={['/raffles/2']}>
-      <Route path="/raffles/:id" component={RaffleDetailPage} />
-    </MemoryRouter>
-  );
-  expect(screen.getByText('Rifa de Año Nuevo')).toBeInTheDocument();
+  expect(container.querySelector("h1").textContent).toBe("Esclusa de Oro");
+  act(() => history.push("/wheels/2"));
+  expect(container.querySelector("h1").textContent).toBe("Semana del Canal");
 });
 ```
 
@@ -1082,7 +1072,7 @@ el mismo bug con otra sintaxis**, y la traducción entre las dos formas está en
 **Si tu causa fue distinta a esta**
 
 Si tu diagnóstico fue *"los nombres se confunden"*, esa era la teoría del ticket:
-cámbiale el nombre a una de las dos rifas por algo irreconocible y el síntoma
+cámbiale el nombre a una de las dos ruedas por algo irreconocible y el síntoma
 sigue igual. Descartada con evidencia, en treinta segundos. Si dijiste *"falta un
 `exact` en la ruta"*, mira la URL: el error común #2 de la Fase 1 te dejaría
 viendo el **listado**, no un detalle equivocado. Y si tu fix fue `key={id}` en la
@@ -1093,7 +1083,7 @@ y tiene un costo que hoy no se nota.
 
 ---
 
-## Incidente 05 — Las peticiones salen sin token y el servidor las rebota
+## Incidente 05 — Después de entrar, mis peticiones salen sin token
 
 > **Fase:** 2 · **Categoría:** Autenticación · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -1101,12 +1091,9 @@ y tiene un costo que hoy no se nota.
 
 ### 🎫 El ticket
 
-Entro con mi usuario y mi contraseña y me deja pasar sin problema: veo el menú y
-arriba a la derecha aparece mi nombre. Pero apenas hago clic en cualquier rifa me
-dice que no tengo permiso. Es raro, porque acabo de entrar. Probé cerrando y
-volviendo a entrar y pasa lo mismo.
+Entro con mi usuario y mi contraseña y me deja pasar sin problema: veo el menú y arriba a la derecha aparece mi nombre. Pero las peticiones que la consola manda después de entrar no llevan nada que identifique mi sesión: en la herramienta de red no aparece ningún `Authorization`. Probé cerrando y volviendo a entrar y pasa lo mismo.
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** operadora de soporte
 **Ambiente:** desarrollo
 
 ### 🎯 Qué se te pide
@@ -1118,13 +1105,13 @@ ciento del trabajo. El fix es de una línea.
 ### 🔧 Preparación
 
 - **Rama:** `incidente/05`
-- **Caos:** `off`. Este bug es determinista y con caos encendido se confunde con
-  el incidente 08: apágalo antes de empezar.
-- **Datos:** el `db.json` de la fase, con al menos un usuario válido.
+- **Caos:** no aplica en esta fase: el mock todavía no tiene caos (llega en Fase 3).
+- **Datos:** `mock/db.json`, con los usuarios de la fase.
+- **Qué no se ve:** el mock no valida el token, ni en esta fase ni en ninguna del track base. El síntoma se ve en el header y en el store. El único `401` que vas a ver es el aleatorio del caos (Fase 3); la validación real del token llega con el track BE (`be04`).
 
 ```bash
 git checkout incidente/05
-CHAOS_LEVEL=off npm run mock
+npm run mock:api
 npm start
 ```
 
@@ -1136,7 +1123,7 @@ npm start
 Hay dos lugares donde este sistema guarda la verdad sobre tu sesión, y todavía no
 sabes si dicen lo mismo. Uno es el store: míralo en Redux DevTools después de
 loguearte. El otro es lo que efectivamente sale por el cable: míralo en Network,
-en **Request Headers** —no en Response—, de cualquier petición a una rifa.
+en **Request Headers** —no en Response—, de cualquier petición a una rueda.
 Compáralos antes de abrir un archivo.
 
 </details>
@@ -1296,8 +1283,7 @@ nadie mira si no lo va a buscar.
 Si dijiste *"el backend no está validando bien el token"*, abre Request Headers:
 el header no está. No se puede validar mal algo que no llegó. Si dijiste *"es
 CORS"*, un fallo de CORS trae su propio mensaje en la consola y bloquea la
-petición antes de que salga; acá la petición sale, llega y la rechazan con un
-`401` bien formado. Y si tu fix fue guardar el token en una variable global que
+petición antes de que salga; acá la petición sale sin header. El mock no valida el token en ninguna fase del track base: que la petición llegue sin header no produce un `401`, y por eso el síntoma hay que buscarlo en Network y no en un error. Y si tu fix fue guardar el token en una variable global que
 el login actualiza, funciona — pero acabas de crear una segunda fuente de verdad
 que se va a desincronizar del store el día que alguien despache `logout` sin
 pasar por tu función.
@@ -1317,10 +1303,10 @@ pasar por tu función.
 Hago clic en "Cerrar sesión" y arriba a la derecha me sigue apareciendo mi nombre.
 Si después hago clic en cualquier cosa me manda al login, pero el nombre sigue ahí
 arriba, como si no me hubiera ido. Una vez, además, la pestaña se quedó titilando
-sola y tuve que cerrarla a la fuerza. Me preocupa que en el kiosco compartido
+sola y tuve que cerrarla a la fuerza. Me preocupa que en una consola compartida
 quede la sesión de otro.
 
-**Reportado por:** supervisor de ventas
+**Reportado por:** supervisor de operación
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -1335,13 +1321,14 @@ abierto antes de haber mirado Redux DevTools, vuelve atrás.
 ### 🔧 Preparación
 
 - **Rama:** `incidente/06`
-- **Caos:** `off`.
+- **Caos:** no aplica en esta fase.
+
 - **Datos:** el `db.json` de la fase. Loguéate con un usuario cuyo nombre se vea
   claramente en la barra superior.
 
 ```bash
 git checkout incidente/06
-CHAOS_LEVEL=off npm run mock
+npm run mock:api
 npm start
 # Logueate, mira la barra superior, y recién ahí cierra sesión.
 ```
@@ -1363,7 +1350,7 @@ cambiado.
 
 Para el primer síntoma: el reducer de `logout` en `src/features/auth/authSlice.js`,
 y qué campo lee la barra superior para pintar el nombre. Para el segundo: quién
-envuelve la ruta `/login` en `src/App.jsx`. Son dos archivos distintos, y esa es
+envuelve la ruta `/login` en `src/AppRouter.jsx`. Son dos archivos distintos, y esa es
 media respuesta.
 
 </details>
@@ -1429,12 +1416,12 @@ tus datos adentro. Dos consumidores del mismo estado, cada uno mirando una clave
 distinta, y el logout solo se acordó de una. El *Diff* de DevTools lo muestra en
 un segundo: una sola clave en verde.
 
-Y la preocupación del supervisor es correcta y no es paranoia: en un kiosco
-compartido, el nombre del vendedor anterior queda a la vista. No es una fuga de
+Y la preocupación del supervisor es correcta y no es paranoia: en una consola
+compartido, el nombre de la operadora anterior queda a la vista. No es una fuga de
 datos grave, pero es exactamente el tipo de detalle por el que un cliente pierde
 la confianza en un sistema.
 
-**Bug B — el titileo.** `src/App.jsx`: la ruta `/login` quedó envuelta en
+**Bug B — el titileo.** `src/AppRouter.jsx`: la ruta `/login` quedó envuelta en
 `PrivateRoute`. Sin sesión, `PrivateRoute` te redirige a `/login`… que exige
 sesión… que te redirige a `/login`. Es el error común #2 de la Fase 2, y explica
 por qué el nombre se queda **visible**: sin el bucle, el redirect es tan rápido que
@@ -1456,7 +1443,7 @@ logout() {
 ```
 
 ```javascript
-// App.jsx — /login es pública, siempre.
+// AppRouter.jsx — /login es pública, siempre.
 <Route path="/login" component={LoginPage} />
 ```
 
@@ -1501,7 +1488,7 @@ línea, y cierra para siempre una clase de bug que cuelga la pestaña del usuari
 **Por qué llegó a producción**
 
 Porque el logout **cumple su objetivo**: te saca. Quien lo escribió probó lo que
-había que probar —cerrar sesión y comprobar que ya no se puede entrar a una rifa—
+había que probar —cerrar sesión y comprobar que ya no se puede entrar a una rueda—
 y eso funciona. Nadie mira el resto del estado después de una acción que "anduvo".
 
 El bucle de `/login` es de la misma familia: se agregó la protección de rutas de
@@ -1525,7 +1512,7 @@ mal: quiere decir que reprodujiste uno solo. Vuelve y busca el otro.
 
 ---
 
-## Incidente 07 — A veces no carga y no dice nada
+## Incidente 07 — A veces no entra y no dice nada
 
 > **Fase:** 3 · **Categoría:** Integración · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -1533,12 +1520,11 @@ mal: quiere decir que reprodujiste uno solo. Vuelve y busca el otro.
 
 ### 🎫 El ticket
 
-A veces no carga y no dice nada. Me pasa como una de cada cinco veces, no sé bien.
-Abro la lista de rifas y me quedo mirando la pantalla, y no aparece nada: ni las
-rifas ni un error ni un cartel ni nada. Si recargo, generalmente sale bien. A mi
-compañera también le pasa pero menos.
+A veces no entro. Pongo mi usuario y mi contraseña, toco "Iniciar sesión" y el
+botón se queda en "Ingresando…" para siempre. No aparece ningún error ni nada más.
+Si recargo, generalmente sale bien. A mi compañera también le pasa, pero menos.
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** operadora de soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -1548,23 +1534,22 @@ entregable principal: un procedimiento determinista. Después, localizar la capa
 aplicar el fix.
 
 > 🧭 **Este es el ticket vago canónico del curso**, y por eso conviene decir en voz
-> alta lo que va a sonar raro: *"a veces"* y *"una de cada cinco"* son los dos
-> datos **más valiosos** del reporte, no sus defectos. Una frecuencia es una pista
-> sobre el mecanismo. Un reporte que dijera "no carga" a secas sería mucho peor.
+> alta lo que va a sonar raro: *"a veces"* y *"para siempre"* son los dos datos
+> **más valiosos** del reporte. Una frecuencia es una pista sobre el mecanismo.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/07`, que devuelve `apiClient` a una sola de sus opciones de
-  creación. Es un cambio de una línea y no toca ningún componente.
+- **Rama:** `incidente/07`, que quita el `timeout` de la instancia de `apiClient`.
+  Es un cambio de una línea y no toca ningún componente.
 - **Caos:** `CHAOS_LEVEL=high` en el mock del puerto `3001`. **Obligatorio.** Con
-  `low` tarda mucho en aparecer y con `off` no aparece jamás.
-- **Datos:** el `db.json` de la fase, con varias rifas cargadas.
+  `low` el timeout casi no aparece, y con `off` no aparece jamás.
+- **Datos:** `mock/db.json`, con los usuarios de la fase.
 
 ```bash
 git checkout incidente/07
-CHAOS_LEVEL=high npm run mock
+CHAOS_LEVEL=high npm run mock:api
 npm start
-# Abre /raffles y recarga varias veces hasta que te toque.
+# Entra y sale varias veces hasta que el botón se quede pegado.
 ```
 
 ---
@@ -1572,10 +1557,9 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-Antes de la aplicación, mira **el mock**. "Una de cada cinco veces" es una
-probabilidad, y hay un archivo en este proyecto donde esa probabilidad está
-escrita y donde se decide qué tipo de fallo toca. Encontrarlo convierte el azar en
-un interruptor.
+Antes de la aplicación, mira **el mock**. "Para siempre" significa que una petición
+nunca termina, y el mock es el único que decide si una petición responde. Hay un
+archivo en este proyecto donde está escrito qué fallo le toca a cada respuesta.
 
 </details>
 
@@ -1583,9 +1567,9 @@ un interruptor.
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 Network, con la columna **Status** y la columna **Time** a la vista. Ordena por
-Time y reproduce el fallo. Vas a encontrar una petición que no tiene status,
-porque no terminó. Ahora la pregunta es de la otra orilla: ¿cuánto tiempo está
-dispuesto a esperar el cliente?
+Time y repite el login. Vas a encontrar una petición que no tiene status, porque no
+terminó. Ahora la pregunta es de la otra orilla: ¿cuánto tiempo está dispuesto a
+esperar el cliente?
 
 </details>
 
@@ -1593,8 +1577,8 @@ dispuesto a esperar el cliente?
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
 ¿Cuál es el valor por defecto de `timeout` en axios, y qué significa ese valor?
-¿Y en qué estado se queda un `createAsyncThunk` cuya promesa nunca se resuelve ni
-se rechaza?
+¿Y en qué estado se queda el `login` de la Fase 2 cuando su promesa nunca se
+resuelve ni se rechaza?
 
 </details>
 
@@ -1605,15 +1589,16 @@ se rechaza?
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Acá lo que se evalúa es que sea determinista. "Recargar hasta que pase" no es
-un procedimiento de reproducción: es esperar.}}
+{{Acá lo que se evalúa es que sea determinista. "Intentar hasta que pase" no es un
+procedimiento de reproducción: es esperar. Cuenta cuántos intentos hacen falta con
+la semilla que uses.}}
 
 **Evidencia observable**
 {{La fila de Network de la petición que no termina, y el estado del store mientras
-tanto.}}
+tanto (`loading`, `error`).}}
 
 ```
-{{status, time, y qué dice state.raffles.loading}}
+{{status, time, y qué dice state.auth.loading}}
 ```
 
 **Hipótesis**
@@ -1631,123 +1616,80 @@ tanto.}}
 <details>
 <summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
 
-**Cómo se reproduce sin esperar al azar**
-
-En `mock/server.js`, haz que el selector de fallo devuelva siempre el que te
-interesa:
-
-```javascript
-// Temporalmente, para investigar. Revertir al terminar.
-function pickFailureType() {
-  return 'timeout';
-}
-```
-
-Ahora el fallo es un interruptor. **Convertir "a veces" en "siempre" es la primera
-mitad de cualquier investigación de intermitencias**, y casi nunca requiere tocar
-la aplicación: requiere entender qué la rodea.
-
 **Causa raíz**
 
-El mock, con `CHAOS_LEVEL=high`, inyecta un fallo de tipo *timeout*: recibe la
-petición y sencillamente **no responde nunca**. Del otro lado, `src/api/apiClient.js`
-crea el cliente de axios sin la opción `timeout`, y el valor por defecto de axios
-es `0`, que significa *esperar indefinidamente*.
+`src/api/apiClient.js`: la instancia se crea sin `timeout`. Axios, por defecto, no
+corta ninguna petición: espera a que el servidor responda, pase lo que pase. El mock,
+con `CHAOS_LEVEL=high`, a veces no responde (es el fallo de tipo *timeout*: el
+servidor recibe la petición y no contesta). La promesa de `authService.login` nunca
+se resuelve ni se rechaza, así que el thunk `auth/login/pending` queda como la última
+acción despachada: `loading` se queda en `true` para siempre y el botón en
+"Ingresando…".
 
-La consecuencia en cadena: la promesa del `createAsyncThunk` no se resuelve ni se
-rechaza, la acción `raffles/fetch/pending` queda como la última despachada,
-`loading` se queda en `true` y `error` en `null`. La pantalla no muestra rifas
-porque no llegaron, y no muestra un error porque —desde el punto de vista de la
-aplicación— **no hubo ningún error: la petición sigue en curso**.
+El síntoma "a veces" es la probabilidad del caos (2 % de timeouts en el nivel alto),
+y el "para siempre" es la ausencia de un tiempo máximo. Son dos datos del mismo
+defecto.
 
-> 🧠 **El silencio no es un olvido, es un estado.** La lectura fácil de este bug es
-> "la aplicación se olvidó de avisar". La correcta es que la aplicación está
-> reportando fielmente lo que cree: que sigue cargando. El defecto no está en el
-> mensaje que falta: está en que nadie decidió cuánto es demasiado.
+**Evidencia que lo confirma**
 
-Es el error común #2 de la Fase 3.
+En Network, una petición `/users` sin status y con un tiempo que crece mientras el
+botón sigue pegado. En el store, `auth/login/pending` como última acción: sin
+`fulfilled` ni `rejected`.
 
 **Parche mínimo**
 
 ```javascript
-// src/api/apiClient.js
+// src/api/apiClient.js — la instancia tiene un tiempo máximo
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-  timeout: 5000,   // pasado este punto, es un error y se trata como tal
+  baseURL: "http://localhost:3001",
+  timeout: 5000, // sin esto, un timeout del mock cuelga la UI
 });
 ```
-
-Con eso axios aborta la petición con `ECONNABORTED`, el thunk cae en `rejected`,
-`loading` vuelve a `false` y la pantalla puede mostrar el error que ya sabía
-mostrar.
 
 **La refactorización correcta**
 
-Dos capas más, ninguna de las cuales se paga en esta fase:
-
-1. Un interceptor de respuesta que traduzca `ECONNABORTED` a un mensaje que un
-   vendedor entienda —"el servidor no respondió a tiempo, intenta de nuevo"— en
-   vez del texto crudo de axios.
-2. Reintento con espera creciente para las lecturas, que son idempotentes y se
-   pueden repetir sin riesgo. Eso **no** se hace acá: requiere cancelación de
-   verdad, y la cancelación de verdad es RxJS. Llega en la Fase 7, con `timer` y
-   `takeUntil`.
+Tener un tiempo máximo en la instancia no basta si la UI no tiene qué hacer cuando
+se agota. El tiempo máximo convierte el cuelgue en un `rejected`, y el `rejected` ya
+llega a `LoginPage`: el mensaje legible de `authService` (5xx y timeouts) lo muestra.
+La refactorización es que cada instancia de cliente declare su tiempo máximo según el
+servicio: el de la consola, 5 s; el de un servicio externo, otro valor, medido.
 
 **Prueba de regresión**
 
+Con el mock en `CHAOS_LEVEL=high`, doscientos logins en paralelo no pueden quedar
+colgados. Mientras el defecto exista, la prueba falla; con el timeout, pasa.
+
 ```javascript
-// src/features/raffles/raffleSlice.test.js
-import MockAdapter from 'axios-mock-adapter';
-import apiClient from '../../api/apiClient';
-import store from '../../store';
-import { fetchRaffles } from './raffleSlice';
+// src/__incidentes__/inc07.test.js — el mock corre en otro contenedor con CHAOS_LEVEL=high
+import { store } from "../app/store";
+import { login } from "../features/auth/authSlice";
 
-test('una petición que nunca responde termina en rejected, no colgada', async () => {
-  const mock = new MockAdapter(apiClient);
-  mock.onGet('/raffles').timeout();   // simula exactamente el caos del mock
-
-  await store.dispatch(fetchRaffles());
-
-  const state = store.getState().raffles;
-  expect(state.loading).toBe(false);   // con el bug, se queda en true para siempre
-  expect(state.error).not.toBeNull();
-});
+test("ninguna petición de login se queda colgada con el caos alto", async () => {
+  const logins = Array.from({ length: 200 }, () =>
+    store.dispatch(login({ email: "ibatista@esclusa.test", password: "esclusa123" }))
+  );
+  const outcome = await Promise.race([
+    Promise.all(logins).then(() => "todas resueltas"),
+    new Promise((resolve) => setTimeout(() => resolve("hay colgadas"), 20000)),
+  ]);
+  expect(outcome).toBe("todas resueltas");
+}, 40000);
 ```
+
+Corre la prueba con `--forceExit`: las peticiones colgadas mantienen vivo el proceso
+de Jest aunque la prueba termine.
 
 **Prevención**
 
-El `timeout` va en la **creación del cliente**, no en cada llamada: puesto por
-llamada, el primer endpoint que alguien agregue mañana nace sin él. Y toda
-pantalla que cargue datos necesita tres estados dibujados, no dos: cargando,
-error, y vacío. La mayoría de las pantallas legacy tienen dos, y el tercero es el
-que se descubre en producción.
-
-**Por qué llegó a producción**
-
-Porque en desarrollo todo responde en tres milisegundos, y un `timeout` es
-invisible mientras no haga falta. Pero el mecanismo de fondo merece un párrafo
-propio: **este bug no se escribió, se dejó de escribir.** No hay una línea
-equivocada que un revisor pudiera haber señalado; hay una opción ausente cuyo
-valor por defecto —"esperar para siempre"— nadie eligió conscientemente. Los
-errores de configuración por omisión son los más difíciles de encontrar en una
-revisión de código, porque no aparecen en el diff.
-
-Y llegó también porque el síntoma es amable: no hay pantalla roja, no hay
-excepción, no hay nada en la consola. Solo un usuario esperando, que después de un
-rato recarga y sigue trabajando. Nadie abre un ticket por eso hasta que pasa
-cincuenta veces por día.
+Un cliente HTTP sin tiempo máximo es un defecto de revisión, y es fácil de detectar:
+una regla de lint o una revisión de la instancia de axios. El cuaderno del track BE
+vuelve sobre esto con el nivel de carga de `be08`.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"el servidor está lento"*, mídelo: lento tiene un final, esto no lo
-tiene. Deja la pestaña abierta diez minutos y la petición va a seguir ahí. Si
-dijiste *"es un 500 que no se está manejando"*, el 500 del caos **sí** llega, sí
-rechaza el thunk y sí deja rastro en la consola: es un fallo distinto del mismo
-mock, y compararlos lado a lado es un ejercicio de veinte minutos que vale la
-pena. Y si tu fix fue poner un `setTimeout` en el componente para mostrar un
-cartel a los cinco segundos, tapaste el síntoma con precisión quirúrgica: la
-petición sigue viva, sigue ocupando una conexión y va a resolver —o no— cuando se
-le antoje, con el usuario ya en otra pantalla.
+Si dijiste *"el servidor está lento"*, mide: el cuelgue no depende de la velocidad,
+sino de que la respuesta nunca llega. Si dijiste *"falta un `.catch`"*, mira la
+pregunta de la pista 3: un `.catch` no ayuda a una promesa que nunca se resuelve.
 
 </details>
 
@@ -1762,13 +1704,13 @@ le antoje, con el usuario ya en otra pantalla.
 
 ### 🎫 El ticket
 
-Estoy cargando una rifa nueva y de golpe me tira a la pantalla de login, sin
+Estoy cargando una rueda nueva y de golpe me tira a la pantalla de login, sin
 avisar nada. No pasa siempre, pasa de a ratos. Pierdo todo lo que había escrito y
 tengo que empezar de nuevo. Vuelvo a entrar con la misma clave de siempre y entra
 perfecto, así que mi usuario está bien. Alguien me dijo que "se cae la sesión",
 pero no sé qué quiere decir eso.
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** operadora de soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -1782,13 +1724,13 @@ del sistema, o el sistema haciendo exactamente lo que debe?** Y si es lo segundo
 - **Rama:** ninguna; el comportamiento ya está en tu aplicación.
 - **Caos:** `CHAOS_LEVEL=high` en `3001`. **Obligatorio**: el `401` aleatorio solo
   lo inyecta el caos alto sobre rutas protegidas.
-- **Datos:** el `db.json` de la fase. Empieza el formulario de una rifa nueva y
-  escribe algo antes de que te eche: parte del incidente es medir qué se pierde.
+- **Datos:** el `db.json` de la fase. En esta fase la pantalla no pide datos protegidos:
+  el 401 se reproduce con el caos alto y una petición protegida (ver la preparación). Escribe algo antes de que te eche: parte del incidente es medir qué se pierde.
 
 ```bash
-CHAOS_LEVEL=high npm run mock
+CHAOS_LEVEL=high npm run mock:api
 npm start
-# Abre el formulario de rifa nueva, escribe, y sigue navegando hasta que te saque.
+# Con el caos alto, pide una petición protegida (la prueba de la pieza forense de F03 la hace).
 ```
 
 ---
@@ -1806,7 +1748,7 @@ en el log del mock. Vas a ver quién lo generó y por qué.
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`mock/server.js`: el middleware de caos, la lista `PROTECTED_ROUTES` y el valor de
+`mock/chaosMiddleware.js`: la regla que da el 401 a todo lo que no es `/users`, y el valor de
 `CHAOS_LEVEL`. Después, y solo después, el interceptor de respuesta en
 `src/api/apiClient.js`.
 
@@ -1856,8 +1798,8 @@ Esos dos, juntos, son la prueba de quién emitió el `401`.}}
 
 **Causa raíz**
 
-El `401` lo inyecta a propósito el middleware de caos de `mock/server.js` sobre las
-rutas de `PROTECTED_ROUTES`, para simular un token vencido. Eso **no es el bug**:
+El `401` lo inyecta a propósito el middleware de caos (`mock/chaosMiddleware.js`) sobre las
+rutas que no son `/users`, para simular un token vencido. Eso **no es el bug**:
 es la Fase 3 haciendo su trabajo, y es el error común #3 de esa fase. Un backend
 real hace exactamente lo mismo cuando la sesión expira.
 
@@ -1875,7 +1817,7 @@ qué, no recuerda a dónde ibas, y no hace nada con lo que estabas escribiendo.
 > la sesión duraba ocho horas y un `401` inesperado era tan raro que ocuparse de
 > "avisar bien" parecía sobre-ingeniería. La suposición no era tonta: era correcta
 > para el mundo de 2020, y dejó de serlo cuando el sistema empezó a vivir en un
-> kiosco con red mala.
+> consola con red mala.
 
 **Parche mínimo**
 
@@ -1912,16 +1854,16 @@ mensaje. El primero es culpa de quien escribe; el segundo, de nadie.
 // src/api/apiClient.test.js
 test('un 401 informa el motivo y de dónde venías', async () => {
   const mock = new MockAdapter(apiClient);
-  mock.onGet('/raffles').reply(401);
-  history.push('/raffles/7/numbers');
+  mock.onGet('/players/42/grants').reply(401);
+  history.push('/wheels/1');
 
-  await apiClient.get('/raffles').catch(() => {});
+  await apiClient.get('/players/42/grants').catch(() => {});
 
   expect(store.getState().auth.token).toBeNull();
   expect(history.location.pathname).toBe('/login');
   expect(history.location.state).toEqual({
     reason: 'session-expired',
-    from: '/raffles/7/numbers',
+    from: '/wheels/1',
   });
 });
 ```
@@ -1949,8 +1891,8 @@ adjunta el token"*, eso es el incidente 05, y se descarta en un segundo: apaga e
 caos con `CHAOS_LEVEL=off` y el síntoma desaparece por completo. Si desaparece, era
 el caos; si persiste, era el token.
 
-**Y acá vive el cruce con el track BE.** El incidente `be-08` —*"a algunos los saca
-de la sesión al mediodía y a otros nunca"*— tiene este mismo síntoma con otra causa
+**Y acá vive el cruce con el track BE.** El incidente `be-08` —*"a Yariela la saca
+de la sesión a las ocho de la noche, y a Itzel nunca"*— tiene este mismo síntoma con otra causa
 raíz: allá el `401` es **real**, lo produce un `exp` de JWT sin renovación, y por
 eso el fallo tiene **patrón horario**. Esa es la forma de distinguirlos en la vida
 real: si las expulsiones se concentran en una franja del día, sospecha de
@@ -1961,7 +1903,7 @@ infraestructura. Un mismo síntoma, dos capas, dos investigaciones distintas.
 
 ---
 
-## Incidente 09 — Guardo la rifa, se recarga la página y pierdo todo
+## Incidente 09 — Guardo la rueda, la pantalla se recarga y pierdo lo que escribí
 
 > **Fase:** 4 · **Categoría:** Estado (store) · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -1969,34 +1911,34 @@ infraestructura. Un mismo síntoma, dos capas, dos investigaciones distintas.
 
 ### 🎫 El ticket
 
-Cargo la rifa nueva con todos los datos, le doy a "Guardar" y la pantalla
-parpadea y se me borra todo el formulario. Vuelvo a la lista y la rifa no está.
-Es como si se reiniciara el programa entero. Lo raro es que a veces, si vuelvo un
-rato después, la rifa sí está cargada. Ya la creé tres veces por las dudas y
-ahora tengo dos repetidas.
+Cargo la rueda nueva con todos los pesos, le doy a "Crear rueda" y la pantalla
+parpadea y se me borra todo el formulario. Vuelvo a la lista y la rueda no está.
+Es como si se reiniciara la consola entera. Lo raro es que a veces, si vuelvo un
+rato después, la rueda sí está. Ya la creé tres veces por las dudas y ahora tengo
+dos repetidas.
 
-**Reportado por:** supervisor de ventas
+**Reportado por:** operación
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
 
 Reproducir, localizar la línea y aplicar el fix. Y como ejercicio aparte:
-explicar por qué el síntoma que reporta el usuario —"se borró todo"— no se parece
-en nada a la causa, y por qué las rifas duplicadas son consecuencia del mismo bug.
+explicar por qué el síntoma que reporta la operadora —"se borró todo"— no se parece
+en nada a la causa, y por qué las ruedas duplicadas son consecuencia del mismo bug.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/09`
+- **Rama:** `incidente/09`, desde `fase-04-ruedas-crud`.
 - **Caos:** `off`. Con caos encendido el ruido de los fallos aleatorios tapa la
   señal, que acá es limpísima.
-- **Datos:** el `db.json` de la fase. Llena el formulario entero antes de guardar:
-  parte del incidente es ver qué se pierde.
+- **Datos:** el `mock/db.json` de la fase. Llena el formulario entero antes de
+  guardar: parte del incidente es ver qué se pierde.
 
 ```bash
 git checkout incidente/09
-CHAOS_LEVEL=off npm run mock
+CHAOS_LEVEL=off npm run mock:api
 npm start
-# /raffles → "Nueva rifa" → llena todo → Guardar
+# /wheels → "Nueva rueda" → nombre, cierre, pesos → Crear rueda
 ```
 
 ---
@@ -2005,7 +1947,7 @@ npm start
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
 Network, con *Preserve log* marcado —sin eso no vas a ver nada, porque justamente
-se limpia—. Guarda la rifa y cuenta las peticiones. Además de tu `POST`, hay otra.
+se limpia—. Guarda la rueda y cuenta las peticiones. Además de tu `POST`, hay otra.
 Mira su **método** y su **tipo**, y mira la barra de direcciones del navegador
 justo después de guardar.
 
@@ -2014,8 +1956,8 @@ justo después de guardar.
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`src/features/raffles/RaffleForm.jsx`, y en particular las dos primeras líneas de
-`handleSubmit`. Comparalo con cualquier otro `handleSubmit` que hayas escrito.
+`src/features/wheels/WheelForm.jsx`, y en particular las primeras líneas de
+`handleSubmit`. Compáralo con cualquier otro `handleSubmit` que hayas escrito.
 
 </details>
 
@@ -2035,12 +1977,12 @@ pregunta no es sobre React: es sobre el navegador, y ahí está la respuesta.
 
 **Reproducción**
 {{Pasos numerados. Anota qué había en la barra de direcciones antes y después de
-hacer clic en Guardar: es la evidencia más contundente de este incidente.}}
+hacer clic en Crear rueda: es la evidencia más contundente de este incidente.}}
 
 **Evidencia observable**
 {{Las peticiones de Network con *Preserve log*, y la URL resultante.}}
 
-```
+```text
 {{método, tipo y URL de cada petición}}
 ```
 
@@ -2061,46 +2003,54 @@ hacer clic en Guardar: es la evidencia más contundente de este incidente.}}
 
 **Causa raíz**
 
-`src/features/raffles/RaffleForm.jsx`: `handleSubmit` no llama a
+`src/features/wheels/WheelForm.jsx`: `handleSubmit` no llama a
 `e.preventDefault()`.
 
 ```javascript
 // ❌ El thunk sale… y el navegador hace lo suyo al mismo tiempo.
-function handleSubmit(e) {
-  dispatch(createRaffle(form));
-}
+const handleSubmit = (e) => {
+  if (weightErrors.length > 0) return;
+  if (isEditing) {
+    dispatch(updateWheel(draft));
+  } else {
+    dispatch(createWheel(draft));
+    setDraft(EMPTY_WHEEL);
+  }
+};
 ```
 
 Un `<form>` de HTML, si nadie lo detiene, envía sus campos por su cuenta: el
 navegador arma una petición de documento a la misma URL con los valores en el
 *query string*, la ejecuta y **recarga la página entera**. React se desmonta, el
-store —que vive en memoria y no se persiste— se vacía, y el formulario vuelve en
+borrador del formulario —que vive en memoria— se pierde, y el formulario vuelve en
 blanco. Es el error común #4 de la Fase 4.
 
 La evidencia definitiva está en la barra de direcciones: después de guardar dice
-algo como `/raffles/new?name=Rifa+de+Navidad&closesAt=2024-12-20`. Los datos del
-usuario, ahí a la vista. Nunca se "borraron": se fueron a la URL.
+algo como `/wheels?name=Semana+del+Canal+2027&closesAt=2027-08-14T20%3A00%3A00-05%3A00&status=draft&weight-sin-premio=3000…`.
+Los datos de la operadora, ahí a la vista, con cada peso. Nunca se "borraron": se
+fueron a la URL.
 
-> 🧠 **Por qué el síntoma no se parece a la causa.** El usuario reporta "se borró
+> 🧠 **Por qué el síntoma no se parece a la causa.** La operadora reporta "se borró
 > todo", que suena a un problema de guardado o de estado. La causa es una llamada
 > ausente en un manejador de eventos, tres capas más abajo, que ni siquiera es de
 > React. Este incidente es corto a propósito, y aun así es de los más formativos
 > del cuaderno: **la distancia entre lo que el usuario describe y donde vive la
 > causa es la razón de ser de todo este oficio.**
 
-Y las rifas duplicadas son el mismo bug: el `POST` del thunk **sí sale**, y a veces
+Y las ruedas duplicadas son el mismo bug: el `POST` del thunk **sí sale**, y a veces
 alcanza a completarse antes de que la recarga lo cancele. De ahí el "a veces sí
-está" del ticket. El usuario, viendo la pantalla en blanco, vuelve a cargarla, y
+está" del ticket. La operadora, viendo la pantalla en blanco, vuelve a cargarla, y
 la segunda también entra. Es una carrera entre tu petición y el navegador
 descargando la página de abajo.
 
 **Parche mínimo**
 
 ```javascript
-function handleSubmit(e) {
-  e.preventDefault();          // el navegador no tiene nada que hacer acá
-  dispatch(createRaffle(form));
-}
+const handleSubmit = (e) => {
+  e.preventDefault(); // sin esto, el navegador recarga y pierdes la SPA
+  if (weightErrors.length > 0) return;
+  // …
+};
 ```
 
 **La refactorización correcta**
@@ -2115,7 +2065,10 @@ al `preventDefault` y delegue después:
 export function Form({ onSubmit, children, ...rest }) {
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); onSubmit(e); }}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(e);
+      }}
       {...rest}
     >
       {children}
@@ -2126,21 +2079,30 @@ export function Form({ onSubmit, children, ...rest }) {
 
 **Prueba de regresión**
 
-```javascript
-// src/features/raffles/RaffleForm.test.jsx
-import { render, screen, fireEvent, createEvent } from '@testing-library/react';
+```jsx
+// src/features/wheels/WheelForm.test.jsx (la misma prueba que corre en el repo de prueba)
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import wheelReducer from "./wheelSlice";
+import WheelForm from "./WheelForm";
 
-test('el submit no deja que el navegador recargue', () => {
-  render(<RaffleForm />);
-  const form = screen.getByTestId('raffle-form');
-
-  const submitEvent = createEvent.submit(form);
-  fireEvent(form, submitEvent);
-
-  // Con el bug, defaultPrevented es false y el navegador se lleva la página.
-  expect(submitEvent.defaultPrevented).toBe(true);
+test("guardar la rueda no recarga la página: el submit llama a preventDefault", () => {
+  const store = configureStore({ reducer: { wheels: wheelReducer } });
+  const originalDispatch = store.dispatch;
+  store.dispatch = (action) => (typeof action === "function" ? Promise.resolve() : originalDispatch(action));
+  render(<Provider store={store}><WheelForm /></Provider>);
+  fireEvent.change(screen.getByLabelText("Nombre"), { target: { value: "Semana del Canal 2027" } });
+  fireEvent.change(screen.getByLabelText("Cierre (ISO, con offset)"), { target: { value: "2027-08-14T20:00:00-05:00" } });
+  const event = new Event("submit", { bubbles: true, cancelable: true });
+  screen.getByText("Nueva rueda").closest("form").dispatchEvent(event);
+  expect(event.defaultPrevented).toBe(true); // con el bug: false, y el navegador recarga
 });
 ```
+
+Con la rama `incidente/09`, la prueba falla (`Expected: true`, `Received: false`). Con
+el `preventDefault()` de vuelta, pasa.
 
 **Prevención**
 
@@ -2152,7 +2114,7 @@ detectar con certeza absoluta.
 **Por qué llegó a producción**
 
 Por una historia banal que se repite en todos lados: durante el desarrollo el
-botón "Guardar" era un `<button type="button">` con un `onClick`, y funcionaba
+botón "Crear rueda" era un `<button type="button">` con un `onClick`, y funcionaba
 perfecto. Después alguien pidió que se pudiera enviar con Enter, se cambió a
 `type="submit"` —que es la forma correcta y accesible de hacerlo— y nadie volvió a
 probar el flujo completo, porque "solo cambié el tipo de un botón". El cambio de
@@ -2161,17 +2123,17 @@ una palabra activó un comportamiento del navegador que llevaba dormido desde 19
 **Si tu causa fue distinta a esta**
 
 Si dijiste *"el thunk no está guardando"*, mira Network: el `POST` sale y a veces
-hasta responde `201`. Si dijiste *"falta persistir el store"* tienes razón en que
-es una deuda real —el store no sobrevive a un F5 y eso se paga en otra parte—,
-pero no es la causa: sin la recarga, no habría nada que persistir. Y si tu fix fue
-`window.location.reload()` después de guardar para "refrescar la lista", acabas de
-convertir el bug en una funcionalidad.
+hasta responde `201`. Si dijiste *"falta persistir el borrador"* tienes razón en que
+sería una mejora —un borrador que sobrevive a un F5—, pero no es la causa: sin la
+recarga, no habría nada que persistir. Y si tu fix fue `window.location.reload()`
+después de guardar para "refrescar la lista", acabas de convertir el bug en una
+funcionalidad.
 
 </details>
 
 ---
 
-## Incidente 10 — La lista de rifas se queda cargando para siempre
+## Incidente 10 — La lista de ruedas se queda cargando para siempre
 
 > **Fase:** 4 · **Categoría:** Estado (store) · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -2179,10 +2141,10 @@ convertir el bug en una funcionalidad.
 
 ### 🎫 El ticket
 
-Reenvío lo que nos llegó de tres vendedores distintos esta semana: la lista de
-rifas se queda con el cartel de "Cargando rifas…" y ahí se queda, para siempre. Hay
-que recargar. Yo lo probé diez veces en mi máquina y anda perfecto, así que no sé
-si están exagerando o si hay algo raro en las máquinas del kiosco.
+Reenvío lo que nos llegó de tres personas distintas esta semana: la lista de
+ruedas se queda con el cartel de "Cargando ruedas…" y ahí se queda, para siempre.
+Hay que recargar. Yo lo probé diez veces en mi máquina y anda perfecto, así que no
+sé si están exagerando o si hay algo raro en las computadoras de soporte.
 
 **Reportado por:** soporte, reenviando reportes de UAT
 **Ambiente:** UAT (en desarrollo "no pasa")
@@ -2206,16 +2168,16 @@ nadie practica.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/10`, y trae **un solo** `addCase` de menos en el slice de
-  rifas. Los otros tres thunks quedan intactos: esa asimetría es parte del
-  material con el que vas a trabajar.
+- **Rama:** `incidente/10`, desde `fase-04-ruedas-crud`, y trae **un solo**
+  `addCase` de menos en el slice de ruedas. Los otros tres thunks quedan intactos:
+  esa asimetría es parte del material con el que vas a trabajar.
 - **Caos:** empieza en `off` **a propósito**, que es donde vive la primera mitad
   de la lección. La segunda mitad necesita `high`.
-- **Datos:** el `db.json` de la fase, con varias rifas.
+- **Datos:** el `mock/db.json` de la fase, con sus tres ruedas.
 
 ```bash
 git checkout incidente/10
-CHAOS_LEVEL=off npm run mock     # primera vuelta: intenta reproducirlo así
+CHAOS_LEVEL=off npm run mock:api     # primera vuelta: intenta reproducirlo así
 npm start
 ```
 
@@ -2226,8 +2188,8 @@ npm start
 
 Si con el caos apagado no lo reproduces, la pregunta no es *"¿dónde está el bug?"*
 sino *"¿qué tiene el ambiente de ellos que el mío no tiene?"*. Enumera las
-diferencias entre tu máquina y un kiosco de UAT antes de abrir un archivo: red,
-datos, uso simultáneo, configuración del mock.
+diferencias entre tu máquina y una computadora de UAT antes de abrir un archivo:
+red, datos, uso simultáneo, configuración del mock.
 
 </details>
 
@@ -2244,7 +2206,7 @@ Mira la última acción despachada y su panel **Diff**: te va a decir qué pasó
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
 Un `createAsyncThunk` genera tres acciones. ¿Cuántas de las tres tiene registradas
-el `extraReducers` de `raffleSlice`?
+el `extraReducers` de `wheelSlice` para `fetchWheels`?
 
 </details>
 
@@ -2266,7 +2228,7 @@ cuántas veces, y qué tres datos necesitas de quien lo reportó.}}
 **Evidencia observable**
 {{El Diff de la última acción, y el valor de `loadingList` después de ella.}}
 
-```
+```text
 {{acción, y qué cambió}}
 ```
 
@@ -2299,33 +2261,36 @@ verdad antes de que un usuario lo descubra.
 
 **Causa raíz**
 
-`src/features/raffles/raffleSlice.js`: el `extraReducers` registra `pending` y
-`fulfilled`, y no registra `rejected`.
+`src/features/wheels/wheelSlice.js`: el `extraReducers` registra `pending` y
+`fulfilled` para `fetchWheels`, y no registra `rejected`.
 
 ```javascript
 // ❌ Dos de tres. La que falta es justo la del día malo.
-extraReducers: (builder) => {
-  builder
-    .addCase(fetchRaffles.pending,   (state) => { state.loadingList = true; })
-    .addCase(fetchRaffles.fulfilled, (state, action) => {
-      state.loadingList = false;
-      state.items = action.payload;
-    });
-}
+builder
+  .addCase(fetchWheels.pending, (state) => {
+    state.loadingList = true;
+    state.error = null;
+  })
+  .addCase(fetchWheels.fulfilled, (state, action) => {
+    state.loadingList = false;
+    state.items = action.payload;
+  })
+  // … los otros tres thunks, con sus tres casos
 ```
 
-Cuando el mock devuelve `500`, el thunk despacha `raffles/fetch/rejected`,
-nadie la escucha, `loadingList` se queda en `true` y la pantalla sigue mostrando
-"Cargando rifas…" indefinidamente. Es el error común #1 de la Fase 4, y la fase lo
+Cuando el mock devuelve un `503`, el thunk despacha `wheels/fetch/rejected`, nadie
+la escucha, `loadingList` se queda en `true` y la pantalla sigue mostrando
+"Cargando ruedas…" indefinidamente. Es el error común #1 de la Fase 4, y la fase lo
 llama "el más común y el más caro".
 
 **Parche mínimo**
 
 ```javascript
-.addCase(fetchRaffles.rejected, (state, action) => {
+.addCase(fetchWheels.rejected, (state, action) => {
   state.loadingList = false;
-  state.error = action.payload ?? 'No pudimos cargar las rifas.';
-});
+  // payload viene de rejectWithValue; si no, cae a un genérico.
+  state.error = action.payload || { message: "Error al cargar las ruedas.", type: "unknown" };
+})
 ```
 
 La Fase 4 es explícita sobre cómo llamar a esto: **no es un refactor, es completar
@@ -2337,32 +2302,52 @@ Que olvidarse deje de ser posible. Un ayudante que registre los tres casos de
 cualquier thunk de una sola vez:
 
 ```javascript
-// src/store/registerThunk.js
+// src/app/registerThunk.js
 export function registerThunk(builder, thunk, { loadingKey, onSuccess }) {
   builder
-    .addCase(thunk.pending,   (s) => { s[loadingKey] = true; s.error = null; })
-    .addCase(thunk.fulfilled, (s, a) => { s[loadingKey] = false; onSuccess(s, a); })
-    .addCase(thunk.rejected,  (s, a) => { s[loadingKey] = false; s.error = a.payload; });
+    .addCase(thunk.pending, (state) => {
+      state[loadingKey] = true;
+      state.error = null;
+    })
+    .addCase(thunk.fulfilled, (state, action) => {
+      state[loadingKey] = false;
+      onSuccess(state, action);
+    })
+    .addCase(thunk.rejected, (state, action) => {
+      state[loadingKey] = false;
+      state.error = action.payload;
+    });
 }
 ```
 
-Con eso, el `rejected` no se olvida porque no se escribe.
+Con eso, el `rejected` no se olvida porque no se escribe. La Fase 4 eligió no
+usarlo, para que el patrón se vea; es una decisión que conviene revisar cuando el
+equipo ya lo tenga en los dedos.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/raffles/raffleSlice.test.js
-test('un 500 apaga el loading y deja un error legible', async () => {
-  const mock = new MockAdapter(apiClient);
-  mock.onGet('/raffles').reply(500);
-
-  await store.dispatch(fetchRaffles());
-
-  const state = store.getState().raffles;
-  expect(state.loadingList).toBe(false);   // con el bug: true, para siempre
-  expect(state.error).toBeTruthy();
+// src/features/wheels/wheelSlice.test.js (la misma prueba que corre en el repo de prueba)
+test("un 500 al cargar la lista apaga loadingList y deja el error legible", async () => {
+  jest.resetModules();
+  const apiClient = require("../../api/apiClient").default;
+  const { store } = require("../../app/store");
+  const { fetchWheels } = require("./wheelSlice");
+  apiClient.defaults.adapter = (config) => {
+    const err = new Error("Request failed with status code 500");
+    err.config = config;
+    err.response = { status: 500, headers: {}, config, data: {} };
+    return Promise.reject(err);
+  };
+  await store.dispatch(fetchWheels());
+  expect(store.getState().wheels.loadingList).toBe(false); // con el bug: true para siempre
+  expect(store.getState().wheels.error).toEqual({ message: "El servidor tuvo un problema. Intenta de nuevo.", type: "http" });
 });
 ```
+
+Con la rama `incidente/10`, la prueba falla (`Expected: false`, `Received: true`). Con
+el `addCase` de vuelta, pasa. No necesita el mock: el adapter de axios hace de
+servidor que falla.
 
 **Prevención**
 
@@ -2380,13 +2365,13 @@ recorridos por el mismo camino feliz.
 
 Y el segundo motivo es cultural: cerrar el ticket cuando la funcionalidad "anda"
 es lo que se premia. Escribir la rama del error cuesta cinco minutos, no se ve en
-la demostración, y nadie la agradece hasta el día que salva un turno entero.
+la demostración, y nadie la agradece hasta el día que salva un evento entero.
 
 **Si tu causa fue distinta a esta**
 
 Si dijiste *"el backend no responde"*, ese es el **incidente 07**, y se distinguen
 en un vistazo a Network: en el 07 hay una petición **sin status**, todavía
-pendiente, que nunca termina; acá la petición **terminó**, con un `500` bien
+pendiente, que nunca termina; acá la petición **terminó**, con un `503` bien
 visible en rojo. Mismo síntoma en la pantalla —una espera que no acaba—, dos
 lugares totalmente distintos. Tener los dos en el cuaderno y saber separarlos con
 una sola columna de DevTools es exactamente el músculo que este curso entrena.
@@ -2394,13 +2379,13 @@ una sola columna de DevTools es exactamente el músculo que este curso entrena.
 Si dijiste *"falta un `try/catch` en el componente"*, el componente no es el
 problema: está pintando fielmente un `loadingList` que dice `true`. Y si tu fix
 fue un `setTimeout` que apaga el cargando a los diez segundos, escondiste el error
-y además le mentiste al usuario: la carga no terminó, se rindió en silencio.
+y además le mentiste a la operadora: la carga no terminó, se rindió en silencio.
 
 </details>
 
 ---
 
-## Incidente 11 ⭐ — Vendimos el número 0347 dos veces
+## Incidente 11 ⭐ — Compensamos dos veces a la misma jugadora
 
 > **Fase:** 5 · **Categoría:** Concurrencia · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -2409,40 +2394,40 @@ y además le mentiste al usuario: la carga no terminó, se rindió en silencio.
 
 ### 🎫 El ticket
 
-Tenemos dos comprobantes del número 0347 de la Rifa de Navidad, a nombre de dos
-personas distintas, emitidos con dos minutos de diferencia. Los dos pagaron y los
-dos tienen su papel. El sorteo es el viernes. Necesito saber qué pasó, si hay más
-números en la misma situación, y a cuál de los dos señores le vamos a tener que
-explicar que su número no vale.
+A Juan P. lo compensé una sola vez por la caída del martes, caso C-2210: un avatar.
+Hoy me escribe contento porque le llegaron dos. Revisé en la consola y aparece una
+sola vez, "Enviado". Esa noche la consola estaba lentísima y no sé si toqué el
+botón una vez o dos, pero en la pantalla había uno solo. Necesito saber si hay más
+jugadores así, y a cuántos les mandamos de más.
 
-**Reportado por:** tesorería
+**Reportado por:** soporte
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Reproducir la secuencia **en el store** —no en el backend—, nombrarla, y separar
-con claridad el parche mínimo del fix correcto. En este incidente los dos no viven
-en la misma fase, y esa es media lección.
+Reproducir la secuencia **en el store** —no solo en el servidor—, nombrarla, y
+separar con claridad el parche mínimo del fix correcto. En este incidente los dos
+no viven en la misma fase, y ni siquiera en la misma capa, y esa es media lección.
 
 Y una advertencia que conviene leer antes de empezar: es tentador concluir que el
-backend aceptó dos ventas. **Verifícalo antes de creerlo.** Si esa hipótesis
-resulta falsa —y lo va a ser—, el lugar donde vive la causa cambia por completo.
+problema es del servidor, que aceptó dos compensaciones del mismo caso.
+**Verifícalo antes de creerlo**, y pregúntate después por qué le llegaron dos.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/11`
-- **Caos:** `CHAOS_LEVEL=high`. Hace falta latencia: sin ella la ventana entre las
-  dos ventas es demasiado angosta para que la aciertes con el mouse.
-- **Datos:** la Rifa de Navidad (`id: 1`) en estado `open`, con el número `0347` en
-  `reserved`. La rama lo deja así.
-- **Además:** dos pestañas del navegador sobre el mismo tablero. No hace falta que
-  sean usuarios distintos; alcanza con que sean dos operaciones simultáneas.
+- **Rama:** `incidente/11`, desde `fase-05-envios-manuales`.
+- **Caos:** `off`. La demora que hace falta ya está en el mock: entregar un premio
+  en el juego tarda `GRANT_DELIVERY_MS` (800 ms por defecto). Si quieres más margen
+  para el doble clic, súbela.
+- **Datos:** el `mock/db.json` de la fase, con la colección `grants` vacía.
 
 ```bash
 git checkout incidente/11
-CHAOS_LEVEL=high npm run mock
+GRANT_DELIVERY_MS=3000 npm run mock:api
 npm start
-# Dos pestañas en /raffles/1/numbers. Vender el 0347 en las dos, casi a la vez.
+# /grants → marca a Juan P. → caso C-2210 → motivo → Compensar
+# → en la fila, doble clic en «Enviar ahora»
+curl -s "http://localhost:3001/grants?caseId=C-2210"   # ¿cuántos registros?
 ```
 
 ---
@@ -2450,29 +2435,28 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-No abras el código todavía. Reproduce con las dos pestañas, y después lee la lista
-de acciones de Redux DevTools **de arriba abajo, entera**, como si fuera el
-extracto de una cuenta bancaria donde falta plata. La secuencia completa te cuenta
-la historia sin que tengas que interpretarla.
+No abras el código todavía. Reproduce, y después mira dos cosas: la pestaña
+Network (¿cuántos `POST /players/42/grants` salieron?) y la lista de acciones de
+Redux DevTools **de arriba abajo, entera**, como si fuera el extracto de una cuenta
+bancaria donde sobra plata.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Hay una acción, casi al final de la secuencia, que **revierte algo que otra acción
-ya había confirmado**. Selecciónala y usa *time-travel* para pararte justo antes:
-mira en qué estado estaba el número `0347` en ese instante exacto, y compáralo con
-el valor al que la acción lo está devolviendo.
+Hay dos `grants/send/pending` para el **mismo** `grantId`. Selecciona el segundo y
+usa *time-travel* para pararte justo antes: ¿en qué estado estaba el envío en ese
+instante? ¿Quién debió preguntar eso antes de mandarlo?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-`rollbackSale` recibe un `previousStatus`. ¿En qué momento se capturó ese valor, y
-qué le pasó al número entre esa captura y el instante en que el rollback se
-ejecuta?
+`createAsyncThunk` acepta una opción que decide, **antes** de `pending`, si el thunk
+corre o no. Busca en `grantSlice.js` si `sendGrant` la tiene. Y después mira
+`registerGrant` en el mock: ¿qué pasa entre que comprueba el caso y que lo anota?
 
 </details>
 
@@ -2483,26 +2467,27 @@ ejecuta?
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Pasos numerados y exactos: qué rifa, qué número, en qué estado de partida, con
-qué `CHAOS_LEVEL`, y cuánta separación hubo entre los dos clics. Si tardaste
-varios intentos, anota cuántos: la frecuencia es parte de la descripción de una
-carrera.}}
+{{Pasos numerados y exactos: qué jugador, qué caso, con qué `GRANT_DELIVERY_MS`, y
+cuánto tiempo pasó entre los dos clics. Si tardaste varios intentos, anota cuántos:
+la frecuencia es parte de la descripción de una carrera.}}
 
 **Evidencia observable**
-{{La secuencia completa de acciones de Redux DevTools, en texto, con el payload de
-cada una. Es la prueba central de este incidente; sin ella no hay diagnóstico.}}
+{{La secuencia completa de acciones de Redux DevTools, en texto, y lo que devuelve
+`GET /grants?caseId=C-2210`. Es la prueba central de este incidente; sin ella no
+hay diagnóstico.}}
 
-```
-{{la secuencia de acciones, en orden}}
+```text
+{{la secuencia de acciones, en orden, y los registros del mock}}
 ```
 
 **Hipótesis**
 - ❌ Descartada: {{qué creíste y qué evidencia la tumbó. Anota especialmente si
-  pasaste por "el backend aceptó las dos" y cómo la descartaste}}.
+  pasaste por "el servidor está mal" y qué parte de eso resultó cierta}}.
 - ✅ Confirmada: {{la que sobrevivió}}.
 
 **Tu causa raíz**
-{{Archivo y línea. Y en qué capa vive: componente, store, epic, interceptor o mock.}}
+{{Archivo y línea. Y en qué capa vive: componente, store, epic, interceptor o mock.
+Puede que sean dos.}}
 
 **Tu fix**
 {{El parche mínimo del viernes a las seis. Aparte, la refactorización correcta, y
@@ -2513,231 +2498,201 @@ por qué no se puede hacer todavía.}}
 <details>
 <summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
 
-**Lo primero: el backend se defendió bien**
+**Lo primero: el servidor registró dos, y no es el culpable principal**
 
-Antes que nada, la hipótesis que hay que descartar. Mira el log del mock: la
-segunda venta recibió un **`409`**. El servidor detectó el conflicto y lo rechazó,
-tal como la Fase 5 lo diseñó. **El backend hizo su trabajo.**
+`GET /grants?caseId=C-2210` devuelve **dos** registros con el mismo caso y el
+mismo jugador. El servidor aceptó dos compensaciones. Pero mira también Network:
+salieron **dos** `POST`. La consola mandó dos veces el mismo envío, y el servidor,
+que comprueba el caso antes de entregar el premio, no frenó al segundo porque los
+dos llegaron dentro de la demora de la entrega.
 
-Eso reubica la investigación entera. No estamos buscando por qué el servidor
-aceptó dos ventas: estamos buscando por qué, habiéndolas rechazado correctamente,
-igual terminaron existiendo dos comprobantes.
+Eso reparte la investigación en dos capas, y la de la consola es la que se arregla
+hoy.
 
 **Causa raíz**
 
 La secuencia, tal como se lee en Redux DevTools:
 
+```text
+grants/send/pending     g-1      ← primer clic: queued → sending
+grants/grantSent        g-1      ← el optimista: sending → sent
+grants/send/pending     g-1      ← segundo clic: nadie preguntó el origen
+grants/grantSent        g-1      ← otra vez "enviado"; en la pantalla no cambia nada
+grants/send/fulfilled   g-1      ← el servidor registró el primero…
+grants/send/fulfilled   g-1      ← …y el segundo
 ```
-sales/sellNumber/pending
-numberSoldOptimistic     { number: '0347' }      ← pestaña A pinta sold
-sales/sellNumber/pending
-numberSoldOptimistic     { number: '0347' }      ← pestaña B, sin guarda de origen
-sales/sellNumber/fulfilled                       ← A ganó: venta real, confirmada
-sales/sellNumber/rejected  { type: 'conflict' }  ← B perdió: el 409
-rollbackSale  { number: '0347', previousStatus: 'reserved' }   ← ⚠️ acá
+
+Son dos defectos encadenados.
+
+**El primero**, el de la consola: `sendGrant` no tiene guarda de origen. «Enviar
+ahora» sigue visible mientras el servidor no confirma —es una decisión de producto,
+para que el operador pueda insistir si un envío parece colgado—, y un segundo clic
+crea una segunda petición sobre un envío que ya salió. Además, `grantSent` asigna
+`sent` sin pasar por la tabla de transiciones. En la rama:
+
+```javascript
+// ❌ Sin condition: el thunk corre aunque el envío ya haya salido.
+export const sendGrant = createAsyncThunk(
+  "grants/send",
+  async (grantId, { dispatch, getState, rejectWithValue }) => {
+    // …
+  }
+);
+
+// ❌ Y el optimista pinta encima de cualquier cosa.
+grantSent(state, action) {
+  state.byId[action.payload.grantId].status = "sent";
+},
 ```
 
-Son dos defectos encadenados, y el segundo es el grave.
+**El segundo**, el del servidor: `registerGrant` comprueba el caso, entrega el
+premio en el juego (800 ms) y recién después lo anota. Dos pedidos que llegan dentro
+de esa ventana ven los dos "no hay registro" y pasan los dos. Es el mismo estilo del
+giro de 2019 que mediste en la Fase 3: comprobar y escribir en pasos separados.
 
-**El primero**, cosmético: `numberSoldOptimistic` asigna `sold` sin verificar el
-estado de origen. La pestaña B repinta un número que ya estaba vendido. Es el
-error común #1 de la Fase 5 y por sí solo no habría causado el incidente.
+> 🧠 **Lo que hay que llevarse.** La consola tenía la información para no mandar
+> dos veces —el envío ya estaba `sent` en su propio store— y no la consultó. El
+> servidor tenía la regla —un caso, una compensación— y la aplicó en dos pasos.
+> Dos defensas a medias no suman una entera.
 
-**El segundo**, el que produce los dos comprobantes: `rollbackSale` revierte al
-`previousStatus` que se capturó **antes** de que existiera la venta ganadora. Para
-cuando el rollback se ejecuta, el `0347` ya estaba vendido de verdad, con
-confirmación del servidor — y el rollback lo devuelve a `reserved` igual, pisando
-una venta legítima. Es el error común #2 de la fase.
-
-Y ahí nace el segundo comprobante: la UI vuelve a mostrar el `0347` como
-disponible para reservar. Alguien lo vende otra vez, esta vez sin carrera y sin
-`409`, porque han pasado dos minutos y el backend… también lo rechaza. Pero el
-vendedor ya imprimió el papel mirando la pantalla.
-
-> 🧠 **Lo que hay que llevarse.** El fallo no fue no detectar el conflicto: fue
-> **deshacer la detección**. El sistema tenía la información correcta y la
-> descartó al revertir a ciegas. En concurrencia, el rollback es tan peligroso como
-> la operación que revierte, y casi nunca se le presta la mitad de atención.
-
-> 📝 **Nota de época.** Esto es de la Era 2 (2020-2021), y
-> `00-historia-del-sistema.md` §3 lo nombra sin rodeos: cuando la venta pasó de un
-> kiosco a tres, aparecieron los números vendidos dos veces, y la solución de
-> entonces fue optimista —pintar al instante y revertir si el servidor protesta—.
-> Funciona el 99% de las veces. Este incidente es el 1% restante, y no fue una
-> mala decisión: fue una decisión correcta con un caso límite mal cerrado.
+> 📝 **Nota de época.** El envío optimista es de 2020 (`00-historia-del-sistema.md`
+> §3, era 2): se marca enviado al instante y se revierte si el servidor protesta.
+> Funciona casi siempre. Este incidente es el "casi", y no fue una mala decisión:
+> fue una decisión correcta con un caso límite mal cerrado. La noche de la Esclusa
+> de Oro, con la consola lenta, el caso límite fue la norma.
 
 **Parche mínimo**
 
-Que el `fulfilled` deje constancia de que la venta fue confirmada, y que el
-rollback la respete:
+La guarda de origen, en el `condition` del thunk: si el envío no está en cola ni
+falló, no se manda.
 
 ```javascript
-// saleSlice.js
-[sellNumber.fulfilled]: (state, action) => {
-  const { number } = action.payload;
-  state.byNumber[number] = 'sold';
-  state.confirmed[number] = true;        // esta venta la ratificó el servidor
-},
-
-rollbackSale(state, action) {
-  const { number, previousStatus } = action.payload;
-  // No se revierte lo que otro actor ya confirmó.
-  if (state.confirmed[number]) return;
-  state.byNumber[number] = previousStatus;
-},
+export const sendGrant = createAsyncThunk(
+  "grants/send",
+  async (grantId, { dispatch, getState, rejectWithValue }) => {
+    // … sin cambios
+  },
+  {
+    // Guarda de origen: solo se envía lo que está en cola o falló. Un segundo clic
+    // sobre un envío que ya salió no llega ni a crear la petición.
+    condition: (grantId, { getState }) => {
+      const grant = getState().grants.byId[grantId];
+      return Boolean(grant) && (grant.status === "queued" || grant.status === "failed");
+    },
+  }
+);
 ```
 
-Y la guarda de origen, que es de una línea y cuesta nada:
-
-```javascript
-numberSoldOptimistic(state, action) {
-  const { number } = action.payload;
-  if (state.byNumber[number] !== 'reserved') return;   // solo desde reserved
-  state.byNumber[number] = 'sold';
-},
-```
+Y que `grantSent` pase por la tabla: `transition(state.byId[action.payload.grantId], "sent")`.
 
 **La refactorización correcta** (que en este curso no se paga en esta fase)
 
-No revertir localmente: cuando llega un `409`, el cliente no sabe cuál es el estado
-verdadero del número, así que **no debería inventarlo**. Lo correcto es
-re-sincronizar ese número desde el servidor y pintar lo que el servidor diga. Un
-`409` no es "volvé a como estabas": es "tu foto del mundo está vieja".
+Que el segundo intento no exista. Un epic con `exhaustMap` ignora los clics mientras
+hay un envío en vuelo: el doble clic da un solo envío, sin guardas repartidas. Eso es
+la Fase 6 (`sendGrantEpic`), y es la razón por la que este incidente se enuncia en la
+5 y termina de entenderse en la 6.
 
-Y estructuralmente hay dos piezas más, ninguna disponible todavía:
-
-1. **Cancelar la operación perdedora en el origen**, con un `switchMap` por número
-   en un epic. Eso es Fase 6, y es la razón por la que este incidente se enuncia en
-   la 5 y termina de entenderse en la 6.
-2. **La unicidad garantizada por el servidor**: un índice único y una transacción,
-   que es lo único que cierra la ventana de verdad. Eso es el track BE (`be05`), y
-   es también el incidente hermano.
+Y la otra mitad: **la unicidad garantizada por el servidor**, con una restricción en
+la base que haga imposible registrar dos veces el mismo caso para el mismo jugador.
+Eso es el track BE —`be05`—, y es también el territorio del incidente hermano.
 
 > 🧭 **Y la conclusión honesta, que conviene decir en voz alta:** ninguna guarda en
-> el frontend elimina esta carrera. La achica. La ventana entre "leí el estado" y
-> "escribí el estado" existe en cuanto hay dos clientes, y solo se cierra donde hay
-> un único árbitro. Todo lo que hagas acá es mitigación.
+> la consola elimina esta carrera. La achica. Dos operadores en dos consolas, el
+> mismo caso, el mismo segundo: cada store está limpio, y el servidor registra dos.
+> La ventana entre "comprobé" y "anoté" solo se cierra donde hay un único árbitro.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/sales/saleSlice.test.js
-test('el rollback del perdedor no pisa la venta confirmada del ganador', () => {
-  let state = reducer(undefined, setNumberStatus({ number: '0347', status: 'reserved' }));
-
-  state = reducer(state, numberSoldOptimistic({ number: '0347' }));   // A
-  state = reducer(state, numberSoldOptimistic({ number: '0347' }));   // B
-  state = reducer(state, sellNumber.fulfilled({ number: '0347' }));   // A gana
-  state = reducer(state, rollbackSale({ number: '0347', previousStatus: 'reserved' })); // B
-
-  expect(state.byNumber['0347']).toBe('sold');   // con el bug: 'reserved'
+// src/features/grants/grantSlice.test.js (la misma prueba que corre en el repo de prueba)
+test("doble clic en 'Enviar ahora': sale una sola petición", async () => {
+  jest.resetModules();
+  const apiClient = require("../../api/apiClient").default;
+  const { store } = require("../../app/store");
+  const { queueGrant, sendGrant } = require("./grantSlice");
+  let posts = 0;
+  apiClient.defaults.adapter = (config) => {
+    posts += 1;
+    return Promise.resolve({ status: 201, data: JSON.parse(config.data), headers: {}, config, statusText: "Created" });
+  };
+  const grant = store.dispatch(queueGrant({ player: { id: 42, name: "Juan P." }, caseId: "C-2210", prize: "vidas-5", reason: "caída" }));
+  // Los dos clics, sin que la respuesta del primero haya llegado.
+  await Promise.all([store.dispatch(sendGrant(grant.id)), store.dispatch(sendGrant(grant.id))]);
+  expect(posts).toBe(1); // con el bug: 2
 });
 ```
 
-Es un test de reducer puro, sin red y sin componentes: la secuencia exacta que
-viste en DevTools, escrita como código. Reproducir una carrera de forma
-determinista es difícil en la aplicación y trivial en el reducer, y ese es el
-argumento más fuerte a favor de mantener la lógica de estado separada de la UI.
+Es una prueba sin red: el adapter de axios hace de servidor y cuenta las
+peticiones. Con la rama `incidente/11` falla (`Expected: 1`, `Received: 2`); con la
+guarda, pasa. Reproducir una carrera de forma determinista es difícil en la
+aplicación y trivial en el store, y ese es el argumento más fuerte a favor de
+mantener la lógica de estado separada de la UI.
 
 **Prevención**
 
 Una máquina de estados explícita, con las transiciones permitidas declaradas en un
-solo lugar, en vez de asignaciones sueltas repartidas por el slice:
-
-```javascript
-const ALLOWED = {
-  available: ['reserved'],
-  reserved:  ['sold', 'available'],
-  sold:      [],                      // vendido es terminal: de acá no se vuelve
-};
-```
-
-Con `sold` declarado como estado terminal, **el bug es inexpresable**: el rollback
-no tiene a dónde ir. Es más código que la guarda, y a cambio protege también los
-caminos que todavía no existen.
+solo lugar (`ALLOWED_TRANSITIONS`), y una guarda en cada puerta de entrada: el
+`condition` del thunk para lo que sale a la red, la tabla para lo que cambia el
+store. Y una prueba por thunk que lo dispare dos veces seguidas.
 
 **Por qué llegó a producción**
 
-Porque el camino que falla necesita tres condiciones simultáneas —dos actores, el
-mismo número, y latencia suficiente para que las respuestas se crucen— y ninguna
-de las tres ocurre en la máquina de quien programa. Con un kiosco no pasaba nunca;
-con tres empezó a pasar, y para entonces el código llevaba un año funcionando y
-nadie lo miraba.
-
-Y hay una causa más de fondo, que no es de este código sino del proyecto: **no hay
-tests**. La Era 1 no dejó ninguno (`00-historia-del-sistema.md` §3), y sin una
-suite donde escribir la secuencia de arriba, la única forma de descubrir esta
-carrera es que la sufra tesorería.
-
-El análisis no es sobre quien escribió el rollback. Un rollback a ciegas es el
-comportamiento razonable por defecto y está en la mitad de los tutoriales de
-actualización optimista que había en 2020.
+Porque el camino que falla necesita tres condiciones a la vez —un envío que ya
+salió, un segundo intento, y que los dos lleguen dentro de la demora del servidor— y
+ninguna de las tres ocurre en la máquina de quien programa, con un clic y un mock
+rápido. La noche de la Esclusa de Oro, con la consola lenta y cientos de
+compensaciones, ocurrieron todas.
 
 **Si tu causa fue distinta a esta**
 
-Si concluiste *"el backend aceptó dos ventas"*, el log del mock lo desmiente: hay
-un `409`. Es la hipótesis más natural del mundo y descartarla con evidencia, en
-vez de asumirla, es la mitad del valor de este incidente.
-
-Si tu fix fue **bloquear el botón de vender mientras hay una venta en curso**,
-funciona para las dos pestañas del mismo navegador y no hace nada contra dos
-kioscos distintos, que es el caso real del ticket. Tapaste el síntoma en la capa
-de la UI.
-
-**Y acá está el cruce más importante del curso.** El incidente `be-09` del track BE
-—*"vendimos tres números dos veces, y solo los redondos"*— tiene el mismo síntoma y
-la causa **opuesta**: allá el backend **no** se defiende, porque falta el índice
-único, y las dos ventas entran de verdad en la base. Acá el backend se defiende
-bien y el frontend arruina la defensa. Mismo comprobante duplicado, dos culpables
-en orillas contrarias del cable. Si vas a hacer el track BE, resolver estos dos en
-pareja enseña más sobre concurrencia que cualquier explicación.
+Si dijiste *"es el temporizador de la ventana"*, mira la secuencia: no hay ningún
+`grants/send/pending` diez segundos después; `sendGrant` cierra la ventana al
+empezar. Si dijiste *"el servidor está mal"*, tienes la mitad: su chequeo no es
+atómico, pero la consola le mandó dos pedidos que no tenía por qué mandar. Y si tu
+fix fue deshabilitar el botón en el componente, frenaste este doble clic, pero la
+regla quedó en un botón: cualquier otro camino que despache `sendGrant` —el
+temporizador de la ventana, un epic de la Fase 6— vuelve a abrir la puerta. La
+guarda va donde pasan todos los caminos, en el thunk.
 
 </details>
 
 ---
 
-## Incidente 12 — Un número que ya estaba vendido volvió solo a disponible
+## Incidente 12 — Un envío que ya estaba enviado volvió a «falló»
 
 > **Fase:** 5 · **Categoría:** Concurrencia · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 50-65 min
+> **Tiempo sugerido:** 45-60 min
 
 ### 🎫 El ticket
 
-Un número que ya estaba vendido volvió solo a disponible. Nadie lo tocó, yo estaba
-mirando la pantalla. Estaba pintado como vendido y al rato apareció otra vez en
-blanco, como si nunca lo hubieran comprado. Fue en la Rifa de Navidad. Y me parece
-que también lo vi en otra rifa el martes, pero no estoy seguro.
+Compensé a Juan P. por la caída, caso C-2210, y quedó "Enviado". Una hora después
+mandé la compensación masiva a la lista de afectados de la misma caída, y Juan
+estaba en la lista. Ahora el envío de la mañana dice "Falló", con el mensaje "Ese
+caso ya fue compensado para este jugador". ¿Falló o no falló? En el juego Juan
+tiene su avatar. Y el de la lista sigue diciendo "Enviado".
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
 
-**Dos causas distintas producen exactamente este síntoma.** El entregable de este
-incidente no es el parche: es determinar cuál de las dos estás viendo, con la
-evidencia que descarta la otra. El fix, una vez que sabes cuál es, es de una línea
-en ambos casos.
-
-Y no ignores la última frase del ticket —*"me parece que también lo vi en otra
-rifa"*—. Los vendedores suelen disculparse por lo que no recuerdan bien; ese detalle
-inseguro es, en este incidente, el que más información trae.
+Determinar qué acción cambió el envío de la mañana y por qué el store la aceptó. El
+fix es corto; el entregable es la evidencia de que la acción que llegó **no era
+de ese envío**.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/12`
-- **Caos:** `low`. Con `high` se mezclan los fallos de venta y cuesta separar las
-  dos causas; con `off` no se reproduce una de ellas.
-- **Datos:** dos rifas en `open`, la 1 y la 2, cada una con algún número en
-  `reserved` y alguno en `sold`. La rama las deja así.
-- **Y algo que no es un dato sino una instrucción:** parte del procedimiento es
-  **esperar sin tocar nada**. Deja el tablero quieto varios minutos.
+- **Rama:** `incidente/12`, desde `fase-05-envios-manuales`.
+- **Caos:** `off`. El `409` lo da el propio mock: el caso ya está registrado.
+- **Datos:** el `mock/db.json` de la fase.
 
 ```bash
 git checkout incidente/12
-CHAOS_LEVEL=low npm run mock
+npm run mock:api
 npm start
-# Reserva un número en la rifa 1, navega a la rifa 2, y espera mirando DevTools.
+# /grants → Juan P., caso C-2210 → Compensar → «Enviar ahora» → queda "Enviado"
+# después: Juan P. y María R., mismo caso C-2210 → Compensar → «Enviar todos ahora»
 ```
 
 ---
@@ -2745,28 +2700,25 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-Redux DevTools abierto, y paciencia: deja de interactuar con la aplicación durante
-unos minutos, mirando la lista de acciones. Si aparece una acción que **nadie
-pidió**, ya sabes por dónde va. Y mira Network al mismo tiempo: si esa acción no
-tiene ninguna petición al lado, nació dentro del navegador.
+Redux DevTools. Busca el `grants/rollbackGrant` y mira dos cosas: el `grantId` de su
+payload, y en el panel **Diff**, cuál envío cambió.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-El **payload** de esa acción huérfana: ¿de qué rifa habla? Compáralo con la rifa
-que tienes en pantalla. Y en el otro camino: ¿qué acción viene inmediatamente
-después de un `sellNumber/rejected`?
+El reducer de `rollbackGrant` en `src/features/grants/grantSlice.js`. ¿Con qué busca
+el envío que va a revertir? ¿Qué pasa si hay dos envíos del mismo caso para el
+mismo jugador?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Una de las dos causas llega **tarde, desde otro lado**; la otra llega **a tiempo,
-con información vieja**. Una aparece en silencio minutos después; la otra, al
-instante de una venta fallida. ¿Cuál de las dos viste?
+Un rollback tiene que revertir **su** envío, y solo si el servidor no lo confirmó.
+¿Cuál de las dos condiciones cumple el reducer?
 
 </details>
 
@@ -2777,19 +2729,18 @@ instante de una venta fallida. ¿Cuál de las dos viste?
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Pasos numerados, incluyendo cuántos minutos esperaste y en qué rifa estabas
-parado cuando apareció el síntoma. Ese último dato decide el diagnóstico.}}
+{{Pasos numerados: qué envío salió primero, cuál después, y con qué caso.}}
 
 **Evidencia observable**
-{{La acción huérfana con su payload completo, y si hubo o no una petición en
-Network en ese mismo instante.}}
+{{La secuencia de acciones de Redux DevTools, con el payload del `rollbackGrant` y el
+Diff que produjo.}}
 
-```
-{{acción, payload, y qué había en Network}}
+```text
+{{la secuencia, y qué envío cambió}}
 ```
 
 **Hipótesis**
-- ❌ Descartada: {{cuál de las dos causas descartaste, y con qué evidencia}}.
+- ❌ Descartada: {{qué creíste y qué evidencia la tumbó}}.
 - ✅ Confirmada: {{la que sobrevivió}}.
 
 **Tu causa raíz**
@@ -2803,122 +2754,121 @@ Network en ese mismo instante.}}
 <details>
 <summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
 
-**Las dos causas, y cómo se separan**
+**Lo primero: el servidor contestó bien**
 
-**Causa A — el temporizador que sobrevivió al desmontaje.** El `setTimeout` que
-expira una reserva se crea en el `useEffect` del tablero y no se cancela al
-desmontarlo. Navegas de la rifa 1 a la rifa 2, el temporizador de la rifa 1 sigue
-vivo y minutos después dispara `reservationExpired` con el número de la rifa vieja.
-Y como el reducer indexa por número —`state.byNumber['0347']`— y no por rifa, la
-expiración de la rifa 1 se aplica sobre el tablero de la rifa 2, si comparten ese
-número. Es el error común #3 de la Fase 5, con un agravante de diseño encima.
+El `409` del envío masivo es correcto: el caso C-2210 ya estaba compensado para Juan.
+El servidor hizo su trabajo. Lo que hay que explicar es por qué ese `409`, que era
+del envío de la lista, terminó marcando como fallido el envío de la mañana.
 
-Ahí está la frase del ticket que parecía un titubeo: *"también lo vi en otra
-rifa"*. No era una confusión del vendedor. Era el bug describiéndose solo.
+**Causa raíz**
 
-**Causa B — el rollback a ciegas.** Es el error común #2 de la Fase 5 y el segundo
-defecto del incidente 11: tras un `sellNumber/rejected`, `rollbackSale` devuelve el
-número a un `previousStatus` capturado antes, sin comprobar qué pasó entre medio.
+La secuencia, tal como se lee en Redux DevTools:
 
-**Cómo se distinguen, en un vistazo:**
+```text
+grants/send/pending     g-1      ← el individual de la mañana
+grants/grantSent        g-1
+grants/send/fulfilled   g-1      ← confirmado: confirmed = true
+…
+grants/send/pending     g-7      ← el masivo, mismo caso y mismo jugador
+grants/grantSent        g-7
+grants/rollbackGrant    { grantId: "g-7", caseId: "C-2210", playerId: 42, error: { type: "conflict" } }
+grants/send/rejected    g-7
+```
 
-| | Causa A — temporizador huérfano | Causa B — rollback a ciegas |
-|---|---|---|
-| Acción que aparece | `reservationExpired` | `rollbackSale` |
-| Cuándo | minutos después, sin que hagas nada | al instante, tras una venta fallida |
-| En Network | **nada**: no hay petición asociada | un `409` o un `500` justo antes |
-| El payload | menciona **otra** rifa | menciona la rifa en pantalla |
+El `rollbackGrant` dice `g-7` en su payload, y el Diff muestra que el que cambió fue
+`g-1`: de `sent` a `failed`. **Lo que dice la acción y lo que hace el reducer no
+coinciden.** Son dos defectos en el mismo reducer:
 
-La columna de Network es la más rápida: **una acción sin petición al lado nació
-dentro del navegador**, y eso descarta la mitad de las hipótesis de un plumazo.
+```javascript
+// ❌ Busca "el envío de este caso para este jugador": encuentra el primero, g-1.
+rollbackGrant(state, action) {
+  const { caseId, playerId, error } = action.payload;
+  // El envío de este caso para este jugador.
+  const grant = Object.values(state.byId).find((g) => g.caseId === caseId && g.playerId === playerId);
+  if (transition(grant, "failed")) grant.error = error;
+},
+```
+
+El primero: busca por caso y jugador, no por id. Quien lo escribió pensaba que un
+caso tiene un solo envío, y la Fase 5 hizo posible lo contrario con el envío masivo.
+El segundo: no pregunta si el envío ya estaba confirmado. `g-1` tenía
+`confirmed: true`; nada debió revertirlo. Y queda un tercer daño, silencioso: `g-7`,
+el que de verdad falló, se queda en "Enviado (sin confirmar)" para siempre.
 
 **Parche mínimo**
 
-Para A, limpiar al desmontar:
-
 ```javascript
-useEffect(() => {
-  scheduleExpiration(raffleId, number);
-  return () => cancelAllExpirations();   // el temporizador muere con el tablero
-}, [raffleId]);
+rollbackGrant(state, action) {
+  const { grantId, error } = action.payload;
+  const grant = state.byId[grantId]; // por id: el rollback es de este envío, no del caso
+  if (!grant || grant.confirmed) return; // lo que el servidor confirmó no se revierte
+  if (transition(grant, "failed")) grant.error = error;
+},
 ```
-
-Para B, la guarda del incidente 11.
 
 **La refactorización correcta**
 
-Para A hay dos capas, y conviene no confundirlas:
-
-1. **Que el temporizador no sea responsabilidad del componente.** Un `setTimeout`
-   dentro de un `useEffect` obliga a acordarse de limpiarlo, y acordarse no es una
-   estrategia. En la Fase 6 esto se convierte en un epic que se apaga solo con
-   `takeUntil`, y el problema deja de existir en vez de quedar resuelto.
-2. **Que el estado se indexe por rifa y número**, no por número a secas. Que la
-   expiración de una rifa pueda tocar el tablero de otra no es un accidente del
-   temporizador: es una clave mal elegida. Con `state.byNumber['1:0347']` el bug
-   pierde el vehículo.
+Un `409` no es "volvé a como estabas": es "tu foto del mundo está vieja". Lo correcto,
+ante un conflicto, es volver a preguntarle al servidor por ese caso y ese jugador
+(`GET /grants?caseId=…&playerId=…`) y pintar lo que el servidor diga, en vez de
+inventar un estado local. Y que el envío masivo no proponga compensar un caso que ya
+está compensado en la misma sesión: el asistente puede mirar el store antes de
+encolar.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/sales/NumberBoard.test.jsx
-jest.useFakeTimers();
+// src/features/grants/grantSlice.rollback.test.js (la misma prueba que corre en el repo de prueba)
+import reducer, { grantQueued, sendGrant, grantSent, rollbackGrant } from "./grantSlice";
 
-test('al desmontar el tablero, sus expiraciones no disparan nada', () => {
-  const { unmount } = render(<NumberBoard raffleId={1} />);
-  act(() => { fireEvent.click(screen.getByTestId('cell-0347')); });  // reserva
-
-  unmount();
-  const before = store.getState().sales.byNumber;
-
-  act(() => { jest.advanceTimersByTime(5 * 60 * 1000); });
-
-  // Con el bug, acá apareció un reservationExpired de la rifa 1.
-  expect(store.getState().sales.byNumber).toEqual(before);
+test("el rollback del envío masivo no pisa el envío individual ya confirmado", () => {
+  const juan = { playerId: 42, playerName: "Juan P.", caseId: "C-2210", prize: "vidas-5", reason: "caída", confirmed: false, error: null };
+  let state = reducer(undefined, grantQueued({ ...juan, id: "g-1", status: "queued" }));
+  state = reducer(state, sendGrant.pending("req-1", "g-1"));
+  state = reducer(state, grantSent({ grantId: "g-1" }));
+  state = reducer(state, sendGrant.fulfilled({}, "req-1", "g-1")); // el individual: confirmado
+  state = reducer(state, grantQueued({ ...juan, id: "g-7", status: "queued" })); // el masivo, mismo caso
+  state = reducer(state, sendGrant.pending("req-7", "g-7"));
+  state = reducer(state, grantSent({ grantId: "g-7" }));
+  const conflict = { message: "Ese caso ya fue compensado para este jugador.", type: "conflict" };
+  state = reducer(state, rollbackGrant({ grantId: "g-7", caseId: "C-2210", playerId: 42, error: conflict }));
+  expect(state.byId["g-1"].status).toBe("sent"); // con el bug: "failed"
+  expect(state.byId["g-7"].status).toBe("failed");
 });
 ```
 
-`jest.advanceTimersByTime` es lo que vuelve barato probar esto: el bug tarda
-minutos en la vida real y milisegundos en la suite.
+Es un test de reducer puro, sin red y sin componentes: la secuencia exacta que viste
+en DevTools, escrita como código. Con la rama `incidente/12` falla (`Expected: "sent"`,
+`Received: "failed"`); con el parche, pasa.
 
 **Prevención**
 
-Una regla que vale para todo el curso y para todo lo que escribas después: **todo
-lo que se agenda se cancela, en el mismo archivo donde se agendó**. Si un
-`useEffect` crea un `setTimeout`, un `setInterval` o una suscripción y no devuelve
-una función de limpieza, es un defecto — no un descuido de estilo. Y como
-prevención estructural, la clave compuesta por rifa y número.
+Que toda acción que modifica un envío lleve su id, y que todo reducer lo use. Los
+otros datos del payload —el caso, el jugador— están para que DevTools muestre de qué
+se trata, no para buscar. Y la confirmación del servidor como frontera: lo que el
+servidor confirmó, solo lo cambia el servidor.
 
 **Por qué llegó a producción**
 
-Porque los temporizadores no dejan rastro. Un `setTimeout` huérfano no lanza
-excepciones, no escribe en la consola, no aparece en ningún log, y su efecto ocurre
-**minutos después** del código que lo creó. Esa distancia entre causa y efecto es
-lo que vuelve carísima esta familia de bugs: cuando el síntoma aparece, quien lo
-ve ya está en otra pantalla haciendo otra cosa, y no tiene ninguna razón para
-sospechar de algo que hizo hace cinco minutos.
-
-Es, exactamente, el problema que empujó al equipo hacia `redux-observable` en 2022
-(`00-historia-del-sistema.md` §3, Era 3). La cancelación dejó de ser algo que había
-que recordar y pasó a ser algo que el operador hace por vos. A cambio, la Era 3
-trajo su propia familia de bugs invisibles — que son los incidentes 13, 14, 15 y
-17.
+Porque el envío individual y el masivo se probaron por separado, y por separado
+funcionan. El reducer se escribió cuando un caso tenía un solo envío posible; el
+envío masivo llegó después y nadie volvió a leer el rollback. Es la forma más común
+de que un supuesto viejo se vuelva un bug nuevo: no cambió el código que falla,
+cambió lo que lo rodea.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"el backend liberó la reserva por su cuenta"*, mira Network en el
-instante del síntoma: no salió ninguna petición. La acción se despachó desde el
-navegador. Si dijiste *"otro vendedor lo liberó desde su máquina"*, plausible y
-falso en este sistema: la aplicación no tiene ningún canal por el que le lleguen
-cambios de otros clientes —no hay websockets ni polling del tablero todavía—, así
-que nada de lo que haga otro puede modificar tu store sin que tú preguntes. Notar
-eso, por sí solo, ya elimina una familia entera de hipótesis.
+Si dijiste *"el servidor marcó mal el envío"*, el `409` es para `g-7`, y en Network se
+ve que salió de la petición de `g-7`. Si dijiste *"es el temporizador de la ventana"*,
+no hay ningún `grants/send` de `g-1` después del primero. Y si tu fix fue no mandar
+nunca un `409` a `rollbackGrant`, el envío de la lista se queda "Enviado" mintiendo:
+el rollback hace falta, solo que del envío correcto.
 
 </details>
 
 ---
 
-## Incidente 13 — Falló una venta y desde entonces no funciona ninguna
+## Incidente 13 — Falló un envío y desde entonces no sale ninguno
 
 > **Fase:** 6 · **Categoría:** RxJS / epics · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -2926,13 +2876,12 @@ eso, por sí solo, ya elimina una familia entera de hipótesis.
 
 ### 🎫 El ticket
 
-Vendí un número, me salió un cartel de error rojo, y desde ese momento no puedo
-vender nada más. Le doy al botón y no pasa absolutamente nada: ni se vende, ni me
-da error, ni se queda cargando. Nada. Cierro el navegador, vuelvo a entrar y anda
-otra vez, hasta que se repite. Perdí media mañana entre cierre y cierre del
-navegador.
+Mandé una compensación, me salió "Falló" con un cartel de error, y desde ese
+momento no sale nada más. Le doy a «Enviar ahora» y no pasa absolutamente nada: ni
+sale, ni falla, ni se queda enviando. Nada. Cierro el navegador, vuelvo a entrar y
+anda otra vez, hasta que se repite. Perdí media mañana entre cierre y cierre.
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -2942,21 +2891,21 @@ imposible: **por qué el sistema no da ningún error**. En este incidente el
 silencio no es un detalle: es el síntoma principal.
 
 Antes de terminar, comprueba una cosa más que el ticket no menciona: ¿solo dejó de
-funcionar la venta, o algo más se apagó junto con ella?
+funcionar el envío, o algo más se apagó junto con él?
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/13`
-- **Caos:** `CHAOS_LEVEL=high`. Hace falta que una venta falle de verdad; con `off`
+- **Rama:** `incidente/13`, desde `fase-06-redux-observable-a-fondo`.
+- **Caos:** `CHAOS_LEVEL=high`. Hace falta que un envío falle de verdad; con `off`
   no hay forma de encender el problema.
-- **Datos:** una rifa en `open` con varios números `reserved`, para poder intentar
-  varias ventas seguidas.
+- **Datos:** los de la fase. Encola varios envíos, para poder intentar varios
+  seguidos.
 
 ```bash
 git checkout incidente/13
-CHAOS_LEVEL=high npm run mock
+CHAOS_LEVEL=high npm run mock:api
 npm start
-# Vende hasta que una falle. Después intenta vender otro número cualquiera.
+# /grants → encola tres o cuatro envíos → «Enviar ahora» hasta que uno falle → intenta otro.
 ```
 
 ---
@@ -2964,10 +2913,11 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-Redux DevTools abierto. Después del primer fallo, haz clic en vender otro número y
-responde dos preguntas por separado: ¿se despachó la acción `SELL_NUMBER`? ¿Y pasó
-algo **después** de ella? Si la respuesta es "sí" y "no", ya tienes acotada la capa
-a una sola: la que escucha las acciones y no reaccionó.
+Redux DevTools abierto. Después del primer fallo, haz clic en «Enviar ahora» sobre
+otro envío y responde dos preguntas por separado: ¿se despachó
+`grants/sendGrantRequested`? ¿Y pasó algo **después** de ella? Si la respuesta es
+"sí" y "no", ya tienes acotada la capa a una sola: la que escucha las acciones y no
+reaccionó.
 
 Y mira Network al mismo tiempo: cuenta cuántas peticiones salieron.
 
@@ -2976,9 +2926,9 @@ Y mira Network al mismo tiempo: cuenta cuántas peticiones salieron.
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`src/features/sales/epics/sellNumberEpic.js`, y al lado
-`src/features/sales/epics/validateNumberEpic.js`. Los dos hacen una petición
-dentro de un `switchMap`. Uno tiene un operador que el otro no.
+`src/features/grants/epics/sendGrantEpic.js`, y al lado
+`src/features/grants/epics/searchPlayerEpic.js`. Los dos hacen una petición dentro
+de un operador de aplanamiento. Uno tiene un operador que el otro no.
 
 </details>
 
@@ -2998,14 +2948,14 @@ Observable?
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Pasos numerados. Anota cuántas ventas hiciste antes de la que falló, y qué
+{{Pasos numerados. Anota cuántos envíos salieron antes del que falló, y qué
 intentaste después.}}
 
 **Evidencia observable**
 {{Las acciones de Redux DevTools después del fallo, y —muy importante— cuántas
 peticiones salieron por Network en cada intento posterior.}}
 
-```
+```text
 {{acciones despachadas   ·   peticiones en Network}}
 ```
 
@@ -3026,21 +2976,22 @@ peticiones salieron por Network en cada intento posterior.}}
 
 **Causa raíz**
 
-`sellNumberEpic` no tiene `catchError` dentro de su `switchMap`. Cuando la petición
-de venta falla, el error no lo atrapa nadie, sube por el pipe hasta el `rootEpic`
+`sendGrantEpic` no tiene `catchError` en el stream de cada envío. Cuando la
+petición falla, el error no lo atrapa nadie, sube por el pipe hasta el `rootEpic`
 y **completa el Observable con error**. A partir de ese instante, el epic ya no
-está suscrito a `action$`.
+está suscrito a `action$`. En la consola del navegador queda una sola línea, un
+`Uncaught` con el `503`, que nadie mira porque la pantalla sigue respondiendo.
 
 Y ahí está la explicación del silencio, que es lo que más cuesta aceptar: el epic
-no falló. **Dejó de existir.** Las acciones `SELL_NUMBER` se siguen despachando —lo
-ves en DevTools, ahí están— y no hay nadie del otro lado escuchándolas. Un
-componente que despacha a un epic muerto se comporta exactamente igual que un
-componente que despacha a un epic que decidió no hacer nada: sin excepción, sin
-log, sin nada.
+no falló. **Dejó de existir.** Las acciones `grants/sendGrantRequested` se siguen
+despachando —lo ves en DevTools, ahí están— y no hay nadie del otro lado
+escuchándolas. Un componente que despacha a un epic muerto se comporta exactamente
+igual que uno que despacha a un epic que decidió no hacer nada: sin excepción en
+pantalla, sin cartel, sin nada.
 
 La evidencia definitiva es la que pedía la pista 1: **cero peticiones en Network**
-en los intentos posteriores. No es que el servidor rechace la venta; es que la
-venta nunca sale de la aplicación.
+en los intentos posteriores. No es que el servidor rechace el envío; es que el
+envío nunca sale de la aplicación.
 
 Es el error común #1 de la Fase 6.
 
@@ -3048,9 +2999,9 @@ Es el error común #1 de la Fase 6.
 
 `combineEpics` combina los epics con un `merge`. Un error que mata a uno mata el
 stream combinado, y con él **todos los demás epics**. Si lo comprobaste, viste que
-la validación del número en tiempo real también dejó de responder, y la expiración
-de reservas también. El vendedor solo reportó lo que estaba haciendo en ese
-momento; el daño fue mucho mayor y nadie lo notó.
+la búsqueda de jugadores también dejó de responder, y que la ventana de deshacer ya
+no manda nada solo. Soporte reportó lo que estaba haciendo en ese momento; el daño
+fue mucho mayor y nadie lo notó.
 
 Ese detalle vale por sí solo el incidente: **el alcance de un fallo casi nunca
 coincide con el alcance del reporte.**
@@ -3063,26 +3014,22 @@ coincide con el alcance del reporte.**
 
 **Parche mínimo**
 
-El `catchError` va **dentro** del `switchMap`, envolviendo al Observable interno —el
-de la petición—, no al externo:
+El `catchError` va **dentro** del stream del envío —el de la petición—, no afuera:
 
 ```javascript
-switchMap((action) => {
-  const { raffleId, number, participant } = action.payload;
-  return from(
-    apiClient.post(`/raffles/${raffleId}/numbers/${number}/sell`, { participant })
-  ).pipe(
-    map((response) => numberSoldOptimistic({ /* … */ })),
-    // Acá muere el error: mata solo a esta venta, no al epic.
-    catchError((error) => of(rollbackSale({ raffleId, number, error: toReadableError(error) })))
-  );
-})
+from(api.post(`/players/${grant.playerId}/grants`, { /* … */ })).pipe(
+  map(() => grantConfirmed(grantId)),
+  // Acá muere el error: mata solo a este envío, no al epic.
+  catchError((error) =>
+    of(rollbackGrant({ grantId, caseId: grant.caseId, playerId: grant.playerId, error: toReadableError(error) }))
+  )
+)
 ```
 
-Si lo pones afuera del `switchMap`, atrapas el error y **igual pierdes el stream
+Si lo pones afuera del `exhaustMap`, atrapas el error y **igual pierdes el stream
 externo**: el epic emite el rollback una vez y después se completa. Se ve arreglado
-en la primera prueba y vuelve a fallar en la segunda, que es la peor forma
-posible de arreglar algo.
+en la primera prueba y vuelve a fallar en la segunda, que es la peor forma posible
+de arreglar algo.
 
 **La refactorización correcta**
 
@@ -3092,51 +3039,55 @@ volver a ocurrir en algún epic que alguien escriba el año que viene:
 
 ```javascript
 // src/app/rootEpic.js
-export const rootEpic = (action$, store$, deps) =>
-  combineEpics(/* … */)(action$, store$, deps).pipe(
+export const rootEpic = (action$, state$, deps) =>
+  combineEpics(/* … */)(action$, state$, deps).pipe(
     catchError((error, source) => {
-      console.error('[rootEpic] un epic murió y fue resucitado:', error);
-      return source;      // re-suscribe: el sistema sigue vivo
+      console.error("[rootEpic] un epic murió y fue resucitado:", error);
+      return source; // re-suscribe: el sistema sigue vivo
     })
   );
 ```
 
-Con eso, un epic mal escrito degrada una operación en vez de apagar la aplicación
+Con eso, un epic mal escrito degrada una operación en vez de apagar la consola
 entera. Y el `console.error` convierte un fallo invisible en uno que deja rastro,
 que es la mitad del problema de este incidente.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/sales/epics/sellNumberEpic.test.js
-import { TestScheduler } from 'rxjs/testing';
-import { ActionsObservable } from 'redux-observable';
+// src/features/grants/epics/sendGrantEpic.survival.test.js (la misma prueba que corre en el repo de prueba).
+import { TestScheduler } from "rxjs/testing";
+import { sendGrantEpic } from "./sendGrantEpic";
+import { grantQueued, sendGrantRequested, grantSending, grantSent, grantConfirmed, rollbackGrant } from "../grantSlice";
 
-test('una venta que falla no mata el epic: la siguiente se sigue atendiendo', () => {
-  const scheduler = new TestScheduler((actual, expected) =>
-    expect(actual).toEqual(expected)
-  );
-
-  scheduler.run(({ hot, expectObservable }) => {
-    const action$ = new ActionsObservable(
-      hot('a 20ms b', { a: sellNumber('0347'), b: sellNumber('0348') })
-    );
-    // La primera petición falla, la segunda funciona.
-    const output$ = sellNumberEpic(action$, null, { api: apiThatFailsOnce() });
-
-    // Con el bug, el segundo marble no aparece: el epic ya estaba muerto.
-    expectObservable(output$).toBe('10ms r 20ms s', {
-      r: rollbackSale({ number: '0347' }),
-      s: numberSoldOptimistic({ number: '0348' }),
+test("un envío que falla no mata el epic: el siguiente sale igual", () => {
+  const scheduler = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
+  scheduler.run(({ hot, cold, expectObservable }) => {
+    const a = grantQueued({ player: { id: 42, name: "Juan P." }, caseId: "C-1", prize: "vidas-5", reason: "caída" }).payload;
+    const b = grantQueued({ player: { id: 43, name: "María R." }, caseId: "C-1", prize: "vidas-5", reason: "caída" }).payload;
+    const state$ = { value: { grants: { byId: { [a.id]: a, [b.id]: b }, order: [a.id, b.id] } } };
+    const error = Object.assign(new Error("503"), { response: { status: 503, data: {} } });
+    // El primero falla con un 503; el segundo sale bien.
+    const api = { post: (url, body) => (body.grantId === a.id ? cold("----#", {}, error) : cold("----r|", { r: {} })) };
+    const action$ = hot("-a 10ms b", { a: sendGrantRequested(a.id), b: sendGrantRequested(b.id) });
+    // Con el bug, el diagrama termina en error (#) en el frame del fallo, y b nunca sale.
+    expectObservable(sendGrantEpic(action$, state$, { api })).toBe("-(st)f 6ms (uv)c", {
+      s: grantSending(a.id),
+      t: grantSent({ grantId: a.id }),
+      f: rollbackGrant({ grantId: a.id, caseId: "C-1", playerId: 42, error: { message: "El servidor tuvo un problema. Intenta de nuevo.", type: "http" } }),
+      u: grantSending(b.id),
+      v: grantSent({ grantId: b.id }),
+      c: grantConfirmed(b.id),
     });
   });
 });
 ```
 
-Lo que hace útil este test es la **segunda** venta. Un test que solo compruebe que
+Lo que hace útil este test es el **segundo** envío. Un test que solo compruebe que
 el fallo produce un rollback pasa con el bug adentro: el rollback llega, y recién
-la operación siguiente revela que no quedó nadie escuchando. El detalle de cómo se
-leen estos diagramas está en `A11-marble-testing.md`.
+la operación siguiente revela que no quedó nadie escuchando. Con la rama
+`incidente/13` el diagrama termina en error en el frame del fallo, y el envío de
+María nunca sale. Cómo se leen estos diagramas está en `A11-marble-testing.md`.
 
 **Prevención**
 
@@ -3149,9 +3100,9 @@ repetible.
 **Por qué llegó a producción**
 
 Por una creencia razonable y equivocada: *"los errores ya los maneja el interceptor
-de axios"*. Y es cierto para lo que el interceptor hace —traducir el `401`,
-normalizar el mensaje— pero el interceptor vive en la capa de transporte y no sabe
-nada del ciclo de vida de un Observable. Rechaza la promesa, como debe. Lo que pasa
+de axios"*. Y es cierto para lo que el interceptor hace —atrapar el `401`, anotar
+el `requestId`— pero el interceptor vive en la capa de transporte y no sabe nada
+del ciclo de vida de un Observable. Rechaza la promesa, como debe. Lo que pasa
 después de ese rechazo es asunto del epic, y nadie lo había pensado.
 
 Y sobrevivió porque el síntoma es absurdo: *"le doy al botón y no pasa nada"* suena
@@ -3163,9 +3114,9 @@ efectivamente no lo hay. El botón funciona perfecto.
 Si dijiste *"el botón se deshabilitó y no se volvió a habilitar"*, míralo en el
 inspector: está habilitado, y el `onClick` se ejecuta. Si dijiste *"el backend está
 rechazando todo"*, la prueba está en Network: **no sale ninguna petición**, así que
-el backend ni se entera. Y si tu fix fue recargar la aplicación desde el código
-—un `window.location.reload()` en el `catch`—, automatizaste lo que ya hacía el
-vendedor a mano y le pusiste el mismo costo: todo el estado en memoria, perdido.
+el backend ni se entera. Y si tu fix fue recargar la consola desde el código
+—un `window.location.reload()` en el `catch`—, automatizaste lo que ya hacía
+soporte a mano y le pusiste el mismo costo: todo lo que estaba en cola, perdido.
 
 </details>
 
@@ -3180,14 +3131,14 @@ vendedor a mano y le pusiste el mismo costo: todo el estado en memoria, perdido.
 
 ### 🎫 El ticket
 
-Nos avisó el proveedor de infraestructura que estamos haciendo como cuatro veces
-más peticiones de las que correspondería para la cantidad de gente que usa el
-sistema. Miramos el log del servidor y hay pedidos de tableros de rifas a las tres
-de la mañana, cuando no hay nadie trabajando. Vienen sin token y son de usuarios
-que cerraron sesión hacía horas. Nadie se quejó nunca de nada: la aplicación
-funciona bien.
+Nos avisó el proveedor de pagos que estamos consultando compras como cuatro veces
+más de lo que correspondería para la cantidad de gente que usa la consola. Miramos
+el log del servicio de compras y hay consultas a las tres de la mañana, cuando no
+hay nadie trabajando. Vienen sin sesión y son de compras que soporte estaba
+siguiendo antes de cerrar sesión, hace horas. Nadie se quejó nunca de nada: la
+consola funciona bien.
 
-**Reportado por:** infraestructura, a partir de la factura
+**Reportado por:** operación, a partir del aviso del proveedor
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
@@ -3203,17 +3154,22 @@ se quejó nunca?**
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/14`, que trae el `boardRefreshEpic` en su versión con leak
-  (la de §5.8 de la Fase 6).
+- **Rama:** `incidente/14`, desde `fase-07-cierre-polling-compras`. El `pollingEpic`
+  nace en la Fase 7; el leak, en la Fase 6 (§5.8).
 - **Caos:** `off`. Este bug no necesita que nada falle; al contrario, el caos solo
   agrega ruido a Network justo donde hay que mirar.
-- **Datos:** una rifa en `open`, la 3, para tener su tablero.
+- **Datos:** una compra en efectivo que tarde en confirmarse. El mock de Google
+  Play la deja pendiente `PLAY_PENDING_MS` milisegundos: ponlo alto, o la compra se
+  confirma y el polling termina solo antes de que veas nada.
 
 ```bash
 git checkout incidente/14
-CHAOS_LEVEL=off npm run mock
+npm run mock:api
+PLAY_PENDING_MS=600000 npm run mock:googleplay      # diez minutos de compra pendiente
+curl -s -X POST localhost:3002/purchases -H 'Content-Type: application/json' \
+  -d '{"purchaseToken":"tok-oxxo-2","method":"cash"}'
 npm start
-# Login → abrir el tablero de la rifa 3 → logout → NO TOCAR NADA y mirar Network.
+# Login → /purchases → consulta tok-oxxo-2 → logout → NO TOCAR NADA y mirar Network y el log del 3002.
 ```
 
 ---
@@ -3222,27 +3178,31 @@ npm start
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
 No lo busques en el código: es de los pocos bugs que se ven antes de leer nada.
-Abre Network, filtra por `numbers`, cierra sesión y **quédate quieto mirando la
-pestaña**. La aplicación no se está usando. Si algo aparece igual, ese algo es el
-incidente.
+Abre Network, filtra por `purchases`, cierra sesión y **quédate quieto mirando la
+pestaña**. La consola no se está usando. Si algo aparece igual, ese algo es el
+incidente. Y en la terminal del mock de Google Play, el contador de consultas sin
+sesión.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`src/features/sales/epics/boardRefreshEpic.js`. Pon su `.pipe()` al lado del de
-`reservationExpirationEpic`, que sí se apaga. Los dos crean un stream que emite
-para siempre; uno de los dos tiene una instrucción de apagado.
+`src/features/purchases/epics/pollingEpic.js`. Lee sus dos salidas: el `takeWhile`
+y el `takeUntil`. ¿Qué señales escucha el `takeUntil`? ¿Cuál falta?
+
+Y después `src/features/purchases/PurchasesPage.jsx`: al cerrar sesión, la ruta
+protegida la desmonta. ¿Hace algo la pantalla cuando se va?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-El `interval` que abre el `switchMap` emite cada cinco segundos hasta el fin de los
-tiempos. ¿Quién le dice que pare, y —esta es la parte que decide si tu fix va a
-funcionar— **en cuál de los dos pipes** tendría que estar esa instrucción?
+El `timer` que abre el `switchMap` emite cada dos segundos hasta el fin de los
+tiempos. ¿Quién le dice que pare cuando el operador cierra sesión, y —esta es la
+parte que decide si tu fix va a funcionar— **en cuál de los dos pipes** tendría que
+estar esa instrucción?
 
 </details>
 
@@ -3254,14 +3214,15 @@ funcionar— **en cuál de los dos pipes** tendría que estar esa instrucción?
 
 **Reproducción**
 {{Pasos numerados. Anota cuántos minutos dejaste la pestaña quieta y cuántas
-peticiones contaste en ese tiempo: ese número es el que convierte este incidente
-en dinero.}}
+consultas contó el log del mock en ese tiempo: ese número es el que convierte este
+incidente en dinero.}}
 
 **Evidencia observable**
 {{Las filas de Network después del logout, con su URL, su cadencia y sus headers.
-La ausencia del `Authorization` es parte de la prueba.}}
+La ausencia del `Authorization` es parte de la prueba, y las líneas
+`[3002] sin sesión #…` del log del mock, la otra parte.}}
 
-```
+```text
 {{las peticiones que no deberían existir}}
 ```
 
@@ -3282,54 +3243,48 @@ La ausencia del `Authorization` es parte de la prueba.}}
 
 **Causa raíz**
 
-`src/features/sales/epics/boardRefreshEpic.js` **no tiene `takeUntil`**. El
-`interval(5000)` que abre el `switchMap` emite indefinidamente, y nadie lo corta
-nunca:
+El `takeUntil` de `src/features/purchases/epics/pollingEpic.js` **no escucha el
+logout**. El `timer(0, POLLING_INTERVAL_MS)` que abre el `switchMap` emite cada dos
+segundos, y solo lo cortan la confirmación de la compra y el stop del operador:
 
 ```javascript
-// ❌ VERSIÓN CON LEAK (Fase 6, §5.8)
-export const boardRefreshEpic = (action$) =>
-  action$.pipe(
-    ofType('START_BOARD_REFRESH'),
-    switchMap(({ payload }) =>
-      interval(5000).pipe(map(() => fetchNumbers(payload.raffleId)))
-    )   // <-- acá falta el takeUntil. Ese es el leak.
-  );
+// ❌ Solo el stop: el logout no es una señal para este polling.
+takeUntil(action$.pipe(filter((other) => stopPolling.match(other))))
 ```
 
-Desmontar el tablero no hace nada, y ahí está el salto conceptual de toda la Fase
-6: **un epic no tiene ciclo de vida atado a la interfaz**. Vive en el middleware,
-que se monta una vez con la aplicación. El componente que despachó
-`START_BOARD_REFRESH` puede desaparecer, el usuario puede cerrar sesión, puede
-navegar a otra sección — el `interval` sigue emitiendo, porque nada de eso es una
-señal para él. Sigue emitiendo hasta que se cierra la pestaña, que es exactamente
-lo que dice el log de las tres de la mañana: máquinas de kiosco que quedaron
-prendidas.
+Cerrar sesión no hace nada, y ahí está el salto conceptual de toda la Fase 6: **un
+epic no tiene ciclo de vida atado a la interfaz**. Vive en el middleware, que se
+monta una vez con la aplicación. Al cerrar sesión, la ruta protegida desmonta la
+pantalla de compras, y en esta rama la pantalla **se va sin decir nada**: no tiene
+la limpieza que despacha `stopPolling` al desmontarse.
 
-Y las peticiones salen **sin token** porque el interceptor lee el store en cada
-petición y el store ya no tiene sesión (ver el incidente 05). Un `401` por cada
-tick, cada cinco segundos, toda la noche. La aplicación las descarta en silencio;
-el servidor las atiende igual, y las cobra.
+```javascript
+// ❌ Lo que falta en PurchasesPage: al irse, no avisa.
+useEffect(() => () => dispatch(stopPolling()), [dispatch]);
+```
+
+Ninguna de las dos salidas se dispara, así que el `timer` sigue. Sigue emitiendo
+hasta que la compra se confirma o se cierra la pestaña, que es exactamente lo que
+dice el log de las tres de la mañana: consolas que quedaron abiertas en el login.
+
+Y las consultas salen **sin token** porque el interceptor de `apiStore` lee el store
+en cada petición y el store ya no tiene sesión (ver el incidente 05). El servicio
+las atiende igual, y el proveedor las cuenta.
 
 **Parche mínimo**
 
 ```javascript
-switchMap(({ payload }) =>
-  interval(5000).pipe(
-    map(() => fetchNumbers(payload.raffleId)),
-    // Última línea del pipe INTERNO: corta este interval, no el epic.
-    takeUntil(action$.pipe(ofType('STOP_BOARD_REFRESH', logout.type)))
-  )
-)
+// Última línea del pipe INTERNO: corta este timer, no el epic.
+takeUntil(action$.pipe(filter((other) => stopPolling.match(other) || logout.match(other))))
 ```
 
 **Y por qué va en el pipe interno, que es la mitad de la lección**
 
 `takeUntil` corta **todo lo que está antes de él en el pipe donde vive**. Si lo
 pones en el pipe externo —cerrando el `action$.pipe(...)` del epic—, funciona una
-vez: el primer logout apaga el `interval`… y también apaga el epic entero. El
-usuario vuelve a entrar, abre un tablero, y el refresco ya no arranca nunca más,
-porque no queda nadie escuchando `START_BOARD_REFRESH`.
+vez: el primer logout apaga el `timer`… y también apaga el epic entero. El operador
+vuelve a entrar, consulta una compra, y el polling ya no arranca nunca más, porque
+no queda nadie escuchando `startPolling`.
 
 Habrías cambiado un leak por un epic muerto, que es exactamente el **incidente
 13**. Dos bugs opuestos, la misma línea, dos ubicaciones distintas dentro del
@@ -3338,91 +3293,96 @@ práctica es: **`takeUntil` casi siempre va último, y en el pipe interno**.
 
 **La refactorización correcta**
 
-La versión de producción, que la Fase 7 consolida en §5.10 al pagar esta deuda 💸:
-`timer(0, 5000)` en lugar de `interval(5000)` —para refrescar de entrada, sin
-esperar el primer intervalo— y el mismo `takeUntil` con todas las señales que
-tengan sentido para el tablero: `STOP_BOARD_REFRESH`, `logout`, el cierre de la
-rifa. Mismo esqueleto que el `pollingEpic`.
+La que la Fase 7 ya escribió: dos salidas explícitas, cada una con su operador.
+`takeWhile` para la salida que viene de adentro (la compra se confirmó) y
+`takeUntil` con **todas** las señales que vienen de afuera (el stop, el logout).
+Y la pantalla que despacha su `stopPolling` al desmontarse, como segunda red para
+cuando el operador sale de ella sin cerrar sesión.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/sales/epics/boardRefreshEpic.test.js
-import { TestScheduler } from 'rxjs/testing';
-import { ActionsObservable } from 'redux-observable';
+// src/features/purchases/epics/pollingEpic.logout.test.js (la misma prueba que corre en el repo de prueba).
+import { TestScheduler } from "rxjs/testing";
+import { pollingEpic, POLLING_INTERVAL_MS } from "./pollingEpic";
+import { startPolling } from "../purchaseSlice";
+import { logout } from "../../auth/authSlice";
 
-test('el refresco del tablero completa al llegar el logout', () => {
-  const scheduler = new TestScheduler((actual, expected) =>
-    expect(actual).toEqual(expected)
-  );
-
-  scheduler.run(({ hot, expectObservable }) => {
-    const action$ = new ActionsObservable(
-      hot('a 12s b', { a: startBoardRefresh({ raffleId: 3 }), b: logout() })
-    );
-
-    // Dos ticks (5s y 10s) y después NADA: el "|" es el punto del test.
-    expectObservable(boardRefreshEpic(action$)).toBe('5s x 4999ms y 2s |', {
-      x: fetchNumbers(3),
-      y: fetchNumbers(3),
+test("después del logout no sale ni una consulta más", () => {
+  const scheduler = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
+  let calls = 0;
+  scheduler.run(({ hot, cold, expectObservable }) => {
+    const store = { get: () => { calls += 1; return cold("r|", { r: { data: { state: "pending" } } }); } };
+    const action$ = hot(`a ${POLLING_INTERVAL_MS + 500}ms L`, { a: startPolling("tok-oxxo-2"), L: logout() });
+    // Se mira lo que pasa en los diez segundos siguientes al logout.
+    expectObservable(pollingEpic(action$, null, { store }), `^ ${POLLING_INTERVAL_MS + 10500}ms !`).toBe(`p ${POLLING_INTERVAL_MS - 1}ms q`, {
+      p: expect.objectContaining({ type: "purchases/purchaseStatusReceived" }),
+      q: expect.objectContaining({ type: "purchases/purchaseStatusReceived" }),
     });
   });
+  expect(calls).toBe(2); // con el bug: siguen saliendo, una cada dos segundos
 });
 ```
 
 > 🧭 **Lo que se prueba acá no es que el epic emita: es que el epic
-> DEJE de emitir.** Esa barra vertical al final del diagrama es todo el test. Es la
-> única forma práctica de verificar una cancelación, y es la razón por la que
-> `A11-marble-testing.md` existe: sin marbles, "comprobar que algo no pasa nunca
+> DEJE de emitir.** La segunda letra del diagrama de suscripción (`!`, diez
+> segundos después del logout) y el `calls` en 2 son todo el test. Es la única
+> forma práctica de verificar una cancelación, y es la razón por la que
+> `A11-marble-testing.md` existe: sin canicas, "comprobar que algo no pasa nunca
 > más" requiere esperar para siempre.
 
 **Prevención**
 
 Una regla concreta: **todo epic que crea un stream infinito** —`interval`, `timer`,
 `fromEvent`, un websocket— **declara su `takeUntil` en el mismo pipe donde lo
-creó**, y lleva un test de cancelación como el de arriba. Son dos líneas de
-prevención contra una familia de bugs que no da ninguna otra señal.
+creó, con el logout entre sus señales**, y lleva un test de cancelación como el de
+arriba. Son dos líneas de prevención contra una familia de bugs que no da ninguna
+otra señal.
 
-Y una operativa que cuesta cinco minutos: revisar el volumen de peticiones por
-usuario activo, una vez al mes. Este incidente lo encontró una factura; podría
-haberlo encontrado un gráfico.
+Y una operativa que cuesta cinco minutos: revisar el volumen de consultas por
+operador activo, una vez al mes. Este incidente lo encontró el aviso de un
+proveedor; podría haberlo encontrado el contador del log.
 
 **Por qué llegó a producción**
 
-Porque **no rompe nada**. La aplicación funciona perfecto, el usuario no percibe
-absolutamente nada, no hay error en ninguna consola, y el `takeUntil` faltante no
+Porque **no rompe nada**. La consola funciona perfecto, el operador no percibe
+absolutamente nada, no hay error en ninguna consola, y el logout faltante no
 produce ningún síntoma el día que se escribe. El costo aparece meses después, lo
-paga otra área, y llega expresado en una unidad —una factura de infraestructura—
+paga otra área, y llega expresado en una unidad —un aviso de abuso del proveedor—
 que nadie asocia con una línea de código.
 
 Ahí está la respuesta a la pregunta del enunciado: nadie se quejó porque **no hay
-nadie a quien le duela**. El usuario no lo sufre, el desarrollador no lo ve, y el
+nadie a quien le duela**. El operador no lo sufre, el desarrollador no lo ve, y el
 que lo paga no sabe leer un pipe de RxJS. Es la definición del bug caro con parche
 barato, y por eso el curso lo marca con ⭐.
 
 Es también, exactamente, el problema que empujó al equipo a adoptar
-`redux-observable` en 2022 (`00-historia-del-sistema.md` §3, Era 3): un
+`redux-observable` en 2022 (`00-historia-del-sistema.md` §3, era 3): un
 `setInterval` que seguía preguntando después del logout, para siempre. La
 herramienta que vino a resolverlo trae la solución —`takeUntil`— y también la forma
 de olvidarla.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"el componente del tablero no se desmonta"*, compruébalo con React
-DevTools: se desmonta perfectamente. Y aunque no lo hiciera, daría igual — el
-`interval` no vive en el componente. Interiorizar eso es el objetivo del incidente:
-en un sistema con epics, **desmontar la interfaz no cancela nada**.
+Si dijiste *"falta la limpieza del `useEffect`"*, tienes razón a medias, y conviene
+comprobar la otra mitad. Pon solo la limpieza y repite: el síntoma desaparece,
+porque hoy el único logout posible desmonta la pantalla. Pero el epic queda
+dependiendo de que haya una pantalla montada que se acuerde de pararlo. El día que
+otra parte de la consola despache `startPolling` —un botón en la ficha del jugador,
+una pantalla nueva— o que un logout llegue sin desmontar nada, el leak vuelve con la
+misma cara. La limpieza es del lado de React; el logout es del lado del epic, y la
+corrección de verdad es la del epic: **desmontar la interfaz no cancela nada que el
+epic no escuche**.
 
-Si dijiste *"falta limpiar el `useEffect`"*, ese diagnóstico es correcto para el
-**incidente 12**, donde el temporizador sí vive en el componente. Tener los dos en
-el cuaderno y saber cuál es cuál —el mismo síntoma de "algo sigue vivo", en dos
-capas distintas— es una de las distinciones más útiles que te llevas del curso.
+Si dijiste *"es el `switchMap`, que no cancela"*, el `switchMap` cancela el polling
+anterior **cuando llega otro `startPolling`**. Después del logout no llega ninguno,
+así que no tiene nada que cancelar.
 
 </details>
 
 ---
 
-## Incidente 15 — Escribo el número rápido y me valida uno viejo
+## Incidente 15 — Busco a la jugadora rápido y me muestra a otra
 
 > **Fase:** 6 · **Categoría:** RxJS / epics · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -3430,13 +3390,12 @@ capas distintas— es una de las distinciones más útiles que te llevas del cur
 
 ### 🎫 El ticket
 
-Cuando escribo el número que quiero vender, el cartelito de al lado me dice
-cualquier cosa. Escribo 0347 y me dice que el 034 está vendido. Si escribo
-despacio, letra por letra, anda bien. Ayer no le vendí un número a un cliente
-porque el cartel decía que no estaba disponible, y después resulta que sí lo
-estaba. Perdimos la venta.
+Cuando busco a una jugadora en el asistente, la lista me muestra cualquier cosa.
+Escribo "Anaís" y me aparece Ana, la que está suspendida. Si escribo despacio,
+letra por letra, anda bien. Ayer casi le mando una compensación a la persona
+equivocada porque la lista decía otra cosa de la que yo había escrito.
 
-**Reportado por:** vendedor de rifas
+**Reportado por:** soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
@@ -3445,27 +3404,23 @@ Reproducir, localizar y arreglar. Y explicar dos cosas que el ticket regala:
 **por qué escribir despacio lo arregla**, y por qué eso descarta de entrada la
 mitad de las hipótesis.
 
-Ojo: en el pipe de este epic hay **dos** cosas cambiadas respecto de la versión
-que escribiste en la Fase 6, y solo una de las dos causa la respuesta equivocada.
-Separarlas es parte del trabajo.
-
 ### 🔧 Preparación
 
-- **Rama:** `incidente/15`
+- **Rama:** `incidente/15`, desde `fase-06-redux-observable-a-fondo`.
 - **Caos:** `CHAOS_LEVEL=high`. **Obligatorio**, y acá el motivo es preciso: el bug
   no existe sin latencia variable. Con el mock respondiendo en tres milisegundos,
   las respuestas vuelven en el mismo orden en que salieron y el problema es
   invisible. Este incidente **no se puede reproducir con `off`**, por mucho que
   escribas rápido.
-- **Datos:** una rifa en `open` donde el número `034` esté `sold` y el `0347` esté
-  `available`. La rama los deja así, y esa combinación es la que hace el síntoma
-  inconfundible.
+- **Datos:** los de la fase traen a Ana (`banned`) y a Anaís (`active`). Que un
+  nombre sea prefijo del otro, con estados opuestos, es lo que hace el síntoma
+  inconfundible: la búsqueda de "Ana" trae a las dos.
 
 ```bash
 git checkout incidente/15
-CHAOS_LEVEL=high npm run mock
+CHAOS_LEVEL=high npm run mock:api
 npm start
-# En el campo de venta, escribe 0347 a velocidad normal. Repite unas cuantas veces.
+# /grants → en «Buscar jugador», escribe Anaís a velocidad normal. Repite unas cuantas veces.
 ```
 
 ---
@@ -3474,7 +3429,7 @@ npm start
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
 No es un problema del campo de texto. Escribe con Network abierto y mira dos
-columnas: cuántas peticiones salieron, y la columna **Time** de cada una. Después
+columnas: cuántas búsquedas salieron, y la columna **Time** de cada una. Después
 ordénalas por el momento en que **volvieron**, no por el momento en que salieron.
 Ahí está todo.
 
@@ -3483,16 +3438,15 @@ Ahí está todo.
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`src/features/sales/epics/validateNumberEpic.js`. Compara su operador de
-aplanamiento con el de `sellNumberEpic`. Y fíjate qué le pasó al primer operador
-del pipe, el que controlaba cada cuánto se dispara la validación.
+`src/features/grants/epics/searchPlayerEpic.js`. Compara su operador de
+aplanamiento con lo que la Fase 6 dice que va en una búsqueda.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si dos peticiones están en vuelo al mismo tiempo y la primera tarda más que la
+Si dos búsquedas están en vuelo al mismo tiempo y la primera tarda más que la
 segunda, ¿cuál de las dos respuestas llega última? ¿Y cuál de las dos termina
 pintando el store?
 
@@ -3509,263 +3463,11 @@ pintando el store?
 falta: en un bug que depende de latencia, la frecuencia es parte de la descripción.}}
 
 **Evidencia observable**
-{{Las peticiones de Network con su tiempo de respuesta, y las acciones
-`numberValidationSucceeded` en el orden en que llegaron al store.}}
+{{Las búsquedas de Network con su tiempo de respuesta, y las acciones
+`grants/playerSearchSucceeded` en el orden en que llegaron al store.}}
 
-```
+```text
 {{qué salió, qué volvió, y en qué orden}}
-```
-
-**Hipótesis**
-- ❌ Descartada: {{qué creíste y qué evidencia la tumbó}}.
-- ✅ Confirmada: {{la que sobrevivió}}.
-
-**Tu causa raíz**
-{{Archivo y línea. Y de los dos cambios que hay en ese pipe, cuál es la causa y
-cuál es solo un amplificador.}}
-
-**Tu fix**
-{{El parche mínimo. Aparte, la refactorización correcta.}}
-
----
-
-<details>
-<summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
-
-**Causa raíz**
-
-`validateNumberEpic` usa `mergeMap` donde corresponde `switchMap`.
-
-`mergeMap` mantiene **todas** las peticiones en vuelo a la vez y deja pasar sus
-respuestas en el orden en que lleguen. Con latencia variable —que es lo que hace el
-caos y lo que hace cualquier red real— la respuesta de `034` puede volver después
-de la de `0347`, y como el reducer aplica lo último que recibe, el estado del
-número viejo pisa al del nuevo. El campo dice `0347`, el cartel describe el `034`.
-
-Es el error común #2 de la Fase 6, y la fase es tajante sobre cómo llamarlo: **no
-es cosmético, es corrección contra bug.**
-
-**Los dos cambios, y cuál es cuál**
-
-El otro cambio en ese pipe es que `debounceTime(300)` fue reducido —alguien lo
-bajó porque "se sentía lento"—. Eso **no es la causa**: es un amplificador. El
-debounce controla *cuántas* validaciones se disparan; el operador de aplanamiento
-controla *cuál gana*. Compruébalo en dos pasos:
-
-- Restituye el `debounceTime(300)` y deja el `mergeMap`: el bug **sigue apareciendo**,
-  solo que necesitas hacer una pausa de poco más de trescientos milisegundos en
-  mitad del número. Menos frecuente, igual de incorrecto.
-- Deja el debounce corto y pon `switchMap`: se disparan muchas peticiones —derroche
-  de red— y **el resultado siempre es correcto**.
-
-De ahí sale la conclusión que vale para el resto de tu carrera: **el debounce es una
-optimización, el operador de aplanamiento es una decisión de correctitud.** Se
-parecen porque los dos "reducen peticiones", y no son lo mismo.
-
-**Y por qué escribir despacio lo arregla**
-
-Porque con pausas largas solo hay una petición en vuelo por vez, y una petición
-sola no puede cruzarse con nadie. Esa frase del ticket —*"si escribo despacio anda
-bien"*— es un regalo: descarta de un plumazo el campo de texto, el reducer, el
-componente y el backend. Ninguno de ellos se comporta distinto según la velocidad
-de tipeo. **Lo único que cambia con la velocidad es cuántas cosas ocurren a la
-vez**, y eso solo apunta a concurrencia.
-
-**Parche mínimo**
-
-```javascript
-// src/features/sales/epics/validateNumberEpic.js
-action$.pipe(
-  ofType(numberValidationRequested.type),
-  debounceTime(300),
-  // switchMap: cada número nuevo CANCELA la validación anterior en vuelo.
-  switchMap((action) => { /* … la petición, igual que antes … */ })
-)
-```
-
-**La refactorización correcta**
-
-`switchMap` con el `debounceTime(300)` restituido es la versión correcta y es la
-que la Fase 6 ya tenía escrita. Lo que se puede agregar aparte, y que revela algo
-más profundo, es una guarda en el reducer:
-
-```javascript
-numberValidationSucceeded(state, action) {
-  // Ignora la respuesta de un número que ya no es el que el usuario está mirando.
-  if (action.payload.number !== state.currentInput) return;
-  state.validation = action.payload.status;
-}
-```
-
-Es cinturón además de tirantes, y sobre todo es un olor a diseño que conviene
-nombrar: **la acción no lleva ninguna identidad de la petición que la originó**.
-Sin esa identidad, el store no tiene forma de saber si lo que le llega es actual o
-llegó tarde, y depende por completo de que el epic haya cancelado bien.
-
-**Prueba de regresión**
-
-```javascript
-// src/features/sales/epics/validateNumberEpic.test.js
-test('la respuesta lenta de un número viejo no pisa a la del número nuevo', () => {
-  const scheduler = new TestScheduler((actual, expected) =>
-    expect(actual).toEqual(expected)
-  );
-
-  scheduler.run(({ hot, cold, expectObservable }) => {
-    const action$ = new ActionsObservable(
-      hot('a 400ms b', {
-        a: numberValidationRequested({ number: '034' }),
-        b: numberValidationRequested({ number: '0347' }),
-      })
-    );
-    // El '034' tarda 900ms; el '0347', 100ms. Se cruzan a propósito.
-    const api = { get: (n) => (n === '034' ? cold('900ms r') : cold('100ms r')) };
-
-    // Solo debe emitir la validación del 0347. Con mergeMap aparecen las dos,
-    // y la del 034 llega DESPUÉS.
-    expectObservable(validateNumberEpic(action$, null, { api })).toBe(
-      '801ms s', { s: numberValidationSucceeded({ number: '0347' }) }
-    );
-  });
-});
-```
-
-Reproducir una inversión de orden en la aplicación requiere suerte y caos;
-reproducirla con marbles es escribir dos números distintos. Ese es el argumento
-entero a favor de `A11-marble-testing.md`.
-
-**Prevención**
-
-Una regla por defecto que resuelve el noventa por ciento de los casos:
-**`switchMap` cuando solo importa el último resultado** —búsquedas, validaciones,
-autocompletado, cualquier cosa atada a lo que el usuario está mirando ahora
-mismo—; **`mergeMap` solo cuando cada operación es independiente y sus resultados
-no se pisan** —enviar eventos, registrar métricas—. Y si en una revisión de código
-aparece un `mergeMap`, que su autor tenga que decir en voz alta por qué no es
-`switchMap`.
-
-**Por qué llegó a producción**
-
-Porque en la máquina de quien lo escribió la latencia es de tres milisegundos y
-**las respuestas siempre vuelven en orden**. El orden de llegada no es una
-propiedad del código: es una propiedad de la red. Y el código se escribe sobre una
-red que en la práctica no existe.
-
-Y sobrevivió porque el síntoma parece un problema de la interfaz —"el cartelito
-dice cualquier cosa"— y porque es intermitente, así que quien fue a mirarlo escribió
-el número una vez, despacio, vio que funcionaba, y cerró el ticket.
-
-El costo real, en cambio, no es cosmético en absoluto: el ticket dice que se
-perdió una venta. Un cartel que miente sobre la disponibilidad de un número es, en
-este negocio, una decisión comercial tomada con datos falsos.
-
-**Si tu causa fue distinta a esta**
-
-Si dijiste *"es el debounce"*, lee arriba: cambia la frecuencia, no la
-correctitud. Es la hipótesis más común y es una media verdad, que en depuración es
-peor que una hipótesis equivocada — porque tocarla mejora el síntoma lo suficiente
-como para dar por cerrado el caso.
-
-Si dijiste *"el input pierde caracteres"*, mira el payload de las acciones
-`numberValidationRequested`: están todas, completas y en orden. Lo que se desordena
-es la vuelta, no la ida. Y si tu fix fue deshabilitar el campo mientras hay una
-validación en curso, funciona y hace la aplicación notablemente peor de usar:
-convertiste un problema de concurrencia en un problema de ergonomía.
-
-</details>
-
----
-
-## Incidente 16 — La rifa siguió vendiendo después de la hora de cierre
-
-> **Fase:** 7 · **Categoría:** Tiempo · **Dificultad:** 🟠
-> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 50-65 min
-> · Hermano del incidente `be-12`, con otra causa raíz
-
-### 🎫 El ticket
-
-La Rifa de Navidad cerraba a las 8 de la noche y el sistema siguió aceptando
-ventas después. Tenemos catorce números vendidos con hora posterior al cierre, y
-uno de ellos salió sorteado. El vendedor de la costa dice que a él le cerró a la
-hora que correspondía; el de la capital dice que le siguió dejando vender un rato
-más. No sé si eso tiene algo que ver.
-
-**Reportado por:** tesorería
-**Ambiente:** PROD
-
-### 🎯 Qué se te pide
-
-Reproducir y localizar. Y prestarle atención a la última frase del ticket, que
-parece un comentario al pasar y es el dato central: **dos vendedores en lugares
-distintos vieron cerrar la misma rifa en momentos distintos.**
-
-> ⚠️ **Sin declarar la zona horaria del navegador, este incidente no se
-> reproduce.** No es un detalle de la preparación: es el mecanismo del bug. Si
-> intentas reproducirlo sin fijar la zona horaria, vas a concluir que no pasa.
-
-### 🔧 Preparación
-
-- **Rama:** `incidente/16`
-- **Caos:** `off`. El bug es determinista una vez que la zona horaria está fijada.
-- **Datos:** una rifa con `closesAt` en `2024-12-20T20:00:00-05:00` y números
-  disponibles para vender. La rama la deja cargada.
-- **Zona horaria del navegador:** hay que cambiarla, y ahí está el experimento. En
-  Chrome: DevTools → menú de tres puntos → More tools → Sensors → Location, o más
-  simple, arrancar el navegador con la variable de entorno:
-
-```bash
-git checkout incidente/16
-CHAOS_LEVEL=off npm run mock
-TZ=America/Bogota npm start        # -05:00, la del cierre
-# Y después, la misma prueba con:
-TZ=America/Argentina/Buenos_Aires npm start    # -03:00
-```
-
----
-
-<details>
-<summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
-
-Antes del código, haz el experimento que el ticket describe sin saberlo: reproduce
-la misma venta, sobre la misma rifa, con dos zonas horarias distintas en el
-navegador. Si el resultado cambia, ya sabes que la causa está en cómo se compara
-el tiempo, y no en el estado de la rifa.
-
-</details>
-
-<details>
-<summary>💡 <b>Pista 2</b> — qué mirar</summary>
-
-La guarda que decide si una rifa admite ventas. Busca dónde se compara la hora de
-cierre con la hora actual, y mira **con qué** se comparan: ¿dos instantes, o dos
-pedazos de fecha?
-
-</details>
-
-<details>
-<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
-
-¿Qué devuelve `new Date('2024-12-20T20:00:00-05:00').getHours()` en un navegador
-configurado en `-03:00`? Escríbelo en la consola antes de contestar de memoria.
-
-</details>
-
----
-
-### 📝 Tu investigación
-
-{{Esto lo escribes tú, antes de abrir la solución.}}
-
-**Reproducción**
-{{Pasos numerados, y **obligatorio**: la zona horaria del navegador en cada
-intento, y el `closesAt` exacto de la rifa con su offset.}}
-
-**Evidencia observable**
-{{El resultado del mismo experimento en dos zonas horarias, lado a lado.}}
-
-```
-{{TZ=...  → vendió / no vendió    ·    TZ=...  → vendió / no vendió}}
 ```
 
 **Hipótesis**
@@ -3785,21 +3487,279 @@ intento, y el `closesAt` exacto de la rifa con su offset.}}
 
 **Causa raíz**
 
-La guarda de cierre desarma la fecha en componentes en vez de comparar instantes:
+`searchPlayerEpic` usa `mergeMap` donde corresponde `switchMap`.
+
+`mergeMap` mantiene **todas** las búsquedas en vuelo a la vez y deja pasar sus
+respuestas en el orden en que lleguen. Con latencia variable —que es lo que hace el
+caos y lo que hace cualquier red real— la respuesta de "Ana" puede volver después
+de la de "Anaís", y como el reducer aplica lo último que recibe, la lista de la
+búsqueda vieja pisa a la de la nueva. El campo dice "Anaís", la lista muestra a
+Ana, suspendida.
+
+Es el error común #2 de la Fase 6, y la fase es tajante sobre cómo llamarlo: **no
+es cosmético, es corrección contra bug.**
+
+**Y por qué escribir despacio lo arregla**
+
+Porque con pausas largas solo hay una búsqueda en vuelo por vez, y una búsqueda
+sola no puede cruzarse con nadie. Esa frase del ticket —*"si escribo despacio anda
+bien"*— es un regalo: descarta de un plumazo el campo de texto, el reducer, el
+componente y el backend. Ninguno de ellos se comporta distinto según la velocidad
+de escritura. **Lo único que cambia con la velocidad es cuántas cosas ocurren a la
+vez**, y eso solo apunta a concurrencia.
+
+**El debounce no es la causa**
+
+La tentación es subir el `debounceTime`. Hazlo con el `mergeMap` todavía puesto: el
+bug **sigue apareciendo**, solo que necesitas una pausa algo mayor en mitad del
+nombre. Menos frecuente, igual de incorrecto. Al revés, con un debounce mínimo y
+`switchMap`, salen muchas búsquedas —derroche de red— y **el resultado siempre es
+correcto**. De ahí sale la conclusión que vale para el resto de tu carrera: **el
+debounce es una optimización, el operador de aplanamiento es una decisión de
+correctitud.** Se parecen porque los dos "reducen peticiones", y no son lo mismo.
+
+**Parche mínimo**
 
 ```javascript
-// ❌ getHours() devuelve la hora EN LA ZONA DEL NAVEGADOR, no en la del cierre.
-const closing = new Date(raffle.closesAt);
-if (new Date().getHours() < closing.getHours()) {
-  // …permitir la venta
+// src/features/grants/epics/searchPlayerEpic.js
+action$.pipe(
+  ofType(playerSearchRequested.type),
+  debounceTime(SEARCH_DEBOUNCE_MS),
+  // switchMap: cada búsqueda nueva abandona la anterior en vuelo.
+  switchMap((action) => { /* … la búsqueda, igual que antes … */ })
+)
+```
+
+**La refactorización correcta**
+
+`switchMap` es la versión correcta, y es la que la Fase 6 ya tenía escrita. Lo que
+se puede agregar aparte, y que revela algo más profundo, es una guarda en el
+reducer:
+
+```javascript
+playerSearchSucceeded(state, action) {
+  // Ignora la respuesta de una búsqueda que ya no es la que el operador está mirando.
+  if (action.payload.query !== state.playerSearch.query) return;
+  state.playerSearch.loading = false;
+  state.playerSearch.results = action.payload.results;
+},
+```
+
+Es cinturón además de tirantes, y sobre todo nombra un olor de diseño: la respuesta
+ya trae la búsqueda que la originó (`query`), y el reducer no la estaba mirando.
+Sin esa comparación, el store depende por completo de que el epic haya cancelado
+bien.
+
+**Prueba de regresión**
+
+```javascript
+// src/features/grants/epics/searchPlayerEpic.order.test.js (la misma prueba que corre en el repo de prueba).
+import { TestScheduler } from "rxjs/testing";
+import { searchPlayerEpic } from "./searchPlayerEpic";
+import { playerSearchRequested, playerSearchSucceeded } from "../grantSlice";
+
+test("buscar «Ana» y enseguida «Anaís»: solo llega la respuesta de «Anaís»", () => {
+  const scheduler = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
+  scheduler.run(({ hot, cold, expectObservable }) => {
+    const ANA = [{ id: 44, name: "Ana", status: "banned" }, { id: 45, name: "Anaís", status: "active" }];
+    const ANAIS = [{ id: 45, name: "Anaís", status: "active" }];
+    // «Ana» tarda más que «Anaís»: es la latencia que el caos alto produce de vez en cuando.
+    const api = {
+      get: (url, { params }) =>
+        params.name_like === "Ana" ? cold("500ms r|", { r: { data: ANA } }) : cold("100ms r|", { r: { data: ANAIS } }),
+    };
+    const action$ = hot("-a 400ms b", { a: playerSearchRequested("Ana"), b: playerSearchRequested("Anaís") });
+    // Con el bug (mergeMap) llegan las dos, y la de «Ana» en último lugar.
+    expectObservable(searchPlayerEpic(action$, null, { api })).toBe("802ms s", {
+      s: playerSearchSucceeded({ query: "Anaís", results: ANAIS }),
+    });
+  });
+});
+```
+
+Reproducir una inversión de orden en la consola requiere suerte y caos;
+reproducirla con canicas es escribir dos búsquedas distintas. Ese es el argumento
+entero a favor de `A11-marble-testing.md`.
+
+**Prevención**
+
+Una regla por defecto que resuelve el noventa por ciento de los casos:
+**`switchMap` cuando solo importa el último resultado** —búsquedas, validaciones,
+autocompletado, cualquier cosa atada a lo que el operador está mirando ahora
+mismo—; **`mergeMap` solo cuando cada operación es independiente y sus resultados
+no se pisan**. Y si en una revisión de código aparece un `mergeMap`, que su autor
+tenga que decir en voz alta por qué no es `switchMap`.
+
+**Por qué llegó a producción**
+
+Porque en la máquina de quien lo escribió la latencia es de tres milisegundos y
+**las respuestas siempre vuelven en orden**. El orden de llegada no es una
+propiedad del código: es una propiedad de la red. Y el código se escribe sobre una
+red que en la práctica no existe.
+
+Y sobrevivió porque el síntoma parece un problema de la interfaz —"la lista me
+muestra cualquier cosa"— y porque es intermitente, así que quien fue a mirarlo
+escribió el nombre una vez, despacio, vio que funcionaba, y cerró el ticket.
+
+El costo real no es cosmético: una lista que muestra a la jugadora equivocada es,
+en soporte, una compensación mandada a quien no correspondía.
+
+**Si tu causa fue distinta a esta**
+
+Si dijiste *"es el debounce"*, lee arriba: cambia la frecuencia, no la
+correctitud. Es la hipótesis más común y es una media verdad, que en depuración es
+peor que una hipótesis equivocada — porque tocarla mejora el síntoma lo suficiente
+como para dar por cerrado el caso.
+
+Si dijiste *"el input pierde caracteres"*, mira el payload de las acciones
+`grants/playerSearchRequested`: están todas, completas y en orden. Lo que se
+desordena es la vuelta, no la ida. Y si tu fix fue deshabilitar el buscador
+mientras hay una búsqueda en curso, funciona y hace la consola notablemente peor de
+usar: convertiste un problema de concurrencia en un problema de ergonomía.
+
+</details>
+
+---
+
+## Incidente 16 — Seguimos enviando giros de una rueda que ya cerró
+
+> **Fase:** 7 · **Categoría:** Tiempo · **Dificultad:** 🟠
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 50-65 min
+> · Hermano del incidente `be-12`, con otra causa raíz
+
+### 🎫 El ticket
+
+La Rueda de fin de mes cerraba el 30 a las 8 de la noche y la consola siguió
+dejando enviar giros de ella. Tenemos catorce giros manuales con fecha posterior al
+cierre, y uno cayó en el avatar raro. La noche del 30, desde la oficina de Panamá, a
+mí ya no me dejaba elegirla; Yariela, que a las 11 estaba atendiendo a un jugador de
+Chile con la computadora configurada en su hora, dice que a ella sí. No sé si eso
+tiene algo que ver. Y lo más raro: hoy en la mañana a mí también me deja.
+
+**Reportado por:** operación
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Reproducir y localizar. Y prestarle atención a la última frase del ticket, que
+parece un comentario al pasar y es el dato central: **dos personas en máquinas
+distintas vieron cerrar la misma rueda en momentos distintos.**
+
+> ⚠️ **Sin declarar la zona horaria, este incidente no se reproduce.** No es un
+> detalle de la preparación: es el mecanismo del bug. Si intentas reproducirlo sin
+> fijar la zona horaria, vas a concluir que no pasa.
+
+### 🔧 Preparación
+
+- **Rama:** `incidente/16`, desde `fase-07-cierre-polling-compras`.
+- **Caos:** `off`. El bug es determinista una vez que la zona horaria está fijada.
+- **Datos:** los de la fase traen la Rueda de fin de mes, `live`, con `closesAt` en
+  `2026-08-30T20:00:00-05:00`. El offset explícito es parte del dato.
+- **Zona horaria:** el navegador toma la del sistema operativo; la forma más simple
+  es arrancar el servidor de desarrollo con `TZ` y abrir la consola en otro perfil
+  de navegador, o correr la prueba de abajo con `TZ` fijado.
+
+```bash
+git checkout incidente/16
+npm run mock:api
+TZ=America/Panama npm start        # la consola de la oficina
+# Y después, la misma prueba con:
+TZ=America/Santiago npm start      # la computadora configurada en la hora de Chile
+```
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
+
+Antes del código, haz el experimento que el ticket describe sin saberlo: mira la
+misma rueda en el asistente, a la misma hora real, con dos zonas horarias. Y cambia
+también la hora del día: a las 10 de la mañana, a las 9 de la noche. Si el
+resultado cambia con la zona y con la hora, la causa está en cómo se compara el
+tiempo, y no en el estado de la rueda.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+`src/features/wheels/closing.js`, la función que decide si una rueda está cerrada.
+Mira **con qué** compara: ¿dos instantes, o dos pedazos de fecha?
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+¿Qué devuelve `new Date('2026-08-30T20:00:00-05:00').getHours()` en una máquina
+configurada en `America/Santiago`? ¿Y qué fecha mira esa comparación? Escríbelo en
+la consola antes de contestar de memoria.
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+{{Esto lo escribes tú, antes de abrir la solución.}}
+
+**Reproducción**
+{{Pasos numerados, y **obligatorio**: la zona horaria en cada intento, la hora del
+día, y el `closesAt` exacto de la rueda con su offset.}}
+
+**Evidencia observable**
+{{El resultado del mismo experimento en dos zonas horarias, lado a lado.}}
+
+```text
+{{TZ=...  → la ofrece / no la ofrece    ·    TZ=...  → la ofrece / no la ofrece}}
+```
+
+**Hipótesis**
+- ❌ Descartada: {{qué creíste y qué evidencia la tumbó}}.
+- ✅ Confirmada: {{la que sobrevivió}}.
+
+**Tu causa raíz**
+{{Archivo y línea.}}
+
+**Tu fix**
+{{El parche mínimo. Aparte, la refactorización correcta.}}
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
+
+**Causa raíz**
+
+La guarda de cierre desarma la fecha en partes en vez de comparar instantes:
+
+```javascript
+// ❌ getHours() devuelve la hora EN LA ZONA DE LA MÁQUINA, y la fecha no cuenta.
+export function isWheelClosed(wheel, now) {
+  if (wheel.status === "ended" || wheel.status === "reconciled") return true;
+  // cierra a las 8 de la noche: se compara la hora del día
+  return new Date(now).getHours() >= new Date(wheel.closesAt).getHours();
 }
 ```
 
-Un instante en el tiempo es un número absoluto: el momento en que ocurre el cierre
-es el mismo para todo el mundo. Pero `getHours()` no devuelve ese número: devuelve
-cómo **se ve** ese instante desde donde está el reloj que pregunta. Las 20:00 de
-`-05:00` son las 22:00 en `-03:00`, y por eso el vendedor de la capital pudo seguir
-vendiendo dos horas más que el de la costa. Es el error común #1 de la Fase 7.
+Dos defectos en una línea. El primero: compara solo la hora del día. Un 15 de
+octubre a las 10 de la mañana, la rueda que cerró el 30 de agosto "todavía no
+cerró", porque 10 es menor que 20; a las 9 de la noche, sí. Eso explica el "hoy en la
+mañana a mí también me deja". El segundo: `getHours()` no devuelve el instante,
+devuelve cómo **se ve** ese instante desde la zona de la máquina que pregunta. En
+`America/Santiago`, en agosto, el cierre se ve a las 21; y a las 23:15 de Panamá el
+reloj de Santiago ya pasó la medianoche y marca las 0. Cero es menor que 21, y la
+rueda "se reabre" en esa máquina mientras sigue cerrada en la de al lado. Por eso dos
+computadoras ofrecen y niegan la misma rueda en el mismo instante. Es el error común
+#1 de la Fase 7.
+
+| Instante real (hora de Panamá) | `TZ=America/Panama` | `TZ=America/Santiago` |
+|---|---|---|
+| 30/08, 19:30 | abierta (19 < 20) | abierta (20 < 21) |
+| 30/08, 20:30 | cerrada (20 ≥ 20) | cerrada (21 ≥ 21) |
+| 30/08, 23:15 | cerrada (23 ≥ 20) | **abierta** (0 < 21) |
+| 31/08, 10:00 | **abierta** (10 < 20) | **abierta** (11 < 21) |
 
 Y por eso el comentario final del ticket —*"no sé si eso tiene algo que ver"*— era
 el diagnóstico entero. **Cuando dos usuarios ven comportamientos distintos frente
@@ -3808,18 +3768,17 @@ forma de razonar del incidente 02 y del 20, en tres capas completamente distinta
 
 **Parche mínimo**
 
-Comparar instantes contra instantes, que es lo que hace `isPastClosing`:
+Comparar instantes contra instantes, que es lo que hace la `closing.js` de la fase:
 
 ```javascript
-// src/features/raffles/closing.js
-export function isPastClosing(closesAt) {
-  return Date.now() >= new Date(closesAt).getTime();
-}
+const closesAt = Date.parse(wheel.closesAt);
+if (Number.isNaN(closesAt)) return true;
+return now >= closesAt; // en el instante exacto del cierre, ya está cerrada
 ```
 
-`getTime()` devuelve milisegundos desde la época, en UTC, idéntico en todo el
-planeta. La zona horaria deja de participar de la decisión y pasa a ser lo único
-que debería haber sido siempre: un asunto de **presentación**.
+`Date.parse` devuelve milisegundos desde la época, idénticos en todo el planeta. La
+zona horaria deja de participar de la decisión y pasa a ser lo único que debería
+haber sido siempre: un asunto de **presentación**.
 
 **La refactorización correcta**
 
@@ -3829,81 +3788,70 @@ Dos capas, y la segunda es la importante:
    `getHours()`, `getDate()` y `getMonth()` en el resto del código con una regla de
    lint. Desarmar una fecha es legítimo para mostrarla y nunca para decidir con
    ella.
-2. **Que la hora la decida el servidor.** Hoy la guarda usa el reloj del navegador,
-   y el reloj del navegador lo controla el usuario: adelantarlo dos horas es un
-   ajuste de la configuración del sistema operativo. Toda esta guarda es una
-   comodidad de la interfaz, no una garantía. La garantía tiene que estar del otro
-   lado del cable, y eso es la deuda 💸 de `serverNow` que la Fase 7 declara y no
-   paga.
+2. **Que la hora la decida el servidor.** Hoy la guarda usa el reloj de la máquina,
+   y el reloj de la máquina lo controla quien la usa. Toda esta guarda es una
+   comodidad de la consola, no una garantía. La garantía tiene que estar del otro
+   lado del cable, y eso es la deuda 💸 que la Fase 7 declara y paga `be06`.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/raffles/closing.test.js
-describe('isPastClosing', () => {
-  const closesAt = '2024-12-20T20:00:00-05:00';   // 01:00 UTC del 21
+// src/features/wheels/closing.timezone.test.js (la misma prueba que corre en el repo de prueba). Córrela con TZ=America/Panama.
+import { isWheelClosed } from "./closing";
 
-  test.each([
-    'America/Bogota',                  // -05:00
-    'America/Argentina/Buenos_Aires',  // -03:00
-    'Europe/Madrid',                   // +01:00
-    'Asia/Tokyo',                      // +09:00
-  ])('da el mismo resultado en %s', (tz) => {
-    process.env.TZ = tz;
-    // Un instante indiscutiblemente posterior al cierre.
-    jest.setSystemTime(new Date('2024-12-21T02:00:00Z'));
-
-    expect(isPastClosing(closesAt)).toBe(true);
-  });
+test("una rueda que cerró el 30/08 a las 20:00 sigue cerrada un 15/10 a las 10:00", () => {
+  const wheel = { id: 4, status: "live", closesAt: "2026-08-30T20:00:00-05:00" };
+  const now = Date.parse("2026-10-15T10:00:00-05:00");
+  expect(isWheelClosed(wheel, now)).toBe(true); // con el bug: false (10 < 20, y la fecha no cuenta)
 });
 ```
 
-La forma del test es la lección: **la misma aserción, repetida en cuatro zonas
-horarias**. Un test de tiempo que corre en una sola zona no prueba nada sobre
-tiempo; prueba sobre la máquina que lo corrió — y eso lleva directo al incidente 20.
+Con `TZ=America/Panama`, la rama `incidente/16` falla (`Expected: true`,
+`Received: false`); con la comparación de instantes, pasa en cualquier zona. La
+forma del test es la lección: **un test de tiempo que corre en una sola zona no
+prueba nada sobre tiempo; prueba sobre la máquina que lo corrió**. En UTC, esta
+misma prueba **pasa con el bug**: allá el cierre se ve a la 1 de la mañana y las 10
+de Panamá son las 15, así que "15 ≥ 1" da cerrada por la razón equivocada. Para que sea red de verdad, córrelo en varias zonas (`TZ=… npm test`), que
+es lo que lleva directo al incidente 20.
 
 **Prevención**
 
-La regla de lint contra los desarmadores de fecha, los cuatro casos de prueba por
-zona, y una convención de datos que ahorra la mitad de estos bugs: **todas las
-fechas viajan y se guardan con offset explícito** (`2024-12-20T20:00:00-05:00`),
-nunca como `2024-12-20 20:00`. Una fecha sin offset no es un instante: es un texto
-que cada máquina interpreta como quiere.
+La regla de lint contra los desarmadores de fecha, la prueba en varias zonas, y una
+convención de datos que ahorra la mitad de estos bugs: **todas las fechas viajan y
+se guardan con offset explícito** (`2026-08-30T20:00:00-05:00`), nunca como
+`2026-08-30 20:00`. Una fecha sin offset no es un instante: es un texto que cada
+máquina interpreta como quiere.
 
 **Por qué llegó a producción**
 
-Porque todo el equipo está en la misma zona horaria, y en una sola zona horaria
-este código **es correcto**. No hay ninguna prueba, ninguna revisión y ninguna demo
-que pueda revelar el error mientras todos los relojes coincidan. El bug estuvo
-latente desde el primer día y se activó el día que se vendió una rifa desde otra
-provincia — sin que cambiara una línea de código.
-
-Y llegó, además, porque el descuadre es pequeño y tardío: dos horas de más en un
-cierre no llaman la atención hasta que alguien cruza las horas de venta con la
-hora de cierre, que es algo que solo pasa cuando ya hay un problema.
+Porque todo el equipo de Panamá está en la misma zona horaria, y siempre se probó
+de día y el mismo día del cierre. En esas condiciones este código **parece
+correcto**. Ninguna demo puede revelar el error mientras todos los relojes
+coincidan y nadie pruebe después de la fecha. El bug estuvo latente hasta el primer
+cierre que alguien miró al día siguiente, y la zona horaria de Yariela le agregó la
+noche del 30, todo sin que cambiara una línea de código.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"el estado de la rifa no se actualizó a `closed`"*, es una hipótesis
-buena y hay que descartarla mirando el store: el `status` puede estar correcto y la
-venta pasar igual, porque la guarda de la hora dura es independiente del enum. De
-hecho la Fase 7 lo dice explícitamente al explicar por qué el selector **no** llama
-a `isPastClosing`: el enum es del store, la hora es del reloj, y son dos preguntas
+Si dijiste *"la rueda sigue en `live`"*, es una hipótesis buena y hay que
+descartarla mirando el store: el `status` dice `live` también con la guarda
+correcta, y ahí la rueda sí aparece cerrada, porque la hora dura es independiente
+del enum. El enum es del store, la hora es del reloj, y son dos preguntas
 distintas.
 
-**Y acá está el cruce con el track BE.** El incidente `be-12` —*"vendimos doscientos
-números después del cierre"*— tiene el mismo síntoma con la causa una capa más
-abajo: allá la comparación de instantes está bien hecha, y el problema es **quién
-tiene autoridad sobre la hora**. Acá el navegador se equivoca al interpretar el
-instante; allá el navegador acierta y aun así no debería ser él quien decida. Si
-haces el track BE, este par enseña la diferencia entre *calcular bien el tiempo* y
-*tener derecho a decidir sobre el tiempo*.
+**Y acá está el cruce con el track BE.** El incidente `be-12` —*"giros anotados
+después del cierre"*— tiene el mismo síntoma con la causa una capa más abajo: allá
+la comparación de instantes está bien hecha, y el problema es **quién tiene
+autoridad sobre la hora**. Acá la consola se equivoca al interpretar el instante;
+allá el servidor le cree al estado que deja un barrido, en vez de mirar el reloj
+cuando decide. Si haces el track BE, este par enseña la diferencia entre *calcular
+bien el tiempo* y *tener derecho a decidir sobre el tiempo*.
 
 </details>
 
 ---
 
-## Incidente 17 — El resultado nunca llega y no aparece ningún error
+## Incidente 17 — La compra pendiente nunca se confirma, y la consola dice que sigue consultando
 
 > **Fase:** 7 · **Categoría:** RxJS / epics · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -3911,36 +3859,41 @@ haces el track BE, este par enseña la diferencia entre *calcular bien el tiempo
 
 ### 🎫 El ticket
 
-Cerramos la rifa de las 8 de la noche y el sistema tenía que traer solo el
-resultado de la lotería. Nunca lo trajo. Estuvimos hasta las 9 mirando la pantalla,
-que decía "esperando resultado" todo el tiempo. Al final lo cargamos a mano
-mirando la página de la lotería. En ningún momento salió ningún error ni ningún
-aviso: solo decía esperando.
+Un jugador pagó en OXXO a las 7 de la tarde y me escribió para preguntar por sus
+giros. Pegué el código en la consola y se quedó en "Esperando confirmación ·
+consultando…". Al ratito salió abajo un aviso en rojo, que el servidor tuvo un
+problema y que intentara de nuevo, pero como seguía diciendo "consultando…" pensé
+que lo estaba reintentando sola. Estuve hasta las 9 mirando la pantalla. Al final
+le pedí a Carlos que revisara en la tienda, y la compra estaba confirmada desde las
+7:20.
 
-**Reportado por:** supervisor de ventas
+**Reportado por:** soporte
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
 Reproducir y decidir cuál de **dos causas plausibles** produjo este caso concreto.
-Las dos dejan al usuario mirando "esperando resultado"; se distinguen con una sola
-observación. Después, el fix.
+Las dos dejan a soporte mirando "Esperando confirmación · consultando…"; se
+distinguen con una sola observación. Después, el fix.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/17`
-- **Caos:** `CHAOS_LEVEL=high`, y **en el mock de la lotería, el del puerto
+- **Rama:** `incidente/17`, desde `fase-07-cierre-polling-compras`.
+- **Caos:** `CHAOS_LEVEL=high`, y **en el mock de Google Play, el del puerto
   `3002`** —no en el `3001`—. Hace falta que un tick reciba un `500`; sin eso el
   bug no se enciende. Es el error más común al preparar este incidente: subir el
   caos en el mock equivocado y concluir que no se reproduce.
-- **Datos:** una rifa que acabe de pasar a `closed`, con el resultado ya disponible
-  en el mock de lotería.
+- **Datos:** una compra en efectivo creada justo antes de consultarla, con la
+  demora por defecto (`PLAY_PENDING_MS=3000`).
 
 ```bash
 git checkout incidente/17
-CHAOS_LEVEL=high npm run mock:lottery     # el 3002, no el 3001
+npm run mock:api
+CHAOS_LEVEL=high npm run mock:googleplay     # el 3002, no el 3001
+curl -s -X POST localhost:3002/purchases -H 'Content-Type: application/json' \
+  -d '{"purchaseToken":"tok-oxxo-7","method":"cash"}'
 npm start
-# Cierra la rifa y deja la pantalla de resultado abierta, mirando Network.
+# /purchases → consulta tok-oxxo-7 → deja la pantalla abierta, mirando Network.
 ```
 
 ---
@@ -3948,17 +3901,17 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-Network, filtrado por `results`. No mires si hay errores: **cuenta los `GET` y fíjate
-en qué momento dejan de salir**. Un polling sano deja un rastro regular en la
-pestaña. La hora exacta en la que ese rastro se corta es el dato que decide todo el
-diagnóstico.
+Network, filtrado por `purchases`. No mires si hay errores: **cuenta los `GET` y
+fíjate en qué momento dejan de salir**. Un polling sano deja un rastro regular en
+la pestaña. La hora exacta en la que ese rastro se corta es el dato que decide todo
+el diagnóstico.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`src/features/raffles/epics/pollingEpic.js`. Localiza el `catchError` y responde
+`src/features/purchases/epics/pollingEpic.js`. Localiza el `catchError` y responde
 una sola pregunta: ¿está adentro del tick, o envuelve al `timer` entero?
 
 </details>
@@ -3983,10 +3936,10 @@ del primer error?
 pusiste.}}
 
 **Evidencia observable**
-{{La secuencia de `GET /results` con sus horas y sus status, y el momento exacto en
-que dejan de aparecer.}}
+{{La secuencia de `GET /purchases/…` con sus horas y sus status, y el momento
+exacto en que dejan de aparecer.}}
 
-```
+```text
 {{los ticks, hasta que se cortan}}
 ```
 
@@ -4007,85 +3960,97 @@ que dejan de aparecer.}}
 
 **Las dos causas, y la observación que las separa**
 
-**Causa A — el `catchError` envuelve al `timer`.** Cuando el primer `500` de la
-lotería llega, el `catchError` lo atrapa, emite su acción de reemplazo y —esto es
-lo que importa— **completa el stream que envuelve**, que es el `timer` entero. El
-polling muere ahí. No hay más ticks, no hay más peticiones, y el store se queda
-con el último estado que tenía: "esperando resultado". Es el error común #2 de la
-Fase 7, y es el error #1 de la Fase 6 aplicado al polling: **el `catchError` mata
-lo que envuelve.**
+**Causa A — el `catchError` envuelve al `timer`.** Cuando el primer `500` del
+servicio de compras llega, el `catchError` lo atrapa, emite su `pollingFailed` y
+—esto es lo que importa— **completa el stream que envuelve**, que es el `timer`
+entero. El polling muere ahí. No hay más ticks, no hay más consultas, y el store se
+queda con el último estado que tenía: "Esperando confirmación · consultando…",
+porque el `pollingToken` nunca se limpió, y debajo el aviso del `500`, que ya no se
+borra porque no llega otra respuesta que lo borre. Es el error común #2
+de la Fase 7, y es el error #1 de la Fase 6 aplicado al polling: **el `catchError`
+mata lo que envuelve.**
 
-**Causa B — el `204` tratado como error.** La lotería devuelve `204` cuando el
-sorteo todavía no salió, que es información legítima y frecuente: significa "sigue
-preguntando". Si el epic lo trata como fallo, el store se llena de `pollingFailed`
-mientras no pasa nada malo. Es el error común #4 de la Fase 7.
+**Causa B — la espera es real.** Google Play confirma un pago en efectivo minutos u
+horas después, hasta dos días en el peor caso. Si la tienda todavía no confirmó, el
+polling está sano y cada consulta dice, con razón, `pending`. Es la otra forma de
+quedarse mirando "Esperando confirmación". Y si el caos tira algún `500` por el
+camino, el aviso rojo también aparece, y desaparece en el tick siguiente.
 
 **Se distinguen con una sola columna de Network:**
 
-| | Causa A — `catchError` mal ubicado | Causa B — el `204` como error |
+| | Causa A — `catchError` mal ubicado | Causa B — la espera de la tienda |
 |---|---|---|
-| Los `GET /results` | **paran** y no vuelven nunca | **siguen saliendo** cada 3 s |
-| En el store | nada nuevo tras el corte | `pollingFailed` acumulándose |
-| Qué ve el usuario | "esperando resultado" | "esperando resultado" |
+| Los `GET /purchases/…` | **paran** y no vuelven nunca | **siguen saliendo** cada 2 s |
+| Su respuesta | el último es un `500` | `200` con `state: "pending"` |
+| El aviso rojo | se queda fijo | aparece y se borra con el tick siguiente |
+| La columna «Última consulta» | **congelada** en la hora del `500` | avanza cada 2 s |
+| Qué ve soporte | "Esperando confirmación · consultando…" | "Esperando confirmación · consultando…" |
 
-La pantalla dice lo mismo en los dos casos. La red no. **Cuando dos causas producen
-la misma interfaz, la evidencia tiene que venir de una capa donde se comporten
-distinto**, y esa es la razón por la que la pista 1 te manda a contar peticiones en
+El encabezado de la pantalla dice lo mismo en los dos casos, y lo que los separa
+—el aviso que no se borra, la hora que no avanza— está en letra chica, justo donde
+nadie mira después de la primera media hora. La red no deja dudas. **Cuando dos
+causas producen la misma interfaz, la evidencia tiene que venir de una capa donde se
+comporten distinto**, y esa es la razón por la que la pista 1 te manda a contar consultas en
 lugar de a buscar errores.
 
-En este incidente concreto —el de las ocho de la noche— es la **causa A**: los
-`GET` se cortan y no vuelven.
+En este incidente concreto —la compra confirmada desde las 7:20— es la **causa A**:
+los `GET` se cortan en un `500` y no vuelven.
 
 **Parche mínimo**
 
-El `catchError` va adentro del tick, envolviendo la petición y no al `timer`:
+El `catchError` va adentro del tick, envolviendo la consulta y no al `timer`:
 
 ```javascript
 timer(0, POLLING_INTERVAL_MS).pipe(
   mergeMap(() =>
-    from(apiLottery.get(`/results/${raffleId}`)).pipe(
-      filter((res) => res.status === 200 && res.data),
-      map((res) => resultReceived(res.data)),
+    from(store.get(`/purchases/${token}`)).pipe(
+      map((response) => purchaseStatusReceived({ /* … */ })),
       // Muere el tick, no el polling: el siguiente sale igual.
-      catchError((error) => of(pollingFailed(toReadableError(error))))
+      catchError((error) => of(pollingFailed({ token, error: toReadableError(error) })))
     )
   ),
+  takeWhile(/* … */, true),
   takeUntil(/* … */)
 )
 ```
 
 **La refactorización correcta**
 
-Dos cosas más, y la segunda es la que este incidente deja al descubierto:
-
-1. **Reintento con espera creciente por tick**, que la Fase 7 ya trae: `500`, `1s`,
-   `2s` antes de rendirse con ese tick. Un `500` aislado deja de tener consecuencia
-   alguna.
-2. **Un límite al "esperar"**. Si pasaron veinte minutos desde el cierre y no hay
-   resultado, el sistema tiene que decirlo. Hoy "esperando resultado" significa las
-   dos cosas a la vez: *"todavía no salió"* y *"me morí hace una hora"*. **Un
-   estado que también significa su propio fallo es un defecto de diseño de
-   estados**, y es literalmente el mismo defecto del incidente 07 una capa más
-   arriba: nadie decidió cuánto es demasiado.
+Una cosa más, que este incidente deja al descubierto: **un límite al "esperar"**.
+Si pasó una hora y la compra sigue sin confirmarse, la pantalla tiene que decirlo de
+otra forma: hoy "Esperando confirmación · consultando…" significa las dos cosas a la
+vez, *"la tienda todavía no confirmó"* y *"me morí hace una hora"*. **Un estado que también
+significa su propio fallo es un defecto de diseño de estados**, y es literalmente
+el mismo defecto del incidente 07 una capa más arriba: nadie decidió cuánto es
+demasiado. El primer paso es barato: que "consultando…" dependa de que la última
+consulta sea reciente, no de que exista un `pollingToken`. La hora ya está en la
+columna «Última consulta»; si tiene más de dos intervalos de antigüedad, la pantalla
+tiene que dejar de decir que consulta.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/raffles/epics/pollingEpic.test.js
-test('un tick que falla no mata el polling: el siguiente sale igual', () => {
-  const scheduler = new TestScheduler((actual, expected) =>
-    expect(actual).toEqual(expected)
-  );
+// src/features/purchases/epics/pollingEpic.survival.test.js (la misma prueba que corre en el repo de prueba).
+import { TestScheduler } from "rxjs/testing";
+import { pollingEpic, POLLING_INTERVAL_MS } from "./pollingEpic";
+import { startPolling, pollingFailed } from "../purchaseSlice";
 
-  scheduler.run(({ hot, expectObservable }) => {
-    const action$ = new ActionsObservable(hot('a', { a: startPolling({ raffleId: 1 }) }));
-    // Primer tick: 500. Segundo tick: el resultado.
-    const api = apiThatFailsOnce();
-
-    // Con el bug, después de la 'f' no hay nada más: el timer murió.
-    expectObservable(pollingEpic(action$, null, { api })).toBe('f 2999ms r', {
-      f: pollingFailed(expect.anything()),
-      r: resultReceived(expect.anything()),
+test("después de un 500, el tick siguiente pregunta igual y llega la confirmación", () => {
+  const scheduler = new TestScheduler((actual, expected) => expect(actual).toEqual(expected));
+  scheduler.run(({ hot, cold, expectObservable }) => {
+    const error = Object.assign(new Error("500"), { response: { status: 500, data: {} } });
+    let call = 0;
+    const store = {
+      get: () => {
+        call += 1;
+        return call === 1 ? cold("#", {}, error) : cold("r|", { r: { data: { state: "confirmed" } } });
+      },
+    };
+    const action$ = hot("a", { a: startPolling("tok-efecty-1") });
+    // Con el bug, el diagrama se queda en «f»: el polling murió en el primer 500.
+    expectObservable(pollingEpic(action$, null, { store })).toBe(`f ${POLLING_INTERVAL_MS - 1}ms c`, {
+      f: pollingFailed({ token: "tok-efecty-1", error: { message: "El servidor tuvo un problema. Intenta de nuevo.", type: "http" } }),
+      c: expect.objectContaining({ type: "purchases/purchaseStatusReceived", payload: expect.objectContaining({ state: "confirmed" }) }),
     });
   });
 });
@@ -4106,31 +4071,34 @@ después la comprobación de que el siguiente ciclo ocurre igual.
 
 **Por qué llegó a producción**
 
-Porque el polling se probó contra una lotería sana, que es la única que existe en
-la máquina de quien programa. El `500` de un tercero es exactamente el evento que
-no puedes provocar en desarrollo si no construiste antes un mock que falle a
-propósito — que es la razón entera por la que la Fase 3 existe.
+Porque el polling se probó contra un servicio de compras sano, que es el único que
+existe en la máquina de quien programa. El `500` de un tercero es exactamente el
+evento que no puedes provocar en desarrollo si no construiste antes un mock que
+falle a propósito —que es la razón entera por la que la Fase 3 existe, y por la que
+la Fase 7 le puso caos al `3002`—.
 
-Y llegó, sobre todo, porque el fallo se disfrazó de comportamiento normal. "Esperando
-resultado" es un mensaje legítimo, tranquilizador, que el supervisor miró durante
-una hora sin motivo para desconfiar. Los fallos que se ven iguales que el
-funcionamiento correcto no generan tickets: generan gente esperando.
+Y llegó, sobre todo, porque el fallo se disfrazó de comportamiento normal.
+"Esperando confirmación" es un mensaje legítimo y frecuente —la causa B existe de
+verdad todos los días—, el aviso rojo decía "intenta de nuevo", y el "consultando…"
+de al lado le prometía que eso ya estaba pasando. Soporte lo miró dos horas sin
+motivo para desconfiar. Los
+fallos que se ven iguales que el funcionamiento correcto no generan tickets:
+generan gente esperando.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"la lotería no publicó el resultado"*, revisa el mock: el resultado
-estaba ahí, con un `200` y su ganador, esperando a que alguien fuera a buscarlo.
-Nadie fue. Si dijiste *"el `takeUntil` cortó de más"* —que sería el error común #3
-de la Fase 7— es una hipótesis excelente y se descarta mirando **qué** ocurrió justo
-antes del último `GET`: con un `takeUntil` de más, el corte coincide con un evento
-concreto (el cierre, el logout, recibir el resultado); acá coincide con un `500`.
-El momento del corte te dice quién lo cortó.
+Si dijiste *"la tienda no confirmó"*, esa es la causa B, y se descarta con Network:
+los `GET` se cortaron. Si dijiste *"el `takeUntil` cortó de más"* —el operador tocó
+«Dejar de consultar», o la pantalla se desmontó— es una hipótesis excelente y se
+descarta mirando **qué** ocurrió justo antes del último `GET`: con un `takeUntil`
+que corta, el corte coincide con una acción concreta en DevTools (`stopPolling`, el
+logout); acá coincide con un `500`. El momento del corte te dice quién lo cortó.
 
 </details>
 
 ---
 
-## Incidente 18 — La liquidación da un centavo de diferencia
+## Incidente 18 — La conciliación da un centavo de diferencia
 
 > **Fase:** 8 · **Categoría:** Dinero · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -4139,36 +4107,40 @@ El momento del corte te dice quién lo cortó.
 
 ### 🎫 El ticket
 
-La liquidación de la rifa chica de la semana pasada da un centavo de diferencia
-contra lo que sumamos a mano. Un centavo. Ya sé que suena a nada y que van a
-decirme que lo redondee, pero necesito entender de dónde sale antes de firmarla,
-porque si es un centavo con tres números, no sé cuánto es con diez mil.
+El prorrateo del paquete tok-ago-05 suma US$21,00 y el paquete se vendió a US$20,99.
+Un centavo. Ya sé que suena a nada y que me van a decir que lo redondee, pero no
+firmo una conciliación sin saber de dónde sale cada centavo. Y antes de que me lo
+pregunten: revisé los otros tres paquetes de 500 de agosto, y uno da el mismo
+centavo de más, otro cuadra y otro da un centavo de menos. ¿Y ese centavo de dónde
+salió?
 
-**Reportado por:** tesorería
+**Reportado por:** contabilidad (Licda. De Gracia)
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
 
 Reproducir con los datos exactos del reporte, localizar el cálculo culpable y
-arreglarlo. Y contestarle a tesorería la pregunta que hizo, que es la correcta:
-**¿cuánto es este error con diez mil números?**
+arreglarlo. Y contestarle a la contadora las dos cosas que su ticket deja planteadas:
+**por qué un paquete descuadra para arriba, otro para abajo y otro no descuadra**, y
+**cuánto puede llegar a ser el error**.
 
 Este incidente es el más chico del cuaderno en tamaño del síntoma y de los más
 grandes en tamaño de la causa. Esa desproporción es la lección entera.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/18`
+- **Rama:** `incidente/18`, desde `fase-08-conciliacion`.
 - **Caos:** `off`. No hay ninguna red involucrada en el error: es aritmética.
-- **Datos, y son exactos:** una rifa con `numberPriceInPesos: 0.1` y **tres**
-  números vendidos. Sí, diez centavos por número: es el precio más ridículo
-  posible y es justo el que hace visible el problema en el primer decimal.
+- **Datos:** los de la fase, sembrados con `npm run seed:reconciliation`. El paquete
+  `tok-ago-05` es el primero de 500 giros que la bitácora consume entero, y es el
+  que la pantalla muestra.
 
 ```bash
 git checkout incidente/18
-CHAOS_LEVEL=off npm run mock
+npm run seed:reconciliation        # con los mocks parados
+npm run mock:all
 npm start
-# Liquida esa rifa y compara el total con lo que dan tres veces diez centavos.
+# /reconciliation → Rueda de fin de mes → mira «Prorrateo del paquete tok-ago-05» y la suma de sus filas.
 ```
 
 ---
@@ -4176,29 +4148,29 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-No hace falta la aplicación. Abre una consola de Node y escribe `0.1 + 0.1 + 0.1`.
-Mira el resultado con atención, hasta el último dígito. Si eso te sorprende, ya
-tienes la causa; si no te sorprende, ya sabes dónde buscarla en el código.
+No hace falta la aplicación. Copia los ocho conteos de la tabla del prorrateo, abre
+una consola de Node, y calcula a mano lo que vale cada fila: los giros de la fila por
+el precio de un giro. Antes de redondear nada, anota con todos sus decimales lo que
+vale un giro.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-`calculateTotalCollected` y todo lo que la alimenta. La Fase 8 pide una regla:
-**el dinero vive en centavos enteros**. Busca el punto exacto del recorrido donde
-esa regla se rompe — dónde entra un número con coma, o dónde una división deja de
-ser entera.
+`src/features/reconciliation/reconciliationSlice.js`, la línea que arma
+`packageProration`, y la función a la que llama. La Fase 8 pide una regla: **el
+dinero se reparte con división entera y el resto explícito**. Busca el punto exacto
+donde la regla se rompe.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Un número de punto flotante de doble precisión no puede representar 0,1 de forma
-exacta, del mismo modo que en decimal no puedes escribir un tercio con una
-cantidad finita de dígitos. ¿Qué pasa entonces cuando sumas tres de esos, y qué
-pasa cuando multiplicas el resultado por cien para "pasarlo a centavos"?
+Si redondeas cada fila al centavo más cercano, cada fila se equivoca en menos de
+medio centavo, para arriba o para abajo. ¿Qué pasa con esos errores cuando sumas
+ocho filas? ¿Y de qué depende hacia qué lado caigan?
 
 </details>
 
@@ -4209,16 +4181,16 @@ pasa cuando multiplicas el resultado por cien para "pasarlo a centavos"?
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Pasos numerados, con los valores exactos: precio, cantidad de números y el total
-que esperabas contra el que salió.}}
+{{Pasos numerados, con los valores exactos: el precio, los ocho conteos, la suma que
+esperabas y la que salió.}}
 
 **Evidencia observable**
-{{El resultado de correr la función pura en la consola, con esos mismos datos.
-Este es el único incidente del cuaderno donde la evidencia decisiva no está en el
-navegador.}}
+{{El resultado de correr la cuenta en la consola, fila por fila, con todos sus
+decimales antes de redondear. Este es uno de los incidentes del cuaderno donde la
+evidencia decisiva no está en el navegador.}}
 
-```
-{{entrada, salida esperada, salida real, con todos sus decimales}}
+```text
+{{conteo · valor sin redondear · valor redondeado, por fila; y las dos sumas}}
 ```
 
 **Hipótesis**
@@ -4230,8 +4202,8 @@ navegador.}}
 el cálculo, sus entradas, el estado o la presentación.}}
 
 **Tu fix**
-{{El parche mínimo. Aparte, la refactorización correcta. Y la respuesta a
-tesorería: cuánto es el error con diez mil números.}}
+{{El parche mínimo. Aparte, la refactorización correcta. Y la respuesta a la
+contadora: por qué cada paquete descuadra distinto, y cuánto puede ser el error.}}
 
 ---
 
@@ -4240,148 +4212,152 @@ tesorería: cuánto es el error con diez mil números.}}
 
 **Causa raíz**
 
-`calculateTotalCollectedBroken` hace la aritmética en pesos con decimales y
-convierte a centavos al final:
+El panel prorratea con `prorateSpinPriceBroken`, la versión del ejercicio 18 de la
+Fase 8 que alguien conectó "un momento" y no desconectó. Calcula el precio de un giro
+en dólares y redondea cada fila:
 
 ```javascript
-// ❌ 0.1 no existe en binario. Ni 0.2. Ni 0.3.
-const totalInPesos = soldNumbers.length * raffle.numberPriceInPesos;
-const totalInCents = Math.round(totalInPesos * 100);
+// ❌ 0,04198 dólares por giro, y cada fila redondeada por su cuenta.
+const perSpinDollars = packagePriceCents / 100 / spins;
+return counts.map((count) => Math.round(count * perSpinDollars * 100));
 ```
 
-En la consola:
+En la consola, con los conteos de `tok-ago-05`:
 
+```text
+148 giros · 621,304 → 621        57 giros · 239,286 → 239
+ 95 giros · 398,810 → 399        38 giros · 159,524 → 160
+ 71 giros · 298,058 → 298        13 giros ·  54,574 →  55
+ 74 giros · 310,652 → 311         4 giros ·  16,792 →  17
+                                  suma: 2.100 (el paquete: 2.099)
 ```
-> 0.1 + 0.1 + 0.1
-0.30000000000000004
-> 3 * 0.1 * 100
-30.000000000000004
-```
 
-Un `double` de la IEEE 754 no puede representar 0,1 exactamente, igual que en
-decimal no puedes escribir un tercio con dígitos finitos. La representación real
-es un poquito mayor, y al multiplicar por cien ese poquito sale a la superficie. El
-`Math.round` a veces lo tapa y a veces no, según hacia qué lado caiga el error —y
-eso explica que la diferencia aparezca en unas liquidaciones y en otras no—.
+Cada fila está **bien redondeada**: ninguna se equivoca en más de medio centavo. El
+problema no está en ninguna fila; está en sumarlas. Cinco filas redondean para
+arriba y tres para abajo, y los errores no se compensan: suman +1. El float agrega
+su granito (el precio por giro es `0.041979999999999996`, no 0,04198), pero no es la
+causa: con aritmética exacta, el redondeo por fila da el mismo 2.100.
 
-La causa está en la **primera** de las cuatro capas de auditoría de la Fase 8: la
-función pura. Y por eso el diagnóstico se hace en una consola de Node, sin abrir el
-navegador. Cuando el descuadre aparece ahí, no es React, no es Redux y no es la
-red: es aritmética, y terminaste.
+La causa está en la **primera** de las cuatro capas de auditoría de la Fase 8: el
+cálculo. Y por eso el diagnóstico se hace en una consola de Node, sin abrir el
+navegador.
 
-**La respuesta a tesorería**
+**La respuesta a la contadora**
 
-Es la pregunta más importante del ticket y merece un número, no una tranquilización.
-El error de representación no es constante ni crece de forma predecible: **depende
-de los valores**, y puede cancelarse o acumularse. Con tres números da un centavo;
-con diez mil puede dar cero, o puede dar decenas — y, lo que es peor, el mismo
-cálculo con los mismos datos da siempre lo mismo, así que parece estable hasta que
-un día no lo es.
+Las dos preguntas tienen una sola respuesta: **el error depende de cómo cayeron los
+giros**. Con ocho filas, cada una se equivoca entre −0,5 y +0,5 centavos, y la suma
+de los errores puede dar −4, −3… hasta +4, según el reparto. En agosto, con los mismos
+2.099 centavos, `tok-ago-05` da 2.100, `tok-ago-19` da 2.099 y `tok-ago-26` da
+2.098. Ninguno de los tres está "más roto" que los otros: los tres usan el cálculo
+equivocado, y uno tuvo suerte.
 
-La respuesta honesta no es *"con diez mil números serían N centavos"*. Es: **este
-cálculo no tiene una cota de error que podamos prometer, y por eso hay que sacar el
-float en vez de acotarlo.**
+La respuesta honesta a *"¿cuánto puede ser?"* no es *"un centavo"*. Es: **hasta medio
+centavo por fila, en cualquier dirección, y no se cancela por promedio**. Con ocho
+filas, hasta cuatro centavos por paquete. Con un reporte por jugador en vez de por
+segmento —miles de filas—, cualquier cosa. Por eso no se acota: se elimina.
 
 > 🧠 **La desproporción es el mensaje.** El síntoma mide un centavo. La causa es
-> que el sistema entero está haciendo aritmética de dinero sobre un tipo que no
-> puede representar dinero. Un ticket pequeño puede tener una causa estructural, y
-> la magnitud del síntoma no dice nada sobre la magnitud del problema. En dinero,
-> esa confusión es especialmente cara: **el redondeo esconde el error justo lo
-> suficiente como para que nadie lo investigue.**
+> que el cálculo reparte dinero sin garantizar que las partes sumen el todo. Un
+> ticket pequeño puede tener una causa estructural, y la magnitud del síntoma no
+> dice nada sobre la magnitud del problema. En dinero, esa confusión es
+> especialmente cara: **el redondeo esconde el error justo lo suficiente como para
+> que nadie lo investigue**, y que un paquete cuadre es lo que más lo esconde.
 
 **Parche mínimo**
 
-Enteros de punta a punta. El precio se guarda en centavos, y no hay ninguna
-multiplicación por cien en ningún lado:
+Volver a conectar el panel a `prorateSpinPrice`, que reparte con `prizeShare`:
+división entera para todos los giros, y el resto —99 centavos— de a uno.
 
 ```javascript
-// El dato entra en centavos y no vuelve a salir de ahí.
-const totalInCents = soldNumbers.length * raffle.numberPriceInCents;   // 3 * 10 = 30
+cents: prorateSpinPrice(big.packagePriceCents, countLanded(spinsByToken.get(token), segments)),
 ```
 
+Con los mismos conteos: 691, 380, 284, 296, 228, 152, 52 y 16 centavos. **2.099.**
+
 La Fase 8 es explícita sobre cómo llamar a esto: **no es refactor, es sacar el
-float de la línea que lo metió.**
+redondeo por fila de la línea que lo metió.**
 
 **La refactorización correcta**
 
-Que el float no pueda entrar. Tres piezas:
+Que la versión rota no pueda volver a entrar:
 
-1. **Un solo tipo de dinero en todo el sistema**, en centavos enteros, con el
-   sufijo en el nombre (`numberPriceInCents`, `prizeAmountInCents`). El nombre es
-   la mitad de la prevención: `price` a secas no le dice a nadie en qué unidad
-   está.
-2. **`formatCents` con su aserción de entero**, que es la alarma: si explota, no es
-   un bug de `formatCents` sino la prueba de que un cálculo de más arriba devolvió
-   un decimal. Es el error común #2 de la Fase 8 y conviene resistir la tentación
-   de "arreglarlo" ablandando la aserción.
-3. **Repartos con resto explícito.** Al dividir un premio entre ganadores, la
-   división entera deja un resto que hay que asignar a alguien por una regla
-   escrita, no perderlo en un redondeo. La mecánica está en
-   `A10-aritmetica-de-dinero.md`.
+1. **Borrar `prorateSpinPriceBroken`.** Una función equivocada escrita "al lado de la
+   buena, para el ejercicio" es una trampa con nombre propio. El ejercicio vive en el
+   repo del alumno, no en el código de la consola.
+2. **La invariante en el cálculo, no en la pantalla.** `prorateSpinPrice` podría
+   terminar con una aserción —que la suma de las filas sea el precio— y lanzar si no.
+   Igual que `formatCents` con los floats: falla donde está el error.
+3. **Repartos con resto explícito en todas partes.** Cualquier cálculo que divida
+   dinero entre partes pasa por `prizeShare`. La mecánica está en
+   `A10-aritmetica-de-dinero.md` §4.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/settlements/money.test.js
-test('el total de tres números a diez centavos es exactamente 30', () => {
-  const raffle = { numberPriceInCents: 10 };
-  const sold = ['0001', '0002', '0003'];
+// src/features/reconciliation/reconciliationSlice.proration.test.js (la misma prueba que corre en el repo de prueba)
+import { store } from "../../app/store";
+import { login } from "../auth/authSlice";
+import { fetchReconciliation } from "./reconciliationSlice";
 
-  const total = calculateTotalCollected(raffle, sold);
-
-  expect(total).toBe(30);              // no toBeCloseTo: exacto o nada
-  expect(Number.isInteger(total)).toBe(true);
-});
+test("el prorrateo del paquete que muestra la conciliación suma exactamente su precio", async () => {
+  await store.dispatch(login({ email: "mdegracia@esclusa.test", password: "esclusa123" }));
+  await store.dispatch(fetchReconciliation(4));
+  const { purchaseToken, cents, packagePriceCents } = store.getState().reconciliation.packageProration;
+  expect(purchaseToken).toBe("tok-ago-05");
+  expect(cents.reduce((sum, c) => sum + c, 0)).toBe(packagePriceCents); // con el bug: 2100 contra 2099
+}, 20000);
 ```
 
-El detalle que hace útil este test es lo que **no** usa. `toBeCloseTo` es la
-herramienta correcta para medir cosas del mundo físico y la herramienta
-equivocada para el dinero: un test de dinero que tolera aproximaciones es un test
-que aprueba justamente el bug que tiene que impedir.
+Con la rama `incidente/18` falla (`Expected: 2099`, `Received: 2100`); con el parche,
+pasa. Corre contra los dos mocks, porque lo que se prueba es lo que **la pantalla**
+muestra: una prueba de `prorateSpinPrice` sola pasaba con el bug adentro, porque la
+función buena nunca estuvo rota.
+
+El detalle que hace útil esta prueba es lo que **no** usa. `toBeCloseTo` es la
+herramienta correcta para medir cosas del mundo físico y la herramienta equivocada
+para el dinero: una prueba de dinero que tolera aproximaciones aprueba justamente el
+bug que tiene que impedir.
 
 **Prevención**
 
-La aserción de entero en la frontera de presentación, el sufijo de unidad en todos
-los nombres, y una regla de lint que prohíba multiplicar o dividir cualquier
-identificador que termine en `Cents` sin pasar por los ayudantes de `money.js`. Y
-un test de propiedad barato: para cualquier precio entero y cualquier cantidad, el
-total tiene que ser entero.
+La invariante "las partes suman el todo" escrita como prueba de propiedad (ejercicio
+26 de la Fase 8): para cualquier precio y cualquier conjunto de conteos, las filas
+suman el precio. Y una regla de revisión de código: un `Math.round` dentro de un
+`map` sobre dinero es un hallazgo, siempre.
 
 **Por qué llegó a producción**
 
-Porque durante años los precios fueron números redondos —mil pesos, dos mil
-quinientos—, y con valores así el error de representación se esconde debajo del
-redondeo y nunca sale. El bug estuvo escrito y latente durante toda la vida del
-sistema, y lo despertó una decisión de negocio: la rifa chica, con números a diez
-centavos, que nadie consultó con nadie porque no tenía por qué consultarla.
+Porque la versión rota **se ve bien**. Cada fila tiene un valor razonable, ninguna
+tiene decimales raros, y con muchos paquetes la suma cuadra: en agosto, uno de cada
+cuatro paquetes de 500 dio exacto. Quien la probó con un solo paquete pudo tener la
+suerte de elegir el que cuadraba.
 
-Y sobrevivió, sobre todo, por una reacción cultural que el ticket anticipa con una
-lucidez notable: *"van a decirme que lo redondee"*. En la mayoría de los equipos,
-un centavo de diferencia se cierra como "error de redondeo, no es nada". La persona
-de tesorería que se negó a firmar hasta entenderlo hizo exactamente lo correcto, y
-es la razón por la que este incidente existe.
+Y sobrevivió, sobre todo, por una reacción cultural que el ticket anticipa: *"me van
+a decir que lo redondee"*. En la mayoría de los equipos, un centavo de diferencia se
+cierra como "error de redondeo, no es nada". La contadora que se negó a firmar hasta
+entenderlo hizo exactamente lo correcto, y es la razón por la que este incidente
+existe.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"falta redondear"*, ese es el reflejo que hay que desarmar: redondear
-**es** la causa de que el error se vuelva invisible en unos casos y visible en
-otros. Agregar más redondeo no arregla la aritmética, la disfraza mejor. Si dijiste
-*"el margen negativo también está mal"* —el error común #4 de la Fase 8—, cuidado:
-un margen negativo es un hecho, no un defecto. La casa pagó más premio del que
-recaudó, y esconderlo con un `Math.max(0, margin)` es falsear la liquidación.
+Si dijiste *"es el float de 0,04198"*, es media verdad: el float existe, y es mala
+práctica, pero no explica este centavo. Haz la cuenta con fracciones exactas
+(`count * 2099 / 500`) y redondea: da el mismo 2.100. Si dijiste *"falta redondear
+el total"*, ese es el reflejo que hay que desarmar: redondear **es** la causa.
+Agregar un redondeo más al final no arregla el reparto, lo disfraza mejor.
 
-**Y acá está el cruce con el track BE.** El incidente `be-13` —*"la liquidación dice
-340.000 y las ventas suman 355.000"*— tiene un descuadre parecido y una causa
-distinta: allá la aritmética está bien y lo que falla es **la fuente de los
-datos**, un cliente calculando con una foto vieja. Acá los datos son correctos y el
-cálculo los arruina. Cuando una cifra no cuadra, esas son las dos preguntas, en
-este orden: *¿el cálculo está mal?* y *¿los datos que entraron eran los de ahora?*
+**Y acá está el cruce con el track BE.** El incidente `be-13` —*"la conciliación y el
+reporte de la tienda no dan lo mismo"*— tiene un descuadre parecido y una causa
+distinta: allá la aritmética está bien y lo que falla es **la fuente de los datos**.
+Acá los datos son correctos y el cálculo los arruina. Cuando una cifra no cuadra,
+esas son las dos preguntas, en este orden: *¿el cálculo está mal?* y *¿los datos que
+entraron eran los de ahora?*
 
 </details>
 
 ---
 
-## Incidente 19 — El dashboard se arrastra al final del día
+## Incidente 19 — El dashboard se arrastra al final de la Semana del Canal
 
 > **Fase:** 9 · **Categoría:** Performance · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -4390,70 +4366,69 @@ este orden: *¿el cálculo está mal?* y *¿los datos que entraron eran los de a
 
 ### 🎫 El ticket
 
-El tablero de control se arrastra a partir de las seis de la tarde. A la mañana
-vuela y a la tarde tengo que esperar dos o tres segundos cada vez que hago clic en
-algo, y el ventilador de la máquina se pone a soplar. Al otro día a primera hora
-vuelve a andar bien. Las máquinas son las mismas de siempre.
+Estoy armando el tablero para el cierre de la Semana del Canal y desde que lo cargo
+toda la consola se pone pesada. No solo el tablero: escribo en el buscador del
+asistente de envíos y cada letra tarda en aparecer, toco «Deshacer» y tarda,
+cambio de pantalla y tarda. Con la Rueda de fin de mes anda bien. Si recargo la
+página sin abrir el tablero, vuela. En la consola del navegador hay un aviso
+amarillo que se repite y que no entiendo.
 
-**Reportado por:** supervisor de ventas
-**Ambiente:** UAT
+**Reportado por:** el equipo de Juliana, preparando el evento
+**Ambiente:** desarrollo (`npm start`)
 
 ### 🎯 Qué se te pide
 
 Reproducir —que en este incidente es la mitad difícil, porque hace falta volumen—,
-medir con el Profiler, y arreglar. Y explicar por qué "a la mañana vuela y a la
-tarde no" es una descripción precisa del mecanismo, no una exageración.
+encontrar **quién** tarda, y arreglar. Y explicar dos frases del ticket que parecen
+detalles y son el diagnóstico: *"no solo el tablero"* y *"con la Rueda de fin de
+mes anda bien"*.
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/19`
-- **Caos:** `off`. El caos agrega latencia de red y acá lo que se mide es tiempo de
-  render: mezclarlos hace imposible leer el Profiler.
-- **Datos, y son el corazón del incidente:** hace falta **volumen**. Con las tres
-  rifas de demostración no se nota nada, y esa es exactamente la razón por la que
-  el bug llegó a producción. La rama trae un script que siembra un día completo de
-  ventas:
+- **Rama:** `incidente/19`, desde `fase-09-dashboard`.
+- **Caos:** `off`. El caos agrega latencia de red, y lo que se mide acá es lo que
+  tarda el navegador.
+- **Datos, y son el corazón del incidente:** hace falta **volumen**. Con la Rueda
+  de fin de mes (10.000 giros) se nota poco, y esa es la razón por la que el bug
+  llegó hasta el evento. La siembra de la fase trae la Semana del Canal con un día
+  de evento:
 
 ```bash
 git checkout incidente/19
-node scripts/seedHeavyDay.js       # 40 rifas · ~12.000 números vendidos
-CHAOS_LEVEL=off npm run mock
+node mock/seed-reconciliation.js --event    # con los mocks parados: 180.000 giros en la rueda 2
+npm run mock:all
 npm start
-# Abre /dashboard y cambia de rifa varias veces con el Profiler grabando.
+# Abre /dashboard, elige «Semana del Canal», y después escribe en el buscador de /grants.
+# Al terminar: git checkout -- mock/db.json mock/googlePlay/earnings.json
 ```
-
-> 🧭 Si el script no existe en tu repositorio todavía, escríbelo: es parte del
-> incidente. Un bug de rendimiento sin datos que lo despierten es un bug que no
-> puedes investigar, y armar el juego de datos es tan trabajo forense como leer el
-> Profiler.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-React DevTools → **Profiler**. Graba, interactúa con el tablero, frena, y mira dos
-cosas: qué componentes se volvieron a renderizar y —el panel te lo dice— **por
-qué**. Un componente que se re-renderiza porque cambió una parte del store que no
-usa es una señal fuerte.
+Antes del Profiler, la consola del navegador: el aviso amarillo dice exactamente
+quién tarda y cuánto. Y después, DevTools → **Performance**: graba mientras
+escribes una letra en el buscador y mira qué función se lleva el tiempo. Si el
+React Profiler muestra renders rápidos y la pestaña igual se traba, el tiempo no
+se va en renderizar.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Pon un `console.count('computeTopNumbers')` dentro de la función pura, temporalmente,
-y cuenta cuántas veces corre por cada interacción. Compara ese número con cuántas
-veces **debería** correr, que es: solo cuando cambian los datos de los que depende.
+`src/app/store.js`, el `middleware` de `configureStore`. ¿Qué hace
+`getDefaultMiddleware()` en cada acción, y sobre qué?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-La memoización está puesta. Mira su array de dependencias con mucha atención y
-pregúntate: ese valor que está ahí adentro, ¿es el mismo objeto entre un render y
-el siguiente, o es uno nuevo con el mismo contenido?
+Si un middleware recorre **todo el estado** en cada acción, ¿qué pasa cuando una
+rama del estado tiene 180.000 objetos? ¿Y por qué ese costo aparece en pantallas que
+no tienen nada que ver con el tablero?
 
 </details>
 
@@ -4464,16 +4439,15 @@ el siguiente, o es uno nuevo con el mismo contenido?
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Pasos numerados, y **obligatorio**: cuántas rifas y cuántos números vendidos hay
-en el `db.json` con el que reprodujiste. Sin ese número, tu reproducción no la
-puede repetir nadie.}}
+{{Pasos numerados, con el volumen: cuántos giros tenía la rueda que abriste, y qué
+pantalla usaste después.}}
 
 **Evidencia observable**
-{{Los tiempos del Profiler y el número del `console.count`. Este incidente se
-diagnostica con dos números, no con una impresión.}}
+{{El aviso de la consola, literal, con su número de milisegundos. Y lo que mostró
+Performance.}}
 
-```
-{{render de X ms   ·   computeTopNumbers corrió N veces}}
+```text
+{{el aviso, y cuántas veces aparece por cada letra que escribes}}
 ```
 
 **Hipótesis**
@@ -4493,138 +4467,124 @@ diagnostica con dos números, no con una impresión.}}
 
 **Causa raíz**
 
-`DashboardPage` memoiza un cálculo caro con una dependencia que se **crea nueva en
-cada render**:
+En la rama, el store vuelve al middleware por defecto:
 
 ```javascript
-// ❌ Object.values(...) devuelve un array nuevo cada vez que corre esta línea.
-const topNumbers = useMemo(
-  () => computeTopNumbers(byNumber),
-  [Object.values(byNumber)]
-);
+// ❌ Los chequeos de desarrollo, sobre el estado entero, en cada acción.
+middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(epicMiddleware),
 ```
 
-`useMemo` compara sus dependencias por identidad referencial. Un array recién
-creado nunca es idéntico al de la vuelta anterior, aunque tenga exactamente el
-mismo contenido, así que la caché se invalida **siempre**. El `console.count` lo
-muestra sin ambigüedad: `computeTopNumbers` corre en cada render.
+En desarrollo, `getDefaultMiddleware()` monta dos chequeos que cuidan al equipo:
+uno avisa si alguien muta el estado, otro si mete algo no serializable. Los dos
+**recorren el estado entero en cada acción**, y el de serialización recorre además
+el payload de la acción. Mientras el estado fueron unas ruedas y unos envíos,
+eran microsegundos. Con la bitácora de la Semana del Canal en `dashboard.spinLog`
+—180.000 filas— son cientos de milisegundos **por acción**: medido en la corrida
+del curso, la mediana de nueve acciones cualquiera fue de **213 ms**, contra
+**0,1 ms** con la bitácora excluida. Y el aviso que el ticket no entendía es de
+Toolkit, literal:
 
-**La memoización existe y no sirve para nada.** Es peor que no tenerla, porque paga
-el costo del cálculo y además el de mantener y comparar la caché — y, sobre todo,
-porque parece resuelto. Nadie va a sospechar de un `useMemo` que está ahí,
-prolijamente escrito, en la línea correcta. Es el error común #1 de la Fase 9.
+```text
+SerializableStateInvariantMiddleware took 480ms, which is more than the warning threshold of 32ms.
+If your state or actions are very large, you may want to disable the middleware as it might cause
+too much of a slowdown in development mode. … It is disabled in production builds, so you don't
+need to worry about that.
+```
 
-**Y por qué "a la mañana vuela y a la tarde no"**
-
-Porque el costo de `computeTopNumbers` crece con la cantidad de números vendidos, y
-esa cantidad crece a lo largo del día. A las nueve de la mañana el cálculo inútil
-tarda un milisegundo y nadie lo nota; a las seis de la tarde, con doce mil ventas
-en el store, tarda cientos de milisegundos y ocurre en cada render.
-
-La observación del supervisor es exacta: **no cambió la aplicación, cambió el
-tamaño de los datos**. Un bug de rendimiento casi nunca es "el sistema está lento";
-es "hay una operación cuyo costo depende de algo que crece". Y por eso el ticket
-trae la hora del día: es la variable independiente, servida en bandeja.
-
-> 🧠 **Este es el mismo error del incidente 05 con otra sintaxis.** Allá se
-> capturaba un valor una sola vez y no se volvía a preguntar; acá se pregunta
-> siempre porque la clave de comparación nunca coincide. Los dos son fallos de
-> *identidad*: confundir "el mismo contenido" con "el mismo objeto" es una de las
-> dos o tres confusiones que producen más bugs en JavaScript.
+Ahí están las dos frases del ticket. *"No solo el tablero"*: el costo es por
+**acción**, y toda la consola despacha acciones —cada letra del buscador es un
+`playerSearchRequested`, cada «Deshacer» un `undoGrant`—. *"Con la Rueda de fin de
+mes anda bien"*: con 10.000 filas el recorrido es dieciocho veces más chico, y queda
+debajo de lo que alguien percibe.
 
 **Parche mínimo**
 
-Depender del objeto del store, que sí mantiene su referencia mientras no cambie:
+Que los chequeos no miren esa rama, ni la acción que la trae:
 
 ```javascript
-const topNumbers = useMemo(() => computeTopNumbers(byNumber), [byNumber]);
+// src/app/store.js
+  // F09: los chequeos de desarrollo recorren el estado entero en cada acción. La bitácora del
+  // tablero tiene miles de filas que nadie muta: se excluye de los dos, solo esa rama.
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: { ignoredPaths: ["dashboard.spinLog"] },
+      serializableCheck: {
+        ignoredPaths: ["dashboard.spinLog"],
+        // y la acción que la trae: este chequeo también mira el payload de cada acción.
+        ignoredActionPaths: ["meta.arg", "meta.baseQueryMeta", "payload.spinLog"],
+      },
+    }).concat(epicMiddleware),
 ```
 
 **La refactorización correcta**
 
-Sacar el cálculo del componente. Un `createSelector` de Reselect memoiza contra el
-store, garantiza referencia estable y —lo más importante— **el cálculo del dominio
-deja de vivir en la capa de presentación**:
-
-```javascript
-// src/features/sales/selectors.js
-export const selectTopSoldNumbers = createSelector(
-  [(state) => state.sales.byNumber],
-  computeTopNumbers
-);
-```
-
-```javascript
-// DashboardPage.jsx — sin useMemo, sin dependencias que vigilar.
-const topNumbers = useSelector(selectTopSoldNumbers);
-```
-
-La Fase 9 es clara en que esta es la corrección correcta y no un lujo: el
-`useMemo` bien puesto arregla este caso, y el selector hace que el caso no pueda
-volver a existir desde ningún otro componente que necesite el mismo dato.
+El parche deja la bitácora en el store: 180.000 objetos en memoria del navegador
+para dibujar ocho barras, bajados enteros en cada cambio de rueda. La corrección de
+fondo es que el store **no guarde la bitácora**, sino los conteos —como ya hace la
+conciliación de la Fase 8—, o mejor, que los conteos vengan agregados del servidor
+(`be07`). Es el caso que la Fase 11 trabaja en §5.3, con las dos respuestas lado a
+lado.
 
 **Prueba de regresión**
 
 ```javascript
-// src/features/sales/selectors.test.js
-test('el selector no recalcula si los datos no cambiaron', () => {
-  const state = { sales: { byNumber: { '0347': 'sold' } } };
+// src/features/dashboard/dashboardSlice.devchecks.test.js (la misma prueba que corre en el repo de prueba)
+// Contra los dos mocks, con la Semana del Canal sembrada: node mock/seed-reconciliation.js --event
+import { store } from "../../app/store";
+import { login } from "../auth/authSlice";
+import { fetchDashboard } from "./dashboardSlice";
+import { undoGrant } from "../grants/grantSlice";
 
-  const first = selectTopSoldNumbers(state);
-  const second = selectTopSoldNumbers(state);
-
-  // toBe, no toEqual: lo que se prueba es la IDENTIDAD, no el valor.
-  expect(second).toBe(first);
-});
+test("cargar la bitácora del evento, y después una acción de otra pantalla, no disparan el aviso de Toolkit", async () => {
+  await store.dispatch(login({ email: "ibatista@esclusa.test", password: "esclusa123" }));
+  const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+  await store.dispatch(fetchDashboard(2)); // la acción que trae las 180.000 filas
+  expect(store.getState().dashboard.spinLog).toHaveLength(180000);
+  store.dispatch(undoGrant("g-inexistente")); // cualquier acción, de cualquier pantalla
+  const slow = warn.mock.calls.filter(([message]) => String(message).includes("which is more than the warning threshold"));
+  warn.mockRestore();
+  expect(slow).toEqual([]); // con el bug: "SerializableStateInvariantMiddleware took … ms"
+}, 60000);
 ```
 
-`toEqual` acá pasaría siempre, incluso con la memoización rota, porque dos
-recálculos del mismo dato dan el mismo contenido. Es el error común #3 de la Fase
-10, y es la trampa más silenciosa de los tests de memoización: un test verde que no
-prueba nada.
+Con la rama `incidente/19` falla: el espía recoge los avisos de Toolkit de la carga
+y de la acción. Con el parche, pasa. Corre contra los mocks y con la Semana del
+Canal sembrada, porque sin volumen el aviso no aparece y la prueba pasaría con el
+bug.
 
 **Prevención**
 
-Una regla concreta para las revisiones de código: **en el array de dependencias de
-un `useMemo` o un `useCallback` no puede aparecer una llamada a función**.
-`[Object.values(x)]`, `[items.filter(…)]`, `[{ id }]` son todos el mismo error. Si
-la dependencia hay que calcularla, o se memoiza también, o —mejor— el cálculo entero
-se va a un selector.
+Una regla de revisión: **una rama del store que puede crecer sin límite —una
+bitácora, un historial, un reporte— entra al store con su `ignoredPaths`, o no
+entra**. Y una prueba con volumen, como la de arriba, en la suite de desarrollo.
 
-Y una operativa: medir el tablero con el juego de datos de un día cargado, no con
-tres rifas de ejemplo. Un banco de datos realista debería ser parte del repositorio,
-no algo que se improvisa el día del incidente.
+**Por qué llegó hasta el evento**
 
-**Por qué llegó a producción**
-
-Porque en desarrollo hay tres rifas. El `useMemo` se agregó de buena fe —alguien vio
-un cálculo caro y lo memoizó, que es exactamente lo que hay que hacer—, se probó, la
-pantalla anduvo rápido, y ahí terminó todo. **Con datos de juguete, la memoización
-rota y la memoización correcta se comportan igual.** No hay forma de distinguirlas
-mirando la pantalla; solo el `console.count` o el Profiler las separan, y nadie los
-abre cuando algo va rápido.
-
-Y el segundo motivo es que el rendimiento se degrada gradualmente. No hay un día en
-que "se rompió": hay meses en que fue empeorando, y cada semana el sistema estuvo
-apenas un poco peor que la anterior, que es la velocidad exacta a la que un equipo
-se acostumbra a cualquier cosa.
+Porque los dos chequeos **solo existen en desarrollo**: el build de producción no
+los monta, y el mismo tablero ahí vuela. El equipo prueba en desarrollo, con la
+Rueda de fin de mes, y nunca había cargado un evento en el navegador. El aviso de
+Toolkit es justamente el mecanismo que existe para que esto no pase, y dice en su
+última línea que en producción no hay de qué preocuparse — que es cierto, y es
+también por qué nadie se preocupó.
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"faltan `React.memo` en los componentes hijos"*, puede ser cierto y no
-es lo principal: mide primero. Agregar memoización sin medir es cómo se llega a este
-bug, no cómo se sale de él. Si dijiste *"hay que paginar la tabla"*, también es
-razonable y no cambia nada mientras el cálculo se rehaga en cada render: estarías
-pintando menos filas y calculando lo mismo. Y si tu fix fue subir el intervalo del
-refresco para que haya menos renders, tapaste el síntoma reduciendo la frecuencia
-con la que se manifiesta.
+Si dijiste *"es el `useMemo` del tablero"*, es la hipótesis más razonable con la
+Fase 9 fresca, y se mide: con el `useMemo` roto de la pieza forense, cambiar el
+filtro tarda 12,5 ms con la Semana del Canal, contra 2,2 ms bien memoizado. Es un
+bug real y no explica este: 12 ms no traban una consola, y el `useMemo` del tablero
+no corre cuando escribes en el buscador de **otra** pantalla. El tiempo se va en el
+`dispatch`, antes de que React se entere: es la diferencia entre los 213 ms por
+acción con el bug y los 0,1 ms con el parche, con el mismo tablero y los mismos
+renders. Si dijiste *"es la red"*, Network muestra una sola carga de la
+bitácora, al elegir la rueda; lo que tarda después no sale del navegador.
 
-**Y acá está el cruce con el track BE.** El incidente `be-05` —*"todo funciona hasta
-que hay gente"*— comparte el patrón *"anda bien hasta que crece"* y la causa vive
-del otro lado del cable: el pool de conexiones agotado. Cuando algo se degrada con
-el volumen, las dos preguntas son *¿qué crece?* y *¿en qué orilla está el recurso
-que se acabó?* — acá es tiempo de CPU en el navegador, allá son conexiones a la
-base.
+**Y acá está el cruce con el track BE.** El incidente `be-05` tiene el mismo
+síntoma —*"todo se arrastra al final del evento"*— una capa más abajo: allá es el
+pool de conexiones de PostgreSQL, agotado por los envíos repetidos de la noche del
+evento, cada uno con una conexión que nadie devolvió. Las dos caras del
+mismo aprendizaje: **lo que anda con los datos de prueba se comporta distinto con
+los del evento**, y el volumen se prueba antes, no la noche del cierre.
 
 </details>
 
@@ -4658,8 +4618,8 @@ tercera es la que importa:
 2. Localizar la causa, y contestar una pregunta que suena filosófica y es
    perfectamente práctica: **¿el test está mal, o el test tiene razón?**
 3. **Tomar una decisión y escribirla**: hotfix o refactorización, con sus
-   consecuencias. Este es uno de los tres incidentes del cuaderno que **no termina
-   en un parche**, sino en un documento que alguien firma.
+   consecuencias. Es uno de los incidentes del cuaderno que **no termina en un
+   parche**, sino en un documento que alguien firma.
 
 > 🧭 **Se abre en la Fase 10 y se cierra en la Fase 11.** La Fase 10 te da las
 > herramientas para reproducirlo; el criterio para decidir —cuándo un parche es
@@ -4668,7 +4628,7 @@ tercera es la que importa:
 
 ### 🔧 Preparación
 
-- **Rama:** `incidente/20`
+- **Rama:** `incidente/20`, desde `fase-10-testing-minimo`.
 - **Caos:** no aplica; no hay red en juego.
 - **Datos:** ninguno del `db.json`. Lo que hace falta es cambiar **tu máquina**, y
   ahí está la primera lección: la reproducción de este incidente no se consigue
@@ -4679,8 +4639,8 @@ tercera es la que importa:
 
 ```bash
 git checkout incidente/20
-npm test -- MetricCard                          # tu zona horaria: pasa
-TZ=UTC npm test -- MetricCard                   # la del runner: falla
+TZ=America/Bogota npm test -- MetricCard      # la del equipo: pasa
+TZ=UTC npm test -- MetricCard                 # la del runner: falla
 ```
 
 ---
@@ -4688,29 +4648,28 @@ TZ=UTC npm test -- MetricCard                   # la del runner: falla
 <details>
 <summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
 
-Ni el test ni el código cambiaron, así que lo que cambió es **dónde corre**. Antes
-de abrir un archivo, escribe la lista de todo lo que difiere entre tu máquina y el
-servidor de integración: sistema operativo, versión de Node, configuración
-regional, **zona horaria**, hora del sistema. Después tacha las que no puedan
-afectar a un componente que muestra una fecha.
+Ni el test ni el código del test cambiaron, así que lo que cambió es **dónde
+corre**. Antes de abrir un archivo, escribe la lista de todo lo que difiere entre tu
+máquina y el servidor de integración: sistema operativo, versión de Node,
+configuración regional, **zona horaria**, hora del sistema. Después tacha las que
+no puedan afectar a un componente que muestra una fecha.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-El `MetricCard` de fechas y lo que le llega por props. La pregunta concreta:
-**¿quién decide qué día es "hoy"?** Busca de dónde sale ese dato y cuántas veces
-podría dar respuestas distintas para el mismo instante.
+`MetricCard` y su línea "Actualizado". La pregunta concreta: **¿de dónde sale el
+instante que muestra, y en qué zona lo formatea?** Compara con el `git log` del
+archivo.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Corre el test con `TZ=UTC` delante. Si cambia el resultado, la pregunta ya no es
-"por qué falla el test" sino **"por qué el resultado del componente depende de la
-máquina que lo ejecuta"**.
+El test congela el reloj en las 21:00 del 20 de diciembre en Panamá. ¿Qué hora es
+ese mismo instante en UTC? ¿Y qué día?
 
 </details>
 
@@ -4721,16 +4680,15 @@ máquina que lo ejecuta"**.
 {{Esto lo escribes tú, antes de abrir la solución.}}
 
 **Reproducción**
-{{Pasos numerados, y **obligatorio**: la zona horaria y la hora del sistema en cada
-intento, tuyas y las del runner. Sin esos cuatro datos este incidente no se puede
-contar.}}
+{{Pasos numerados, y **obligatorio**: la zona horaria en cada intento, tuya y la del
+runner. Sin esos datos este incidente no se puede contar.}}
 
 **Evidencia observable**
 {{La salida del test en las dos configuraciones, con el texto esperado y el
 recibido.}}
 
-```
-{{TZ=...  → verde     ·     TZ=UTC  → esperaba "20/12", recibió "21/12"}}
+```text
+{{TZ=America/Bogota → verde     ·     TZ=UTC → esperaba "…", recibió "…"}}
 ```
 
 **Hipótesis**
@@ -4753,149 +4711,364 @@ fase se paga lo que dejas pendiente. Escríbelo como se lo mandarías a tu equip
 
 **Causa raíz**
 
-El `MetricCard` de fechas calcula "hoy" con `new Date()` adentro del componente y
-lo formatea con la zona horaria de la máquina. El test asegura un texto concreto.
-En tu máquina, en `-05:00`, el instante de la prueba cae el día 20; en el runner,
-que corre en `UTC` —el valor por defecto de prácticamente todos los servidores de
-integración—, el mismo instante cae el día 21. El test dice que esperaba `20/12` y
-recibió `21/12`, y las dos afirmaciones son correctas.
+Alguien "simplificó" la tarjeta: en vez de mostrar el instante de los datos que le
+llega por props, calcula "Actualizado" con `new Date()` adentro, y lo formatea **sin
+zona horaria**, o sea en la de la máquina:
+
+```javascript
+// ❌ El reloj y la zona de quien la renderiza, no el instante de los datos.
+const UPDATED_FORMAT = new Intl.DateTimeFormat("es-PA", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+// …
+Actualizado: {UPDATED_FORMAT.format(new Date())}
+```
+
+El test congela el reloj del sistema en las 21:00 del 20 de diciembre en Panamá y
+espera `"Actualizado: 20/12 21:00"`. En tu máquina, en `-05:00`, ese instante es
+exactamente eso, y pasa. En el runner, que corre en `UTC` —el valor por defecto de
+prácticamente todo servidor de integración—, el mismo instante son las **02:00 del
+21**, y la tarjeta dice `Actualizado: 21/12 02:00`. Medido: en `America/Bogota`
+pasa 3 de 3 veces; en `UTC` falla 3 de 3.
 
 **Y ahora la pregunta del enunciado: el test tiene razón.**
 
-Esto es lo que hay que llevarse del incidente. La lectura cómoda es "el test es
-frágil, arreglemos el test". La lectura correcta es que el test **descubrió un
-defecto real del componente**: su salida depende de estado ambiente —el reloj y la
-zona horaria de quien lo ejecuta— que nadie le pasó y que nadie eligió. Ese mismo
-defecto, en producción, es el incidente 16 en otra pantalla: dos usuarios en
-provincias distintas ven cosas distintas sobre el mismo dato.
+Es lo que hay que llevarse del incidente. La lectura cómoda es "el test es frágil,
+arreglemos el test". La lectura correcta es que el test **descubrió un defecto real
+del componente**: su salida depende de estado ambiente —el reloj y la zona horaria
+de quien lo ejecuta— que nadie le pasó y que nadie eligió. Ese mismo defecto, en
+producción, es el incidente 16 en otra pantalla: dos operadores en zonas distintas
+ven cosas distintas sobre el mismo dato.
 
 > 🧠 **Un test no es flaky solo porque falle donde no esperabas.** Descarta esa
-> hipótesis con un número: en el runner falla el **100%** de las veces, y en tu
-> máquina el **0%**. Eso no es aleatoriedad: es un resultado perfectamente
+> hipótesis con un número: en el runner falla el **100 %** de las veces, y en tu
+> máquina el **0 %**. Eso no es aleatoriedad: es un resultado perfectamente
 > determinista en dos ambientes distintos. Flaky sería fallar a veces en el
 > **mismo** ambiente. Confundir las dos cosas lleva directo a la peor decisión
 > posible, que es reintentar el test hasta que pase.
 
 Y el detalle más grave del ticket no es el rojo: es que **dos personas ya lo están
 salteando**. Un test que el equipo aprende a ignorar es peor que un test que no
-existe, porque sigue contando en la cobertura y ya no protege nada. Cada día que
-el rojo sobrevive, más gente aprende a convivir con él.
+existe, porque sigue contando en la cobertura y ya no protege nada.
 
 **La decisión, que es el entregable**
 
-**Opción A — el hotfix.** Fijar el ambiente de la suite: la zona horaria y el reloj,
-en la configuración de Jest.
+**Opción A — el hotfix.** Fijar la zona horaria de la suite en el script:
 
-```javascript
-// jest.setup.js
-process.env.TZ = 'America/Bogota';
-jest.useFakeTimers().setSystemTime(new Date('2024-12-20T15:00:00-05:00'));
+```json
+"test": "TZ=America/Bogota react-scripts test"
 ```
 
-Cuesta quince minutos, desbloquea el pipeline hoy y **no arregla nada**: el
-componente sigue siendo no determinista en producción. Peor todavía, fijar una sola
-zona horaria en los tests **esconde la familia entera de errores del incidente
-16**, porque garantiza que ninguna prueba vuelva a ejercitar otra zona.
+Cuesta cinco minutos, desbloquea el pipeline hoy y **no arregla nada**: el
+componente sigue mostrando la hora de la máquina de cada operador. Peor todavía,
+fijar una sola zona en las pruebas **esconde la familia entera de errores del
+incidente 16**, porque garantiza que ninguna prueba vuelva a ejercitar otra zona.
 
-**Opción B — la refactorización.** Que el reloj sea una dependencia explícita: el
-`MetricCard` recibe `now` por props o por contexto, y no llama a `new Date()` nunca.
-El componente se vuelve una función pura de sus entradas, el test deja de depender
-de la máquina, y de paso queda abierto el camino para pagar la deuda 💸 de
-`serverNow` que la Fase 7 declaró: que la hora de referencia venga del servidor y
-no del navegador.
-
-Cuesta más, toca varios componentes y no se termina en una tarde.
+**Opción B — la refactorización.** Volver a lo que la Fase 9 escribió: la tarjeta
+recibe el instante de los datos por props (`updatedAt`) y lo formatea **en hora de
+Panamá, explícita** (`timeZone: "America/Panama"`), que es la hora de presentación
+del sistema (historia §9). El componente vuelve a ser una función pura de sus
+entradas, y el test pasa en cualquier zona sin cambiar una línea.
 
 **La decisión recomendada, y por qué**
 
-Aplicar **A hoy**, con dos condiciones que son las que la separan de una tapadera:
+Acá B es barata —el componente correcto existe en `fase-10-testing-minimo`, y el
+cambio es revertir dos líneas—, así que la respuesta es **B, hoy**. A tiene sentido
+cuando B cuesta semanas; en ese caso se aplica con dos condiciones que la separan
+de una tapadera:
 
-1. **La suite corre en más de una zona horaria**, no en una fija. Es una matriz de
-   dos o tres valores en el pipeline, y convierte el hotfix en algo que además
-   protege:
-
-```javascript
-// jest.setup.js — la zona la decide el pipeline, no el archivo.
-process.env.TZ = process.env.TEST_TZ || 'UTC';
-```
-
+1. **La suite corre en más de una zona horaria**, no en una fija: una matriz de dos
+   o tres valores en el pipeline (`TZ=UTC`, `TZ=America/Bogota`), que convierte el
+   hotfix en algo que además protege.
 2. **Queda anotado en `A12-mapa-de-deuda-tecnica.md`** con su fecha y su destino, y
-   **B se agenda en la Fase 11**, que es donde el curso paga deuda. Una deuda que
-   no está escrita no es una deuda: es un olvido con buena intención.
+   B se agenda. Una deuda que no está escrita no es una deuda: es un olvido con buena
+   intención.
 
-Y la parte que casi nunca se hace: **escribirlo**. Que quede dicho que se eligió el
-parche a sabiendas, qué queda sin resolver y cuándo se paga. Un hotfix documentado
-y agendado es una decisión profesional; el mismo hotfix sin escribir es cómo nace
-la deuda que nadie recuerda haber contraído.
+Y la parte que casi nunca se hace: **escribirlo**. Que quede dicho qué se eligió,
+por qué, qué queda sin resolver y cuándo se paga.
 
-> 🧭 **Y esto es lo que distingue a este incidente de los otros diecinueve.** Acá no
-> hay un `git diff` que sea la respuesta. El entregable es un párrafo, una entrada
-> en el mapa de deuda y un acuerdo. En un equipo de mantenimiento real, buena parte
-> del trabajo termina así — y casi nunca se practica.
+> 🧭 **Y esto es lo que distingue a este incidente de los otros.** Acá no hay un
+> `git diff` que sea la respuesta. El entregable es un párrafo, una entrada en el
+> mapa de deuda y un acuerdo. En un equipo de mantenimiento real, buena parte del
+> trabajo termina así — y casi nunca se practica.
 
 **Prueba de regresión**
 
+La de la Fase 10, sin tocarla, corrida en las dos zonas:
+
 ```javascript
-// src/features/dashboard/MetricCard.test.jsx
-describe.each(['UTC', 'America/Bogota', 'Asia/Tokyo'])('en %s', (tz) => {
-  beforeAll(() => { process.env.TZ = tz; });
+// src/features/dashboard/MetricCard.test.jsx (la de la Fase 10)
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import MetricCard from "./MetricCard";
 
-  test('muestra la fecha del cierre, no la de la máquina', () => {
-    render(<MetricCard label="Cierre" date="2024-12-20T20:00:00-05:00" now={FIXED_NOW} />);
+// El 20 de diciembre a las 21:00 en Panamá: en UTC ya es el 21.
+const EVENING = Date.parse("2026-12-20T21:00:00-05:00");
 
-    // El mismo texto en las tres zonas: eso es lo que se está probando.
-    expect(screen.getByText('20/12/2024')).toBeInTheDocument();
+describe("MetricCard", () => {
+  // El reloj de la máquina se congela en ese instante: si el componente lo consultara,
+  // vería el mismo momento que le llega por props. Lo que no se congela es la zona horaria.
+  beforeEach(() => {
+    jest.useFakeTimers("modern");
+    jest.setSystemTime(EVENING);
+  });
+  afterEach(() => jest.useRealTimers());
+
+  test("muestra título, valor y pista", () => {
+    render(<MetricCard title="Giros" value="10000" hint="7566 gratis · 2434 pagos" />);
+    expect(screen.getByText("Giros")).toBeInTheDocument();
+    expect(screen.getByText("10000")).toBeInTheDocument();
+    expect(screen.getByText("7566 gratis · 2434 pagos")).toBeInTheDocument();
+  });
+
+  test("muestra el instante de los datos en hora de Panamá, en cualquier máquina", () => {
+    render(<MetricCard title="Giros" value="10000" updatedAt={EVENING} />);
+    expect(screen.getByText("Actualizado: 20/12 21:00")).toBeInTheDocument();
   });
 });
 ```
 
-Igual que en el incidente 16, la forma del test **es** la corrección: la misma
-aserción repetida en varias zonas horarias. Un test de fechas que corre en una sola
-zona no prueba nada sobre fechas.
+```bash
+TZ=UTC npm test -- MetricCard            # con B: verde
+TZ=America/Bogota npm test -- MetricCard # con B: verde
+```
+
+La forma del test **es** la corrección: el reloj congelado en un instante que cae
+en días distintos según la zona, y la misma aserción en las dos. Un test de fechas
+que corre en una sola zona no prueba nada sobre fechas.
 
 **Prevención**
 
-Tres cosas, en orden de valor. La matriz de zonas horarias en el pipeline, que es
-lo único que impide que esto vuelva. Una regla de revisión: **`new Date()` no se
-llama dentro de un componente** — el reloj es una dependencia y se inyecta como
-cualquier otra. Y una política sobre los tests rojos: un test que falla se arregla
-o se borra, con su motivo; saltearlo no es una tercera opción.
+La matriz de zonas horarias en el pipeline, que es lo único que impide que esto
+vuelva. Una regla de revisión: **`new Date()` no se llama dentro de un componente**
+—el instante es un dato y llega por props, como en `MetricCard`—. Y una política
+sobre los tests rojos: un test que falla se arregla o se borra, con su motivo;
+saltearlo no es una tercera opción.
 
-**Por qué llegó a producción**
+**Por qué llegó a integración**
 
 Porque nadie decidió nunca cuál era la zona horaria de la suite, y el valor por
-defecto es "la de quien la corra". Mientras la suite solo corrió en las máquinas
-del equipo —todas en la misma zona— la ambigüedad no tuvo consecuencias. El día que
-se creó el pipeline se agregó un ejecutor más, en UTC, y la divergencia nació ahí:
-**no la produjo un cambio de código, la produjo un cambio de participantes.**
-
-Y el segundo motivo es que el sistema no tuvo tests durante años
-(`00-historia-del-sistema.md` §3: la Era 1 no dejó ninguno). Una suite joven sobre
-un código viejo va a encontrar defectos que llevaban años ahí, y los va a reportar
-todos juntos, en forma de rojos que parecen problemas de la suite. Sostener que el
-test tiene razón, en ese contexto, requiere más carácter que conocimiento.
+defecto es "la de quien la corra". Mientras la suite solo corrió en las máquinas del
+equipo —todas en `-05:00`, de Bogotá a Panamá— la ambigüedad no tuvo consecuencias.
+El día que se creó el pipeline se agregó un ejecutor más, en UTC, y la divergencia
+nació ahí: **no la produjo un cambio de código, la produjo un cambio de
+participantes.**
 
 **Si tu causa fue distinta a esta**
 
-Si dijiste *"es flaky, hay que reintentarlo"*, mira arriba: 100% y 0% no es
-aleatoriedad. Si dijiste *"el runner tiene mal la hora"*, no: el runner tiene la
-hora perfectamente bien, en UTC, que es la configuración correcta para un servidor.
-El que hace una suposición indebida es el componente. Y si tu fix fue cambiar el
-texto esperado del test para que coincida con lo que devuelve el runner, dejaste el
-pipeline en verde y el componente roto en las dos zonas — y ahora el test miente en
-tu máquina.
+Si dijiste *"es flaky, hay que reintentarlo"*, mira arriba: 100 % y 0 % no es
+aleatoriedad. Si dijiste *"el runner tiene mal la hora"*, no: el runner tiene la hora
+perfectamente bien, en UTC, que es la configuración correcta para un servidor. Si
+tu fix fue cambiar el texto esperado del test para que coincida con lo que devuelve
+el runner, dejaste el pipeline en verde y el componente roto en las dos zonas — y
+ahora el test miente en tu máquina. Y si notaste que en el navegador la tarjeta dice
+`20/12, 21:00`, con una coma que el test no tiene: es real, el formato depende del
+ICU de cada motor (Node 14 contra Chromium), y es otro motivo para que una aserción
+de fechas compare lo que importa y no el separador.
 
 **Y acá está el cruce con el track BE.** El incidente `be-15` —*"la suite lleva tres
 semanas en verde y ayer se rompió producción"*— es el mismo patrón con otro
 sustituto: allá lo que engaña no es el reloj sino **el motor de la base**, con la
-suite corriendo contra SQLite y producción contra PostgreSQL. Los dos incidentes
-enseñan lo mismo desde orillas opuestas: **una prueba solo vale lo que valga su
-parecido con el ambiente real**, y cada diferencia que aceptas —el reloj, la zona,
-el motor, la latencia— es una clase de bug que tu suite no va a encontrar jamás.
+suite corriendo contra un motor y producción contra otro. Los dos incidentes enseñan
+lo mismo desde orillas opuestas: **una prueba solo vale lo que valga su ambiente.**
 
-Y hay una simetría que vale la pena notar: en `be-15` la suite estaba **verde** y
-mentía; acá está **roja** y dice la verdad. La reacción instintiva es desconfiar del
-rojo y confiar en el verde, y en los dos casos es la reacción equivocada.
+</details>
+
+---
+
+## Incidente 21 ➕ — La rueda dice 15 % y el tablero muestra 5 %
+
+> **Fase:** 9 · **Categoría:** Dominio · **Dificultad:** 🟠
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 60-75 min
+> · Termina en diagnóstico y decisión, no en un commit
+
+### 🎫 El ticket
+
+Itzel abrió el tablero de la Rueda de fin de mes para contestar la reseña, y el
+avatar común, que la tabla del juego publica al 15 %, sale en el 5 % de los giros. La
+barra está muy por debajo de la banda. El resto de los segmentos se mueven poco, y
+la Esclusa de Oro casi bien. En la consola la rueda está configurada con 1.500
+puntos básicos para el avatar común. Nadie tocó los pesos. ¿Está arreglada o no?
+
+**Reportado por:** Itzel, operación
+**Ambiente:** el tablero de la Fase 9, con una bitácora vieja
+
+### 🎯 Qué se te pide
+
+Diagnosticar, con lo que el repo trae, **por qué la rueda no da lo que publica**, y
+escribir la decisión que le propondrías al estudio. Este incidente **no termina en
+un commit** de la consola: la causa no está en la consola, y la decisión no es tuya
+sola.
+
+### 🔧 Preparación
+
+- **Sin rama:** el incidente se prepara con un dato, no con código.
+- **Sale de:** `fase-09-dashboard`.
+- **Datos:** la Rueda de fin de mes con la bitácora de la regla vieja, la de 2021:
+
+```bash
+git checkout fase-09-dashboard
+node mock/seed-reconciliation.js --accommodating    # con los mocks parados
+npm run mock:all
+npm start
+# /dashboard → Rueda de fin de mes. Al terminar: git checkout -- mock/db.json mock/googlePlay/earnings.json
+```
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — dónde mirar (ábrela si llevas 20 min sin una idea nueva)</summary>
+
+Antes de sospechar del aleatorio, mira **a quién** le sale cada segmento, no
+cuántas veces. La bitácora tiene el jugador de cada giro. Si un segmento sale poco,
+pregúntate a qué jugadores **no** les sale.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+`00-historia-del-sistema.md` §5, *la rueda que se acomoda*. ¿Qué haría esa regla con
+el avatar más común de la rueda, en una comunidad donde muchos veteranos ya lo
+tienen?
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+Cuenta, para el avatar común, cuántos jugadores lo sacaron **dos o más veces**. ¿Qué
+número esperarías con una rueda honesta de 10.000 giros y 800 jugadores? ¿Y qué
+número daría una regla que promete *"nunca te repite"*?
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+{{Esto lo escribes tú, antes de abrir la solución.}}
+
+**Evidencia observable**
+{{Los conteos del tablero, el χ², y el conteo por jugador.}}
+
+```text
+{{segmento · esperado · observado     ·     jugadores que lo sacaron dos veces}}
+```
+
+**Hipótesis**
+- ❌ Descartada: {{qué creíste y qué evidencia la tumbó}}.
+- ✅ Confirmada: {{la que sobrevivió}}.
+
+**Tu causa raíz**
+{{Dónde vive la regla que contradice la tabla.}}
+
+**Tu decisión**
+{{Qué le propones al estudio, con sus costos, y quién decide.}}
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b> — ábrela después de escribir la tuya</summary>
+
+**Lo que muestra el tablero**
+
+Con la bitácora de la regla vieja, el tablero de la Fase 9 marca "Con alarma",
+χ² = 808,35, y los conteos de 10.000 giros contra lo publicado:
+
+| Segmento | Esperado | Observado |
+|---|---|---|
+| sin-premio | 3.000 | 3.404 |
+| vidas-2 | 2.000 | 2.179 |
+| avatar-comun | 1.500 | **505** |
+| set-gemas-basico | 1.500 | 1.704 |
+| vidas-5 | 1.000 | 1.161 |
+| set-gemas-plata | 800 | 877 |
+| avatar-raro | 150 | 106 |
+| esclusa-de-oro | 50 | 64 |
+
+No es un desvío de azar: la banda del avatar común con 10.000 giros va de 1.393 a
+1.607 (A14 §2), y 505 está a casi veintiocho desviaciones por debajo.
+
+**La evidencia que separa las hipótesis: a quién le sale**
+
+El aleatorio roto daría un segmento raro en general; el patrón es otro. Con un
+script de diez líneas sobre la bitácora del `db.json`:
+
+```javascript
+// scripts/repeated-landings.js — ¿a cuántos jugadores les salió dos veces el mismo segmento?
+// Lee la bitácora del db.json del mock. Uso: node scripts/repeated-landings.js 4 avatar-comun
+const db = require("../mock/db.json");
+
+const wheelId = Number(process.argv[2]);
+const segmentId = process.argv[3];
+const perPlayer = new Map();
+for (const row of db.spinLog) {
+  if (row.wheelId === wheelId && row.landedSegment === segmentId) {
+    perPlayer.set(row.playerId, (perPlayer.get(row.playerId) || 0) + 1);
+  }
+}
+const landings = [...perPlayer.values()].reduce((sum, n) => sum + n, 0);
+const repeated = [...perPlayer.values()].filter((n) => n >= 2).length;
+console.log(`${segmentId}: ${landings} veces, en ${perPlayer.size} jugadores; ${repeated} jugadores lo sacaron dos o más veces`);
+```
+
+```bash
+node scripts/repeated-landings.js 4 avatar-comun
+```
+
+```text
+avatar-comun: 505 veces, en 505 jugadores; 0 jugadores lo sacaron dos o más veces
+```
+
+**Quinientas cinco veces, a quinientos cinco jugadores distintos, y ninguno dos
+veces.** Con la bitácora de la regla nueva, el mismo script da `1515 veces, en 695
+jugadores; 448 jugadores lo sacaron dos o más veces` —a esos se les entregó el
+sustituto—. La regla vieja cumple su promesa, *"¡ahora la rueda nunca te repite!"*,
+y la cumple sacando el avatar de la rueda antes de girar para quien ya lo tiene.
+Con el 30 % de los jugadores veteranos que ya traían los dos avatares más comunes,
+el avatar común casi desaparece de la rueda, y el raro también baja (106 contra
+150). El peso que dejan se reparte entre los demás: por eso los segmentos que no
+son avatares salen **de más**, y la Esclusa de Oro también (64 contra 50).
+
+**Causa raíz**
+
+La regla de la rueda que se acomoda (historia §5). No está en la consola: vive en el
+API de 2021, que decide en cada giro con unos pesos que la consola no ve. Los pesos
+configurados son verdad; la tabla del juego, no.
+
+**Por qué no termina en un commit**
+
+Porque no hay una línea de la consola que arreglar, y porque la decisión cambia la
+promesa que el estudio les hizo a los jugadores. Las salidas, con su costo:
+
+1. **La protección con sustituto** (la que el equipo de Juliana propone, historia
+   §5): la rueda gira con los pesos publicados, y si cae en algo repetido se entrega
+   el sustituto publicado. La tabla vuelve a decir la verdad y la promesa se
+   mantiene. Es trabajo del API (track BE), y la bitácora nueva guarda las dos cosas.
+2. **Publicar la tabla que de verdad corre.** Imposible: depende de cada jugador.
+3. **Quitar la regla y la promesa.** Lo más barato y lo que más duele en la
+   comunidad.
+
+**La decisión recomendada** es la 1, y la escribe quien la va a firmar: Itzel (el
+producto), Juliana (el API) y Abdiel (el estudio). El entregable del incidente es
+ese documento: qué se observó, qué regla lo produce, qué se propone, cuánto cuesta,
+cómo se va a verificar que quedó bien.
+
+**Cómo se verifica, después**
+
+Con lo que el curso ya construyó: la conciliación de la Fase 8 sobre la bitácora
+nueva no tiene que dar alarma, y la prueba de la Fase 10 (`oddsAudit.test.js`) fija
+las dos caras —la regla nueva dentro de la tolerancia, la vieja afuera—. Ese es el
+criterio de aceptación de la decisión.
+
+**Si tu causa fue distinta a esta**
+
+Si dijiste *"el aleatorio está roto"*, la evidencia por jugador lo descarta: un
+aleatorio roto no sabe quién tiene qué avatar. Si dijiste *"alguien cambió los
+pesos"*, la consola dice 1.500 y la bitácora vieja no guarda la versión de los pesos
+(A12): la hipótesis se descarta en el API, no en la consola. Y si dijiste *"es una
+falsa alarma, una de cada dieciocho"*, A14 §5 te da el número: 5 % de falsas
+alarmas es para desvíos de dos o tres σ, no de treinta.
 
 </details>
 

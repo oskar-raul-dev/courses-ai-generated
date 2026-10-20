@@ -1,6 +1,7 @@
 # 🔍 Apéndice A13 — Depurar el build de producción
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **~3 horas**
+> Apéndice de **consulta rápida** · **~3 horas**
 > Lo usan: el track forense desde la Fase 3 · Prioridad: 🔴 Alta
 > Requiere: la app corriendo (Fase 0) y el mock de la Fase 3.
 
@@ -11,8 +12,11 @@ reportar no ocurrió ahí.
 
 Ocurrió en un bundle minificado, servido desde un dominio distinto, con
 variables de entorno distintas, y el stack trace que te llega dice
-`t.value is not a function` en `main.8f3a2b1c.js:2:14853`. Este apéndice es
-sobre eso: **cómo se depura lo que ya no se parece a tu código.**
+`t.value is not a function` en `main.<hash>.chunk.js:1:12330`. Este apéndice es
+sobre eso: **cómo se depura lo que ya no se parece a tu código.** Todo lo que
+sigue se corrió sobre el build de la consola al cerrar la Fase 11, el
+18/10/2026: los nombres de archivo, los tamaños, los hashes y la posición que se
+resuelve en §4 son de esa corrida.
 
 > 📝 **Por qué existe este apéndice.** Dos de los ocho objetivos pedagógicos que
 > declara `00-alcance-del-proyecto.md` §3 —«depurar código productivo, incluso
@@ -41,14 +45,16 @@ sobre eso: **cómo se depura lo que ya no se parece a tu código.**
 `npm run build` no es «lo mismo pero comprimido». Webpack le hace a tu código
 cuatro cosas, y cada una rompe una suposición distinta que tenías al depurar:
 
-**Minifica.** Los nombres locales desaparecen: `raffleId` pasa a ser `t`,
-`toReadableError` a `n`. Los nombres de módulos y de propiedades de objeto
-sobreviven —por eso `state.raffles.items` sigue reconocible—, pero todo lo local
-se pierde. Esto es lo que convierte un stack trace en jeroglífico.
+**Minifica.** Los nombres locales desaparecen: `wheelId` pasa a ser `t`,
+`toReadableError` a `n`. Las propiedades de objeto sobreviven —por eso
+`state.wheels.items` sigue reconocible—, pero todo lo local se pierde. Esto es lo
+que convierte un stack trace en jeroglífico.
 
-**Concatena.** Tus doscientos archivos se vuelven dos o tres. Un error que en
-desarrollo decía `saleSlice.js:47` ahora dice `main.8f3a2b1c.js:2:14853`, donde
-la línea 2 tiene medio megabyte.
+**Concatena.** Tus decenas de archivos se vuelven tres: `main.<hash>.chunk.js`
+(tu código, 47.928 bytes en la corrida), `2.<hash>.chunk.js` (las dependencias,
+489.606 bytes) y `runtime-main.<hash>.js` (el cargador de webpack, 1.569). Un
+error que en desarrollo decía `closedWheelGuard.js:24` ahora dice
+`main.2be97eaf.chunk.js:1:12330`, en una línea de casi 48.000 caracteres.
 
 **Elimina el código de desarrollo.** `process.env.NODE_ENV === 'production'`
 hace que React quite sus warnings, sus validaciones de `propTypes` y sus mensajes
@@ -74,27 +80,35 @@ producción, y ese es el §6 entero.
 npm run build
 ```
 
-Te deja `build/` con el HTML, los assets y `build/static/js/main.<hash>.js`.
-Mira el tamaño y el hash: **el hash es el contenido**. Dos builds del mismo
-código dan el mismo hash; si cambia el hash, cambió algo. Es el primer dato que
-pides cuando alguien reporta un bug de producción: *¿qué hash tiene el bundle que
-estás viendo?*
+Te deja `build/` con el HTML, los assets y `build/static/js/main.<hash>.chunk.js`.
+Mira el tamaño y el hash: **el hash es el contenido**. Medido: dos builds
+seguidos del mismo código dieron el mismo `main.2be97eaf.chunk.js`; cambiar un
+texto de interfaz dio `main.d1c58a72`. Es el primer dato que pides cuando alguien
+reporta un bug de producción: *¿qué hash tiene el bundle que estás viendo?*
+
+> 💡 **El hash es del código fuente, no del minificado.** Cambiar solo un
+> comentario también cambió el hash (`main.85e8d0ff`), aunque el código
+> minificado salió idéntico salvo su última línea, la que apunta al source map. Dos
+> hashes distintos no prueban que el código que corre sea distinto; dos hashes
+> iguales sí prueban que es el mismo.
 
 Servirlo es el paso que casi nadie da y que descubre bugs propios:
 
 ```bash
-npx serve -s build -l 5000
+npx serve@14.2.1 -s build -l 5000
 ```
 
 El `-s` importa: le dice a `serve` que redirija cualquier ruta desconocida a
-`index.html`. **Sin ese flag, recargar en `/raffles/1` da 404** — y ese es el bug
-de deploy que la Fase 1 anticipa en su ejercicio 26. Acá es donde se ve de
-verdad: en `npm start` el dev server hace ese fallback solo, y por eso el
+`index.html`. Medido: con `-s`, `GET /wheels/1` da **200**; sin él, **404**. Es el
+bug de deploy que la Fase 1 anticipa en su ejercicio 26, y acá se ve de verdad:
+en `npm start` el servidor de desarrollo hace ese fallback solo, y por eso el
 problema no existe hasta que despliegas.
 
-> ⚠️ **El build no habla con tu mock.** `apiClient` apunta a `localhost:3001`;
-> si construiste sin `REACT_APP_API_URL`, el bundle tiene esa URL horneada.
-> Levanta el mock (`npm run mock:all`) antes de probar el build, o vas a
+> ⚠️ **El build habla con el mock de siempre.** `apiClient` tiene escrita en el
+> código su URL, `http://localhost:3001`, y `apiStore` la del `3002`: la consola
+> no lee la dirección del API de ninguna variable de entorno (es una deuda, y la
+> razón de que un build "para producción" de esta consola no exista todavía).
+> Levanta los mocks (`npm run mock:all`) antes de probar el build, o vas a
 > diagnosticar como bug de build lo que es un servidor apagado — que es, con
 > diferencia, la media hora más tonta que se pierde en este oficio.
 
@@ -113,6 +127,11 @@ CRA 4 los genera por defecto en el build, y se controlan con una variable:
 # Build de producción SIN source maps: no expones tu código fuente.
 GENERATE_SOURCEMAP=false npm run build
 ```
+
+Medido: sin source maps, `build/static/js/` no tiene ningún `.map`, y el bundle
+sale con el **mismo hash** (`main.2be97eaf`): el mapa no cambia el código, solo
+quién puede leerlo. El mapa de la consola pesa 169.457 bytes, más de tres veces
+el bundle que describe.
 
 Y acá está el compromiso que hay que entender, porque es una decisión real que
 todo equipo toma y casi ninguno documenta:
@@ -142,17 +161,10 @@ desplegar.
 
 ## 4. Depurar un stack trace minificado, paso a paso
 
-Te llega esto en un reporte:
-
-```
-TypeError: Cannot read property 'number' of undefined
-    at t (main.8f3a2b1c.js:2:14853)
-    at Object.n [as sell] (main.8f3a2b1c.js:2:9271)
-```
-
+Te llega un reporte con una posición del bundle: `main.2be97eaf.chunk.js:1:12330`.
 El procedimiento, de más barato a más caro:
 
-**Uno: confirma el hash.** ¿`8f3a2b1c` es el build que está desplegado ahora?
+**Uno: confirma el hash.** ¿`2be97eaf` es el build que está desplegado ahora?
 Si el usuario tenía la pestaña abierta desde ayer, puede estar corriendo un
 bundle viejo y estás persiguiendo un bug ya arreglado. Un `Ctrl+Shift+R` del
 reportante resuelve más incidentes de los que parece.
@@ -163,17 +175,24 @@ mecánico. Si **no** aparece, ya sabes algo enorme: la diferencia no está en el
 código, está en el ambiente (§6).
 
 **Tres: abre el map en Sources.** Con `GENERATE_SOURCEMAP` activo, las DevTools
-resuelven solo: pegas la posición `2:14853` en el panel Sources y te lleva a
-`saleSlice.js:47`, con tu variable llamándose `raffleId` otra vez. A partir de
-ahí depuras como siempre: breakpoint, watch, step.
+resuelven solas: la posición `1:12330` te lleva a
+`features/grants/epics/closedWheelGuard.js:24:24`, el mensaje de "la rueda ya
+cerró". Medido con la librería `source-map` (0.5.7, la que trae el proyecto) sobre
+el `.map` de la corrida: esa es la línea real del archivo. A partir de ahí depuras
+como siempre: breakpoint, watch, step.
 
 **Cuatro, si no hay map: el bundle crudo.** Abre `main.<hash>.js` en DevTools y
 usa el botón `{}` («Pretty print») abajo a la izquierda. No te devuelve los
 nombres, pero sí la estructura, y con la posición del stack llegas a la función
 culpable. Buscar por strings que sobrevivieron a la minificación es la técnica
 que salva acá: los **textos de interfaz en español y las claves de objeto** no se
-minifican. Buscar `"Ese número ya fue vendido"` dentro del bundle te deja parado
-justo al lado del código que quieres leer.
+minifican. Buscar `"La rueda ya cerr"` dentro del bundle te deja parado justo al
+lado del código que quieres leer.
+
+> ⚠️ **Busca sin tildes.** CRA 4 minifica con `ascii_only: true`: los caracteres
+> fuera de ASCII se escriben como escapes. En el bundle de la consola el texto
+> dice `"La rueda ya cerr\xf3: no se env\xedan giros de ella."`. Buscar
+> `"cerró"` no encuentra nada, y es fácil concluir que el código no está.
 
 > 💡 **Ese último truco es la razón práctica de una convención del curso.** Los
 > textos de interfaz van en español y las claves en inglés (README,
@@ -201,7 +220,7 @@ distinta latencia. El frontend puede ser idéntico y el comportamiento no serlo.
 
 **El servidor que sirve los estáticos.** Configuración de fallback a
 `index.html`, cabeceras de caché, compresión, HTTPS. El bug de recarga en
-`/raffles/1` vive exactamente acá.
+`/wheels/1` vive exactamente acá.
 
 **El navegador y la máquina del usuario.** Versión, extensiones, zona horaria,
 reloj. La zona horaria es la que más caro sale en este dominio: toda la Fase 7
@@ -277,7 +296,10 @@ y es el que menciona el A2.
 
 **Lo que depende de una variable de entorno ausente.** `process.env.REACT_APP_X`
 sin definir no es un error: es `undefined`, que se hornea literalmente. Terminas
-con una petición a `undefined/raffles` y un 404 desconcertante.
+con una petición a `undefined/wheels` y un 404 desconcertante. Y la otra cara,
+medida: una `REACT_APP_` definida **que ningún archivo usa no llega al bundle**
+(se construyó con `REACT_APP_BUILD_LABEL=uat-17` y el texto no aparece); en cuanto
+un componente la lee, el valor queda escrito literal en `main.<hash>.chunk.js`.
 
 > ⚠️ **Y la regla de oro que se deriva de todas.** Un warning de React en
 > desarrollo **no es ruido**: es producción avisándote con anticipación y en un
@@ -304,21 +326,23 @@ con una petición a `undefined/raffles` y un 404 desconcertante.
 
 ## 🧪 Ejercicios (9)
 
-1. **🟢** Corre `npm run build`. Anota el tamaño de `main.<hash>.js` y el hash.
-   Vuelve a construir sin cambiar nada y confirma que el hash **no** cambió.
-   Cambia una línea, reconstruye y confirma que sí cambió.
-2. **🟢** Sirve el build con `npx serve -s build`. Navega a `/raffles/1` y
+1. **🟢** Corre `npm run build`. Anota el tamaño de `main.<hash>.chunk.js` y el
+   hash. Vuelve a construir sin cambiar nada y confirma que el hash **no**
+   cambió. Cambia un texto, reconstruye y confirma que sí cambió. **Criterio:**
+   después cambia solo un comentario y explica por qué el hash cambió igual.
+2. **🟢** Sirve el build con `npx serve@14.2.1 -s build`. Navega a `/wheels/1` y
    recarga. Ahora sírvelo **sin** el flag `-s` y recarga otra vez. Documenta la
    diferencia y explica por qué `npm start` no tenía este problema.
 3. **🟢** Abre el bundle en DevTools → Sources, dale a «Pretty print» y busca el
-   texto `"Ese número ya fue vendido"`. Anota qué código hay alrededor y cuánto
-   tardaste en encontrarlo.
+   texto `"La rueda ya cerr"`. **Criterio:** anotas qué código hay alrededor, y por
+   qué buscar `"cerró"` no lo encontraba.
 4. **🟡** Construye con `GENERATE_SOURCEMAP=false` y compara el contenido de
    `build/static/js/` con el build normal. Provoca un error en la app servida y
    compara el stack trace de los dos builds, lado a lado.
-5. **🟡** Define `REACT_APP_API_URL` en un `.env`, construye, y **busca la URL
-   literal dentro del bundle** con `grep`. Explica en dos líneas por qué esto
-   descalifica a `REACT_APP_` como lugar para guardar un secreto.
+5. **🟡** Define `REACT_APP_BUILD_LABEL` en un `.env`, construye y búscala en el
+   bundle con `grep`: no está. Muéstrala en el navbar, construye otra vez y
+   búscala. **Criterio:** la encuentras literal, y explicas en dos líneas por qué
+   esto descalifica a `REACT_APP_` como lugar para guardar un secreto.
 6. **🟠 Diagnóstico.** Provoca a propósito un bug que solo aparezca en el build:
    quita una `key` de una lista renderizada con `.map()`. Confirma el warning en
    desarrollo, construye, y verifica que en producción el warning desaparece.
@@ -329,12 +353,12 @@ con una petición a `undefined/raffles` y un 404 desconcertante.
    contra `CHAOS_LEVEL=high`. Documenta tres diferencias observables de
    comportamiento entre ellos, con evidencia de Network o consola.
 8. **🔴 Diagnóstico integrado.** Te llega este ticket: *«desde ayer, algunos
-   usuarios ven la lista de rifas vacía, pero a otros les funciona. En UAT no
+   operadores ven la lista de ruedas vacía, pero a otros les funciona. En UAT no
    pasa.»* Aplica el árbol de §6 completo: escribe qué preguntas haces, en qué
    orden, qué evidencia pides en cada paso, y qué causa descarta cada respuesta.
    El entregable es el árbol de decisión, no una respuesta.
 9. **🔴** Escribe el documento de una página «Cómo depurar un bug de producción
-   en raffles-app» para el próximo que entre al equipo: cómo obtener el hash,
+   en la Esclusa» para el próximo que entre al equipo: cómo obtener el hash,
    dónde están los source maps, cómo levantar el build local, el árbol de §6
    resumido, y la política de source maps del proyecto. Es el artefacto que
    convierte este apéndice en algo que el equipo usa en vez de leer.
@@ -365,8 +389,10 @@ con una petición a `undefined/raffles` y un 404 desconcertante.
   https://developer.chrome.com/docs/devtools/javascript/source-maps/ — el panel
   Sources y la carga de maps.
 - React — errores en producción:
-  https://react.dev/errors — el descodificador de los códigos numéricos que React
-  emite en el build en vez del mensaje completo. Guárdalo en marcadores.
+  https://legacy.reactjs.org/docs/error-decoder.html — el descodificador de los
+  códigos numéricos que React 16 emite en el build en vez del mensaje completo (el
+  propio bundle de `react-dom` 16.14 enlaza a `error-decoder.html?invariant=`).
+  Guárdalo en marcadores.
 
 **Del curso**
 - `A4-cra-por-dentro.md` §3 y §7 — variables de entorno y la configuración de

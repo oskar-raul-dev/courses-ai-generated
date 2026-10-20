@@ -1,6 +1,6 @@
 # 📦 Apéndice A3 — Node y npm
 
-> Tutorial React 16 — Rifas y chances · Apéndice de consulta rápida · **~1h**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Apéndice de consulta rápida · **~1h**
 > Lo usa: **Fase 0 (setup)**, y cualquier incidente de "en mi máquina anda" · Prioridad: 🔴 Alta
 
 Esto **no** se lee de corrido. Es la página que abres cuando `npm ci` te
@@ -281,7 +281,7 @@ obtenga **el mismo build que tú**, sin sorpresas. Cuando alguien reporta
 > 💡 **El patrón a memorizar.** Node correcto (`.nvmrc`) + lockfile
 > commiteado + `npm ci` = build reproducible. Si los tres están, "en mi
 > máquina funciona" deja de ser una excusa y pasa a ser una verdad
-> verificable. Quita cualquiera de los tres y vuelves a la lotería.
+> verificable. Quita cualquiera de los tres y vuelves a la casilla de salida.
 
 ---
 

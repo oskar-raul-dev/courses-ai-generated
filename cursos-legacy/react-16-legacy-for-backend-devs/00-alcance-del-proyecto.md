@@ -1,5 +1,5 @@
 # 🎯 Alcance del proyecto
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 Documento de encuadre. Define qué es este proyecto, para quién, qué
 produce y —tan importante— qué **no** hace. Se lee antes de escribir
@@ -9,7 +9,7 @@ cualquier fase.
 
 ## 1. En una frase
 
-Un tutorial práctico y **autocontenido** de **96 horas** que prepara a
+Un tutorial práctico y **autocontenido** de **98 horas** que prepara a
 desarrolladores senior para **mantener, depurar y hacer hotfixes** en una
 aplicación React 16 heredada — sin reescribirla y sin depender de ningún
 sistema, repositorio ni instructor externo.
@@ -23,12 +23,13 @@ es una habilidad distinta de saber React, y no se entrena leyendo tutoriales
 de apps nuevas. Este curso construye deliberadamente un sistema con las
 cicatrices de un sistema viejo, para que se pueda practicar sobre ellas.
 
-El sistema es **Rifas y Chances S.A.S.**, una empresa y una plataforma
-**ficticias**, inventadas enteras para este curso. Su historia completa —tres
-eras de desarrollo, quién dejó cada cosa y por qué— está en
-`00-historia-del-sistema.md`. Que sea ficticio es una ventaja, no una
-limitación: podemos documentar cada decisión mala con su fecha y su motivo,
-cosa que ningún caso de estudio real permite.
+El sistema es **la Esclusa**, la consola con la que **Interoceanic Games**, un
+estudio indie de Ciudad de Panamá, opera las ruedas de premios de **Jewel
+Locks**. El estudio, el juego, la consola y el API son **ficticios**, inventados
+enteros para este curso. Su historia completa —tres eras de desarrollo, quién
+dejó cada cosa y por qué— está en `00-historia-del-sistema.md`. Que sea ficticio
+es una ventaja, no una limitación: podemos documentar cada decisión mala con su
+fecha y su motivo, cosa que ningún caso de estudio real permite.
 
 Las características que lo hacen difícil, y que son el material del curso:
 
@@ -76,32 +77,48 @@ conceptual real está en **RxJS/epics** y en **leer código de transición**.
 
 ---
 
-## 5. El dominio: rifas y chances
+## 5. El dominio: ruedas, jugadores y giros
 
-La aplicación administra rifas, números (disponibles / reservados /
-vendidos), participantes, resultados de una lotería simulada, liquidaciones
-y un dashboard.
+La Esclusa administra **ruedas** de premios: cada rueda tiene **segmentos**, y
+cada segmento tiene un premio y un **peso en puntos básicos**. Además maneja
+**jugadores** con su saldo de giros y su inventario, **envíos manuales** de
+premios desde la consola, **compras** de giros verificadas en Google Play, la
+**conciliación** de compras y de probabilidades, y un dashboard.
 
-**Flujo de estados de una rifa:**
+**Flujo de estados de una rueda:**
 
-```
-borrador → abierta → cerrada → resuelta → liquidada
+```mermaid
+stateDiagram-v2
+    [*] --> draft
+    draft --> scheduled
+    scheduled --> live
+    live --> ended
+    ended --> reconciled
+    reconciled --> [*]
+    note right of live : los pesos no cambian
+    note right of ended : no se giran ni se envían premios
 ```
 
 **Reglas de negocio (que son también las fuentes de bug):**
 
-- Un mismo número no puede venderse dos veces (race condition inevitable).
-- Las reservas deben expirar correctamente.
-- No se vende después de la hora de cierre (hora dura + zona horaria).
-- Las fechas consideran timezone y cambios de día (medianoche).
-- Los resultados se consultan por polling (la lotería tarda variable).
+- Un giro produce **un solo resultado**, aunque la petición llegue dos veces
+  (clave de idempotencia).
+- Un premio de **edición limitada** no se entrega por encima de su stock.
+- Un envío manual tiene una **ventana de deshacer** de 10 segundos.
+- No se gira ni se envía a una rueda `ended`, desde el instante del cierre
+  (hora dura + zona horaria).
+- Las fechas consideran timezone y cambios de día (medianoche). El proceso corre
+  en UTC; la hora de Panamá es solo de presentación.
+- Las compras pendientes (pago en efectivo en Google Play) se consultan por
+  polling: minutos, y hasta 48 horas en la vida real.
 - El polling debe detenerse al cerrar, desmontar o cerrar sesión.
-- Los cálculos monetarios no usan floats.
-- Toda operación relevante conserva trazabilidad.
+- Los cálculos monetarios se hacen en centavos de dólar, enteros.
+- Toda operación relevante conserva trazabilidad: cada giro deja una fila en la
+  bitácora, que solo se agrega.
 
-Este dominio se eligió porque cualquiera entiende una rifa (curva de
-dominio nula) y porque concentra concurrencia, tiempo, dinero y
-reactividad en un espacio que cabe holgado en 96 horas.
+Este dominio se eligió porque cualquiera entiende una rueda de premios (curva de
+dominio nula) y porque concentra concurrencia, tiempo, dinero y reactividad en un
+espacio que cabe holgado en 98 horas.
 
 ---
 
@@ -114,15 +131,16 @@ El curso son archivos `.md` autocontenidos, sin dependencias externas:
   estudiante versiona su código: repos, prefijos de commit y tags de fase, de
   ejercicio y de incidente).
 - **12 fases** → `NN-slug.md` (`00-` a `11-`).
-- **13 apéndices** de consulta rápida → `AN-slug.md` (`A1-` a `A13-`).
+- **14 apéndices** de consulta rápida → `AN-slug.md` (`A1-` a `A14-`).
   Cuatro de ellos (A9 entornos, A10 dinero, A11 marbles, A12 deuda) salieron de
   dividir fases que habían crecido de más, y el A13 cubre los objetivos de §3
   sobre source maps y comparación de ambientes, que antes no tenían contenido en
-  ninguna fase.
+  ninguna fase. El A14 es la estadística para auditar una rueda: la teoría que la
+  Fase 8 usa y remite.
 - **1 cuaderno de incidentes** → `cuaderno-incidentes.md` (archivo único:
   índice, enunciados, pistas y soluciones).
 - **De consulta**, en la raíz: `00-decisiones-y-versiones.md` (versiones,
-  `package.json` y `go.mod` de referencia, puertos y las decisiones D1–D29) y
+  `package.json` y `go.mod` de referencia, puertos y las decisiones D1–D37) y
   `00-convencion-de-git-y-tags.md` (ramas, tags y commits).
 
 El track forense **no tiene archivos propios**: vive dentro de la §6 de cada
@@ -135,20 +153,21 @@ lejos del código que explica no se lee.
 
 ## 7. Lo que está dentro del alcance
 
-- 12 fases (0-11) que suman exactamente 96 horas.
+- 12 fases (0-11) que suman exactamente 98 horas.
 - Track forense integrado en cada fase.
-- 20 incidentes con post-mortem (mínimo 4 de RxJS/epics).
-- 13 apéndices de consulta rápida (A1–A13).
+- 21 incidentes con post-mortem (mínimo 4 de RxJS/epics).
+- 14 apéndices de consulta rápida (A1–A14).
 - Convención de git y tags de progreso, con su recordatorio en el cierre de cada
   fase y apéndice.
 - Testing mínimo: unitario (Jest/RTL), epics (marbles), smoke (Playwright/Cypress).
 - Setup multiplataforma con workarounds reales (Windows, Linux, macOS Apple Silicon).
-- 🔥 **Track BE opcional (be00–be09 y bea-01…bea-10): 84 horas aparte.** Un
+- 🔥 **Track BE opcional (be00–be09 y bea-01…bea-11): 86 horas aparte.** Un
   backend real en Go 1.19 contra PostgreSQL 13 que reemplaza al mock del puerto
   3001 sin que el frontend cambie una línea, y que paga las deudas 💸 que las
-  fases 2, 5, 7 y 8 declararon y no podían saldar. **No cuenta en las 96 horas
-  y no es prerrequisito de nada**; se puede empezar al terminar la Fase 8. Su
-  encuadre completo está en el README del curso (§Track BE) y en `be00`.
+  fases 2, 5, 7 y 8 declararon y no podían saldar. Su cuaderno tiene 18
+  incidentes. **No cuenta en las 98 horas y no es prerrequisito de nada**; se
+  puede empezar al terminar la Fase 8. Su encuadre completo está en el README del
+  curso (§Track BE) y en `be00`.
 
 ---
 
@@ -179,7 +198,8 @@ Todas las versiones están **congeladas y decididas** en
 `00-decisiones-y-versiones.md`, que es la fuente de verdad única: el
 `package.json` completo, qué instala cada fase, los tres puertos y el porqué
 de cada decisión (D1–D13). El track BE opcional añade allí mismo sus decisiones
-D14–D29, su `go.mod` y su cuarto puerto, en la §7 de ese archivo.
+D14–D38, su `go.mod` y su cuarto puerto, en la §7 de ese archivo; cuatro de ellas
+(D30, D32, D33 y D36) rigen también fases del track base.
 
 El resumen, para orientarse: Node 14.21.3 con npm 6 · React 16.14.0 ·
 react-scripts 4.0.3 · Redux 4.1.2 · Redux Toolkit 1.8.6 · React-Redux 7.2.9 ·

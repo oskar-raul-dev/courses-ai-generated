@@ -1,6 +1,6 @@
 # 🐹 Apéndice bea-01 — Go para quien no escribe Go
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~4 horas
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Consulta rápida · ~4 horas
 > Lo referencian: `be01` y todas las fases siguientes
 
 ---
@@ -12,7 +12,7 @@ puedas abrirlo cuando una línea te frene y volver a la fase en cinco minutos.
 Damos por sabidos funciones, tipos, punteros como concepto, HTTP y concurrencia
 como idea. Lo que se explica es **por qué Go tomó decisiones distintas** y qué
 consecuencias tienen en el código que estás escribiendo. Si algo no aparece en el
-backend de rifas, no está acá — por interesante que sea.
+backend de la rueda, no está acá, por interesante que sea.
 
 > 🧭 **Regla de época (`D14`).** El código del track es Go **1.19**, de agosto de
 > 2022. Sin `log/slog`, sin `errors.Join`, sin los patrones de método de
@@ -46,7 +46,7 @@ directorio comparten espacio de nombres y se ven entre sí sin importarse.
 
 Tres cosas que sorprenden viniendo de otros lenguajes:
 
-**La visibilidad la decide la mayúscula.** `Raffle` es exportado, `sqlStore` no.
+**La visibilidad la decide la mayúscula.** `Wheel` es exportado, `sqlStore` no.
 No hay `public` ni `private`, y no hay nada intermedio. La consecuencia práctica
 es que la unidad de encapsulamiento es el **paquete**, no el tipo: dentro de un
 paquete todo se ve todo.
@@ -62,9 +62,9 @@ diccionario— y el paquete se llama `httpapi`, porque un paquete llamado `http`
 que importa `net/http` obliga a poner alias en cada archivo.
 
 ```go
-// server/internal/raffle/store.go
-package raffle   // el paquete se llama por lo que ES, no por lo que hace:
-                 // "raffle", no "raffles", no "raffleservice", no "utils"
+// server/internal/wheel/store.go
+package wheel   // el paquete se llama por lo que ES, no por lo que hace:
+                // "wheel", no "wheels", no "wheelservice", no "utils"
 ```
 
 > ⚠️ **El import por efecto secundario.** Cuando veas `_ "github.com/lib/pq"`, el
@@ -88,8 +88,8 @@ manejas es una variable que el compilador te obliga a nombrar.
 ### Envolver, no aplastar
 
 ```go
-if err := tx.InsertSale(ctx, raffleID, number, participantID, soldBy); err != nil {
-    return fmt.Errorf("registrando la venta del número %s: %w", number, err)
+if err := s.store.AddVersion(ctx, w.ID, incoming); err != nil {
+    return fmt.Errorf("publicando una versión de la rueda %d: %w", w.ID, err)
 }
 ```
 
@@ -115,11 +115,9 @@ if errors.As(err, &pqErr) && pqErr.Code == "23505" { … }
 El track los usa en todas las capas y son la frontera entre ellas:
 
 ```go
-var (
-    ErrNotFound     = errors.New("la rifa no existe")
-    ErrAlreadySold  = errors.New("ese número ya fue vendido")
-    ErrRaffleClosed = errors.New("la rifa ya cerró")
-)
+var ErrNotFound = errors.New("la rueda no existe")                               // paquete wheel
+var ErrCaseGranted = errors.New("Ese caso ya fue compensado para este jugador.") // paquete player
+var ErrSoldOut = errors.New("agotado")                                           // paquete spin
 ```
 
 📖 **El patrón del track, en una línea:** el store traduce errores de
@@ -137,14 +135,15 @@ conocerla.
 Eso invierte una convención que probablemente traes:
 
 > 🧭 **Las interfaces se declaran del lado del consumidor, no del proveedor.** El
-> paquete que necesita guardar rifas declara `Store` con los métodos que usa; el
+> paquete que necesita guardar ruedas declara `Store` con los métodos que usa; el
 > paquete que habla con Postgres no sabe que esa interfaz existe.
 
 ```go
-// server/internal/raffle/raffle.go — la declara QUIEN LA USA
+// server/internal/wheel/wheel.go — la declara QUIEN LA USA
 type Store interface {
-    List(ctx context.Context) ([]Raffle, error)
-    FindByID(ctx context.Context, id int64) (Raffle, error)
+    List(ctx context.Context) ([]Wheel, error)
+    FindByID(ctx context.Context, id int64) (Wheel, error)
+    // … y lo que el service de be03 necesita, nada más
 }
 ```
 
@@ -160,9 +159,9 @@ un struct de tres líneas. No hay framework de *mocks* en este track y no hace
 falta.
 
 ```go
-type stubNumberService struct{ err error }
-func (s stubNumberService) SellNumber(context.Context, int64, string, *int64) (RaffleNumber, error) {
-    return RaffleNumber{}, s.err
+type stubGrantService struct{ err error }
+func (s stubGrantService) SendGrant(context.Context, player.Grant) (player.Grant, error) {
+    return player.Grant{}, s.err
 }
 ```
 
@@ -199,13 +198,15 @@ solo `*T` satisface una interfaz cuyos métodos tengan receptor por puntero.
 Este es el uso más importante en el track, y no tiene que ver con eficiencia:
 
 ```go
-ParticipantID *int64 `json:"participantId" db:"participant_id"`
+Origin *string `json:"origin,omitempty" db:"origin"`
 ```
 
-Un `int64` pelado no puede distinguir "no hay participante" de "el participante
-es el cero". Un puntero sí: `nil` serializa a `null`, que es exactamente lo que
-el contrato de `be00` exige. La alternativa obvia —`sql.NullInt64`— serializa a
-`{"Int64":0,"Valid":false}` y **rompe el frontend en silencio**. Es la pieza
+Un `string` pelado no puede recibir un `NULL`: el `Scan` falla con `converting NULL
+to string is unsupported`. Un puntero sí: `nil` es "no hay origen", y con `omitempty`
+la clave ni aparece en el JSON, que es exactamente lo que devolvía el mock para las
+filas del giro de 2019. La alternativa obvia —`sql.NullString`— serializa a
+`{"String":"paid","Valid":true}` y **rompe el frontend en silencio**: la consola
+compara `origin === "paid"` y un objeto nunca es igual a un texto. Es la pieza
 forense de `be03`.
 
 📖 **Cuando el dominio distingue "ausente" de "cero", el tipo también tiene que
@@ -217,10 +218,10 @@ distinguirlo.** Vale para `*int64`, para `*time.Time` y para el
 ## 5. Structs, etiquetas y campos exportados
 
 ```go
-type Raffle struct {
-	ID          int64     `json:"id"           db:"id"`
-	ClosesAt    time.Time `json:"closesAt"     db:"closes_at"`
-	NumberPrice int64     `json:"numberPrice"  db:"number_price"`
+type Wheel struct {
+	ID       int64     `json:"id"           db:"id"`
+	ClosesAt time.Time `json:"closesAt"     db:"closes_at"`
+	Version  int       `json:"wheelVersion" db:"version"`
 }
 ```
 
@@ -235,8 +236,9 @@ lugar. Esa es la costura, y está concentrada a propósito.
 > al que le falta justo el campo que importa, y cuesta cinco minutos encontrarlo
 > la primera vez.
 
-`json:"-"` omite un campo a propósito. El track lo usa para el `id` de
-`raffle_numbers`, que existe en la tabla y no estaba en el `db.json`: mantener la
+`json:"-"` omite un campo a propósito. El track lo usa para la clave de `grants`:
+el `id` que ve el contrato es el que generó la consola (`g-1`, `g-2`…, guardado en
+`grant_id`), y la clave de la tabla es otra que el cliente nunca ve. Mantener la
 respuesta idéntica a la del mock es lo que hace verificable el reemplazo.
 
 ---
@@ -256,13 +258,16 @@ defer tx.Rollback()  // un Rollback después de un Commit exitoso es un no-op:
 ```
 
 **`panic`** aborta la ejecución y desenrolla la pila corriendo los `defer`. Y
-acá está la diferencia cultural que `be01` convierte en pieza forense:
+acá está la diferencia cultural que `be01` convierte en pieza forense, medida:
 
-> 🧠 En Node, un `throw` dentro de un handler de Express lo atrapa el framework y
-> solo muere esa petición. En Go, **un `panic` que nadie recupera tumba el
-> proceso entero**: todo el servidor, todas las conexiones de todos los usuarios.
-> `gorilla/mux` no trae recuperación incorporada. El middleware es tuyo y es
-> obligatorio.
+> 🧠 En Node, un `throw` síncrono dentro de un handler de Express lo atrapa el
+> framework, responde `500` y el proceso sigue. En Go, depende de **en qué
+> goroutine** ocurre. En la que atiende la petición, `net/http` lo recupera por su
+> cuenta: escribe `http: panic serving …` en el log y **cierra la conexión sin
+> responder**, sin status ni `X-Request-Id`. En una goroutine que lanzó el handler,
+> nadie lo recupera y **el proceso entero muere**. `gorilla/mux` no agrega nada:
+> el middleware que convierte el pánico en un `500` con su id es tuyo y es
+> obligatorio, y no protege goroutines.
 
 ```go
 defer func() {
@@ -308,7 +313,7 @@ func RequestIDFrom(ctx context.Context) string {
 
 > 🧭 **La regla de los valores en el contexto:** solo para datos que atraviesan
 > capas **sin ser parte de la lógica**. El request id, la identidad. Nunca
-> parámetros de negocio disfrazados: si el service necesita el `raffleID`, va en
+> parámetros de negocio disfrazados: si el service necesita el `wheelID`, va en
 > la firma.
 
 Y el patrón que aparece en todo el track:
@@ -348,7 +353,7 @@ for i := 0; i < contenders; i++ {
 	go func(i int) {       // el índice se pasa como PARÁMETRO: capturar la
 		defer wg.Done()    // variable del bucle es el bug clásico de Go < 1.22
 		start.Wait()
-		errs[i] = sell(…)
+		errs[i] = spin(…)
 	}(i)
 }
 start.Done()   // ¡ya!
@@ -358,9 +363,13 @@ wg.Wait()
 Sin la barrera, las goroutines se lanzan escalonadas, la carrera nunca ocurre, y
 **la prueba pasa contra el código vulnerable**.
 
-**Proteger estado compartido: `sync.RWMutex`.** El `ChaosController` de `be01` lo
-leen miles de peticiones y lo escribe un `POST /_chaos` muy de vez en cuando.
-`RWMutex` permite lecturas simultáneas entre sí y serializa las escrituras.
+**Proteger estado compartido: `sync.Mutex` y `sync.RWMutex`.** El
+`ChaosController` de `be01` lo leen miles de peticiones y lo escribe un
+`POST /_chaos` muy de vez en cuando. Si solo guardara el nivel, `RWMutex` sería lo
+justo: permite lecturas simultáneas entre sí y serializa las escrituras. Pero
+guarda también su generador de números, y un `*rand.Rand` no se puede usar desde
+varias goroutines a la vez; cada petición lo modifica al sacar sus números, así
+que no hay lecturas puras y alcanza un `Mutex`.
 
 **Canales y `select`.** El track los usa para una sola cosa: los *workers* de
 `be05` y `be06`, con la forma que los hace apagables.
@@ -387,8 +396,8 @@ Un slice declarado y no inicializado es `nil`, y **`json.Marshal(nil)` produce
 `null`**, no `[]`.
 
 ```go
-var raffles []Raffle      // → "null"  ❌ rompe el .map() del componente
-raffles := []Raffle{}     // → "[]"    ✅ contrato de be00
+var wheels []Wheel       // → "null"  ❌ rompe el .map() de WheelTable
+wheels := []Wheel{}      // → "[]"    ✅ contrato de be00
 ```
 
 Es literalmente una línea de diferencia y es el error común nº 2 de `be02`. Un
@@ -414,13 +423,14 @@ go vet ./...            # errores probables que compilan: cancel sin usar,
                         # Printf mal formado, bloqueos copiados
 go mod tidy             # agrega lo que falta y quita lo que sobra del go.mod
 gofmt -l .              # el formato NO se discute en Go: hay uno solo
-go list -m all          # el árbol de dependencias
+go list -m all          # el GRAFO de módulos, no lo que se compila (be04)
+go version -m ./api     # lo que de verdad quedó dentro del binario
 go build -tags sqlite   # compila con etiquetas (be09)
 ```
 
 Dos convenciones que conviene saber antes de que te confundan: los archivos
 `*_test.go` **no entran en el binario**, y un archivo puede declarar el paquete
-`raffle` o `raffle_test` — la segunda forma solo ve la API exportada, que es
+`wheel` o `wheel_test`: la segunda forma solo ve la API exportada, que es
 buena disciplina para las pruebas de contrato.
 
 ---
@@ -438,12 +448,11 @@ buscando "Go http server" lo va a usar.
 | `errors.Join` | 1.20 | Un error a la vez, envuelto con `%w` |
 | Patrones en `http.ServeMux` | 1.22 | `gorilla/mux` (`D15`) |
 | `for` con variable por iteración | 1.22 | Pasar el índice como parámetro (§8) |
-| `time.Now()` sembrado al azar en `math/rand` | 1.20 | El caos es reproducible entre arranques (`be01`) |
 
-Los dos últimos merecen atención porque **cambian el comportamiento del código
-que escribiste** si algún día actualizas el toolchain: la captura de la variable
-del bucle y el sembrado de `math/rand` son exactamente el tipo de detalle que
-hace aparecer un test intermitente en una actualización que "no tocaba nada".
+El último merece atención porque **cambia el comportamiento del código que
+escribiste** si algún día actualizas el toolchain: la captura de la variable del
+bucle es exactamente el tipo de detalle que hace aparecer un test intermitente
+en una actualización que "no tocaba nada".
 
 ---
 
@@ -453,11 +462,11 @@ hace aparecer un test intermitente en una actualización que "no tocaba nada".
 |---|---|---|
 | Señalar un fallo esperable | `return err` envuelto con `%w` | `panic` |
 | Preguntar qué error es | `errors.Is` / `errors.As` | comparar el texto |
-| Que el proceso no muera por un bug | `recover` en un middleware | confiar en el router |
-| Distinguir ausente de cero | un puntero (`*int64`) | `sql.NullInt64` |
+| Que un pánico llegue como `500` con su id | `recover` en un middleware | confiar en la recuperación de `net/http` |
+| Un campo anulable en el JSON | un puntero con `omitempty` | `sql.NullString` |
 | Un doble de prueba | un struct con los métodos | una librería de *mocks* |
 | Devolver una lista vacía | `[]T{}` | `var s []T` |
-| Estado compartido entre goroutines | `sync.RWMutex` | esperar que no colisione |
+| Estado compartido entre goroutines | `sync.Mutex` o `sync.RWMutex` | esperar que no colisione |
 | Que un worker se apague | `select` con `<-ctx.Done()` | un `for` infinito |
 | Liberar lo que abriste | `defer` en la línea siguiente | acordarte al final |
 | Cancelar trabajo que ya no importa | pasar el `ctx` hasta la consulta | ignorarlo |
@@ -468,12 +477,12 @@ hace aparecer un test intermitente en una actualización que "no tocaba nada".
 
 1. **🟢** Escribe una función que devuelva `(int64, error)`, envuelve su error con `%w` desde quien la llama, y recupera el error original con `errors.Is`.
 2. **🟢** Serializa un struct con un campo en minúscula y comprueba que desaparece del JSON sin ningún aviso.
-3. **🟡** Toma `RaffleNumber` y cambia `ParticipantID` de `*int64` a `sql.NullInt64`. Serializa y compara los dos JSON. Explica qué le pasaría al tablero de la Fase 5.
+3. **🟡** Toma `spin.Spin` y cambia `Origin` de `*string` a `sql.NullString`. Serializa una fila con origen y una sin él, y compara los dos JSON. Explica qué le pasaría al tablero de la Fase 9.
 4. **🟡** Escribe una interfaz de un método, satisfácela con dos tipos distintos —uno real y uno de prueba— y comprueba que el compilador no necesita que declares nada.
 5. **🟠 Diagnóstico.** Escribe un bucle que lance cinco goroutines capturando la variable del bucle en vez de pasarla como parámetro. Compila con Go 1.19 y observa el resultado. Explica por qué Go 1.22 lo cambió y qué significa eso para un código viejo que se actualiza.
 6. **🟠 Diagnóstico.** Escribe un `context.WithTimeout` sin `defer cancel()` y encuéntralo con `go vet`. Explica qué se filtra exactamente.
 7. **🟠** Escribe un worker con `select` sobre `ctx.Done()` y un `time.Ticker`, y demuestra que se detiene cuando el contexto se cancela. Después quita el `case` del contexto y demuestra que el proceso ya no termina.
-8. **🔴 Diagnóstico.** Escribe un struct compartido por goroutines sin candado, hazlo fallar con `go test -race`, y transcribe el informe explicando qué significa cada bloque. Después arréglalo con `sync.RWMutex` y comprueba que el informe desaparece.
+8. **🔴 Diagnóstico.** Escribe un struct compartido por goroutines sin candado, hazlo fallar con `go test -race`, y transcribe el informe explicando qué significa cada bloque. Después arréglalo con `sync.Mutex` y comprueba que el informe desaparece.
 
 ---
 

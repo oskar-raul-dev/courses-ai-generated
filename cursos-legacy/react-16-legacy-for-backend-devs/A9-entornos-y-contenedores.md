@@ -1,6 +1,6 @@
 # 🐳 Apéndice A9 — Entornos y contenedores
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **~3 horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Apéndice de **consulta rápida** · **~3 horas**
 > Lo usa: Fase 0 (setup), y el track forense ante cualquier bug de entorno.
 > No es lectura secuencial: salta al bloque que necesites.
 
@@ -167,7 +167,7 @@ npm start
 
 Editas en tu editor del host (o con Dev Containers) y abres el navegador en
 `localhost:3000`. El servicio `mock` levanta los dos backends de la Fase 3 —el
-json-server del `3001` y la lotería del `3002`— con un solo comando.
+mock de la API del `3001` y el mock de Google Play del `3002`— con un solo comando.
 
 > 📝 **Por qué `build-essential` y `python3` si ya no usamos `node-sass`.** No
 > hacen falta hoy. Están en el `Dockerfile.dev` como red por si alguna
@@ -300,7 +300,7 @@ dentro; a cambio, el problema desaparece para siempre.
    y compáralo con el `node -v` de tu host. Explica en dos líneas por qué pueden
    diferir y por qué el `.nvmrc` no aplica dentro del contenedor.
 3. **🟡** Levanta el servicio `mock` del `docker-compose.yml` y confirma que
-   `localhost:3001/raffles` y `localhost:3002/results/1` responden desde el
+   `localhost:3001/wheels` y `localhost:3002/purchases/tok-1` responden desde el
    navegador del host. Si alguno no responde, diagnostica si es el mapeo de
    puertos o el `--host 0.0.0.0`.
 4. **🟡** Alterna entre Colima y Docker Desktop sin tocar el proyecto: apaga uno,

@@ -1,17 +1,19 @@
 # 🛠️ Fase 00 — Setup + Hola mundo CRA
 
-> Tutorial React 16 — Rifas y chances · Fase 0 de 11 · **6 horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Fase 0 de 11 · **6 horas**
 > Depende de: nada (es la primera) · Habilita: Fase 1 — Estructura base + Router 5
 
 ---
 
 ## 🎯 1. Propósito
 
-Antes de arreglar un solo bug del sistema de rifas, tienes que poder levantarlo en tu máquina. Suena trivial. No lo es. En una app legacy de 2020-2022, "clono el repo y corre" es una promesa que casi nunca se cumple a la primera: la versión de Node no coincide, un paquete nativo no compila en tu arquitectura, el `sass` que esperaba el build no es el que instalaste. Media hora perdida antes de escribir una línea de código.
+Tu primer día en el equipo empieza con un enlace al repo y un correo reenviado: el `.env` de producción que la agencia de San José dejó en 2019, el único que hay. Juliana no te da un onboarding porque no hay quién lo dé; te da un plazo: *"levántala antes del lunes, que el martes miramos el API"*.
 
-Antes de arrancar, si no lo hiciste: `00-historia-del-sistema.md` te cuenta en veinte minutos qué estás heredando y por qué está como está. Vale la pena — casi todas las rarezas que vas a encontrar en las próximas 96 horas tienen ahí su explicación.
+Antes de arreglar un solo bug de la Esclusa, tienes que poder levantarla en tu máquina. Suena trivial. No lo es. En una app legacy de 2019-2023, "clono el repo y corre" es una promesa que casi nunca se cumple a la primera: la versión de Node no coincide, un paquete nativo no compila en tu arquitectura, el `sass` que esperaba el build no es el que instalaste. Media hora perdida antes de escribir una línea de código.
 
-Esta fase existe para que esa media hora la pierdas **ahora, a propósito y con red**, en lugar de un martes a las 6 de la tarde con PROD caído. Vas a dejar el ambiente en pie en tu plataforma —Windows, Mac con Apple Silicon o Linux—, vas a arrancar un Create React App con las versiones exactas que usa el proyecto real, y vas a montar tu primer componente: una tarjeta que muestra una rifa. Nada de routing, nada de Redux, nada de fetch. Una rifa hardcodeada y un componente que la pinta.
+Antes de arrancar, si no lo hiciste: `00-historia-del-sistema.md` te cuenta en veinte minutos qué estás heredando y por qué está como está. Vale la pena — casi todas las rarezas que vas a encontrar en las próximas 98 horas tienen ahí su explicación.
+
+Esta fase existe para que esa media hora la pierdas **ahora, a propósito y con red**, en lugar de un martes a las 6 de la tarde con PROD caído. Vas a dejar el ambiente en pie en tu plataforma —Windows, Mac con Apple Silicon o Linux—, vas a armar a mano el proyecto con las versiones exactas que usa la consola real, y vas a montar tu primer componente: una tarjeta que muestra una rueda de premios. Nada de routing, nada de Redux, nada de fetch. Una rueda hardcodeada y un componente que la pinta.
 
 El objetivo no es que aprendas a construir. Es que aprendas a **poner el sistema en marcha y mirarlo por dentro** con las herramientas del oficio. Un dev de mantenimiento que no sabe levantar el proyecto no puede arreglar nada; uno que lo levanta pero no sabe abrir React DevTools trabaja a ciegas. Y como el mayor dolor de setup de esta era vive justo en Apple Silicon con `node-sass`, ese caso es, en sí mismo, el primer ejercicio forense de la fase.
 
@@ -20,9 +22,9 @@ El objetivo no es que aprendas a construir. Es que aprendas a **poner el sistema
 ## ✅ 2. Qué queda listo al terminar
 
 - [ ] Node **14.21.3** corriendo vía nvm, con un `.nvmrc` en el repo, verificado con `node -v`.
-- [ ] Proyecto **CRA 4.0.3** con React 16.14.0 creado y arrancando en `localhost:3000` sin errores en consola.
+- [ ] Proyecto **React 16.14.0 con react-scripts 4.0.3** armado a mano, arrancando en `localhost:3000` sin errores en consola.
 - [ ] **Bootstrap 4.6.2 + dart-sass** integrados; un `_tokens.scss` propio que compila y aplica estilos visibles.
-- [ ] Un componente funcional con hooks (**`RaffleCard`**) que renderiza una rifa y tiene estado local (un toggle de detalle con `useState`).
+- [ ] Un componente funcional con hooks (**`WheelCard`**) que renderiza una rueda y tiene estado local (un toggle de detalle con `useState`).
 - [ ] **React DevTools** instalado y **Network tab** usado para inspeccionar el componente y ver cargar el bundle.
 - [ ] Ambiente reproducible: cualquier compañero clona el repo y lo levanta con `nvm use && npm ci && npm start`.
 - [ ] El proyecto **versionado en git desde el minuto cero**, con su primer commit y el tag `fase-00-setup-hola-mundo-cra` al cerrar.
@@ -34,10 +36,10 @@ Si puedes marcar las siete, la fase está cerrada. La quinta es la que más gent
 ## 🚫 3. Qué queda fuera por ahora
 
 - **Routing (React Router 5)** → Fase 1. Por ahora hay una sola pantalla; no hace falta navegar a ningún lado.
-- **Redux / store / slices** → Fase 2 en adelante. El estado de `RaffleCard` vive en un `useState` local y con eso sobra.
-- **json-server y `db.json`** → Fase 3 (el backend) y Fase 4 (consumirlo). La rifa de esta fase va **hardcodeada** en el código (marcada 💸 más abajo). No hay backend todavía.
-- **Autenticación** → Fase 2. Cualquiera que abra `localhost:3000` ve la rifa; está bien así.
-- **Middleware de caos, mock de lotería, epics, polling** → Fases 3, 6 y 7. Ni los nombres nos importan aún.
+- **Redux / store / slices** → Fase 2 en adelante. El estado de `WheelCard` vive en un `useState` local y con eso sobra.
+- **json-server y `mock/db.json`** → Fase 3 (el backend) y Fase 4 (consumirlo). La rueda de esta fase va **hardcodeada** en el código (marcada 💸 más abajo). No hay backend todavía.
+- **Autenticación** → Fase 2. Cualquiera que abra `localhost:3000` ve la rueda; está bien así.
+- **Middleware de caos, mock de Google Play, epics, polling** → Fases 3, 6 y 7. Ni los nombres nos importan aún.
 - **Contenedores, Colima, paridad con producción** → Apéndice `A9-entornos-y-contenedores.md`, cuando un incidente lo pida. Acá se corre nativo y punto.
 
 La regla de la fase es brutal en su simplicidad: **una pantalla, un componente, cero red.** Todo lo demás es ruido que sumamos después.
@@ -50,9 +52,9 @@ Eres senior y sabes qué es npm, qué es un bundler y qué es un componente. No 
 
 ### Por qué Node 14 y no el que tienes instalado
 
-El sistema se construyó en 2019 con **Create React App 4.0.3**, la última versión de CRA que soporta React 16. CRA 4 y sus `react-scripts` fueron pensados para la era de **Node 14**. Si intentas correrlo con Node 18 o 20 —lo que probablemente tengas hoy— te vas a encontrar con el famoso `error:0308010C:digital envelope routines::unsupported`, que es OpenSSL 3 peleándose con el Webpack viejo que CRA lleva escondido. Hay workarounds con flags, sí, pero en mantenimiento no quieres workarounds: quieres **la misma versión que corre en producción**. Por eso fijamos Node 14.21.3 y lo dejamos escrito en un `.nvmrc` para que nadie del equipo lo adivine.
+La consola se construyó en 2019 con **Create React App 4.0.3**, la última versión de CRA que soporta React 16. CRA 4 y sus `react-scripts` fueron pensados para la era de **Node 14**. Si intentas correrlo con Node 18 o 20 —lo que probablemente tengas hoy— te vas a encontrar con el famoso `error:0308010C:digital envelope routines::unsupported`, que es OpenSSL 3 peleándose con el Webpack viejo que CRA lleva escondido. Hay workarounds con flags, sí, pero en mantenimiento no quieres workarounds: quieres **la misma versión que corre en producción**. Por eso fijamos Node 14.21.3 y lo dejamos escrito en un `.nvmrc` para que nadie del equipo lo adivine.
 
-> 📝 **Nota de época.** En 2020-2022, CRA era *el* default para arrancar una SPA de React. No había Vite en el radar de las empresas, Next.js todavía no era omnipresente para apps internas, y "create-react-app y a trabajar" era la respuesta obvia. El sistema que vas a mantener nació ahí. Que hoy CRA esté prácticamente jubilado 🪦 no cambia que tu trabajo es mantenerlo, no reescribirlo.
+> 📝 **Nota de época.** En 2019-2023, CRA era *el* default para arrancar una SPA de React. No había Vite en el radar de las empresas, Next.js todavía no era omnipresente para apps internas, y "create-react-app y a trabajar" era la respuesta obvia. La consola que vas a mantener nació ahí. Que hoy CRA esté prácticamente jubilado 🪦 no cambia que tu trabajo es mantenerla, no reescribirla.
 
 ### Qué es `.nvmrc` y por qué salva reuniones
 
@@ -78,11 +80,11 @@ Vienes de backend y quizás tocaste React moderno de refilón. Antes del código
 
 | Concepto | Qué es en una línea | Ejemplo |
 |---|---|---|
-| **JSX** | HTML-como-sintaxis dentro de JS; se transpila a llamadas `React.createElement`. | `<div className="card">{raffle.name}</div>` |
+| **JSX** | HTML-como-sintaxis dentro de JS; se transpila a llamadas `React.createElement`. | `<div className="card">{wheel.name}</div>` |
 | **`className`** | El atributo `class` de HTML se llama `className` en JSX (`class` es palabra reservada de JS). | `<span className="badge">` |
-| **`{ }` en JSX** | Interpola una expresión JS dentro del markup. | `{raffle.numberPrice}` |
+| **`{ }` en JSX** | Interpola una expresión JS dentro del markup. | `{wheel.segments.length}` |
 | **`useState`** | Hook que te da `[valor, setter]`; cambiar el valor re-renderiza el componente. | `const [isDetailOpen, setDetailOpen] = useState(false)` |
-| **Props** | Los "argumentos" de un componente; entran como un objeto. | `function RaffleCard({ raffle }) { ... }` |
+| **Props** | Los "argumentos" de un componente; entran como un objeto. | `function WheelCard({ wheel }) { ... }` |
 
 > 📚 Si el hook `useState` te suena a chino, 15 minutos acá y vuelves: https://react.dev/reference/react/useState — cubre React ≥ 16.8, que es justo la nuestra. Ojo con ejemplos que usen APIs de 17/18.
 
@@ -90,7 +92,7 @@ Vienes de backend y quizás tocaste React moderno de refilón. Antes del código
 
 ## 💻 5. Implementación y código comentado
 
-El plan es el mismo en las tres plataformas: **instalar Node 14 con un gestor de versiones → crear el CRA → sumar Bootstrap y sass → escribir `RaffleCard`**. Lo que cambia es el paso de instalar Node y aislar el ambiente, porque cada sistema tiene su fricción — y Apple Silicon tiene varias vías, cada una con su tradeoff. Empezamos por las plataformas simples y dejamos Mac para el final, que es el caso interesante.
+El plan es el mismo en las tres plataformas: **instalar Node 14 con un gestor de versiones → armar el proyecto a mano → sumar Bootstrap y sass → escribir `WheelCard`**. Lo que cambia es el paso de instalar Node y aislar el ambiente, porque cada sistema tiene su fricción — y Apple Silicon tiene varias vías, cada una con su tradeoff. Empezamos por las plataformas simples y dejamos Mac para el final, que es el caso interesante.
 
 ### 5.1 🪟 Windows 11 (entorno por defecto del equipo)
 
@@ -154,86 +156,181 @@ el apéndice te espera con el `Dockerfile.dev` y el `docker-compose.yml` hechos.
 Antes de crear nada, deja la versión escrita para que el resto del equipo no la adivine:
 
 ```bash
+mkdir esclusa-app && cd esclusa-app
 echo "14.21.3" > .nvmrc
 ```
 
 De ahora en más, quien clone el repo corre `nvm use` en la raíz y nvm lee ese archivo. Una línea, cero reuniones sobre "¿qué Node usas tú?".
 
-### 5.5 Crear el proyecto con CRA 4.0.3
+### 5.5 Armar el proyecto a mano, con React 16.14.0 y react-scripts 4.0.3
 
-Fijamos la versión de CRA explícitamente. No uses `npx create-react-app` a secas, porque te bajaría la última —incompatible con React 16—:
+No hay generador en esta fase. **No uses `npx create-react-app`**: el generador de CRA 4.0.3 aborta hoy si el registro tiene una versión más nueva, y `npm init react-app` te trae React 19. Escribes el `package.json` tú: son las versiones fijadas en `00-decisiones-y-versiones.md` §3, solo las que instala esta fase.
 
-```bash
-npx create-react-app@4.0.3 raffles-app --use-npm
-cd raffles-app
+`package.json`, en la raíz de `esclusa-app`:
+
+```json
+{
+  "name": "esclusa-app",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "14.21.3",
+    "npm": "^6.14.0"
+  },
+  "dependencies": {
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "react-scripts": "4.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  },
+  "browserslist": {
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
 ```
 
-Esto crea el andamiaje con `react-scripts@4.0.3`, que a su vez trae **React 16.14.0** (decisión D1). Verifícalo antes de seguir:
+Instala con npm 6 (el que viene con Node 14):
+
+```bash
+npm install
+```
+
+Sin `^` ni `~` en las versiones, a propósito: el lockfile congela el árbol, pero el `package.json` dice la intención. Y `react-scripts` va en `dependencies`, no en `devDependencies`: es donde lo pone CRA y no se mueve.
+
+Ahora el andamiaje mínimo que CRA escribía por ti. Lo escribes tú, y es poco. `public/index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>La Esclusa</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+`src/index.js`, el punto de entrada:
+
+```javascript
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+
+// React 16: el render clásico con ReactDOM.render.
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+`src/App.js`, por ahora una sola línea:
+
+```javascript
+import React from "react";
+
+function App() {
+  return <h1 className="p-4">La Esclusa</h1>;
+}
+
+export default App;
+```
+
+Verifica que React quedó en la versión que dice el documento:
 
 ```bash
 cat package.json | grep react
-# "react": "^16.14.0",
-# "react-dom": "^16.14.0",
-# "react-scripts": "4.0.3"
+# "react": "16.14.0",
+# "react-dom": "16.14.0",
+# "react-scripts": "4.0.3",
 ```
 
-Arranca el dev server para confirmar que la base respira:
+Y arranca el dev server para confirmar que la base respira:
 
 ```bash
 npm start
 ```
 
-Se abre `localhost:3000` con el logo de React girando. Todavía no es nuestra app; es el andamiaje. Pero si esto no arranca, no sigas: resuelve el arranque primero (la sección 6 tiene los errores típicos).
+Se abre `localhost:3000` con el título "La Esclusa". Todavía no es la consola, es el andamiaje. Pero si esto no arranca, no sigas: resuelve el arranque primero (la sección 6 tiene los errores típicos).
 
 > **Prueba de fuego.** Con `npm start` corriendo, abre `localhost:3000`, después cierra el proceso con `Ctrl+C` y recarga el navegador. La página debe morir (error de conexión). Vuelve a levantar `npm start` y recarga: vuelve. Parece tonto, pero acabas de comprobar que el dev server es quien sirve la app, no un archivo estático. Esa distinción te ahorra debugging en la Fase 3.
 
 ### 🏷️ El repo, desde el minuto cero
 
-Antes de escribir una línea de React, el proyecto entra a git. No es ceremonia: en este curso vas a romper cosas **a propósito** —el middleware de caos de la Fase 3 existe para eso, y un tercio de los ejercicios te entrega algo roto— y necesitas poder volver a un estado sano sin pensarlo.
+Antes de escribir una línea más de React, el proyecto entra a git. No es ceremonia: en este curso vas a romper cosas **a propósito** —el middleware de caos de la Fase 3 existe para eso, y un tercio de los ejercicios te entrega algo roto— y necesitas poder volver a un estado sano sin pensarlo.
+
+Como CRA ya no te deja un `.gitignore`, lo escribes tú, en la raíz:
 
 ```bash
-# desde la raíz de raffles-app
-git init
-git add .
-git commit -m "f00: andamiaje inicial de CRA 4.0.3"
+printf 'node_modules/\nbuild/\n.env.local\n.env.*.local\nnpm-debug.log*\n' > .gitignore
 ```
 
-De ahí en adelante, los commits llevan el prefijo de la fase —`f00:`, `f01:`, `f04:`— y los de ejercicio además su número: `f04 ej17: filtro por estado de rifa`. Un prefijo, nada más; con eso `git log --oneline --grep '^f04'` te devuelve todo lo que hiciste en la Fase 4.
+Después, el primer commit:
 
-CRA ya te dejó un `.gitignore` correcto; antes del primer commit confirma que `node_modules/` y `build/` están adentro y que **`package-lock.json` no lo está** — esa foto exacta del árbol de dependencias sí se versiona, y es la decisión **D7** de `00-decisiones-y-versiones.md`: el lockfile manda y se instala con `npm ci`.
+```bash
+# desde la raíz de esclusa-app
+git init
+git add .
+git commit -m "f00: andamiaje inicial con react 16.14.0 y react-scripts 4.0.3"
+```
+
+Antes de ese `git add .`, confirma con `git status` que `node_modules/` y `build/` **no** aparecen y que **`package-lock.json` sí**: esa foto exacta del árbol de dependencias se versiona, y es la decisión **D7** de `00-decisiones-y-versiones.md`: el lockfile manda y se instala con `npm ci`.
+
+De ahí en adelante, los commits llevan el prefijo de la fase —`f00:`, `f01:`, `f04:`— y los de ejercicio además su número: `f04 ej17: filtro por estado de rueda`. Un prefijo, nada más; con eso `git log --oneline --grep '^f04'` te devuelve todo lo que hiciste en la Fase 4.
 
 Y al terminar la fase —con el checklist de la sección 2 en verde, no antes— marcas el hito con un tag anotado:
 
 ```bash
-git tag -a fase-00-setup-hola-mundo-cra -m "F0 cerrada: Node 14.21.3 con nvm y .nvmrc, CRA 4.0.3 con React 16.14.0 arrancando, Bootstrap 4.6.2 y dart-sass compilando, RaffleCard con useState, React DevTools instalado."
+git tag -a fase-00-setup-hola-mundo-cra -m "F0 cerrada: Node 14.21.3 con nvm y .nvmrc, React 16.14.0 y react-scripts 4.0.3 armados a mano y arrancando, Bootstrap 4.6.2 y dart-sass compilando, WheelCard con useState, React DevTools instalado."
 ```
 
-A partir de acá cada fase cierra igual: commit, tag `fase-NN-…`, y a la siguiente. Doce fases después vas a poder correr `git tag -l 'fase-*'` y ver el curso entero en una pantalla. La convención completa —cómo etiquetar ejercicios, cómo dejar un incidente resuelto con su par de tags, cómo restaurar el `db.json` que ensuciaste probando ventas y cómo se mide con un diff que el backend del track BE no tocó el frontend— está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
+A partir de acá cada fase cierra igual: commit, tag `fase-NN-…`, y a la siguiente. Doce fases después vas a poder correr `git tag -l 'fase-*'` y ver el curso entero en una pantalla. La convención completa —cómo etiquetar ejercicios, cómo dejar un incidente resuelto con su par de tags, cómo restaurar el `mock/db.json` que ensuciaste probando envíos y cómo se mide con un diff que el backend del track BE no tocó el frontend— está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
 
-> 💡 **¿Nunca usaste git más allá de `pull` y `commit`?** No hace falta más que eso. Los tags son punteros a un commit: no ocupan espacio, no cambian nada y se borran con `git tag -d`. La convención se lee en diez minutos y te ahorra la tarde en que el ejercicio de venta concurrente te deje el store irreconocible.
+> 💡 **¿Nunca usaste git más allá de `pull` y `commit`?** No hace falta más que eso. Los tags son punteros a un commit: no ocupan espacio, no cambian nada y se borran con `git tag -d`. La convención se lee en diez minutos y te ahorra la tarde en que el ejercicio del giro concurrente te deje el store irreconocible.
 
 ### 5.6 Sumar Bootstrap 4.6.2 y dart-sass
 
 Instalamos Bootstrap en su versión exacta y `sass` (dart-sass, **no** node-sass):
 
 ```bash
-npm install bootstrap@4.6.2
-npm install --save-dev sass@1.32.5
+npm install --save-exact bootstrap@4.6.2
+npm install --save-dev --save-exact sass@1.32.5
+
+# Las pruebas: las mismas versiones que trae la plantilla de CRA 4 (D6),
+# fijadas. Se usan desde la Fase 1 y, sobre todo, en el cuaderno de incidentes.
+npm install --save-dev --save-exact @testing-library/react@11.2.7 @testing-library/user-event@12.8.3 @testing-library/jest-dom@5.16.5
 ```
 
-Ahora renombra el `src/index.css` que trae CRA a `src/index.scss` (así usamos Sass de una vez) y crea un archivo de tokens propio. Este `_tokens.scss` es el germen del mini design system que se desarrolla en serio en el Apéndice A2; acá lo dejamos mínimo.
+La plantilla de CRA 4 trae además un archivo que `react-scripts` carga antes de cada prueba, para que `expect` entienda los matchers de jest-dom (`toBeInTheDocument`, `toBeDisabled`…). Como armaste el proyecto a mano, lo escribes tú. `src/setupTests.js`:
+
+```javascript
+// react-scripts carga este archivo antes de cada prueba: suma los matchers de
+// jest-dom (toBeInTheDocument, toBeDisabled…) a expect. La plantilla de CRA 4 lo trae.
+import "@testing-library/jest-dom";
+```
+
+Como CRA ya no te deja un `index.css` que renombrar, creas tú el punto de entrada de estilos. Y el archivo de tokens propio: este `_tokens.scss` es el germen del mini design system que se desarrolla en serio en el Apéndice A2; acá lo dejamos mínimo.
 
 `src/styles/_tokens.scss`:
 
 ```scss
-// Tokens del mini design system de Rifas y chances.
+// Tokens del mini design system de La Esclusa.
 // Acá centralizamos los valores que después Bootstrap y nuestros
 // componentes reutilizan. En Fase 0 son cuatro; en A2 crecen.
 
-$raffle-primary: #0066cc;  // azul de marca, para acciones principales
-$raffle-success: #28a745;  // verde "rifa abierta / número disponible"
-$raffle-danger:  #dc3545;  // rojo "cerrada / vendido"
-$raffle-spacing: 0.5rem;   // unidad base de espaciado
+$esclusa-primary: #0066cc;  // azul de marca, para acciones principales
+$esclusa-success: #28a745;  // verde "rueda en vivo"
+$esclusa-danger:  #dc3545;  // rojo "terminada / agotado"
+$esclusa-spacing: 0.5rem;   // unidad base de espaciado
 ```
 
 `src/index.scss`:
@@ -249,18 +346,18 @@ $raffle-spacing: 0.5rem;   // unidad base de espaciado
 
 // 3) Un estilo propio que usa un token, para PROBAR que Sass compila
 //    de verdad y no solo que Bootstrap se coló.
-.raffle-card {
-  border-top: 4px solid $raffle-primary;
-  margin-bottom: $raffle-spacing * 2;
+.wheel-card {
+  border-top: 4px solid $esclusa-primary;
+  margin-bottom: $esclusa-spacing * 2;
 }
 ```
 
-En `src/index.js`, asegúrate de importar el Sass (CRA compila `.scss` sin config extra gracias a que instalamos `sass`):
+En `src/index.js`, agrega el import del Sass (CRA compila `.scss` sin config extra gracias a que instalamos `sass`):
 
 ```javascript
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.scss"; // ← antes era index.css; ahora Sass
+import "./index.scss"; // ← el pipeline de Sass, desde el minuto cero
 import App from "./App";
 
 // React 16: el render clásico con ReactDOM.render.
@@ -269,69 +366,70 @@ import App from "./App";
 ReactDOM.render(<App />, document.getElementById("root"));
 ```
 
-> **Detalles con intención.** Importamos los tokens **antes** que Bootstrap y que nuestros estilos porque Sass resuelve variables de arriba hacia abajo: si `$raffle-primary` se define después de usarlo, Sass no lo encuentra. Y renombramos a `.scss` en vez de dejar `.css` porque queremos que el pipeline de Sass esté activo desde el minuto cero, no "cuando lo necesitemos".
+> **Detalles con intención.** Importamos los tokens **antes** que Bootstrap y que nuestros estilos porque Sass resuelve variables de arriba hacia abajo: si `$esclusa-primary` se define después de usarlo, Sass no lo encuentra. Y usamos `.scss` desde el principio porque queremos que el pipeline de Sass esté activo desde el minuto cero, no "cuando lo necesitemos".
 
-### 5.7 El primer componente: `RaffleCard`
+### 5.7 El primer componente: `WheelCard`
 
-Ahora sí, la estrella de la fase. Un componente funcional con hooks que recibe una rifa por props y muestra sus datos, con un botón que despliega u oculta un bloque de detalle usando `useState`.
+Ahora sí, la estrella de la fase. Un componente funcional con hooks que recibe una rueda por props y muestra sus datos, con un botón que despliega u oculta un bloque de detalle usando `useState`.
 
-Ojo a una convención que vas a ver en todo el curso y que arranca acá: **el código va en inglés, pero lo que ve el usuario va en español.** El estado interno de la rifa es `'open'` (un valor de enum, código), y una pequeña función `statusLabel` lo traduce a `"Abierta"` (texto de interfaz). Nunca metas `'abierta'` como valor de dato; nunca le muestres `open` al usuario.
+Ojo a una convención que vas a ver en todo el curso y que arranca acá: **el código va en inglés, pero lo que ve el usuario va en español.** El estado interno de la rueda es `'live'` (un valor de enum, código), y una pequeña función `statusLabel` lo traduce a `"En vivo"` (texto de interfaz). Nunca metas `'en vivo'` como valor de dato; nunca le muestres `live` al usuario.
 
-`src/components/RaffleCard.jsx`:
+`src/components/WheelCard.jsx`:
 
 ```javascript
 import React, { useState } from "react";
 
 /**
- * Traduce el estado interno de la rifa a la etiqueta que ve el usuario.
+ * Traduce el estado interno de la rueda a la etiqueta que ve el usuario.
  * El `case` va en inglés (es el valor de dato); el `return` va en
  * español (es lo que se muestra en pantalla).
  */
 function statusLabel(status) {
   switch (status) {
-    case "open":
-      return "Abierta";
-    case "closed":
-      return "Cerrada";
-    case "resolved":
-      return "Resuelta";
+    case "draft":
+      return "Borrador";
+    case "scheduled":
+      return "Programada";
+    case "live":
+      return "En vivo";
+    case "ended":
+      return "Terminada";
+    case "reconciled":
+      return "Conciliada";
     default:
       return status;
   }
 }
 
 /**
- * Tarjeta que muestra una rifa y permite desplegar su detalle.
+ * Tarjeta que muestra una rueda y permite desplegar su detalle.
  * Componente funcional con hooks: es el estilo que usamos para
  * módulos nuevos. (El código legacy tiene clases; las vemos en A5.)
  *
  * @param {Object} props
- * @param {Object} props.raffle - Rifa a mostrar.
+ * @param {Object} props.wheel - Rueda a mostrar.
  */
-function RaffleCard({ raffle }) {
+function WheelCard({ wheel }) {
   // Estado local: ¿está desplegado el detalle? Arranca cerrado.
   // useState devuelve [valor, setter]; cambiar el valor re-renderiza.
   const [isDetailOpen, setDetailOpen] = useState(false);
 
-  // Elegimos la clase del badge según el estado de la rifa.
+  // Elegimos la clase del badge según el estado de la rueda.
   // Nada de lógica de negocio pesada acá: solo presentación.
-  const badgeClass =
-    raffle.status === "open" ? "badge-success" : "badge-secondary";
+  const badgeClass = wheel.status === "live" ? "badge-success" : "badge-secondary";
 
   return (
-    <div className="raffle-card card p-3">
+    <div className="wheel-card card p-3">
       <div className="d-flex justify-content-between align-items-center">
-        <h5 className="mb-0">{raffle.name}</h5>
+        <h5 className="mb-0">{wheel.name}</h5>
         {/* El valor va en inglés en el dato, pero mostramos la etiqueta
             traducida al español. */}
         <span className={`badge ${badgeClass}`}>
-          {statusLabel(raffle.status)}
+          {statusLabel(wheel.status)}
         </span>
       </div>
 
-      <p className="text-muted mb-2">
-        Precio por número: ${raffle.numberPrice}
-      </p>
+      <p className="text-muted mb-2">Segmentos: {wheel.segments.length}</p>
 
       <button
         className="btn btn-outline-primary btn-sm align-self-start"
@@ -345,51 +443,58 @@ function RaffleCard({ raffle }) {
           React para mostrar/ocultar. */}
       {isDetailOpen && (
         <div className="mt-3">
-          <p className="mb-1">Lotería: {raffle.lotteryId}</p>
-          <p className="mb-1">Premio base: ${raffle.basePrize}</p>
-          <p className="mb-0">Cierre: {raffle.closesAt}</p>
+          <p className="mb-1">Zona horaria: {wheel.timezone}</p>
+          <p className="mb-0">Cierre: {wheel.closesAt}</p>
         </div>
       )}
     </div>
   );
 }
 
-export default RaffleCard;
+export default WheelCard;
 ```
 
-Y `src/App.js`, que arma la rifa hardcodeada y monta la tarjeta:
+Y `src/App.js`, que arma la rueda hardcodeada y monta la tarjeta. Reemplaza la versión de una línea:
 
 ```javascript
 import React from "react";
-import RaffleCard from "./components/RaffleCard";
+import WheelCard from "./components/WheelCard";
 
 /**
  * App raíz. En Fase 0 no hay routing ni store: montamos una sola
- * tarjeta con una rifa fija. En cuanto entre json-server (Fase 3)
+ * tarjeta con una rueda fija. En cuanto entre json-server (Fase 3)
  * estos datos vendrán del backend.
  */
 function App() {
-  // 💸 DEUDA TÉCNICA INTENCIONAL: la rifa está hardcodeada acá.
+  // 💸 DEUDA TÉCNICA INTENCIONAL: la rueda está hardcodeada acá.
   //    Lo correcto es traerla de un backend, pero todavía no tenemos
   //    json-server (llega en Fase 3) ni store (Fase 2+). Por ahora,
   //    un objeto literal alcanza para renderizar y aprender el setup.
   //    La forma del objeto ya respeta el modelo de datos oficial
   //    (ver `00-alcance-del-proyecto.md` §5) para no tener que reescribir
-  //    RaffleCard cuando lleguen los datos del mock en Fase 3.
-  const demoRaffle = {
+  //    WheelCard cuando lleguen los datos del mock en Fase 3.
+  const demoWheel = {
     id: 1,
-    name: "Rifa fin de mes",
-    lotteryId: "boyaca",
-    closesAt: "2024-03-30T22:00:00-05:00",
-    numberPrice: 5000,
-    basePrize: 500000,
-    status: "open",
+    name: "Esclusa de Oro",
+    timezone: "America/Panama",
+    closesAt: "2030-12-31T20:00:00-05:00",
+    status: "live",
+    segments: [
+      { segmentId: "sin-premio", prizeType: "none", weightBp: 3000 },
+      { segmentId: "vidas-2", prizeType: "lives", weightBp: 2000 },
+      { segmentId: "avatar-comun", prizeType: "avatar", weightBp: 1500 },
+      { segmentId: "set-gemas-basico", prizeType: "gemSet", weightBp: 1500 },
+      { segmentId: "vidas-5", prizeType: "lives", weightBp: 1000 },
+      { segmentId: "set-gemas-plata", prizeType: "gemSet", weightBp: 800 },
+      { segmentId: "avatar-raro", prizeType: "avatar", weightBp: 150 },
+      { segmentId: "esclusa-de-oro", prizeType: "avatar", weightBp: 50 },
+    ],
   };
 
   return (
     <div className="container py-4">
-      <h1 className="mb-4">Rifas y chances</h1>
-      <RaffleCard raffle={demoRaffle} />
+      <h1 className="mb-4">La Esclusa</h1>
+      <WheelCard wheel={demoWheel} />
     </div>
   );
 }
@@ -397,17 +502,17 @@ function App() {
 export default App;
 ```
 
-Guarda, mira el navegador (el hot reload de CRA ya recargó), y deberías ver la tarjeta con el borde azul superior (ese borde es tu prueba de que **el token de Sass se aplicó**), el badge verde de "Abierta", y un botón que despliega el detalle al clickearlo.
+Guarda, mira el navegador (el hot reload de CRA ya recargó), y deberías ver la tarjeta con el borde azul superior (ese borde es tu prueba de que **el token de Sass se aplicó**), el badge verde de "En vivo", y un botón que despliega el detalle al clickearlo.
 
 > **El patrón a memorizar.** `useState` para estado local + renderizado condicional con `&&` es el 80% de la interactividad simple en React: *un booleano en el estado → un `&&` en el JSX → el bloque aparece y desaparece.* Lo vas a ver mil veces en el código que mantengas. Cuando algo "aparece y desaparece" en la UI, busca primero un `useState` booleano y un `&&` o un ternario.
 
-> **Detalles con intención.** El estado de la rifa vive como `'open'` (inglés, valor de dato) y `statusLabel` lo convierte a `"Abierta"` (español, UI). Esa separación no es capricho de idioma: mañana, cuando `RaffleCard` reciba la rifa de un backend, el dato que llega es `status: 'open'` y el mapeo a etiqueta sigue viviendo en un solo lugar. Si mezclaras idioma y dato, cada pantalla reinventaría la traducción.
+> **Detalles con intención.** El estado de la rueda vive como `'live'` (inglés, valor de dato) y `statusLabel` lo convierte a `"En vivo"` (español, UI). Esa separación no es capricho de idioma: mañana, cuando `WheelCard` reciba la rueda de un backend, el dato que llega es `status: 'live'` y el mapeo a etiqueta sigue viviendo en un solo lugar. Si mezclaras idioma y dato, cada pantalla reinventaría la traducción.
 
-> **Prueba de fuego.** Clickea "Ver detalle" y confirma que aparece el bloque. Ahora abre React DevTools (sección 6), selecciona `RaffleCard`, y mira el hook `State`: dice `false` cuando está cerrado y `true` cuando está abierto. Cámbialo a mano desde DevTools y mira cómo la UI reacciona sin que hayas tocado el botón. Eso es ver el estado *manejar* la vista.
+> **Prueba de fuego.** Clickea "Ver detalle" y confirma que aparece el bloque. Ahora abre React DevTools (sección 6), selecciona `WheelCard`, y mira el hook `State`: dice `false` cuando está cerrado y `true` cuando está abierto. Cámbialo a mano desde DevTools y mira cómo la UI reacciona sin que hayas tocado el botón. Eso es ver el estado *manejar* la vista.
 
 #### 💸 Nota de deuda de esta fase
 
-Dejamos **una** deuda intencional, y la nombramos para pagarla después: la rifa está **hardcodeada** en `App.js`. Lo correcto sería traerla de un backend. No lo hacemos ahora porque el backend (json-server) no existe hasta la Fase 3 y el store (Redux) hasta la Fase 2+. La forma del objeto ya coincide con el modelo de datos oficial, así que cuando los datos lleguen de verdad, `RaffleCard` no cambia: solo cambia de dónde sale `raffle`. Esa deuda se salda en **Fase 4**, cuando el listado deje de leer el array y lo pida al store. No antes: la Fase 3 construye el backend, pero hasta que no haya store ni thunks no hay con qué reemplazar el array.
+Dejamos **una** deuda intencional, y la nombramos para pagarla después: la rueda está **hardcodeada** en `App.js`. Lo correcto sería traerla de un backend. No lo hacemos ahora porque el backend (json-server) no existe hasta la Fase 3 y el store (Redux) hasta la Fase 2+. La forma del objeto ya coincide con el modelo de datos oficial, así que cuando los datos lleguen de verdad, `WheelCard` no cambia: solo cambia de dónde sale `wheel`. Esa deuda se salda en **Fase 4**, cuando el listado deje de leer el array y lo pida al store. No antes: la Fase 3 construye el backend, pero hasta que no haya store ni thunks no hay con qué reemplazar el array.
 
 ---
 
@@ -425,12 +530,12 @@ Síntoma: un error de node-gyp compilando binarios arm64 al hacer `npm install`.
 Síntoma: la app compila en un lado y falla en el otro con errores de binarios que no mencionan la arquitectura por ningún lado. Causa casi segura: el `node_modules` del host montado dentro del contenedor. El detalle y el fix están en `A9-entornos-y-contenedores.md` §7 — es el error de entorno que más caro sale, y por eso el A9 tiene una sección entera solo para él.
 
 **La página carga pero se ve sin estilos (Bootstrap "no aparece").**
-Síntoma: la tarjeta está ahí pero fea, sin card, sin badge, sin colores. Causa casi segura: no importaste el `.scss` en `index.js`, o el `@import "~bootstrap/scss/bootstrap"` tiene mal la ruta. Fix: revisa que `index.js` tenga `import "./index.scss"` y que el `~` esté presente (le dice a Webpack "busca en node_modules"). El borde azul superior de `.raffle-card` es tu canario: si **ese** aparece pero Bootstrap no, el problema es el import de Bootstrap, no el de Sass.
+Síntoma: la tarjeta está ahí pero fea, sin card, sin badge, sin colores. Causa casi segura: no importaste el `.scss` en `index.js`, o el `@import "~bootstrap/scss/bootstrap"` tiene mal la ruta. Fix: revisa que `index.js` tenga `import "./index.scss"` y que el `~` esté presente (le dice a Webpack "busca en node_modules"). El borde azul superior de `.wheel-card` es tu canario: si **ese** aparece pero Bootstrap no, el problema es el import de Bootstrap, no el de Sass.
 
 **`Something is already running on port 3000`.**
-Síntoma: CRA no puede levantar. Causa: dejaste otro `npm start` corriendo (o cualquier cosa en el 3000). Fix rápido: acepta cuando CRA te ofrece usar otro puerto, o mata el proceso previo. En la Fase 3, cuando entren json-server y el mock de lotería, vas a hacer malabares con varios puertos; conviene acostumbrarte ahora a saber quién ocupa cuál.
+Síntoma: CRA no puede levantar. Causa: dejaste otro `npm start` corriendo (o cualquier cosa en el 3000). Fix rápido: acepta cuando CRA te ofrece usar otro puerto, o mata el proceso previo. En la Fase 3, cuando entren json-server y el mock de Google Play, vas a hacer malabares con varios puertos; conviene acostumbrarte ahora a saber quién ocupa cuál.
 
-> ⚠️ **Sobre CORS.** Todavía **no** vas a ver errores de CORS en esta fase, porque no hay ninguna petición a otro origen: todo es estático servido por el dev server. Lo menciono porque en la Fase 3, cuando `RaffleCard` deje de inventar la rifa y `App` la pida a json-server en otro puerto, CORS va a aparecer. Si en Fase 0 ves un error que dice "CORS", es que copiaste código de una fase futura: vuelve al plan.
+> ⚠️ **Sobre CORS.** Todavía **no** vas a ver errores de CORS en esta fase, porque no hay ninguna petición a otro origen: todo es estático servido por el dev server. Lo menciono porque en la Fase 3, cuando `WheelCard` deje de inventar la rueda y `App` la pida a json-server en otro puerto, CORS va a aparecer. Si en Fase 0 ves un error que dice "CORS", es que copiaste código de una fase futura: vuelve al plan.
 
 ### Pieza forense de esta fase: aprender a mirar
 
@@ -441,44 +546,44 @@ Un dev de mantenimiento vive en tres herramientas antes de tocar código. Esta f
 
 **El Network tab (DevTools → Network).** Recarga la página con Network abierto y mira qué baja: el `bundle.js` (tu código + React + Bootstrap, todo empaquetado por Webpack), el HTML, los estilos. Fíjate en el tamaño del bundle — vas a ver que Bootstrap completo pesa lo suyo (ahí está la deuda 💸 de "importar todo" que se optimiza en A1). Confirma que todo carga con 200, no con 404. No hay llamadas a APIs porque no hay APIs: eso también es información. En la Fase 2, este tab va a ser tu mejor amigo para depurar el interceptor de axios.
 
-**React DevTools (extensión del navegador).** Instálala desde la tienda de extensiones de tu navegador. Te agrega dos pestañas, ⚛️ Components y ⚛️ Profiler. Anda a **Components**, selecciona `RaffleCard` en el árbol, y mira el panel derecho: vas a ver sus **props** (`raffle`, con todos sus campos) y sus **hooks** (`State: false`). Clickea el botón "Ver detalle" en la app y mira cómo ese `State` cambia a `true` en vivo. Eso es lo que separa depurar React de depurar a ciegas: **ver el estado y las props reales de cada componente**, no adivinarlos.
+**React DevTools (extensión del navegador).** Instálala desde la tienda de extensiones de tu navegador. Te agrega dos pestañas, ⚛️ Components y ⚛️ Profiler. Anda a **Components**, selecciona `WheelCard` en el árbol, y mira el panel derecho: vas a ver sus **props** (`wheel`, con todos sus campos) y sus **hooks** (`State: false`). Clickea el botón "Ver detalle" en la app y mira cómo ese `State` cambia a `true` en vivo. Eso es lo que separa depurar React de depurar a ciegas: **ver el estado y las props reales de cada componente**, no adivinarlos.
 
-**Ejercicio "rompe a propósito y observa."** En `RaffleCard`, cambia la línea del `useState` inicial de `useState(false)` a `useState(true)`. Guarda. La tarjeta ahora arranca con el detalle **abierto**. Confírmalo en React DevTools: el hook `State` dice `true` desde el vamos. Vuelve a `false`. Acabas de comprobar, con evidencia visual, quién controla ese comportamiento. Esa es la mentalidad forense: no "creo que es el estado", sino "lo vi en DevTools".
+**Ejercicio "rompe a propósito y observa."** En `WheelCard`, cambia la línea del `useState` inicial de `useState(false)` a `useState(true)`. Guarda. La tarjeta ahora arranca con el detalle **abierto**. Confírmalo en React DevTools: el hook `State` dice `true` desde el vamos. Vuelve a `false`. Acabas de comprobar, con evidencia visual, quién controla ese comportamiento. Esa es la mentalidad forense: no "creo que es el estado", sino "lo vi en DevTools".
 
 ---
 
 ## 🧪 7. Ejercicios (30)
 
-Los primeros calientan el setup; los últimos te hacen diagnosticar cosas rotas, que es el músculo real del curso. Varios son de diagnóstico: te entregan algo que no anda y tienes que reproducir y localizar, no solo construir. Cuando un ejercicio nombra código, usa el identificador en inglés vigente (`RaffleCard`, `statusLabel`, `demoRaffle`).
+Los primeros calientan el setup; los últimos te hacen diagnosticar cosas rotas, que es el músculo real del curso. Varios son de diagnóstico: te entregan algo que no anda y tienes que reproducir y localizar, no solo construir. Cuando un ejercicio nombra código, usa el identificador en inglés vigente (`WheelCard`, `statusLabel`, `demoWheel`).
 
 **🟢 Fácil (1–8)**
 
 1. Instala Node 14.21.3 con tu gestor de versiones y confirma con `node -v` y `npm -v`. Anota qué versión de npm trajo.
 2. Crea el `.nvmrc` con `14.21.3`, cambia a otra versión de Node con `nvm use 18` (o la que tengas), vuelve a la raíz del proyecto y corre `nvm use` a secas. Confirma que vuelve a 14.21.3 solo.
-3. Crea el proyecto con `create-react-app@4.0.3` y verifica en `package.json` que `react` es `^16.14.0` y `react-scripts` es `4.0.3`.
+3. Arma el `package.json` de la sección 5.5 y verifica que `react` es `16.14.0` y `react-scripts` es `4.0.3`. Después corre `npm install` y confirma que `package-lock.json` apareció.
 4. Arranca `npm start`, confirma que abre en `localhost:3000`, y anota qué imprime la consola del navegador (debería estar casi limpia).
-5. Instala `bootstrap@4.6.2` y `sass@1.32.5`, renombra `index.css` a `index.scss`, y confirma que la app sigue arrancando.
-6. Crea `_tokens.scss` con los cuatro tokens y aplica `$raffle-primary` al borde de `.raffle-card`. Confirma visualmente que el borde azul aparece.
-7. Escribe `RaffleCard` y móntalo en `App` con la rifa hardcodeada `demoRaffle`. Confirma que ves nombre, estado y precio.
-8. Cambia el `status` de `demoRaffle` de `'open'` a `'closed'` y confirma que el badge cambia de verde a gris y la etiqueta pasa de "Abierta" a "Cerrada".
+5. Instala `bootstrap@4.6.2` y `sass@1.32.5`, crea `src/index.scss`, y confirma que la app sigue arrancando.
+6. Crea `_tokens.scss` con los cuatro tokens y aplica `$esclusa-primary` al borde de `.wheel-card`. Confirma visualmente que el borde azul aparece.
+7. Escribe `WheelCard` y móntalo en `App` con la rueda hardcodeada `demoWheel`. Confirma que ves nombre, estado y cantidad de segmentos.
+8. Cambia el `status` de `demoWheel` de `'live'` a `'ended'` y confirma que el badge cambia de verde a gris y la etiqueta pasa de "En vivo" a "Terminada".
 
 **🟡 Intermedio (9–17)**
 
-9. Agrega un segundo objeto rifa en `App` y monta **dos** `RaffleCard`. Confirma que cada tarjeta tiene su propio estado de "detalle" independiente (abrir una no abre la otra).
-10. Instala React DevTools, selecciona una `RaffleCard` y cambia su hook `State` a mano desde el panel. Documenta qué pasó en la UI.
-11. Formatea `basePrize` con separador de miles usando `Intl.NumberFormat('es-CO')`. Confirma que muestra `500.000` y no `500000`.
-12. Extrae el badge a un mini-componente `StatusBadge` que reciba `status` por props, use `statusLabel` internamente y devuelva el `<span>` con la clase correcta. Úsalo desde `RaffleCard`.
+9. Agrega un segundo objeto rueda en `App` y monta **dos** `WheelCard`. Confirma que cada tarjeta tiene su propio estado de "detalle" independiente (abrir una no abre la otra).
+10. Instala React DevTools, selecciona una `WheelCard` y cambia su hook `State` a mano desde el panel. Documenta qué pasó en la UI.
+11. Formatea la lista de segmentos con su peso en porcentaje (`weightBp / 100`) con `Intl.NumberFormat('es-PA')`. Confirma que `3000` aparece como `30 %`.
+12. Extrae el badge a un mini-componente `StatusBadge` que reciba `status` por props, use `statusLabel` internamente y devuelva el `<span>` con la clase correcta. Úsalo desde `WheelCard`.
 13. En Network tab, recarga y anota el tamaño del `bundle.js`. Después importa solo `~bootstrap/scss/bootstrap-grid` en vez de Bootstrap completo y compara el tamaño. Revierte el cambio al terminar.
-14. Agrega un `console.log(raffle.name)` dentro de `RaffleCard` y observa en la consola cuántas veces se imprime al abrir y cerrar el detalle. Explica por qué.
+14. Agrega un `console.log(wheel.name)` dentro de `WheelCard` y observa en la consola cuántas veces se imprime al abrir y cerrar el detalle. Explica por qué.
 15. Cambia el `onClick` del botón para que use una función nombrada `toggleDetail` en vez de la arrow inline. Confirma que el comportamiento es idéntico.
-16. Agrega el estado `'resolved'` a `statusLabel` (devolviendo "Resuelta") y haz que el badge lo pinte con un color propio (usa `$raffle-primary` o agrega un token).
-17. Convierte la lista de campos del detalle en un array y renderízala con `.map()`. Acuérdate de la `key`. Confirma que React DevTools ya no muestra warnings de key en consola.
+16. `statusLabel` ya traduce `'reconciled'` a "Conciliada": haz que el badge de ese estado se pinte con un color propio (usa `$esclusa-primary` o agrega un token).
+17. Convierte la lista de segmentos en un array de `<li>` con `.map()`. Acuérdate de la `key`. Confirma que React DevTools ya no muestra warnings de key en consola.
 
 **🟠 Difícil (18–24)**
 
 18. **Diagnóstico:** te paso un `package.json` con `"node-sass": "^6.0.0"` en vez de `sass`. En un Mac arm64 el `npm install` falla. Reproduce el error (o razona por qué falla), identifica la causa y aplica el fix mínimo. Escribe dos líneas de post-mortem.
 19. **Diagnóstico:** un compañero reporta que "la app no arranca, tira un error de digital envelope". Sin ver su máquina, lista las tres preguntas que le harías y cuál es la causa más probable.
-20. **Diagnóstico:** la app carga pero se ve completamente sin estilos. El borde azul de `.raffle-card` **sí** aparece. ¿Dónde está el problema y por qué el borde azul es la pista clave?
+20. **Diagnóstico:** la app carga pero se ve completamente sin estilos. El borde azul de `.wheel-card` **sí** aparece. ¿Dónde está el problema y por qué el borde azul es la pista clave?
 21. Configura el proyecto para que `npm start` arranque en el puerto `4000` en vez del `3000`, sin romper nada. Documenta cómo lo hiciste y por qué (pista: variable de entorno `PORT`).
 22. Agrega una variable de entorno `REACT_APP_ORGANIZER` con tu nombre y muéstrala en el `<h1>`. Confirma que aparece y explica por qué **debe** empezar con `REACT_APP_`.
 23. Rompe a propósito el import de Bootstrap (quita el `~`) y documenta exactamente qué error da y en qué herramienta lo viste primero (consola de la terminal vs consola del navegador).
@@ -486,17 +591,17 @@ Los primeros calientan el setup; los últimos te hacen diagnosticar cosas rotas,
 
 **🔴 Muy difícil (25–30)**
 
-25. **Diagnóstico integrado:** te entrego un repo donde `npm start` arranca pero la tarjeta muestra el precio como `undefined`. El bug está entre `App.js` y `RaffleCard.jsx` (pista: un campo renombrado a medias entre español e inglés). Reprodúcelo, localiza la capa (¿datos mal formados o componente mal escrito?) y escribe un post-mortem de cinco puntos (síntoma, reproducción, causa raíz, fix, prevención).
+25. **Diagnóstico integrado:** te entrego un repo donde `npm start` arranca pero la tarjeta muestra los segmentos como `undefined`. El bug está entre `App.js` y `WheelCard.jsx` (pista: un campo renombrado a medias entre español e inglés). Reprodúcelo, localiza la capa (¿datos mal formados o componente mal escrito?) y escribe un post-mortem de cinco puntos (síntoma, reproducción, causa raíz, fix, prevención).
 26. **Diagnóstico de arquitectura:** alguien "optimizó" el proyecto reemplazando `sass` por `node-sass` porque "es más rápido". En tu equipo hay Windows y Macs M2. Explica qué se rompe, en qué máquinas, y por qué la decisión fue mala. Propón el fix y una regla de lint o CI que lo prevenga.
 27. **Diagnóstico de dependencias:** corre `npm ls react` y `npm ls sass` y explica qué te dice cada salida sobre el árbol instalado. Después borra `node_modules`, corre `npm ci` y confirma que el árbol queda idéntico. Explica por qué `npm ci` garantiza eso y `npm install` no (pista: `A3-node-y-npm.md` §4).
 28. **Reproducción de "en mi máquina funciona":** simula el bug clásico. Corre la app con Node 14 (anda) y con Node 20 (falla). Documenta ambos resultados, el mensaje exacto de error, y explica la causa raíz a nivel de OpenSSL/Webpack de forma que un junior lo entienda.
-29. Configura React DevTools para resaltar re-renders (opción "Highlight updates when components render"). Abre y cierra el detalle varias veces y documenta qué componentes se resaltan y cuáles no. Explica por qué solo re-renderiza `RaffleCard` y no `App`.
-30. **Cierre forense:** escribe una guía de una página titulada "Cómo levantar raffles-app desde cero", pensada para el próximo dev que entre al equipo. Debe cubrir las tres vías nativas (Windows, Linux, Mac), los tres errores más probables con su fix, el checklist de verificación, y una línea que remita al A9 por si hace falta contenedor. Este es el entregable que ojalá existiera en todo proyecto legacy y nunca existe.
+29. Configura React DevTools para resaltar re-renders (opción "Highlight updates when components render"). Abre y cierra el detalle varias veces y documenta qué componentes se resaltan y cuáles no. Explica por qué solo re-renderiza `WheelCard` y no `App`.
+30. **Cierre forense:** escribe una guía de una página titulada "Cómo levantar esclusa-app desde cero", pensada para el próximo dev que entre al equipo. Debe cubrir las tres vías nativas (Windows, Linux, Mac), los tres errores más probables con su fix, el checklist de verificación, y una línea que remita al A9 por si hace falta contenedor. Este es el entregable que ojalá existiera en todo proyecto legacy y nunca existe.
 
 **🔥 Opcionales**
 
-- 🔥 Deja `mock/db.json` con una rifa de ejemplo y levanta `npx json-server --watch mock/db.json --port 3001`; confirma que `localhost:3001/raffles` responde JSON (aún sin conectarlo a la app). Anticipa la Fase 3.
-- 🔥 Reescribe `RaffleCard` como **class component** con `this.state` y `this.setState` en vez de hooks. Compara ambas versiones lado a lado. Anticipa el Apéndice A5, "leer código mezclado".
+- 🔥 Deja `mock/db.json` con una rueda de ejemplo y levanta `npx json-server --watch mock/db.json --port 3001`; confirma que `localhost:3001/wheels` responde JSON (aún sin conectarlo a la app). Anticipa la Fase 3.
+- 🔥 Reescribe `WheelCard` como **class component** con `this.state` y `this.setState` en vez de hooks. Compara ambas versiones lado a lado. Anticipa el Apéndice A5, "leer código mezclado".
 - 🔥 Escribe un script `bash` que detecte la plataforma (Windows/Linux/macOS arm64/macOS amd64) y sugiera la vía de setup correcta. El A9 lo retoma como su ejercicio 8.
 
 ---
@@ -507,7 +612,7 @@ Los primeros calientan el setup; los últimos te hacen diagnosticar cosas rotas,
 
 - Create React App — https://create-react-app.dev/docs/getting-started — la doc de CRA. Cubre versiones recientes; nosotros usamos **4.0.3**, así que algunas features nuevas no aplican. Útil para entender scripts y variables de entorno (`REACT_APP_`).
 - React (hooks) — https://react.dev/reference/react/useState — referencia de `useState`. Cubre React ≥ 16.8, compatible con nuestra 16.14.0. **Advertencia:** los ejemplos pueden usar patrones de React 17/18; quédate con lo básico del hook.
-- React (clases, legacy) — https://legacy.reactjs.org/docs/react-component.html — para cuando quieras hacer el 🔥 de reescribir `RaffleCard` como clase.
+- React (clases, legacy) — https://legacy.reactjs.org/docs/react-component.html — para cuando quieras hacer el 🔥 de reescribir `WheelCard` como clase.
 - Bootstrap 4.6 — https://getbootstrap.com/docs/4.6/getting-started/introduction/ — la versión exacta que usamos. **No** consultes la doc de Bootstrap 5: cambian clases y utilidades.
 - Sass (dart-sass) — https://sass-lang.com/documentation/ — la implementación oficial que usamos vía el paquete `sass`.
 - nvm (Unix) — https://github.com/nvm-sh/nvm — para Mac y Linux.
@@ -520,17 +625,17 @@ Los primeros calientan el setup; los últimos te hacen diagnosticar cosas rotas,
 
 > ⚠️ Las URLs, títulos y contenidos de arriba pueden estar desactualizados o haber cambiado desde que se escribió esta fase. Verifica siempre contra la versión que tienes instalada. Cuando un enlace cubra una versión distinta a la nuestra (React 17/18, Bootstrap 5, CRA 5), está avisado en la nota — pero confirma tú también. No confíes en números de versión de memoria.
 
-**Orden de lectura sugerido:** arranca por el getting-started de CRA (10 min, solo para ubicarte) → mira el `useState` en react.dev si los hooks te son ajenos (15 min) → vuelve al código de la sección 5 y hazlo andar → recién ahí, si te pica la curiosidad, la doc de Bootstrap 4.6 para las clases que usamos en `RaffleCard`.
+**Orden de lectura sugerido:** arranca por el getting-started de CRA (10 min, solo para ubicarte) → mira el `useState` en react.dev si los hooks te son ajenos (15 min) → vuelve al código de la sección 5 y hazlo andar → recién ahí, si te pica la curiosidad, la doc de Bootstrap 4.6 para las clases que usamos en `WheelCard`.
 
 ---
 
 ## 🚀 9. Cierre y conexión con la Fase 1
 
-Tienes el ambiente en pie en tu plataforma, un CRA 4 con las versiones exactas de producción (D1, D10, D11), Bootstrap y Sass compilando de verdad, y un primer componente funcional con hooks que ya sabes inspeccionar en React DevTools. Más importante que el código: sabes **levantar el sistema y mirarlo por dentro**. Ese es el piso desde el que se hace mantenimiento.
+Tienes el ambiente en pie en tu plataforma, un proyecto armado a mano con las versiones exactas de producción (D1, D10, D11), Bootstrap y Sass compilando de verdad, y un primer componente funcional con hooks que ya sabes inspeccionar en React DevTools. Más importante que el código: sabes **levantar el sistema y mirarlo por dentro**. Ese es el piso desde el que se hace mantenimiento.
 
-Pero una tarjeta suelta no es una app. Ahora mismo tienes una sola pantalla que muestra una sola rifa hardcodeada. Un sistema de rifas real tiene un listado, un detalle, un dashboard, una pantalla de venta — y necesitas **moverte entre ellas**. Eso es routing, y es exactamente lo que construye la **Fase 1 — Estructura base + Router 5**: vas a montar React Router 5 (la versión pre-v6, con su mezcla de rutas declarativas y hooks de router), un layout con navbar de Bootstrap, y vas a ver por primera vez cómo conviven componentes de clase y funcionales en la estructura de navegación. La rifa hardcodeada sigue ahí, esperando su backend; la deuda 💸 se paga más adelante.
+Pero una tarjeta suelta no es una app. Ahora mismo tienes una sola pantalla que muestra una sola rueda hardcodeada. La Esclusa tiene un listado, un detalle, un tablero de jugadores, una bitácora — y necesitas **moverte entre ellas**. Eso es routing, y es exactamente lo que construye la **Fase 1 — Estructura base + Router 5**: vas a montar React Router 5 (la versión pre-v6, con su mezcla de rutas declarativas y hooks de router), un layout con navbar de Bootstrap, y vas a ver por primera vez cómo conviven componentes de clase y funcionales en la estructura de navegación. La rueda hardcodeada sigue ahí, esperando su backend; la deuda 💸 se paga más adelante.
 
-> **La señal de que quedó bien:** si un compañero nuevo clona el repo, corre `nvm use && npm ci && npm start`, y ve la tarjeta de la rifa en `localhost:3000` sin preguntarte nada — entonces el setup de esta fase hizo su trabajo. El mejor ambiente de desarrollo es el que se levanta sin que tengas que explicarlo.
+> **La señal de que quedó bien:** si un compañero nuevo clona el repo, corre `nvm use && npm ci && npm start`, y ve la tarjeta de la rueda en `localhost:3000` sin preguntarte nada — entonces el setup de esta fase hizo su trabajo. El mejor ambiente de desarrollo es el que se levanta sin que tengas que explicarlo.
 
 
 > 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en
@@ -565,7 +670,7 @@ Pero una tarjeta suelta no es una app. Ahora mismo tienes una sola pantalla que 
   A9 §6, con su 🔥 al final del apéndice.
 - ~~**`node-sass` frente a `sass`.**~~ **Resuelto:** el porqué histórico está en
   `00-decisiones-y-versiones.md` (D11) y la fricción de instalación en el A9 §1.
-- ~~**La rifa hardcodeada 💸** se declara acá y se paga en Fase 3.~~
+- ~~**La rueda hardcodeada 💸** se declara acá y se paga en Fase 3.~~
   **Resuelto:** se paga en **Fase 4 §5.5**, marcada explícitamente como 💸 Pago
   de deuda. La fase que corresponde era la 4, no la 3 — hasta que no hay store,
   no hay con qué reemplazar el array.

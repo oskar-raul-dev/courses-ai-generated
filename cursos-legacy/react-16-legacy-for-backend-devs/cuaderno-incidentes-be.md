@@ -1,20 +1,20 @@
 # 📓🔥 Cuaderno de incidentes — Track BE
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Documento vivo
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Documento vivo
 > El changelog es `git log -- cuaderno-incidentes-be.md`
-> El tiempo ya está contado dentro de las 84 h del track BE; no es un bloque aparte
+> El tiempo ya está contado dentro de las 86 h del track BE; no es un bloque aparte
 
-Este es el cuaderno del **track opcional de backend**. Los dieciséis incidentes
+Este es el cuaderno del **track opcional de backend**. Los dieciocho incidentes
 de acá ocurren del otro lado del cable: en el binario de Go, en PostgreSQL, en el
-contenedor o en el pipeline. Su rango de IDs —`be-01` a `be-16`— está reservado
+contenedor o en el pipeline. Su rango de IDs —`be-01` a `be-18`— está reservado
 en `cuaderno-incidentes.md` y **nunca se reasigna**.
 
 > 📝 **Por qué este archivo existe aparte.** `cuaderno-incidentes.md` se declara
 > "el único archivo de incidentes del curso", y esa frase se escribió antes de que
 > el track BE existiera. Se **diverge a propósito** y por dos razones: el track BE
-> es opcional, y un alumno que solo hace las 96 horas del track base no debería
-> encontrarse dieciséis incidentes de Go y Postgres intercalados entre los suyos;
-> y los IDs `be-NN` conviven con los `01`–`20` sin colisionar precisamente porque
+> es opcional, y un alumno que solo hace las 98 horas del track base no debería
+> encontrarse dieciocho incidentes de Go y Postgres intercalados entre los suyos;
+> y los IDs `be-NN` conviven con los `01`–`21` sin colisionar precisamente porque
 > están en rangos distintos. El cuaderno base conserva la reserva y apunta acá.
 >
 > La estructura, las reglas y el tono son **exactamente los mismos**. Lo que
@@ -68,17 +68,17 @@ herramienta, y el `X-Request-Id` es lo que permite cruzarlo sin perder el hilo
 ### Convención de commits
 
 ```
-incidente(be-09): abre — vendimos tres números dos veces, y solo los redondos
-incidente(be-09): repro — 20 clientes concurrentes sobre el 0500, dos ganan
-incidente(be-09): hipótesis descartada — no es el frontend, curl sin navegador lo reproduce
-incidente(be-09): causa — SellNumber lee, decide y escribe sin transacción ni bloqueo
-incidente(be-09): fix — transacción con SELECT ... FOR UPDATE sobre raffle_numbers
-incidente(be-09): cierre — prueba de concurrencia contra Postgres y post-mortem
+incidente(be-09): abre — otra vez más Esclusas de Oro que stock, y el contador dice que sobran
+incidente(be-09): repro — 50 jugadores a la vez con k6 sobre la rueda de medición: 1.500 entregadas
+incidente(be-09): hipótesis descartada — no es el juego: la misma clave no se repite en la bitácora
+incidente(be-09): causa — takeStock lee el stock sin FOR UPDATE y escribe el valor calculado en Go
+incidente(be-09): fix — vuelve el SELECT ... FOR UPDATE sobre la fila del stock
+incidente(be-09): cierre — TestStockNeverExceeded contra Postgres y post-mortem
 ```
 
 Y si el incidente deja el laboratorio roto a propósito, el par de tags de
-`00-convencion-de-git-y-tags.md`: `inc/be-09/venta-doble-roto` e
-`inc/be-09/venta-doble-fix`.
+`00-convencion-de-git-y-tags.md`: `inc/be-09/esclusas-de-mas-roto` e
+`inc/be-09/esclusas-de-mas-fix`.
 
 ---
 
@@ -97,16 +97,18 @@ dónde empezar a mirar.
 | "Anda hasta que hay gente" | `pg_stat_activity` | pool, transacción | be-05 |
 | "A veces sale en blanco" | `go test -race` | concurrencia | be-06 |
 | "Los saca de la sesión" | el `exp` del token, decodificado | autenticación | be-08 |
-| "Se vendió dos veces" | los índices de la tabla, en `\d` | base de datos | be-09 |
-| "Quedó reservado para siempre" | qué proceso libera, y cuándo | transacciones | be-10 |
-| "Siguió vendiendo tras el cierre" | quién evalúa la hora | autoridad del reloj | be-12 |
+| "Entregamos más de lo que había" | la bitácora contra el contador | concurrencia | be-09 |
+| "Quedó en proceso para siempre" | quién cierra los pedidos, y con qué fecha | concurrencia | be-10 |
+| "Siguió girando tras el cierre" | quién evalúa la hora, y con qué | autoridad del reloj | be-12 |
+| "Cobran el giro gratis antes de tiempo" | de dónde sale la hora del reclamo | autoridad del reloj | be-18 |
 | "La cuenta no cuadra" | de cuándo son los datos que entraron | contrato, transacción | be-13, be-14 |
 | "Verde en la suite, rojo en PROD" | contra qué motor corre la suite | pruebas | be-15 |
 | "La imagen de ayer no arranca" | qué cambió si el código no cambió | despliegue | be-16 |
+| "Siempre salen los mismos premios" | la versión de Go, y quién siembra el generador | aleatorio | be-17 |
 
 Dos advertencias. La primera: la última columna son **candidatos**, no un
 diagnóstico — `be-13` y `be-14` comparten síntoma y no comparten causa. La segunda,
-y es la propia de este track: **seis de estos dieciséis tienen un hermano en el
+y es la propia de este track: **seis de estos dieciocho tienen un hermano en el
 cuaderno base con el mismo síntoma y otra causa raíz**, así que antes de dar por
 cerrada una hipótesis conviene preguntarse si el síntoma que estás viendo no será
 el de la otra orilla. El cruce está en la sección de hermanos, más abajo.
@@ -117,45 +119,47 @@ el de la otra orilla. El cruce está en la sección de hermanos, más abajo.
 
 | ID | Fase | Síntoma reportado | Categoría | Dif. | Estado |
 |---|---|---|---|---|---|
-| be-01 | be00 | La trazabilidad funciona en Network pero no en la consola | 🔥 contrato | 🟡 | ⬜ |
-| be-02 | be00 | El número ganador no tiene dueño | 🔥 contrato | 🟠 | ⬜ |
-| be-03 | be01 | El backend se cae solo y vuelve, tres veces al día | 🔥 despliegue | 🟡 | ⬜ |
-| be-04 | be02 | Las rifas se crean con la hora corrida | 🔥 base de datos | 🟠 | ⬜ |
-| be-05 | be02 | Todo funciona hasta que hay gente | 🔥 base de datos | 🔴 | ⬜ |
-| be-06 | be03 | El comprador aparece en blanco, pero solo a veces | 🔥 contrato | 🟠 | ⬜ |
-| be-07 | be03 | Faltan datos en las liquidaciones de agosto | 🔥 contrato | 🔴 | ⬜ |
-| be-08 | be04 | A algunos los saca de la sesión al mediodía y a otros nunca | 🔥 autenticación | 🟡 | ⬜ |
-| be-09 ⭐ | be05 | Vendimos tres números dos veces, y solo los redondos | 🔥 transacciones | 🔴 | ⬜ |
-| be-10 | be05 | Un número quedó reservado para siempre | 🔥 transacciones | 🟡 | ⬜ |
-| be-11 | be06 | A los vendedores de la costa se les cierra la rifa una hora antes | 🔥 tiempo | 🟠 | ⬜ |
-| be-12 | be06 | Vendimos doscientos números después del cierre | 🔥 tiempo | 🔴 | ⬜ |
-| be-13 | be07 | La liquidación dice 340.000 y las ventas suman 355.000 | 🔥 dinero | 🟠 | ⬜ |
-| be-14 | be07 | Repartimos el premio dos veces | 🔥 transacciones | 🔴 | ⬜ |
+| be-01 | be01 | La trazabilidad funciona en Network pero no en la consola | 🔥 contrato | 🟡 | ⬜ |
+| be-02 | be00 | El premio entregado no tiene rueda | 🔥 contrato | 🟠 | ⬜ |
+| be-03 | be01 | A ratos la consola da error de red, y el servidor nunca se cayó | 🔥 despliegue | 🟡 | ⬜ |
+| be-04 | be02 (desde be03) | Las ruedas aparecen con la hora corrida | 🔥 base de datos | 🟠 | ⬜ |
+| be-05 | be02 (desde be03) | Todo funciona hasta que hay gente | 🔥 base de datos | 🔴 | ⬜ |
+| be-06 | be03 | El tablero dice que nadie compró giros | 🔥 contrato | 🟠 | ⬜ |
+| be-07 | be03 | Faltan datos en las conciliaciones | 🔥 contrato | 🔴 | ⬜ |
+| be-08 | be04 | A Yariela la saca de la sesión a las ocho de la noche, y a Itzel nunca | 🔥 autenticación | 🟡 | ⬜ |
+| be-09 ⭐ | be05 | Otra vez más Esclusas de Oro que stock, y el contador dice que sobran | 🔥 concurrencia | 🔴 | ⬜ |
+| be-10 | be05 | Un giro quedó "en proceso" para siempre | 🔥 concurrencia | 🟡 | ⬜ |
+| be-11 | be06 | A los jugadores de Chile la rueda les cierra una hora antes | 🔥 tiempo | 🟡 | ⬜ |
+| be-12 | be06 | Giros anotados después del cierre | 🔥 tiempo | 🟢 | ⬜ |
+| be-13 | be07 | La conciliación y el reporte de la tienda no dan lo mismo | 🔥 dinero | 🟡 | ⬜ |
+| be-14 | be07 | Acreditamos la compra dos veces | 🔥 transacciones | 🟡 | ⬜ |
 | be-15 ⭐ | be08 | La suite lleva tres semanas en verde y ayer se rompió producción | 🔥 contrato | 🔴 | ⬜ |
 | be-16 | be09 | La imagen de ayer no arranca y el código no cambió | 🔥 despliegue | 🟠 | ⬜ |
+| be-17 | be05 | Cada vez que reiniciamos, la rueda da los mismos premios | 🔥 aleatorio | 🟠 | ⬜ |
+| be-18 ➕ | be06 | Hay jugadores que cobran el giro gratis cada hora | 🔥 tiempo | 🟡 | ⬜ |
 
 **Categorías propias del track:** 🔥 base de datos · 🔥 transacciones · 🔥
-despliegue · 🔥 contrato. Se suman a las del cuaderno base, de donde salen
-autenticación, tiempo y dinero.
+concurrencia · 🔥 despliegue · 🔥 contrato · 🔥 aleatorio. Se suman a las del
+cuaderno base, de donde salen autenticación, tiempo y dinero.
 
-**⭐** marca los dos más formativos: la venta duplicada (`be-09`) y la suite que
-autorizó un despliegue roto (`be-15`).
+**⭐** marca los dos más formativos: las Esclusas de Oro de más (`be-09`) y la
+suite que autorizó un despliegue roto (`be-15`).
 
 ### Los hermanos del track base
 
-Seis de estos dieciséis comparten síntoma con un incidente del cuaderno base y
+Seis de estos dieciocho comparten síntoma con un incidente del cuaderno base y
 tienen **otra causa raíz**. Ese paralelo es deliberado y es de lo más formativo
 que ofrece el track: resolverlos en pareja te enseña más que resolver doce
 sueltos.
 
 | Track base | Track BE | Qué cambia |
 |---|---|---|
-| 11 — el `0347` vendido dos veces ⭐ | **be-09** ⭐ | Allá se diagnostica en el store; acá se resuelve con un índice único y una transacción |
-| 16 — la rifa siguió vendiendo tras el cierre | **be-12** | Allá el reloj del navegador; acá la autoridad temporal del servidor |
-| 18 — la liquidación da un centavo de diferencia | **be-13** | Allá el redondeo; acá el cliente calculando con datos viejos |
+| 11 — la compensación doble ⭐ | **be-09** ⭐ | Allá el store y un chequeo en dos pasos; acá el mismo chequeo en dos pasos, dentro de una transacción que no excluye |
+| 16 — seguimos enviando giros de una rueda que ya cerró | **be-12** | Allá el reloj del navegador; acá la autoridad temporal del servidor |
+| 18 — la conciliación da un centavo de diferencia | **be-13** | Allá el redondeo; acá el cliente calculando con datos viejos |
 | 20 — el test pasa en mi máquina y falla en la de al lado | **be-15** ⭐ | Allá el entorno; acá el **motor** de la base |
-| 08 — la sesión se cae sola *(auth, track base)* | **be-08** | Allá el `401` del caos; acá un `exp` real sin renovación |
-| 19 — el dashboard se arrastra al final del día | **be-05** | Allá memoización; acá el pool de conexiones agotado |
+| 08 — me saca a login al azar mientras estoy trabajando | **be-08** | Allá el `401` del caos; acá un `exp` real sin renovación |
+| 19 — el dashboard se arrastra al final de la Semana del Canal | **be-05** | Allá memoización; acá el pool de conexiones agotado |
 
 ---
 
@@ -167,62 +171,67 @@ Ordenados por ID, que es también el orden sugerido. El ID nunca se reasigna.
 
 ## Incidente be-01 — La trazabilidad funciona en Network pero no en la consola
 
-> **Fase:** be00 · **Categoría:** 🔥 contrato · **Dificultad:** 🟡
+> **Fase:** be01 · **Categoría:** 🔥 contrato · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 30-45 min
 
 ### 🎫 El ticket
 
-> "Soporte nos pidió que cuando un usuario reporte un error le pasemos el id de
-> la petición, ese que sale en la consola. El problema es que casi nunca sale.
-> Yo lo veo en la pestaña de red, ahí está el header, pero en la consola no
-> aparece nada. Un compañero dice que a él sí le sale, así que a lo mejor es
-> algo de mi Chrome."
+> "Estoy probando el binario nuevo desde la consola del navegador, con `fetch`,
+> para que soporte le pueda pasar a Juliana el id de cada petición. El header
+> está: lo veo en la pestaña de red. Pero `r.headers.get('X-Request-Id')` me da
+> `null`. A un compañero sí le sale el id, así que a lo mejor es algo de mi
+> Chrome."
 
-**Reportado por:** soporte
-**Ambiente:** desarrollo y UAT
+**Reportado por:** el equipo de Juliana
+**Ambiente:** desarrollo
 
 ### 🎯 Qué se te pide
 
-Determinar por qué el header **se ve** y no **se lee**, y de qué lado del cable
-está la causa. No hace falta arreglarlo todavía: `be01` lo va a pagar. Lo que sí
-hace falta es que quede registrado en `server/CONTRACT.md` como hallazgo, con su
-evidencia.
+Determinar por qué el header **se ve** y no **se lee**, de qué lado del cable está
+la causa y por qué al compañero sí le sale. Después, el fix y la prueba que lo
+habría atrapado.
 
 ### 🔧 Preparación
 
 ```bash
-CHAOS_LEVEL=off npm run mock:api        # el mock con el middleware de X-Request-Id
-npm start                                # la app en el 3000
+git checkout incidente/be-01
+cd server && PORT=3011 go run ./cmd/api     # el binario de la rama, en el puerto de transición
+# En otra terminal, como siempre:
+CHAOS_LEVEL=off npm run mock:all            # el mock sigue en el 3001
+npm start
 ```
+
+Con la consola abierta en `localhost:3000`, pide `/health` al binario desde la
+consola del navegador, igual que en `be01` §5.7.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-El header llega: lo estás viendo. Así que el backend hizo su parte. La pregunta
-no es si el dato viaja, sino **quién tiene permiso para leerlo** una vez que
-llegó.
+El header llega: lo estás viendo. Así que el backend lo mandó. La pregunta no es si
+el dato viaja, sino **quién tiene permiso para leerlo** una vez que llegó.
 
 Y el detalle del reporte que parece ruido y no lo es: *"a un compañero sí le
-sale"*. ¿Qué tiene distinto la máquina de esa persona?
+sale"*. ¿Contra qué servidor está probando esa persona?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Abre la consola del navegador y evalúa a mano, con la aplicación cargada:
+Evalúa las dos cosas a mano, una detrás de la otra:
 
 ```javascript
-fetch('http://localhost:3001/raffles')
-  .then(r => console.log('leído:', r.headers.get('X-Request-Id')));
+fetch('http://localhost:3011/health')
+  .then(r => console.log('binario:', r.headers.get('X-Request-Id')));
+fetch('http://localhost:3001/wheels')
+  .then(r => console.log('mock:', r.headers.get('X-Request-Id')));
 ```
 
-Compara ese resultado con lo que muestra la pestaña Network para esa **misma**
-petición. Después mira los headers de **respuesta** completos, no solo el que
-buscas.
+Después compara en Network los headers de **respuesta** completos de las dos
+peticiones, no solo el que buscas. Hay uno que está en una y no en la otra.
 
 </details>
 
@@ -231,7 +240,7 @@ buscas.
 
 En una petición de origen cruzado, ¿qué headers de respuesta le entrega el
 navegador a JavaScript, y cuáles se guarda para sí? ¿Qué tiene que declarar el
-servidor para ampliar esa lista?
+servidor para ampliar esa lista, y quién lo declara en el mock?
 
 </details>
 
@@ -265,98 +274,107 @@ servidor para ampliar esa lista?
 CORS. En una petición de origen cruzado, el navegador **solo entrega a JavaScript
 un puñado de headers de respuesta seguros** (`Content-Type`, `Cache-Control` y
 unos pocos más). Cualquier otro —incluido `X-Request-Id`— queda visible en
-DevTools pero **inaccesible desde código**, salvo que el servidor lo declare
+DevTools pero **inaccesible desde código**, salvo que la respuesta lo declare
 explícitamente:
 
 ```
 Access-Control-Expose-Headers: X-Request-Id
 ```
 
-El mock de la Fase 2 pone el header y **no** lo expone. Por eso
-`response.headers['x-request-id']` vale `undefined` en el interceptor de
-`apiClient`, y el `console.debug` nunca imprime.
+El `corsMiddleware` del binario de la rama perdió esa línea. El header sale, Network
+lo muestra, y `r.headers.get('X-Request-Id')` vale `null`. Medido en el navegador
+contra la rama: `null` desde el `3011` y el id completo desde el `3001`, en la misma
+consola y en el mismo segundo.
 
-Es el hallazgo **`C-05`** de `be00`.
-
-📝 **Y la pista del compañero era real, no ruido.** A quien le funciona es porque
-está usando el `proxy` del dev server de CRA: con él, las peticiones salen al
-`3000` y no hay origen cruzado, así que CORS no interviene y todos los headers
-son legibles. Dos entornos, dos comportamientos, mismo código. Es el "en mi
-máquina anda" de manual, y por eso el reporte lo mencionaba.
+📝 **Y la pista del compañero era real, no ruido.** Esa persona está probando
+contra el **mock**, y el mock expone el header en `mock/requestIdMiddleware.js`
+desde la Fase 2. Es exactamente lo que `be00` registró como `C-05`: esa línea es
+contrato aunque no figure en ninguna tabla de rutas, y un reemplazo que emite el
+header y olvida exponerlo deja la trazabilidad visible en Network y muda en el
+código. Dos servidores, dos comportamientos, mismo cliente. Es el "en mi máquina
+anda" de manual, y por eso el reporte lo mencionaba.
 
 **Parche mínimo**
 
-Ninguno en esta fase: `be00` **no escribe código**. El entregable es el registro
-del hallazgo en `server/CONTRACT.md`, dentro del régimen estricto, con las dos
-evidencias: la captura del header en Network y la consola sin la línea del
-interceptor.
-
-Y la verificación 9 de `server/smoke.sh`, que hoy **falla a propósito**:
-
-```bash
-check "X-Request-Id expuesto a CORS (C-05)" "1" \
-  "$(curl -s -D - -o /dev/null -X OPTIONS "$BASE/raffles" \
-     -H 'Origin: http://localhost:3000' -H 'Access-Control-Request-Method: GET' \
-     | grep -ci 'access-control-expose-headers:.*x-request-id')"
-```
-
-**La corrección correcta**
-
-Una línea en el middleware de CORS de `be01`:
+Devolver la línea al middleware de CORS:
 
 ```go
 w.Header().Set("Access-Control-Expose-Headers", requestIDHeader)
 ```
 
-Con eso, la verificación 9 pasa a verde y la trazabilidad funciona de verdad.
+**La corrección correcta**
+
+La misma línea, más las dos defensas que faltaban: la verificación 11 de
+`server/smoke.sh` corrida **contra el binario** y no solo contra el mock
+(`BASE_URL=http://localhost:3011 ./server/smoke.sh`), y una prueba de handler que
+falle si alguien vuelve a tocar el middleware.
 
 **Prueba de regresión**
 
-Vive en la suite de contrato de `be08`, y se verifica sobre el **preflight**:
+Sobre la **respuesta real**, que es donde el navegador mira. Comprobarlo en el
+preflight no sirve: ahí el header no cuenta.
 
 ```go
-func TestExposeRequestID(t *testing.T) {
-	req := httptest.NewRequest("OPTIONS", "/raffles", nil)
+// server/internal/http/cors_test.go
+
+package httpapi
+
+import (
+	"net/http/httptest"
+	"strings"
+	"testing"
+)
+
+// be-01: el X-Request-Id no basta con que viaje; la respuesta real tiene que exponerlo.
+func TestRequestIDIsExposedToTheBrowser(t *testing.T) {
+	req := httptest.NewRequest("GET", "/health", nil)
 	req.Header.Set("Origin", "http://localhost:3000")
-	req.Header.Set("Access-Control-Request-Method", "GET")
 	rec := httptest.NewRecorder()
 
-	newRouter(testConfig).ServeHTTP(rec, req)
+	NewRouter(Config{AllowedOrigin: "http://localhost:3000", ChaosLevel: "off"}).ServeHTTP(rec, req)
 
-	// No basta con que el header viaje: tiene que estar EXPUESTO.
-	require.Contains(t,
-		rec.Header().Get("Access-Control-Expose-Headers"), "X-Request-Id")
+	if rec.Header().Get("X-Request-Id") == "" {
+		t.Fatal("la respuesta no trae X-Request-Id")
+	}
+	if !strings.Contains(rec.Header().Get("Access-Control-Expose-Headers"), "X-Request-Id") {
+		t.Fatalf("X-Request-Id viaja pero no está expuesto: Access-Control-Expose-Headers=%q",
+			rec.Header().Get("Access-Control-Expose-Headers"))
+	}
 }
 ```
 
-Motor: ninguno. Es una prueba de handler y no toca la base.
+En la rama falla con `X-Request-Id viaja pero no está expuesto:
+Access-Control-Expose-Headers=""`; en `fase-be01-go-y-la-forma-del-monolito`
+pasa. Motor: ninguno. Es una prueba de handler y no toca la base.
 
 **Prevención**
 
-La verificación del `smoke.sh`, que corre en cada fase desde `be03`, y la prueba
-de contrato de arriba. Las dos son necesarias: el `smoke.sh` atrapa "el ambiente
-está mal configurado" y la prueba atrapa "alguien tocó el middleware".
+El `smoke.sh` contra el binario en cada fase y la prueba de arriba. Las dos son
+necesarias: el `smoke.sh` atrapa "el ambiente está mal configurado" y la prueba
+atrapa "alguien tocó el middleware".
 
 **Por qué llegó a producción**
 
-Porque el síntoma es invisible desde el lado que lo produce. El backend hizo todo
-bien y el header está ahí; nada en el servidor sugiere que falte algo. Y del lado
-del cliente, `undefined` en un `console.debug` es exactamente lo que se ve cuando
-no pasa nada — no hay error, no hay advertencia, no hay señal.
+Porque el síntoma es invisible desde el lado que lo produce. El header está ahí;
+nada en el servidor sugiere que falte algo, y `curl` lo muestra perfecto. Y del
+lado del cliente, `null` o `undefined` en un `console.debug` es exactamente lo que
+se ve cuando no pasa nada: no hay error, no hay advertencia, no hay señal.
 
-A eso se suma que **funcionaba en la máquina de algunas personas** por el proxy
-del dev server, lo que convierte el problema en "algo de tu Chrome" y desvía la
-investigación durante semanas.
+A eso se suma que **funcionaba para quien probaba contra el mock**, lo que convierte
+el problema en "algo de tu Chrome" y desvía la investigación hacia el navegador,
+que es justo el lado que no tiene la culpa.
 
 **Si tu causa fue distinta a esta**
 
-- *"El interceptor lee la clave mal"* — plausible: los navegadores normalizan los
-  headers a minúsculas y `response.headers['X-Request-Id']` con mayúsculas sí
-  daría `undefined`. Compruébalo: en `axios`, `response.headers` ya normaliza, y
-  el interceptor de la Fase 2 usa `'x-request-id'` correctamente. Descartada por
-  lectura, pero era una hipótesis correcta de formular.
-- *"El mock no siempre pone el header"* — se descarta mirando diez peticiones en
-  Network: está en todas.
+- *"Se lee con la clave mal escrita"* — plausible: hay librerías que distinguen
+  mayúsculas. Compruébalo: `Headers.get` de `fetch` no distingue, y `axios`
+  normaliza a minúsculas; el interceptor de la Fase 2 usa `'x-request-id'`.
+  Descartada por lectura, pero era una hipótesis correcta de formular.
+- *"El binario no siempre pone el header"* — se descarta mirando diez peticiones
+  en Network o con `curl -D -`: está en todas.
+- *"Hay que exponerlo en el preflight"* — el `OPTIONS` ya lo trae en la fase y no
+  cambia nada: el navegador mira `Access-Control-Expose-Headers` en la respuesta
+  real. Agregarlo solo ahí deja el bug intacto.
 - Si concluiste *"hay que loguearlo en el servidor y correlacionar por hora"*,
   tapaste el síntoma: funciona, y te deja sin trazabilidad en el cliente para
   siempre.
@@ -365,7 +383,7 @@ investigación durante semanas.
 
 ---
 
-## Incidente be-02 — El número ganador no tiene dueño
+## Incidente be-02 — El premio entregado no tiene rueda
 
 > **Fase:** be00 · **Categoría:** 🔥 contrato · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -373,56 +391,66 @@ investigación durante semanas.
 
 ### 🎫 El ticket
 
-> "Salió el sorteo de la rifa 1 y el número ganador fue el 0347. Está vendido,
-> eso lo vemos, pero cuando entramos a ver a quién se lo vendimos no aparece
-> nadie. Miramos otras rifas y algunos números sí tienen comprador y otros no,
-> y no encontramos el patrón. Los vendedores juran que siempre ponen el
-> comprador."
+> "Anoche cerramos la Esclusa de Oro y el stock bajó, o sea que la gente se
+> ganó el avatar. Pero abro el tablero de esa rueda y dice cero giros, y en
+> probabilidades dice *Sin alarma*. ¿Cero giros con el stock bajando? Si mañana
+> alguien en el Discord vuelve con lo de *la rueda está arreglada*, no tengo un
+> solo número para contestarle."
 
-**Reportado por:** tesorería
+**Reportado por:** Itzel, operación
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Encontrar el patrón que tesorería no encontró y determinar de qué lado del cable
-está la causa. El entregable es el hallazgo registrado en `server/CONTRACT.md`
-con la forma canónica del cuerpo — el fix real llega en `be04`.
+Encontrar dónde se pierden los giros entre el juego y el tablero, y de qué lado del
+cable está la causa. El entregable es el hallazgo registrado en `server/CONTRACT.md`
+con la forma canónica de la fila y su comando de reproducción; el fix real llega en
+`be05`.
 
 ### 🔧 Preparación
 
 ```bash
-CHAOS_LEVEL=off npm run mock:api
+CHAOS_LEVEL=off npm run mock:all
 npm start
-# Vende números por los DOS caminos que ofrece la aplicación.
+# Haz girar al juego: veinte giros de la jugadora 42, como los manda el celular.
+for i in $(seq 1 20); do
+  curl -s -o /dev/null -X POST -H 'Content-Type: application/json' \
+       -d "{\"idempotencyKey\":\"k-be02-$i\"}" localhost:3001/players/42/spins
+done
 ```
+
+Después abre el tablero y elige la Esclusa de Oro.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-*"Algunos sí y otros no, sin patrón"* casi nunca significa que no haya patrón:
-significa que el patrón no está donde lo buscaron. Tesorería miró **los números**.
-Mira tú **cómo se vendieron**.
-
-La aplicación tiene más de un camino para vender. ¿Cuántos?
+*"El stock bajó y el tablero no lo ve"* dice que hay dos cosas que deberían contar
+lo mismo y no lo hacen. Una la escribe el juego; la otra la lee la consola. Antes de
+mirar el tablero, mira **qué escribió el juego**.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Abre Network, vende un número desde el tablero, y vende otro provocando el camino
-del `sellNumberEpic` de la Fase 6. Compara los **cuerpos** de las dos peticiones
-`POST /raffles/:id/numbers/:number/sell`, campo por campo.
+```bash
+curl -s localhost:3001/stock/1 | jq .remaining
+curl -s 'localhost:3001/spinLog?wheelId=1' | jq length
+curl -s 'localhost:3001/spinLog?idempotencyKey=k-be02-1' | jq .
+```
+
+Compara esa fila, campo por campo, con una de las que trae la Rueda de fin de mes
+(`?wheelId=4`), y busca en Network qué le pide el tablero al servidor.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si el servidor lee `req.body.participantId` y el cliente manda `participant`,
-¿qué guarda el servidor? ¿Y qué código de estado devuelve?
+Si el tablero pide `GET /spinLog?wheelId=1` y la fila no tiene `wheelId`, ¿qué
+devuelve json-server? ¿Y qué código de estado?
 
 </details>
 
@@ -453,112 +481,96 @@ Si el servidor lee `req.body.participantId` y el cliente manda `participant`,
 
 **Causa raíz**
 
-**Dos clientes mandan dos cuerpos distintos al mismo endpoint.**
+**La bitácora tiene dos escritores, y cada uno escribe una forma distinta de la
+misma fila.**
 
-- El thunk `sellNumber` de la Fase 5 y el de la Fase 7 mandan `{ participantId }`.
-- El `sellNumberEpic` de la Fase 6 manda `{ participant }`.
-
-Y el mock lee:
+- Las filas que trae `mock/db.json` desde la Fase 8 —la Rueda de fin de mes, la
+  Semana del Canal sembrada— tienen la forma completa: `wheelId`, `playerId`,
+  `landedSegment`, `deliveredPrize`, `origin`, `idempotencyKey` y `createdAt`.
+- El giro de 2019, el que llama el juego, escribe solo cuatro campos:
 
 ```javascript
-record.assign({ status: "sold", participantId: req.body.participantId ?? null })
+db.get("spinLog")
+  .push({ playerId, idempotencyKey, landedSegment: "esclusa-de-oro", createdAt: new Date().toISOString() })
+  .write(); // viaje 3
 ```
 
-Así que la variante de la Fase 6 **guarda `null` en silencio**. La venta se
-registra, el número queda `sold`, el servidor responde `200`, y el comprador
-desaparece. No hay error en ninguna capa.
+El tablero de la Fase 9 pide `GET /spinLog?wheelId=1`, y json-server filtra por un
+campo que esas filas no tienen: devuelve `200` con `[]`. Medido: después de los
+veinte giros, `stock.remaining` está en 980 —veinte Esclusas de Oro entregadas—,
+`GET /spinLog?wheelId=1` devuelve cero filas, y las tarjetas dicen *Giros 0 · 0
+gratis · 0 pagos* y *Probabilidades: Sin alarma, χ² = 0.00*. La alarma no suena
+porque no hay datos que auditar, y eso se ve igual que una rueda honesta.
 
 Es el hallazgo **`C-03`** de `be00`.
 
-📝 **Nota de época.** Esto es lo que pasa cuando dos personas implementan el mismo
-caso de uso en momentos distintos —la Fase 5 con un thunk, la Fase 6 con un epic—
-sin un contrato escrito que arbitre. No es descuido de nadie en particular: es la
-consecuencia previsible de no tener el contrato en ninguna parte, que es
-exactamente el vacío que `be00` viene a llenar.
+📝 **Nota de época.** La rueda de 2019 no tenía bitácora: anotaba lo que el jugador
+recibía y nada más (`00-historia-del-sistema.md` §5). El giro del mock imita esa
+pobreza, y la forma completa la trajo la conciliación de la Fase 8, que necesitaba
+saber de qué rueda era cada giro. Dos equipos, con años de diferencia, escribieron
+la misma colección sin un contrato que dijera qué tiene una fila. No es descuido de
+nadie: es lo que pasa cuando la forma de un dato vive en la cabeza de quien lo
+escribe.
 
 **Parche mínimo**
 
 Ninguno en `be00`: se documenta. En `CONTRACT.md`, régimen estricto:
 
-> `POST /raffles/:raffleId/numbers/:number/sell` — cuerpo canónico
-> `{"participantId": <número|null>}`. El `sellNumberEpic` de la Fase 6 manda
-> `{"participant": …}`; el backend **debe aceptarlo sin explotar** y lo ignora,
-> igual que hacía el mock. Cambiar ese comportamiento rompería el contrato
-> observable.
+> `GET /spinLog?wheelId=<id>` — cada fila tiene la forma completa: `id`, `wheelId`,
+> `playerId`, `landedSegment`, `deliveredPrize`, `origin`, `idempotencyKey`,
+> `createdAt`. El giro de hoy (`POST /players/:id/spins`) **no la cumple**: escribe
+> filas sin `wheelId`, `origin` ni `deliveredPrize`, y el tablero y la conciliación
+> no las ven. Reproducción: los veinte giros de arriba y `GET /spinLog?wheelId=1`.
 
 **La corrección correcta**
 
-En `be03`, el handler acepta las dos formas explícitamente y lo dice en un
-comentario:
-
-```go
-var body struct {
-	ParticipantID *int64          `json:"participantId"`
-	Participant   json.RawMessage `json:"participant"`   // la variante de la Fase 6
-}
-```
-
-Y la causa raíz se paga en **`be04`**: cuando la identidad venga de
-`req.Context()` y no del cuerpo, el problema desaparece por construcción para el
-vendedor. Para el **participante** —el comprador— no: ese sí es un dato del
-negocio que el cliente tiene que mandar, y unificarlo exigiría tocar el epic de
-la Fase 6, lo que choca con la regla del track.
-
-💸 Queda como deuda declarada. La forma correcta sería que el frontend mande un
-solo cuerpo, y eso está fuera de `D27`.
+En `be05`, cuando el giro sea una sola operación que escribe el hecho completo en
+`spin_log`: la rueda y su versión de pesos, el segmento en que cayó, el premio
+entregado, el origen y la clave de idempotencia, en la misma transacción que
+descuenta el saldo y el stock. Hasta entonces, `be03` reimplementa el giro tal cual,
+con su fila pobre incluida: el contrato obliga a la forma que el juego espera, no a
+la que el tablero querría.
 
 **Prueba de regresión**
 
-En la suite de contrato de `be08`:
-
-```go
-func TestSellAceptaLasDosFormasDelCuerpo(t *testing.T) {
-	// La canónica: guarda el participante.
-	srv.POST(t, "/raffles/1/numbers/0347/sell", token,
-		`{"participantId":7}`).ExpectStatus(200)
-	require.Equal(t, int64(7), participantIDOf(t, 1, "0347"))
-
-	// La de la Fase 6: NO explota, y guarda null. Este test fija el
-	// comportamiento actual como esperado — es lo que impide que alguien
-	// lo "arregle" y rompa el epic de la Fase 6.
-	srv.POST(t, "/raffles/1/numbers/1500/sell", token,
-		`{"participant":{"name":"Ana"}}`).ExpectStatus(200)
-	require.Nil(t, participantIDOf(t, 1, "1500"))
-}
-```
-
+La escribe la suite de contrato de `be08`, sobre el giro de `be05`, y su criterio cabe
+en una línea: **un giro de la jugadora 42 con una clave nueva aparece en
+`GET /spinLog?wheelId=1`, con `wheelId`, `origin` y `deliveredPrize` llenos**. Contra
+el giro de hoy falla en la primera condición: la fila existe, pero no en esa rueda.
 Motor: PostgreSQL. Toca la base, aunque no las cuatro áreas críticas.
 
 **Prevención**
 
-El contrato escrito de `be00` con el cuerpo canónico, y la prueba de arriba. Y a
-futuro: una sola función de cliente por caso de uso. Que la Fase 5 y la Fase 6
-llamen al mismo endpoint desde dos sitios distintos es la condición que hizo
-posible la divergencia.
+El contrato escrito de `be00` con la forma de la fila, y la prueba de arriba. Y una
+regla de diseño que esta colección enseña: **una colección, una forma, un dueño**.
+Que dos procesos escriban la misma tabla está bien; que cada uno decida qué columnas
+llenar, no.
 
 **Por qué llegó a producción**
 
-Porque el fallo **no produce ningún error**. `req.body.participantId ?? null` es
-código defensivo bienintencionado: evita un `undefined` y a cambio convierte un
-dato faltante en un dato válido. El `200` confirma el éxito, la UI pinta el
-número vendido, y el problema aparece meses después, cuando alguien reclama un
-premio.
+Porque el fallo **no produce ningún error**. El giro responde `200`, el juego
+entrega el avatar, el stock baja. El tablero recibe `200` con un array vacío, que es
+una respuesta perfectamente válida para una rueda sin giros. Y la auditoría de
+probabilidades, con cero giros, dice *Sin alarma*: el único indicador pensado para
+detectar una rueda rara es justo el que se queda callado cuando no hay datos.
 
 **Si tu causa fue distinta a esta**
 
-- *"El vendedor no puso el comprador"* — es la hipótesis obvia y la que
-  tesorería asumió. Se descarta mirando el cuerpo en Network: el dato **iba** en
-  la petición.
-- *"Se pierde en la base"* — no hay base todavía; es un archivo JSON.
-- Si concluiste *"hay que validar que `participantId` no sea nulo y devolver
-  `400`"*, cuidado: la Fase 5 manda `participantId: null` a propósito, porque el
-  curso base no tiene formulario de comprador. Ese `400` rompería la venta normal.
+- *"El tablero calcula mal"* — es la hipótesis obvia, y la que Itzel asumió. Se
+  descarta mirando la respuesta en Network: el servidor **devolvió** cero filas, y el
+  tablero las contó bien.
+- *"Los giros no se guardaron"* — se descarta con `GET /spinLog?idempotencyKey=…`:
+  están, sin rueda.
+- *"La caché del navegador"* — con *Disable cache* activado da lo mismo.
+- Si concluiste *"hay que filtrar por segmento en vez de por rueda"*, cuidado: el
+  slug `esclusa-de-oro` existe en más de una rueda (la Rueda de fin de mes también
+  lo tiene), y el tablero mezclaría giros de las dos.
 
 </details>
 
 ---
 
-## Incidente be-03 — El backend se cae solo y vuelve, tres veces al día
+## Incidente be-03 — A ratos la consola da error de red, y el servidor nunca se cayó
 
 > **Fase:** be01 · **Categoría:** 🔥 despliegue · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -566,19 +578,19 @@ premio.
 
 ### 🎫 El ticket
 
-> "Desde que pasamos al backend nuevo, un par de veces al día la aplicación se
-> queda muerta unos segundos: cualquier cosa que hagas da error de red, y
-> después vuelve sola. No es siempre a la misma hora ni con la misma pantalla.
-> El equipo de infraestructura dice que el contenedor se está reiniciando pero
-> que ellos no lo tocan."
+> "Desde que probamos el servidor nuevo, a ratos abro el asistente de envíos y
+> sale *Network Error* debajo de la búsqueda. No siempre: a veces la lista sale
+> bien. Si escribo un nombre, aparece y sigo trabajando. Juliana dice que el
+> servidor no se cayó en ningún momento, y en la pantalla de *Ruedas* todo va
+> normal."
 
-**Reportado por:** el propio equipo
+**Reportado por:** Yariela, soporte
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
 
-Reproducirlo a voluntad —que es la mitad del trabajo— y determinar por qué el
-cliente ve un **error de red** y no un `500`. Después, el fix.
+Reproducirlo a voluntad —que es la mitad del trabajo—, determinar por qué el
+cliente ve un **error de red** y no un `500`, y por qué "a ratos". Después, el fix.
 
 ### 🔧 Preparación
 
@@ -587,38 +599,47 @@ git checkout incidente/be-03
 cd server && PORT=3011 go run ./cmd/api
 ```
 
-La rama trae un handler que revienta con ciertos datos. Encuéntralo tú.
+La rama adelanta un `GET /players` en memoria, para probar el asistente contra el
+binario antes de que exista la base. Pídelo desde la consola del navegador (con la
+consola abierta en `localhost:3000`) o con `curl`, con y sin filtro, igual que lo
+pide el asistente.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-*"Error de red"* y *"vuelve sola"* son dos datos muy concretos. Un `500` no es un
-error de red: llega con status, con cuerpo y con headers. Un error de red es lo
-que ve el cliente cuando **no llega nada**.
+*"Network Error"* y *"el servidor no se cayó"* son dos datos muy concretos. Un `500`
+no es un error de red: llega con status, con cuerpo y con headers. Un error de red
+es lo que ve el cliente cuando **no llega ninguna respuesta**.
 
-¿Qué tendría que pasarle al servidor para que no llegue nada, y para que unos
-segundos después vuelva a responder?
+¿Qué tendría que pasarle a un servidor vivo para que no conteste?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Mira la **terminal del servidor** mientras reproduces, no el navegador. Y fíjate
-en si el proceso sigue vivo después: `curl localhost:3011/health`.
+Mira la **terminal del servidor** mientras reproduces, no el navegador. Y compara
+dos peticiones:
 
-Con `curl -v` sobre la petición que falla, compara el mensaje con el de un `500`
-normal (puedes provocar uno con `CHAOS_LEVEL=high`).
+```bash
+curl -v localhost:3011/players?name_like=ju
+curl -v localhost:3011/players
+```
+
+Después abre el asistente de la Fase 5 y mira en Network qué pide al abrirse, y qué
+pide si empiezas a escribir antes de que pase medio segundo (`searchPlayerEpic`,
+Fase 6).
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-En Go, ¿qué le pasa al proceso cuando un handler entra en pánico y nadie lo
-recupera? ¿Y en Node con Express?
+En Go, ¿qué hace `net/http` con un pánico dentro de un handler cuando nadie lo
+recupera? ¿Y qué middleware de la cadena de `be01` debería haberlo convertido en un
+`500`?
 
 </details>
 
@@ -649,199 +670,190 @@ recupera? ¿Y en Node con Express?
 
 **Causa raíz**
 
-Un `panic` dentro de un handler, sin `recoverMiddleware` en la cadena.
+Dos cosas, y las dos hacen falta. La primera: el handler indexa la query sin mirar
+si el parámetro vino:
 
-En Go, **un pánico que nadie recupera desenrolla toda la pila y termina el
-proceso**. No muere esa petición: muere el servidor entero, con todas las
-conexiones de todos los usuarios. El orquestador lo reinicia unos segundos
-después, y de ahí el "vuelve sola".
+```go
+query := strings.ToLower(r.URL.Query()["name_like"][0])
+```
 
-Por eso el cliente ve un error de red y no un `500`: **no hay nadie que responda**.
-`axios` entrega un `Network Error` sin `error.response`, o sea sin status, sin
-cuerpo y **sin `X-Request-Id`** — todo el aparato de diagnóstico que `be00`
-levantó desaparece justo cuando más falta hace.
+Cuando el asistente se abre, `searchPlayerEpic` pide todos los jugadores, **sin**
+`name_like`, y ese `[0]` sobre un slice vacío entra en pánico: `index out of range
+[0] with length 0`. La segunda: la rama sacó `recoverMiddleware` de la cadena.
 
-📝 **La diferencia cultural, que es la lección del incidente.** En Express, un
-`throw` síncrono dentro de un handler lo atrapa el framework: responde `500` y el
-proceso sigue. Quien viene de Node asume esa red de seguridad. Go no la trae, y
-`gorilla/mux` tampoco: **el middleware de recuperación es tuyo y es obligatorio**.
+Sin `recover`, `net/http` recupera el pánico por su cuenta, y lo hace a su manera:
+escribe `http: panic serving 127.0.0.1:50674: runtime error: index out of range [0]
+with length 0` en el log, con el stack, y **cierra la conexión sin responder**. El
+proceso sigue vivo —por eso Juliana tiene razón—, pero el cliente no recibe nada.
+Medido en el navegador: `fetch` lanza `TypeError: Failed to fetch` y `axios`
+entrega `Network Error` con `error.response` en `undefined`. Sin status, sin cuerpo
+y **sin `X-Request-Id`**, que tampoco aparece en la línea del log: no hay con qué
+cruzar el ticket con el servidor.
+
+📝 **Y el "a ratos" tiene explicación, y está en el frontend.** `searchPlayerEpic`
+espera 300 ms (`debounceTime`) antes de pedir. Si Yariela empieza a escribir antes
+de que pasen, la búsqueda vacía nunca sale, y lo que sale lleva `name_like`: todo
+funciona. Si abre el asistente y espera, sale `GET /players` a secas, y revienta.
+Mismo servidor, misma pantalla, distinto ritmo de quien la usa.
 
 **Parche mínimo**
 
-```go
-// server/internal/http/middleware.go
-func recoverMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// defer corre al salir, pase lo que pase — también con pánico.
-		// Es la única forma de que recover() llegue a ejecutarse.
-		defer func() {
-			if rec := recover(); rec != nil {
-				// El id es lo que vuelve diagnosticable el pánico: ata el
-				// 500 que vio el usuario con esta línea del log.
-				log.Printf("[req-id %s] PÁNICO en %s %s: %v",
-					RequestIDFrom(r.Context()), r.Method, r.URL.Path, rec)
-				// Mensaje genérico: nunca se filtra el detalle interno.
-				writeError(w, http.StatusInternalServerError, "Error interno del servidor")
-			}
-		}()
-		next.ServeHTTP(w, r)
-	})
-}
-```
-
-Y su **posición en la cadena**, que es la mitad del fix:
-
-```
-requestID → logging → cors → recover → chaos → rutas
-```
-
-`recover` va **por dentro** de `logging` y de `cors`: por dentro de `logging`
-para que el `500` quede registrado con su duración, y por dentro de `cors` para
-que la respuesta de error lleve los headers de origen cruzado. Un `500` sin
-headers de CORS es, para el navegador, un error de red opaco — o sea, volverías
-a ver el mismo síntoma con otra causa.
+Devolver `recoverMiddleware` a su lugar en `NewRouter`, entre `cors` y `chaos`. Con
+eso, la misma petición responde `500` con `{"error":"Error interno del servidor"}` y
+su `X-Request-Id`, y el log escribe `[req-id 8bb18bf70c5e58bb] PÁNICO en GET
+/players: runtime error: index out of range [0] with length 0`, **con el mismo id**.
+El asistente ya no dice *Network Error*: dice *El servidor tuvo un problema*, y
+Yariela tiene un id para pegar en el ticket.
 
 **La corrección correcta**
 
 Además del `recover`, arreglar el pánico. Un pánico recuperado sigue siendo un
-bug: el `recover` evita que se lleve el servidor por delante, no que la petición
-falle. Localízalo con el stack trace:
+bug: el `recover` convierte el silencio en un `500`, no hace que la petición
+funcione.
 
 ```go
-log.Printf("[req-id %s] PÁNICO: %v\n%s",
-	RequestIDFrom(r.Context()), rec, debug.Stack())
+query := strings.ToLower(r.URL.Query().Get("name_like")) // "" si no vino: todos los jugadores
 ```
 
-⚠️ El stack trace va **al log**, nunca al cliente: revela rutas, nombres de
-paquete y estructura interna (`bea-08` §4).
+Con eso, `GET /players` devuelve `200` con todos los jugadores, que es lo que el
+contrato de `be00` dice que hace el mock.
 
 **Prueba de regresión**
 
 ```go
-func TestPanicoDevuelve500YNoTumbaElProceso(t *testing.T) {
-	r := mux.NewRouter()
-	r.HandleFunc("/boom", func(http.ResponseWriter, *http.Request) {
-		panic("explota a propósito")
-	})
-	handler := buildChain(r)   // la cadena completa
+// server/internal/http/panic_test.go
+
+package httpapi
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"testing"
+)
+
+// be-03: lo que pide el asistente al abrir (GET /players sin name_like) no puede
+// romper el handler, y si algo entra en pánico, el cliente recibe un 500 legible.
+func TestPlayersWithoutFilterAnswers(t *testing.T) {
+	rec := httptest.NewRecorder()
+	NewRouter(Config{AllowedOrigin: "http://localhost:3000", ChaosLevel: "off"}).
+		ServeHTTP(rec, httptest.NewRequest("GET", "/players", nil))
+	if rec.Code != http.StatusOK {
+		t.Fatalf("GET /players sin filtro respondió %d", rec.Code)
+	}
+}
+
+func TestPanicBecomesReadable500(t *testing.T) {
+	boom := http.HandlerFunc(func(http.ResponseWriter, *http.Request) { panic("explota a propósito") })
+	handler := requestIDMiddleware(loggingMiddleware(corsMiddleware("http://localhost:3000")(recoverMiddleware(boom))))
 
 	rec := httptest.NewRecorder()
 	handler.ServeHTTP(rec, httptest.NewRequest("GET", "/boom", nil))
 
-	require.Equal(t, 500, rec.Code)
-	require.Contains(t, rec.Body.String(), "Error interno del servidor")
-	// La otra mitad: que la respuesta sea legible desde el navegador.
-	require.NotEmpty(t, rec.Header().Get("Access-Control-Allow-Origin"))
-	require.NotEmpty(t, rec.Header().Get("X-Request-Id"))
-	// Si el proceso hubiera muerto, este test no habría llegado hasta acá.
+	if rec.Code != http.StatusInternalServerError {
+		t.Fatalf("un pánico respondió %d, se esperaba 500", rec.Code)
+	}
+	if rec.Header().Get("X-Request-Id") == "" || rec.Header().Get("Access-Control-Allow-Origin") == "" {
+		t.Fatal("el 500 tiene que llevar su X-Request-Id y los headers de CORS")
+	}
 }
 ```
 
-Motor: ninguno.
+En la rama, la primera falla; con las dos correcciones, pasan las dos. La segunda
+prueba el middleware solo, armado a mano: que `NewRouter` no lo vuelva a perder lo
+cuida la suite de contrato de `be08`, que golpea el router entero. Motor: ninguno.
 
 **Prevención**
 
-El middleware, la prueba, y una alerta sobre reinicios del contenedor: **un
-proceso que se reinicia solo es siempre un incidente**, aunque el orquestador lo
-disimule. Que "vuelve sola" se haya normalizado durante días es parte del
-problema.
+El `recover` en la cadena, las dos pruebas, y una regla de revisión que cuesta poco:
+**ningún acceso por índice a algo que viene del cliente** sin mirar antes su
+longitud. `Query().Get` existe justamente para no tener que hacerlo.
 
 **Por qué llegó a producción**
 
-Porque el orquestador hace bien su trabajo. Un reinicio automático convierte una
-caída total en unos segundos de indisponibilidad, y unos segundos de
-indisponibilidad se confunden con "internet estuvo lento". Sin una alerta sobre
-reinicios, el sistema estuvo **fallando de la forma más grave posible** —muriendo
-entero— y el síntoma parecía menor.
+Porque nada se cayó. Sin muerte del proceso no hay reinicio, sin reinicio no hay
+alerta, y una conexión cerrada se confunde con "internet estuvo lento". La línea
+del log existía, pero sin id y entre cientos de líneas normales, y nadie sabía qué
+petición buscar. Y el ritmo de quien usa la pantalla —esperar o escribir rápido—
+hacía que el error apareciera y desapareciera sin patrón aparente.
 
-Y el diagnóstico se desvió porque el equipo venía de Node, donde ese síntoma es
-imposible: el framework atrapa los `throw` y el proceso no se cae. Es un buen
-recordatorio de que las intuiciones no cruzan de lenguaje.
+El diagnóstico, además, se desvía con facilidad hacia el lado equivocado: quien
+viene de Node espera que un error en el handler sea un `500`, porque Express lo es;
+y quien conoce algo de Go espera que un pánico tumbe el proceso. Ninguna de las dos
+cosas pasa acá, y las dos intuiciones mandan a buscar donde no es.
 
 **Si tu causa fue distinta a esta**
 
 - *"Es el `timeout` del caos"* — plausible, porque también da error de red. Se
-  descarta comprobando `CHAOS_LEVEL=off` y que el proceso **muere**, cosa que el
-  caos no hace.
-- *"Se cae la base y el pool se agota"* — daría `500`, no error de red, y el
-  proceso seguiría vivo. Es el incidente `be-05`.
-- Si tu fix fue *"que el orquestador reinicie más rápido"*, tapaste el síntoma de
-  la forma más costosa posible.
+  descarta con `CHAOS_LEVEL=off` (el binario arranca así por defecto) y con la línea
+  `http: panic serving` en el log, que el caos no produce.
+- *"Es CORS"* — un header de CORS que falta también termina en *Network Error* en
+  el navegador. Se descarta con `curl -v`: la respuesta no llega nunca (`Empty reply
+  from server`), con o sin navegador de por medio.
+- *"El servidor se reinicia"* — se descarta pidiendo `/health` justo después: responde,
+  y el log no tiene ninguna línea de arranque nueva.
+- Si tu fix fue *"poner un `try/catch` en el epic"*, tapaste el síntoma en el
+  cliente y dejaste el pánico vivo en el servidor.
 
 </details>
 
 ---
 
-## Incidente be-04 — Las rifas se crean con la hora corrida
+## Incidente be-04 — Las ruedas aparecen con la hora corrida
 
-> **Fase:** be02 · **Categoría:** 🔥 base de datos · **Dificultad:** 🟠
+> **Fase:** be02 (se reproduce desde be03) · **Categoría:** 🔥 base de datos · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 45-60 min
 
 ### 🎫 El ticket
 
-> "Creo una rifa que cierra a las 10 de la noche, la guardo, y cuando vuelvo a
-> abrirla dice que cierra a las 3 de la mañana del día siguiente. Si la edito y
-> la vuelvo a guardar, se queda igual. Lo raro es que en la pantalla del listado
-> se ve bien. Pasó desde que cambiamos el servidor."
+> "Desde que cambiaron el servidor en UAT, la tabla de ruedas dice que la
+> Esclusa de Oro cierra el 1 de enero de 2031 a la 1 de la mañana. Yo la
+> programé para el 31 de diciembre a las 8 de la noche, como todas. ¿La corrijo
+> a mano? No quiero que cierre cinco horas tarde."
 
-**Reportado por:** supervisor
-**Ambiente:** desarrollo
+**Reportado por:** Itzel, operación
+**Ambiente:** UAT
 
 ### 🎯 Qué se te pide
 
-Determinar si el **instante** guardado es correcto o si de verdad se movió — no
-es lo mismo, y confundirlo lleva a arreglar lo que no está roto. Después, decidir
-dónde va el fix: ¿código, esquema o configuración?
+Determinar si la rueda **cierra** a otra hora o solo **se muestra** a otra hora, de qué lado del cable está la causa, y qué habría pasado si Itzel la "corregía" a mano. Después, el fix y la prueba que ya existía y nadie corrió.
 
 ### 🔧 Preparación
 
 ```bash
-git checkout incidente/be-04
-docker start rifas-pg
-cd server && migrate -path migrations/postgres -database "$DATABASE_URL" up
-go run ./cmd/seed -file ../mock/db.json
-PORT=3011 go run ./cmd/api
+git checkout incidente/be-04          # sale de fase-be03: no cambia ni una línea
+cd server
+export DATABASE_URL="postgres://esclusa:esclusa@localhost:5432/esclusa?sslmode=disable"   # tal como está en UAT
+go run ./cmd/api
 ```
+
+Y la consola, como siempre, contra el binario en el `3001`.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-Antes de nada, contesta esta pregunta con una consulta: *¿el instante que hay en
-la base es el mismo que se guardó?* Un instante puede **representarse** de
-muchas formas sin cambiar de valor.
-
-`22:00-05:00` y `03:00+00:00` del día siguiente, ¿son horas distintas o la misma
-escrita de dos maneras?
+El frontend no cambió: el diff de la rama contra la fase está vacío. Así que si la tabla muestra otra cosa, lo que cambió es **lo que llega**. Y la rama tampoco cambió el backend. ¿Qué queda?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-```sql
-SHOW TimeZone;
-SELECT closes_at FROM raffles WHERE id = 1;
-SELECT closes_at AT TIME ZONE 'America/Bogota' FROM raffles WHERE id = 1;
-```
-
-Y del otro lado, el JSON crudo:
-
 ```bash
-curl -s localhost:3011/raffles/1 | jq -r .closesAt
+curl -s -H "Authorization: Bearer $TOKEN" 'localhost:3001/wheels/1' | jq -r .closesAt
+psql "$DATABASE_URL" -c 'SHOW TimeZone;'
 ```
 
-Compáralo con lo que devolvía el mock antes del cambio.
+Convierte las dos fechas a UTC a mano. Después compara el `DATABASE_URL` de UAT con el de tu máquina.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-`TIMESTAMPTZ` no guarda ninguna zona horaria: guarda un instante y lo **muestra**
-en la zona de la sesión. ¿En qué zona está tu sesión, y quién la fijó?
+`TIMESTAMPTZ` guarda un instante. ¿En qué zona lo **devuelve**? ¿Y quién decide esa zona: la columna, el servidor de base, o la sesión?
 
 </details>
 
@@ -872,116 +884,43 @@ en la zona de la sesión. ¿En qué zona está tu sesión, y quién la fijó?
 
 **Causa raíz**
 
-**El instante no se movió.** `2026-08-30T22:00:00-05:00` y
-`2026-08-31T03:00:00Z` son **exactamente el mismo momento**, escrito en dos
-zonas distintas.
+Ninguna línea de código. El `DATABASE_URL` de UAT no tiene `timezone=America/Panama`, así que la sesión de Postgres queda en la zona del servidor de base, que en `postgres:13` es `Etc/UTC`. `TIMESTAMPTZ` guarda el instante y lo devuelve **en la zona de la sesión**, y `lib/pq` lo entrega a Go con ese huso. Medido contra la rama: la tabla de ruedas muestra `2031-01-01T01:00:00Z` donde la fase muestra `2030-12-31T20:00:00-05:00`.
 
-`TIMESTAMPTZ` guarda un instante en UTC y lo convierte a la zona de la **sesión**
-al leerlo. El contenedor de Postgres arranca con `TimeZone = UTC`, así que
-devuelve `03:00+00`, `lib/pq` lo entrega como un `time.Time` en UTC, y
-`encoding/json` lo serializa con `Z`. El mock devolvía la cadena literal del
-`db.json`, con su `-05:00`.
+**Es el mismo instante.** La rueda cierra exactamente cuando tenía que cerrar: la guarda de cierre de la Fase 7 compara instantes y no se entera. Lo que cambió es la **representación**, y `WheelTable` y el formulario la muestran tal cual llega.
 
-Así que hay **dos hechos y solo uno es un problema**:
+El peligro no es el bug: es la corrección. Si Itzel escribe a mano `2030-12-31T20:00:00Z` "para que diga las 8", la rueda pasa a cerrar a las 3 de la tarde de Panamá, cinco horas antes de lo anunciado en el Discord. La representación equivocada invita a dañar el dato correcto.
 
-1. El dato es correcto. Nada que arreglar. ✅
-2. La **representación** cambió respecto de lo que devolvía el mock, y el
-   contrato de `be00` fija el offset. ⚠️
-
-Y por eso el listado se ve bien: la UI hace `new Date(closesAt)`, que interpreta
-las dos formas igual y muestra la hora local correcta. El único sitio donde se
-nota es donde alguien lee la cadena cruda — el formulario de edición.
-
-Es el **error común nº 2 de `be03`** y la Divergencia 2 de `be02`, vistas desde el
-ticket.
+Es la Divergencia 0 de `be02`, llegada como ticket vago.
 
 **Parche mínimo**
 
-Configuración, no código: fijar la zona de la sesión.
+El parámetro en el DSN de UAT:
 
-```go
-// server/internal/storage/storage.go, en Open()
-if dialect == Postgres {
-	if _, err := db.ExecContext(ctx, "SET TIME ZONE 'America/Bogota'"); err != nil {
-		return nil, fmt.Errorf("fijando la zona de la sesión: %w", err)
-	}
-}
+```bash
+DATABASE_URL="postgres://…/esclusa?sslmode=disable&timezone=America/Panama"
 ```
 
-Con eso, `GET /raffles/1` vuelve a devolver `2026-08-30T22:00:00-05:00`, byte a
-byte como el mock.
+Medido: `SHOW TimeZone` pasa de `Etc/UTC` a `America/Panama`, y `closesAt` vuelve a salir con `-05:00`.
 
 **La corrección correcta**
 
-La de `be06`, que es una **política** y no un parche: dos zonas con jerarquía
-explícita y un porqué para cada una.
-
-| Qué | Valor | Para qué |
-|---|---|---|
-| Proceso Go | `TZ=UTC` | Decidir y comparar instantes |
-| Sesión de base | `America/Bogota` | **Solo** serializar la salida |
-
-> 🧭 El instante es la verdad; el offset de la serialización es cosmética. La
-> zona de presentación no participa en ninguna decisión.
-
-Lo importante es que la zona quede **fijada explícitamente** y no heredada del
-host: un backend cuyo comportamiento depende de cómo esté configurada la máquina
-falla distinto en cada ambiente.
+Que la representación no dependa de una variable que alguien puede olvidar en un ambiente. Eso es `be06`: el proceso en UTC, la zona de la sesión fijada por el backend (D29), y la decisión escrita de quién es la autoridad del reloj.
 
 **Prueba de regresión**
 
-```go
-func TestClosesAtConservaElOffsetDelContrato(t *testing.T) {
-	var r map[string]interface{}
-	srv.GET(t, "/raffles/1", token).ExpectStatus(200).JSON(t, &r)
+Ya existía: es la verificación 3 de `server/smoke.sh`, *"wheel.closesAt trae offset"*. Contra la rama falla; contra la fase, pasa. El incidente no es que faltara la prueba: es que en UAT **nadie la corrió con el `DATABASE_URL` de UAT**. La prevención es correrla en cada ambiente después de cada despliegue, que es exactamente lo que `be09` pone en el pipeline.
 
-	// El contrato de be00 fija offset, no "Z".
-	require.Regexp(t, `[+-]\d{2}:\d{2}$`, r["closesAt"])
-}
-
-func TestElInstanteNoSeMueve(t *testing.T) {
-	original, _ := time.Parse(time.RFC3339, "2026-08-30T22:00:00-05:00")
-	created, err := store.Create(ctx, raffle.Raffle{ClosesAt: original, /* … */ })
-	require.NoError(t, err)
-
-	found, err := store.FindByID(ctx, created.ID)
-	require.NoError(t, err)
-	// Equal compara el INSTANTE. Con == compararías también huso y reloj
-	// monótono, y fallaría por motivos que no son los del test.
-	require.True(t, found.ClosesAt.Equal(original))
-}
-```
-
-Motor: **PostgreSQL obligatorio**. Toca zonas horarias, que es una de las cuatro
-áreas de la regla del motor (`D18`). En SQLite este par de pruebas no significa
-nada: no hay tipo fecha.
-
-**Prevención**
-
-La política escrita, las dos pruebas, y —la más eficaz— el ejercicio 22 de
-`be06`: correr la suite entera con `TZ=Asia/Tokyo`. Si algo falla, hay una
-comparación mirando componentes de fecha. Ese paso debería estar en CI.
+Motor: PostgreSQL. Toca zonas horarias: la regla del motor de `be08` dice que contra SQLite no vale.
 
 **Por qué llegó a producción**
 
-Porque **el dato nunca estuvo mal** y todos los indicadores decían que sí. El
-supervisor vio una hora distinta y reportó, con toda la razón, que la hora había
-cambiado. Cualquiera habría empezado buscando dónde se suma o resta tiempo — y no
-hay ninguna línea así en todo el sistema.
-
-Es el caso arquetípico de un bug donde **la primera media hora se gasta
-confirmando qué está realmente roto**. Aquí lo roto era la representación, no el
-valor, y esa distinción no se le puede pedir a quien reporta.
+Porque la consola **funciona**: compara instantes, y los instantes están bien. Nada falla, nada avisa. Y porque el valor que se ve raro tiene una explicación tentadora —"el servidor nuevo guarda mal la hora"— que lleva a corregir el dato en vez de la representación.
 
 **Si tu causa fue distinta a esta**
 
-- *"Alguien suma 5 horas en algún lado"* — la hipótesis natural. Se descarta con
-  `git grep -n "Add(.*Hour"`: no hay ninguna.
-- *"El navegador convierte mal"* — se descarta mirando el JSON crudo con `curl`:
-  el offset ya viene distinto del servidor.
-- Si tu fix fue **restar cinco horas al guardar**, acabas de introducir el bug de
-  verdad: ahora el instante sí se mueve, y en el próximo ambiente con otra zona
-  se moverá otra vez y en otra dirección.
+- *"Go guarda la hora en UTC"* — se descarta con `psql`: el instante guardado es el mismo con las dos configuraciones, y cambiar la sesión cambia la salida sin tocar la tabla.
+- *"El navegador está en otra zona"* — la tabla muestra la cadena cruda que llegó; Network la muestra igual, y Network no tiene zona.
+- *"Hay que convertir en el frontend"* — tocaría la consola, y el contrato (`be00`) dice que `closesAt` llega con offset. El que se desvió es el backend.
 
 </details>
 
@@ -989,39 +928,41 @@ valor, y esa distinción no se le puede pedir a quien reporta.
 
 ## Incidente be-05 — Todo funciona hasta que hay gente
 
-> **Fase:** be02 · **Categoría:** 🔥 base de datos · **Dificultad:** 🔴
+> **Fase:** be02 (se reproduce desde be03) · **Categoría:** 🔥 base de datos · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 60-90 min
-> · Hermano del incidente **19** del track base, con otra causa raíz
 
 ### 🎫 El ticket
 
-> "En la mañana todo va perfecto. Como a las cinco de la tarde, que es cuando se
-> vende más, la aplicación se pone lentísima y al rato ya no responde nada:
-> queda todo cargando. Si reiniciamos el servidor, vuelve a funcionar de una y
-> aguanta un par de horas. Probamos en la mañana con las mismas pantallas y no
-> pasa."
+> "Anoche, con la caída de las 7, Itzel y yo compensamos a todos los
+> afectados, y como éramos dos, varios casos los mandamos las dos y nos salía
+> *ya compensado*. En algún momento la consola dejó de responder: no cargaban
+> las ruedas, no cargaba nada. Juliana reinició el servidor y volvió. En las
+> pruebas nunca pasa."
 
-**Reportado por:** supervisor
-**Ambiente:** UAT
+**Reportado por:** Yariela, soporte
+**Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Reproducirlo **sin esperar a las cinco de la tarde** —esa es la parte difícil— y
-determinar qué recurso se agota. El fix, y una prueba que lo habría atrapado.
+Reproducirlo a voluntad, encontrar qué recurso se agota y por qué solo con "gente", y explicar qué tenía de distinto la noche del evento. Después, el fix y la prueba que lo atrapa.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-05
-docker start rifas-pg
-cd server && PORT=3011 SQL_DEBUG=1 go run ./cmd/api
+cd server && go run ./cmd/seed -file ../mock/db.json && go run ./cmd/api
 ```
 
-Vas a necesitar carga. Un bucle basta:
+La noche del evento, en una terminal: un envío de un caso, y después el mismo caso veinte y tantas veces, como dos operadoras compensando la misma lista.
 
 ```bash
-for i in $(seq 1 200); do curl -s -o /dev/null localhost:3011/raffles & done; wait
+H='Content-Type: application/json'; A="Authorization: Bearer $TOKEN"
+curl -s -X POST -H "$H" -H "$A" -d '{"grantId":"g-1","caseId":"C-7","prize":"vidas-5","reason":"caída"}' localhost:3001/players/42/grants
+for i in $(seq 1 27); do
+  curl -s -o /dev/null --max-time 3 -w '%{http_code} ' -X POST -H "$H" -H "$A" \
+       -d "{\"grantId\":\"g-$i\",\"caseId\":\"C-7\",\"prize\":\"vidas-5\",\"reason\":\"caída\"}" localhost:3001/players/42/grants
+done; echo
 ```
 
 ---
@@ -1029,36 +970,27 @@ for i in $(seq 1 200); do curl -s -o /dev/null localhost:3011/raffles & done; wa
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-*"Reiniciamos y vuelve"* es el dato más informativo del ticket: significa que algo
-**se acumula** en el proceso y no se libera. No es la base —esa no se reinició— ni
-el frontend.
-
-*"Queda todo cargando"* también dice mucho: las peticiones no fallan, **esperan**.
-¿Esperando qué?
+"Dejó de responder todo" y "reiniciar lo arregla" son dos datos muy concretos. Algo se acumula dentro del proceso y no se libera. Y la condición no es "mucha gente": es una clase de respuesta que esa noche se repitió mucho.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Mientras el sistema está lento, desde otra terminal:
+Con la consola ya colgada:
 
 ```sql
-SELECT count(*), state FROM pg_stat_activity
-WHERE datname = 'rifas' GROUP BY state;
+SELECT state, count(*) FROM pg_stat_activity WHERE datname = 'esclusa' GROUP BY state;
 ```
 
-Y desde Go, si instrumentas: `db.Stats()` te da `OpenConnections`, `InUse` y
-`WaitCount`. Compáralos con `SetMaxOpenConns(25)`.
+Y pide `/health`. Después cuenta cuántas respuestas `409` diste antes del primer cuelgue, y compáralo con `SetMaxOpenConns` en `internal/storage`.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-`*sql.DB` es un pool. ¿Qué le pasa a una conexión cuando abres un `*sql.Rows` y
-nunca lo cierras? ¿Y qué diferencia hay entre `Query` y los `Get`/`Select` de
-`sqlx`?
+Un `*sql.Rows` devuelve su conexión cuando lo cierra `Close`, cuando `Next` llega al final, o cuando se cancela su contexto (`be02` §4). Busca una consulta que no cumpla ninguna de las tres.
 
 </details>
 
@@ -1089,126 +1021,110 @@ nunca lo cierras? ¿Y qué diferencia hay entre `Query` y los `Get`/`Select` de
 
 **Causa raíz**
 
-Un `*sql.Rows` sin cerrar. La rama trae esto:
+El chequeo de caso de `SendGrant` se reescribió para "mirar solo si hay una fila":
 
 ```go
-// ❌ Cada llamada retiene una conexión del pool PARA SIEMPRE.
-rows, err := s.db.QueryContext(ctx, query)
-if err != nil {
-	return nil, err
+rows, err := s.db.Query(s.db.Rebind(`
+	SELECT id FROM grants WHERE player_id = ? AND case_id = ?`), g.PlayerID, g.CaseID)
+// …
+if rows.Next() {
+	return Grant{}, ErrCaseGranted
 }
-// falta: defer rows.Close()
-for rows.Next() { … }
-return raffles, nil
 ```
 
-`Query` devuelve un `Rows` que **mantiene tomada su conexión** hasta que se cierra
-—explícitamente o al agotar el iterador—. Un `return` anticipado, un `break`, o
-simplemente olvidar el `defer`, y esa conexión no vuelve al pool nunca.
+Dos faltas juntas. `Query` sin contexto, y una salida temprana sin `rows.Close()`. Cuando el caso **no** existe, `Next` devuelve `false` y el `Rows` se cierra solo: no pasa nada, y por eso las pruebas —que mandan casos nuevos— nunca lo ven. Cuando el caso **ya** existe, el `return` sale con el `Rows` abierto, nadie lo cierra, y como no hay contexto que se cancele, la conexión queda tomada para siempre.
 
-Con `SetMaxOpenConns(25)`, hacen falta 25 llamadas para agotarlo. A partir de la
-26, **cada petición espera indefinidamente** una conexión que no va a liberarse.
-De ahí el síntoma exacto: no falla, **espera**. Y reiniciar el proceso vacía el
-pool, lo que explica por qué "vuelve de una".
+Medido contra la rama: veinticinco respuestas `409` y después `000` (el cliente corta a los 3 s). `GET /wheels` se cuelga, `/health` responde `503` a los 2 s (el `Ping` espera una conexión que no llega) y `pg_stat_activity` muestra **25 conexiones `idle`**: para Postgres están ociosas, para el pool de Go están tomadas. Veinticinco es `SetMaxOpenConns(25)`.
 
-📝 **Y por eso solo pasa a las cinco.** El agotamiento no depende del tiempo sino
-del **número de llamadas** a esa ruta. En la mañana se llega a 25 en tres horas;
-a las cinco, en veinte minutos. El patrón horario es una consecuencia del tráfico,
-no una causa — y buscar "qué pasa a las cinco" es el desvío que este ticket
-invita a tomar.
+La noche del evento tuvo lo que las pruebas no tienen: dos operadoras mandando la misma lista, o sea muchos `409`. "Hasta que hay gente" era, en realidad, "hasta que hay casos repetidos".
 
 **Parche mínimo**
 
 ```go
-rows, err := s.db.QueryContext(ctx, query)
-if err != nil {
-	return nil, err
-}
-// Sin excepción, en la línea siguiente. Cualquier camino de salida —error,
-// break, return anticipado— pasa por acá.
 defer rows.Close()
 ```
 
 **La corrección correcta**
 
-No usar `Query` a mano cuando `sqlx` ya resuelve el caso:
-
-```go
-// Select cierra el Rows por ti. Es una de las razones de usar sqlx y no
-// database/sql pelado: elimina por construcción toda una clase de fugas.
-raffles := []Raffle{}
-if err := s.db.SelectContext(ctx, &raffles, query); err != nil {
-	return nil, fmt.Errorf("listando rifas: %w", err)
-}
-```
-
-Regla operativa que vale la pena adoptar: **si un archivo de store contiene
-`QueryContext`, tiene que tener un `defer rows.Close()` tres líneas más abajo.**
-Es un `grep` de revisión de código.
+La consulta con contexto (`QueryContext`, guía §16.3) y, mejor todavía, sin `Rows`: `GetContext` sobre un `count(*)` o un `EXISTS`, que es como estaba en la fase. Una pregunta de sí o no no necesita un cursor.
 
 **Prueba de regresión**
 
-```go
-func TestElPoolNoSeAgota(t *testing.T) {
-	db := testsupport.OpenPostgres(t)
-	testsupport.MustPostgres(t, db, "mide el comportamiento real del pool de conexiones")
-	db.SetMaxOpenConns(5)   // pool pequeño: la fuga aparece enseguida
+Con un pool chico, para que el agotamiento llegue rápido:
 
-	store := raffle.NewStore(db)
-	for i := 0; i < 50; i++ {   // 10× el tamaño del pool
-		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-		_, err := store.List(ctx)
-		cancel()
-		// Con la fuga, a partir de la sexta iteración esto es
-		// "context deadline exceeded": la conexión nunca llega.
-		require.NoError(t, err, "iteración %d: el pool se agotó", i)
+```go
+// server/internal/player/pool_test.go
+
+package player_test
+
+import (
+	"context"
+	"errors"
+	"os"
+	"testing"
+	"time"
+
+	"github.com/interoceanic-games/esclusa-api/internal/player"
+	"github.com/interoceanic-games/esclusa-api/internal/storage"
+)
+
+// be-05: veinte envíos del mismo caso, con un pool de tres conexiones. Cada uno
+// tiene que volver con ErrCaseGranted, y al final no puede quedar ninguna tomada.
+func TestDuplicateGrantsDoNotDrainThePool(t *testing.T) {
+	db, err := storage.Open(context.Background(), os.Getenv("TEST_DATABASE_URL"))
+	if err != nil {
+		t.Skip("necesita TEST_DATABASE_URL (Postgres): ", err)
 	}
-	require.Zero(t, db.Stats().InUse, "quedaron conexiones tomadas")
+	defer db.Close()
+	db.SetMaxOpenConns(3)
+	db.MustExec(`DELETE FROM grants WHERE case_id = 'C-POOL'`)
+	db.MustExec(`INSERT INTO players (id, name, status) VALUES (9001, 'Prueba del pool', 'active') ON CONFLICT (id) DO NOTHING`)
+
+	svc := player.NewService(db, 0)
+	g := player.Grant{GrantID: "g-0", PlayerID: 9001, CaseID: "C-POOL", Prize: "vidas-5", Reason: "caída"}
+	if _, err := svc.SendGrant(context.Background(), g); err != nil {
+		t.Fatal(err)
+	}
+	for i := 1; i <= 20; i++ {
+		done := make(chan error, 1)
+		go func() { _, err := svc.SendGrant(context.Background(), g); done <- err }()
+		select {
+		case err := <-done:
+			if !errors.Is(err, player.ErrCaseGranted) {
+				t.Fatalf("envío %d: %v", i, err)
+			}
+		case <-time.After(3 * time.Second):
+			t.Fatalf("el envío duplicado %d se colgó: el pool está agotado (en uso: %d)", i, db.Stats().InUse)
+		}
+	}
+	if inUse := db.Stats().InUse; inUse != 0 {
+		t.Fatalf("quedaron %d conexiones tomadas", inUse)
+	}
 }
 ```
 
-Motor: **PostgreSQL obligatorio**. Con SQLite el pool es de una sola conexión
-(`be02`) y el test no significa nada.
+En la rama falla con `el envío duplicado 4 se colgó: el pool está agotado (en uso: 3)`; en `fase-be03-crud-y-el-reemplazo` pasa. Motor: PostgreSQL, contra `esclusa_test`.
 
 **Prevención**
 
-Tres capas, y las tres hacen falta:
-
-1. La prueba de arriba, con un pool pequeño.
-2. **Exportar `db.Stats()`** —`InUse` y `WaitCount`— y alertar cuando `InUse` se
-   acerque al máximo. Es la señal temprana: sube durante horas antes de que algo
-   falle.
-3. Timeouts en el contexto de cada consulta. No evitan la fuga, pero convierten
-   "esperar para siempre" en un error con mensaje, que es diagnosticable.
+La prueba, la regla de contexto en toda consulta, y `db.Stats()` en el log o en `/health`: un `InUse` que crece y no baja es el aviso que esa noche no hubo.
 
 **Por qué llegó a producción**
 
-Porque **el código funciona perfectamente hasta que no**. No hay error, no hay
-advertencia, no hay degradación gradual visible: el sistema va bien con 24
-llamadas y se cuelga con 26. Ninguna prueba funcional lo detecta, porque cada
-prueba hace una llamada y el pool se recicla entre ellas.
-
-Y el reporte apuntaba a la hora, que es la correlación visible pero no la causa.
-Un equipo puede pasar días buscando "qué proceso corre a las cinco".
+Porque la fuga solo existe en un camino —el caso repetido— que las pruebas no recorren, y porque `defer rows.Close()` falta en un bucle que recorre todo y no pasa nada, así que el olvido sobrevive a la revisión hasta el día que alguien agrega un `return` temprano. Y porque el síntoma —todo colgado, reiniciar lo arregla— se parece mucho a "la base estaba lenta".
 
 **Si tu causa fue distinta a esta**
 
-- *"Es un problema de rendimiento de la consulta"* — se descarta mirando
-  `SQL_DEBUG`: las consultas que **sí** se ejecutan tardan lo mismo que en la
-  mañana. Lo lento es esperar el turno.
-- *"La base se queda sin conexiones"* — cerca, y vale la pena distinguirlo: si el
-  límite lo pusiera Postgres (`max_connections`), verías `too many connections`
-  como **error**. Acá no hay error: hay espera, y eso apunta al pool del cliente.
-- *"Hay un deadlock"* — daría `deadlock detected` en el log y Postgres mataría una
-  de las transacciones. No es el caso.
-- Si tu fix fue **subir `SetMaxOpenConns`**, compraste tiempo: ahora se cuelga a
-  las siete en vez de a las cinco.
+- *"Postgres llegó a `max_connections`"* — se descarta con `pg_stat_activity`: 25 conexiones, no 100, todas de este proceso.
+- *"Es la demora de entrega del juego"* — `GRANT_DELIVERY_MS` retiene cada petición 800 ms, pero sin conexión tomada; y los `409` ni siquiera llegan a esperar.
+- *"El caos"* — con `CHAOS_LEVEL=off` se reproduce igual.
+- Si tu fix fue *"subir `SetMaxOpenConns` a 100"*, compraste setenta y cinco casos repetidos más antes del mismo cuelgue.
 
 </details>
 
 ---
 
-## Incidente be-06 — El comprador aparece en blanco, pero solo a veces
+## Incidente be-06 — El tablero dice que nadie compró giros
 
 > **Fase:** be03 · **Categoría:** 🔥 contrato · **Dificultad:** 🟠
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -1216,17 +1132,17 @@ Un equipo puede pasar días buscando "qué proceso corre a las cinco".
 
 ### 🎫 El ticket
 
-> "Desde el cambio de servidor, el tablero se ve raro: números que están libres
-> aparecen como si tuvieran comprador. Y cuando entras al detalle no hay ningún
-> nombre. Los vendedores no confían en la pantalla y están anotando en papel."
+> "Desde el cambio de servidor, el tablero de la Rueda de fin de mes dice
+> 10.000 giros, 10.000 gratis y 0 pagos. Pero los ingresos netos dicen 135,60
+> dólares, y la tienda nos cobró la comisión de 40 compras. ¿Regalamos todo o
+> cobramos? No puedo cerrar el mes con esto."
 
-**Reportado por:** vendedor
+**Reportado por:** Licda. Marisol De Gracia, contadora
 **Ambiente:** desarrollo
 
 ### 🎯 Qué se te pide
 
-Determinar de qué lado del cable está la causa y por qué **ningún test la
-detectó**. Después el fix, y la prueba que faltaba.
+Determinar de qué lado del cable está la causa y por qué **ninguna prueba la detectó**. Después, el fix y la prueba que faltaba.
 
 ### 🔧 Preparación
 
@@ -1236,15 +1152,14 @@ cd server && go run ./cmd/seed -file ../mock/db.json && go run ./cmd/api
 npm start
 ```
 
+Abre el tablero y elige la Rueda de fin de mes.
+
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-El frontend no cambió: `git diff pre-backend-go..HEAD -- . ':!server'` está
-vacío. Así que si la pantalla se ve distinta, lo que cambió es **lo que llega**.
-
-Mira el JSON crudo antes de mirar el componente.
+El frontend no cambió. Así que si la tarjeta cuenta distinto, lo que cambió es **lo que llega**. Mira el JSON crudo antes de mirar el componente.
 
 </details>
 
@@ -1252,19 +1167,17 @@ Mira el JSON crudo antes de mirar el componente.
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```bash
-curl -s localhost:3001/raffles/1/numbers | jq '.[0]'
+curl -s -H "Authorization: Bearer $TOKEN" 'localhost:3001/spinLog?wheelId=4' | jq '.[0]'
 ```
 
-Compáralo con lo que devolvía el mock, campo por campo. Fíjate en el **tipo** de
-cada valor, no solo en si el campo está.
+Compáralo con lo que devolvía el mock, campo por campo. Fíjate en el **tipo** de cada valor, no solo en si el campo está. Después lee `summarizeSpins` en `dashboardMath.js`.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-En JavaScript, ¿`if (numero.participantId)` es verdadero para `null`? ¿Y para
-`{"Int64":0,"Valid":false}`?
+En JavaScript, ¿`row.origin === "paid"` es verdadero para `"paid"`? ¿Y para `{"String":"paid","Valid":true}`? ¿Qué rama del `if` toman los dos?
 
 </details>
 
@@ -1295,108 +1208,86 @@ En JavaScript, ¿`if (numero.participantId)` es verdadero para `null`? ¿Y para
 
 **Causa raíz**
 
-`sql.NullInt64` serializado a JSON.
+El campo `Origin` de `spin.Spin` pasó de `*string` a `sql.NullString`. La historia es verosímil: alguien lo declaró `string`, el primer giro de 2019 —que no tiene origen— hizo fallar el `Scan` con `converting NULL to string is unsupported`, y `sql.NullString` es la forma directa de que un `NULL` entre. Escanea perfecto. Y serializa así:
 
-```go
-// ❌ Escanea perfecto desde la base y produce esto:
-//    {"raffleId":1,"number":"0347","status":"available",
-//     "participantId":{"Int64":0,"Valid":false}}
-type RaffleNumber struct {
-	ParticipantID sql.NullInt64 `json:"participantId" db:"participant_id"`
-}
+```json
+"origin": {"String": "paid", "Valid": true}
 ```
 
-El mock devolvía `null`. El backend devuelve **un objeto**. Y como en JavaScript
-cualquier objeto es *truthy*, todo `if (number.participantId)` del tablero pasa a
-ser verdadero **para todos los números**, incluidos los disponibles. De ahí que
-aparezcan "con comprador"; y como el objeto no tiene nombre, el detalle sale en
-blanco.
+`summarizeSpins` cuenta un giro como pago si `row.origin === "paid"`, y un objeto nunca es igual a un texto: **todo** cae en la rama de los gratis. Medido contra la rama: la tarjeta dice *Giros 10000 · 10000 gratis · 0 pagos*, al lado de *Ingresos netos US$135,60*, que salen de otra fuente (el reporte de la tienda). Las filas del giro de 2019, sin origen, salen `{"String":"","Valid":false}`. **No hay un solo error en consola.**
 
-**Sin un solo error en consola.** El JSON es válido, la petición es `200`, y el
-componente hace exactamente lo que le pidieron.
+Es el Caso A de la pieza forense de `be03`.
 
 **Parche mínimo**
 
-Un puntero:
+Volver al puntero con `omitempty`:
 
 ```go
-// nil serializa a null, que es lo que el contrato de be00 exige. Y el
-// puntero además distingue "no hay participante" de "el participante es
-// el cero", que es una distinción del dominio, no un detalle de Go.
-ParticipantID *int64 `json:"participantId" db:"participant_id"`
+Origin *string `json:"origin,omitempty" db:"origin"`
 ```
 
-`sqlx` lo escanea igual de bien. Es un cambio de una palabra.
+`sqlx` lo escanea igual de bien, un `nil` se omite como en el mock y un valor sale como texto.
 
 **La corrección correcta**
 
-La misma, más la regla general: **`sql.NullX` sirve para escanear, no para
-serializar**. Si un tipo de `database/sql` cruza hasta la etiqueta JSON, es un
-bug esperando su turno. Lo mismo vale para `sql.NullString`, `sql.NullTime` y
-compañía.
+La misma, más la prueba que compara **JSON** y no structs, y una regla para los tipos de las respuestas: ningún `sql.NullX` cruza la frontera del contrato. Si una columna es anulable, el campo del struct que se serializa es un puntero.
 
 **Prueba de regresión**
 
-Y acá está lo que hace especial a este incidente:
-
 ```go
-// ❌ ESTA PRUEBA NO LO ATRAPA, aunque parezca que sí.
-func TestFindOneDevuelveElNumero(t *testing.T) {
-	n, err := store.FindOne(ctx, 1, "0347")
-	require.NoError(t, err)
-	require.Equal(t, "available", n.Status)   // pasa con las dos versiones
-}
+// server/internal/spin/spin_json_test.go
 
-// ✅ Esta sí. El problema no está en los datos: está en la SERIALIZACIÓN.
-// Hay que comparar el JSON, no el struct.
-func TestParticipantIdNuloLlegaComoNull(t *testing.T) {
-	body := srv.GET(t, "/raffles/1/numbers", token).ExpectStatus(200).Raw()
+package spin_test
 
-	require.Contains(t, string(body), `"participantId":null`)
-	// El centinela: si aparece "Valid", alguien volvió a meter un sql.NullX.
-	require.NotContains(t, string(body), `"Valid":`)
+import (
+	"encoding/json"
+	"strings"
+	"testing"
+
+	"github.com/interoceanic-games/esclusa-api/internal/spin"
+)
+
+// be-06: el JSON de una fila de la bitácora, comparado como texto. Una prueba
+// que compare structs no ve la diferencia; la consola sí.
+func TestSpinSerializesLikeTheMock(t *testing.T) {
+	var row spin.Spin
+	if err := json.Unmarshal([]byte(`{"id":1,"wheelId":4,"playerId":1538,"landedSegment":"sin-premio",
+		"deliveredPrize":"sin-premio","origin":"paid","idempotencyKey":"k","createdAt":"2026-08-01T05:00:00.000Z"}`), &row); err != nil {
+		t.Fatalf("la fila del mock no entra en spin.Spin: %v", err)
+	}
+	out, _ := json.Marshal(row)
+	if !strings.Contains(string(out), `"origin":"paid"`) {
+		t.Fatalf("origin no sale como texto: %s", out)
+	}
+	var poor spin.Spin // la fila del giro de 2019: sin origen
+	out, _ = json.Marshal(poor)
+	if strings.Contains(string(out), `"origin"`) {
+		t.Fatalf("una fila sin origen no puede traer la clave origin: %s", out)
+	}
 }
 ```
 
-📖 **La lección transferible:** un test que deserializa a un struct tipado **no
-puede detectar un problema de contrato**, porque convierte lo que llegue a lo que
-el struct dice. En pruebas de contrato hay que mirar los bytes, o deserializar a
-`map[string]interface{}`.
-
-Motor: PostgreSQL.
+En la rama falla antes de llegar a la comparación: `json: cannot unmarshal string into Go struct field Spin.origin of type sql.NullString`, que es la misma incompatibilidad vista desde el otro lado. En la fase, pasa. Motor: ninguno.
 
 **Prevención**
 
-La prueba de contrato, y un `grep` en la revisión de código:
-`grep -rn "sql.Null" internal/*/[a-z]*.go` — cada resultado tiene que estar en un
-struct que **no** se serialice.
+La prueba, la regla de los punteros, y la comparación de lecturas contra el mock que `be03` hizo campo por campo: corrida después de este cambio, la diferencia salta en la primera fila.
 
 **Por qué llegó a producción**
 
-Porque `sql.NullInt64` es **la respuesta correcta a la pregunta equivocada**.
-Quien lo escribió resolvía "cómo escaneo una columna anulable", y esa es
-exactamente su función. El error está en que ese tipo llegó a la frontera del
-contrato, y nada en el compilador ni en las pruebas señala ese cruce.
-
-Y la suite estaba verde: todas las pruebas de `be02` comparaban structs, que es
-lo natural. El bug vivía en el único sitio que nadie estaba mirando.
+Porque el arreglo del `Scan` **funcionó**: el error desapareció, las pruebas del store pasaron —comparan structs, y el struct tiene el dato—, `curl` devuelve algo que se ve razonable si no sabes qué buscar. Y porque el síntoma vive en una cuenta que nadie revisa hasta fin de mes.
 
 **Si tu causa fue distinta a esta**
 
-- *"El seed no cargó los participantes"* — no hay participantes en el `db.json`;
-  es correcto que no haya ninguno. La hipótesis es razonable y se descarta con un
-  `SELECT`.
-- *"El componente cambió"* — se descarta con el `git diff` del contrato.
-- Si tu fix fue **cambiar el componente para que compruebe
-  `participantId?.Valid`**, arreglaste la pantalla y rompiste la regla del track:
-  el frontend no se toca, y además el día que el backend devuelva `null` correcto,
-  volverías a romperlo.
+- *"La siembra perdió el origen"* — se descarta con `psql`: `SELECT origin, count(*) FROM spin_log WHERE wheel_id = 4 GROUP BY origin` da 7.566 `free` y 2.434 `paid`.
+- *"El tablero calcula mal"* — el frontend no cambió, y con el mock la misma tarjeta dice *7566 gratis · 2434 pagos*.
+- Si tu fix fue *"comparar `row.origin.String` en la consola"*, tocaste el frontend para adaptarlo a un backend roto: el contrato dice al revés.
 
 </details>
 
 ---
 
-## Incidente be-07 — Faltan datos en las liquidaciones de agosto
+## Incidente be-07 — Faltan datos en las conciliaciones
 
 > **Fase:** be03 · **Categoría:** 🔥 contrato · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
@@ -1404,28 +1295,30 @@ lo natural. El bug vivía en el único sitio que nadie estaba mirando.
 
 ### 🎫 El ticket
 
-> "Nos pidieron el informe de cierre del semestre y necesitamos, por rifa,
-> cuántos números se vendieron y si el ganador estaba vendido. Eso lo veíamos
-> antes en la pantalla de liquidación. Ahora sacamos los datos y esos dos campos
-> no están en ninguna parte. Las liquidaciones de marzo sí los tienen; las de
-> agosto en adelante, no. Nadie tocó nada de liquidaciones."
+> "Para el cierre del semestre necesito, por cada rueda conciliada, qué compras
+> de la tienda no estaban acreditadas y cuáles se acreditaron dos veces. Eso lo
+> veíamos en la pantalla de conciliación el día que se conciliaba. Ahora saco el
+> registro de las ruedas conciliadas desde el cambio de servidor, y las dos
+> listas están vacías. En agosto había una de cada lado, yo misma las anoté en
+> papel. ¿Y ese registro de dónde salió?"
 
-**Reportado por:** tesorería
+**Reportado por:** Licda. Marisol De Gracia, contadora
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Determinar qué se perdió, **desde cuándo**, y si es recuperable. Este incidente
-no termina necesariamente en un fix: parte del entregable es decidir qué se le
-responde a tesorería.
+Determinar qué se perdió, **desde cuándo**, y si es recuperable. Este incidente no termina necesariamente en un fix: parte del entregable es decidir qué se le responde a la contadora.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-07
-cd server && migrate -path migrations/postgres -database "$DATABASE_URL" up
+cd server
+psql "$DATABASE_URL" -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'   # base limpia
+migrate -path migrations/postgres -database "$DATABASE_URL" up
+go run ./cmd/seed -file ../mock/db.json
 go run ./cmd/api
-# Liquida una rifa desde la aplicación, con Network abierto.
+# Concilia la Rueda de fin de mes desde la consola, con Network abierto.
 ```
 
 ---
@@ -1433,11 +1326,9 @@ go run ./cmd/api
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-Los campos que faltan, ¿**salieron** del navegador? Mira el cuerpo del
-`POST /settlements` en Network, no la respuesta.
+Las dos listas, ¿**salieron** del navegador? Mira el cuerpo del `POST /wheels/4/reconciliation` en Network, no la respuesta.
 
-Si el dato viajó y no está guardado, el problema está del lado del servidor. Y
-"desde agosto" tiene una fecha: ¿qué cambió entonces?
+Si el dato viajó y no está guardado, el problema está del lado del servidor. Y "desde el cambio de servidor" tiene una fecha: ¿qué cambió entonces?
 
 </details>
 
@@ -1445,23 +1336,19 @@ Si el dato viajó y no está guardado, el problema está del lado del servidor. 
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```bash
-curl -s localhost:3001/settlements | jq '.[0]'
+curl -s -H "Authorization: Bearer $TOKEN" localhost:3001/wheels/4/reconciliation | jq .purchases
+psql "$DATABASE_URL" -c '\d reconciliations'
+migrate -path migrations/postgres -database "$DATABASE_URL" version
 ```
 
-Compara los campos de esa respuesta con el cuerpo que manda `createSettlement`
-(Fase 8). Y después:
-
-```sql
-\d settlements
-```
+Compara las columnas de la tabla con los campos del cuerpo que mandó `reconcileWheel` (Fase 8).
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si un `INSERT` solo nombra cinco columnas y el cuerpo trae ocho campos, ¿qué pasa
-con los otros tres? ¿Falla, avisa, o devuelve `201`?
+Si un `INSERT` nombra ocho columnas y el cuerpo trae once campos, ¿qué pasa con los otros tres? ¿Falla, avisa, o devuelve `201`?
 
 </details>
 
@@ -1492,186 +1379,144 @@ con los otros tres? ¿Falla, avisa, o devuelve `201`?
 
 **Causa raíz**
 
-El esquema de `be02` se diseñó **sin medir el cuerpo real** del
-`POST /settlements`.
+En esta rama la migración `000003_reconciliation_full_shape` no existe —`migrate version` dice `2`— y el `INSERT` de `Reconcile` nombra solo las columnas que la tabla de `be02` tenía. La consola manda `bandAlarms`, `purchases.missingInApi` y `purchases.duplicatedInApi`; el handler los decodifica; el service los ignora al insertar; la respuesta es `201`.
 
-El thunk `createSettlement` de la Fase 8 manda ocho campos:
+Medido contra la rama, con la conciliación hecha desde la consola: el cuerpo que salió del navegador trae `bandAlarms`, `chi2`, `chi2Alarm`, `counts`, `purchases` y `spins`; la tabla tiene diez columnas y ninguna de las tres listas; y el registro guardado dice `"missingInApi": []` y `"duplicatedInApi": []`. Con la fase y la misma conciliación, el registro dice `"missingInApi": ["tok-ago-31"]` y `"duplicatedInApi": ["tok-ago-17"]`: los dos descuadres de agosto que la contadora anotó en papel.
 
-```json
-{ "raffleId": 1, "winningNumber": "0347", "isWinnerSold": true, "soldCount": 42,
-  "totalCollected": 21000000, "prizeAmount": 50000000, "margin": -29000000,
-  "settledAt": "2026-08-30T22:05:11.031Z" }
-```
-
-Y la tabla tiene sitio para cinco: `raffle_id`, `winning_number`,
-`total_collected`, `prize_amount`, `margin`. Los otros tres —`isWinnerSold`,
-`soldCount`, `settledAt`— **el `INSERT` ni los nombra**.
-
-El resultado es lo peor que puede pasar: **no falla nada**. El `201` sale bien, la
-aplicación festeja, el slice guarda la liquidación completa (la que tiene en
-memoria), y el dato se pierde en el momento de guardarse. El síntoma aparece seis
-meses después, cuando alguien pregunta.
-
-"Desde agosto" es la fecha del reemplazo de `be03`: `json-server` guardaba el
-JSON entero, campos incluidos, porque no tenía esquema. **La rigidez del esquema
-es lo correcto y es también lo que hizo visible un hueco que antes no existía.**
-
-📝 Y por eso las de marzo sí los tienen: están en el `db.json` viejo.
-
-**¿Es recuperable?** `soldCount` e `isWinnerSold` sí, reconstruyéndolos desde los
-números vendidos de cada rifa. `settledAt` no: ese instante no está en ninguna
-parte. Eso es lo que hay que responderle a tesorería, y conviene decirlo así de
-claro.
+Es el Caso B de la pieza forense de `be03`.
 
 **Parche mínimo**
 
-Una migración. El fix **va en el esquema**, no en el código:
+Aplicar la migración `000003` y volver a nombrar las tres columnas en el `INSERT`. Eso arregla **de acá en adelante**.
 
-```sql
--- server/migrations/postgres/000003_settlement_full_shape.up.sql
-ALTER TABLE settlements ADD COLUMN is_winner_sold BOOLEAN     NOT NULL DEFAULT false;
-ALTER TABLE settlements ADD COLUMN sold_count     INTEGER     NOT NULL DEFAULT 0;
--- 💸 settledAt lo calcula el CLIENTE (new Date() en el thunk). Se guarda tal
--- cual llega porque cambiarlo sería cambiar el contrato. La autoridad del
--- reloj se cobra en be06.
-ALTER TABLE settlements ADD COLUMN settled_at     TIMESTAMPTZ;
-```
+**La corrección correcta, y la respuesta a la contadora**
 
-Más los tres campos en el `INSERT` del store. Y el `down` correspondiente, con su
-trampa: SQLite no soporta `DROP COLUMN` hasta la 3.35, y con restricciones incluso
-después.
+Lo que se perdió no se recupera desde la base: nunca se guardó. Hay que decirlo así, sin rodeos. Lo que sí se puede hacer es **recalcularlo**: las listas salen de cruzar las compras acreditadas con el reporte de la tienda (Fase 8), y los dos insumos siguen existiendo. Recalcular en el servidor es exactamente lo que hace `be07`; hasta entonces, la contadora puede volver a abrir la pantalla de conciliación, que recalcula en el navegador.
 
-**La corrección correcta**
-
-Además de la migración, el **backfill** de lo recuperable:
-
-```sql
--- soldCount se puede reconstruir desde los números vendidos.
-UPDATE settlements s SET sold_count = (
-    SELECT count(*) FROM raffle_numbers n
-    WHERE n.raffle_id = s.raffle_id AND n.status = 'sold')
-WHERE sold_count = 0;
-```
-
-⚠️ Y con una advertencia honesta en el informe: ese número es el de **hoy**, no el
-del día de la liquidación. Si después se vendió algo más, no coinciden. Un dato
-reconstruido no es el dato original y hay que etiquetarlo como tal.
+El entregable incluye esa respuesta por escrito: qué se perdió, desde cuándo (la fecha del despliegue que no aplicó la `000003`), qué se puede reconstruir y cómo.
 
 **Prueba de regresión**
 
+Lo que se manda es lo que queda guardado:
+
 ```go
-func TestSettlementGuardaLosOchoCamposDelContrato(t *testing.T) {
-	body := `{"raffleId":1,"winningNumber":"0347","isWinnerSold":true,
-	          "soldCount":42,"totalCollected":21000000,"prizeAmount":50000000,
-	          "margin":-29000000,"settledAt":"2026-08-30T22:05:11Z"}`
+// server/internal/reconciliation/shape_test.go
 
-	srv.POST(t, "/settlements", token, body).ExpectStatus(201)
+package reconciliation_test
 
-	var s settlement.Settlement
-	require.NoError(t, db.Get(&s, `SELECT * FROM settlements WHERE raffle_id = 1`))
+import (
+	"context"
+	"os"
+	"reflect"
+	"testing"
 
-	// La aserción que importa: lo que ENTRÓ está en la base. Un test que
-	// solo comprobara el 201 pasaría con el bug intacto.
-	require.Equal(t, 42, s.SoldCount)
-	require.True(t, s.IsWinnerSold)
-	require.NotNil(t, s.SettledAt)
+	"github.com/interoceanic-games/esclusa-api/internal/reconciliation"
+	"github.com/interoceanic-games/esclusa-api/internal/storage"
+	"github.com/interoceanic-games/esclusa-api/internal/wheel"
+)
+
+// be-07: lo que la consola manda es lo que queda guardado. Los tres campos que
+// el INSERT podría olvidar se comparan al volver a leer.
+func TestReconciliationKeepsEveryField(t *testing.T) {
+	db, err := storage.Open(context.Background(), os.Getenv("TEST_DATABASE_URL"))
+	if err != nil {
+		t.Skip("necesita TEST_DATABASE_URL (Postgres): ", err)
+	}
+	defer db.Close()
+	db.MustExec(`DELETE FROM reconciliations WHERE wheel_id = 9002`)
+	db.MustExec(`DELETE FROM wheels WHERE id = 9002`)
+	db.MustExec(`INSERT INTO wheels (id, name, closes_at, status) VALUES (9002, 'Prueba', '2026-08-31T20:00:00-05:00', 'ended')`)
+	db.MustExec(`INSERT INTO wheel_versions (wheel_id, version) VALUES (9002, 1)`)
+
+	svc := reconciliation.NewService(db, wheel.NewStore(db))
+	sent := reconciliation.Reconciliation{Spins: 3, Counts: []int{1, 1, 1}, BandAlarms: []string{"sin-premio"},
+		Purchases: reconciliation.Totals{MissingInAPI: []string{"tok-ago-31"}, DuplicatedInAPI: []string{"tok-ago-17"}}}
+	if _, _, err := svc.Reconcile(context.Background(), 9002, sent); err != nil {
+		t.Fatal(err)
+	}
+	got, err := svc.Find(context.Background(), 9002)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(got.BandAlarms, sent.BandAlarms) ||
+		!reflect.DeepEqual(got.Purchases.MissingInAPI, sent.Purchases.MissingInAPI) ||
+		!reflect.DeepEqual(got.Purchases.DuplicatedInAPI, sent.Purchases.DuplicatedInAPI) {
+		t.Fatalf("se guardó otra cosa: mandé %+v, leí %+v", sent, got)
+	}
 }
 ```
 
-Motor: PostgreSQL.
+En la rama falla con `se guardó otra cosa`, y la línea muestra las dos listas llenas a la ida y vacías a la vuelta; en la fase, pasa. Motor: PostgreSQL. Toca la base, aunque no las cuatro áreas críticas.
 
 **Prevención**
 
-Una prueba de contrato por endpoint que verifique que **todo campo que entra se
-persiste o se descarta a propósito**. Y una regla de proceso más barata que
-cualquier prueba: **el esquema se diseña con el cuerpo real de las peticiones al
-lado**, medido en Network, no deducido leyendo el slice. Es exactamente lo que
-`be00` predica y lo que `be02` no aplicó del todo.
+La prueba, y una regla de despliegue: el binario no arranca si la versión de migraciones de la base es menor que la que el código espera. Es una comprobación de una línea en `main.go`, y es `be09`.
 
 **Por qué llegó a producción**
 
-Porque **ignorar campos desconocidos es el comportamiento por defecto de casi
-todo**: `encoding/json` los descarta sin avisar y SQL solo escribe las columnas
-que nombras. Los dos hacen lo razonable, y de la suma sale una pérdida silenciosa.
-
-No hubo ningún síntoma durante seis meses. No hay error que buscar, no hay alerta
-que configurar, no hay usuario que se queje — hasta que alguien necesita el dato y
-ya no está. Es la clase de bug que solo se previene **antes**, y esa es la
-lección: los bugs de contrato que duelen no son los que fallan, son los que pasan.
+Porque el fallo **no produce ningún error**. El `201` confirma el éxito, la pantalla muestra la conciliación entera —la calculó el navegador—, y la rueda queda conciliada. El dato se pierde en el momento de guardarse, y el síntoma aparece meses después, cuando alguien pide el registro.
 
 **Si tu causa fue distinta a esta**
 
-- *"El frontend dejó de mandarlos"* — se descarta en Network: van en el cuerpo.
-- *"Se perdieron al migrar los datos"* — se descarta comparando con el `db.json`:
-  las viejas los tienen; las nuevas nacieron sin ellos.
-- Si concluiste *"hay que guardar el JSON entero en una columna `jsonb` por si
-  acaso"*, es una respuesta defendible y vale la pena discutirla: resuelve la
-  pérdida y renuncia a que el esquema te avise. Cuál prefieres depende de si el
-  dato es de negocio o de auditoría.
+- *"La consola no manda las listas"* — se descarta en Network: el cuerpo las trae, con `tok-ago-31` y `tok-ago-17` adentro.
+- *"El reporte de la tienda cambió"* — el `3002` devuelve el mismo `GET /earnings`, y la pantalla de conciliación, que lo cruza en el navegador, sigue mostrando los dos descuadres.
+- Si tu respuesta a la contadora fue *"los datos están, hay que buscarlos mejor"*, no: no están, y decirlo es parte del trabajo.
 
 </details>
 
 ---
 
-## Incidente be-08 — A algunos los saca de la sesión al mediodía y a otros nunca
+## Incidente be-08 — A Yariela la saca de la sesión a las ocho de la noche, y a Itzel nunca
 
 > **Fase:** be04 · **Categoría:** 🔥 autenticación · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 30-45 min
-> · Hermano del incidente **08** del track base, con otra causa raíz
 
 ### 🎫 El ticket
 
-> "Hay dos o tres personas a las que se les cierra la sesión sola casi todos los
-> días, siempre más o menos a la misma hora, y pierden lo que estaban haciendo.
-> A la mayoría no le pasa nunca. Ya probamos con otro navegador y con otra
-> máquina y sigue igual. ¿Será que tienen la cuenta mal configurada?"
+> "Desde que cambiaron el login, todos los días a las ocho de la noche la
+> consola me manda a la pantalla de entrar, justo cuando cierra la rueda y más
+> trabajo hay. Pierdo lo que estaba escribiendo en el asistente. A Itzel no le
+> pasa nunca. ¿Es mi computadora?"
 
-**Reportado por:** soporte
+**Reportado por:** Yariela, soporte
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Explicar el patrón —por qué a unos sí y a otros no, y por qué siempre a la misma
-hora— y decidir si hay algo que arreglar. **Ojo con la última parte.**
+Explicar el patrón —por qué a las ocho, por qué a ella y no a Itzel— con evidencia, y decidir qué se arregla y qué se declara.
 
 ### 🔧 Preparación
 
+Ninguna línea de código: la rama `incidente/be-08` sale de `fase-be04-identidad-real-jwt-y-un-cve` sin cambios. Lo que se acorta es el tiempo, para no esperar doce horas:
+
 ```bash
 git checkout incidente/be-08
-cd server && JWT_TTL=3m go run ./cmd/api   # tres minutos, para no esperar horas
-npm start
+cd server && JWT_TTL=3m go run ./cmd/api
 ```
+
+Entra a la consola, trabaja, y vuelve a hacer clic pasados tres minutos.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-*"Siempre a la misma hora"* suena a algo programado. Pero fíjate: la pregunta no
-es a qué hora **se cierra** la sesión, sino a qué hora **empezó**.
-
-Y "a la mayoría no le pasa nunca" es igual de informativo: ¿qué hacen distinto
-esas personas durante el día?
+"Todos los días a la misma hora" y "a una persona sí y a otra no" no son azar: el caos de la Fase 3 reparte sus `401` al azar. Esto tiene reloj. ¿Qué tiene hora en este sistema desde `be04`?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Pega el token en https://jwt.io y mira el claim `exp`. Conviértelo a hora local y
-compáralo con el `iat`.
-
-Después, en el log del backend, busca los `401` de esas personas y mira qué dice
-el mensaje.
+Decodifica la segunda parte del token de Yariela y mira `iat` y `exp`. Después pregúntale a qué hora entra a trabajar, y a Itzel cada cuánto vuelve a iniciar sesión. Y busca el `401` en el log del servidor.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si el token dura una hora y alguien entra a las 8 y trabaja sin cerrar el
-navegador, ¿a qué hora vence? ¿Y alguien que entra y sale cinco veces al día?
+¿Cuánto vive un token? ¿Qué hace la consola cuando vence? ¿Y quién lo renueva?
 
 </details>
 
@@ -1702,198 +1547,111 @@ navegador, ¿a qué hora vence? ¿Y alguien que entra y sale cinco veces al día
 
 **Causa raíz**
 
-El JWT expira y **no hay renovación**. El sistema funciona exactamente como se
-diseñó.
+El token vive `JWT_TTL`, doce horas por defecto, y **nadie lo renueva**: no hay *refresh token* (`be04` §4.5). Yariela entra a las 8 de la mañana; su token vence a las 8 de la noche, y la primera petición después recibe `401`. El interceptor de la Fase 2 hace lo que tiene que hacer con un `401`: cierra la sesión y manda a `/login`. Itzel cierra sesión y vuelve a entrar después del almuerzo, así que su token vence a medianoche, cuando ya no trabaja.
 
-Cuando el `exp` pasa, el middleware de `be04` devuelve `401`, y el interceptor de
-respuesta de la Fase 2 —escrito mucho antes, para el `401` que inyectaba el
-caos— dispara el logout global. El usuario aterriza en el login sin explicación y
-pierde lo que estuviera haciendo.
+Medido con la rama y `JWT_TTL=3m`: a los tres minutos y diez segundos, el primer clic termina en `/login`, la sesión guardada desaparece, y el log del servidor dice `401: token inválido o expirado: token is expired by 11.080124218s`. El cliente recibió `Token inválido o expirado`, igual que con un token falsificado: el servidor sabe la diferencia y la consola no.
 
-El patrón se explica solo en cuanto lo ves:
-
-- **A quienes les pasa** entran a primera hora y **no cierran el navegador en todo
-  el día**. Su token vence `JWT_TTL` después del login: siempre a la misma hora,
-  todos los días.
-- **A quienes no les pasa** hacen logout o cierran el navegador varias veces, así
-  que renuevan el token sin darse cuenta cada vez que vuelven a entrar.
-
-No tiene nada que ver con la cuenta, ni con el navegador, ni con la máquina — y
-por eso las tres pruebas de soporte no encontraron nada.
-
-📝 `bea-04` §5: **un JWT es autocontenido y no se puede revocar ni renovar solo.**
-Esa es su gracia y su límite.
+Que pase justo en el cierre de la rueda es casualidad del horario de Yariela, y por eso duele: es la hora en que más trabajo hay.
 
 **Parche mínimo**
 
-Ninguno en el código. Y esta es la parte incómoda del incidente:
-
-> 🧭 **El sistema hizo lo correcto.** Un token que expira es una propiedad de
-> seguridad, no un fallo. Lo que falta es la **renovación**, y está declarada como
-> deuda 💸 viva en `bea-09` §1 con su motivo escrito.
-
-Lo que sí se puede hacer hoy, y hay que hacerlo:
-
-1. **Responderle a soporte con la explicación real**, para que dejen de buscar en
-   la configuración de las cuentas.
-2. **Subir `JWT_TTL`** si la ventana operativa lo justifica —una jornada de ventas
-   dura más de una hora—. Es configuración, no código, y no rompe nada.
-3. **Registrar el caso** como el disparador de la deuda, que es precisamente lo
-   que `bea-09` pide vigilar.
+Ninguno de código. El sistema hace lo correcto: un token que expira es una propiedad de seguridad. Lo que sí se puede hacer hoy es operativo: que soporte vuelva a entrar antes del cierre del evento, y que el asistente avise. Decirlo así es parte de la respuesta.
 
 **La corrección correcta**
 
-*Refresh tokens*: un token corto para las peticiones y uno largo para renovarlo.
-Diseño completo en el ejercicio 31 de `be04`.
-
-⚠️ Y por qué no se hace acá: exige que **el cliente** llame al endpoint de
-renovación, o sea tocar `apiClient.js`, sus dos interceptores y probablemente
-`authSlice.js`. Eso es media capa de red del frontend, y **choca con la regla del
-track y con `D27`**, cuya única excepción está acotada a `authService.js`.
-
-Decidir no pagar una deuda y escribir por qué es una forma legítima de
-administrarla. Lo que no sería legítimo es que el usuario y soporte no sepan que
-existe.
+El *refresh token*, que exige tocar el frontend más allá de `authService.js` y por eso el track decidió no hacerlo (`D27`, `be04` ejercicio 31). La deuda 💸 está viva en `bea-09`, con su motivo y con este síntoma escrito tal cual: *"al vencer el token, el operador pierde lo que estuviera haciendo"*.
 
 **Prueba de regresión**
 
-No hay regresión que probar —no hay bug— pero sí una prueba que **fija el
-comportamiento como esperado**, que es lo que impide que alguien lo "arregle"
-quitando el `exp`:
-
-```go
-func TestTokenVencidoSeRechaza(t *testing.T) {
-	signer, _ := auth.NewSigner(testSecret, -1*time.Minute)  // ya nació vencido
-	token, err := signer.Sign(2, "organizador@rifas.test")
-	require.NoError(t, err)
-
-	_, err = signer.Verify(token)
-	require.ErrorIs(t, err, auth.ErrInvalidToken)
-}
-
-func TestTokenSinExpiracionNoSeEmite(t *testing.T) {
-	// Un token sin exp es una llave maestra permanente. Que esto sea
-	// imposible de construir es la prevención.
-	_, err := auth.NewSigner(testSecret, 0)
-	require.Error(t, err)
-}
-```
-
-Motor: ninguno.
+No hay regresión que probar: no se arregló nada. Lo que sí existe es la prueba de que un token vencido se rechaza (`be08`), que es la propiedad que este incidente **no** debe romper. Si alguien "arregla" el ticket alargando `JWT_TTL` a un mes, esa prueba sigue pasando y el riesgo cambia de lugar: un token robado sirve un mes.
 
 **Prevención**
 
-No es técnica, y por eso es la parte interesante: **documentar el comportamiento
-esperado** en un sitio donde soporte lo encuentre. Un incidente que consume horas
-de tres equipos para concluir "funciona como está diseñado" es un fallo de
-comunicación, no de código.
-
-Y una mejora de experiencia que **sí** cabría del lado del servidor: distinguir en
-el log un token **vencido** de uno **inválido**. Al cliente se le sigue devolviendo
-el mismo `401` —no tiene por qué saber la diferencia— pero quien diagnostica sí la
-necesita.
+Que la decisión esté escrita donde la busca quien recibe el ticket: el mapa de deuda, y el `JWT_TTL` documentado en la configuración con su consecuencia. Y medir cuántos `401` por vencimiento hay por día, que es lo que diría si la deuda empezó a costar.
 
 **Por qué llegó a producción**
 
-Porque nadie se preguntó **qué le pasa a un usuario cuando el token vence**. Se
-decidió la duración, se implementó la expiración, se probó que un token vencido
-se rechaza — y no se probó el recorrido completo desde la silla del usuario. La
-consecuencia visible de una decisión correcta puede seguir siendo un problema
-operativo.
+Porque **no es un error**: es una decisión de alcance con un síntoma que nadie escribió en lenguaje de operador. "El token dura doce horas" no dice "te va a sacar a las ocho de la noche".
 
 **Si tu causa fue distinta a esta**
 
-- *"El caos está inyectando `401`"* — es la hipótesis natural viniendo del track
-  base, donde ese síntoma era exactamente eso. Se descarta con `CHAOS_LEVEL=off`
-  y comprobando que el patrón horario persiste. **Es el hermano del incidente 08
-  del cuaderno base: mismo síntoma, causa distinta.**
-- *"El secreto rota y los tokens dejan de validar"* — daría un fallo masivo y
-  simultáneo, no individual y escalonado.
-- *"Se cae la base y devuelve `401`"* — no: sin base, `/health` da `503` y las
-  rutas dan `500`.
-- Si tu fix fue **quitar el `exp`**, cambiaste un problema de experiencia por un
-  agujero de seguridad permanente.
+- *"Es el caos del 401"* — se descarta con `CHAOS_LEVEL=off` y con el patrón: el caos no tiene hora.
+- *"La computadora de Yariela tiene la hora mal"* — el `exp` lo verifica el servidor contra su reloj, no contra el del navegador.
+- Si tu fix fue *"guardar la contraseña en el navegador y volver a entrar sola"*, cambiaste un problema de experiencia por uno de seguridad.
 
 </details>
 
 ---
 
-## Incidente be-09 ⭐ — Vendimos tres números dos veces, y solo los redondos
+## Incidente be-09 ⭐ — Otra vez más Esclusas de Oro que stock, y el contador dice que sobran
 
-> **Fase:** be05 · **Categoría:** 🔥 transacciones · **Dificultad:** 🔴
+> **Fase:** be05 · **Categoría:** 🔥 concurrencia · **Dificultad:** 🔴
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 90-120 min
 > ⭐ **Uno de los dos más formativos del track** · Hermano del incidente **11** del track base, con otra causa raíz
 
 ### 🎫 El ticket
 
-> "En el sorteo del sábado tuvimos tres reclamos: tres personas con el mismo
-> número que otra persona. Los números eran el 0500, el 1000 y el 2000. Nos
-> llamó la atención que fueran justo los redondos, así que revisamos y esos son
-> los que más piden. Tuvimos que devolver plata. En el sistema el número aparece
-> vendido una sola vez, con el último comprador."
+> "Volvimos a sacar la Esclusa de Oro, otra vez mil, y a la hora de la
+> notificación pasó lo de 2025. En el Discord hay muchas más capturas del avatar
+> de las que puede haber, y la gente ya está preguntando. Lo raro es que el
+> contador de la consola dice que todavía quedan casi novecientas. ¿Entregamos de
+> más o no? Y si sí, ¿cómo es que sobran?"
 
-**Reportado por:** tesorería
+**Reportado por:** Itzel, operación
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Reproducirlo **a voluntad** —que acá es la mitad del trabajo y no es trivial—,
-explicar por qué el sesgo hacia los números redondos es una pista y no ruido, y
-aplicar el fix. Y una pregunta más: ¿por qué el sistema muestra una sola venta?
+Determinar cuántas Esclusas se entregaron de verdad, por qué el contador no lo refleja, y qué cambió desde `be05`, donde esto estaba resuelto. Después, el fix, y la respuesta a una pregunta incómoda: **la prueba que debía atraparlo existe; ¿por qué no lo atrapó?**
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-09
-cd server && migrate -path migrations/postgres -database "$DATABASE_URL" up
+cd server
+migrate -path migrations/postgres -database "$DATABASE_URL" drop -f
+migrate -path migrations/postgres -database "$DATABASE_URL" up
 go run ./cmd/seed -file ../mock/db.json
-CHAOS_LEVEL=off go run ./cmd/api
+psql "$DATABASE_URL" < load/rueda-de-medicion.sql
+go run ./cmd/api
 ```
 
-Vas a necesitar clientes concurrentes de verdad. Dos pestañas no bastan.
+Y en otra terminal, la noche de la notificación (`bea-11` si nunca usaste k6):
+
+```bash
+docker run --rm -i --network <red-del-backend> -e BASE_URL=http://api:3001 \
+  -e SCENARIO=notificacion -e VUS=200 grafana/k6:1.5.0 run - < load/giro.js
+```
+
+**Caos:** `off`. Acá estorba: un `500` aleatorio se confunde con lo que buscas.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-Antes que nada, descarta una orilla: reproduce **sin navegador**. Si `curl`
-también lo produce, el frontend queda fuera de la investigación y te ahorras la
-mitad del terreno.
-
-Y sobre los números redondos: no son especiales para el software. Son especiales
-para las **personas**. ¿Qué tiene de particular un número que mucha gente quiere
-al mismo tiempo?
+La consola no gira: gira el juego. Y el ticket trae **dos números que no pueden ser verdad a la vez**: más ganadores que stock, y stock que sobra. Uno de los dos miente. ¿Cuál de las dos fuentes es un hecho y cuál es un estado?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Lanza veinte ventas simultáneas sobre el mismo número y cuenta cuántas devuelven
-`200`:
-
 ```bash
-for i in $(seq 1 20); do
-  curl -s -o /dev/null -w "%{http_code}\n" \
-    -X POST localhost:3001/raffles/1/numbers/0500/sell \
-    -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-    -d '{"participantId":null}' &
-done; wait
+psql "$DATABASE_URL" < load/medicion.sql
+git log --oneline fase-be05-giro-concurrente..HEAD -- internal/spin/
+TEST_DATABASE_URL="…/esclusa_test" go test -race -run Stock -v ./internal/spin/
 ```
 
-Después mira `SellNumber` en `server/internal/rafflenumber/service.go` y cuenta
-cuántas operaciones separadas hay entre leer el estado y escribirlo.
+Lee el diff del último commit con la Fase 5 del track base al lado. Y después corre la carga con `SCENARIO=pico -e RATE=50`.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si dos transacciones leen `status = 'available'` **antes** de que ninguna
-escriba, ¿qué decide cada una? ¿Y qué garantiza `READ COMMITTED` exactamente —
-atomicidad, o exclusión mutua?
+Dos transacciones leen `remaining = 5` a la vez y escriben las dos `4`. ¿Cuántas Esclusas se entregaron? ¿Cuántas descontó el contador?
 
 </details>
 
@@ -1924,462 +1682,122 @@ atomicidad, o exclusión mutua?
 
 **Causa raíz**
 
-Un **check-then-act** sin transacción ni bloqueo. `SellNumber` hace tres
-operaciones separadas:
+Un commit de optimización en `takeStock`, con un motivo que suena razonable y que las mediciones de `be05` respaldan a medias: *"sin FOR UPDATE: bloqueaba, y bajo carga el p95 subía"*. El commit hizo dos cosas a la vez:
 
-```go
-current, _ := s.store.FindOne(ctx, raffleID, number)  // (1) lee: "available"
-if current.Status == "sold" { return ErrAlreadySold } // (2) decide
-return s.store.MarkSold(ctx, raffleID, number, …)     // (3) escribe
+```diff
+ 		var remaining int
+ 		err = tx.GetContext(ctx, &remaining, tx.Rebind(`
+-			SELECT remaining FROM stock WHERE id = ?`+s.db.ForUpdate()), stockID)
++			SELECT remaining FROM stock WHERE id = ?`), stockID)
+ …
+-				UPDATE stock SET remaining = remaining - 1 WHERE id = ?`), stockID); err != nil {
++				UPDATE stock SET remaining = ? WHERE id = ?`), remaining-1, stockID); err != nil {
 ```
 
-Entre (1) y (3) **cabe otra ejecución completa**. Dos vendedores leen
-`available`, los dos deciden que se puede, los dos escriben, **los dos reciben
-`200`**. No hay error en ninguna capa.
+Quitar el `FOR UPDATE` deja el *check-then-act* de 2019 **dentro de una transacción**, que en `READ COMMITTED` no excluye a nadie (`be05` §4.2). Y escribir el valor calculado en Go en vez de `remaining - 1` convierte cada choque en una **actualización perdida**: dos giros leen `5`, entregan los dos, y los dos escriben `4`. El contador baja una vez por cada choque, no una por cada Esclusa.
 
-Y como vender era un `UPDATE` sobre una fila que ya existe, la segunda escritura
-**pisa** a la primera: en la base queda una sola venta, con el último comprador.
-De ahí que el sistema muestre una y tesorería tenga dos reclamos. **La evidencia
-del bug se destruyó a sí misma.**
+Medido contra la rama, con la rueda de medición (1.000 de stock, 1.500 giros):
 
-📝 **El sesgo hacia los redondos es la pista principal, no ruido.** La ventana de
-la carrera dura microsegundos: para que dos peticiones caigan dentro, tienen que
-ser casi simultáneas. Eso solo ocurre con los números que **muchas personas
-quieren a la vez**, y los redondos son exactamente esos. El patrón no está en el
-código: está en el comportamiento humano que activa el código.
+| Carga | Esclusas entregadas | Stock que dice el contador |
+|---|---|---|
+| `pico`, 50 por segundo | 1.000 | 0 |
+| `notificacion`, 50 jugadores | 1.500 | 874 |
+| `notificacion`, 200 jugadores | 1.500 | 904 |
 
-Es el mismo síntoma del **incidente 11 del track base**. Allá se estudia desde el
-store, con doble clic y peticiones que se cruzan, y se mitiga con corrección
-optimista y rollback. Acá se ve la verdad incómoda: **ninguna race condition de
-venta se resuelve en el cliente.** Se puede hacer improbable. Resolver, no.
+Con la notificación, **todos** los giros se llevaron la Esclusa y el contador quedó en casi novecientas: la evidencia del exceso se borró a sí misma. Es la cifra del ticket. Y a 50 por segundo parejos, el ritmo del pico de 2025, la rama da **exactamente** bien.
 
 **Parche mínimo**
 
-No hay parche mínimo honesto, y decirlo es parte de la respuesta. Envolver los
-tres pasos en una transacción **no arregla nada**: `READ COMMITTED` da atomicidad,
-no exclusión mutua, y las dos transacciones siguen leyendo `available`. Es el
-error más peligroso de este incidente porque **parece** arreglado y baja la
-frecuencia lo suficiente como para que las pruebas manuales pasen.
-
-Lo mínimo que de verdad protege es una transacción **con bloqueo**:
-
-```go
-err := s.store.WithTx(ctx, func(tx Tx) error {
-	// FOR UPDATE toma un bloqueo exclusivo sobre la fila. La segunda
-	// transacción que pida la misma fila SE QUEDA ESPERANDO —no lee un dato
-	// viejo, no falla: espera— hasta que esta confirme. Al despertar, lee
-	// el estado ya actualizado y decide bien.
-	current, err := tx.FindOneForUpdate(ctx, raffleID, number)
-	if err != nil {
-		return err
-	}
-	if current.Status == "sold" {
-		return ErrAlreadySold
-	}
-	return tx.MarkSold(ctx, raffleID, number, participantID)
-})
-```
+Revertir el commit: el `FOR UPDATE` antes de decidir, y el descuento relativo (`remaining = remaining - 1`). Con eso, la misma carga da 1.000 Esclusas, 500 sustitutos y stock en 0.
 
 **La corrección correcta**
 
-La de `be05`, que además de bloquear cambia el **modelo**:
-
-> 🧭 **La venta se modela como un hecho, no como un estado** (`D28`). Cada venta
-> es una fila nueva en `sales` con `UNIQUE (raffle_id, number)`.
-
-Y eso importa por dos razones, las dos visibles en este incidente:
-
-1. **Un `UNIQUE` no puede proteger un `UPDATE`** sobre una fila que ya existe: no
-   hay segunda fila que rechazar. Con el modelo de estado, la defensa más fuerte
-   —una restricción de la base— sencillamente no estaba disponible.
-2. **Los hechos no se pisan.** Con `sales`, la segunda venta habría fallado *y*
-   habría quedado el rastro de que alguien lo intentó. Con el modelo de estado, la
-   evidencia se perdió.
-
-```sql
-CONSTRAINT sales_unique_number_per_raffle UNIQUE (raffle_id, number)
-```
-
-```go
-// El 409 deja de ser un if: lo produce la BASE. Nuestro código puede
-// equivocarse en las condiciones de carrera; la restricción, no.
-var pqErr *pq.Error
-if errors.As(err, &pqErr) && pqErr.Code == "23505" {
-	return ErrAlreadySold
-}
-```
-
-Cinturón y tirantes, y hacen falta los dos: el `FOR UPDATE` protege **este**
-camino; el `UNIQUE` protege los que escribirá otra persona dentro de dos años sin
-leer nada de esto.
+El parche, más que la prueba de concurrencia corra **contra Postgres** en el pipeline (`be08`), y que la medición con k6 use la forma de la noche, no llegadas parejas. Si el p95 de verdad molesta, la respuesta medida es la escritura condicional de `be05` (`UPDATE … WHERE remaining > 0`), no quitar el bloqueo.
 
 **Prueba de regresión**
 
+**Ya existía**, en `server/internal/spin/race_test.go`:
+
 ```go
-func TestVentaConcurrenteSoloUnGanador(t *testing.T) {
-	db := testsupport.OpenPostgres(t)
-	testsupport.MustPostgres(t, db, "verifica el bloqueo de fila bajo concurrencia real")
+// Carrera 3: mil quinientos giros contra un stock de mil. Mil Esclusas de Oro
+// y quinientos sustitutos, ni una más.
+func TestStockNeverExceeded(t *testing.T) {
+	for _, locking := range strategies {
+		t.Run(string(locking), func(t *testing.T) {
+			db := openPostgres(t)
+			measurementWheel(t, db, 1000, 300, 5)
+			svc := spin.NewService(db, locking, 0, 30*time.Second)
 
-	const contenders = 20
-	// La BARRERA es lo que hace válida la prueba: sin ella las goroutines
-	// se lanzan escalonadas, la carrera no ocurre, y el test pasa contra el
-	// código vulnerable.
-	var start sync.WaitGroup
-	start.Add(1)
-	var wg sync.WaitGroup
-	errs := make([]error, contenders)
-
-	for i := 0; i < contenders; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			start.Wait()
-			_, errs[i] = svc.SellNumber(ctxConUsuario(1), 1, "0500", nil)
-		}(i)
+			errs := race(1500, func(i int) error {
+				_, err := svc.Spin(context.Background(), int64(i%300+1), fmt.Sprintf("stock-%d", i))
+				return err
+			})
+			got := count(errs)
+			var golden, substitutes, remaining int
+			db.Get(&golden, `SELECT count(*) FROM spin_log WHERE delivered_prize = 'esclusa-de-oro'`)
+			db.Get(&substitutes, `SELECT count(*) FROM spin_log WHERE delivered_prize = 'set-gemas-plata'`)
+			db.Get(&remaining, `SELECT remaining FROM stock WHERE wheel_id = 900`)
+			if got["ok"] != 1500 || golden != 1000 || substitutes != 500 || remaining != 0 {
+				t.Fatalf("%v · entregadas %d, sustitutos %d, stock %d (esperado 1000, 500, 0)", got, golden, substitutes, remaining)
+			}
+			t.Logf("%s: %v · entregadas %d · sustitutos %d · stock %d", locking, got, golden, substitutes, remaining)
+		})
 	}
-	start.Done()
-	wg.Wait()
-
-	ganadores := 0
-	for _, err := range errs {
-		if err == nil {
-			ganadores++
-		} else if !errors.Is(err, ErrAlreadySold) {
-			t.Fatalf("error inesperado: %v", err)
-		}
-	}
-	require.Equal(t, 1, ganadores)
-
-	// La verificación que de verdad importa: la BASE. Un servicio que
-	// devolviera un solo 200 y hubiera insertado dos filas pasaría todas
-	// las aserciones de arriba.
-	var ventas int
-	require.NoError(t, db.Get(&ventas,
-		`SELECT count(*) FROM sales WHERE raffle_id=1 AND number='0500'`))
-	require.Equal(t, 1, ventas)
 }
 ```
 
-Motor: **PostgreSQL obligatorio**. Toca concurrencia y bloqueos: dos de las cuatro
-áreas de la regla del motor. En SQLite `FOR UPDATE` es un error de sintaxis, y sin
-él aparece `SQLITE_BUSY` porque la base se serializa entera. **La concurrencia no
-se puede probar contra SQLite ni siquiera mal.**
-
-⚠️ Y la propiedad que hace válida esta prueba: **falla contra el código de
-`be03`**. Si pasa contra el código vulnerable, la prueba está mal — arréglala
-antes de confiar en ella.
+Contra Postgres, en la rama falla la estrategia pesimista con *"entregadas 1500, sustitutos 0, stock 916"* (918 y 919 en otras corridas) y la condicional pasa; en la fase pasan las dos. Motor: PostgreSQL, contra `esclusa_test`.
 
 **Prevención**
 
-Tres niveles, y hacen falta los tres:
-
-1. **La restricción de la base.** Protege todos los caminos, incluidos los que no
-   existen todavía y los `INSERT` desde `psql` a las tres de la mañana.
-2. **La prueba de concurrencia con barrera**, corriendo en CI contra Postgres.
-3. **El criterio de revisión de código:** cualquier secuencia leer → decidir →
-   escribir sobre un recurso compartido es sospechosa hasta que se demuestre que
-   está dentro de una transacción con bloqueo.
+La prueba ya estaba. Lo que faltaba es que **corriera**: sin `TEST_DATABASE_URL`, las carreras hacen `t.Skip` y `go test ./...` sale verde en 0,003 s. Y si alguien la apunta a SQLite, también sale verde: medido, la rama de este incidente da 1.000 entregadas y stock en 0 contra SQLite, porque su pool de una conexión serializa todo. La prevención es la regla del motor de `be08` en el pipeline, y una línea en la revisión de código: **un cambio que quita un bloqueo trae su prueba de concurrencia corrida contra Postgres, y su medición con la forma de la noche.**
 
 **Por qué llegó a producción**
 
-Porque **no se reproduce cuando lo buscas**. La ventana dura microsegundos: con
-dos pestañas y dos clics no pasa nunca. Pasa el día del sorteo grande, con cien
-vendedores, sobre los tres números que todo el mundo quiere.
-
-Ninguna prueba funcional lo detecta, porque las pruebas funcionales hacen una
-llamada por vez. Y una prueba de concurrencia **sin barrera de salida** tampoco:
-pasa contra el código roto, que es la forma más traicionera de tener cobertura.
-
-A eso se sumó que la evidencia se destruyó sola —la base muestra una venta— así
-que durante días el equipo estuvo investigando si tesorería se había equivocado.
-El código funcionaba correctamente el 99,99 % de las veces, que es exactamente
-la frecuencia que hace que nadie sospeche del código.
+Porque **todo lo que se miró dio bien**. La suite local pasó (las carreras se saltaron). El autor del commit midió con k6 a ritmo parejo y el stock salió exacto, con mejor p95. La revisión vio una simplificación con un número que la respaldaba. Y el contador de la consola, que es lo que operación mira, dice que sobran.
 
 **Si tu causa fue distinta a esta**
 
-- *"Es el doble clic del vendedor"* — es la mitigación que estudia la Fase 5 del
-  track base, y es una hipótesis excelente. Se descarta reproduciéndolo con `curl`,
-  sin navegador: el bug está del lado del servidor y ninguna guarda de cliente lo
-  cierra.
-- *"Falta un índice único"* — vas bien, y no alcanza solo: con el modelo de estado
-  de `be03`, la venta es un `UPDATE` y no hay unicidad que violar. Hay que cambiar
-  el modelo. Si llegaste hasta acá, llegaste a `D28`.
-- *"Es el caos inyectando reintentos"* — se descarta con `CHAOS_LEVEL=off`.
-- Si tu fix fue **envolver en una transacción sin bloqueo**, léelo otra vez: bajó
-  la frecuencia y no cerró la ventana. Es el peor resultado posible, porque parece
-  arreglado.
+- *"El juego mandó claves repetidas"* — se descarta con `medicion.sql`: cero claves con dos giros. La clave repetida está resuelta, y no es esto.
+- *"El stock inicial estaba mal cargado"* — se descarta con la bitácora: 1.500 filas con la Esclusa entregada, y el stock sembrado en 1.000.
+- *"Es el caos"* — con `CHAOS_LEVEL=off` se reproduce igual.
+- Si tu fix fue *"un `CHECK (remaining >= 0)` en la tabla"*: no alcanza. Con actualizaciones perdidas el contador nunca llega a negativo; acá quedó en 904.
 
 </details>
 
 ---
 
-## Incidente be-10 — Un número quedó reservado para siempre
+## Incidente be-10 — Un giro quedó "en proceso" para siempre
 
-> **Fase:** be05 · **Categoría:** 🔥 transacciones · **Dificultad:** 🟡
-> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 30-45 min
-
-### 🎫 El ticket
-
-> "El 1500 de la rifa 3 aparece apartado desde el martes y nadie lo compró. Un
-> cliente lo quiere y no lo podemos vender: el sistema dice que está reservado.
-> ¿Se puede liberar a mano? Nos ha pasado con cuatro o cinco números este mes."
-
-**Reportado por:** vendedor
-**Ambiente:** PROD
-
-### 🎯 Qué se te pide
-
-Explicar cómo un número llega a ese estado y decidir dónde debe vivir la
-expiración. Y un detalle que parece menor y no lo es: **¿el estado bloqueado es
-correcto o es basura?**
-
-### 🔧 Preparación
-
-```bash
-git checkout incidente/be-10
-cd server && go run ./cmd/api
-npm start
-# Reserva un número desde el tablero y cierra la pestaña antes de comprar.
-```
-
----
-
-<details>
-<summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
-
-Reserva un número y **cierra la pestaña**. Espera. ¿Se libera?
-
-Ahora pregúntate quién lo iba a liberar: ¿qué proceso, corriendo dónde?
-
-</details>
-
-<details>
-<summary>💡 <b>Pista 2</b> — qué mirar</summary>
-
-```sql
-SELECT number, status, reserved_until FROM raffle_numbers
-WHERE raffle_id = 3 AND status = 'reserved';
-```
-
-Mira la columna `reserved_until`. ¿Tiene valor? ¿Y quién lo lee?
-
-Después busca en el frontend dónde se cancela una reserva (Fase 5, `setTimeout`;
-Fase 6, un epic).
-
-</details>
-
-<details>
-<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
-
-Si quien vence la reserva es un temporizador del navegador, ¿qué pasa cuando el
-navegador se cierra?
-
-</details>
-
----
-
-### 📝 Tu investigación
-
-**Reproducción**
-
-**Evidencia observable**
-
-```
-
-```
-
-**Hipótesis**
-- ❌ Descartada:
-- ✅ Confirmada:
-
-**Tu causa raíz**
-
-**Tu fix**
-
----
-
-<details>
-<summary>✅ <b>Solución de referencia</b></summary>
-
-**Causa raíz**
-
-**La reserva la expiraba el cliente.** La Fase 5 del track base lo hace con un
-`setTimeout` y la Fase 6 con un epic; el backend solo marcaba `status =
-'reserved'` y se olvidaba.
-
-Si el usuario cierra la pestaña, se le acaba la batería o pierde la conexión, ese
-temporizador muere con él y **nadie libera el número jamás**. La columna
-`reserved_until` existía en el esquema desde `be02` y no la leía nadie.
-
-Es una deuda 💸 declarada desde el mock de la Fase 3, con esta nota textual:
-*"un backend serio expiraría del lado del servidor, porque el cliente puede
-cerrar el navegador y dejar el número bloqueado para siempre"*. Está así **para
-que el problema se vea**, y este ticket es el problema viéndose.
-
-Y la respuesta a la pregunta incómoda: **el estado no es basura, es correcto**. La
-reserva se hizo bien; lo que falta es quién la caduca. Por eso liberar a mano es
-un parche legítimo y no una corrupción de datos.
-
-**Parche mínimo**
-
-Liberar a mano lo que está atascado, que es lo que pide el vendedor:
-
-```sql
-UPDATE raffle_numbers
-SET status = 'available', reserved_until = NULL
-WHERE status = 'reserved' AND reserved_until < now();
-```
-
-⚠️ Antes de correrlo: si `reserved_until` está en `NULL` —porque nadie lo
-escribía— esa consulta **no libera nada**. Ese es el hallazgo dentro del hallazgo.
-En ese caso hay que acotar por otro criterio y decirlo en el runbook:
-
-```sql
--- Con reserved_until sin poblar, se usa la antigüedad como aproximación.
--- Es un parche, y hay que anotarlo como tal.
-UPDATE raffle_numbers SET status = 'available'
-WHERE status = 'reserved' AND raffle_id = 3 AND number = '1500';
-```
-
-**La corrección correcta**
-
-La de `be05`, en dos piezas que se complementan:
-
-```go
-// 1. La reserva escribe su vencimiento.
-until := time.Now().Add(s.reservationTTL)
-reserved, err = tx.MarkReserved(ctx, raffleID, number, until)
-```
-
-```go
-// 2. Un worker las vence. Y sabe morir: el select sobre ctx.Done() lo
-//    conecta con el apagado ordenado de be01 — un worker que no termina
-//    convierte un Shutdown limpio en un proceso zombi.
-for {
-	select {
-	case <-ctx.Done():
-		return
-	case <-ticker.C:
-		n, err := store.ExpireReservations(ctx)   // un solo UPDATE, idempotente
-		if err != nil {
-			log.Printf("[expiry] error venciendo reservas: %v", err)
-			continue
-		}
-		if n > 0 {
-			log.Printf("[expiry] %d reservas vencidas y liberadas", n)
-		}
-	}
-}
-```
-
-Y la tercera pieza, que es la que casi siempre se olvida: **una reserva vencida
-cuenta como disponible aunque el barrido todavía no haya pasado.**
-
-```go
-expired := current.ReservedUntil != nil && current.ReservedUntil.Before(time.Now())
-if current.Status != "available" && !(current.Status == "reserved" && expired) {
-	return ErrNotAvailable
-}
-```
-
-> 🧭 **La verdad es el reloj, no el último barrido.** Si dependieras del worker,
-> la ventana entre ejecuciones sería un agujero funcional: un número vencido hace
-> diez segundos seguiría sin poder venderse.
-
-**Prueba de regresión**
-
-```go
-func TestReservaVencidaSePuedeVender(t *testing.T) {
-	// Reserva que nació vencida: el reloj inyectado de be06 hace esto
-	// trivial de montar, y sin él habría que esperar de verdad.
-	reservarConVencimiento(t, 1, "1500", time.Now().Add(-time.Minute))
-
-	// Sin esperar al worker: el servicio ya debe considerarlo disponible.
-	_, err := svc.SellNumber(ctxConUsuario(1), 1, "1500", nil)
-	require.NoError(t, err)
-}
-
-func TestElWorkerLiberaLasVencidas(t *testing.T) {
-	reservarConVencimiento(t, 1, "0347", time.Now().Add(-time.Minute))
-
-	n, err := store.ExpireReservations(context.Background())
-	require.NoError(t, err)
-	require.Equal(t, int64(1), n)
-	require.Equal(t, "available", statusOf(t, 1, "0347"))
-}
-```
-
-Motor: PostgreSQL.
-
-**Prevención**
-
-El worker, la comprobación de vencimiento en el servicio, y —lo que convierte
-esto en operable— **una consulta de vigilancia**: cuántos números llevan
-reservados más de `reservationTTL`. Si ese número no es cero, el worker no está
-corriendo. Es la clase de métrica que cuesta una consulta y evita el ticket
-entero.
-
-💸 Y una deuda que este fix introduce y hay que declarar: **el worker corre en
-todas las réplicas**. No rompe nada —el `UPDATE` es idempotente— pero es trabajo
-repetido. `bea-09` §3 lo recoge, y la solución es un `pg_advisory_lock`.
-
-**Por qué llegó a producción**
-
-Porque la expiración en el cliente **funciona en el camino feliz**, que es el que
-se prueba. Reservar y comprar funciona; reservar y esperar funciona; reservar y
-**desaparecer** es el camino que nadie ejecuta a propósito y que los usuarios
-ejecutan todo el día.
-
-Y el daño es acumulativo y silencioso: cuatro o cinco números al mes no disparan
-ninguna alarma, pero no se recuperan solos y el inventario se degrada mes a mes.
-
-**Si tu causa fue distinta a esta**
-
-- *"El usuario lo reservó y no lo compró"* — es exactamente lo que pasó, y no es
-  la causa: la causa es que el sistema no previó ese caso. Distinguir "qué hizo el
-  usuario" de "qué falló en el sistema" es el trabajo.
-- *"Se cayó el epic de la Fase 6"* — plausible si el flujo pasó por ahí, y se
-  descarta reproduciéndolo con la pestaña cerrada: sin navegador no hay epic que
-  caerse.
-- Si tu fix fue **un script manual que corre cada noche**, resuelve el síntoma y
-  es defendible como parche. Pero deja una ventana de hasta 24 horas y vive fuera
-  del sistema, donde nadie lo mantiene ni lo monitorea.
-
-</details>
-
----
-
-## Incidente be-11 — A los vendedores de la costa se les cierra la rifa una hora antes
-
-> **Fase:** be06 · **Categoría:** 🔥 tiempo · **Dificultad:** 🟠
+> **Fase:** be05 · **Categoría:** 🔥 concurrencia · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 45-60 min
 
 ### 🎫 El ticket
 
-> "Los muchachos de la costa dicen que a ellos la rifa se les cierra una hora
-> antes que a los del interior: cuando todavía se puede vender, a ellos ya no
-> les sale el botón. Debe ser el tema de las zonas horarias, ¿no? Nos están
-> reclamando porque pierden ventas."
+> "Un jugador escribe que tocó girar, la rueda empezó a girar y la app se
+> cerró. Ahora, cada vez que entra, le sale 'giro en proceso' y no puede volver
+> a girar, y el giro ya se le descontó. Le dije que esperara. Ya pasaron dos días.
+> Ese día hubo un reinicio del servidor a media tarde."
 
-**Reportado por:** supervisor
+**Reportado por:** Yariela, soporte
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Evaluar la teoría del reporte —y el reporte trae una, como casi siempre—,
-encontrar la causa real, y decidir **qué se puede arreglar y qué no**. Este
-incidente termina en una conversación, no en un commit.
+Explicar por qué el giro no se cierra solo, por qué la consulta del runbook no lo encuentra, y qué hay que hacer con **este** jugador además de arreglar el código.
 
 ### 🔧 Preparación
 
 ```bash
-git checkout incidente/be-11
-cd server && go run ./cmd/api
-npm start
-# Para simular la máquina afectada, adelanta el reloj del sistema una hora
-# (desactivando la sincronización automática).
+git checkout incidente/be-10
+cd server && go build -o /tmp/api ./cmd/api
+psql "$DATABASE_URL" -c "UPDATE players SET free_spins = 5 WHERE id = 42"
+SPIN_DELIVERY_MS=5000 /tmp/api &
+curl -s -X POST -d '{"idempotencyKey":"corte-1"}' localhost:3001/players/42/spins &
+sleep 2; kill -9 %1          # el reinicio de media tarde, durante la entrega
+SPIN_DELIVERY_MS=5000 /tmp/api &
+curl -s -X POST -d '{"idempotencyKey":"corte-1"}' localhost:3001/players/42/spins
 ```
 
 ---
@@ -2387,11 +1805,206 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-Empieza por la teoría del reporte, porque descartarla es rápido: **Colombia
-entera está en UTC−5, todo el año, sin horario de verano.** No hay dos zonas.
+La app del jugador reintenta con la misma clave: eso está bien, es para lo que la clave existe. El que contesta "en proceso" es el servidor. ¿Quién, en el servidor, tendría que haber dicho "este ya no está en proceso"?
 
-Descartada esa, queda la pregunta interesante: la hora de cierre, ¿la evalúa el
-mismo reloj para todo el mundo?
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+```sql
+SELECT * FROM spin_requests WHERE idempotency_key = 'corte-1';
+SELECT * FROM spin_log WHERE idempotency_key = 'corte-1';
+SELECT count(*) FROM spin_requests WHERE status = 'processing' AND processing_until < now();
+```
+
+Y busca `[barrido]` en el log, después de un minuto.
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+`NULL < now()` no es ni verdadero ni falso. ¿Y qué pasa con una fila que ninguna consulta encuentra, si además nadie la busca?
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+```
+
+```
+
+**Hipótesis**
+- ❌ Descartada:
+- ✅ Confirmada:
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b></summary>
+
+**Causa raíz**
+
+Dos faltas juntas, y las dos importan. El giro se decide en una transacción y se entrega en el juego fuera de ella (`be05` §4.4); entre las dos cosas, el pedido está en `processing` con una fecha límite. Esta rama cambió las dos mitades del mecanismo que lo cierra:
+
+```diff
+-		until := time.Now().UTC().Add(s.processing)
++		// El juego reintenta cuando quiera; el pedido no necesita fecha límite. 💸
+ …
+-			VALUES (?, ?, 'processing', ?)
++			VALUES (?, ?, 'processing', NULL)
+```
+
+```diff
+-	sweepCtx, stopSweep := context.WithCancel(context.Background())
+-	defer stopSweep()
+-	go spins.RunSweeper(sweepCtx, cfg.SpinSweepEvery)
+```
+
+Sin fecha límite, `repeated` nunca considera vencido el pedido y responde `409 giro en proceso` para siempre. Sin barrido, nadie lo cierra. Y la consulta obvia del runbook, `WHERE processing_until < now()`, **no encuentra nada**, porque `NULL < now()` es `NULL`: ese es el hallazgo dentro del hallazgo.
+
+Medido con el binario, la entrega en 5 s y `kill -9` a los 2 s: el pedido queda `processing|NULL`, la bitácora tiene **una** fila y el saldo bajó de 5 a 4. Al reiniciar, `409 giro en proceso`; a los 40 s, la consulta del runbook devuelve 0 filas, el reintento sigue en `409`, y el log no tiene ninguna línea `[barrido]`. Con la fase, la misma secuencia termina distinto: el barrido cierra el pedido 8 s después de su vencimiento (`[barrido] 1 giros en proceso vencidos, entregados y cerrados`) y el reintento devuelve `200` con **el mismo premio** que había salido antes del corte.
+
+**Parche mínimo**
+
+Restaurar la fecha límite y el arranque del barrido. Con eso, los pedidos nuevos se cierran solos.
+
+**La corrección correcta, y el jugador**
+
+El parche no toca los pedidos que ya están colgados con `processing_until` en `NULL`: el barrido tampoco los ve. Hay que encontrarlos con la consulta correcta y darles una fecha que ya pasó, para que el barrido haga su trabajo —entregar lo que dice la bitácora— en su próxima vuelta:
+
+```sql
+UPDATE spin_requests SET processing_until = now()
+WHERE status = 'processing' AND processing_until IS NULL;
+```
+
+Nunca a mano, con un `INSERT` en el inventario o devolviendo el saldo: el giro **ya salió**, está en la bitácora, y lo correcto es entregar ese, no otro. Y la deuda que queda declarada: una columna que la lógica necesita no nula y la tabla admite nula.
+
+**Prueba de regresión**
+
+```go
+// server/internal/spin/processing_test.go
+
+package spin_test
+
+import (
+	"context"
+	"testing"
+	"time"
+
+	"github.com/interoceanic-games/esclusa-api/internal/spin"
+)
+
+// be-10: el proceso muere entre decidir y entregar. Pasado el plazo, la misma
+// clave tiene que devolver el giro que ya salió, y el barrido tiene que poder
+// encontrarlo con la consulta del runbook.
+func TestSpinCutDuringDeliveryRecovers(t *testing.T) {
+	db := openPostgres(t)
+	measurementWheel(t, db, 1000, 1, 5)
+	svc := spin.NewService(db, spin.Pessimistic, time.Hour, 200*time.Millisecond)
+
+	// El corte: el contexto se cancela mientras el juego "recibe" el premio.
+	ctx, cut := context.WithTimeout(context.Background(), 50*time.Millisecond)
+	defer cut()
+	if _, err := svc.Spin(ctx, 1, "corte"); err == nil {
+		t.Fatal("la entrega no se cortó")
+	}
+
+	time.Sleep(300 * time.Millisecond) // vence processing_until
+	var stuck int
+	db.Get(&stuck, `SELECT count(*) FROM spin_requests WHERE status = 'processing' AND processing_until < now()`)
+	if stuck != 1 {
+		t.Fatalf("el runbook no encuentra el giro colgado: %d filas", stuck)
+	}
+
+	retry := spin.NewService(db, spin.Pessimistic, 0, 200*time.Millisecond)
+	r, err := retry.Spin(context.Background(), 1, "corte")
+	if err != nil {
+		t.Fatalf("la misma clave, pasado el plazo: %v", err)
+	}
+	var rows int
+	db.Get(&rows, `SELECT count(*) FROM spin_log WHERE idempotency_key = 'corte'`)
+	if rows != 1 || r.LandedSegment != "esclusa-de-oro" {
+		t.Fatalf("el reintento giró otra vez o devolvió otra cosa: %d filas, %+v", rows, r)
+	}
+}
+```
+
+En la rama falla con *"el runbook no encuentra el giro colgado: 0 filas"*; en la fase, pasa. Usa los ayudantes de `race_test.go` (`openPostgres`, `measurementWheel`). Motor: PostgreSQL.
+
+**Prevención**
+
+La prueba, un `CHECK ((status = 'processing') = (processing_until IS NOT NULL))` en la tabla, y en el runbook la consulta que no depende de la fecha: *"pedidos en `processing` creados hace más de N minutos"*, por `created_at`.
+
+**Por qué llegó a producción**
+
+Porque el camino feliz no pasa por ahí. Sin cortes, el pedido se cierra en la misma petición y nadie extraña al barrido. Hace falta que el proceso muera **durante** la entrega, y eso pasa un día de despliegue a media tarde, con un solo jugador afectado que escribe a soporte dos días después.
+
+**Si tu causa fue distinta a esta**
+
+- *"El juego reintenta mal"* — reintenta con la misma clave, que es lo correcto; con una clave nueva giraría otra vez y el jugador tendría dos giros por un toque.
+- *"La transacción quedó abierta"* — se descarta en `pg_stat_activity`: nada en `idle in transaction`. La transacción confirmó; lo que quedó abierto es el **pedido**, que es otra cosa.
+- Si tu fix fue *"borrar la fila de `spin_requests`"*: el reintento gira **de nuevo**, con un sorteo nuevo. El jugador se queda con un giro que no recibió y otro que sí, y la bitácora tiene dos hechos para un toque.
+
+</details>
+
+---
+
+## Incidente be-11 — A los jugadores de Chile la rueda les cierra una hora antes
+
+> **Fase:** be06 · **Categoría:** 🔥 tiempo · **Dificultad:** 🟡
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 45-60 min
+> · Termina en diagnóstico y decisión, no en un commit
+
+### 🎫 El ticket
+
+> "Varios jugadores de Chile dicen que la rueda se les cierra una hora antes que
+> a todo el mundo. Y hoy me pasó a mí en la consola: el giro de la Esclusa de
+> Oro me sale '(cerrada)' y todavía faltan treinta minutos. ¿Es el horario de
+> verano de Chile?"
+
+**Reportado por:** Yariela, soporte
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Evaluar la teoría del ticket —el ticket trae una, como casi siempre—, encontrar la causa real, y decidir **qué se puede arreglar y qué no**. Este incidente termina en una conversación, no en un commit.
+
+### 🔧 Preparación
+
+Sin rama: el incidente vive en `fase-be06-hora-dura-y-la-autoridad-del-reloj`, con la consola y el binario en el `3001`.
+
+```bash
+git checkout fase-be06-hora-dura-y-la-autoridad-del-reloj
+psql "$DATABASE_URL" -c "UPDATE wheels SET closes_at = now() + interval '30 minutes' WHERE id = 1"
+# La máquina afectada: adelanta el reloj del sistema una hora (desactiva la
+# sincronización automática). Después abre la consola y ve a Envíos.
+# Al terminar, el reloj en automático y:
+# psql "$DATABASE_URL" -c "UPDATE wheels SET closes_at = '2030-12-31T20:00:00-05:00' WHERE id = 1"
+```
+
+⚠️ Poner `TZ` no reproduce este incidente: `isWheelClosed` compara instantes, y una comparación de instantes no depende de la zona. Confundir zona con hora es justamente la teoría del ticket.
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
+
+Empieza por la teoría del ticket, porque descartarla es rápido. ¿Qué guarda el servidor del cierre, un instante o una hora local? ¿Y qué compara la consola?
+
+Descartada esa, queda la pregunta interesante: ¿con qué reloj se decide en cada lado?
 
 </details>
 
@@ -2404,21 +2017,14 @@ En la máquina afectada, en la consola del navegador:
 new Date().toISOString()
 ```
 
-Y compáralo con la hora del servidor:
-
-```bash
-curl -s -D - -o /dev/null localhost:3001/health | grep -i 'x-server-time'
-```
-
-Después mira qué reloj usa `isPastClosing` (Fase 7, `src/features/raffles/closing.js`).
+Y en cualquier respuesta del `3001`, en Network, el header `X-Server-Time`. Después manda el mismo giro con `curl`, desde una máquina con la hora bien.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si el frontend esconde el botón y el backend seguiría aceptando la venta, ¿quién
-está equivocado? ¿Y qué pierde el usuario exactamente?
+Si el servidor dice que faltan treinta minutos y el navegador dice que ya pasó, ¿quién está equivocado? ¿Y qué se puede arreglar sin tocar la consola?
 
 </details>
 
@@ -2440,164 +2046,94 @@ está equivocado? ¿Y qué pierde el usuario exactamente?
 
 **Tu causa raíz**
 
-**Tu fix**
+**Tu decisión**
 
 ---
 
 <details>
 <summary>✅ <b>Solución de referencia</b></summary>
 
+**Lo que se ve**
+
+La rueda 1 cierra a las 03:40 UTC. Con el navegador una hora adelante, la consola ve las 04:11 y el servidor, las 03:11:
+
+```json
+{ "status": 201, "serverTime": "2026-10-20T03:11:14.428Z", "consoleNow": "2026-10-20T04:11:12.853Z" }
+```
+
+En el asistente de envíos, la opción *Giro en Esclusa de Oro (cerrada)* está deshabilitada. El mismo envío, mandado con `curl` al servidor, responde **`201`** y queda anotado (`C-BE11 spin:1`). Los dos lados aplican la misma regla —`now >= closesAt`— con relojes distintos.
+
 **Causa raíz**
 
-**El reloj de esas máquinas está adelantado una hora.** No es la zona horaria: es
-la hora.
+El reloj de la máquina, adelantado una hora. No hay ningún componente roto: el servidor decide bien, la consola calcula bien con el dato que tiene, y el dato que tiene está mal por causas ajenas al software. Para los jugadores es lo mismo con el reloj del celular. El juego cuenta con su propio reloj cuánto falta, y un celular con la hora puesta a mano, o con una base de zonas vieja, cuenta mal. Una base de zonas vieja hace lo mismo con una ley nueva: la imagen de Go del laboratorio, con la base 2023c, todavía pone a Asunción en `-04` en julio de 2025, una hora antes de la que rige desde que Paraguay dejó el horario de verano (`be06` §4.2).
 
-La teoría del reporte era razonable y es falsa: Colombia es una sola zona
-(UTC−5) y no tiene horario de verano. Y aunque hubiera varias, **no importaría**:
-`isPastClosing` compara instantes (`new Date(closesAt).getTime()` contra
-`new Date().getTime()`), y una comparación de instantes es independiente de la
-zona en que esté configurado el equipo.
+**Por qué no es el horario de verano**
 
-Lo que sí importa es el **reloj**. `new Date()` devuelve la hora del sistema
-operativo del usuario. Si esa hora está adelantada —sincronización desactivada,
-una máquina que se configuró a mano, un equipo que estuvo apagado y arrancó con la
-hora de la BIOS— la interfaz calcula que la rifa ya cerró y esconde el botón,
-mientras el servidor sabe perfectamente que todavía no.
+El cierre es un instante (`TIMESTAMPTZ`, `be06` §4.1), y Santiago cambiando de `-04` a `-03` no mueve ningún instante. Si el horario de verano fuera la causa, les pasaría a todos los jugadores de Chile el mismo día y a ninguno de Panamá. Y Yariela, en Panamá, lo vio en su consola.
 
-📝 **Y la geografía era una correlación, no una causa.** Un lote de equipos que se
-compró junto y se configuró junto comparte el mismo problema de sincronización.
-El reporte agrupó por región porque es lo visible; agrupar por lote de compra
-habría dado la misma lista.
+**La asimetría que hay que entender y explicar**
 
-**Parche mínimo**
-
-No hay parche en el código. Lo que hay es un diagnóstico y dos acciones:
-
-1. **Sincronizar el reloj** de esas máquinas (activar NTP). Resuelve el caso hoy.
-2. **Confirmar que no se perdió ninguna venta indebidamente aceptada**: no. El
-   servidor nunca se equivocó — este es el escenario "reloj adelantado" de
-   `be06` §7, el que solo cuesta ventas perdidas, no datos corruptos.
-
-> 🧭 **La asimetría que hay que entender y explicar.** Con el reloj **adelantado**,
-> la UI cierra antes y el usuario **pierde una venta legítima**: molesto. Con el
-> reloj **atrasado**, la UI ofrece el botón y el backend rechaza con `409`:
-> mensaje confuso, **datos correctos**.
->
-> Antes de `be06`, el segundo caso vendía un número de una rifa cerrada. **Una
-> interfaz confusa es un problema; una base de datos mentirosa es un incidente.**
+Con el reloj **adelantado**, la consola cierra antes, y el jugador o la operadora **pierden un giro legítimo**: molesto. Con el reloj **atrasado**, la consola ofrece el giro y el servidor lo rechaza con `409`: mensaje confuso, **datos correctos**. Antes de `be06`, el segundo caso anotaba un envío de una rueda cerrada. **Una interfaz confusa es un problema; una base de datos mentirosa es un incidente.**
 
 **La corrección correcta**
 
-Que el frontend deje de mirar su propio reloj: el `serverNow` que la Fase 7 dejó
-anotado como deuda 💸 y que su ejercicio 27 preguntaba qué fase debería pagar.
+Que la consola deje de mirar su propio reloj: un interceptor que guarde el desfase contra `X-Server-Time` y un `serverNow()` en `closing.js`. La mitad del servidor **ya está hecha**; la de la consola choca con la regla del track y con `D27` (`be06` §5.6). Y el juego pinta la cuenta regresiva con `nextFreeSpinAt` y el `closesAt` del servidor, restando el desfase que mida: eso es del equipo de Carlos.
 
-La **mitad barata ya está hecha** — `be06` publica la hora del servidor en cada
-respuesta:
-
-```go
-w.Header().Set("X-Server-Time", s.clock.Now().Format(time.RFC3339Nano))
-```
-
-Hoy no lo consume nadie. Está puesto igual, y no es un adorno: es el punto donde
-la deuda se vuelve barata de pagar. La otra mitad —un interceptor que guarde el
-desfase y una función `serverNow()` que lo aplique— son unas treinta líneas en
-`apiClient.js` y `closing.js`, y **choca con la regla del track y con `D27`**.
-
-⚠️ Y un detalle técnico que conviene conocer: medir el desfase como *hora del
-servidor − hora local* incluye la latencia de la red. La corrección seria
-—descontar la mitad del tiempo de ida y vuelta— es media implementación de NTP, y
-explica por qué sincronizar relojes es más difícil de lo que parece.
+⚠️ Medir el desfase como *hora del servidor − hora local* incluye la latencia de la red. Corregirla —descontar la mitad de la ida y vuelta— es media implementación de NTP.
 
 **Prueba de regresión**
 
-No hay bug del backend que probar. Lo que sí se prueba es que **el servidor no
-depende del reloj del cliente**, que es lo que hace que el daño sea acotado:
-
-```go
-func TestElServidorIgnoraLaHoraDelCliente(t *testing.T) {
-	// Una hora antes del cierre, según el reloj del servidor.
-	svc := newServiceWithClock(t, fixedClock{closesAt.Add(-time.Hour)})
-
-	// El cliente puede mandar lo que quiera: no hay ningún campo de hora
-	// en el cuerpo de una venta, y aunque lo hubiera, no se leería.
-	_, err := svc.SellNumber(ctxConUsuario(1), 1, "0347", nil)
-	require.NoError(t, err)
-}
-```
-
-Motor: PostgreSQL. Toca zonas horarias.
+No hay bug del backend que probar. Lo que sí se prueba es que **el servidor no depende del reloj del cliente**, que es lo que acota el daño: `TestClientClockDoesNotGrantFreeSpins` (incidente `be-18`) y la tabla de bordes de `be06` §5.5. Motor: PostgreSQL.
 
 **Prevención**
 
-Tres cosas, en orden de coste:
-
-1. **La línea de log del desfase** que `be06` ya registra al liquidar. Convierte
-   este ticket en un diagnóstico de dos minutos: *"el cliente dice las 22:03 y el
-   servidor las 21:03"*.
-2. **La métrica agregada** del ejercicio 23 de `be06`: cuántos usuarios tienen el
-   reloj desfasado y cuánto. Es el argumento que decidiría si vale la pena pagar
-   la deuda del `serverNow`. 💸 Hoy solo hay líneas sueltas de log.
-3. **Sincronización de reloj en el aprovisionamiento** de los equipos. Es la
-   prevención real y no es técnica: es de operación.
+1. **El desfase, medido.** Una métrica agregada de cuántas consolas y cuántos celulares tienen la hora corrida y cuánto (`be06`, ejercicio 23). Es el número que decidiría si vale la pena pagar la deuda del `serverNow`.
+2. **La sincronización automática en las máquinas del estudio.** Es la prevención real, y no es técnica: es de operación.
 
 **Por qué llegó a producción**
 
-Porque **el sistema está funcionando correctamente** y aun así alguien pierde
-dinero. No hay ningún componente roto: el backend decide bien, el frontend
-calcula bien con el dato que tiene, y el dato que tiene está mal por causas
-ajenas al software.
-
-Es el tipo de incidente donde la respuesta *"no es un bug"* es técnicamente cierta
-y operativamente inútil. Lo que faltaba era **no depender de un dato que no
-controlamos**, y esa dependencia estaba declarada como deuda desde la Fase 7
-—con su nota de época y todo— sin que nadie le hubiera puesto una fecha.
+Porque **el sistema funciona correctamente** y aun así alguien pierde un giro. Es el tipo de incidente donde *"no es un bug"* es técnicamente cierto y operativamente inútil. Lo que faltaba era no depender de un dato que no controlamos, y esa dependencia estaba declarada como deuda desde la Fase 7.
 
 **Si tu causa fue distinta a esta**
 
-- *"Es la zona horaria"* — la teoría del reporte, y es **la hipótesis correcta de
-  formular**: es lo primero que hay que descartar. Se cae con dos datos: Colombia
-  es una sola zona, y la comparación es de instantes.
-- *"El backend cierra antes de tiempo"* — se descarta con `curl` desde una máquina
-  con el reloj bien: el servidor sigue aceptando ventas.
-- *"El worker de cierre marcó la rifa como `closed` antes"* — buena hipótesis, y
-  se descarta mirando `status` y `closes_at` en la base.
-- Si tu fix fue **restar una hora en el cliente**, arreglaste esas máquinas y
-  rompiste todas las demás.
+- *"Es el horario de verano de Chile"*: es **la hipótesis correcta de formular**, porque es lo primero que hay que descartar. Se cae con dos datos: el cierre es un instante, y la operadora que lo vio está en Panamá.
+- *"El servidor cierra antes de tiempo"*: se descarta con `curl` desde una máquina con la hora bien. El servidor sigue aceptando.
+- *"El barrido pasó la rueda a `ended` antes"*: es buena hipótesis, y se descarta mirando `status` y `closes_at` en la base.
+- Si tu fix fue **restar una hora en la consola**, arreglaste esa máquina y rompiste todas las demás.
 
 </details>
 
 ---
 
-## Incidente be-12 — Vendimos doscientos números después del cierre
+## Incidente be-12 — Giros anotados después del cierre
 
-> **Fase:** be06 · **Categoría:** 🔥 tiempo · **Dificultad:** 🔴
+> **Fase:** be06 · **Categoría:** 🔥 tiempo · **Dificultad:** 🟢
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 60-90 min
-> · Hermano del incidente **16** del track base, con otra causa raíz
+> **Tiempo sugerido:** 30-45 min
 
 ### 🎫 El ticket
 
-> "Al liquidar la rifa del 30 nos dio que se recaudaron 1.100.000 pesos pero el
-> corte que hicimos a la hora del cierre decía 900.000. Revisando, hay como
-> doscientos números con hora de venta posterior a las diez de la noche, que es
-> cuando cerraba. Uno de esos es el ganador. No sabemos si pagar el premio."
+> "Concilié la rueda de anoche y en la bitácora hay giros con hora de después
+> del cierre. No muchos, pero hay. ¿No era que ahora eso lo controlaba el
+> servidor?"
 
-**Reportado por:** tesorería
+**Reportado por:** Itzel, live-ops
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Determinar cómo entraron esas ventas, si el premio se debe pagar, y qué hace
-falta para que no vuelva a pasar. Es el incidente con más consecuencias del
-track: hay dinero y hay una decisión de negocio que depende de tu diagnóstico.
+Encontrar por qué el servidor deja girar después del cierre, cuantificar cuántos giros, y explicar por qué el número cambia de una noche a otra.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-12
-cd server && go run ./cmd/api
-npm start
-# Pon una rifa a cerrar en dos minutos y sigue vendiendo pasada la hora.
+cd server && go build -o /tmp/api ./cmd/api && /tmp/api &
+psql "$DATABASE_URL" -f load/rueda-de-medicion.sql
+# La rueda de medición cierra a los 5 s de empezar la carga:
+psql "$DATABASE_URL" -c "UPDATE wheels SET closes_at = now() + interval '5 seconds' WHERE id = 900"
+docker run --rm -i --network <red-del-backend> -e BASE_URL=http://api:3001 -e RATE=50 -e KEYS=750 \
+  grafana/k6:1.5.0 run - < load/giro.js
 ```
 
 ---
@@ -2605,31 +2141,27 @@ npm start
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-Prueba lo más directo: pasada la hora de cierre, manda una venta con `curl`,
-**sin navegador**. Si entra, la interfaz no tiene nada que ver.
-
-Y si entra: ¿quién estaba comprobando la hora, y dónde vive ese código?
+El juego no sabe cuándo cierra la rueda: gira cuando el jugador toca. El que tiene que decir *"ya cerró"* es el servidor. ¿Qué mira el servidor para saber si la rueda está abierta?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-```bash
-grep -rn "closesAt\|ClosesAt" server/internal/
-grep -rn "isPastClosing" src/
+```sql
+SELECT count(*) FILTER (WHERE l.created_at <  w.closes_at) AS antes,
+       count(*) FILTER (WHERE l.created_at >= w.closes_at) AS despues
+FROM spin_log l JOIN wheels w ON w.id = l.wheel_id WHERE l.wheel_id = 900 GROUP BY w.closes_at;
 ```
 
-Cuenta cuántas comprobaciones de la hora de cierre hay en cada orilla.
+Y en el log, la línea `[cierre]`: ¿a qué hora cerró la rueda el barrido?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si la única guarda vive en el cliente, ¿qué la evita? Un reloj mal, una pestaña
-abierta desde antes del cierre, o `curl`. ¿Cuál de las tres es la más probable
-con doscientos números?
+Corre la carga tres veces y compara el número de *después*. Si cambia mucho, ¿de qué depende? ¿Cada cuánto pasa el barrido?
 
 </details>
 
@@ -2658,243 +2190,128 @@ con doscientos números?
 <details>
 <summary>✅ <b>Solución de referencia</b></summary>
 
+**Lo que se ve**
+
+Tres corridas de k6 a 50 giros por segundo, con la rueda 900 cerrando a los 5 segundos y el barrido cada 10:
+
+```text
+giros de la 900 antes del cierre: 117 · después: 108 · el último, 4.30 s después
+giros de la 900 antes del cierre: 117 · después: 61 · el último, 2.40 s después
+giros de la 900 antes del cierre: 117 · después: 5 · el último, 0.18 s después
+```
+
+Con `fase-be06-…`, la misma carga: `después: 0`. Los giros de después del cierre fueron a la otra rueda abierta.
+
 **Causa raíz**
 
-**El backend nunca comprobó la hora de cierre.** La única guarda vivía en el
-cliente: `isPastClosing(raffle.closesAt)` en el tablero y en el epic de la Fase 7.
+El giro elige la rueda por su estado, y confía en que el barrido la pase a `ended` a tiempo:
 
-Cualquiera de estas tres cosas la esquiva:
+```diff
+ 	for _, w := range wheels {
+-		// Instantes con Before, nunca componentes de fecha ni ==. En el
+-		// instante exacto del cierre la rueda ya está cerrada: el mismo borde
+-		// que isWheelClosed de la Fase 7 (now >= closesAt).
+-		if !now.Before(w.ClosesAt) {
+-			continue
+-		}
++		// El barrido de cierre ya pasa las ruedas vencidas a ended: si dice
++		// live, está abierta.
+```
 
-1. **Una pestaña abierta desde antes del cierre**, con el estado de la rifa
-   cacheado en el store. Es la más probable con doscientos números: los
-   vendedores no recargan la página.
-2. **Un reloj de cliente atrasado** — el escenario espejo de `be-11`.
-3. **Cualquier cliente que no sea el navegador.** `curl` no ejecuta
-   `isPastClosing`.
-
-Y el resultado no es un error: son doscientas ventas **aceptadas y confirmadas**,
-con su `200`, indistinguibles de las legítimas salvo por el `sold_at`.
-
-Es el mismo síntoma del **incidente 16 del track base**, donde la causa es que el
-frontend compara mal la fecha. Acá la causa es más profunda: **no hay nada que
-comparar del lado que decide**.
-
-**Sobre el premio.** El diagnóstico no lo decide, pero sí lo informa, y esa
-distinción importa: la venta ganadora fue **aceptada por el sistema**. Quien la
-compró hizo todo bien y recibió una confirmación. Que el sistema no debiera
-haberla aceptado es un problema de la empresa, no del comprador. Tu entregable es
-la evidencia —`sold_at` contra `closes_at`, con precisión de segundos, y en qué
-orden llegaron— para que negocio decida con datos.
+Entre el instante del cierre y la próxima vuelta del barrido, la rueda dice `live` y gira. Esa ventana dura entre 0 y `WHEEL_CLOSE_EVERY`, según en qué momento del ciclo cae el cierre: por eso 108, 61 y 5. El peor caso, a 50 giros por segundo y con el barrido cada 10 s, son unos 500.
 
 **Parche mínimo**
 
-Comprobar la hora en el servidor, y comprobarla **dentro de la transacción de
-venta**:
-
-```go
-err := s.store.WithTx(ctx, func(tx Tx) error {
-	// FOR SHARE y no FOR UPDATE: solo necesitamos que nadie CAMBIE la
-	// closesAt mientras vendemos, no bloquear a los demás vendedores entre
-	// sí. Un FOR UPDATE acá serializaría todas las ventas de la rifa
-	// contra una sola fila y tiraría a la basura lo que consiguió be05.
-	raffle, err := tx.FindRaffleForShare(ctx, raffleID)
-	if err != nil {
-		return err
-	}
-
-	now := s.clock.Now()
-	// Comparación de INSTANTES. El borde (now == closesAt → no se vende)
-	// se hereda de isPastClosing: dos capas que contesten distinto en el
-	// borde producen el ticket más difícil de diagnosticar que existe.
-	if !now.Before(raffle.ClosesAt) {
-		return fmt.Errorf("cerró a las %s y ahora son las %s: %w",
-			raffle.ClosesAt.Format(time.RFC3339), now.Format(time.RFC3339),
-			ErrRaffleClosed)
-	}
-	// … el resto de be05
-})
-```
-
-⚠️ **La posición no es estilo.** Comprobar antes de abrir la transacción reabre
-el mismo *check-then-act* que `be05` acaba de cerrar: entre "vi que estaba
-abierta" y "vendí" cabe el cierre. La ventana es pequeña y justo por eso el bug
-sería intermitente.
-
-Y el handler traduce a `409`, no a `400`: la petición está bien formada, el estado
-del recurso no la permite. El frontend heredado ya sabe mostrar un `409` como
-conflicto, así que **maneja este caso nuevo sin saber que existe**.
-
-**La corrección correcta**
-
-La de `be06` completa, que son tres piezas:
-
-1. La comprobación dentro de la transacción (arriba).
-2. Un **worker que cierra por reloj**, para que el estado refleje la realidad
-   aunque nadie pida nada. Sin él, una rifa cerrada a las 22:00 sigue diciendo
-   `open` hasta que alguien intente venderle algo — y el `pollingEpic` de la Fase
-   7 no arrancaría a buscar el resultado.
-3. La **política de zonas** explícita: proceso en UTC, sesión de base en
-   `America/Bogota` solo para serializar.
-
-> ⚠️ Y una advertencia sobre la pieza 2: el worker mantiene el estado al día,
-> **no es la regla**. Usar `status = 'open'` como comprobación de la hora dura
-> deja colarse las ventas de los segundos entre un tick y el siguiente. La que
-> manda es el reloj.
+Volver a poner la comparación con el reloj dentro de `liveWheel`. Es la que tiene `be06` §5.3.
 
 **Prueba de regresión**
 
-```go
-func TestSellNumberRespetaLaHoraDura(t *testing.T) {
-	closesAt := mustParse(t, "2026-08-30T22:00:00-05:00")
+`TestSpinRespectsClosing`, que ya está en `server/internal/spin/clock_test.go`. En la rama falla en los tres casos de después del cierre:
 
-	casos := []struct {
-		nombre string
-		ahora  time.Time
-		quiere error
-	}{
-		{"un segundo antes", closesAt.Add(-time.Second), nil},
-		{"un milisegundo antes", closesAt.Add(-time.Millisecond), nil},
-		{"el instante exacto", closesAt, ErrRaffleClosed},
-		{"un milisegundo después", closesAt.Add(time.Millisecond), ErrRaffleClosed},
-		// El que de verdad importa: el mismo instante escrito en otra zona.
-		// Si este pasa, ninguna comparación mira componentes de fecha.
-		{"el mismo instante en UTC",
-			mustParse(t, "2026-08-31T03:00:00Z"), ErrRaffleClosed},
-	}
-
-	for _, c := range casos {
-		t.Run(c.nombre, func(t *testing.T) {
-			svc := newServiceWithClock(t, fixedClock{c.ahora})
-			_, err := svc.SellNumber(ctxConUsuario(1), 1, "0347", nil)
-			require.ErrorIs(t, err, c.quiere)
-		})
-	}
-}
+```text
+clock_test.go:49: con ahora=2030-01-01T00:00:00Z: esperaba no hay rueda activa, obtuve <nil>
+clock_test.go:49: con ahora=2030-01-01T00:00:00.001Z: esperaba no hay rueda activa, obtuve <nil>
+clock_test.go:49: con ahora=2029-12-31T19:00:00-05:00: esperaba no hay rueda activa, obtuve <nil>
+--- FAIL: TestSpinRespectsClosing (0.61s)
 ```
 
-Motor: **PostgreSQL obligatorio**. Zonas horarias.
-
-📖 Y fíjate en lo que hace posible esta prueba: el **reloj inyectado**. Con
-`time.Now()` dentro del servicio, los casos del borde —un milisegundo antes, un
-milisegundo después— no se pueden escribir. Que `be06` haya hecho el reloj una
-dependencia no es purismo: es lo que convierte "difícil de probar" en cinco
-líneas.
+En la fase, pasa. Motor: PostgreSQL.
 
 **Prevención**
 
-La prueba de bordes, el worker, y una consulta de auditoría que debería correr
-después de cada cierre:
-
-```sql
--- Ventas posteriores al cierre. Tiene que devolver cero filas.
-SELECT s.raffle_id, s.number, s.sold_at, r.closes_at
-FROM sales s JOIN raffles r ON r.id = s.raffle_id
-WHERE s.sold_at > r.closes_at;
-```
-
-Si esta consulta hubiera existido, el problema se habría detectado la primera
-noche y no en la liquidación.
+La regla de `be06`, escrita como regla: **el barrido mantiene el estado al día; la decisión la toma el reloj, dentro de la transacción**. Y en la conciliación, la consulta de la Pista 2 como alarma: cualquier giro con `created_at >= closes_at` es un incidente.
 
 **Por qué llegó a producción**
 
-Porque la guarda **existía y funcionaba** — en el lugar equivocado. Quien escribió
-`isPastClosing` hizo un buen trabajo: función pura, comparación de instantes,
-probada, con el borde decidido. Todo correcto. Y toda esa calidad estaba del lado
-que el usuario controla.
-
-El sistema pasó meses sin fallar porque el camino feliz —vendedor con reloj bien,
-página recargada— respeta la guarda. El fallo necesita una condición que nadie
-prueba: seguir usando una pestaña que se abrió antes del cierre.
-
-Y el descubrimiento tardó porque **no hay síntoma en el momento**. La venta se
-acepta, el vendedor cobra, el comprador se va contento. El descuadre aparece en la
-liquidación, semanas después, cuando ya hay dinero repartido y un premio en
-disputa.
+Porque el barrido funcionaba. Las ruedas pasaban a `ended` solas, la consola las mostraba cerradas, y nadie miró qué pasaba en los segundos entre el cierre y la vuelta del barrido. Con poca carga, cinco giros en una noche no se ven; con la carga de un cierre de evento, son cien.
 
 **Si tu causa fue distinta a esta**
 
-- *"Los relojes de los vendedores están mal"* — es una de las tres vías y es
-  **insuficiente como causa**: aunque todos los relojes estuvieran perfectos,
-  `curl` seguiría entrando. La causa es la ausencia de guarda en el servidor.
-- *"El worker de cierre no corrió"* — no existía. Y aunque existiera, el estado no
-  es la regla: el reloj lo es.
-- *"La `closesAt` está mal guardada"* — se descarta comparando con lo que muestra
-  la UI: es la misma.
-- Si tu fix fue **comprobar la hora en el handler** en vez de en la transacción,
-  cerraste el 99 % del agujero y dejaste una ventana intermitente. Es defendible
-  como hotfix de un viernes; anótalo como tal.
+- *"El reloj del servidor está atrasado"*: se descarta con `X-Server-Time` contra `date -u`, y porque el número cambia entre corridas con el mismo reloj.
+- *"El juego manda giros viejos que llegan tarde"*: el `created_at` lo pone la base al anotar; un giro que llega tarde se anota tarde y se tendría que rechazar igual.
+- Si tu fix fue *"correr el barrido cada segundo"*, achicaste la ventana sin cerrarla, y pagaste una consulta por segundo para eso.
 
 </details>
 
 ---
 
-## Incidente be-13 — La liquidación dice 340.000 y las ventas suman 355.000
+## Incidente be-13 — La conciliación y el reporte de la tienda no dan lo mismo
 
-> **Fase:** be07 · **Categoría:** 🔥 dinero · **Dificultad:** 🟠
+> **Fase:** be07 · **Categoría:** 🔥 dinero · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
 > **Tiempo sugerido:** 45-60 min
-> · Hermano del incidente **18** del track base, con otra causa raíz
 
 ### 🎫 El ticket
 
-> "La liquidación de la rifa de agosto quedó en 340.000 de recaudo. Cuando
-> contamos los números vendidos y multiplicamos por el precio nos da 355.000.
-> Son 15.000 de diferencia, o sea tres números. No es un centavo de redondeo,
-> son tres números enteros que no aparecen en la cuenta."
+> "La conciliación de la Rueda de fin de mes dice que a la API le falta acreditar
+> una compra, la tok-ago-31. Pero esa compra está acreditada: el jugador tiene sus
+> giros y Yariela lo confirmó ayer. ¿Cuál de los dos números le mando a los
+> socios?"
 
-**Reportado por:** tesorería
+**Reportado por:** Marisol, contabilidad
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Encontrar los tres números y explicar por qué no entraron. Y una pregunta que
-decide todo lo demás: **¿el número guardado está mal, o está bien y lo que está
-mal es otra cosa?**
+Explicar cómo una conciliación guardada puede decir algo que ya no era cierto cuando se guardó, y corregirlo de forma que no dependa de cuándo cada quien abrió la pantalla.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-13
-cd server && go run ./cmd/api
-npm start
-# Abre la aplicación en DOS pestañas sobre la misma rifa.
+cd server && go build -o /tmp/api ./cmd/api && /tmp/api &
+npm run mock:googleplay & npm start
 ```
+
+Con la sesión de Marisol (`mdegracia`), abre *Conciliación* y elige la Rueda de fin de mes: `tok-ago-31` aparece como cobrada por la tienda y no acreditada. **Sin cerrar la pantalla**, en otra terminal, la tienda confirma el pago y el juego avisa:
+
+```bash
+curl -s -X POST -H 'Content-Type: application/json' -d '{"purchaseToken":"tok-ago-31","method":"card"}' localhost:3002/purchases
+curl -s -X POST -H 'Content-Type: application/json' -d '{"purchaseToken":"tok-ago-31","productId":"spins-10"}' localhost:3001/players/42/purchases
+```
+
+Después aprieta *Conciliar rueda*.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-"No es un centavo de redondeo, son tres números enteros" es un dato excelente:
-descarta toda la familia de bugs de aritmética. `A10` y `be07` usan enteros de
-centavos y las partes suman el todo.
-
-Entonces la pregunta no es *cómo se calculó*, sino **con qué datos**. ¿Quién hizo
-la cuenta?
+La compra está acreditada en la base: `SELECT * FROM purchases WHERE purchase_token = 'tok-ago-31'`. La conciliación guardada dice que no. ¿Quién calculó la conciliación, y con qué datos?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Mira el **cuerpo** del `POST /settlements` en Network. ¿De dónde salieron
-`totalCollected` y `soldCount`?
-
-Y en el backend:
-
-```sql
-SELECT count(*) FROM sales WHERE raffle_id = 1;
-SELECT sold_count, total_collected FROM settlements WHERE raffle_id = 1;
-```
+En Network, el cuerpo del `POST /wheels/4/reconciliation`. Compáralo con `GET /purchases` en este momento. Y busca en el log del backend alguna línea sobre esa conciliación.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si el navegador calcula con los números que tiene cargados en el store, y otra
-persona vendió tres números hace diez minutos sin que esa pestaña se enterara,
-¿qué total manda?
+¿Cuándo pidió la consola las compras? ¿Y cuándo se acreditó `tok-ago-31`?
 
 </details>
 
@@ -2923,178 +2340,118 @@ persona vendió tres números hace diez minutos sin que esa pestaña se enterara
 <details>
 <summary>✅ <b>Solución de referencia</b></summary>
 
-**Causa raíz**
+**Lo que se ve**
 
-**El cliente calculó el recaudo y el servidor lo guardó sin preguntar.**
+Lo guardado en la rama, con `GET /wheels/4/reconciliation`:
 
-El thunk `createSettlement` de la Fase 8 hace las cuentas con los números que
-tiene en el store, y las manda en el cuerpo:
-
-```javascript
-const totalCollected = calculateTotalCollected({
-  soldCount: soldNumbers.length,        // ← los que ESTA pestaña conoce
-  numberPrice: raffle.numberPrice,
-});
+```json
+{"chargedCents":15960,"feeCents":2400,"netCents":13560,"missingInApi":["tok-ago-31"],"duplicatedInApi":["tok-ago-17"]}
 ```
 
-Si otra persona vendió tres números después de que esa pestaña cargara el
-tablero, el store está desactualizado y el total sale corto. El backend recibe
-`340000`, lo guarda tal cual, y devuelve `201`.
+Y `tok-ago-31` acreditada en `purchases` desde antes de conciliar. Con la fase, la misma secuencia guarda `missingInApi: []`, y el log dice:
 
-**No es mala fe ni un bug del frontend: el cliente no tiene los datos.** Puede
-tener una foto de hace diez minutos; el servidor tiene la verdad.
+```text
+[req-id b1af1ff9de301f25] la conciliación de la rueda 4 que mandó la consola difiere de la del servidor: missingInApi: consola [tok-ago-31], servidor []
+```
 
-Reprodúcelo en dos minutos: dos pestañas sobre la misma rifa, vende tres números
-en la primera, liquida en la segunda **sin recargar**.
+**Causa raíz**
 
-Es el hermano del **incidente 18 del track base** —*"la liquidación da un centavo
-de diferencia"*—, donde la causa es el redondeo. Acá la aritmética es impecable y
-lo que falla es la **fuente de los datos**. Mismo síntoma, distinta capa, y por
-eso el detalle del ticket —"no es un centavo, son tres números"— es la pista que
-separa los dos casos.
+El servidor guarda la conciliación que calculó la consola:
+
+```diff
+-	r, err := s.Recalculate(ctx, wheelID)
+-	if err != nil {
+-		return wheel.Wheel{}, Reconciliation{}, nil, err
+-	}
+-	diffs := differences(client, r)
+-	w, saved, err := s.record(ctx, wheelID, r)
+-	return w, saved, diffs, err
++	// La consola ya hizo la cuenta, con las mismas funciones de la Fase 8 que el
++	// servidor tiene portadas: recalcular sería hacer dos veces lo mismo.
++	w, saved, err := s.record(ctx, wheelID, client)
++	return w, saved, nil, err
+```
+
+El argumento del commit es cierto a medias. Las funciones son las mismas —sobre la bitácora sembrada, la consola y el servidor dan lo mismo campo por campo (`be07` §5.6)—, pero **los datos no**. La consola pidió `GET /purchases` cuando Marisol abrió la pantalla, y no recargó antes de conciliar. La compra se acreditó en el medio. La consola no mintió: no tenía los datos.
 
 **Parche mínimo**
 
-Recalcular en el servidor:
-
-```go
-sold, err := tx.ListSales(ctx, in.RaffleID)
-if err != nil {
-	return err
-}
-totalCollected := TotalCollected(int64(len(sold)), raffle.NumberPrice)
-```
-
-**La corrección correcta**
-
-La de `be07`: recalcular **todo** —`totalCollected`, `prizeAmount`, `margin`— desde
-`sales`, y **registrar la discrepancia** en vez de rechazar la petición:
-
-```go
-if in.TotalCollected != totalCollected || in.PrizeAmount != prizeAmount || in.Margin != margin {
-	log.Printf("[req-id %s] discrepancia en la rifa %d — cliente: total=%d premio=%d margen=%d | servidor: total=%d premio=%d margen=%d",
-		httpapi.RequestIDFrom(ctx), in.RaffleID,
-		in.TotalCollected, in.PrizeAmount, in.Margin,
-		totalCollected, prizeAmount, margin)
-}
-```
-
-> 🧭 **Por qué se registra y no se rechaza.** Un `400` "sus números no cuadran"
-> rompería el contrato y además culparía al cliente de algo que no puede hacer
-> bien. Se recalcula, se guarda lo correcto, y queda el rastro — que es
-> información de diagnóstico valiosísima el día que alguien pregunte por qué el
-> total que vio no es el que quedó guardado.
-
-📖 Y es la tercera vez que el track dice lo mismo, así que ya se puede nombrar:
-**el cliente propone, el servidor dispone, y la diferencia se mide.** Identidad en
-`be04`, reloj en `be06`, dinero en `be07`.
+Volver a recalcular en el servidor, como en `be07` §5.6. Y la conciliación que ya se guardó mal no se edita: se anota. La rueda está en `reconciled`, y lo correcto es una conciliación nueva como hecho, con su fecha, y la vieja como historia (ejercicio 27 de `be07`).
 
 **Prueba de regresión**
 
 ```go
-func TestLosMontosSeRecalculanYNoSeLeenDelCuerpo(t *testing.T) {
-	seedRaffleConVentas(t, 1, 71, /* numberPrice */ 500000)   // 35.500.000
+// server/internal/reconciliation/stale_client_test.go (extracto)
 
-	// El cliente manda cifras inventadas.
-	body := `{"raffleId":1,"winningNumber":"0347","isWinnerSold":true,
-	          "soldCount":68,"totalCollected":34000000,"prizeAmount":0,
-	          "margin":34000000,"settledAt":"2026-08-30T22:05:11Z"}`
-	srv.POST(t, "/settlements", token, body).ExpectStatus(201)
-
-	var s settlement.Settlement
-	require.NoError(t, db.Get(&s, `SELECT * FROM settlements WHERE raffle_id = 1`))
-
-	// Lo guardado sale de la base, no del cuerpo.
-	require.Equal(t, 71, s.SoldCount)
-	require.Equal(t, int64(35500000), s.TotalCollected)
-}
+	// Lo que la consola cargó antes de que tok-ago-31 se acreditara.
+	stale := reconciliation.Reconciliation{Purchases: reconciliation.Totals{ChargedCents: 198, FeeCents: 30, NetCents: 168,
+		MissingInAPI: []string{"tok-ago-31"}, DuplicatedInAPI: []string{}}}
+	svc := reconciliation.NewService(db, wheel.NewStore(db), report)
+	if _, _, _, err := svc.Reconcile(context.Background(), 4, stale); err != nil {
+		t.Fatal(err)
+	}
+	saved, err := svc.Find(context.Background(), 4)
+	…
+	if len(saved.Purchases.MissingInAPI) != 0 {
+		t.Fatalf("la conciliación guardó como faltante una compra acreditada: %v", saved.Purchases.MissingInAPI)
+	}
 ```
 
-Motor: PostgreSQL.
+La prueba arma una rueda terminada, dos compras acreditadas y un reporte de la tienda falso con las dos, y concilia con el cuerpo viejo. En la rama falla con *"la conciliación guardó como faltante una compra acreditada: [tok-ago-31]"*; en la fase, pasa. Motor: PostgreSQL.
 
 **Prevención**
 
-La regla operativa, que vale más que la prueba: **ningún monto que se guarde puede
-haber cruzado la red**. Si un campo de dinero se lee de un cuerpo de petición, es
-un bug aunque todavía no haya fallado.
-
-Y la consulta de auditoría del ejercicio 22 de `be07`, que debería devolver cero
-filas siempre:
-
-```sql
-SELECT s.raffle_id, s.total_collected,
-       (SELECT count(*) * r.number_price FROM sales v WHERE v.raffle_id = s.raffle_id) AS recalculado
-FROM settlements s JOIN raffles r ON r.id = s.raffle_id
-WHERE s.total_collected <> (SELECT count(*) * r.number_price FROM sales v WHERE v.raffle_id = s.raffle_id);
-```
+**El dinero no se valida: se recalcula** (`be07` §4.2). Y la diferencia, al log, con el `X-Request-Id`: es la línea que le contesta a Marisol en dos minutos.
 
 **Por qué llegó a producción**
 
-Porque el frontend hace la cuenta **bien**. `A10` y la Fase 8 son ejemplares:
-enteros de centavos, redondeo explícito, partes que suman el todo, con sus
-pruebas. Toda esa disciplina es correcta y no sirve de nada si la entrada está
-desactualizada.
-
-Es un error de **arquitectura**, no de implementación, y por eso ninguna revisión
-de código lo detecta: cada archivo, leído solo, está bien. Solo se ve preguntando
-*"¿quién es el dueño de este dato?"*, y esa pregunta no se hace leyendo un diff.
+Porque casi siempre da igual. La conciliación se hace con la rueda cerrada, y la bitácora de una rueda cerrada ya no cambia. Lo que sí cambia son las compras: un pago en efectivo tarda hasta 48 horas en confirmarse (historia §8), y alguien concilia en el medio.
 
 **Si tu causa fue distinta a esta**
 
-- *"Es el redondeo"* — la hipótesis del incidente 18 del track base, y el propio
-  ticket la descarta: 15.000 pesos no son un redondeo. Que tesorería lo
-  especificara es un reporte de calidad excepcional.
-- *"Se borraron ventas"* — se descarta contando `sales`: están todas.
-- *"Se vendieron después del cierre"* — ese es `be-12`, y el síntoma sería el
-  contrario: la liquidación diría **más**, no menos.
-- Si tu fix fue **recargar el tablero antes de liquidar**, reduces la ventana y no
-  la cierras: entre la recarga y el `POST` cabe otra venta. Y además exige que el
-  usuario se acuerde.
+- *"La tienda reportó mal"*: el reporte de la tienda tiene `tok-ago-31`, y la consola también la ve cobrada. El que se quedó atrás es el lado de la API, en la foto de la consola.
+- *"La compra se acreditó dos veces"*: `SELECT count(*) FROM purchases WHERE purchase_token = 'tok-ago-31' AND duplicate_of IS NULL` da 1. Eso es el `be-14`.
+- Si tu fix fue *"que la consola recargue antes de conciliar"*, achicaste la ventana sin cerrarla, y tocaste el frontend.
 
 </details>
 
 ---
 
-## Incidente be-14 — Repartimos el premio dos veces
+## Incidente be-14 — Acreditamos la compra dos veces
 
-> **Fase:** be07 · **Categoría:** 🔥 transacciones · **Dificultad:** 🔴
+> **Fase:** be07 · **Categoría:** 🔥 transacciones · **Dificultad:** 🟡
 > **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
-> **Tiempo sugerido:** 60-90 min
+> **Tiempo sugerido:** 45-60 min
 
 ### 🎫 El ticket
 
-> "En la rifa del 15 el premio salió dos veces en el reporte de pagos. La
-> persona que liquidó dice que le dio error la primera vez y volvió a darle, que
-> siempre hace eso. Y hay otra rifa donde pasó al revés: aparece el pago
-> registrado pero la rifa sigue como pendiente de liquidar, y cuando intentamos
-> liquidarla otra vez da un error raro que nadie entiende."
+> "Una jugadora compró dos paquetes de 10 y tiene 60 giros pagos. No se queja,
+> claro. Pero en la consola hay dos compras, no seis, y en el log del API hay
+> errores de 'duplicate key' de esa misma tarde."
 
-**Reportado por:** tesorería
+**Reportado por:** Yariela, soporte
 **Ambiente:** PROD
 
 ### 🎯 Qué se te pide
 
-Son **dos síntomas y hay que decidir si es un bug o dos**. Reproduce los dos,
-explica el error "raro" del segundo caso, y arregla.
+Explicar cómo una restricción única que funciona —hay una compra por token— convive con el triple de giros, cuantificar a cuántos jugadores les pasó, y arreglarlo.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-14
-cd server && CHAOS_LEVEL=high go run ./cmd/api    # el caos hace habitual el reintento
-npm start
+cd server && go build -o /tmp/api ./cmd/api && /tmp/api &
+npm run mock:googleplay
 ```
+
+Y la compra de la pieza forense de `be07`, pasos 1 a 3: una con tarjeta y otra en efectivo, cada una avisada dos veces por el juego y con la notificación duplicada.
 
 ---
 
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-*"Le dio error y volvió a darle"* es el dato que abre el primer caso. Con el caos
-encendido, un `timeout` significa que **la petición pudo haber llegado igual**.
-
-El segundo caso es distinto: pago registrado, rifa sin liquidar. ¿Qué tienen que
-ser esas dos operaciones para que ese estado sea imposible?
+Google Play avisa más de una vez, y el juego reintenta: eso está bien, para eso existe el `purchaseToken`. Si cada aviso suma giros, el problema es qué hace el servidor con un aviso repetido.
 
 </details>
 
@@ -3102,21 +2459,18 @@ ser esas dos operaciones para que ese estado sea imposible?
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```sql
-SELECT id, raffle_id FROM settlements WHERE raffle_id = 15;
-SELECT count(*) FROM prize_payouts WHERE settlement_id IN (…);
-SELECT status FROM raffles WHERE id = 15;
+SELECT purchase_token, count(*) FROM purchases WHERE player_id = 43 GROUP BY 1;
+SELECT paid_spins FROM players WHERE id = 43;
 ```
 
-Y en el código, cuenta cuántas operaciones separadas hace `Create` y con cuántas
-conexiones.
+Y en el log, las líneas `ERROR`: ¿qué sentencia falló, y qué había pasado antes de ella en la misma petición?
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si el proceso muere entre insertar los pagos y marcar la rifa como liquidada,
-¿qué queda en la base? ¿Y qué pasa cuando alguien reintenta sobre esa rifa?
+El índice único rechazó la segunda compra. ¿Rechazó también los giros?
 
 </details>
 
@@ -3145,160 +2499,95 @@ Si el proceso muere entre insertar los pagos y marcar la rifa como liquidada,
 <details>
 <summary>✅ <b>Solución de referencia</b></summary>
 
+**Lo que se ve**
+
+Seis avisos por compra. La rama responde `200` al primero y `500` a cada repetición que llega cuando la compra ya está:
+
+```text
+tok-card-…|43|1
+tok-efecty-…|43|1
+giros pagos de María R.: 60
+[req-id 1f19dbaad6ca53d7] ERROR en POST /purchases/notifications: anotando la compra tok-card-…: pq: duplicate key value violates unique constraint "purchases_unique_token"
+```
+
+Una compra por token, como manda el índice, y **60** giros donde la fase da **20**.
+
 **Causa raíz**
 
-**Son dos bugs, y comparten origen: la liquidación no es una operación única.**
+La acreditación son tres pasos cortos, cada uno con su conexión, y los giros van **antes** que la compra:
 
-`Create` ejecuta seis pasos, cada uno con su propia conexión y sin transacción:
-verificar, recalcular, insertar la liquidación, repartir el premio, comprobar el
-cuadre, y marcar la rifa como `settled`.
+```diff
+-	err := s.db.WithTx(ctx, func(tx *sqlx.Tx) error {
+-		…
+-		res, err := tx.ExecContext(ctx, tx.Rebind(`
+-			INSERT INTO purchases (…) VALUES (?, ?, ?, ?)
+-			ON CONFLICT (purchase_token) WHERE duplicate_of IS NULL DO NOTHING`), …)
+-		…
+-		if n, _ := res.RowsAffected(); n == 0 {
+-			…
+-			return nil // ya estaba acreditada: no se suma nada
+-		}
+-		res, err = tx.ExecContext(ctx, tx.Rebind(`
+-			UPDATE players SET paid_spins = paid_spins + ? WHERE id = ?`), c.Spins, r.PlayerID)
+-		…
+-	})
++	// Tres pasos cortos, sin transacción larga: cada uno con su conexión, y el
++	// UNIQUE del token cuida que no haya dos compras. Funcionó durante meses.
++	… SELECT spins FROM packages …
++	… UPDATE players SET paid_spins = paid_spins + ? …
++	… INSERT INTO purchases (…) VALUES (?, ?, ?, ?)
+```
 
-**Caso 1 — el premio repartido dos veces.** Con el caos en `high`, la petición
-llega, la liquidación se crea, y la respuesta se pierde. El usuario reintenta, y
-como no hay comportamiento idempotente, se ejecuta otra vez. Sin el `UNIQUE
-(raffle_id)` de `be02` habría dos liquidaciones; con él, salta el `23505` y el
-usuario recibe un error incomprensible sobre una rifa que él ve sin liquidar. En
-el caso reportado, los pagos ya se habían insertado en el primer intento.
+El índice único hace su trabajo: la segunda compra no entra. Pero los giros de ese aviso **ya se sumaron**, en otra sentencia y en otra transacción. El `23505` llega tarde, y además vuelve como `500`: Google Play reintenta lo que no recibió con éxito, y cada reintento suma diez giros más.
 
-**Caso 2 — pago sin liquidación.** El proceso murió entre el paso 4 y el paso 6.
-Quedó la liquidación, quedaron los pagos, y la rifa siguió en `resolved`: **el
-dinero repartido y la rifa sin liquidar.** El "error raro" del reintento es
-exactamente el `23505` del `UNIQUE`, que hace bien su trabajo y comunica fatal.
+**Cuántos son**
 
-📖 **Y ese es el valor entero de una transacción, visto desde el ticket.** No es
-una abstracción académica: es la diferencia entre un martes normal y una tarde
-reconstruyendo a mano quién cobró qué.
+```sql
+SELECT p.id, p.name, p.paid_spins, sum(k.spins) AS comprados
+FROM players p
+JOIN purchases u ON u.player_id = p.id AND u.duplicate_of IS NULL
+JOIN packages k ON k.product_id = u.product_id
+GROUP BY p.id HAVING p.paid_spins > sum(k.spins);
+```
+
+```text
+ id |   name   | paid_spins | comprados
+ 43 | María R. |         60 |        20
+```
+
+Ojo con lo que esa consulta **no** ve: un jugador que ya gastó los giros de más. Para eso hace falta la bitácora, y el `purchase_token` de los giros pagos, que es deuda de `be07`.
 
 **Parche mínimo**
 
-Una transacción alrededor de los seis pasos:
+La transacción de `be07` §5.3: la compra se reclama primero con `ON CONFLICT … DO NOTHING`, y los giros se suman solo si la compra entró, en la misma transacción. Un aviso repetido responde lo mismo que el primero, con `200`.
 
-```go
-err := s.store.WithTx(ctx, func(tx Tx) error {
-	// … los seis pasos, todos con tx
-})
-```
+**Los datos**
 
-Con eso, el caso 2 desaparece: el `recover` de `be01` atrapa el pánico, el
-`defer tx.Rollback()` revierte, y la base queda **idéntica** a como estaba.
-Compruébalo con las mismas consultas: cero filas en las dos.
-
-**La corrección correcta**
-
-La transacción **más la idempotencia**, que es lo que cierra el caso 1:
-
-```go
-// Ya bloqueada la rifa, si existe liquidación se devuelve ESA. No es un
-// error: es un reintento, y con el caos de la Fase 3 encendido es el caso
-// normal, no el excepcional.
-existing, err := tx.FindSettlementByRaffle(ctx, in.RaffleID)
-if err == nil {
-	log.Printf("[req-id %s] liquidación %d ya existía para la rifa %d: se devuelve la misma",
-		httpapi.RequestIDFrom(ctx), existing.ID, in.RaffleID)
-	result = existing
-	return nil
-}
-if !errors.Is(err, ErrNotFound) {
-	return err
-}
-```
-
-📖 **Una operación idempotente responde lo mismo la primera vez y la quinta.** El
-cliente no puede distinguir su reintento de un primer intento, y esa
-indistinguibilidad **es** la propiedad. El reintento deja de ser un problema y
-pasa a ser rutina.
-
-Y el paso que hace que esto no pueda romperse por otro lado, dentro de la misma
-transacción:
-
-```go
-// La aserción que convierte esto en dinero y no en un CRUD. Comprobar el
-// cuadre DENTRO de la transacción significa que un reparto que no cuadre no
-// llega a existir: el Rollback lo borra.
-if got := SumShares(shares); len(winners) > 0 && got != prizeAmount {
-	return fmt.Errorf("el reparto no cuadra: las partes suman %d y el premio es %d", got, prizeAmount)
-}
-```
+Los giros de más no se corrigen restando a mano en `players`: el saldo es una proyección (`be05`), y una resta sin rastro es otra cifra que nadie puede explicar. Se decide con Itzel y con Marisol qué hacer, y lo que se haga queda anotado como hecho.
 
 **Prueba de regresión**
 
-```go
-func TestLiquidacionEsIdempotente(t *testing.T) {
-	primera := srv.POST(t, "/settlements", token, cuerpoValido).ExpectStatus(201)
-	segunda := srv.POST(t, "/settlements", token, cuerpoValido).ExpectStatus(201)
+`TestDuplicateNotificationCreditsOnce`, que ya está en `server/internal/purchase/service_test.go`. En la rama falla con:
 
-	// Mismo id: es la misma liquidación, no una nueva.
-	require.Equal(t, idOf(primera), idOf(segunda))
-
-	var liquidaciones, pagos int
-	require.NoError(t, db.Get(&liquidaciones, `SELECT count(*) FROM settlements WHERE raffle_id=1`))
-	require.NoError(t, db.Get(&pagos, `SELECT count(*) FROM prize_payouts`))
-	require.Equal(t, 1, liquidaciones)
-	require.Equal(t, 1, pagos)
-}
-
-func TestLiquidacionInterrumpidaNoDejaRastro(t *testing.T) {
-	// Falla en el paso 6, después de repartir.
-	svc := newServiceConFalloEn(t, "UpdateRaffleStatus")
-
-	_, err := svc.Create(ctxConUsuario(1), liquidacionValida)
-	require.Error(t, err)
-
-	// Todo o nada: ni liquidación, ni pagos, ni rifa a medio marcar.
-	var liquidaciones, pagos int
-	db.Get(&liquidaciones, `SELECT count(*) FROM settlements WHERE raffle_id=1`)
-	db.Get(&pagos, `SELECT count(*) FROM prize_payouts`)
-	require.Zero(t, liquidaciones)
-	require.Zero(t, pagos)
-	require.Equal(t, "resolved", statusOf(t, 1))
-}
+```text
+respuesta 0 distinta: {…}, anotando la compra tok-be07-1: pq: duplicate key value violates unique constraint "purchases_unique_token"
 ```
 
-Motor: **PostgreSQL obligatorio**. Transacciones y bloqueos.
+En la fase, pasa: *"51 avisos · 1 compra · 10 giros"*. Motor: PostgreSQL.
 
 **Prevención**
 
-Cuatro capas, cada una cubriendo lo que las otras no:
-
-1. **La transacción** — que no exista el estado intermedio.
-2. **El `UNIQUE (raffle_id)`** — que no exista la segunda liquidación, venga por
-   donde venga.
-3. **El comportamiento idempotente** — que el reintento sea aburrido.
-4. **La consulta de auditoría**: liquidaciones cuyos pagos no sumen su
-   `prizeAmount`, y rifas con liquidación pero sin estado `settled`. Las dos
-   deberían devolver cero filas siempre.
+Lo que se tiene que cumplir junto va en una transacción, y lo que se reclama se reclama primero. Y una regla para leer el código de cualquier pago: **si hay un `UNIQUE`, pregúntate qué pasó antes de que salte.**
 
 **Por qué llegó a producción**
 
-Por dos motivos que se refuerzan.
-
-El primero: **el reintento del usuario es un comportamiento esperado y nadie lo
-diseñó**. "Me dio error y volví a darle" es lo que hace todo el mundo, con
-cualquier sistema. Con un mock que falla a propósito —el caos de la Fase 3— eso
-pasó de ser excepcional a rutinario, y aun así la idempotencia no se consideró.
-
-El segundo: **el caso 2 no se puede reproducir a propósito sin quererlo**. Nadie
-mata el proceso a mitad de una liquidación en desarrollo. Es un fallo que solo
-aparece cuando la infraestructura hace lo que la infraestructura hace: reiniciar,
-desplegar, quedarse sin memoria.
-
-Y el error que veía el operador —el `23505`— era técnicamente correcto y
-completamente inútil: le hablaba de una restricción de unicidad sobre una rifa
-que él veía sin liquidar.
+Porque con un aviso por compra funciona perfecto. Las repeticiones llegan cuando la red falla o cuando Google Play no recibe la respuesta a tiempo, y la primera señal es un jugador que no se queja.
 
 **Si tu causa fue distinta a esta**
 
-- *"El usuario liquidó dos veces por error"* — es la mitad del caso 1 y no es la
-  causa: la causa es que el sistema no está preparado para que eso pase, cuando es
-  exactamente lo que va a pasar.
-- *"Falta el `UNIQUE`"* — está desde `be02`. Y protege contra la segunda
-  liquidación, no contra el estado intermedio del caso 2.
-- *"Es un problema de concurrencia"* — plausible y distinto: dos liquidaciones
-  simultáneas de la misma rifa. Se cubre con el `FOR UPDATE` sobre la rifa, que va
-  en el mismo fix. Buena hipótesis.
-- Si tu fix fue **devolver un mensaje más claro ante el `23505`**, mejoraste la
-  comunicación y no arreglaste nada: la rifa sigue con dinero repartido y sin
-  liquidar.
+- *"El índice único no funciona"*: funciona, porque hay una compra por token. Lo que no está protegido es lo que pasó antes del `INSERT`.
+- *"Una carrera: dos avisos a la vez"*: la reproducción es secuencial, un aviso después del otro, y da 60 igual. Con la transacción de `be07`, cincuenta avisos a la vez dan diez giros.
+- Si tu fix fue *"ignorar el 23505"*, el aviso repetido responde bien y los giros siguen sumándose.
 
 </details>
 
@@ -3313,28 +2602,25 @@ que él veía sin liquidar.
 
 ### 🎫 El ticket
 
-> "Ayer desplegamos y dejó de funcionar crear rifas: cualquier intento da error
-> del servidor. Lo raro es que la suite estaba verde, el pipeline pasó, y en las
-> máquinas de los tres que trabajamos en eso funciona perfecto. Volvimos a la
-> versión anterior y ya está bien, pero no sabemos qué pasó y no nos atrevemos a
-> volver a desplegar."
+> "Ayer desplegamos y dejó de funcionar crear ruedas: Itzel arma la de la Semana
+> del Canal y le sale error del servidor. Lo raro es que la suite estaba verde,
+> el pipeline pasó, y en las máquinas de los tres que trabajamos en eso funciona
+> perfecto. Volvimos a la versión anterior, pero no sabemos qué pasó y no nos
+> atrevemos a volver a desplegar."
 
 **Reportado por:** el propio equipo
 **Ambiente:** PROD (y no se reproduce en desarrollo)
 
 ### 🎯 Qué se te pide
 
-Explicar cómo una suite verde puede autorizar un despliegue roto. El fix es
-menor; **lo que importa es el diagnóstico y lo que se cambia después para que no
-vuelva a pasar**.
+Explicar cómo una suite verde puede autorizar un despliegue roto. El fix es menor; **lo que importa es el diagnóstico y lo que se cambia después para que no vuelva a pasar**.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-15
 cd server
-make test-unit          # verde
-go test ./...           # verde, contra SQLite
+go test ./...           # verde, sin TEST_DATABASE_URL
 ```
 
 Ahora corre lo mismo contra Postgres. Ahí empieza el incidente.
@@ -3344,12 +2630,7 @@ Ahora corre lo mismo contra Postgres. Ahí empieza el incidente.
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-*"En nuestras máquinas funciona"* + *"la suite está verde"* + *"en producción no"*
-tienen un factor común que no es el código, porque el código es el mismo en los
-tres sitios.
-
-¿Qué es distinto entre tu máquina y producción? Haz la lista completa antes de
-seguir.
+*"En nuestras máquinas funciona"* + *"la suite está verde"* + *"en producción no"* tienen un factor común que no es el código, porque el código es el mismo en los tres sitios. ¿Qué es distinto entre tu máquina y producción? Haz la lista completa antes de seguir.
 
 </details>
 
@@ -3357,20 +2638,19 @@ seguir.
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
 ```bash
-go test ./... -count=1                                   # ¿contra qué motor?
-TEST_DATABASE_URL="postgres://…/rifas_test" go test ./... -count=1
+go test -v ./... | grep -c SKIP                          # ¿qué no corrió?
+TEST_DATABASE_URL="postgres://…/esclusa_test?sslmode=disable" go test ./... -count=1
+git log --oneline fase-be08-pruebas-y-la-regla-del-motor..incidente/be-15
 ```
 
-Y mira el error de producción entero, sin recortar. La primera línea nombra al
-culpable.
+Y mira el error de producción entero, sin recortar: la última parte nombra al culpable.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-`res.LastInsertId()` funciona en un motor y no en el otro. ¿En cuál corren tus
-pruebas y en cuál corre producción?
+Hay **dos** commits desde la fase, y cada uno solo es inofensivo. `res.LastInsertId()` funciona en un motor y no en el otro. ¿En cuál corren tus pruebas desde el primer commit, y en cuál corre producción?
 
 </details>
 
@@ -3399,155 +2679,98 @@ pruebas y en cuál corre producción?
 <details>
 <summary>✅ <b>Solución de referencia</b></summary>
 
+**Lo que se ve**
+
+En la rama, sin `TEST_DATABASE_URL`, todo `ok`:
+
+```text
+ok  	github.com/interoceanic-games/esclusa-api/internal/http	0.004s
+ok  	github.com/interoceanic-games/esclusa-api/internal/player	0.003s
+ok  	github.com/interoceanic-games/esclusa-api/internal/purchase	0.016s
+ok  	github.com/interoceanic-games/esclusa-api/internal/reconciliation	0.003s
+ok  	github.com/interoceanic-games/esclusa-api/internal/spin	0.236s
+ok  	github.com/interoceanic-games/esclusa-api/internal/wheel	0.039s
+```
+
+Contra Postgres, el store de ruedas cae:
+
+```text
+--- FAIL: TestCreateAndFind (0.13s)
+    store_test.go:50: Create devolvió error: creando la rueda "Esclusa de Oro": LastInsertId is not supported by this driver
+```
+
+Y el binario, contra Postgres, responde `500` al alta de una rueda:
+
+```text
+[req-id 81576bdaa8f5086d] ERROR en POST /wheels: creando la rueda "Rueda de prueba": LastInsertId is not supported by this driver
+```
+
 **Causa raíz**
 
-**Las pruebas corren contra SQLite y producción contra PostgreSQL.**
+**Dos commits razonables, uno detrás del otro.** El primero hace que la suite *"corra en cualquier máquina"*: `OpenPostgres` salta en vez de fallar cuando no hay `TEST_DATABASE_URL`, y `MustPostgres` también. Desde ahí, en las máquinas sin Postgres —y en el pipeline, si no lo tiene—, lo que necesita Postgres se salta, y lo que vale en los dos motores corre contra SQLite. El segundo cambia `RETURNING` por `LastInsertId` en el alta de ruedas, que es la forma "obvia" de recuperar el id y la que sale en la mitad de los tutoriales:
 
-Alguien reemplazó `RETURNING` por `LastInsertId` — que es la forma "obvia" de
-recuperar el id recién insertado y la que sale en la mitad de los tutoriales:
-
-```go
-// ❌ Compila, y funciona en SQLite.
-res, err := s.db.ExecContext(ctx, query, …)
-id, err := res.LastInsertId()
+```diff
+-	err = tx.GetContext(ctx, &id, tx.Rebind(`
+-		INSERT INTO wheels (name, timezone, closes_at, status)
+-		VALUES (?, ?, ?, ?)
+-		RETURNING id`), w.Name, w.Timezone, w.ClosesAt, w.Status)
++	res, err := tx.ExecContext(ctx, tx.Rebind(`
++		INSERT INTO wheels (name, timezone, closes_at, status)
++		VALUES (?, ?, ?, ?)`), w.Name, w.Timezone, w.ClosesAt, w.Status)
++	…
++	id, err := res.LastInsertId()
 ```
 
-`mattn/go-sqlite3` lo implementa. **`lib/pq` no**, y no es un bug del driver: el
-protocolo de Postgres sencillamente no ofrece ese dato. Devuelve:
+`mattn/go-sqlite3` lo implementa. **`lib/pq` no**, y no es un bug del driver: el protocolo de Postgres no ofrece ese dato. El store de ruedas corre en los dos motores desde `be02`, así que su prueba pasó contra SQLite. La suite de contrato, que sí habría corrido contra Postgres, se saltó.
 
-```
-LastInsertId is not supported by this driver
-```
+> 🧠 **Y lo incómodo: la suite no falló en detectar el problema. La suite lo autorizó.** No tener suite te deja desconfiado; una suite verde te da **permiso para desplegar**, y ese permiso es exactamente lo que el equipo no tenía derecho a recibir.
 
-Así que **todo** `POST /raffles` responde `500` en cualquier ambiente con
-Postgres. Y la suite —que corría contra SQLite en memoria, porque es rápido y no
-necesita contenedor— pasó en verde.
-
-> 🧠 **Y acá está lo que hay que entender, que es más incómodo que el bug: la
-> suite no falló en detectar el problema. La suite lo autorizó.** No tener suite
-> te deja desconfiado y prudente; una suite verde te da **permiso para
-> desplegar**, y ese permiso es exactamente lo que el equipo no tenía derecho a
-> recibir.
-
-Es el hermano del **incidente 20 del track base** —*"el test pasa en mi máquina y
-falla en la de al lado"*—, con la causa raíz desplazada del **entorno** al
-**motor**.
+Es el hermano del **incidente 20 del track base** —*"el test pasa en mi máquina y falla en la de al lado"*—, con la causa desplazada del **entorno** al **motor**.
 
 **Parche mínimo**
 
-```go
-// RETURNING funciona en los dos motores, y por eso D18 fija SQLite >= 3.35:
-// es marzo de 2021, cuando llegó la sentencia. La cota no es un número
-// redondo elegido al azar.
-query := s.db.Rebind(`
-	INSERT INTO raffles (name, lottery_id, closes_at, number_price, base_prize, status)
-	VALUES (?, ?, ?, ?, ?, ?)
-	RETURNING id, name, lottery_id, closes_at, number_price, base_prize, status`)
-
-var created Raffle
-err := s.db.GetContext(ctx, &created, query, …)
-```
+Volver a `RETURNING`, que funciona en los dos motores (`D18` fija SQLite ≥ 3.35, la versión donde llegó). Y revertir el primer commit.
 
 **La corrección correcta**
 
-Arreglar el `LastInsertId` es media hora. Lo que hay que cambiar es **cómo se
-prueba**, y eso es el contenido de `be08`:
+Arreglar el `LastInsertId` es media hora. Lo que hay que cambiar es **cómo se prueba**, y eso es `be08`:
 
-> 🧭 **La regla del motor (`D18`).** SQLite vale para pruebas que no tocan
-> concurrencia, bloqueos, zonas horarias ni SQL específico del motor. En cuanto
-> una prueba toca cualquiera de las cuatro, **corre contra PostgreSQL o no vale**.
+> 🧭 **La regla del motor (`D18`).** SQLite vale para pruebas que no tocan concurrencia, bloqueos, zonas horarias ni SQL específico del motor. En cuanto una prueba toca cualquiera de las cuatro, **corre contra PostgreSQL o no vale**.
 
-Y el mecanismo que la hace cumplir, que es la parte que de verdad importa:
+Y el mecanismo que la hace cumplir, que es lo que el primer commit desarmó:
 
 ```go
-// FALLA, no salta. Un t.Skip produce una suite verde que no probó lo que
-// dice probar, y nadie lee los SKIP de una salida que termina en "ok".
-func mustPostgres(t *testing.T, db *storage.DB, motivo string) {
+func MustPostgres(t *testing.T, db *storage.DB, why string) {
 	t.Helper()
 	if db.Dialect != storage.Postgres {
-		t.Fatalf("esta prueba requiere PostgreSQL porque %s.\n"+
-			"Levanta el contenedor y exporta TEST_DATABASE_URL.\n"+
-			"Ver D18 y server/evidence/regla-del-motor.md", motivo)
-	}
-}
+		t.Fatalf("esta prueba requiere PostgreSQL porque %s.\n"+ …
 ```
 
-📖 **`t.Skip` es la forma en que una suite miente.** Y `(cached)` es la segunda:
-`go test` sin `-count=1` puede decir `ok` sin haber ejecutado nada.
+📖 **`t.Skip` es la forma en que una suite miente.** Y `(cached)` es la segunda.
 
 **Prueba de regresión**
 
-No es una prueba: es **el par contradictorio** de `be08`, que va al repositorio
-con su explicación.
-
-```go
-// PRUEBA A — pasa en SQLite, FALLA en Postgres.
-// Documenta la trampa. NO debe correr en CI: el código correcto usa RETURNING.
-func TestA_LastInsertId(t *testing.T) {
-	db := testsupport.OpenAny(t)
-	res, err := db.Exec(db.Rebind(`INSERT INTO participants (name) VALUES (?)`), "Ana")
-	require.NoError(t, err)
-	id, err := res.LastInsertId()
-	require.NoError(t, err, "lib/pq no implementa LastInsertId: usa RETURNING")
-	require.Greater(t, id, int64(0))
-}
-
-// PRUEBA B — FALLA en SQLite, pasa en Postgres.
-// Prueba legítima del sistema. Corre SOLO contra Postgres.
-func TestB_ComparacionDeInstantes(t *testing.T) {
-	db := testsupport.OpenAny(t)
-	insertRaffle(t, db, "Rifa fin de mes", "2026-08-30T22:00:00-05:00")
-
-	var nombres []string
-	require.NoError(t, db.Select(&nombres, db.Rebind(
-		`SELECT name FROM raffles WHERE closes_at > ?`), "2026-08-31T01:00:00Z"))
-	require.Len(t, nombres, 1,
-		"si esto falla, el motor está comparando cadenas y no instantes")
-}
-```
-
-Las dos son correctas y se contradicen. **No se arreglan: se clasifican**, y esa
-clasificación vive en `server/evidence/regla-del-motor.md`.
+Dos, y ninguna es nueva. **El par contradictorio de `be08`** (`make test-engine`), que muestra exactamente esta trampa con `TestA_LastInsertId`. Y una que faltaba: **el alta de una rueda en la suite de contrato** (ejercicio 13 de `be08`), que corre contra Postgres con la aplicación entera. La suite de contrato siembra la base directo con el `db.json`, así que nunca llamaba a `Create`: por eso no lo habría atrapado aunque hubiera corrido.
 
 **Prevención**
 
-1. **`mustPostgres` en toda prueba que toque las cuatro áreas.**
-2. **El pipeline corre contra Postgres**, con `services: postgres:13`. Que la
-   suite pudiera pasar sin un Postgres levantado era el agujero real.
-3. **Un paso de CI que verifique la regla** (`make test-engine-rule`).
-4. Y el mecanismo del ejercicio 29 de `be08`: algo que **impida** agregar una
-   prueba de concurrencia sin `mustPostgres` — una etiqueta de compilación, una
-   convención verificada por un script, lo que sea, pero verificable.
+1. **`OpenPostgres` y `MustPostgres` fallan.** Cualquier propuesta de *"que salte, así corre en cualquier lado"* es la propuesta de este incidente.
+2. **El pipeline corre contra Postgres**, con `services: postgres:13` (`be09`). Que la suite pudiera pasar sin un Postgres levantado era el agujero real.
+3. **La suite de contrato cubre las escrituras**, no solo las lecturas.
+4. El mecanismo del ejercicio 28 de `be08`: algo que **impida** agregar una prueba de base sin `testsupport`.
 
 **Por qué llegó a producción**
 
-Porque usar SQLite en memoria para las pruebas es una práctica **extendida y
-razonable**: arranca en milisegundos, no necesita contenedor, cada caso tiene su
-base limpia. Quien la eligió tenía buenos motivos y para la mitad de la suite
-seguía siendo la decisión correcta.
+Porque usar SQLite en memoria para las pruebas es una práctica **extendida y razonable**, y que la suite corra en cualquier máquina suena a una mejora. Quien hizo cada commit tenía buenos motivos. Lo que faltaba era que el límite —hasta dónde vale ese motor— fuera un mecanismo y no una costumbre.
 
-Lo que faltaba era el **límite escrito**: hasta dónde vale ese motor y qué pasa
-cuando una prueba lo cruza. Sin ese límite, la frontera se cruza sola, poco a
-poco, sin que nadie tome una decisión — y el día que se cruza en algo importante,
-no hay ninguna señal.
-
-Y la asimetría que lo hace grave: un falso **negativo** —una prueba que falla y
-pasaría en producción— es molesto pero se investiga. Un falso **positivo** —verde
-en SQLite, roto en Postgres— **no produce ninguna señal**. Nadie investiga una
-prueba que pasa.
+Y la asimetría que lo hace grave: un falso **negativo** se investiga. Un falso **positivo** —verde en SQLite, roto en Postgres— **no produce ninguna señal**.
 
 **Si tu causa fue distinta a esta**
 
-- *"Es un problema de configuración de producción"* — la hipótesis natural con
-  *"en mi máquina funciona"*, y la del incidente 20 del track base. Se descarta
-  levantando Postgres en local: se reproduce al instante.
-- *"Falló la migración"* — se descarta comprobando la versión del esquema, que
-  `be09` además verifica al arrancar.
-- *"Es la versión de Go del runner"* — se descarta: el pipeline corre
-  `container: golang:1.19`, el mismo de siempre.
-- Si tu fix fue **solo** cambiar `LastInsertId` por `RETURNING`, arreglaste este
-  caso y dejaste intacta la condición que lo produjo. La próxima diferencia entre
-  motores va a pasar por el mismo agujero, y hay siete documentadas en `bea-03`.
+- *"Es la configuración de producción"* — la del incidente 20 del track base. Se descarta levantando Postgres en local: se reproduce al instante.
+- *"Falló la migración"* — se descarta mirando la versión del esquema, que `be09` además comprueba al arrancar.
+- *"Es la versión de Go"* — el pipeline corre en `golang:1.19.13`, el mismo de siempre.
+- Si tu fix fue **solo** volver a `RETURNING`, arreglaste este caso y dejaste intacta la condición que lo produjo. La próxima diferencia entre motores va a pasar por el mismo agujero, y `bea-03` documenta siete.
 
 </details>
 
@@ -3561,27 +2784,24 @@ prueba que pasa.
 
 ### 🎫 El ticket
 
-> "La imagen que construimos ayer no arranca en el servidor: se levanta el
-> contenedor y se muere solo. La de anteayer funciona bien. Comparamos el código
-> y no hay ni un commit de diferencia en la aplicación. En la máquina de quien
-> la construyó arranca perfecto."
+> "La imagen que construimos ayer no arranca en el servidor: el contenedor se
+> levanta y se muere solo. La de anteayer funciona bien. Comparamos el código de
+> Go y no hay ni una línea de diferencia. La construcción terminó sin un solo
+> aviso."
 
 **Reportado por:** el propio equipo
 **Ambiente:** UAT
 
 ### 🎯 Qué se te pide
 
-Encontrar qué cambió si el código no cambió, y arreglar la construcción para que
-sea **reproducible**. Hay más de una causa posible: identifica la tuya con
-evidencia, no por descarte.
+Encontrar qué cambió si el código no cambió, y arreglar la construcción para que no pueda volver a pasar.
 
 ### 🔧 Preparación
 
 ```bash
 git checkout incidente/be-16
-cd server
-docker build -t rifas:sospechosa .
-docker run --rm rifas:sospechosa
+docker build --no-cache -t esclusa:sospechosa server/
+docker run --rm -e DATABASE_URL="…" -e JWT_SECRET="…" esclusa:sospechosa
 ```
 
 ---
@@ -3589,24 +2809,18 @@ docker run --rm rifas:sospechosa
 <details>
 <summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
 
-Ni siquiera es el cable: es la **imagen**. Y el dato clave es *"el código no
-cambió"*, que descarta la aplicación y deja tres sospechosos: la receta de
-construcción, la máquina que construye, y las **imágenes base**.
-
-¿Qué versión exacta de la imagen base usa tu Dockerfile? ¿Y qué versión usaba
-anteayer?
+Ni siquiera es el cable: es la **imagen**. *"El código de Go no cambió"* descarta la aplicación y deja tres sospechosos: la receta de construcción, la máquina que construye y las imágenes base. `git log -p` sobre la rama, y no solo sobre `*.go`.
 
 </details>
 
 <details>
 <summary>💡 <b>Pista 2</b> — qué mirar</summary>
 
-Lee el error del contenedor **entero**, sin recortar. Después:
+Lee el error del contenedor **entero**. Y compila el mismo binario fuera de la imagen, con la misma línea del `Dockerfile`, en `golang:1.19.13`:
 
 ```bash
-docker run --rm --entrypoint file rifas:sospechosa /usr/local/bin/api
-docker image inspect rifas:sospechosa --format '{{.Architecture}} {{.Os}}'
-docker history rifas:sospechosa
+ldd /tmp/api
+go version -m /tmp/api | grep CGO_ENABLED
 ```
 
 </details>
@@ -3614,8 +2828,173 @@ docker history rifas:sospechosa
 <details>
 <summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
 
-Si el binario está enlazado dinámicamente contra `glibc` y el runtime usa `musl`,
-¿qué archivo es el que "no existe"? Pista: no es el binario.
+Si el binario pide una biblioteca dinámica y la imagen no la tiene, ¿qué archivo es el que "no existe"? No es el binario.
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+```
+
+```
+
+**Hipótesis**
+- ❌ Descartada:
+- ✅ Confirmada:
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b></summary>
+
+**Lo que se ve**
+
+La construcción con `--no-cache` termina sin un aviso. El contenedor sale con código 255:
+
+```text
+exec /api: no such file or directory
+```
+
+sobre un binario que está en la imagen. Y el mismo binario, compilado afuera con la línea del `Dockerfile`:
+
+```text
+CGO_ENABLED=1
+	linux-vdso.so.1 (0x0000ffffa685c000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffa6670000)
+```
+
+Con la fase, el binario dice `CGO_ENABLED=0` y `not a dynamic executable`, y el contenedor arranca.
+
+**Causa raíz**
+
+**El binario volvió a tener cgo, y la imagen de ejecución no tiene `libc`.** El commit de la rama no toca Go: cambia una línea del `Dockerfile`, con un buen motivo —*"la demo de la Semana del Canal corre sin Postgres: la imagen trae SQLite"*—:
+
+```diff
+-RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o /out/api ./cmd/api
++# La demo de la Semana del Canal corre sin Postgres: la imagen trae SQLite.
++RUN CGO_ENABLED=1 go build -tags sqlite -ldflags "-s -w" -o /out/api ./cmd/api
+```
+
+Con `-tags sqlite` entra `mattn/go-sqlite3`, que exige cgo; con cgo, el binario enlaza contra la `glibc` de `golang:1.19.13` (Debian 12). Y la imagen de ejecución es distroless *static*, que no tiene `libc` porque el binario de `be09` no la necesitaba. **El archivo que no existe es la biblioteca que el binario pide**, no el binario.
+
+📝 **Y hay dos hermanas de esta causa**, con síntomas parecidos:
+- **Arquitectura:** una imagen `arm64` en un servidor `amd64` → `exec format error`, otro mensaje.
+- **Zonas horarias:** en una imagen `scratch`, `time.LoadLocation` devuelve `unknown time zone` con el proceso ya arrancado. En distroless *static* no pasa: trae la base de zonas.
+
+**Parche mínimo**
+
+Revertir la línea. La demo sin Postgres no se arregla con una imagen distinta: se levanta con el compose de `be09`, que trae su Postgres.
+
+**La corrección correcta**
+
+La de `be09`, con su giro: **el binario de producción no tiene por qué traer un driver de SQLite**. Si alguien necesita de verdad una imagen con SQLite, es otra imagen, con otra base —distroless *base*, con `glibc`, como la versión A de `bea-02`— y otro nombre. No la misma imagen con una bandera cambiada.
+
+**Prueba de regresión**
+
+En el pipeline, no en `go test`. El paso que ya está (`CGO_ENABLED=0 go build`) no lo atrapa, porque compila con su propia línea y no con la del `Dockerfile`. Lo que falta es **construir la imagen y arrancarla**:
+
+```yaml
+- name: La imagen tiene que arrancar
+  run: |
+    docker build --no-cache -t esclusa:ci ./server
+    docker run --rm --entrypoint /api esclusa:ci 2>&1 | grep -q "DATABASE_URL" \
+      || { echo "la imagen no arranca: revisa cgo y la imagen de ejecución"; exit 1; }
+```
+
+Sin base, el binario sano muere con *"configuración inválida: required key DATABASE_URL missing value"*: es la prueba de que el proceso **arrancó**. El roto muere antes, con *"no such file or directory"*.
+
+**Prevención**
+
+1. **El paso de arriba.** Construir la imagen no es probarla.
+2. **`docker build --no-cache` en el pipeline.** La caché de capas es una optimización de desarrollo y una fuente de falsos positivos en CI.
+3. **Imágenes base fijadas por digest** (`D38`) y **publicación por `sha`**: sin eso, "la imagen de ayer" y "la de anteayer" no se pueden comparar.
+4. **`smoke.sh` contra el contenedor**, no solo contra `go run`.
+
+**Por qué llegó a producción**
+
+Porque el cambio era **una mejora** para alguien, y la construcción terminó sin un solo aviso. El pipeline **construía** la imagen y no la **ejecutaba**. Y el error es ilegible: *"no such file or directory"* sobre un archivo que existe manda a cualquiera a revisar rutas y permisos durante un buen rato, que es justo donde no está el problema.
+
+**Si tu causa fue distinta a esta**
+
+- *"Es la arquitectura"* — es la hermana, y da `exec format error`.
+- *"Cambió la imagen base sin que nadie la tocara"* — plausible con etiquetas móviles. Con el digest de `D38` se descarta mirando el `FROM`.
+- *"Falta la base de zonas"* — daría un error de zona con el proceso ya arrancado, y distroless *static* la trae.
+- Si tu fix fue **cambiar la imagen de ejecución por una con `glibc`**, funciona… y metiste en producción un driver de SQLite que no usa, con cgo, 81 MB y la compilación de 27 segundos que `be09` midió.
+
+</details>
+
+---
+
+## Incidente be-17 — Cada vez que reiniciamos, la rueda da los mismos premios
+
+> **Fase:** be05 · **Categoría:** 🔥 aleatorio · **Dificultad:** 🟠
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 45-60 min
+
+### 🎫 El ticket
+
+> "En el Discord alguien publicó que después de cada mantenimiento los primeros
+> giros del día salen siempre iguales: vidas-5, gemas básico, sin premio,
+> vidas-2… Varios lo probaron y les dio lo mismo, y ya hay quien dice que hay que
+> girar justo después del reinicio. La conciliación de la Rueda de fin de mes
+> dio perfecta, así que no sé qué responder. ¿Es casualidad?"
+
+**Reportado por:** Itzel, operación
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Decidir si es casualidad, con evidencia. Si no lo es, encontrar la causa, explicar por qué la conciliación de probabilidades **no podía** verla, y escribir la prueba que sí.
+
+### 🔧 Preparación
+
+```bash
+git checkout incidente/be-17
+cd server && go build -o /tmp/api ./cmd/api
+psql "$DATABASE_URL" -c "UPDATE players SET free_spins = 4000 WHERE id = 42"
+/tmp/api &
+for i in $(seq 1 10); do
+  curl -s -X POST -d "{\"idempotencyKey\":\"arranque1-$i\"}" localhost:3001/players/42/spins | jq -r .landedSegment
+done
+kill %1; /tmp/api &
+# …y lo mismo con arranque2-$i
+```
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
+
+El juego muestra lo que el servidor responde: `landedSegment` viene en la respuesta del giro. Si los diez primeros de dos arranques coinciden, coinciden en el servidor. ¿Qué tiene el servidor que se reinicia con el proceso?
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+`internal/spin/random.go`, con su historial. Y la documentación de la versión de Go que corre en producción, no la de tu editor:
+
+```bash
+go version
+go doc math/rand.Seed
+```
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+¿Con qué semilla arranca el generador global de `math/rand` si nadie llama a `rand.Seed`? ¿Y en qué versión de Go cambió eso?
 
 </details>
 
@@ -3646,148 +3025,289 @@ Si el binario está enlazado dinámicamente contra `glibc` y el runtime usa `mus
 
 **Causa raíz**
 
-**El binario tiene cgo y el runtime cambió de `libc`.**
+Un commit que "simplificó" el sorteo para usar el generador global de `math/rand`:
 
-Alguien tocó el Dockerfile para "aligerar la imagen" y cambió el runtime de
-`debian:bullseye-slim` a `alpine`. El código de la aplicación no cambió — el
-ticket dice la verdad. Lo que cambió fue la receta.
-
-Y el error es el más desconcertante que existe:
-
-```
-exec /usr/local/bin/api: no such file or directory
-```
-
-sobre un binario que puedes listar, ver y que tiene permisos de ejecución. **El
-archivo que no existe es la `libc` que el binario espera**, no el binario:
-
-```bash
-docker run --rm --entrypoint file rifas:sospechosa /usr/local/bin/api
-# ELF 64-bit LSB executable, dynamically linked,
-# interpreter /lib64/ld-linux-x86-64.so.2
+```diff
+-type Drawer struct {
+-	mu  sync.Mutex
+-	rng *rand.Rand
+-}
++// Usa el generador global de math/rand: ya es seguro entre goroutines, así
++// que no hace falta ni el mutex ni una fuente propia.
++type Drawer struct{}
+ …
+-	d.mu.Lock()
+-	n := d.rng.Intn(10000)
+-	d.mu.Unlock()
++	n := rand.Intn(10000)
 ```
 
-El builder es Debian (`glibc`); Alpine usa `musl`. El binario arrastra cgo porque
-`mattn/go-sqlite3` lo exige y su `import` está en un archivo sin etiqueta de
-compilación — o sea, **el binario de producción lleva un driver de SQLite que no
-usa jamás**.
+La mitad del razonamiento es correcta: el generador global sí es seguro entre goroutines, y `go test -race` no tiene nada que decir. La otra mitad está en la documentación de Go 1.19.13, la versión congelada del curso, y dice exactamente esto:
 
-**Por qué funcionaba en la máquina de quien construyó:** no ejecutó la imagen; o
-la ejecutó con una caché de capas anterior al cambio. `docker build` sin
-`--no-cache` puede reutilizar capas viejas y esconder exactamente esta clase de
-problema.
+```
+If Seed is not called, the generator behaves as if seeded by Seed(1).
+```
 
-📝 **Y hay dos hermanas de esta causa** que producen síntomas parecidos y conviene
-reconocer:
-- **Arquitectura:** imagen construida en un Mac con Apple Silicon (`arm64`)
-  ejecutándose en un runner `amd64` → `exec format error`.
-- **Zonas horarias:** con una imagen mínima sin `/usr/share/zoneinfo`,
-  `time.LoadLocation("America/Bogota")` devuelve `unknown time zone` **solo dentro
-  del contenedor**.
+Y en la del paquete: *"Top-level functions … use a default shared Source that produces a deterministic sequence of values each time a program is run."* **Cada arranque del binario sortea la misma secuencia.** Go 1.20 cambió eso y siembra el generador global al azar: compilada con `golang:1.20.14`, **la misma rama** pasa la prueba de regresión de abajo, con dos secuencias distintas. Quien escribió el commit tenía razón en su versión de Go, y no en la que corre producción.
+
+Medido con el binario de la rama, dos arranques de 2.000 giros cada uno sobre la Esclusa de Oro: los diez primeros son `vidas-5 set-gemas-basico sin-premio vidas-2 sin-premio sin-premio vidas-2 sin-premio sin-premio vidas-2` en los dos, y **las 2.000 posiciones coinciden**. Con la fase, coinciden 357 de 2.000, lo que se espera por azar con esos pesos.
+
+**Por qué la conciliación no lo ve**
+
+Porque mide **frecuencias**, y las frecuencias son perfectas. El χ² de cada arranque contra los pesos publicados —el mismo cálculo de `oddsAudit`— dio **6,04** en los dos, lejos del valor crítico de 14,067. La secuencia es una buena secuencia pseudoaleatoria; el problema es que es **siempre la misma**. Ninguna prueba sobre la distribución puede ver una falla en la imprevisibilidad, y eso es lo que el ticket describe: un jugador que gira justo después del mantenimiento sabe qué va a salir.
 
 **Parche mínimo**
 
-Volver al runtime compatible:
-
-```dockerfile
-# Mientras haya cgo, builder y runtime tienen que compartir libc. Punto.
-FROM debian:bullseye-slim
-```
+Volver a la fuente propia sembrada desde `crypto/rand`, con su mutex. Un `rand.Seed(time.Now().UnixNano())` al arrancar también corta la repetición, pero deja la semilla en un número que se puede adivinar aproximando la hora del arranque, y desde Go 1.20 `rand.Seed` está marcada como obsoleta.
 
 **La corrección correcta**
 
-La de `be09`, y tiene un giro que vale la pena entender: **la pregunta estaba mal
-planteada**. No era *qué imagen base aguanta cgo*, sino **por qué el binario de
-producción tiene un driver de SQLite**.
-
-SQLite solo se usa en pruebas. Se saca de la compilación con una etiqueta:
-
-```go
-// server/internal/storage/driver_sqlite.go
-//go:build sqlite
-
-package storage
-
-import _ "github.com/mattn/go-sqlite3"
-```
-
-⚠️ La línea `//go:build` va **antes del `package` y separada por una línea en
-blanco**, o el compilador la trata como un comentario cualquiera. Es un error
-silencioso: compila igual, con cgo, y solo lo notas midiendo.
-
-Y entonces:
-
-```dockerfile
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o /out/api ./cmd/api
-
-FROM gcr.io/distroless/static-debian11:nonroot
-```
-
-Binario estático, imagen de ~2 MB, sin `libc` que emparejar. Y `D19` —abierta
-desde `be02`— cerrada con una medición en vez de con una opinión.
+La de la fase (`D37`), y una decisión escrita: `math/rand` no sirve para nada donde predecir el resultado tenga valor —la documentación lo dice, *"unsuitable for security-sensitive work"*—. Si el sorteo tuviera que resistir a un atacante con la secuencia en la mano, el generador es `crypto/rand`, con su costo medido.
 
 **Prueba de regresión**
 
-En el pipeline, no en `go test`:
+Un arranque es un proceso, así que la prueba se relanza a sí misma dos veces y compara:
 
-```yaml
-- name: El binario de producción tiene que ser estático
-  run: |
-    CGO_ENABLED=0 go build -o /tmp/api ./cmd/api
-    # Si aparece "dynamically linked", alguien volvió a meter cgo.
-    file /tmp/api | grep -q "statically linked" || {
-      echo "El binario quedó enlazado dinámicamente: revisa las etiquetas de compilación"
-      exit 1
-    }
+```go
+// server/internal/spin/random_test.go — la regresión de be-17
 
-- name: La imagen tiene que arrancar
-  run: |
-    docker build --no-cache -t rifas:ci ./server
-    docker run -d --name smoke -p 3001:3001 -e DATABASE_URL="$DB" rifas:ci
-    sleep 3 && curl -fsS localhost:3001/health
+package spin
+
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"strings"
+	"testing"
+)
+
+// Dos arranques del binario no pueden sortear la misma secuencia. Un arranque
+// es un proceso: la prueba se vuelve a lanzar a sí misma dos veces, cada una
+// sortea diez segmentos, y compara lo que imprimieron.
+func TestTwoBootsDrawDifferentSequences(t *testing.T) {
+	if os.Getenv("SPIN_DRAW_CHILD") == "1" {
+		d := NewDrawer()
+		segments := []Segment{{SegmentID: "a", WeightBp: 1000}, {SegmentID: "b", WeightBp: 1000},
+			{SegmentID: "c", WeightBp: 1000}, {SegmentID: "d", WeightBp: 1000}, {SegmentID: "e", WeightBp: 1000},
+			{SegmentID: "f", WeightBp: 1000}, {SegmentID: "g", WeightBp: 1000}, {SegmentID: "h", WeightBp: 1000},
+			{SegmentID: "i", WeightBp: 1000}, {SegmentID: "j", WeightBp: 1000}}
+		var out []string
+		for i := 0; i < 10; i++ {
+			out = append(out, d.Draw(segments).SegmentID)
+		}
+		fmt.Println("SECUENCIA", strings.Join(out, ""))
+		return
+	}
+
+	boot := func() string {
+		cmd := exec.Command(os.Args[0], "-test.run=^TestTwoBootsDrawDifferentSequences$", "-test.count=1")
+		cmd.Env = append(os.Environ(), "SPIN_DRAW_CHILD=1")
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatalf("el arranque falló: %v\n%s", err, out)
+		}
+		for _, line := range strings.Split(string(out), "\n") {
+			if strings.HasPrefix(line, "SECUENCIA ") {
+				return strings.TrimPrefix(line, "SECUENCIA ")
+			}
+		}
+		t.Fatalf("el arranque no imprimió su secuencia:\n%s", out)
+		return ""
+	}
+	first, second := boot(), boot()
+	t.Logf("arranque 1: %s · arranque 2: %s", first, second)
+	if first == second {
+		t.Fatalf("dos arranques sortearon la misma secuencia: %s", first)
+	}
+}
 ```
+
+En la rama falla con *"dos arranques sortearon la misma secuencia: ihbecbecad"*; en la fase, pasa. Motor: ninguno. Con diez segmentos de 1.000 bp, que dos arranques honestos coincidan en los diez por azar tiene probabilidad de una en diez mil millones.
 
 **Prevención**
 
-1. **El paso de CI de arriba.** Es lo que impide que la decisión de `D19` se
-   deshaga sola dentro de seis meses.
-2. **`docker build --no-cache` en el pipeline.** La caché es una optimización de
-   desarrollo y una fuente de falsos positivos en CI.
-3. **Fijar la plataforma** (`--platform linux/amd64`) para que construir en un
-   Mac y desplegar en un servidor den lo mismo.
-4. **Etiquetar por `sha`** y no por `latest`: sin eso, "la imagen de ayer" y "la
-   de anteayer" no son identificables, y media hora del diagnóstico se va en
-   averiguar qué se desplegó.
-5. **Correr `smoke.sh` contra el contenedor**, no solo contra `go run`. Es la
-   diferencia entre "el código funciona" y "lo que vamos a desplegar funciona".
+La prueba, y una regla de revisión: **la versión de Go del `go.mod` manda sobre la costumbre de quien revisa.** Un cambio que depende de un comportamiento de la biblioteca estándar se lee con la documentación de esa versión. Y en el mapa de deuda (`bea-09`), la subida de Go anotada con esta consecuencia: el día que se suba, este incidente deja de reproducirse, y la prueba tiene que seguir pasando.
 
 **Por qué llegó a producción**
 
-Porque el cambio era **una mejora**. Alguien vio una imagen de 80 MB, la cambió
-por una de 15, comprobó que el `docker build` terminaba sin errores, y lo subió.
-Todo razonable.
-
-El pipeline **construía** la imagen y no la **ejecutaba**: verificaba que el
-Dockerfile fuera válido, no que el resultado arrancara. Es una distinción que
-parece obvia dicha así y que falta en la mayoría de los pipelines.
-
-Y el error final era ilegible. *"No such file or directory"* sobre un archivo que
-existe manda a cualquiera a revisar rutas y permisos durante un buen rato — que
-es justo donde no está el problema.
+Porque nada de lo que se mira lo ve. `go test -race` pasa, la suite pasa, la conciliación da perfecta y el tablero muestra la rueda honesta. El commit parecía una simplificación correcta, y en una versión de Go más nueva lo era. Lo vio la comunidad, comparando capturas, que es exactamente como se descubrió la rueda que se acomodaba en 2025.
 
 **Si tu causa fue distinta a esta**
 
-- *"Es la arquitectura"* — es la hermana, y produce `exec format error`, no
-  `no such file or directory`. El mensaje exacto los distingue.
-- *"Falta `tzdata`"* — la otra hermana. Daría un error de zona horaria en tiempo
-  de ejecución, con el proceso ya arrancado.
-- *"Cambió la imagen base sin que nadie lo tocara"* — plausible y muy real si el
-  Dockerfile usa una etiqueta móvil (`golang:1.19` puede apuntar a una imagen
-  distinta que hace un mes). Se comprueba con `docker image inspect` y sus
-  digests, y refuerza la conclusión: **fija versiones y no confíes en etiquetas
-  móviles**.
-- Si tu fix fue **instalar `gcc` y `musl-dev` en el builder de Alpine**, funciona…
-  y ahora el binario no corre en Debian. Cambiaste de sitio el problema.
+- *"La rueda está arreglada, como la de 2025"* — se descarta con el χ²: 6,04, sin alarma, y los pesos no cambiaron. La de 2025 cambiaba las **proporciones**; esta las respeta y repite el **orden**.
+- *"Es el caché del juego"* — se descarta con `curl`: la API devuelve la misma secuencia sin juego de por medio.
+- *"Es casualidad"* — dos mil de dos mil posiciones iguales no son casualidad, y la fase lo muestra: 357.
+
+</details>
+
+---
+
+## Incidente be-18 ➕ — Hay jugadores que cobran el giro gratis cada hora
+
+> **Fase:** be06 · **Categoría:** 🔥 tiempo · **Dificultad:** 🟡
+> **Estado:** ⬜ Sin empezar · **Abierto:** — · **Cerrado:** —
+> **Tiempo sugerido:** 30-45 min
+
+### 🎫 El ticket
+
+> "En el Discord se están pasando un truco: adelantas el reloj del celular y te
+> dan otro giro gratis. Uno mandó captura con tres en una hora. Y el mes pasado
+> esto no pasaba."
+
+**Reportado por:** Yariela, soporte
+**Ambiente:** PROD
+
+### 🎯 Qué se te pide
+
+Encontrar por qué el servidor acepta el reloj del celular, decir cuántos jugadores lo están usando, y qué hacer con ellos además de arreglar el código.
+
+### 🔧 Preparación
+
+```bash
+git checkout incidente/be-18
+cd server && go build -o /tmp/api ./cmd/api && /tmp/api &
+curl -s -X POST localhost:3001/players/43/free-spins
+curl -s -X POST -d '{"idempotencyKey":"be18-1"}' localhost:3001/players/43/spins
+# El celular, cuatro horas y un minuto adelante:
+ADELANTE=$(date -u -v+4H -v+1M +%Y-%m-%dT%H:%M:%SZ)   # en Linux: date -u -d '+4 hours 1 minute' …
+curl -s -X POST -H "X-Client-Now: $ADELANTE" localhost:3001/players/43/free-spins
+curl -s -X POST -d '{"idempotencyKey":"be18-2"}' localhost:3001/players/43/spins
+```
+
+---
+
+<details>
+<summary>💡 <b>Pista 1</b> — de qué lado del cable</summary>
+
+El celular no puede cambiar el reloj del servidor. Si el truco funciona, el servidor está **leyendo** la hora del celular en algún lado. ¿Dónde?
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 2</b> — qué mirar</summary>
+
+En Network, o con `curl -v`, las cabeceras que manda el juego al reclamar. Y en la base:
+
+```sql
+SELECT id, name, next_free_spin_at, now() FROM players WHERE next_free_spin_at > now() + interval '4 hours';
+```
+
+</details>
+
+<details>
+<summary>💡 <b>Pista 3</b> — casi la respuesta</summary>
+
+`git log -p fase-be06-hora-dura-y-la-autoridad-del-reloj..incidente/be-18`. Lee el mensaje del commit: ¿qué problema quería resolver?
+
+</details>
+
+---
+
+### 📝 Tu investigación
+
+**Reproducción**
+
+**Evidencia observable**
+
+```
+
+```
+
+**Hipótesis**
+- ❌ Descartada:
+- ✅ Confirmada:
+
+**Tu causa raíz**
+
+**Tu fix**
+
+---
+
+<details>
+<summary>✅ <b>Solución de referencia</b></summary>
+
+**Lo que se ve**
+
+```text
+{"playerId":43,"freeSpins":1,"nextFreeSpinAt":"2026-10-20T07:09:46.986Z"} → 200
+{"landedSegment":"set-gemas-basico",…,"origin":"free",…} → 200
+== el celular, cuatro horas y un minuto adelante: X-Client-Now: 2026-10-20T07:10:47Z
+{"playerId":43,"freeSpins":1,"nextFreeSpinAt":"2026-10-20T11:10:47.000Z"} → 200
+{"landedSegment":"vidas-2",…,"origin":"free",…} → 200
+```
+
+En `spin_log`, dos giros gratis de la misma jugadora con **16 ms** de diferencia en el reloj del servidor (`03:09:46.995` y `03:09:47.011`). Con la fase, el segundo reclamo responde `409 todavía no`.
+
+**Causa raíz**
+
+El commit de la rama (*"la cuenta regresiva del juego y la del servidor, con la misma hora"*) hace que el handler use la hora del celular si viene en una cabecera:
+
+```diff
++	// El juego manda la hora del celular: si viene, se usa esa.
++	if clientNow, perr := time.Parse(time.RFC3339, r.Header.Get("X-Client-Now")); perr == nil {
++		claimed, err = h.spins.ClaimFreeAt(r.Context(), id, clientNow)
++	} else {
++		claimed, err = h.spins.ClaimFree(r.Context(), id)
++	}
+```
+
+La escritura condicional de `be06` sigue ahí y sigue siendo correcta: compara `next_free_spin_at <= ?`. Lo que cambió es **quién pone el `?`**. El problema que quería resolver era real, porque la cuenta regresiva del juego no coincidía con la del servidor, pero se resolvió del lado equivocado.
+
+Un detalle de la reproducción: con el celular **cuatro horas exactas** adelante, el truco no funciona, porque `nextFreeSpinAt` lleva milisegundos y la cabecera no, así que queda unos milisegundos antes. Hace falta pasarse un poco, y los jugadores se pasan.
+
+**Cuántos son**
+
+Un `next_free_spin_at` a más de cuatro horas del reloj del servidor solo puede venir de un reloj ajeno:
+
+```text
+43|María R.|11:16:32|03:15:32
+```
+
+Con la fase, la misma consulta no devuelve nada.
+
+**Parche mínimo**
+
+Borrar la lectura de la cabecera: el handler llama a `ClaimFree`, que usa `s.clock.Now()`.
+
+**Los datos**
+
+Los giros que salieron son hechos y quedan en la bitácora (`D35`): no se borran ni se editan. Lo que sí se corrige es el `next_free_spin_at` envenenado, que además deja al jugador sin su giro honesto hasta la hora falsa:
+
+```sql
+UPDATE players SET next_free_spin_at = now() + interval '4 hours'
+WHERE next_free_spin_at > now() + interval '4 hours';
+```
+
+Qué hacer con los giros de más es una decisión de producto, de Itzel, no tuya.
+
+**Prueba de regresión**
+
+```go
+// server/internal/http/free_spin_test.go (extracto)
+
+	if code := claim(""); code != http.StatusOK {
+		t.Fatalf("el primer reclamo: %d", code)
+	}
+	if code := claim(now.Add(4 * time.Hour).Format(time.RFC3339)); code != http.StatusConflict {
+		t.Fatalf("con el celular cuatro horas adelante: %d (esperaba 409)", code)
+	}
+```
+
+La prueba arma el router con un `clock.Fixed`, reclama una vez sin cabecera y otra con `X-Client-Now` cuatro horas adelante, y exige `409` y un solo giro en el saldo. En la rama falla con *"con el celular cuatro horas adelante: 200 (esperaba 409)"*; en la fase, pasa. Motor: PostgreSQL.
+
+**Prevención**
+
+La regla de `be06`, sin excepción: **ninguna hora del cliente entra a una decisión**. Para la cuenta regresiva, el servidor ya manda `nextFreeSpinAt` y `X-Server-Time`; el juego resta el desfase para pintar, y el servidor no le pregunta a nadie. Y la consulta de *"Cuántos son"* como alarma diaria.
+
+**Por qué llegó a producción**
+
+Porque en las pruebas nadie adelanta el reloj, y el celular de quien lo probó tenía la hora bien: con la cabecera correcta, el comportamiento es idéntico al de la fase. El truco no está en el código. Lo encuentra el primer jugador que sospecha de un contador.
+
+**Si tu causa fue distinta a esta**
+
+- *"El barrido o el reloj del servidor"*: el reloj del servidor se ve en `X-Server-Time`, y el barrido de `be06` cierra ruedas; no toca el giro gratis.
+- *"Una carrera: dos reclamos a la vez"*: la escritura condicional lo impide (`be06` §5.5, cincuenta reclamos, uno suma), y los dos giros de la bitácora están separados por un reclamo cada uno.
+- Si tu fix fue *"rechazar la cabecera si difiere mucho del servidor"*, sigues dejando que el cliente decida dentro de tu tolerancia. La cabecera no se valida: no se lee.
 
 </details>
 
@@ -3795,7 +3315,7 @@ es justo donde no está el problema.
 
 # 🪞 Retrospectiva del track BE
 
-Se llena al terminar los dieciséis, de una sola vez, releyendo tu propio
+Se llena al terminar los dieciocho, de una sola vez, releyendo tu propio
 `git log`.
 
 - **Cuántos abriste, cuántos cerraste, cuántos quedaron ⚪.**
@@ -3823,32 +3343,19 @@ Se llena al terminar los dieciséis, de una sola vez, releyendo tu propio
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **Las ramas `incidente/be-NN` no existen todavía.** Cada incidente declara su
-  preparación con una rama que hay que crear en el repositorio del alumno —o
-  reescribir la sección `🔧 Preparación` para que el estado roto se produzca con
-  un `git revert` o con una edición guiada. Es el trabajo pendiente más concreto
-  de este archivo.
-- **Cobertura por categoría**, revisada al cerrar: contrato 5, transacciones 3,
-  tiempo 2, base de datos 2, despliegue 2, autenticación 1, dinero 1. **Despliegue
-  quedó algo servido y dinero apenas con uno**; si se amplía el rango en el
-  futuro, por ahí conviene crecer.
-- **Reparto por dificultad:** 🟡 4 · 🟠 6 · 🔴 6. Sin ninguno 🟢, y es
-  deliberado: no hay incidentes de backend fáciles en este dominio, y fabricar uno
-  artificialmente sería peor que no tenerlo.
-- **Seis terminan sin fix en el código**, que era el objetivo: `be-01` y `be-02`
-  registran hallazgos, `be-08` y `be-11` concluyen que el sistema hizo lo
-  correcto, `be-07` termina en una conversación con tesorería y `be-12` en una
-  decisión de negocio. Ese desenlace es real y casi nunca se practica.
-- **`be-08` y `be-11` son los dos que más se van a discutir**, porque su respuesta
-  es *"no se arregla, y aquí está por qué"*. Si la revisión editorial los suaviza,
-  se pierde lo mejor que tienen.
-- **Los seis hermanos del track base están cruzados en el índice**, pero el
-  cuaderno base **no los referencia de vuelta** porque sus veinte enunciados
-  siguen sin redactar. Cuando se escriban, conviene añadir la referencia cruzada
-  en los incidentes 08, 11, 16, 18, 19 y 20.
-- **Ningún incidente depende de datos generados con faker.** Es deliberado: un
-  conjunto aleatorio arruinaría la reproducibilidad (`bea-10` §7). `be-09` y
-  `be-05` se benefician del volumen para reproducirse más rápido, pero no lo
-  exigen.
-- **Nada de esto reemplaza a `cuaderno-incidentes.md`**, cuyos veinte incidentes
-  del track base siguen siendo el hueco declarado más grande del curso.
+- **Las ramas existen.** Las catorce `incidente/be-NN` con código están en el repo de prueba, cada una reproduce su
+  síntoma y su corrección lo quita; `be-04`, `be-08` y `be-11` son de diff vacío y `be-02` no tiene rama.
+- **Cobertura por categoría**, al cerrar la reescritura: contrato 5, tiempo 3, base de datos 2, concurrencia 2,
+  despliegue 2, autenticación 1, dinero 1, transacciones 1, aleatorio 1. Dinero y transacciones quedaron con uno cada
+  uno, pero `be-13` y `be-14` son los dos lados de la misma fase (`be07`).
+- **Reparto por dificultad:** 🟢 1 · 🟡 8 · 🟠 5 · 🔴 4. El único 🟢 es `be-12`, que con la carga y la consulta de la
+  pista se resuelve rápido; su valor es la conversación sobre el barrido como regla.
+- **`be-11` termina en una decisión, no en un commit**, y es de los que más se van a discutir: su respuesta es *"el
+  servidor hizo lo correcto, y esto es lo que cuesta pagar la deuda del reloj de la consola"*. Si la revisión editorial
+  lo suaviza, se pierde lo mejor que tiene.
+- **Los seis hermanos están cruzados en los dos cuadernos**: acá en el índice, y allá en los incidentes 08, 11, 16, 18,
+  19 y 20 del cuaderno base.
+- **Ningún incidente depende de datos generados con faker.** Es deliberado: un conjunto aleatorio arruinaría la
+  reproducibilidad (`bea-10`). `be-09` y `be-12` usan la rueda de medición de `be05`, que es SQL fijo.
+- **Las regresiones viven en la suite desde `be08`** (`be08` §5.5). Las ramas de `be-10` y `be-17` salen de `be05`, con
+  la firma de `spin.NewService` de esa fase; sus regresiones portadas están en la fase final.

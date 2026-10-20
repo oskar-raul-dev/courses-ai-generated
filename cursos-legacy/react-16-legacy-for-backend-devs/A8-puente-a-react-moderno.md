@@ -1,19 +1,22 @@
 # 🌉 Apéndice A8 — Puente a React Moderno
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 > ⚠️ **OPCIONAL · COMPARATIVO · CONTEXTO HISTÓRICO**
-> No es material para aplicar en Fase 11 ni en ningún código del curso. Es
-> para leer y entender qué hay del otro lado del puente. Todo el código que
-> veas acá está marcado como *"si fuera React 18"* o *"alternativa moderna"*:
-> **ninguno corre en este proyecto**. El curso termina y se queda en React
-> **16.14.0** (D1), y ese es su punto final de referencia. Lo moderno se
-> mira, no se toca.
+> No es material para aplicar en el código principal del curso. Es para leer
+> y entender qué hay del otro lado del puente. Todo el código que veas acá
+> está marcado como *"si fuera React 18"* o *"alternativa moderna"*: **ninguno
+> entra en el código de la consola**. Lo que se afirma de cada versión se
+> midió en copias descartables del proyecto (Fase 11, §5.4 y §5.5), y lo que
+> no se pudo correr lo dice. El curso termina y se queda en React **16.14.0**
+> (D1), y ese es su punto final de referencia. Lo moderno se mira, no se toca.
 
 > 📝 **Cómo leer este apéndice.** No es lectura secuencial obligatoria. Es
 > consulta: llegas desde §5.5 de la Fase 11 con una pregunta concreta
 > ("¿qué es RTK Query?", "¿por qué RxJS 7 rompe mis imports?") y saltas a la
-> sección que te la responde. Los fragmentos de código son *ilustrativos y
-> no ejecutables en este proyecto* — están para reconocer la forma de lo
-> moderno cuando la veas afuera, no para copiarla adentro.
+> sección que te la responde. Los fragmentos de código son *ilustrativos* —
+> están para reconocer la forma de lo moderno cuando la veas afuera, no para
+> copiarla adentro—, y las cifras que acompañan a cada versión salen de una
+> corrida.
 
 ---
 
@@ -112,35 +115,44 @@ de integrar React dentro de páginas que no son 100% React. Si alguna vez
 dependiste de capturar eventos de React en `document` directamente, ahí hay
 un breaking sutil.
 
-**Nuevo JSX Transform.** En 16, cada archivo con JSX necesita `import React
-from 'react'` aunque no uses `React` explícitamente, porque el JSX compila a
-`React.createElement(...)`. React 17 introdujo un transform nuevo que compila
-a una función interna que el compilador importa solo, así que el import deja
-de ser obligatorio:
+**Nuevo JSX Transform.** Con el JSX clásico, cada archivo con JSX necesita
+`import React from 'react'` aunque no uses `React` explícitamente, porque el
+JSX compila a `React.createElement(...)`. React 17 introdujo un transform nuevo
+que compila a una función interna (`react/jsx-runtime`) que el compilador
+importa solo, así que el import deja de ser obligatorio. Y acá está la
+sorpresa para esta consola: **el transform nuevo se retroportó a React
+16.14.0**, la versión del curso, y Create React App 4 lo usa solo si encuentra
+`react/jsx-runtime`. En la Esclusa, el import ya no hace falta:
 
 ```jsx
-// React 16 (tu curso): el import es obligatorio aunque no uses "React"
+// Con el JSX clásico: el import es obligatorio aunque no uses "React"
 import React from 'react';
-function RaffleBadge() {
-  return <span className="badge">Abierta</span>;
+function WheelBadge() {
+  return <span className="badge">En vivo</span>;
 }
 ```
 
 ```jsx
-// "Si fuera React 17+": con el nuevo JSX transform, sin import de React
-function RaffleBadge() {
-  return <span className="badge">Abierta</span>;
+// Con el JSX nuevo (React 17+, y también React 16.14.0 con CRA 4): sin import de React
+function WheelBadge() {
+  return <span className="badge">En vivo</span>;
 }
-// ⚠️ NO en el código del curso. En 16.14 el import de React sigue haciendo falta.
 ```
 
-> ⚠️ Este es el error más común al copiar snippets modernos a un proyecto
-> 16: pegas un componente sin `import React`, y en 16.14 explota con
-> *"React is not defined"*. No es que el snippet esté mal; es de otra época.
+Medido en la Fase 11 (§5.5): el componente sin import renderiza en React
+16.14.0 con CRA 4, y en 17.0.2. Con `DISABLE_NEW_JSX_TRANSFORM=true` —la
+variable con que CRA 4 vuelve al JSX clásico— el mismo componente explota con
+*"React is not defined"*.
+
+> ⚠️ El error *"React is not defined"* sigue existiendo, y es el más común al
+> copiar snippets modernos a un proyecto **más viejo que 16.14**, o a uno que
+> fuerza el JSX clásico. No es que el snippet esté mal; es de otra época, o de
+> otra configuración. Antes de agregar imports "por las dudas", fíjate qué
+> runtime de JSX usa el build.
 
 Para un mantenedor, el resumen de 16→17 es tranquilizador: **es el escalón
-barato**. Casi no hay breaking changes de cara al desarrollador, y habilita
-todo lo demás. Si este proyecto algún día se moviera, 17 sería el primer paso
+barato**. Casi no hay breaking changes de cara al desarrollador —y el JSX
+nuevo ya lo tienes—, y habilita todo lo demás. Si este proyecto algún día se moviera, 17 sería el primer paso
 sensato y de bajo riesgo.
 
 ---
@@ -172,9 +184,11 @@ root.render(<App />);
 en un solo re-render *solo* si ocurren dentro de un event handler de React.
 Si haces dos `setState` dentro de un `.then()` de una promesa o un
 `setTimeout`, en 16 son dos renders. En 18, React las agrupa igual en todos
-lados. Para tu código de rifas esto sería, en general, una mejora invisible
-—menos renders— pero también un cambio de timing que podría descolocar algún
-test que contaba renders exactos.
+lados. Medido en la Fase 11: dos `setState` dentro de un `setTimeout` dan 2
+renders en 16.14 y en 17.0.2, y **1** en 18.2.0 con `createRoot`. Para la
+consola esto sería, en general, una mejora invisible —menos renders— pero
+también un cambio de tiempo que podría descolocar una prueba que contaba renders
+exactos.
 
 **Suspense para datos y SSR con streaming.** En tu curso, `Suspense` solo
 sirve para `React.lazy` (code splitting). En 18 se expande a *data fetching*:
@@ -188,28 +202,29 @@ React priorice lo que el usuario está tocando ahora mismo por encima de un
 re-render pesado:
 
 ```jsx
-// "Si fuera React 18": marcar el filtrado de una tabla grande de números
+// "Si fuera React 18": marcar el filtrado de una tabla grande de envíos
 // como transición, para que el input no se sienta trabado
 import { useTransition } from 'react';
 
-function NumbersFilter() {
+function GrantFilter() {
   const [isPending, startTransition] = useTransition();
   const onChange = (e) => {
     const value = e.target.value;
     startTransition(() => {
-      // filtrar 10.000 números es pesado: que no bloquee el tecleo
+      // filtrar 10.000 envíos es pesado: que no bloquee el tecleo
       setFilter(value);
     });
   };
   // ...
 }
-// ⚠️ NO en el código del curso. En 16.14 no existe useTransition.
+// ⚠️ NO en el código del curso. En 16.14 no existe useTransition (medido: undefined).
 ```
 
 Este ejemplo es, además, la mejor respuesta a *"¿cuándo me convendría de
 verdad React 18?"*: cuando tienes una UI con actualizaciones pesadas que
-compiten con la interacción del usuario. El tablero de 0000–9999 de la Fase 5
-es exactamente el tipo de caso donde las Transitions brillarían. Si tu UI no
+compiten con la interacción del usuario. El tablero de 10.000 envíos de la Fase 5
+—el que pasó de 235 a 58 ms con `React.memo`— es exactamente el tipo de caso
+donde las Transitions brillarían. Si tu UI no
 tiene ese problema, 18 te da poco a cambio de un costo de migración real.
 
 **Hooks nuevos.** `useId` (IDs estables entre servidor y cliente),
@@ -223,7 +238,8 @@ llegar de 16. En desarrollo, React 18 monta, desmonta y vuelve a montar cada
 componente bajo `<StrictMode>`, corriendo tus efectos **dos veces a
 propósito** para exponer efectos que no limpian bien. Si tienes un `useEffect`
 que arranca un polling y no lo cancela en el cleanup, en 18-dev lo vas a ver
-duplicado de inmediato. Es, en el fondo, la misma lección forense de la Fase
+duplicado de inmediato. Medido en la Fase 11: un efecto bajo `<StrictMode>`
+corre una vez en 16.14 y en 17.0.2, y **dos** en 18.2.0. Es, en el fondo, la misma lección forense de la Fase
 7 (el polling que no para al desmontar) convertida en herramienta del
 framework.
 
@@ -269,8 +285,8 @@ cache, los estados de carga, y **hooks listos para usar**.
 
 ```javascript
 // Tu curso (RTK 1.8): thunk + slice + estados a mano
-export const fetchRaffles = createAsyncThunk('raffles/fetch', async () => {
-  const res = await apiClient.get('/raffles');
+export const fetchWheels = createAsyncThunk('wheels/fetch', async () => {
+  const res = await apiClient.get('/wheels');
   return res.data;
 });
 // ...y en el slice, extraReducers para pending/fulfilled/rejected,
@@ -279,41 +295,42 @@ export const fetchRaffles = createAsyncThunk('raffles/fetch', async () => {
 
 ```javascript
 // "Alternativa moderna" (RTK Query): declaras el endpoint, no el mecanismo
-const raffleApi = createApi({
-  reducerPath: 'raffleApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  tagTypes: ['Raffle'],
+const wheelApi = createApi({
+  reducerPath: 'wheelApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
+  tagTypes: ['Wheel'],
   endpoints: (builder) => ({
-    getRaffles: builder.query({
-      query: () => 'raffles',
-      providesTags: ['Raffle'],
+    getWheels: builder.query({
+      query: () => 'wheels',
+      providesTags: ['Wheel'],
     }),
-    sellNumber: builder.mutation({
-      query: (body) => ({ url: 'sell', method: 'POST', body }),
-      invalidatesTags: ['Raffle'], // al vender, el cache de raffles se marca "viejo"
+    createWheel: builder.mutation({
+      query: (body) => ({ url: 'wheels', method: 'POST', body }),
+      invalidatesTags: ['Wheel'], // al crear, la caché de ruedas se marca "vieja"
     }),
   }),
 });
 // El hook lo genera RTK Query solo:
-export const { useGetRafflesQuery, useSellNumberMutation } = raffleApi;
+export const { useGetWheelsQuery, useCreateWheelMutation } = wheelApi;
 // ⚠️ Alternativa moderna, NO en el código del curso. El proyecto usa
-// createAsyncThunk (D4). Esto es solo para reconocer la forma.
+// createAsyncThunk (D4). Esto es solo para reconocer la forma. (RTK Query
+// viene dentro de Toolkit desde la 1.6: la 1.8.6 del curso ya la trae, sin usarla.)
 ```
 
 Lo que RTK Query te *borra*: los tres estados repetidos en cada slice, el
 `useEffect` que dispara el fetch, el manejo de "no vuelvas a pedir lo que ya
-tengo". Trae **caching** (si dos componentes piden `getRaffles`, hay una sola
-request) e **invalidation por tags** (cuando una mutación toca `'Raffle'`,
-RTK Query re-fetchea automáticamente lo que dependía de ese tag — justo el
-tipo de coordinación que en tu curso resuelves a mano tras vender un número).
+tengo". Trae **caching** (si dos componentes piden `getWheels`, hay una sola
+request) e **invalidation por tags** (cuando una mutación toca `'Wheel'`, RTK
+Query vuelve a pedir lo que dependía de ese tag — justo el tipo de coordinación
+que en tu curso resuelves a mano después de crear una rueda).
 
 Lo que RTK Query te *cuesta*: un acoplamiento fuerte a su forma de pensar el
 cache, menos control fino sobre el flujo (que a veces quieres, sobre todo con
-la lógica de concurrencia de la venta), y una curva para el equipo. Para
+la ventana de deshacer y el optimista de los envíos), y una curva para el equipo. Para
 lógica asíncrona compleja con cancelación y coordinación —tu epic de polling,
 por ejemplo— RTK Query no reemplaza a redux-observable; son herramientas para
-problemas distintos. RTK Query brilla en el CRUD de datos (rifas,
-participantes); los epics siguen siendo para orquestación fina de streams.
+problemas distintos. RTK Query brilla en el CRUD de datos (ruedas,
+jugadores); los epics siguen siendo para orquestación fina de streams.
 
 ---
 
@@ -352,15 +369,15 @@ tipado (irrelevantes para ti, que estás en JS plano por D3) se ajustaron. No
 son reescrituras grandes, pero un `combineLatest(a$, b$)` copiado de doc 7
 puede necesitar `combineLatest([a$, b$])`.
 
-**Impacto en el marble testing.** Este es el que más te tocaría de verdad. En
-la Fase 10 pruebas epics con `rxjs-marbles` (D9) sobre RxJS 6. RxJS 7 cambió
-algunos detalles del `TestScheduler` y de cómo se representan ciertos frames.
-Migrar el proyecto a RxJS 7 no sería solo cambiar imports en los epics:
-tendrías que **re-verificar cada marble test**, porque el harness de testing
-es sensible a estos cambios de timing. Es exactamente lo que exploraría el
-ejercicio 22 de la Fase 11 (migrar `validateNumberEpic` a RxJS 7 en un branch
-aislado) — y la conclusión esperada de ese ejercicio es que la migración de
-RxJS toca más superficie de la que parece, empezando por los tests.
+**Impacto en las pruebas de canicas.** Es el que más te tocaría de verdad. En
+la Fase 10 pruebas epics con `rxjs-marbles` (D9) sobre RxJS 6, y `rxjs-marbles`
+ata su major a la de RxJS: migrar es también pasar a la 7.x del harness. La
+Fase 11 lo midió en una copia descartable: con RxJS 7.8.1 y rxjs-marbles 7.0.1,
+las pruebas de `pollingEpic` y `searchPlayerEpic` de la Fase 10 **pasaron sin
+cambiar una línea**, y los epics tampoco cambiaron. Eso no quiere decir que
+migrar sea gratis: quiere decir que la red funcionó como oráculo. Hay que
+re-verificar **cada** prueba de canicas, y es exactamente lo que hace el
+ejercicio 20 de la Fase 11 con la suite entera.
 
 ---
 
@@ -387,14 +404,15 @@ Donde el epic piensa en *streams* (`action$.pipe(...)`), la saga piensa en
 síncrono, y el middleware lo pausa y reanuda por ti.
 
 ```javascript
-// Tu curso (redux-observable): el flujo es un stream que transformas
-const pollingEpic = (action$) =>
+// Tu curso (redux-observable), simplificado del pollingEpic de la Fase 7:
+// el flujo es un stream que transformas
+const pollingEpic = (action$, state$, { store }) =>
   action$.pipe(
-    ofType('START_POLLING'),
-    switchMap(() =>
-      interval(2000).pipe(
-        mergeMap(() => apiClient.get('/results')),
-        takeUntil(action$.pipe(ofType('STOP_POLLING', logout.type))),
+    ofType(startPolling.type),
+    switchMap((action) =>
+      timer(0, POLLING_INTERVAL_MS).pipe(
+        mergeMap(() => from(store.get(`/purchases/${action.payload}`))),
+        takeUntil(action$.pipe(filter((a) => stopPolling.match(a) || logout.match(a)))),
       )
     )
   );
@@ -404,15 +422,16 @@ const pollingEpic = (action$) =>
 // "Alternativa moderna/distinta" (Redux Saga): el flujo se lee como síncrono
 function* pollingSaga() {
   while (true) {
-    yield take('START_POLLING');
+    const { payload: token } = yield take('purchases/startPolling');
     // race: o seguimos el polling, o alguien lo detiene
     yield race({
-      poll: call(pollLoop),          // loop con delay(2000) adentro
-      stop: take(['STOP_POLLING', 'auth/logout']),
+      poll: call(pollLoop, token),   // loop con delay(2000) adentro
+      stop: take(['purchases/stopPolling', 'auth/logout']),
     });
   }
 }
-// ⚠️ Alternativa comparativa, NO en el código del curso. El proyecto usa
+// ⚠️ Alternativa comparativa, NO en el código del curso, y no se ejecutó:
+// redux-saga no está en el stack y pollLoop no está escrito. El proyecto usa
 // redux-observable (D2). Sagas son otro mental model para el mismo problema.
 ```
 
@@ -436,31 +455,32 @@ antes/después de `connect()` → hooks, y sus trampas.
 
 ```javascript
 // Tu curso, estilo legacy: connect() con mapStateToProps/mapDispatchToProps
-class RaffleList extends React.Component {
+class WheelList extends React.Component {
   componentDidMount() {
-    this.props.fetchRaffles();
+    this.props.fetchWheels();
   }
   render() {
-    return this.props.raffles.map((r) => <RaffleRow key={r.id} raffle={r} />);
+    return this.props.wheels.map((w) => <WheelCard key={w.id} wheel={w} />);
   }
 }
-const mapState = (state) => ({ raffles: selectRaffles(state) });
-const mapDispatch = { fetchRaffles };
-export default connect(mapState, mapDispatch)(RaffleList);
+const mapState = (state) => ({ wheels: selectWheels(state) });
+const mapDispatch = { fetchWheels };
+export default connect(mapState, mapDispatch)(WheelList);
 ```
 
 ```javascript
 // "Alternativa moderna" (hooks-only): el mismo componente sin connect()
-function RaffleList() {
-  const raffles = useSelector(selectRaffles);
+function WheelList() {
+  const wheels = useSelector(selectWheels);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchRaffles());
+    dispatch(fetchWheels());
   }, [dispatch]);
-  return raffles.map((r) => <RaffleRow key={r.id} raffle={r} />);
+  return wheels.map((w) => <WheelCard key={w.id} wheel={w} />);
 }
-// Funciona en tu stack (react-redux 7.2 ya trae hooks). Pero NO se migra
-// automáticamente el código legacy: se convive (regla del curso, §6 de estilo).
+// Funciona en tu stack (react-redux 7.2 ya trae hooks), y la Fase 11 hace
+// exactamente esta migración con WheelTable, con su prueba como oráculo. Pero
+// NO se migra automáticamente todo el código legacy: se convive.
 ```
 
 Lo que **se gana**: menos ceremonia, sin `mapState`/`mapDispatch`, sin el
@@ -471,7 +491,7 @@ siempre grita—:
 - **Re-renders por igualdad referencial.** `connect()` hacía un shallow compare
   de todo el objeto de props. `useSelector` compara *por selector* con `===`
   por defecto. Si tu selector devuelve un objeto o array nuevo en cada llamada
-  (`selectOpenRaffles` que hace `.filter(...)` sin memoizar), el componente
+  (`selectLiveWheels` que hace `.filter(...)` sin memoizar), el componente
   re-renderiza siempre. La solución moderna es memoizar con `reselect` o pasar
   un comparador — un problema que `connect()` te escondía y `useSelector` te
   expone.
@@ -511,19 +531,21 @@ El orden sano, de menor a mayor riesgo:
    los re-renders por igualdad referencial en cada conversión.
 
 4. **RTK Query, endpoint por endpoint.** No migres todos los slices de golpe.
-   Elige *un* endpoint de solo lectura y bajo riesgo (listar rifas, no vender),
-   conviértelo, mide, y recién después sigue. La venta concurrente —con su
-   lógica fina— es lo *último* que tocarías, si es que la tocas.
+   Elige *un* endpoint de solo lectura y bajo riesgo (listar ruedas, no
+   enviar), conviértelo, mide, y recién después sigue. El envío manual —con su
+   ventana de deshacer y su optimista— es lo *último* que tocarías, si es que
+   lo tocas.
 
 5. **17 → 18, solo si hay un problema que resuelva.** No migres a 18 "porque es
    lo nuevo". Migra si tienes un dolor de responsividad de UI que las
-   Transitions arreglan (el tablero de números es el candidato). Si no lo
+   Transitions arreglan (el tablero de envíos de la Fase 5 es el candidato). Si no lo
    tienes, 18 es riesgo (`createRoot`, doble-effect en StrictMode, timing de
    batching) sin premio.
 
 6. **RxJS 6 → 7, al final y con cuidado.** Es el que más superficie de testing
    toca (§7): re-verificas todos los marbles. Bajo beneficio visible, riesgo
-   concentrado en los tests de epics. Último de la fila.
+   concentrado en las pruebas de epics —aunque la copia de la Fase 11 las pasó
+   sin cambios—. Último de la fila.
 
 Y lo que **no migrarías nunca "porque sí"**: Server Components (§5) implica
 cambiar de framework entero, no es una migración, es una reescritura. Redux
@@ -544,12 +566,12 @@ cambiar solo tira a la basura el conocimiento del equipo.
 | **Filosofía de la release** | Fiber estable; `Suspense` solo para `lazy` | "Sin features": habilita migración gradual y dos versiones de React coexistiendo | Concurrencia real: React puede interrumpir, pausar y reordenar renders |
 | **Montaje de la app** | `ReactDOM.render(<App/>, root)` | Igual: `ReactDOM.render(...)` | `createRoot(root).render(<App/>)`; `render` clásico queda deprecado |
 | **Event delegation** | Listeners a nivel `document` | Movidos a la raíz del árbol (nodo del `render`) — clave para apps embebidas y micro-frontends | Igual que 17 |
-| **JSX Transform** | Requiere `import React` en cada archivo con JSX | Nuevo transform: JSX sin importar React (opt-in) | Nuevo transform por defecto |
-| **Batching de estado** | Solo dentro de event handlers de React | Igual que 16 | Automático también en promesas, `setTimeout` y callbacks nativos |
+| **JSX Transform** | 16.14.0 ya trae el runtime nuevo; con CRA 4, JSX sin `import React` (medido) | Nuevo transform: JSX sin importar React | Nuevo transform por defecto |
+| **Batching de estado** | Solo dentro de event handlers de React (2 renders en un `setTimeout`, medido) | Igual que 16 (medido) | Automático también en promesas, `setTimeout` y callbacks nativos (1 render, medido) |
 | **Suspense** | Solo `React.lazy` (code splitting) | Igual | Suspense para data fetching + streaming SSR |
 | **APIs de concurrencia** | No existen | No existen | `startTransition`, `useTransition`, `useDeferredValue` |
 | **Hooks nuevos** | Los de 16.8 (`useState`…`useRef`) | Ninguno nuevo | `useId`, `useSyncExternalStore`, `useInsertionEffect` |
-| **`useEffect` en StrictMode (dev)** | Corre una vez | Igual | Doble invocación en dev para cazar efectos no idempotentes |
+| **`useEffect` en StrictMode (dev)** | Corre una vez (medido) | Igual (medido) | Doble invocación en dev para cazar efectos no idempotentes (medido) |
 | **Breaking al migrar** | — | Casi ninguno (por diseño); revisar si dependías de eventos en `document` | `createRoot` obligatorio; doble-effect en StrictMode; timing de batching |
 | **Qué cambiar en la práctica** | Punto de partida | Subir versión + activar JSX transform; migración casi "gratis" | Cambiar el mount, auditar efectos no idempotentes, decidir dónde usar Transitions |
 | **Costo/beneficio para legacy** | — | 🟢 Barato y de bajo riesgo: el escalón sano si algún día se migra | 🟠 Vale solo si hay un dolor de responsividad que la concurrencia resuelva; si no, riesgo sin premio |
@@ -575,11 +597,12 @@ nada. No hay código que entregar; hay criterio que ejercitar.
    comportamiento?
 
 2. Toma un componente cualquiera del curso que empiece con `import React from
-   'react'`. Explica por qué ese import es obligatorio en 16.14 y en qué
-   versión dejaría de serlo. ¿Qué error exacto verías si lo borraras hoy?
+   'react'`. Explica por qué, con CRA 4 y React 16.14.0, ese import ya no es
+   obligatorio, y qué variable de entorno lo volvería obligatorio. ¿Qué error
+   exacto verías entonces si lo borraras?
 
 3. Lee la fila "Batching de estado" de la tabla maestra (§11). Describe un caso
-   concreto del código de rifas donde el batching automático de React 18
+   concreto del código de la consola donde el batching automático de React 18
    cambiaría el número de renders respecto a tu 16.14, y por qué eso podría
    romper un test que cuenta renders.
 
@@ -588,12 +611,12 @@ nada. No hay código que entregar; hay criterio que ejercitar.
 4. Compara el bloque `createAsyncThunk` (§6, tu curso) con el bloque
    `createApi` de RTK Query. Lista tres cosas que RTK Query te *borraría* del
    código de la Fase 4, y una cosa que *perderías* en control. ¿Migrarías el
-   listado de rifas? ¿Y la venta concurrente? Justifica la diferencia.
+   listado de ruedas? ¿Y el envío manual? Justifica la diferencia.
 
 5. Lee la tabla de §8 (thunk / epic / saga / listener). Para tres flujos reales
-   del curso —el fetch simple de rifas, el polling del resultado, y la reserva
-   temporal con expiración— decide qué herramienta usarías si empezaras hoy de
-   cero, y por qué. ¿En cuáles el epic es la elección correcta y en cuáles es
+   del curso —el fetch simple de ruedas, el polling de compras pendientes, y la
+   ventana de deshacer de los envíos— decide qué herramienta usarías si
+   empezaras hoy de cero, y por qué. ¿En cuáles el epic es la elección correcta y en cuáles es
    sobreingeniería?
 
 6. Compara el `pollingEpic` (redux-observable) con el `pollingSaga` (Redux
@@ -604,7 +627,7 @@ nada. No hay código que entregar; hay criterio que ejercitar.
 **🟠 Decisión difícil (7–8)**
 
 7. Te dan presupuesto para **un solo** movimiento de modernización sobre el
-   sistema de rifas: 16→17, hooks-only, RTK Query en un endpoint, o React 18.
+   la consola: 16→17, hooks-only, RTK Query en un endpoint, o React 18.
    Elige uno, defiende la elección por costo/beneficio (incluye el costo
    invisible: testing, curva del equipo, riesgo en producción), y explica por
    qué los otros tres esperan. Después escribe el contraargumento: por qué
@@ -613,7 +636,8 @@ nada. No hay código que entregar; hay criterio que ejercitar.
 
 8. La estrategia de §10 pone RxJS 6→7 **al final** de la fila. Construye el
    argumento de por qué es el último —qué lo hace caro en relación a su
-   beneficio— apoyándote en lo que la Fase 10 dice sobre marble testing. Luego
+   beneficio— apoyándote en lo que la Fase 10 dice sobre las canicas, y en lo
+   que midió la copia de la Fase 11. ¿Ese resultado cambia el orden? Luego
    el contraejemplo: ¿existe alguna situación (una CVE en RxJS 6, por ejemplo)
    donde tendrías que saltártelo hasta el principio de la fila? ¿Cómo mitigarías
    el riesgo de tests si te vieras forzado?
@@ -635,8 +659,9 @@ nada. No hay código que entregar; hay criterio que ejercitar.
 - https://react.dev — Doc moderna de React. Cubre ≥ 16.8 pero describe 17/18
   como estado por defecto. Útil para este apéndice; **cuidado** al copiar
   cualquier API al código principal.
-- https://react.dev/blog/2020/10/20/react-v17.html — Anuncio oficial de React
-  17: la "release sin features", event delegation y el nuevo JSX transform (§3).
+- https://legacy.reactjs.org/blog/2020/10/20/react-v17.html — Anuncio oficial
+  de React 17: la "release sin features", event delegation y el nuevo JSX
+  transform (§3).
 - https://react.dev/blog/2022/03/29/react-v18 — Anuncio oficial de React 18:
   concurrencia, `createRoot`, batching automático, Transitions (§4).
 - https://react.dev/reference/react/useTransition — Referencia de
@@ -654,14 +679,15 @@ nada. No hay código que entregar; hay criterio que ejercitar.
 
 - https://react.dev/blog/2022/03/08/react-18-upgrade-guide — Guía oficial de
   upgrade a React 18. Contexto para §4 y §10; no se ejecuta en el curso.
-- https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transforms.html
-  — El nuevo JSX transform de React 17 explicado (§3).
+- https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html
+  — El nuevo JSX transform explicado, con su retroportación a 16.14.0 (§3).
 
 **Apéndices y fases del curso relacionados**
 
 - **Fase 11 — Cierre + puente a React moderno.** Este apéndice es la extensión
-  comparativa de su §5.5. La Fase 11 *ejecuta* migraciones puntuales con tests;
-  este apéndice solo *describe* el panorama moderno.
+  comparativa de su §5.4 y §5.5. La Fase 11 *ejecuta* una migración con su
+  prueba y *mide* las versiones nuevas en copias descartables; este apéndice
+  describe el panorama.
 - **Apéndice A5 — Class components vs hooks.** El desarrollo largo del mapa
   clase ↔ hooks que §9 solo roza.
 - **Apéndice A6 — Redux clásico vs Toolkit.** Respalda la parte `connect()` ↔
@@ -676,9 +702,8 @@ la sección que te trajo acá (RTK Query, RxJS, o hooks) → cierra con §10
 (estrategia) para ubicar todo en un orden de prioridad. Los anuncios oficiales
 de React 17 y 18 se leen *después*, ya con el mapa mental puesto.
 
-> ⚠️ **Sobre las citas.** No tengo acceso a búsqueda web ni a una base de
-> datos: estas URLs y los nombres de sección pueden haber cambiado o contener
-> imprecisiones. Verifica cada enlace antes de apoyarte en él, y confirma
+> ⚠️ **Sobre las citas.** Las URL y los nombres de sección pueden haber
+> cambiado desde la redacción. Verifica cada enlace antes de apoyarte en él, y confirma
 > siempre que la versión que estás leyendo coincide con la de tu proyecto
 > (React 16.14, RTK 1.8, react-redux 7.2, RxJS 6.6.7, Router 5). Cuando una
 > API que no reconoces aparece en la doc (`createRoot`, `useTransition`,

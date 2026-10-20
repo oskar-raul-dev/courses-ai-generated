@@ -1,5 +1,5 @@
 # 🧩 Plantilla de incidente — Track BE 🔥
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 Copia este esqueleto al redactar un incidente del track BE y rellena los
 `{{placeholders}}`. Borra las notas entre paréntesis antes de entregar.
@@ -61,7 +61,7 @@ lenguaje de negocio, escritas por alguien que no sabe qué es una transacción.
 reporte incluye una teoría del usuario sobre la causa —y suelen incluirla—,
 consérvala: descartarla es parte del trabajo.}}
 
-**Reportado por:** {{rol — vendedor, supervisor, tesorería, soporte, el propio equipo}}
+**Reportado por:** {{rol — operación, supervisor, tesorería, soporte, el propio equipo}}
 **Ambiente:** {{desarrollo / QA / UAT / PROD / CI / varios}}
 
 ### 🎯 Qué se te pide
@@ -111,7 +111,7 @@ volvió?}}
 ### 📝 Tu investigación
 
 **Reproducción**
-{{Pasos numerados y exactos, con datos concretos: qué rifa, qué número, en qué
+{{Pasos numerados y exactos, con datos concretos: qué rueda, qué segmento, en qué
 estado, a qué hora, con qué usuario, con cuántos clientes concurrentes. Si no lo
 lograste, escribe qué intentaste — no reproducir también es un resultado, y en
 concurrencia es el resultado más frecuente al principio.}}

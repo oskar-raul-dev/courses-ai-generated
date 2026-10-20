@@ -1,5 +1,5 @@
 # 🧰 Apéndice A6 — Redux Clásico vs Toolkit
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 > **Material de consulta rápida.** No se lee de corrido: saltas a la
 > sección que te hace falta cuando una fase te tira un `createSlice` o un
@@ -14,8 +14,8 @@ Toolkit (`createSlice`, `configureStore`) porque así lo fija la decisión D4
 **leer los dos** y a saber cuál te toca tocar en cada hotfix.
 
 Todo el código va con identificadores en inglés y comentarios/UI en
-español, según la convención del proyecto. Los nombres (`raffleSlice`,
-`sellNumber`, `SELL_NUMBER`, `authSlice`) son los mismos que ya usan las
+español, según la convención del proyecto. Los nombres (`wheelSlice`,
+`sendGrant`, `SEND_GRANT`, `authSlice`) son los mismos que ya usan las
 fases 2 a 8, así que lo que veas acá es lo que vas a encontrar allá.
 
 ---
@@ -55,9 +55,9 @@ quieres su equivalente moderno (o al revés), es acá:
 |---|---|---|---|
 | Crear el store | `createStore(rootReducer, applyMiddleware(...))` | `configureStore({ reducer, middleware })` | Toolkit ya trae thunk + DevTools + checks de inmutabilidad |
 | Combinar reducers | `combineReducers({ ... })` | `configureStore({ reducer: { ... } })` | El objeto `reducer` combina solo |
-| Definir action type | `const SELL_NUMBER = 'SELL_NUMBER'` | lo genera `createSlice`/`createAction` | En Toolkit el type queda `'sale/sellNumber'` |
-| Action creator | `(p) => ({ type: SELL_NUMBER, payload: p })` | `createAction('sale/sellNumber')` o `slice.actions.sellNumber` | Ambos devuelven `{ type, payload }` |
-| Chequear el type | `action.type === SELL_NUMBER` | `sellNumber.match(action)` | `.match` evita strings sueltos mal escritos |
+| Definir action type | `const SEND_GRANT = 'SEND_GRANT'` | lo genera `createSlice`/`createAction` | En Toolkit el type queda `'grant/sendGrant'` |
+| Action creator | `(p) => ({ type: SEND_GRANT, payload: p })` | `createAction('grant/sendGrant')` o `slice.actions.sendGrant` | Ambos devuelven `{ type, payload }` |
+| Chequear el type | `action.type === SEND_GRANT` | `sendGrant.match(action)` | `.match` evita strings sueltos mal escritos |
 | Reducer | `function reducer(state, action){ switch(action.type){...} }` | campo `reducers` de `createSlice` o `createReducer` | En clásico devuelves estado nuevo; en Toolkit "mutas" |
 | Inmutabilidad | manual (`{ ...state, items: [...] }`) | automática vía **Immer** | En Toolkit `state.items.push(x)` es seguro |
 | Slice completo | archivo de types + creators + reducer | `createSlice({ name, initialState, reducers })` | Un archivo en lugar de tres |
@@ -89,7 +89,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
-const rootReducer = combineReducers({ raffles: raffleReducer, auth: authReducer });
+const rootReducer = combineReducers({ wheels: wheelReducer, auth: authReducer });
 
 // tienes que enchufar a mano thunk y DevTools
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
@@ -98,12 +98,12 @@ const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk
 ```javascript
 // ── Toolkit (lo que usa el proyecto) ─────────────────────
 import { configureStore } from '@reduxjs/toolkit';
-import raffleReducer from '../features/raffles/raffleSlice';
+import wheelReducer from '../features/wheels/wheelSlice';
 import authReducer from '../features/auth/authSlice';
 
 // thunk, DevTools y checks de inmutabilidad vienen de fábrica
 const store = configureStore({
-  reducer: { raffles: raffleReducer, auth: authReducer },
+  reducer: { wheels: wheelReducer, auth: authReducer },
 });
 ```
 
@@ -128,12 +128,12 @@ el `slice.actions`.
 
 ```javascript
 // ── Clásico: tres piezas separadas ───────────────────────
-export const SELL_NUMBER = 'SELL_NUMBER';                 // el type
-export const sellNumber = (payload) => ({                 // el creator
-  type: SELL_NUMBER,
+export const SEND_GRANT = 'SEND_GRANT';                 // el type
+export const sendGrant = (payload) => ({                 // el creator
+  type: SEND_GRANT,
   payload,
 });
-// uso: dispatch(sellNumber({ raffleId, number: '0347' }))
+// uso: dispatch(sendGrant({ playerId: 42, reason: 'compensación' }))
 ```
 
 ```javascript
@@ -141,10 +141,10 @@ export const sellNumber = (payload) => ({                 // el creator
 import { createAction } from '@reduxjs/toolkit';
 
 // el type se arma solo con el string que le pasas
-export const sellNumber = createAction('sale/sellNumber');
-// uso idéntico: dispatch(sellNumber({ raffleId, number: '0347' }))
-// además: sellNumber.type === 'sale/sellNumber'
-//         sellNumber.match(action) === true si action vino de acá
+export const sendGrant = createAction('grant/sendGrant');
+// uso idéntico: dispatch(sendGrant({ playerId: 42, reason: 'compensación' }))
+// además: sendGrant.type === 'grant/sendGrant'
+//         sendGrant.match(action) === true si action vino de acá
 ```
 
 Los dos producen el mismo objeto `{ type, payload }`. La diferencia es que
@@ -170,12 +170,12 @@ esperaba". El reducer es donde el estado se calcula.
 // ── Clásico: switch + copia inmutable a mano ─────────────
 const initialState = { items: [], loadingList: false };
 
-function raffleReducer(state = initialState, action) {
+function wheelReducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_RAFFLES_PENDING:
+    case FETCH_WHEELS_PENDING:
       // devuelves un objeto NUEVO, sin tocar el anterior
       return { ...state, loadingList: true };
-    case FETCH_RAFFLES_FULFILLED:
+    case FETCH_WHEELS_FULFILLED:
       return { ...state, loadingList: false, items: action.payload };
     default:
       return state; // clave: si no reconoces el type, devuelves el estado tal cual
@@ -187,12 +187,12 @@ function raffleReducer(state = initialState, action) {
 // ── Toolkit: createReducer con builder ───────────────────
 import { createReducer } from '@reduxjs/toolkit';
 
-const raffleReducer = createReducer(initialState, (builder) => {
+const wheelReducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(fetchRaffles.pending, (state) => {
+    .addCase(fetchWheels.pending, (state) => {
       state.loadingList = true;        // "mutas": Immer lo hace inmutable por ti
     })
-    .addCase(fetchRaffles.fulfilled, (state, action) => {
+    .addCase(fetchWheels.fulfilled, (state, action) => {
       state.loadingList = false;
       state.items = action.payload;
     });
@@ -223,11 +223,11 @@ por debajo. Tú escribes código que *parece* mutación sobre un borrador
 
 ```javascript
 // Dentro de un createSlice / createReducer, esto es correcto:
-reserveNumber(state, action) {
+grantSent(state, action) {
   // parece mutación, Immer la convierte en copia inmutable
-  const cell = state.numbers.find((n) => n.number === action.payload);
-  cell.status = 'reserved';        // ✅ seguro
-  state.reservedCount += 1;        // ✅ seguro
+  const grant = state.byId[action.payload.grantId];
+  grant.status = 'sent';           // ✅ seguro
+  grant.error = null;              // ✅ seguro
 }
 ```
 
@@ -239,13 +239,13 @@ reserveNumber(state, action) {
 
 ```javascript
 // ❌ mezcla las dos formas: mutación + return
-addRaffle(state, action) {
+addWheel(state, action) {
   state.items.push(action.payload);
   return { ...state, dirty: true }; // 💥 no hagas esto
 }
 
 // ✅ elige una: solo mutación
-addRaffle(state, action) {
+addWheel(state, action) {
   state.items.push(action.payload);
   state.dirty = true;
 }
@@ -261,7 +261,7 @@ addRaffle(state, action) {
 ## 6. `createSlice`: actions + reducer en un archivo
 
 **Cuándo lo tocas.** Es el caballo de batalla del código nuevo (D4). Cada
-feature nueva del proyecto —`raffleSlice`, `saleSlice`, `authSlice`,
+feature nueva del proyecto —`wheelSlice`, `grantSlice`, `authSlice`,
 `settlementSlice`— es un `createSlice`. Si tocas lógica de estado moderna,
 tocas esto.
 
@@ -271,40 +271,41 @@ action creators, y el reducer. Tú escribes solo el `initialState` y las
 funciones que transforman estado.
 
 ```javascript
-// src/features/sale/saleSlice.js
+// src/features/grants/grantSlice.js — una versión reducida del de F05: dos de sus casos
 import { createSlice } from '@reduxjs/toolkit';
 
-const saleSlice = createSlice({
-  name: 'sale',
-  initialState: { numbers: [], reservedCount: 0, error: null },
+const grantSlice = createSlice({
+  name: 'grants',
+  initialState: { byId: {}, order: [] },
   reducers: {
     // cada key genera un action creator y un action type:
-    //   saleSlice.actions.reserveNumber  →  type 'sale/reserveNumber'
-    reserveNumber(state, action) {
-      const cell = state.numbers.find((n) => n.number === action.payload);
-      if (cell && cell.status === 'available') {
-        cell.status = 'reserved';    // Immer: mutación segura
-        state.reservedCount += 1;
-      }
+    //   grantSlice.actions.grantQueued  →  type 'grants/grantQueued'
+    grantQueued(state, action) {
+      const grant = action.payload;
+      state.byId[grant.id] = grant;
+      state.order.push(grant.id);
     },
-    // ejemplo de acción con payload preparado
-    sellNumber(state, action) {
-      const cell = state.numbers.find((n) => n.number === action.payload.number);
-      if (cell) cell.status = 'sold';
+    // el rollback del envío optimista: por id, y nunca sobre lo confirmado
+    rollbackGrant(state, action) {
+      const grant = state.byId[action.payload.grantId];
+      if (grant && !grant.confirmed && grant.status === 'sent') {
+        grant.status = 'failed';
+        grant.error = action.payload.error;
+      }
     },
   },
 });
 
 // esto es lo que exportas: los creators y el reducer
-export const { reserveNumber, sellNumber } = saleSlice.actions;
-export default saleSlice.reducer;
+export const { grantQueued, rollbackGrant } = grantSlice.actions;
+export default grantSlice.reducer;
 ```
 
 **Anatomía en una frase:** `name` prefija los types, cada key de `reducers`
-es a la vez un action creator (`saleSlice.actions.reserveNumber`) y un caso
-del reducer, y `saleSlice.reducer` es lo que enchufas en `configureStore`.
+es a la vez un action creator (`grantSlice.actions.grantQueued`) y un caso
+del reducer, y `grantSlice.reducer` es lo que enchufas en `configureStore`.
 
-> ⚠️ **Error común.** Olvidar exportar `saleSlice.reducer` como
+> ⚠️ **Error común.** Olvidar exportar `grantSlice.reducer` como
 > `export default` (o exportar el slice entero por error). Si al store le
 > pasas el objeto slice en vez de su `.reducer`, el estado nunca se arma y
 > `useSelector` te devuelve `undefined`. Revisa siempre que el
@@ -315,7 +316,7 @@ del reducer, y `saleSlice.reducer` es lo que enchufas en `configureStore`.
 ## 7. Async: thunk manual vs `createAsyncThunk`
 
 **Cuándo lo tocas.** Cada vez que el estado depende de una llamada a la API
-(`/raffles`, `/raffles/:id/numbers`, `/results`). El async no vive en el reducer —los
+(`/wheels`, `/wheels/:id/segments`, `/spinLog`). El async no vive en el reducer —los
 reducers son puros—; vive en un thunk o en un epic.
 
 En clásico, un thunk es una función que recibe `dispatch` y despacha a mano
@@ -325,13 +326,13 @@ enganchas en `extraReducers`.
 
 ```javascript
 // ── Clásico: thunk a mano, tres action types ─────────────
-export const fetchRaffles = () => async (dispatch) => {
-  dispatch({ type: FETCH_RAFFLES_PENDING });
+export const fetchWheels = () => async (dispatch) => {
+  dispatch({ type: FETCH_WHEELS_PENDING });
   try {
-    const response = await apiClient.get('/raffles');
-    dispatch({ type: FETCH_RAFFLES_FULFILLED, payload: response.data });
+    const response = await apiClient.get('/wheels');
+    dispatch({ type: FETCH_WHEELS_FULFILLED, payload: response.data });
   } catch (error) {
-    dispatch({ type: FETCH_RAFFLES_REJECTED, error: toReadableError(error) });
+    dispatch({ type: FETCH_WHEELS_REJECTED, error: toReadableError(error) });
   }
 };
 ```
@@ -340,20 +341,20 @@ export const fetchRaffles = () => async (dispatch) => {
 // ── Toolkit: createAsyncThunk genera los tres estados ────
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchRaffles = createAsyncThunk('raffles/fetch', async () => {
-  const response = await apiClient.get('/raffles');
+export const fetchWheels = createAsyncThunk('wheels/fetch', async () => {
+  const response = await apiClient.get('/wheels');
   return response.data; // esto llega como action.payload en el .fulfilled
 });
 
 // y en el slice reaccionas a los tres estados:
 extraReducers: (builder) => {
   builder
-    .addCase(fetchRaffles.pending, (state) => { state.loadingList = true; })
-    .addCase(fetchRaffles.fulfilled, (state, action) => {
+    .addCase(fetchWheels.pending, (state) => { state.loadingList = true; })
+    .addCase(fetchWheels.fulfilled, (state, action) => {
       state.loadingList = false;
       state.items = action.payload;
     })
-    .addCase(fetchRaffles.rejected, (state, action) => {
+    .addCase(fetchWheels.rejected, (state, action) => {
       state.loadingList = false;
       state.error = action.error;
     });
@@ -365,10 +366,10 @@ del slice van en `reducers` (y generan creators). Las que vienen de
 *afuera* —un `createAsyncThunk`, o una action de otro slice— van en
 `extraReducers` con `builder.addCase`, y **no** generan creators nuevos.
 
-> 💡 **¿Thunk o epic?** Si es un pedido puntual (traer rifas, vender un
-> número), un thunk alcanza y es más simple de leer. El epic (RxJS) se
+> 💡 **¿Thunk o epic?** Si es un pedido puntual (traer ruedas, enviar un
+> premio), un thunk alcanza y es más simple de leer. El epic (RxJS) se
 > justifica cuando hay **cancelación, debounce, polling o carreras** que un
-> thunk no maneja bien: el polling del resultado de la lotería (Fase 7) es
+> thunk no maneja bien: el polling de las compras pendientes (Fase 7) es
 > el caso de manual. No metas RxJS donde un thunk resuelve. El detalle de
 > epics vive en **A7**.
 
@@ -382,13 +383,13 @@ del slice van en `reducers` (y generan creators). Las que vienen de
 ## 8. `createEntityAdapter`: normalización sin boilerplate
 
 **Cuándo lo tocas.** Cuando un slice guarda una **lista de entidades por
-id** y haces mucho "busca la rifa X, actualízala, bórrala". En vez de
+id** y haces mucho "busca la rueda X, actualízala, bórrala". En vez de
 mantener `{ byId, allIds }` a mano, `createEntityAdapter` te da esa
 estructura normalizada más los métodos CRUD y los selectores.
 
 ```javascript
 // ── A mano (clásico): normalización artesanal ────────────
-// state.raffles = { byId: { 'r1': {...} }, allIds: ['r1', 'r2'] }
+// state.wheels = { byId: { 'r1': {...} }, allIds: ['r1', 'r2'] }
 // y escribes addOne / updateOne / removeOne tú mismo...
 ```
 
@@ -396,32 +397,32 @@ estructura normalizada más los métodos CRUD y los selectores.
 // ── Toolkit: el adapter te lo da hecho ───────────────────
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-const rafflesAdapter = createEntityAdapter();
+const wheelsAdapter = createEntityAdapter();
 
-const raffleSlice = createSlice({
-  name: 'raffles',
+const wheelSlice = createSlice({
+  name: 'wheels',
   // getInitialState() arma { ids: [], entities: {} }
-  initialState: rafflesAdapter.getInitialState({ loadingList: false }),
+  initialState: wheelsAdapter.getInitialState({ loadingList: false }),
   reducers: {
-    raffleAdded: rafflesAdapter.addOne,       // CRUD listo para usar
-    raffleUpdated: rafflesAdapter.updateOne,
-    raffleRemoved: rafflesAdapter.removeOne,
+    wheelAdded: wheelsAdapter.addOne,       // CRUD listo para usar
+    wheelUpdated: wheelsAdapter.updateOne,
+    wheelRemoved: wheelsAdapter.removeOne,
   },
 });
 
 // selectores gratis (selectAll, selectById, ...):
-export const { selectAll: selectAllRaffles, selectById: selectRaffleById } =
-  rafflesAdapter.getSelectors((state) => state.raffles);
+export const { selectAll: selectAllWheels, selectById: selectWheelById } =
+  wheelsAdapter.getSelectors((state) => state.wheels);
 ```
 
 > ⚠️ **Error común.** Pasarle al `getSelectors` el state equivocado. El
 > argumento es la función que ubica *el slice* dentro del state global
-> (`(state) => state.raffles`), no el state entero. Si le erras, los
+> (`(state) => state.wheels`), no el state entero. Si le erras, los
 > selectores devuelven vacío y juras que el fetch falló cuando el problema
 > es el puntero al slice.
 
 > 🔥 En esta base no todos los slices usan adapter; varios guardan un array
-> plano en `items` (como `raffleSlice` de la Fase 4). Migrar uno de esos a
+> plano en `items` (como `wheelSlice` de la Fase 4). Migrar uno de esos a
 > `createEntityAdapter` es un buen ejercicio opcional, no algo que se haga
 > en un hotfix.
 
@@ -437,26 +438,26 @@ hooks. Vas a ver los dos.
 
 ```javascript
 // ── Clásico: mapStateToProps + connect ───────────────────
-class RaffleTable extends React.Component {
+class WheelTable extends React.Component {
   render() {
     if (this.props.loadingList) return <Spinner />;
-    return <table>{/* usa this.props.raffles */}</table>;
+    return <table>{/* usa this.props.wheels */}</table>;
   }
 }
 const mapStateToProps = (state) => ({
-  raffles: state.raffles.items,
-  loadingList: state.raffles.loadingList,
+  wheels: state.wheels.items,
+  loadingList: state.wheels.loadingList,
 });
-export default connect(mapStateToProps)(RaffleTable);
+export default connect(mapStateToProps)(WheelTable);
 ```
 
 ```javascript
 // ── Toolkit + hooks: useSelector ─────────────────────────
-function RaffleTable() {
-  const raffles = useSelector((state) => state.raffles.items);
-  const loadingList = useSelector((state) => state.raffles.loadingList);
+function WheelTable() {
+  const wheels = useSelector((state) => state.wheels.items);
+  const loadingList = useSelector((state) => state.wheels.loadingList);
   if (loadingList) return <Spinner />;
-  return <table>{/* usa raffles */}</table>;
+  return <table>{/* usa wheels */}</table>;
 }
 ```
 
@@ -464,17 +465,17 @@ function RaffleTable() {
 
 ```javascript
 // ── Clásico: mapDispatchToProps ──────────────────────────
-const mapDispatchToProps = { sellNumber, reserveNumber };
-export default connect(mapStateToProps, mapDispatchToProps)(NumbersBoard);
-// dentro: this.props.sellNumber({ raffleId, number })
+const mapDispatchToProps = { sendGrant, undoGrant };
+export default connect(mapStateToProps, mapDispatchToProps)(GrantList);
+// dentro: this.props.sendGrant(grant.id)
 ```
 
 ```javascript
 // ── Hooks: useDispatch ───────────────────────────────────
-function NumbersBoard() {
+function GrantList() {
   const dispatch = useDispatch();
   // ...
-  return <NumberCell onSell={() => dispatch(sellNumber({ raffleId, number }))} />;
+  return <button onClick={() => dispatch(sendGrant(grant.id))}>Enviar ahora</button>;
 }
 ```
 
@@ -526,13 +527,13 @@ moderniza un módulo, así que conviene tener la receta.
 
 ```javascript
 // types
-export const RAFFLE_ADDED = 'RAFFLE_ADDED';
+export const WHEEL_ADDED = 'WHEEL_ADDED';
 // creator
-export const raffleAdded = (raffle) => ({ type: RAFFLE_ADDED, payload: raffle });
+export const wheelAdded = (wheel) => ({ type: WHEEL_ADDED, payload: wheel });
 // reducer
-function raffleReducer(state = { items: [] }, action) {
+function wheelReducer(state = { items: [] }, action) {
   switch (action.type) {
-    case RAFFLE_ADDED:
+    case WHEEL_ADDED:
       return { ...state, items: [...state.items, action.payload] };
     default:
       return state;
@@ -554,29 +555,29 @@ function raffleReducer(state = { items: [] }, action) {
 ```javascript
 import { createSlice } from '@reduxjs/toolkit';
 
-const raffleSlice = createSlice({
-  name: 'raffles',
+const wheelSlice = createSlice({
+  name: 'wheels',
   initialState: { items: [] },
   reducers: {
-    raffleAdded(state, action) {
+    wheelAdded(state, action) {
       state.items.push(action.payload); // Immer: seguro
     },
   },
 });
 
-export const { raffleAdded } = raffleSlice.actions;
-export default raffleSlice.reducer;
+export const { wheelAdded } = wheelSlice.actions;
+export default wheelSlice.reducer;
 ```
 
 > ⚠️ **Lo que NO debes cambiar a la ligera.** Si otras partes del código
-> —o un epic— dependen del string del type (`'RAFFLE_ADDED'`), ten en
-> cuenta que ahora pasa a ser `'raffles/raffleAdded'`. Cualquier
-> `ofType(RAFFLE_ADDED)` en un epic o cualquier comparación por string hay
+> —o un epic— dependen del string del type (`'WHEEL_ADDED'`), ten en
+> cuenta que ahora pasa a ser `'wheels/wheelAdded'`. Cualquier
+> `ofType(WHEEL_ADDED)` en un epic o cualquier comparación por string hay
 > que actualizarla. Por eso es refactor con pruebas, no parche: cambiar el
 > nombre público de una action tiene alcance más allá del slice.
 
 > 💡 **Corrección mínima vs refactor.** Si el bug es "no se agrega la
-> rifa", el hotfix arregla el reducer que ya existe. Convertir el slice a
+> rueda", el hotfix arregla el reducer que ya existe. Convertir el slice a
 > Toolkit es una mejora aparte: no la metas en el mismo commit que el
 > hotfix o mezclas dos riesgos distintos en una sola prueba.
 
@@ -590,7 +591,7 @@ sección 1 alcanza.
 
 **🟢 Fácil (1–3)**
 
-1. Dado el reducer clásico de `raffleReducer` de la sección 4, di qué
+1. Dado el reducer clásico de `wheelReducer` de la sección 4, di qué
    línea es la que garantiza la inmutabilidad y qué pasaría si la
    cambiaras por `state.items = action.payload; return state;`.
 2. Traduce a `createAction` este par clásico:
@@ -602,20 +603,20 @@ sección 1 alcanza.
 
 **🟡 Intermedio (4–6)**
 
-4. Tienes un componente con `mapStateToProps = (state) => ({ raffles:
-   state.raffles.items, count: state.raffles.items.length })` y
+4. Tienes un componente con `mapStateToProps = (state) => ({ wheels:
+   state.wheels.items, count: state.wheels.items.length })` y
    `connect()`. Reescríbelo con `useSelector`. ¿Por qué conviene dos
    `useSelector` separados en vez de uno que devuelva el objeto entero?
 5. Este thunk clásico despacha tres actions a mano
-   (`FETCH_RAFFLES_PENDING/FULFILLED/REJECTED`). Conviértelo a
+   (`FETCH_WHEELS_PENDING/FULFILLED/REJECTED`). Conviértelo a
    `createAsyncThunk` y escribe los tres `addCase` de `extraReducers`.
 6. En un `createSlice` alguien escribió:
-   `addRaffle(state, action) { state.items.push(action.payload); return state; }`.
+   `addWheel(state, action) { state.items.push(action.payload); return state; }`.
    Explica por qué está mal y da la versión correcta.
 
 **🟠 Difícil (7)**
 
-7. Un module heredado tiene un epic con `ofType(RAFFLE_ADDED)` que escucha
+7. Un módulo heredado tiene un epic con `ofType(WHEEL_ADDED)` que escucha
    la action del slice clásico. El equipo migra ese slice a `createSlice`
    siguiendo la receta de la sección 11. Enumera qué se rompe en el epic y
    cuál es el cambio mínimo para que vuelva a escuchar la action correcta.
@@ -623,15 +624,15 @@ sección 1 alcanza.
 **🔴 Muy difícil (8)**
 
 8. Un `useSelector` que hace
-   `useSelector((state) => state.raffles.items.filter((r) => r.status === 'open'))`
-   dispara re-renders en cada acción, aunque las rifas abiertas no cambien.
+   `useSelector((state) => state.wheels.items.filter((r) => r.status === 'live'))`
+   dispara re-renders en cada acción, aunque las ruedas abiertas no cambien.
    Diagnostica la causa (piensa en igualdad referencial) y propón **dos**
    soluciones distintas —una con `createSelector`, otra sin él— explicando
    el trade-off de cada una.
 
-> 🔥 **Opcional.** Toma el `raffleSlice` de la Fase 4 (array plano en
+> 🔥 **Opcional.** Toma el `wheelSlice` de la Fase 4 (array plano en
 > `items`) y reescríbelo con `createEntityAdapter`, dejando los selectores
-> `selectAllRaffles` y `selectRaffleById` funcionando. Compara el before/after
+> `selectAllWheels` y `selectWheelById` funcionando. Compara el before/after
 > en líneas de código y en qué queda más simple de mantener.
 
 ---

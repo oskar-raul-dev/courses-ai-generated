@@ -1,344 +1,374 @@
 # 🏁 Fase 11 — Cierre + puente a React moderno
 
-> Tutorial React 16 — Rifas y chances · Fase 11 de 11 · **6 horas** · **ÚLTIMA FASE**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Fase 11 de 11 · **6 horas** · **ÚLTIMA FASE**
 > Depende de: Fase 10 — Testing mínimo · Habilita: nada (es el cierre del curso)
 
 ---
 
 ## 🎯 1. Propósito
 
-Llegaste al final de 96 horas. No para aprender React —eso lo sabías al empezar—, sino para volverte alguien que puede **entrar a un sistema legacy ajeno, entenderlo, tocarlo sin romperlo y dejar registro de lo que hizo**. Esa era la promesa del curso, y esta fase la cierra mirando dos direcciones.
+Abdiel hace la pregunta que el estudio se viene guardando desde que contrató al equipo de Colombia: *"¿apagamos la Esclusa en 2028 o la migramos?"* (`00-historia-del-sistema.md` §3, el horizonte). Hay dos caminos y ninguno es gratis: **decomisionarla** —que sus funciones pasen a herramientas dentro del editor de Unity, que es lo que el equipo de Jewel Locks sí sabe mantener— o **migrarla** a las versiones actuales de todo. La historia dice cuándo se toma esa decisión: no hoy, sino con lo que el equipo aprenda en estos dos años. Esta fase no la toma por el estudio. Te deja los criterios para tomarla con números.
 
-Hacia atrás: un recorrido honesto por el viaje. Qué construiste, qué deuda técnica dejaste **a propósito** y por qué dejarla fue una decisión de ingeniería, no un descuido. Un mantenedor que no distingue deuda deliberada de negligencia es peligroso: paga la primera creyendo que arregla la segunda, y rompe cosas que funcionaban.
+Llegaste al final de 98 horas. No para aprender React —eso lo sabías al empezar—, sino para volverte alguien que puede **entrar a un sistema legacy ajeno, entenderlo, tocarlo sin romperlo y dejar registro de lo que hizo**. Esta fase cierra mirando en dos direcciones.
 
-Hacia adelante: un puente al React moderno que existe fuera de este curso —hooks puros, React Router 6, RTK Query, RxJS 7—, pero cruzado **con la red de tests de Fase 10 puesta**. La tesis de esta fase, y quizás del curso entero, cabe en una línea: **no se moderniza lo que no está testeado**. El orden correcto no es "reescribir y después probar"; es testear primero (Fase 10) y migrar después con la red debajo (Fase 11), usando los tests que ya existen como oráculo de "¿esto preservó el comportamiento?".
+Hacia atrás: qué construiste, qué deuda técnica quedó **a propósito** y por qué dejarla fue una decisión de ingeniería, no un descuido. Un mantenedor que no distingue deuda deliberada de negligencia es peligroso: paga la primera creyendo que arregla la segunda, y rompe cosas que funcionaban.
 
-La pieza forense de esta fase no es una técnica nueva de debugging. Es el hábito que te llevas: **el test de regresión que reproduce el bug antes del fix**. La disciplina de que ninguna corrección se da por buena hasta que existe un assert que fallaba con el bug presente y pasa con el fix aplicado. Ese hábito es lo que separa apagar un incendio de prevenir el próximo.
-
-> 📝 **Sobre el tono de esta fase.** Las diez fases anteriores construyeron código de dominio. Esta casi no agrega dominio nuevo: reflexiona, compara y ejemplifica migraciones sobre lo que ya existe. Vas a ver menos "acá está el slice nuevo" y más "acá está por qué lo que ya tienes está bien como está, y qué pasaría si lo modernizaras". Es deliberado: cerrar es también saber cuándo *no* tocar.
+Hacia adelante: un puente al React moderno —hooks en todos lados, RxJS 7, React 17 y 18—, cruzado **con la red de pruebas de la Fase 10 puesta**, y **corrido**, no imaginado: los ejemplos de esta fase se ejecutaron en copias descartables del proyecto con cada versión. La tesis cabe en una línea: **no se moderniza lo que no está probado**.
 
 ---
 
 ## ✅ 2. Qué queda listo al terminar
 
-- [ ] Un **mapa de la deuda técnica 💸** acumulada en las once fases, consolidado en `A12-mapa-de-deuda-tecnica.md`: qué se dejó sin pagar, por qué, y qué la haría exigible. La deuda deja de ser una anotación suelta por fase y pasa a ser un inventario versionado que el equipo puede priorizar y mantener.
-- [ ] El ejercicio 🔥 que Fase 4 dejó plantado —migrar `RaffleTable` de class component a funcional con hooks— **resuelto y explicado línea a línea**, con el test de Fase 10 como oráculo de que la migración no cambió el comportamiento.
-- [ ] Una comparación honesta de **corrección mínima vs refactorización** sobre un caso concreto, con el criterio para elegir una u otra bajo presión de producción.
-- [ ] Un ejemplo de **puente RxJS 6 → 7** sobre `validateNumberEpic`, con el marble test de Fase 10 mostrando el *antes/después* del scheduler —como comparación, nunca como migración del código principal.
-- [ ] Mención encuadrada de **RTK Query, React Router 6 y React 17/18**: qué resuelven, qué costo de migración tienen, y por qué este curso se quedó donde se quedó (D1: React 16.14.0 como punto final de referencia).
-- [ ] La **pieza forense consolidada**: el patrón "test de regresión que reproduce el bug antes del fix" como cierre metodológico del track forense de todo el curso.
+- [ ] El **mapa de la deuda técnica 💸** de las once fases, consolidado en `A12-mapa-de-deuda-tecnica.md`, con cada deuda marcada por lo que le pasa en el horizonte: *se paga antes del corte*, *muere con el decomiso* o *se paga al migrar*.
+- [ ] El tag **`pre-modernizacion`**: el estado de la consola antes de modernizar, con la suite de la Fase 10 en verde.
+- [ ] `WheelTable` **de clase a hooks**, con la prueba de la Fase 10 como oráculo: verde antes, verde después, y el archivo de la prueba sin una línea cambiada.
+- [ ] Un caso trabajado de **corrección mínima contra refactorización** sobre un bug real del curso, el incidente 19, con su prueba de regresión.
+- [ ] El **puente a RxJS 7**, medido: las pruebas de canicas de la Fase 10 corren sin cambios con RxJS 7.8.1 y rxjs-marbles 7.0.1.
+- [ ] El **puente a React 17 y 18**, medido: el JSX nuevo, el batching automático, el doble efecto de StrictMode.
+- [ ] El **veredicto de los dos años** (§9): los criterios medibles para decomisionar o migrar, y quién decide.
 
 ---
 
 ## 🚫 3. Qué queda fuera por ahora
 
-- **Migración real a React 17 o 18.** No se toca `package.json` ni `react-scripts`. React 17/18 aparecen solo como pinceladas comparativas (Apéndice A8, opcional). El código principal sigue en React 16.14.0 (D1) hasta la última línea del curso.
-- **Adoptar RTK Query en el código principal.** D4 la deja **solo mencionada**. Migrar `raffleSlice` de `createAsyncThunk` a `createApi` es un ejercicio de comparación 🔥, no un cambio que este curso ejecute.
-- **Migrar RxJS 6.6.7 → 7 en el código principal.** El puente se muestra como comparación editorial (regla del proyecto: las alternativas modernas aparecen como comparación o fase opcional, no en el código principal).
-- **React Router 5 → 6.** Se menciona la diferencia de API (`Switch`/`component` vs `Routes`/`element`, `useHistory` vs `useNavigate`) como orientación para cuando la encuentres afuera. No se migra.
-- **Pagar la deuda técnica acumulada.** El mapa de deuda **inventaria y prioriza**; no la salda. Pagar deuda sin la presión real del equipo es modernización idealizada, justo lo que el curso evita.
-- **Construir el e2e exhaustivo.** Fase 10 lo difirió acá, pero como *encuadre*, no como obligación. Queda 🔥. Esta fase decide dónde vive la discusión, no la resuelve entera.
-- **Depurar el build de producción y comparar ambientes** → `A13-depurar-el-build-de-produccion.md`, que es material de consulta del track forense y no de esta fase.
+- **Migrar de verdad a React 17 o 18, o a RxJS 7.** El código principal sigue en React 16.14.0 (D1) y RxJS 6.6.7 (D2) hasta la última línea del curso. Las otras versiones viven en copias descartables.
+- **Adoptar RTK Query.** D4 la deja solo mencionada (A8 §6).
+- **React Router 5 → 6.** Se menciona la diferencia de API como orientación (A8). No se migra.
+- **Pagar la deuda.** El mapa **inventaría y clasifica**; no salda. Pagar deuda sin su disparador es modernización idealizada, justo lo que el curso evita.
+- **Decidir por el estudio.** El veredicto da criterios y números; la decisión es de Abdiel, de Itzel y de Juliana.
+- **Depurar el build de producción** → `A13-depurar-el-build-de-produccion.md`.
 
 ---
 
 ## 🧠 4. Conceptos mínimos
 
-Esta fase asume que ya internalizaste casi todo. Lo que sigue no son conceptos nuevos de React o Redux; son tres ideas sobre **cómo se mantiene** un sistema, que el curso vino mostrando en la práctica y acá se nombran explícitamente.
-
 ### La deuda técnica deliberada no es lo mismo que el descuido
 
-A lo largo del curso marcaste deuda con 💸: el `window.confirm` en vez de un modal, el dinero en enteros nativos sin librería, `raffleSlice` sin normalizar, el reloj del cliente sin `serverNow` (el inventario completo está en `A12-mapa-de-deuda-tecnica.md`). Ninguna de esas cosas es un bug. Son decisiones donde alguien —tú, o el autor original del sistema real— eligió conscientemente **no** hacer lo "correcto" todavía, porque el costo de hacerlo superaba el beneficio en ese momento.
+A lo largo del curso marcaste deuda con 💸: el `window.confirm` en vez de un modal, la consola que baja la bitácora entera para contar, el reloj del navegador decidiendo el cierre, el detalle de una rueda que lee un arreglo de demo. Ninguna de esas cosas es un bug. Son decisiones donde alguien eligió conscientemente **no** hacer lo "correcto" todavía, porque costaba más de lo que daba.
 
-La distinción es operativa, no filosófica. Frente a una línea rara en producción, el mantenedor tiene que responder una pregunta antes de tocar nada: *¿esto está así a propósito o por error?* Si es deuda deliberada, tiene un motivo documentado y probablemente un test que fija el comportamiento actual como esperado —como el `formatCents` que **lanza** con float, que Fase 10 testea como correcto—. "Arreglarlo" rompería algo que dependía de ese comportamiento. Si es descuido, no hay motivo ni test, y ahí sí se corrige. Confundir las dos es la forma más común de que un hotfix bienintencionado genere el próximo incidente.
+La distinción es operativa. Frente a una línea rara, el mantenedor tiene que responder antes de tocar nada: *¿esto está así a propósito o por error?* Si es deuda deliberada, tiene un motivo escrito y a veces una prueba que fija el comportamiento actual como esperado —`formatCents`, que **lanza** con un float, y la Fase 10 lo prueba como correcto—. "Arreglarlo" rompería algo que dependía de eso. Si es descuido, no hay motivo ni prueba, y ahí sí se corrige.
 
-Por eso el mapa de deuda de §5.1 no lista problemas: lista **decisiones**, cada una con su porqué y su condición de exigibilidad. Eso es lo que un equipo real necesita para priorizar.
+### Corrección mínima contra refactorización: son dos trabajos distintos
 
-### Corrección mínima vs refactorización: son dos trabajos distintos
-
-Todo el curso insistió en separarlas, y acá se formaliza. Ante un bug hay dos respuestas legítimas y **no intercambiables**:
-
-La **corrección mínima** (hotfix) cambia lo menos posible para que el síntoma desaparezca. Una o dos líneas. No mejora el diseño, no paga deuda, a veces hasta *agrega* deuda a propósito. Su virtud es el riesgo bajo: cuanto menos tocas, menos puedes romper. Es lo que va a producción a las tres de la tarde con el incidente abierto.
-
-La **refactorización** cambia la estructura para que la clase de bug no vuelva a ser posible. Toca más código, necesita más pruebas, tiene más riesgo. Su virtud es que ataca la causa, no el síntoma. Es lo que va al backlog, con tiempo y con la red de tests puesta.
-
-El error no es elegir una; es **no distinguirlas**. Refactorizar bajo la presión de un incidente es cómo se rompe producción dos veces. Aplicar solo el hotfix y no anotar el refactor pendiente es cómo la deuda se vuelve invisible hasta que explota. La respuesta profesional casi siempre es *las dos, en orden*: hotfix ahora con su test de regresión, refactor después con su 💸 anotada. §5.3 lo muestra sobre un caso.
+Ante un bug hay dos respuestas legítimas y **no intercambiables**. La **corrección mínima** cambia lo menos posible para que el síntoma desaparezca: una o dos líneas, riesgo bajo, a veces hasta agrega deuda a propósito. Es lo que va a producción con el incidente abierto. La **refactorización** cambia la estructura para que esa clase de bug no vuelva a ser posible: toca más, necesita más pruebas, tiene más riesgo. Es lo que va al backlog, con la red puesta. El error no es elegir una; es **no distinguirlas**. La respuesta profesional casi siempre es *las dos, en orden*: §5.3 lo muestra.
 
 ### Modernizar es una migración con oráculo, no una reescritura con fe
 
-Cuando afuera del curso te toque llevar un módulo de clase a hooks, de RxJS 6 a 7, de `connect()` a `useSelector`, la pregunta que decide si el cambio es seguro no es "¿quedó más lindo?" sino "¿se comporta igual que antes?". Esa pregunta solo tiene respuesta confiable si existe algo que la responda por ti: un test que verifica **comportamiento, no implementación**.
+Cuando te toque llevar un módulo de clase a hooks, o de RxJS 6 a 7, la pregunta que decide si el cambio es seguro no es "¿quedó más lindo?" sino "¿se comporta igual que antes?". Esa pregunta solo tiene respuesta confiable si existe algo que la responda por ti: una prueba que verifica **comportamiento, no implementación**. Las de la Fase 10 preguntan a la pantalla, invocan el reducer como función, verifican la forma del stream con canicas: ninguna sabe si adentro hay una clase o un hook, ni qué versión de RxJS. Por eso sobreviven a la migración y sirven de **oráculo**: pasan contra la versión vieja, migras, pasan contra la nueva.
 
-Ahí es donde Fase 10 se revela como la precondición de Fase 11. Sus tests preguntan a la pantalla (`getByText`, `getByRole`, `getByTestId`), invocan el reducer como función pura, verifican la *forma* del stream con marbles. Ninguno sabe —ni le importa— si adentro hay una clase o un hook, un `connect()` o un `useSelector`, RxJS 6 o 7. Por eso sobreviven a la migración y pueden actuar como **oráculo**: corres el test contra la versión vieja (pasa), migras, corres el mismo test contra la versión nueva. Si sigue pasando, el comportamiento se preservó. Si falla, la migración cambió algo —y mejor enterarte por un assert rojo que por un ticket de producción.
+### El horizonte: decomisionar o migrar
 
-El corolario es la regla rectora de esta fase: **no se moderniza lo que no está testeado**. No porque esté prohibido, sino porque sin oráculo estás reescribiendo con fe, y la fe no es una estrategia de mantenimiento.
+Las dos salidas de la historia no son "lo viejo" contra "lo nuevo". **Decomisionar** es reconocer que la Esclusa resolvió un problema que se puede resolver de otra forma —herramientas dentro del editor de Unity—, y que cada mes que vive es mantenimiento de una tecnología que el estudio no domina. **Migrar** es apostar a que la consola vale lo suficiente como para traerla a la versión actual de todo. Ninguna de las dos se decide por gusto: se decide con lo que se puede medir en dos años, que es justamente lo que este curso aprendió a medir. El veredicto de §9 lo ordena.
 
 ---
 
 ## 💻 5. Implementación y código comentado
 
-Esta fase produce menos código nuevo que ninguna otra, y es correcto que así sea. Lo que produce es: un inventario, dos migraciones de ejemplo (una que sí conviene, una que se muestra solo para comparar) y un caso trabajado de hotfix-vs-refactor. Todo apoyado en artefactos que ya existen —no inventamos dominio nuevo en la última fase.
+Esta fase produce menos código nuevo que ninguna otra, y es correcto. Produce: un tag, una migración con oráculo, un caso trabajado de hotfix contra refactor, y un puente medido a las versiones nuevas.
 
 ### 5.1 El mapa de la deuda técnica 💸 → **A12**
 
-Durante once fases fuiste marcando deuda con 💸. Dispersa, cada marca parece una
-anotación menor. Junta, es el **backlog técnico real** del sistema: lo que un
-equipo de mantenimiento priorizaría en su primer sprint de mejoras.
+Durante once fases fuiste marcando deuda con 💸. Dispersa, cada marca parece una anotación menor. Junta, es el **backlog técnico real** del sistema. El inventario completo —cada deuda con qué se hizo en su lugar, por qué se dejó, qué la vuelve exigible y **qué le pasa en el horizonte**— vive en **`A12-mapa-de-deuda-tecnica.md`**. Ábrelo ahora y vuelve.
 
-El inventario completo —once entradas, cada una con qué se hizo en su lugar, por
-qué se dejó y **qué la vuelve exigible**— vive en
-**`A12-mapa-de-deuda-tecnica.md`**. Ábrelo ahora, léelo entero (son quince
-minutos) y vuelve.
+> 🧭 **La columna que importa no es "qué se dejó" sino "qué la vuelve exigible".** Mientras el disparador no ocurra, pagar la deuda es riesgo sin retorno. El día que ocurre, la deuda deja de ser deuda y pasa a ser un bug con fecha. Y el horizonte agrega una pregunta que la cambia todo: una deuda que muere con el decomiso **no se paga**, aunque su disparador esté cerca, si el corte llega antes.
 
-Que sea un archivo aparte y no una sección de esta fase no es un detalle de
-organización: **es esta misma fase pagando su propia meta-deuda.** La versión
-anterior del curso tenía el mapa acá dentro y una 💸 al lado admitiendo que
-debería vivir en un archivo versionado. Ahora vive ahí. Es el ejemplo más
-pequeño y más literal de todo el curso de cómo se paga una deuda: se identifica,
-se declara, y cuando el disparador ocurre —en este caso, que el inventario
-creció lo suficiente para no caber en una sección— se ejecuta.
+### 5.2 `WheelTable` de clase a hooks, con la red puesta
 
-Lo que sí tiene que quedarte de acá, porque es el criterio y no el inventario:
+La Fase 4 escribió `WheelTable` como clase con `connect()`, a propósito, al estilo de los módulos de 2019 (la versión está en la Fase 4). Es el ejemplo canónico de **migración segura**: la Fase 10 tiene una prueba de la tabla que no sabe si adentro hay una clase o una función. Esa prueba es el oráculo, y el procedimiento tiene un orden que no se negocia:
 
-> 🧭 **La columna que importa no es "qué se dejó" sino "qué la vuelve
-> exigible".** Mientras el disparador no ocurra, pagar la deuda es trabajo sin
-> retorno — peor, es *riesgo* sin retorno, porque estás tocando código que
-> funciona. El día que el disparador ocurre, la deuda deja de ser deuda y pasa a
-> ser un bug con fecha. El trabajo del equipo no es pagar todo: es **vigilar los
-> disparadores**.
+1. **El tag.** Antes de tocar nada, se marca el estado de partida:
 
-Y la distinción que hace utilizable todo el archivo, que es la misma de §4:
-**deuda deliberada tiene motivo documentado y a veces un test que fija el
-comportamiento actual como esperado; el descuido no tiene ni motivo ni test.**
-Frente a una línea rara, esa es la primera pregunta, antes de tocar nada.
+   ```bash
+   git tag -a pre-modernizacion -m "El estado antes de modernizar: la suite de la Fase 10 en verde es el oráculo de la Fase 11"
+   ```
 
-### 5.2 Refactor 🔥: `RaffleTable` de clase a hooks, con la red puesta
+2. **La línea base.** Se corre la prueba existente contra la clase. **Verde** (4 de 4). Esto establece "así se comporta hoy".
+3. **La migración.**
+4. **La misma prueba, sin tocarla**, contra la función. Si sigue verde, el comportamiento se preservó.
 
-Fase 4 dejó este ejercicio explícitamente plantado (§7, opcional 🔥): "reescribe `RaffleTable` de class component a funcional con hooks". Lo resolvemos acá porque es el ejemplo canónico de **migración segura**: hay un test de Fase 10 que verifica el comportamiento de la tabla sin saber si adentro hay una clase o una función. Ese test es el oráculo.
+La versión migrada:
 
-El procedimiento tiene un orden que no es negociable:
-
-1. Correr el test existente de `RaffleTable` contra la versión de clase. **Verde.** Esto establece la línea base: "así se comporta hoy".
-2. Escribir la versión funcional.
-3. Correr **el mismo test, sin tocarlo**, contra la versión funcional. Si sigue verde, el comportamiento se preservó. Si se pone rojo, la migración cambió algo observable.
-
-El paso 3 es el que le da sentido a todo. Si para que pase el test tuvieras que *modificar* el test, no estarías migrando: estarías cambiando el contrato. Ese es el anti-patrón que anula la red (nota de continuidad §1.1).
-
-**Versión original (clase con `connect()`, de Fase 4):**
-
-```javascript
-// src/features/raffles/RaffleTable.jsx (versión de clase, Fase 4)
-import React from 'react';
-import { connect } from 'react-redux';
+```jsx
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { statusLabel } from "../../components/WheelCard"; // el mapeo estado→etiqueta de Fase 0
 import {
-  fetchRaffles,
-  deleteRaffle,
-  selectRaffleToEdit,
-  selectRaffles,
+  fetchWheels,
+  deleteWheel,
+  selectWheelToEdit,
+  selectWheels,
   selectLoadingList,
-  selectRaffleError,
-} from './raffleSlice';
+  selectWheelError,
+} from "./wheelSlice";
 
-class RaffleTable extends React.Component {
-  componentDidMount() {
-    // Cargamos al montar: en clase, el equivalente al useEffect([]) de hooks.
-    this.props.fetchRaffles();
-  }
-
-  handleDelete = (id) => {
-    // 💸 window.confirm nativo como placeholder (deuda de Fase 4, sigue abierta).
-    if (window.confirm('¿Eliminar esta rifa? No se puede deshacer.')) {
-      this.props.deleteRaffle(id);
-    }
-  };
-
-  render() {
-    const { raffles, loadingList, error } = this.props;
-    // ... (los cuatro estados visuales: cargando / error / vacío / lista)
-  }
-}
-
-const mapStateToProps = (state) => ({
-  raffles: selectRaffles(state),
-  loadingList: selectLoadingList(state),
-  error: selectRaffleError(state),
-});
-
-const mapDispatchToProps = { fetchRaffles, deleteRaffle, selectRaffleToEdit };
-
-export default connect(mapStateToProps, mapDispatchToProps)(RaffleTable);
-```
-
-**Versión migrada (funcional con hooks):**
-
-```javascript
-// src/features/raffles/RaffleTable.jsx (versión funcional, Fase 11)
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  fetchRaffles,
-  deleteRaffle,
-  selectRaffleToEdit,
-  selectRaffles,
-  selectLoadingList,
-  selectRaffleError,
-} from './raffleSlice';
-
-// statusLabel no cambia: es una función pura, ajena a clase/hooks. Se mantiene igual.
-
-function RaffleTable() {
+// F11: la misma tabla, de clase con connect() a función con hooks. Comportamiento cero:
+// pinta los mismos cuatro estados, y la prueba de la Fase 10 lo confirma sin cambiar una línea.
+function WheelTable() {
   const dispatch = useDispatch();
-  // useSelector reemplaza mapStateToProps: una suscripción por porción de estado.
-  const raffles = useSelector(selectRaffles);
+  // Un useSelector por porción de estado: el mapStateToProps de antes.
+  const wheels = useSelector(selectWheels);
   const loadingList = useSelector(selectLoadingList);
-  const error = useSelector(selectRaffleError);
+  const error = useSelector(selectWheelError);
 
-  // useEffect con array vacío = componentDidMount. Corre una vez, al montar.
+  // Al montar, como el componentDidMount de antes. dispatch es estable: no se repite.
   useEffect(() => {
-    dispatch(fetchRaffles());
-  }, [dispatch]); // dispatch es estable; el efecto no se re-dispara.
+    dispatch(fetchWheels());
+  }, [dispatch]);
 
   const handleDelete = (id) => {
-    // 💸 La MISMA deuda de la versión de clase. Migrar a hooks NO paga deuda
-    // de UI: window.confirm sigue acá. Modernizar ≠ arreglar todo de paso.
-    if (window.confirm('¿Eliminar esta rifa? No se puede deshacer.')) {
-      dispatch(deleteRaffle(id));
+    // 💸 La misma deuda que en la clase: migrar a hooks no paga deuda de interfaz.
+    if (window.confirm("¿Eliminar esta rueda? No se puede deshacer.")) {
+      dispatch(deleteWheel(id));
     }
   };
 
-  // El JSX del render es idéntico: los cuatro estados visuales no cambian.
-  // La pantalla que ve el usuario —y que el test consulta— es la misma.
-  // ...
+  if (loadingList) {
+    return <div className="alert alert-info">Cargando ruedas…</div>;
+  }
+  if (error) {
+    // Mensaje según el type que resolvió el thunk. El operador no ve el error de axios.
+    return (
+      <div className="alert alert-danger" role="alert">
+        {error.message}
+        <button className="btn btn-sm btn-outline-danger ml-3" onClick={() => dispatch(fetchWheels())}>
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+  if (wheels.length === 0) {
+    return <div className="alert alert-secondary">No hay ruedas todavía. Crea la primera.</div>;
+  }
+
+  return (
+    <table className="table table-striped table-hover">
+      <thead className="thead-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Cierre</th>
+          <th>Segmentos</th>
+          <th>Estado</th>
+          <th className="text-right">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {wheels.map((wheel) => (
+          <tr key={wheel.id}>
+            <td>
+              {/* El detalle todavía lee de src/mock/wheels.js (💸, A12). */}
+              <Link to={`/wheels/${wheel.id}`}>{wheel.name}</Link>
+            </td>
+            <td>{wheel.closesAt}</td>
+            <td>{wheel.segments.length}</td>
+            <td>
+              <span className="badge badge-pill badge-secondary">{statusLabel(wheel.status)}</span>
+            </td>
+            <td className="text-right">
+              <button className="btn btn-sm btn-outline-primary mr-2" onClick={() => dispatch(selectWheelToEdit(wheel.id))}>
+                Editar
+              </button>
+              <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(wheel.id)}>
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
 
-export default RaffleTable; // sin connect(): el componente ya no está envuelto.
+// Sin connect(): la conexión al store la hacen los hooks de adentro.
+export default WheelTable;
 ```
 
-**El mapa de equivalencias**, que es lo que de verdad te llevas (coincide con el Apéndice A5, "class vs hooks"):
+Resultado de la corrida del 18/10/2026: el diff toca **un solo archivo** (71 líneas agregadas, 85 quitadas), `git diff pre-modernizacion -- src/features/wheels/WheelTable.test.jsx` no muestra nada, y la suite entera da **25 de 25** antes y después. El build compila sin advertencias.
+
+**El mapa de equivalencias**, que coincide con A5:
 
 | Clase + `connect()` | Función + hooks | Nota |
 |---|---|---|
-| `mapStateToProps` | un `useSelector` por porción | Cada `useSelector` es una suscripción independiente |
-| `mapDispatchToProps` | `const dispatch = useDispatch()` + `dispatch(action())` | El envoltorio automático de `connect()` ahora es explícito |
-| `componentDidMount` | `useEffect(() => {...}, [])` | El array vacío es lo que lo vuelve "solo al montar" |
-| `componentWillUnmount` | `return` del `useEffect` | (No aplica acá; `RaffleTable` no limpia nada) |
-| `this.props.x` | la variable `x` directa | Ya no hay `this` |
-| `connect(...)(Componente)` | el componente se exporta pelado | La conexión al store la hacen los hooks adentro |
+| `mapStateToProps` | un `useSelector` por porción | cada `useSelector` es una suscripción independiente |
+| `mapDispatchToProps` | `const dispatch = useDispatch()` + `dispatch(action())` | el envoltorio automático de `connect()` ahora es explícito |
+| `componentDidMount` | `useEffect(() => {...}, [dispatch])` | `dispatch` es estable: corre una vez |
+| `componentWillUnmount` | el `return` del `useEffect` | (no aplica: `WheelTable` no limpia nada) |
+| `this.props.x` | la variable `x` | ya no hay `this` |
+| `connect(...)(Componente)` | el componente se exporta pelado | la conexión al store la hacen los hooks |
 
-> **La diferencia entre corrección mínima y refactorización, aplicada acá.** Esta migración **no es un fix**: `RaffleTable` en clase no tiene ningún bug. Es una refactorización pura, opcional (🔥), motivada por consistencia de estilo, no por un incidente. Por eso puede esperar al backlog y hacerse con calma. Si en cambio la tabla *tuviera* un bug en producción, la respuesta correcta **no** sería "aprovecho y la migro a hooks": sería el hotfix mínimo sobre la clase, y la migración quedaría como 💸 aparte. Mezclar un fix urgente con una refactorización opcional es multiplicar el riesgo del fix por el de la migración, justo cuando menos lo quieres.
+> **La diferencia entre corrección mínima y refactorización, aplicada acá.** Esta migración **no es un fix**: la `WheelTable` de clase no tiene ningún bug. Es una refactorización pura, motivada por consistencia, no por un incidente. Si la tabla *tuviera* un bug en producción, la respuesta **no** sería "aprovecho y la paso a hooks": sería el hotfix mínimo sobre la clase, y la migración quedaría como 💸 aparte. Mezclar un fix urgente con una refactorización opcional es multiplicar el riesgo del fix por el de la migración, justo cuando menos lo quieres. Y la deuda del `window.confirm` sigue ahí: migrar no paga deuda de interfaz.
 
-> ⚠️ **Ajuste menor pendiente (nota de continuidad §2/§4).** El test de `RaffleTable` de Fase 10 asume `data-testid="raffles-loading"` para el estado de carga. La versión de clase de Fase 4 renderiza ese estado como `<div className="alert alert-info">Cargando rifas…</div>` **sin ese testid**. Es decir: el testid es un requisito **nuevo** que Fase 10 introdujo y que hay que agregar al componente —tanto en la versión de clase como en la funcional— para que el oráculo funcione. Es un ajuste menor de una línea (`data-testid="raffles-loading"` en el `div` de carga), no una reapertura de diseño. Al migrar, ese testid se mantiene idéntico: renombrarlo rompería el test (los `data-testid` son contrato de testing desde Fase 10).
+### 5.3 Caso trabajado: corrección mínima contra refactor, sobre el mismo bug
 
-### 5.3 Caso trabajado: hotfix mínimo vs refactor, sobre el mismo bug
+El incidente 19 es un bug del curso medido: con la bitácora de la Semana del Canal cargada en el tablero (180.000 giros), cada acción de cualquier pantalla tarda **213 ms** en desarrollo, porque los chequeos de Toolkit recorren la bitácora entera (Fase 9 §4). Las dos respuestas, lado a lado.
 
-Tomemos un bug real del curso para ver las dos respuestas lado a lado. El ejercicio 🔴 25 de Fase 4 describe el síntoma: "a veces, al crear una rifa con caos alto, aparece duplicada en la tabla". La causa raíz es un doble submit rápido: el usuario clickea "Crear" dos veces antes de que `loadingMutation` bloquee el botón, y se disparan dos `createRaffle` que el `push` del reducer inserta ambos.
-
-**Primero, el test de regresión que reproduce el bug antes del fix** (la pieza forense de esta fase). Se escribe *antes* de tocar el código, y debe fallar con el bug presente:
+**Primero, la prueba de regresión que reproduce el bug antes del fix.** Se escribe *antes* de tocar el código, y tiene que fallar con el bug presente:
 
 ```javascript
-// src/features/raffles/raffleSlice.test.js (extracto)
-// Este test se escribe ANTES del fix. Con el bug presente, falla.
-it('no duplica la rifa si createRaffle.fulfilled llega dos veces con el mismo id', () => {
-  const raffle = { id: 'r1', name: 'Navideña', status: 'draft' };
-  let state = raffleReducer(undefined, { type: '@@INIT' });
-  // Simulamos el doble submit: dos fulfilled con la MISMA rifa.
-  state = raffleReducer(state, createRaffle.fulfilled(raffle));
-  state = raffleReducer(state, createRaffle.fulfilled(raffle));
-  // Con el push ingenuo, items.length === 2. El assert exige 1.
-  expect(state.items).toHaveLength(1);
+// src/features/dashboard/dashboardSlice.devchecks.test.js (la misma prueba que corre en el repo de prueba)
+// Contra los dos mocks, con la Semana del Canal sembrada: node mock/seed-reconciliation.js --event
+import { store } from "../../app/store";
+import { login } from "../auth/authSlice";
+import { fetchDashboard } from "./dashboardSlice";
+import { undoGrant } from "../grants/grantSlice";
+
+test("cargar la bitácora del evento, y después una acción de otra pantalla, no disparan el aviso de Toolkit", async () => {
+  await store.dispatch(login({ email: "ibatista@esclusa.test", password: "esclusa123" }));
+  const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+  await store.dispatch(fetchDashboard(2)); // la acción que trae las 180.000 filas
+  expect(store.getState().dashboard.spinLog).toHaveLength(180000);
+  store.dispatch(undoGrant("g-inexistente")); // cualquier acción, de cualquier pantalla
+  const slow = warn.mock.calls.filter(([message]) => String(message).includes("which is more than the warning threshold"));
+  warn.mockRestore();
+  expect(slow).toEqual([]); // con el bug: "SerializableStateInvariantMiddleware took … ms"
+}, 60000);
+```
+
+Con el bug falla, con el aviso literal de Toolkit (*"SerializableStateInvariantMiddleware took 480ms, which is more than the warning threshold of 32ms"*). Con el fix pasa.
+
+**La corrección mínima** (va con el incidente abierto): que los chequeos no miren esa rama.
+
+```javascript
+  // F09: los chequeos de desarrollo recorren el estado entero en cada acción. La bitácora del
+  // tablero tiene miles de filas que nadie muta: se excluye de los dos, solo esa rama.
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: { ignoredPaths: ["dashboard.spinLog"] },
+      serializableCheck: {
+        ignoredPaths: ["dashboard.spinLog"],
+        // y la acción que la trae: este chequeo también mira el payload de cada acción.
+        ignoredActionPaths: ["meta.arg", "meta.baseQueryMeta", "payload.spinLog"],
+      },
+    }).concat(epicMiddleware),
+```
+
+Riesgo bajo, siete líneas —dos de comentario—, la prueba pasa: 0,1 ms por acción. Pero **la bitácora sigue en el store**: 180.000 objetos en memoria del navegador para mostrar ocho barras, bajados enteros por la red en cada cambio de rueda.
+
+**La refactorización correcta** (va al backlog, con su 💸): que el store **no guarde la bitácora**, sino los conteos —como ya hace la conciliación de la Fase 8—, y mejor todavía, que los conteos vengan agregados del servidor (`be07`). Ataca la causa: no hay una rama grande que chequear, ni que bajar, ni que recorrer. Toca el slice, los selectores y el thunk del tablero, y la prueba de memoria de la Fase 10 tiene que reescribirse, porque cambia lo que memoiza.
+
+| | Corrección mínima | Refactorización |
+|---|---|---|
+| **Qué ataca** | el síntoma (los chequeos recorren la bitácora) | la causa (la bitácora en el store) |
+| **Superficie** | 7 líneas en `store.js` | slice, selectores, thunk y una prueba |
+| **Riesgo** | bajo | medio |
+| **Cuándo** | ahora, con el incidente abierto | backlog, con la red puesta |
+| **Deja deuda** | sí: la bitácora sigue bajando entera (💸) | no, o se la pasa al servidor |
+
+La respuesta profesional es **las dos, en orden**, y anotar la 💸 de la corrección mínima. Un hotfix sin su deuda anotada es cómo un síntoma tapado se convierte en el próximo incidente.
+
+### 5.4 Puente RxJS 6 → 7, medido
+
+Si algún día se migra RxJS 6.6.7 → 7, las pruebas de canicas de la Fase 10 son el oráculo que confirma que **el tiempo no cambió**. Esta vez no se cuenta: se corrió. En una copia descartable del proyecto (`git worktree add`, con RxJS 7.8.1 y rxjs-marbles 7.0.1 instalados sin guardar), las pruebas de `pollingEpic` y de `searchPlayerEpic` de la Fase 10 corrieron **sin cambiar una línea**, y pasaron. Los epics tampoco cambiaron: `debounceTime`, `switchMap`, `timer`, `takeWhile`, `takeUntil` y `catchError` existen igual en las dos.
+
+Lo que sí cambia está en la superficie, y una prueba pequeña lo fija en las dos versiones:
+
+```javascript
+// src/__puente__/rxjs7.test.js — corre igual sobre RxJS 6.6.7 (el repo) y 7.8.1 (una copia descartable).
+import * as rxjs from "rxjs";
+import { of, combineLatest } from "rxjs";
+
+const major = Number(require("rxjs/package.json").version.split(".")[0]);
+
+test("firstValueFrom: existe en 7 y no en 6", async () => {
+  if (major >= 7) expect(await rxjs.firstValueFrom(of(1, 2, 3))).toBe(1);
+  else expect(rxjs.firstValueFrom).toBeUndefined();
+});
+
+test("toPromise: sigue andando en las dos (en 7, deprecado)", async () => {
+  expect(await of(1, 2, 3).toPromise()).toBe(3);
+});
+
+test("combineLatest con un arreglo: la forma que sirve en las dos", async () => {
+  const values = [];
+  combineLatest([of("a"), of("b")]).subscribe((v) => values.push(v));
+  expect(values).toEqual([["a", "b"]]);
 });
 ```
 
-**El hotfix mínimo** (va a producción con el incidente abierto): que el reducer no inserte un id que ya existe. Una guarda de una línea.
+| Aspecto | RxJS 6.6.7 (el curso) | RxJS 7.8.1 (la copia) |
+|---|---|---|
+| `firstValueFrom` / `lastValueFrom` | no existen | existen |
+| `toPromise()` | funciona | funciona, deprecado |
+| `combineLatest([a$, b$])` | funciona | funciona (la forma con argumentos sueltos queda deprecada) |
+| Los epics del curso | — | **sin cambios** |
+| Las pruebas de canicas de la Fase 10 | rxjs-marbles 6.0.1 | rxjs-marbles 7.0.1, **las mismas pruebas, en verde** |
 
-```javascript
-// raffleSlice.js — dentro de createRaffle.fulfilled
-.addCase(createRaffle.fulfilled, (state, action) => {
-  state.loadingMutation = false;
-  // 💸 Hotfix: guarda de idempotencia contra el doble-fulfilled.
-  // No ataca la causa (el doble submit); solo evita el síntoma (duplicado).
-  const exists = state.items.some((r) => r.id === action.payload.id);
-  if (!exists) state.items.push(action.payload);
-})
-```
+> **Por qué esto importa más que el resto del puente.** De todas las modernizaciones posibles, la de RxJS es la más traicionera, porque su bug característico —un `takeUntil` que corta un frame tarde, una suscripción que sobrevive al logout— **no se ve** en un render ni en un clic. Solo una prueba que fija el tiempo lo atrapa. Por eso el resultado de esta copia vale más que cualquier lista de cambios: las mismas canicas pasaron.
 
-Riesgo bajo, una línea, el test pasa. Pero **el doble submit sigue ocurriendo**: se disparan dos peticiones POST, el backend crea dos veces (o falla la segunda), y solo el store se salva del duplicado visual. El hotfix tapa el síntoma en la capa donde el incidente dolía, no en la capa donde nace.
+### 5.5 React 17 y 18, medidos
 
-**El refactor correcto** (va al backlog, con la 💸 anotada): impedir el doble submit en el origen. Deshabilitar el botón sincrónicamente al primer click, no esperar a que `loadingMutation` viaje por el store. O —más robusto— derivar la deshabilitación de un estado local inmediato además del flag de Redux. Esto ataca la causa: nunca se dispara la segunda petición.
+El curso fija React 16.14.0 (D1). Dos copias descartables más —una con React 17.0.2 y otra con 18.2.0— corrieron la misma prueba pequeña, que afirma lo que cada versión hace:
 
-```javascript
-// RaffleForm.jsx — refactor, no hotfix
-const [submitting, setSubmitting] = useState(false);
+```jsx
+// src/__puente__/react18.test.jsx — corre igual sobre React 16.14, 17.0.2 y 18.2.0 (copias descartables).
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import { act } from "react-dom/test-utils";
 
-const handleSubmit = async () => {
-  if (submitting) return;         // corta el segundo click SINCRÓNICAMENTE
-  setSubmitting(true);
-  try {
-    await dispatch(createRaffle(draft)).unwrap();
-  } finally {
-    setSubmitting(false);
+const major = Number(React.version.split(".")[0]);
+global.IS_REACT_ACT_ENVIRONMENT = true; // React 18 lo pide para act(); en 16 no hace nada
+
+// Monta como lo hace cada versión: render en 16, createRoot en 18.
+function mount(element) {
+  const container = document.createElement("div");
+  if (major >= 18) {
+    const { createRoot } = require("react-dom/client");
+    const root = createRoot(container);
+    act(() => root.render(element));
+    return () => act(() => root.unmount());
   }
-};
-// El botón usa disabled={submitting || loadingMutation}: local para lo inmediato,
-// Redux para lo global. El segundo click nunca llega a despachar.
+  act(() => ReactDOM.render(element, container));
+  return () => ReactDOM.unmountComponentAtNode(container);
+}
+
+test(`React ${React.version}: dos setState dentro de un setTimeout`, async () => {
+  let renders = 0;
+  let bump;
+  function Counter() {
+    const [a, setA] = useState(0);
+    const [b, setB] = useState(0);
+    renders += 1;
+    bump = () => setTimeout(() => { setA(a + 1); setB(b + 1); }, 0);
+    return <span>{a + b}</span>;
+  }
+  const unmount = mount(<Counter />);
+  renders = 0;
+  await act(async () => {
+    bump();
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  });
+  expect(renders).toBe(major >= 18 ? 1 : 2); // 18 agrupa; 16 solo agrupa en sus handlers
+  unmount();
+});
+
+test(`React ${React.version}: un efecto bajo StrictMode, en desarrollo`, () => {
+  let runs = 0;
+  function Polling() {
+    useEffect(() => {
+      runs += 1;
+    }, []);
+    return null;
+  }
+  const unmount = mount(<React.StrictMode><Polling /></React.StrictMode>);
+  expect(runs).toBe(major >= 18 ? 2 : 1); // 18 monta, desmonta y vuelve a montar en dev
+  unmount();
+});
+
+test(`React ${React.version}: useTransition`, () => {
+  expect(typeof React.useTransition).toBe(major >= 18 ? "function" : "undefined");
+});
 ```
 
-| | Hotfix mínimo | Refactor correcto |
-|---|---|---|
-| **Qué ataca** | El síntoma (duplicado en el store) | La causa (el doble submit) |
-| **Superficie de cambio** | 1 línea en el reducer | Estado local + handler en el form |
-| **Riesgo** | Bajo | Medio (toca el flujo de submit) |
-| **Cuándo** | Ahora, con el incidente abierto | Backlog, con la red de tests puesta |
-| **Deja deuda** | Sí: el POST doble sigue ocurriendo (💸) | No: la elimina en el origen |
+| Comportamiento | React 16.14 | React 17.0.2 | React 18.2.0 |
+|---|---|---|---|
+| Dos `setState` dentro de un `setTimeout` | 2 renders | 2 renders | **1 render** (batching automático) |
+| Un efecto bajo `<StrictMode>`, en desarrollo | corre 1 vez | 1 vez | **2 veces** (monta, desmonta y vuelve a montar) |
+| `useTransition` | no existe | no existe | existe |
+| Montaje | `ReactDOM.render` | `ReactDOM.render` | `createRoot(...).render` |
 
-La respuesta profesional es **las dos, en orden**: el hotfix ahora con su test de regresión, el refactor después. Y —esto es lo que se olvida— **anotar la 💸** del hotfix, para que la duplicidad de POST no quede como una bomba silenciosa. Un hotfix sin su deuda anotada es cómo un síntoma tapado se convierte en el próximo incidente.
+Y un hallazgo que corrige una creencia común: **el JSX sin `import React` ya funciona en esta consola**. React 16.14.0 trae el runtime nuevo de JSX (`react/jsx-runtime`), y CRA 4 lo usa solo si lo encuentra. Lo que sí falla es el JSX clásico: con `DISABLE_NEW_JSX_TRANSFORM=true`, el mismo componente explota con *"React is not defined"*. El detalle está en A8 §3.
 
-### 5.4 Puente RxJS 6 → 7, como comparación: `validateNumberEpic`
-
-Este es el ejemplo que la nota de continuidad §1.3 anticipa: si algún día migras RxJS 6.6.7 → 7, los marble tests de Fase 10 son el oráculo que confirma que **el timing no cambió**. Lo mostramos como comparación editorial —**no** se migra el código principal (regla del proyecto: RxJS 7 es material de comparación o fase opcional).
-
-El epic de validación de Fase 6 casi no cambia entre versiones, y eso es la buena noticia:
-
-```javascript
-// validateNumberEpic — el cuerpo del epic es idéntico en RxJS 6 y 7.
-// Los operadores debounceTime, switchMap, map, catchError existen igual en ambas.
-export const validateNumberEpic = (action$) =>
-  action$.pipe(
-    ofType(numberValidationRequested.type),
-    debounceTime(300),
-    switchMap((action) => {
-      const { raffleId, number } = action.payload;
-      return from(apiClient.get(`/raffles/${raffleId}/numbers/${number}`)).pipe(
-        map((response) => numberValidationSucceeded({ number, status: response.data.status })),
-        catchError((error) => of(numberValidationFailed({ number, error: toReadableError(error) })))
-      );
-    })
-  );
-```
-
-Lo que **sí** cambia entre 6 y 7 no es el epic: son los imports periféricos y —para el test— la sintaxis del `TestScheduler`. Un mapa de las diferencias que importan para mantenimiento:
-
-| Aspecto | RxJS 6.6.7 (vigente en el curso) | RxJS 7 (comparación) |
-|---|---|---|
-| Import de operadores | `from 'rxjs/operators'` | También `from 'rxjs'` directamente (los reexporta) |
-| `toPromise()` | Disponible (deprecado) | Eliminado; se usa `firstValueFrom`/`lastValueFrom` |
-| Tipos de `TestScheduler` | `rxjs-marbles@6` | `rxjs-marbles@7`, sintaxis de scheduler levemente distinta |
-| Cuerpo de este epic | — | **Sin cambios** |
-
-El marble test de Fase 10 que fija el debounce + switchMap sirve como *antes/después*: se corre contra el epic bajo RxJS 6 (pasa), y si algún día se migra a 7, se corre el mismo test —adaptando solo el harness de `rxjs-marbles` de 6.x a 7.x— para confirmar que el frame de emisión no se corrió. Si el marble sigue verde, el timing se preservó; si cambia de frame, la migración alteró el comportamiento temporal y hay que investigar.
-
-> **Por qué esto importa más que el resto del puente.** De todas las modernizaciones posibles, la de RxJS es la más traicionera, porque su bug característico —un `takeUntil` que cancela un frame tarde, una suscripción que sobrevive al logout— **no se ve** en un render ni en un click. Solo un test que fija el timing lo atrapa. El marble test es el único oráculo confiable para migrar streams. Sin él, migrar RxJS es exactamente "reescribir con fe".
-
-### 5.5 RTK Query, React Router 6, React 17/18: qué son y por qué el curso paró donde paró
-
-Tres pinceladas comparativas (Apéndice A8, opcional). Ninguna se aplica al código principal; el punto es que **reconozcas** estas herramientas cuando las cruces afuera y entiendas el costo de migrar hacia ellas.
-
-**RTK Query** (mencionada por D4, no adoptada). Es la capa de data-fetching de Redux Toolkit: reemplaza el patrón `createAsyncThunk` + slice + estados de carga por un `createApi` que genera hooks (`useGetRafflesQuery`) con caché, invalidación y refetch automáticos. Sobre `raffleSlice`, RTK Query se comería casi todo el archivo: los cuatro thunks, los flags `loadingList`/`loadingMutation`, buena parte de los `extraReducers`. A cambio, agrega su propio reducer y middleware al store —y ahí está el costo oculto para el testing: `renderWithStore` (Fase 10) tendría que sumar ese middleware, rompiendo su premisa de "store síncrono sin middleware". Migrar a RTK Query no es cambiar un slice; es cambiar la forma del store y, con ella, el helper de test. Por eso queda como comparación 🔥.
-
-**React Router 6** (el curso usa Router 5, D del stack). La diferencia de API es grande y mecánica: `<Switch>` pasa a `<Routes>`, `component={X}` pasa a `element={<X />}`, `useHistory()` pasa a `useNavigate()`, y las rutas anidadas cambian de modelo. No es conceptualmente más difícil; es simplemente *distinto*, y una migración toca cada archivo de rutas. El curso se quedó en 5 porque el sistema de referencia está en 5 y migrar el router no enseña nada sobre mantenimiento que las otras migraciones no enseñen mejor.
-
-**React 17 y 18** (el código principal es 16.14.0, D1). React 17 fue casi sin features nuevas: su cambio relevante para un mantenedor es que el *event delegation* dejó de colgarse de `document`, lo que rara vez importa salvo en apps que mezclan React con jQuery viejo. React 18 sí trae cosas de fondo —`createRoot`, batching automático de actualizaciones, `Suspense` en el servidor, el modo concurrente— pero ninguna es gratis de adoptar en una base de clase + hooks + epics como esta. El curso fija 16.14.0 como **punto final de referencia exacto** (D1) precisamente para no diluir el foco: el objetivo era mantener un legacy real, no perseguir la última versión. Saber que 17 y 18 existen, y qué cambian, es suficiente; migrar hacia ellos es un proyecto en sí mismo, no un capítulo de cierre.
-
-> **El hilo común de las tres.** Cada modernización promete borrar código (RTK Query borra thunks, Router 6 simplifica rutas, React 18 automatiza el batching). Y cada una tiene un costo que no está en el diff visible: RTK Query cambia el store y el harness de test, Router 6 toca cada ruta, React 18 cambia cómo se montan y actualizan los componentes. La lección de mantenimiento no es "moderniza" ni "no modernices": es **mide el costo real, incluido el que no se ve en el código, antes de decidir**. Y no decidas nunca sin la red de tests que te diga si el comportamiento sobrevivió.
+> **El hilo común.** Cada modernización promete borrar código o renders, y cada una tiene un costo que no está en el diff: React 18 cambia cuántas veces corre un efecto en desarrollo (un efecto que arrancara un polling sin limpiarlo dejaría dos vivos), y el batching cambia cuántos renders cuenta una prueba. La lección no es "moderniza" ni "no modernices": es **mide el costo real, incluido el que no se ve en el código, antes de decidir**.
 
 ---
 
@@ -346,174 +376,142 @@ Tres pinceladas comparativas (Apéndice A8, opcional). Ninguna se aplica al cód
 
 ### 6.1 Los errores clásicos de la última milla
 
-**Migrar sin correr el test viejo primero.** El error de proceso más común: escribir la versión funcional de `RaffleTable`, correr el test, verlo verde y declarar victoria. Falta el paso cero: correr el test contra la versión **de clase** antes de tocar nada, para confirmar que la línea base es verde. Si el test estaba rojo desde antes (por ejemplo, porque falta el `data-testid="raffles-loading"`), tu "migración exitosa" no probó nada: pasaste de rojo a rojo. El oráculo solo sirve si estableces la línea base primero.
+**Migrar sin correr la prueba vieja primero.** Escribes la versión con hooks, corres la prueba, la ves verde y declaras victoria. Falta el paso cero: correrla contra la **clase** antes de tocar nada. Si la prueba ya estaba roja, tu "migración exitosa" pasó de rojo a rojo.
 
-**Tocar el test para que pase.** El anti-patrón que anula la red. Si al migrar el test se pone rojo y tu reacción es editar el test, párate: acabas de convertir el oráculo en un espejo. Un test que modificas para que pase con la implementación nueva ya no verifica nada; solo describe lo que escribiste. Si el test rojo es correcto —la migración cambió el comportamiento— el que se arregla es el código, no el test.
+**Tocar la prueba para que pase.** El antipatrón que anula la red. Si al migrar la prueba se pone roja y tu reacción es editarla, acabas de convertir el oráculo en un espejo. Si la prueba roja es correcta —la migración cambió el comportamiento—, el que se arregla es el código.
 
-**Aprovechar la migración para "arreglar cositas".** Estás migrando `RaffleTable` a hooks y de paso cambias el `window.confirm` por un modal, y ya que estás normalizas el slice. Ahora tu PR de migración toca tres cosas no relacionadas, y si algo se rompe no sabes cuál fue. Una migración es una refactorización de comportamiento-cero: entra igual, sale igual, el diff solo debería mostrar el cambio de mecanismo. Las mejoras van en PRs aparte, cada una con su propio test.
+**Aprovechar la migración para "arreglar cositas".** Estás pasando `WheelTable` a hooks y de paso cambias el `window.confirm` por un modal. Ahora el PR toca dos cosas, y si algo se rompe no sabes cuál fue. Una migración es comportamiento cero: el diff solo muestra el cambio de mecanismo.
 
-**Confundir "el test pasa" con "la migración está completa".** El test de Fase 10 cubre el happy path y algunos bordes, no todo. Que pase es necesario, no suficiente. Un `useEffect` con las dependencias mal puestas puede pasar el test de montaje y aun así re-disparar `fetchRaffles` en cada render en producción. El oráculo reduce el riesgo; no lo elimina. Después del verde, sigue mirando el comportamiento real (DevTools, Network) en los caminos que el test no cubre.
+**Confundir "la prueba pasa" con "la migración está completa".** La prueba cubre los cuatro estados de la tabla, no todo. Un `useEffect` con las dependencias mal puestas puede pasar la prueba de montaje y aun así pedir las ruedas en cada render. El oráculo reduce el riesgo; no lo elimina.
 
-**Pagar deuda sin su disparador.** Ves `raffleSlice` sin normalizar y te pica normalizarlo "porque es lo correcto". Pero el disparador (cientos de rifas) no ocurrió: estás gastando riesgo sin retorno, tocando código que funciona para ganar performance que nadie necesita todavía. La deuda se paga cuando su disparador se acerca, no cuando te molesta estéticamente.
+**Pagar deuda sin su disparador, o pagar la que muere con el decomiso.** Ves que el tablero baja la bitácora entera y te pica pasarlo al servidor "porque es lo correcto". Pero si la Esclusa se apaga en 2028 y el disparador no llega antes, ese trabajo no tiene retorno. A12 dice qué deuda es cuál.
 
-### 6.2 Pieza forense de la fase: el test de regresión que reproduce el bug antes del fix
+### 6.2 Pieza forense de la fase: la prueba de regresión que reproduce el bug antes del fix
 
-Esta es la pieza forense de Fase 11, y el cierre del track forense de todo el curso. No es una herramienta nueva: es la consolidación de una disciplina.
+Es la pieza forense de la Fase 11 y el cierre del track forense del curso. No es una herramienta nueva: es la consolidación de una disciplina. Repasa la cadena: la Fase 5 te enseñó a *leer el store en el tiempo*; la 6, *el flujo de un Observable*; la 7, *a correlacionar un epic con la red*; la 8, *a auditar la aritmética del dinero*; la 9, *a auditar el rendimiento y dónde vive la caché*; la 10, *a convertir cada reproducción manual en una aserción*. La 11 le pone el broche: **todo bug se cierra con una prueba que fallaba antes del fix y pasa después**.
 
-Repasa la cadena forense que el curso construyó fase a fase: Fase 5 te enseñó a *leer el store en el tiempo* (Redux DevTools, time-travel). Fase 6, a *leer el flujo de un Observable*. Fase 7, a *correlacionar el ciclo de vida de un epic con la red*. Fase 8, a *auditar la aritmética del dinero*. Fase 9, a *auditar performance y dónde vive la caché*. Fase 10, a *convertir cada reproducción manual en un assert automatizado*. Fase 11 le pone el broche: **todo bug se cierra con un test que fallaba antes del fix y pasa después**.
-
-El procedimiento, que ya usaste en §5.3 y que te llevas como hábito permanente:
-
-1. **Reproduce el bug** manualmente, hasta poder provocarlo a voluntad. Un bug que no sabes reproducir no lo sabes arreglar.
-2. **Escribe el test que lo captura**, y confirma que **falla** con el bug presente. Este paso es el que la gente se saltea, y es el más importante: un test que nunca viste fallar no sabes si prueba lo que crees.
+1. **Reproduce el bug** a mano, hasta poder provocarlo a voluntad.
+2. **Escribe la prueba que lo captura**, y confirma que **falla** con el bug presente. Es el paso que la gente se salta, y el más importante: una prueba que nunca viste fallar no sabes si prueba lo que crees.
 3. **Aplica el fix.**
-4. **Corre el test.** Ahora pasa. El delta rojo→verde es la evidencia de que *ese* cambio arregló *ese* bug —no otra cosa, no una casualidad.
-5. **El test queda.** Es la regresión: si alguien vuelve a introducir el bug, el test se vuelve rojo antes de que llegue a producción.
+4. **Corre la prueba.** Ahora pasa. El paso de rojo a verde es la evidencia de que *ese* cambio arregló *ese* bug.
+5. **La prueba queda.** Si alguien vuelve a introducir el bug, la prueba se pone roja antes de que llegue a producción.
 
-La razón profunda de escribir el test *antes* del fix, y no después: un test escrito después del fix nunca lo viste fallar, así que no sabes si realmente captura el bug o si pasa por otro motivo. El único momento en que puedes estar seguro de que un test prueba lo que dices es cuando lo ves fallar por la razón correcta. Por eso el orden es rojo primero, verde después. Un test que nació verde es un test en el que no puedes confiar como red de regresión.
+Los incidentes del cuaderno siguen este orden, y por eso casi todos tienen una rama `incidente/NN`: es el estado en que su prueba tiene que estar roja. Los que no la tienen —el 08, que se prepara con caos, y el 21, que termina en una decisión— son la excepción que confirma la regla.
 
-> **El post-mortem sin culpabilización, como hábito de cierre.** Cuando un bug llega a producción, el track forense del curso termina no en el fix sino en el post-mortem: qué pasó, qué lo dejó pasar, qué cambia para que no vuelva —sin buscar a quién culpar. El doble submit de §5.3 no fue "culpa de quien escribió el `push`"; fue una interacción entre un backend caótico y una deshabilitación de botón que viajaba por el store. La pregunta no es *quién* sino *qué del sistema lo permitió*. Un equipo que busca culpables aprende a esconder errores; uno que busca causas aprende a prevenirlos. Ese es el último hábito que el curso te deja.
+> **El post-mortem sin culpables, como hábito de cierre.** El incidente 19 no fue "culpa de quien no puso las `ignoredPaths`": fue una interacción entre una herramienta de desarrollo que hace bien su trabajo y un volumen de datos que nadie había cargado en el navegador. La pregunta no es *quién* sino *qué del sistema lo permitió*. Un equipo que busca culpables aprende a esconder errores; uno que busca causas aprende a prevenirlos.
 
 ---
 
 ## 🧪 7. Ejercicios (30)
 
-Los ejercicios de la última fase son distintos: algunos son de código, pero muchos son de **reflexión estructurada** y **decisión de mantenimiento**, porque esa es la habilidad que la fase cierra. Varios se resuelven mejor por escrito que por teclado.
+**🟢 Fácil (1–8)**
+1. Crea el tag `pre-modernizacion` y confirma con `git tag -n1 -l 'pre-*'` que su mensaje nombra la suite. **Criterio:** `CI=true npm test` en ese tag da 25 de 25.
+2. Corre la prueba de `WheelTable` contra la clase y anota el resultado: es tu línea base.
+3. Lista tres deudas de A12 y su disparador.
+4. Identifica en `WheelTable` (hooks) qué línea reemplaza a `mapStateToProps` y cuál a `componentDidMount`.
+5. Explica en una frase por qué el `window.confirm` sigue igual después de la migración.
+6. Corre `git diff pre-modernizacion --stat`. **Criterio:** un solo archivo, y ninguno de prueba.
+7. Busca en el código de la consola un archivo con JSX que no importe React, o crea uno, y confirma que compila con CRA 4. Explica por qué (§5.5).
+8. Nombra las tres salidas que A12 asigna a cada deuda.
 
-**🟢 Fácil (1–7)**
+**🟡 Intermedio (9–17)**
+9. Haz la migración de §5.2 tú mismo, desde la clase, sin mirar la versión del curso. **Criterio:** la prueba de la Fase 10 pasa sin tocarla.
+10. Rompe la migración a propósito (quita `dispatch` de las dependencias del `useEffect` y agrega un estado que cambie en cada render). **Criterio:** encuentras el pedido repetido en Network, y explicas por qué la prueba no lo atrapó.
+11. Escribe el comentario de la 💸 que acompaña al hotfix de §5.3, con su disparador.
+12. Pasa `GrantList` (o el componente de clase que quede) a hooks con el mismo procedimiento de cuatro pasos.
+13. Clasifica en A12 tres deudas nuevas que hayas encontrado en el curso, con su salida en el horizonte.
+14. Con la copia de RxJS 7, cambia un `toPromise()` por `firstValueFrom` y confirma que en la copia funciona y en el repo no compila.
+15. En la copia de React 18, envuelve la consola en `<StrictMode>` y abre la pantalla de compras. **Criterio:** cuentas las consultas al montar y explicas por qué no son dos pollings vivos.
+16. Explica con la tabla de §5.5 por qué una prueba que cuenta renders exactos puede romperse al pasar a React 18 sin que el componente haya cambiado.
+17. Escribe, en una página, la lista de lo que tendría que pasar antes de mover `react` a 17 en `package.json`.
 
-1. Corre el test de `RaffleTable` de Fase 10 contra la versión de clase. Confirma que es verde (o rojo, si falta el `data-testid="raffles-loading"`). Anota cuál de los dos casos te tocó y por qué.
-2. Agrega `data-testid="raffles-loading"` al `div` de carga de `RaffleTable` (versión de clase). Vuelve a correr el test. Describe el cambio de estado del test.
-3. Recorre el mapa de deuda de §5.1 y elige la deuda que, en tu criterio, tiene el disparador **más cercano** hoy. Justifica en dos frases.
-4. Para esa misma deuda, escribe cómo te darías cuenta de que el disparador ocurrió (qué síntoma, en qué herramienta lo verías).
-5. Lista tres cosas que el curso te enseñó que *no* son sobre React en particular, sino sobre mantener software en general.
-6. Mira la versión migrada de `RaffleTable` (§5.2) e identifica qué línea es el equivalente exacto de `componentDidMount`.
-7. Explica con tus palabras por qué `statusLabel` no cambia entre la versión de clase y la funcional.
+**🟠 Difícil (18–25)**
+18. Haz la refactorización de §5.3: que el tablero guarde los conteos y no la bitácora. **Criterio:** la prueba del incidente 19 pasa **sin** las `ignoredPaths`, y la de memoria de la Fase 10 se reescribe con un motivo escrito en el commit.
+19. Diagnóstico: una migración a hooks que "pasa las pruebas" y en producción pide las ruedas dos veces por visita. Encuentra la causa con Network y escribe la prueba que la habría atrapado.
+20. Arma tu propia copia descartable con `git worktree add` y RxJS 7.8.1, y corre **toda** la suite de la Fase 10. **Criterio:** la lista de lo que pasó y de lo que no, con la causa de cada rojo.
+21. En la copia de React 18, corre la suite de la Fase 10. **Criterio:** lo que se rompe, y si se rompió el componente o la prueba.
+22. Mide cuánto tarda la suite entera en el repo y en la copia de React 18.
+23. Escribe el plan de una migración de React Router 5 a 6 sobre `AppRouter.jsx`: qué archivos toca, en qué orden, con qué prueba de oráculo.
+24. Diagnóstico: después de quitar `DISABLE_NEW_JSX_TRANSFORM` de un `.env` heredado, un componente sin import de React empieza a funcionar. Explica por qué antes fallaba y si hay algo que limpiar.
+25. Escribe el post-mortem del incidente 19 sin culpables, con los ocho puntos del cuaderno.
 
-**🟡 Intermedio (8–17)**
+**🔴 Muy difícil (26–30)**
+26. Llena la tabla de criterios del veredicto (§9) con números reales de tu repo de prueba: cuántos incidentes, cuántas deudas por salida, cuánto tarda la suite.
+27. Diseña la decomisión de una función de la consola —por ejemplo, el envío manual— como herramienta del editor de Unity: qué datos necesita, qué API, qué se pierde.
+28. Diseña la migración de la misma función a React 18 con RTK Query: qué se borra, qué se agrega, y qué pruebas de la Fase 10 sobreviven.
+29. Compara los dos diseños anteriores con los criterios de §9 y escribe una recomendación de una página, sin decidir por el estudio.
+30. Con la copia de React 18, haz que la consola entera corra bajo `createRoot` y `<StrictMode>`, y documenta cada efecto que se dispara dos veces y si su limpieza lo deja sano.
 
-8. Completa la migración de `RaffleTable` a hooks: escribe el `render`/JSX completo de los cuatro estados (cargando, error, vacío, lista) en la versión funcional, partiendo del esqueleto de §5.2. Corre el test como oráculo.
-9. En la versión funcional, ¿qué pasa si pones `useEffect(() => { dispatch(fetchRaffles()); })` **sin** array de dependencias? Predice el comportamiento, después verifícalo en Network. Explica el bug.
-10. Escribe el test de regresión (rojo primero) para el bug del ejercicio 9: un assert que falle si `fetchRaffles` se dispara más de una vez al montar. ¿Cómo lo verificas sin llamar al backend real?
-11. Toma una deuda 💸 del mapa y escribe, en prosa, su ticket de backlog: título, contexto, disparador, criterio de aceptación del fix.
-12. Compara el `handleDelete` de la versión de clase y la funcional. ¿Qué se mantiene idéntico y qué cambia? ¿Por qué la deuda del `window.confirm` sobrevive a la migración?
-13. Escribe el marble test (conceptual, con `rxjs-marbles`) que confirmaría que `validateNumberEpic` emite en el mismo frame bajo RxJS 6 y 7. ¿Qué diagrama de marbles esperas?
-14. Para el caso de §5.3, escribe el post-mortem sin culpabilización del doble submit: síntoma, causa raíz, qué del sistema lo permitió, prevención. Máximo una página.
-15. RTK Query: describe qué archivos de `raffleSlice` desaparecerían si migraras, y qué línea nueva aparecería en `renderWithStore`. No lo implementes; solo el inventario del cambio.
-16. Router 5 → 6: toma el archivo de rutas del proyecto (Fase 1) y escribe, ruta por ruta, cómo quedaría en Router 6 (`Routes`/`element`). Marca qué se rompería si migraras a medias.
-17. Distingue, para tres deudas del mapa, si cada una es "deuda que conviene pagar pronto", "deuda que conviene vigilar" o "deuda que probablemente nunca se pague". Justifica el criterio.
-
-**🟠 Difícil (18–24)**
-
-18. Migra `RaffleTable` a hooks **y** demuestra que el test siguió verde en cada paso. Documenta el proceso rojo/verde: qué corriste, cuándo, qué viste. Si en algún punto se puso rojo, explica qué lo causó y cómo lo resolviste sin tocar el test.
-19. Toma el bug del doble submit (§5.3). Implementa **primero** el hotfix con su test de regresión, **después** el refactor. Entrega los dos como si fueran dos PRs separados, cada uno con su descripción. Explica por qué no van juntos.
-20. Elige una deuda 💸 del mapa y **págala de verdad** en un branch: implementa el fix correcto con su test. Después escribe por qué —fuera de este ejercicio— probablemente **no** deberías haberla pagado todavía (disparador ausente). El ejercicio es reconocer la tensión.
-21. Reproduce el bug del `useEffect` sin dependencias (ejercicio 9) en la app real, captura la evidencia en Network (múltiples GET `/raffles`), escribe el test de regresión rojo, aplica el fix (`[dispatch]`), confirma verde. Post-mortem incluido.
-22. Diseña la migración de `validateNumberEpic` a RxJS 7 **en un branch aislado que no toca el código principal**: cambia imports, adapta el harness de `rxjs-marbles` de 6 a 7, corre el marble. Documenta qué cambió en el test y qué NO cambió en el epic. Concluye si valdría la pena migrar todo el proyecto.
-23. 💸 del reloj cliente/servidor: retoma el ejercicio 🟠 23 de Fase 10 (el test que falla en CI por zona horaria). Propón el diseño de `serverNow` que pagaría esta deuda, y el test que lo fijaría. ¿Por qué esta deuda es más peligrosa que la del `window.confirm`?
-24. Audita el store completo del proyecto y decide, capa por capa (slice, epic, componente, selector), cuál migrarías primero si tuvieras que modernizar todo. Ordena por relación riesgo/beneficio y justifica. ¿Cuál dejarías para el final y por qué?
-
-**🔴 Muy difícil (25–30) — finales de reflexión**
-
-25. Escribe el **post-mortem del curso entero** como si el sistema de rifas fuera un producto real que mantuviste seis meses: los tres incidentes que más te costaron (elígelos de los que viste en las fases), qué patrón común tenían, y qué cambiarías en el diseño original para que esa clase de incidente no fuera posible. Sin culpar a nadie.
-26. Ensayo de decisión: te dan presupuesto para modernizar **una** cosa del sistema —RTK Query, Router 6, React 18, o RxJS 7—. Elige una, defiende la elección con costo/beneficio real (incluido el costo invisible), y argumenta por qué las otras tres esperan. Después escribe el contraargumento: por qué alguien razonable elegiría distinto.
-27. Diseña la estrategia e2e completa que Fase 10 dejó como 🔥: qué flujos cubrir además del happy path, si el smoke debería correr contra json-server efímero o seguir stubbeado (`cy.intercept`), y cómo esa decisión interactúa con la deuda de "smoke stubbeado vs real". No la implementes entera; diseña el plan y su orden de construcción.
-28. El curso sostiene "no se moderniza lo que no está testeado". Construye el **contraejemplo más fuerte que puedas**: un caso real donde tuvieras que modernizar algo sin poder testearlo primero. ¿Cómo mitigarías el riesgo? ¿Qué haría la regla demasiado rígida, y dónde sigue siendo correcta?
-29. Toma el sistema completo y propón qué **cuatro incidentes nuevos** agregarías al cuaderno forense del curso para cubrir huecos que ninguna fase tocó (pista: mira las deudas sin disparador del mapa). Para cada uno: síntoma, causa raíz plausible, y qué herramienta forense lo cazaría.
-30. Meta-reflexión: si tuvieras que reescribir este curso para tu propio equipo entrante, ¿qué fase agregarías, cuál sacarías, y qué mantendrías intacto? Justifica cada decisión desde lo que de verdad necesita un mantenedor de legacy —no desde lo que sería "más completo". El curso tiene 96 horas por una razón; defiende o refuta ese límite.
+**🔥 Opcionales**
+- 🔥 Migra `searchPlayerEpic` a RxJS 7 en la copia y reescribe su import de `rxjs/operators` a `rxjs`. ¿Cambia algo en la prueba?
+- 🔥 Escribe el `createApi` de RTK Query para las ruedas (Toolkit 1.8.6 ya trae `@reduxjs/toolkit/query`) en una rama, y compara con `wheelSlice`.
+- 🔥 Normaliza `wheelSlice` a `byId` y mide si a cien ruedas el `find` importaba.
 
 ---
 
 ## 📚 8. Referencias
 
-**Documentación oficial (compatible con las versiones del curso)**
+**Del curso**
+- `A12-mapa-de-deuda-tecnica.md` — el inventario de la deuda, con su salida en el horizonte.
+- `A8-puente-a-react-moderno.md` — React 17 y 18, RTK Query, RxJS 7, las alternativas a redux-observable.
+- `A5-class-components-vs-hooks.md` — el mapa de clase a hooks, en detalle.
 
-- https://legacy.reactjs.org/docs/hooks-effect.html — `useEffect` y su equivalencia con los métodos de ciclo de vida de clase. Es la doc que respalda la migración de §5.2.
-- https://react-redux.js.org/api/hooks — `useSelector`/`useDispatch`, el reemplazo de `connect()`. Fíjate en react-redux 7.2.x.
-- https://redux-toolkit.js.org/rtk-query/overview — RTK Query, mencionada por D4 (`00-decisiones-y-versiones.md`). Leerla como comparación, no como algo a adoptar: el proyecto usa `createAsyncThunk`.
-- https://rxjs.dev/deprecations/breaking-changes — cambios de RxJS 6 → 7. Útil para el ejercicio 22; el código principal se queda en 6.6.7.
+**Documentación oficial**
+- https://legacy.reactjs.org/blog/2020/10/20/react-v17.html — React 17: el "release sin features".
+- https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html — el JSX nuevo, y por qué llegó también a React 16.14.
+- https://react.dev/blog/2022/03/29/react-v18 — React 18: `createRoot`, el batching automático, StrictMode.
+- https://rxjs.dev/deprecations/to-promise — `toPromise` y su reemplazo.
+- https://redux-toolkit.js.org/rtk-query/overview — RTK Query.
 
-**Migración (leer con criterio, apuntan a versiones más nuevas)**
+**Libros**
+- *Working Effectively with Legacy Code*, de Michael Feathers — la idea de la prueba como red antes de tocar, de donde sale el oráculo de esta fase.
 
-- https://reactrouter.com/en/main/upgrading/v5 — guía oficial de migración Router 5 → 6. Referencia para los ejercicios 16 y 26; no se migra en el curso.
-- https://react.dev/blog/2022/03/08/react-18-upgrade-guide — guía de upgrade a React 18 (`createRoot`, batching). Contexto para la pincelada de §5.5.
+**Orden de lectura sugerido:** A12 → §5.2 y §5.3 de esta fase → A8 §3 y §4 → el veredicto de §9.
 
-**Apéndices del curso**
-
-- **Apéndice A5** — Class components vs hooks. Es el desarrollo largo del mapa de equivalencias de §5.2.
-- **Apéndice A6** — Redux clásico vs Toolkit. Respalda la parte `connect()` ↔ hooks.
-- **Apéndice A7** — redux-observable épica por épica. Contexto del puente RxJS de §5.4.
-- **Apéndice A8** — Puente a React moderno (opcional, comparativo). Es la extensión natural de §5.5: React 17/18, Server Components, solo pinceladas.
-
-> ⚠️ Casi toda la doc oficial de estas librerías apunta hoy a versiones más nuevas que las del curso. Cuando veas una API que no reconoces (`createRoot`, `useNavigate`, `createApi`, `firstValueFrom`), es señal de que estás leyendo material posterior a las versiones fijadas —justamente el material de comparación de esta fase—. No lo copies al código principal.
-
-> ⚠️ **Sobre las citas.** No tengo acceso a una base de datos ni a búsqueda web, así que estas URLs y nombres de sección pueden haber cambiado o contener imprecisiones. Verifica cada enlace antes de apoyarte en él, y confirma siempre que la versión que estás leyendo coincida con la del curso (React 16.14, RTK 1.8, react-redux 7.2, RxJS 6.6.7, Router 5).
+> ⚠️ Las URL pueden haber cambiado; verifícalas. La documentación de React vive hoy en react.dev; la de las versiones viejas, en legacy.reactjs.org.
 
 ---
 
 ## 🚀 9. Cierre del curso
 
-Empezaste sabiendo React. Terminas sabiendo **mantener** un sistema React que no escribiste, que evolucionó de 2019 a hoy, que mezcla clases con hooks y `connect()` con `useSelector`, que habla con un backend que falla a propósito, y que tiene la clase de bugs —race conditions, suscripciones sin cancelar, aritmética de dinero, cierres por zona horaria— que no aparecen en ningún tutorial de "aprende React en un fin de semana". Esa es la diferencia entre escribir código y sostenerlo.
+Entraste a una consola de 2019 que nadie te explicó, con clases y hooks mezclados, un mock que falla a propósito y una rueda que la comunidad acusa de estar arreglada. Sales con la misma consola, sin haberla reescrito: con la sesión que sobrevive al F5, los envíos que no salen dos veces, los epics que se apagan solos, el cierre a hora exacta, la conciliación que cuadra al centavo, un tablero que muestra si la rueda da lo que publica, y una red de pruebas que te deja tocarla. Y con veintiún incidentes que aprendiste a reproducir, a explicar y a cerrar con una prueba.
 
-Las 96 horas no fueron sobre features. Fueron sobre una forma de trabajar: **leer antes de tocar**, distinguir la deuda deliberada del descuido, separar el hotfix del refactor, reproducir el bug antes de arreglarlo, cerrar cada corrección con un test que la fija, y modernizar solo lo que la red de tests te deja modernizar sin fe. Si te llevas una sola frase, que sea esta: **no se moderniza lo que no está testeado, y no se toca lo que no se entiende**. Todo lo demás son detalles de implementación.
+### El veredicto de los dos años
 
-Sobre el puente a lo moderno: existe, es real, y algún día lo vas a cruzar. RTK Query borrará tus thunks, Router 6 simplificará tus rutas, React 18 automatizará tu batching, RxJS 7 limpiará tus imports. Pero ahora sabes lo que ningún changelog te dice: cada una de esas mejoras tiene un costo que no está en el diff, y la única forma de cruzar el puente sin caerte es tener la red de Fase 10 puesta debajo. El curso te deja del lado 16.14.0 no porque lo moderno esté mal, sino porque aprender a mantener se hace mejor sobre lo que ya existe que sobre lo que todavía brilla.
+La historia no deja la decisión para el final del curso, sino para dentro de dos años, y con razón: hoy no hay datos para tomarla. Lo que este curso deja son los **criterios** con que se va a tomar, y la forma de medir cada uno con lo que ya construiste. No se decide por el estudio: se le dan números.
 
-La deuda técnica que dejaste está mapeada en `A12-mapa-de-deuda-tecnica.md`, con nombre y disparador. Los bugs que viste tienen su test de regresión. Los incidentes tienen su post-mortem sin culpables, y la 🪞 retrospectiva del mes al final de `cuaderno-incidentes.md` es el último entregable que te queda por escribir — el único de todo el curso que te llevas literalmente al trabajo real. El sistema que recibes no es perfecto —ninguno lo es— pero ahora lo entiendes lo suficiente para tocarlo sin miedo y con red. Eso es, en una línea, todo lo que un equipo de mantenimiento necesita de ti.
+| Criterio | Cómo se mide | A favor de decomisionar si… | A favor de migrar si… |
+|---|---|---|---|
+| **Incidentes por mes** de la consola | el cuaderno de incidentes y su registro | bajan a casi cero: la consola ya no cambia | siguen apareciendo: la consola está viva y se toca |
+| **Funciones que el editor de Unity no puede absorber** | la lista de pantallas de la consola, una por una | todas tienen un equivalente razonable en el editor | quedan funciones de operación (conciliación, compras) que solo existen acá |
+| **Deuda por salida** (A12) | contar las 💸 por *antes del corte* / *muere con el decomiso* / *al migrar* | la mayoría muere con el decomiso | la mayoría se paga al migrar y es barata |
+| **Costo de un evento** | horas de soporte y de desarrollo de la última Semana del Canal | el evento se opera desde el juego sin la consola | la consola sigue siendo el centro del evento |
+| **La red de pruebas** | `CI=true npm test`, el smoke y las regresiones de los incidentes | — | está en verde y cubre lo que se migraría: sin red, migrar es reescribir con fe |
+| **Quién la mantiene** | las personas que la saben tocar | nadie del estudio, y el contrato del equipo de Colombia termina | el estudio puede sostener a alguien que la conozca |
 
-Fin del curso. El sistema es tuyo para mantener.
+Dos advertencias, para que el veredicto no se haga trampa a sí mismo. La primera: **decomisionar no es gratis**. Mover el envío manual, la conciliación y el seguimiento de compras al editor de Unity es un proyecto con sus propios incidentes, y todo lo que este curso aprendió sobre la regla que vive en un solo lugar (historia §5) aplica también ahí. La segunda: **migrar no es un número de versión**. Es el orden de A8 §10 —React 17, hooks por módulo, RTK Query por endpoint, React 18 solo si hay un problema que resuelva—, cada paso con su oráculo.
 
-> **La señal de que todo quedó bien:** si mañana entra un ticket de un bug que nunca viste, y tu primer instinto —antes de tocar una línea— es reproducirlo, escribir el test que falla, y recién ahí arreglarlo… entonces el curso funcionó. No aprendiste React 16. Aprendiste a mantener.
+Quien decide es el estudio: Abdiel, Itzel y Juliana. Lo que tú puedes llevar a esa reunión es la tabla llena.
 
+> **La señal de que el curso cumplió:** cuando abras un sistema legacy que no es este, encuentres una línea rara, y antes de tocarla te preguntes *¿está así a propósito?*, *¿qué prueba me diría si la rompo?* y *¿qué le pasa a esta deuda si el sistema se apaga en dos años?*
 
-> 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en
-> verde y `git status` limpio:
+> 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en verde y `git status` limpio:
 >
 > ```bash
 > git tag -a fase-11-cierre-puente-react-moderno -m "F11 cerrada: <el checklist, en una línea por ítem>"
 > ```
 >
-> Los commits de la fase llevan su prefijo (`f11: …`) y los de ejercicio su
-> número (`f11 ej17: …`). Si un ejercicio merece su propio marcador va en
-> `ej/f11/17`, y un incidente resuelto en el par `inc/<ID>/<slug>-roto` /
-> `-fix`, con el ID que le reserva `cuaderno-incidentes.md`. Todo eso está en
-> [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
->
-> Antes de tocar los ejercicios 🔥 de migración, pon el punto de retorno:
-> `git tag pre-modernizacion`. Probar Router 6 o RTK Query deja de ser un
-> riesgo cuando volver cuesta un comando.
+> Los commits de la fase llevan su prefijo (`f11: …`) y los de ejercicio su número (`f11 ej17: …`). Todo eso está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
 
 ---
 
 ## 📌 Pendientes sugeridos
 
-> Material de autoría, no de lectura. Va acá abajo, fuera de la plantilla de nueve
-> secciones, porque es lo que apareció al escribir la fase y no cabía adentro — y
-> porque no debe competir con el cierre.
+> Material de autoría, no de lectura. Va acá abajo, fuera de la plantilla de nueve secciones, porque es lo que apareció al escribir la fase y no cabía adentro — y porque no debe competir con el cierre.
 
-- ~~**La meta-deuda 💸 que la propia fase declara.**~~ **Pagada:** el mapa vive
-  en `A12-mapa-de-deuda-tecnica.md`, versionado y mantenible, con su protocolo
-  de actualización (§4 del apéndice).
-- ~~**La tabla de deuda de §5.1 tiene cinco columnas.**~~ **Resuelta con la
-  misma extracción:** en el A12 el inventario es una lista con subtítulos, como
-  pide la regla de tablas cortas del curso, y cada entrada tiene el espacio para explicar su porqué
-  en prosa en vez de comprimirlo en una celda.
-- ~~**El cierre del curso no menciona el cuaderno de incidentes.**~~
-  **Resuelto:** §9 enlaza la 🪞 retrospectiva del mes.
-- ~~**`serverNow`, el `participantSlice` y la normalización de `raffleSlice`
-  llegan al final sin fecha.**~~ **Resuelto:** el A12 §3 las declara
-  explícitamente como las tres que sobreviven al curso, con el porqué de cada
-  una. Una deuda eterna declarada es honesta; una diferida cinco veces, no.
+- **La tabla del veredicto no tiene umbrales.** Es deliberado: los umbrales los pone el estudio. → Si el curso se usa con un equipo real, el ejercicio 26 es el que los produce.
+- **El puente no corrió toda la suite** en las copias de RxJS 7 y React 18, solo las pruebas de los epics y las del puente. → Son los ejercicios 20 y 21.
 
 ### Reservas para el cuaderno de incidentes
 
-Los IDs quedan reservados en `cuaderno-incidentes.md`, donde el enunciado ya
-está redactado con sus pistas y su solución de referencia. El ID nunca se reasigna.
-
-Esta fase **no produce incidentes nuevos**, y es la única que no lo hace. Su
-trabajo es de cierre: aporta el criterio con el que se resuelven los veinte
-anteriores —hotfix frente a refactor, deuda deliberada frente a descuido— y
-cierra el incidente **20**, que Fase 10 dejó abierto.
-
-Si más adelante alguna migración de esta fase produce un bug propio, entra al
-cuaderno con un ID nuevo (21 en adelante). Los veinte existentes no se reasignan.
+- **20** — *El test pasa en mi máquina y falla en la de al lado* · se abre en la Fase 10 y se **cierra acá**: la decisión entre parchear la prueba y arreglar el componente usa el criterio de corrección mínima contra refactorización de §4.

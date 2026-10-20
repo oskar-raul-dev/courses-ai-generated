@@ -1,6 +1,6 @@
 # 🗃️ Apéndice bea-03 — SQL portable y dialectos
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
 > Lo referencian: `be02` principalmente; `be05`, `be06` y `be08` lo consultan
 
 ---
@@ -45,18 +45,22 @@ produce código feo por miedo. Verifica en las dos direcciones.
 |---|---|
 | `WHERE id = $1 AND status = $2` | `WHERE id = ? AND status = ?` |
 
-**Cómo se ve cuando falla.** `pq: syntax error at or near "?"`, o
-`near "$1": syntax error`. Es la divergencia más inofensiva porque revienta en
-la primera ejecución.
+**Cómo se ve cuando falla.** Un `?` que llega a Postgres revienta en la primera
+ejecución: medido con un `WHERE product_id = ?`, `pq: syntax error at end of
+input`. El sentido contrario **no falla**: SQLite acepta `$1` como
+parámetro con nombre, así que un `$1` escrito a mano funciona en los dos motores
+(medido en `be02`) y sobrevive a todas las pruebas.
 
 **Qué hacer.** Escribir siempre con `?` y pasar por `sqlx.Rebind`:
 
 ```go
-query := s.db.Rebind(`SELECT id FROM raffles WHERE status = ? AND closes_at > ?`)
+query := s.db.Rebind(`SELECT id FROM wheels WHERE status = ? AND closes_at > ?`)
 ```
 
 📖 **La regla operativa del track:** si un archivo de store contiene un `$1`
-literal, está mal. Es un `grep` que vale la pena tener en la revisión de código.
+literal, está mal **aunque hoy funcione**: es la mitad de la mezcla que un día
+deja pasar un `?` a Postgres. Es un `grep` que vale la pena tener en la revisión
+de código.
 
 > ⚠️ Y el límite de `Rebind`, que hay que tener presente todo el tiempo: resuelve
 > **la sintaxis de los placeholders y nada más**. No traduce tipos, ni funciones
@@ -79,14 +83,15 @@ no mueve la secuencia**, así que el siguiente `INSERT` automático intenta usar
 1 y choca.
 
 **Cómo se ve cuando falla.**
-`duplicate key value violates unique constraint "raffles_pkey"` justo después de
-una siembra que funcionó perfecto. Es el error común nº 1 de `be03`.
+`duplicate key value violates unique constraint "wheels_pkey"` justo después de
+una siembra que funcionó perfecto (medido en `be03`, con la secuencia de `wheels`
+de vuelta en 1). Es el error común nº 1 de `be03`.
 
 **Qué hacer.** Reajustar la secuencia después de sembrar:
 
 ```sql
-SELECT setval(pg_get_serial_sequence('raffles','id'),
-              COALESCE((SELECT MAX(id) FROM raffles), 1));
+SELECT setval(pg_get_serial_sequence('wheels','id'),
+              COALESCE((SELECT MAX(id) FROM wheels), 1));
 ```
 
 En SQLite no hace falta: el `rowid` se calcula sobre el máximo existente.
@@ -118,16 +123,18 @@ bug: la suite lo autoriza. Es la Prueba A del par contradictorio de `be08`.
 **Qué hacer.** `RETURNING` siempre, en los dos motores:
 
 ```go
-query := s.db.Rebind(`
-    INSERT INTO raffles (name, status) VALUES (?, ?)
-    RETURNING id, name, status`)
-var created Raffle
-err := s.db.GetContext(ctx, &created, query, r.Name, r.Status)
+query := tx.Rebind(`
+    INSERT INTO wheels (name, timezone, closes_at, status)
+    VALUES (?, ?, ?, ?)
+    RETURNING id`)
+var id int64
+err := tx.GetContext(ctx, &id, query, w.Name, w.Timezone, w.ClosesAt, w.Status)
 ```
 
 > 🧭 Y acá está el porqué de una decisión que parecía arbitraria: `D18` fija
 > **SQLite 3.35 o superior**, y 3.35 no es un número redondo. Es marzo de 2021,
-> cuando llegó `RETURNING`. Comprueba la tuya con `select sqlite_version();`.
+> cuando llegó `RETURNING`. Comprueba la tuya con `select sqlite_version();`: la
+> que trae `mattn/go-sqlite3` v1.14.16 es la **3.39.4** (medido en `be02`).
 
 ---
 
@@ -144,16 +151,22 @@ lexicográfica. Con formato ISO 8601 y **todo en el mismo huso** funciona por
 accidente. Con husos mezclados, no.
 
 **El caso que hay que tener grabado** (Divergencia 2 de `be02`, Prueba B de
-`be08`):
+`be08`), medido:
 
 ```sql
--- closes_at = '2026-08-30T22:00:00-05:00', que es el 31 a las 03:00 UTC
-SELECT name FROM raffles WHERE closes_at > '2026-08-31T01:00:00Z';
+-- closes_at = '2026-08-15T20:00:00-05:00' (la Semana del Canal), que es el 16 a la 01:00 UTC
+SELECT name FROM wheels WHERE closes_at > '2026-08-16T00:00:00Z';
 ```
 
-- **Postgres:** compara instantes. 03:00Z > 01:00Z → **devuelve la rifa**.
-- **SQLite:** compara `'2026-08-30…'` con `'2026-08-31…'`, ve que `30 < 31` →
+- **Postgres:** compara instantes. 01:00Z > 00:00Z → **devuelve la rueda**.
+- **SQLite:** compara `'2026-08-15…'` con `'2026-08-16…'`, ve que `15 < 16` →
   **no devuelve nada**.
+
+Y una trampa más, del lado de Go (Divergencia 0 de `be02`): con la columna
+declarada `TEXT`, `mattn/go-sqlite3` no convierte a `time.Time` y el `Scan` falla
+con `unsupported Scan, storing driver.Value type string into type *time.Time`.
+Declarada `TIMESTAMP` —que para SQLite no es un tipo, sino un nombre—, el driver
+convierte al leer. Adentro sigue siendo texto.
 
 Los dos motores funcionan correctamente según su propia especificación, y tu
 regla de negocio da resultados **opuestos**.
@@ -192,25 +205,44 @@ Y acá está la divergencia más **inquietante** de la lista, porque no falla: m
 para otro lado.
 
 ```sql
-INSERT INTO raffles (name, lottery_id, closes_at, number_price, base_prize, status)
-VALUES ('Rifa de prueba', 'boyaca', '2026-08-30T22:00:00-05:00', 'mucha plata', 0, 'open');
+INSERT INTO packages (product_id, spins, package_price_cents) VALUES ('spins-10', 10, 99);
+INSERT INTO packages (product_id, spins, package_price_cents) VALUES ('spins-x', 10, 'mucha plata');
 ```
 
 - **Postgres:** `invalid input syntax for type bigint: "mucha plata"`. Rechaza.
 - **SQLite:** **la acepta y guarda el texto** en una columna `INTEGER`.
 
 Es la **afinidad de tipos**: en SQLite el tipo es una sugerencia sobre la columna,
-no una restricción sobre el valor. Prueba después `SELECT sum(number_price)` en
-cada motor y mira qué devuelve cada uno. Una de las dos bases acaba de mentir
-sobre cuánto dinero hay.
+no una restricción sobre el valor. Medido después con
+`SELECT sum(package_price_cents), count(*) FROM packages`: Postgres `99 | 1`,
+SQLite `99 | 2`. Dos paquetes en el catálogo, y la plata de uno no existe.
 
 **Qué hacer.**
 
 - Validar en el código, porque el motor de pruebas no te va a avisar.
 - Dinero en `BIGINT` de centavos a los dos lados (`A10`, `be07`). Un `INTEGER` de
-  32 bits se agota a los ~21 millones de pesos.
+  32 bits, en centavos, se agota a los ~21,4 millones de dólares.
 - Y saber que **las tablas `STRICT`** —que sí hacen cumplir los tipos— llegaron
-  en SQLite **3.37**, después de la cota de `D18`. No están disponibles acá.
+  en SQLite **3.37**, después de la cota de `D18`. El curso no las usa.
+
+### Y el texto: `LIKE`, mayúsculas y tildes
+
+La búsqueda de jugadores manda `name_like`, que en el mock es una expresión
+regular de JavaScript con la bandera `i`: `ángela` encuentra a `Ángela M.`.
+Medido en `be02` con los dos motores:
+
+| Consulta | SQLite | PostgreSQL |
+|---|---|---|
+| `name LIKE '%juan%'` | `Juan P.` | (sin filas) |
+| `name LIKE '%ángela%'` | (sin filas) | (sin filas) |
+| `lower(name) LIKE '%ángela%'` | (sin filas) | `Ángela M.` |
+| `name ILIKE '%ángela%'` | no existe | `Ángela M.` |
+
+El `LIKE` de SQLite ignora mayúsculas solo en ASCII y su `lower()` no toca las
+tildes; el de Postgres distingue mayúsculas, e `ILIKE` no existe en SQLite.
+**Qué hacer** cuando la regla tiene que ser igual en los dos: filtrar en Go, como
+hace `be03` con `regexp` y `(?i)`, o aceptar que esa consulta es SQL del motor y
+probarla solo contra Postgres.
 
 ---
 
@@ -253,10 +285,10 @@ database is locked
   fallar al instante.
 - `SetMaxOpenConns(1)` contra SQLite. Un pool de 25 conexiones contra un archivo
   no da paralelismo: da `SQLITE_BUSY`.
-- Y otra vez la conclusión: veinte vendedores compitiendo por una fila en
-  Postgres producen un ganador y diecinueve `409` en milisegundos; los mismos
-  veinte contra SQLite compiten por **el archivo** y el resultado depende del
-  `busy_timeout`.
+- Y otra vez la conclusión: veinte jugadores girando por la última Esclusa de
+  Oro compiten en Postgres por **una fila**, y lo que pasa lo decide la
+  transacción que escribas (`be05`); los mismos veinte contra SQLite compiten por
+  **el archivo**, y el resultado depende del `busy_timeout`.
 
 ---
 
@@ -266,9 +298,11 @@ En SQLite, `PRAGMA foreign_keys` está **en `OFF`** por defecto, y es **por
 conexión**, no por base. Las `REFERENCES` de tu DDL son decorativas hasta que
 alguien las encienda.
 
-**Cómo se ve cuando falla.** No falla: eso es lo malo. Insertas un
-`raffle_numbers` con un `raffle_id` inexistente y SQLite lo acepta sin chistar.
-La prueba pasa, el modelo está roto, y en Postgres reventaría.
+**Cómo se ve cuando falla.** No falla: eso es lo malo. Insertas un segmento con
+un `wheel_version_id` inexistente y SQLite lo acepta sin chistar (medido:
+`PRAGMA foreign_keys` dice `0`, aunque la migración lo encienda, porque `migrate`
+corrió en su propia conexión). La prueba pasa, el modelo está roto, y Postgres
+responde `violates foreign key constraint "wheel_segments_wheel_version_id_fkey"`.
 
 **Qué hacer.** Ponerlo en el DSN, siempre:
 
@@ -319,8 +353,10 @@ La lista corta, para que no escribas código feo por miedo:
   sintaxis compatible para los casos del track.
 - **Transacciones, `BEGIN`/`COMMIT`/`ROLLBACK` y savepoints.**
 - **Índices por expresión**, subconsultas, CTEs y funciones de ventana.
-- **`RIGHT`/`FULL OUTER JOIN`**… ojo, **este no**: llegó a SQLite en la 3.39, y
-  `D18` fija 3.35. Ese es el tipo de detalle que hay que verificar y no suponer.
+- **`RIGHT`/`FULL OUTER JOIN`**… ojo, **este depende**: llegó a SQLite en la
+  3.39. El que trae `mattn/go-sqlite3` v1.14.16 es la 3.39.4, así que en tu
+  máquina funciona; `D18` promete 3.35, y en una 3.35 no. Ese es el tipo de
+  detalle que hay que verificar y no suponer.
 
 📖 **La moraleja de esta sección.** El inventario de divergencias se hace
 **midiendo**, no de memoria ni de un blog. La mitad de lo que "todo el mundo
@@ -359,11 +395,11 @@ Y el argumento que sostiene la regla, que es de `be08` y conviene repetir:
 ## 🧪 Ejercicios (8)
 
 1. **🟢** Comprueba tu versión de SQLite con `select sqlite_version();` y verifica que cumple la cota de `D18`. Explica qué llegó en la 3.35.
-2. **🟢** Ejecuta el `INSERT` del §6 en los dos motores y compara. Después corre `SELECT sum(number_price)` en cada uno.
+2. **🟢** Ejecuta los dos `INSERT` del §6 en los dos motores y compara. Después corre `SELECT sum(package_price_cents), count(*) FROM packages` en cada uno.
 3. **🟡** Reproduce el §4 completo con los dos motores y pega las dos salidas. Es la Divergencia 2 y la Prueba B de `be08`.
 4. **🟡 Diagnóstico.** Sustituye `RETURNING` por `LastInsertId` y corre la suite contra los dos motores. Explica por qué el resultado es peligroso y no solo molesto.
-5. **🟠 Diagnóstico.** Quita `_foreign_keys=on` del DSN de pruebas, inserta un `raffle_numbers` huérfano, y determina cuántas de tus pruebas siguen pasando.
-6. **🟠** Siembra con ids explícitos, omite el `setval`, y crea una rifa desde la aplicación. Lee el error de Postgres y explica de dónde salió el id que chocó.
+5. **🟠 Diagnóstico.** Quita `_foreign_keys=on` del DSN de pruebas, inserta un segmento huérfano, y determina cuántas de tus pruebas siguen pasando.
+6. **🟠** Siembra con ids explícitos, omite el `setval`, y crea una rueda desde la consola. Lee el error de Postgres en el log y explica de dónde salió el id que chocó.
 7. **🟠** Verifica **midiendo** tres entradas de la §11: crea un índice parcial, un `CHECK` con `IN` y un `ON CONFLICT DO NOTHING` en los dos motores. Si alguna no porta, corrige este apéndice.
 8. **🔴 Diagnóstico.** Encuentra una divergencia que **no** esté en este apéndice, con evidencia medida, clasifícala en una de las cuatro áreas de la regla del motor, y decide si obliga a cambiar algo del backend.
 

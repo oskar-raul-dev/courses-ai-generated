@@ -1,5 +1,5 @@
 # 🧩 Plantilla de incidente — track base
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 Copia este esqueleto al redactar un incidente de `cuaderno-incidentes.md` y rellena los
 `{{placeholders}}`. Borra las notas entre paréntesis antes de entregar.
@@ -35,10 +35,10 @@ enunciado tiene que decirlo o el estudiante concluirá que el ticket estaba equi
 revés también cuenta: un incidente que se reproduce con `off` es un bug determinista, y
 decirlo es media pista.
 
-**3. El estado de `db.json`.** Qué rifa, qué números, en qué estado, a qué hora de cierre y
+**3. El estado de `db.json`.** Qué rueda, qué segmentos, en qué estado, a qué hora de cierre y
 **en qué zona horaria**. Los incidentes de tiempo son irreproducibles sin la TZ del
 navegador declarada, y los de rendimiento lo son sin volumen: si hace falta sembrar
-doscientas rifas, el incidente trae el script que las siembra.
+doscientas ruedas, el incidente trae el script que las siembra.
 
 
 > 🧰 **El contenido de cada preparación está en
@@ -87,7 +87,7 @@ legítimo sobre la reproducibilidad, no un defecto del reporte. Si el reporte tr
 teoría del usuario sobre la causa —y suelen traerla—, consérvala: descartarla es parte del
 trabajo.}}
 
-**Reportado por:** {{rol — vendedor de rifas, supervisor, tesorería, soporte}}
+**Reportado por:** {{rol — operación, supervisor, tesorería, soporte}}
 **Ambiente:** {{desarrollo / UAT / PROD / varios}}
 
 ### 🎯 Qué se te pide
@@ -103,7 +103,7 @@ el bug es determinista" es información, el silencio no.}}
 
 - **Rama:** {{incidente/NN}}
 - **Caos:** {{off / low / high — y por qué}}
-- **Datos:** {{qué rifa, qué números, en qué estado, a qué hora de cierre, en qué zona horaria}}
+- **Datos:** {{qué rueda, qué segmentos, en qué estado, a qué hora de cierre, en qué zona horaria}}
 
 ```bash
 {{git checkout incidente/NN
@@ -143,7 +143,7 @@ entra con el estado que sale". No nombra el archivo.}}
 a releer en la retrospectiva del mes. Se entrega VACÍA, con sus placeholders intactos.}}
 
 **Reproducción**
-{{Pasos numerados y exactos, con datos concretos: qué rifa, qué número, en qué estado, a
+{{Pasos numerados y exactos, con datos concretos: qué rueda, qué segmento, en qué estado, a
 qué hora y en qué zona horaria. Si no lo lograste, escribe qué intentaste — no reproducir
 también es un resultado.}}
 

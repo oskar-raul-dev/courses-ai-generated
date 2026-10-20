@@ -3,7 +3,7 @@
 
 > ✏️ **Variante excepcional de la plantilla.** El curso ya existe completo (12 fases, 13 apéndices,
 > track BE de 10 + 10 y dos cuadernos con 36 incidentes) y cambia de dominio: de **Rifas y Chances**
-> a **la rueda de premios de Jewel Locks** (ver `../00-historia-del-sistema-v2.md`). Por eso este
+> a **la rueda de premios de Jewel Locks** (ver `../00-historia-del-sistema.md`, la historia v2 ya en su nombre). Por eso este
 > documento no propone un arco desde cero: hace el **inventario** de qué se queda, qué sale y qué
 > entra, fase por fase, para que el plan de tandas (paso 3) sepa cuáles **editan** y cuáles **crean**.
 >
@@ -94,8 +94,8 @@ Estados de una rueda: `draft → scheduled → live → ended → reconciled` (a
 | **07** Hora dura + polling | Cierre de la rifa + polling de la lotería | **Cierre del evento a hora exacta** (no se envían giros de una rueda `ended`) + **polling de compras pendientes** (Efecty/OXXO, minutos a 48 h) | 🔴 | "El cierre es un instante", polling con `timer`, `switchMap` vs `mergeMap`, `catchError` por tick, la pieza forense | La lotería | `apiStore.js` (instancia del mock de Google Play) |
 | **08** Dinero | Liquidación y premio en centavos de peso | **Conciliación**: (1) de compras en USD —precio del paquete prorrateado por giro (20,99/500), comisión de la tienda, el reporte que no cuadra—; (2) ➕ **de probabilidades**: `oddsAudit(counts, weightsBp)` con banda de ±3σ y chi-cuadrado | 🔴 + ➕ | `money.js`, enteros, la transición irreversible (`ended → reconciled`), `prizeShare` (reparto sin perder centavos) | El premio en pesos y su migración | `oddsAudit.js` (función pura, enteros); landed vs entregado; la teoría, en A14 (DR-01) |
 | **09** Dashboard | Ventas y margen | Giros gratis / pagos / manuales, ingresos, **observado contra configurado** con la banda por segmento | 🟡 | Derivar en selectores, chart.js 2 sin wrapper, la pieza forense de `useMemo` | — | El gráfico de la banda |
-| **10** Testing | Pruebas de `saleSlice`, `dashboardMath`, epics | Las mismas sobre `grantSlice`, `dashboardMath`, epics; ➕ **probar algo aleatorio sin que la prueba sea intermitente** (generador sembrado + tolerancia calculada) sobre `oddsAudit` | 🟢 + ➕ | Los niveles, marbles, Cypress | — | Sección 5.x nueva |
-| **11** Cierre + puente | `RaffleTable` a hooks; RxJS 7; React 17/18 | `WheelTable` a hooks; ➕ **el horizonte de dos años**: decomisionar (editor de Unity) o migrar, con criterios medibles | 🟢 + ➕ | Todo el concepto de deuda deliberada, hotfix vs refactor | — | El veredicto de los dos años en §9 |
+| **10** Testing | Pruebas de `saleSlice`, `dashboardMath`, epics | Las mismas sobre `grantSlice`, `dashboardMath`, epics; ➕ **probar algo aleatorio sin que la prueba sea intermitente** (generador sembrado + tolerancia calculada) sobre `oddsAudit` | 🟡 + ➕ (era 🟢; T6: ninguna prueba sobrevivía al renombre) | Los niveles, marbles, Cypress | — | Sección 5.x nueva |
+| **11** Cierre + puente | `RaffleTable` a hooks; RxJS 7; React 17/18 | `WheelTable` a hooks; ➕ **el horizonte de dos años**: decomisionar (editor de Unity) o migrar, con criterios medibles | 🟡 + ➕ (era 🟢; T6) | Todo el concepto de deuda deliberada, hotfix vs refactor | — | El veredicto de los dos años en §9 |
 
 **Resumen del track base:** 4 🔴 (03, 05, 07, 08), 3 🟡 (04, 06, 09), 5 🟢 (00, 01, 02, 10, 11),
 con tres secciones ➕ (08, 10, 11).
@@ -107,13 +107,13 @@ con tres secciones ➕ (08, 10, 11).
 | Fase | Hoy | Con la rueda | Grado | Entra |
 |---|---|---|---|---|
 | **be00** Contrato | Auditoría del mock de rifas | Auditoría del mock de la rueda: el contrato **incluye el giro ingenuo** y sus defectos como hallazgos | 🟡 | Hallazgos nuevos (el giro sin idempotencia, el stock que se descuenta después) |
-| **be01** Go y el monolito | — | — | 🟢 | — |
+| **be01** Go y el monolito | — | — | 🟡 (era 🟢; T7: el pánico sin `recover` no tumba el proceso, medido; el caos replica al mock nuevo; `be-01` pasa acá) | — |
 | **be02** Costura de datos | Tablas de rifas; "por qué `numbers` se llama `raffle_numbers`" | Tablas `wheels`, `wheel_versions`, `wheel_segments`, `players`, `player_inventory`, `purchases`, `spin_log`; el nombrado nuevo | 🟡 | Versión de pesos como tabla propia |
 | **be03** CRUD y reemplazo | CRUD de rifas, siembra, 🪦 el momento | CRUD de ruedas y jugadores; 🪦 el momento igual | 🟡 | — |
-| **be04** JWT y CVE | Transiciones de la rifa | Transiciones de la rueda; el operador del envío sale del contexto | 🟢 | — |
-| **be05** Concurrencia | La venta concurrente: hecho, `FOR UPDATE`, pesimista vs optimista medido | **El giro concurrente**: (1) idempotencia por clave del cliente, (2) saldo con descuento condicional, (3) **stock de edición limitada** como fila caliente; pesimista vs optimista medido; ➕ **arnés de carga** (k6 o vegeta en contenedor) que reproduce la Semana del Canal a escala | 🔴 + ➕ | D28 pasa a "el giro se modela como hecho"; la bitácora de solo inserción nace aquí |
-| **be06** Hora dura | Cierre por reloj; zona de Bogotá | Cierre del evento por reloj; ➕ **el giro gratis cada 4 h**: el reloj del celular no manda (la trampa de adelantar la hora); zona de Panamá; jugadores con horario de verano (Chile, Paraguay) | 🟡 + ➕ | D29 con Panamá |
-| **be07** Dinero transaccional | Liquidación: recaudo y reparto como hechos | **Compras**: acreditar giros e ingreso en una transacción, idempotente por `purchaseToken` (la notificación duplicada); ➕ **la conciliación de probabilidades en SQL** (`GROUP BY wheel_version, landed_segment`) y la **protección de duplicados** que reemplaza a la rueda que se acomoda | 🔴 + ➕ | Endpoint de auditoría |
+| **be04** JWT y CVE | Transiciones de la rifa | Transiciones de la rueda; el operador del envío sale del contexto | 🟢 con una sección 🟡 (T7: transiciones, `sent_by`, la segunda vuelta de `govulncheck`) | — |
+| **be05** Concurrencia | La venta concurrente: hecho, `FOR UPDATE`, pesimista vs optimista medido | **El giro concurrente**: (1) idempotencia por clave del cliente, (2) saldo con descuento condicional, (3) **stock de edición limitada** como fila caliente; pesimista vs optimista medido; ➕ **arnés de carga** (k6 o vegeta en contenedor) que reproduce la Semana del Canal a escala | 🔴 + ➕ (T8: medido con k6; el pedido aparte en `spin_requests`, el sustituto por stock agotado y la unicidad del caso del envío entran aquí) | D28 pasa a "el giro se modela como hecho"; la bitácora de solo inserción nace aquí |
+| **be06** Hora dura | Cierre por reloj; zona de Bogotá | Cierre del evento por reloj; ➕ **el giro gratis cada 4 h**: el reloj del celular no manda (la trampa de adelantar la hora); zona de Panamá; jugadores con horario de verano (Chile) y una zona que cambió por ley (Paraguay, 2024) | 🟡 + ➕ (T9: el cierre dentro de `decide`, el barrido de cierre, el giro gratis por reclamo con escritura condicional, la zona forzada en el DSN, la base de zonas medida en dos imágenes) | D29 con Panamá |
+| **be07** Dinero transaccional | Liquidación: recaudo y reparto como hechos | **Compras**: acreditar giros e ingreso en una transacción, idempotente por `purchaseToken` (la notificación duplicada); ➕ **la conciliación de probabilidades en SQL** (`GROUP BY wheel_version, landed_segment`) y la **protección de duplicados** que reemplaza a la rueda que se acomoda | 🔴 + ➕ (T9: la compra por el juego y por la notificación con `purchase_requests`, índice único parcial sobre el duplicado histórico, conciliación recalculada igual a la de la consola, `GET /wheels/:id/audit`, el arnés de be05 a un giro por jugador; `purchase_token` de los giros pagos, a deuda) | Endpoint de auditoría |
 | **be08** Pruebas | Cinco niveles, regla del motor, `-race` | Igual; ➕ prueba estadística con generador sembrado; ➕ nivel de carga con el arnés de be05 | 🟢 + ➕ | — |
 | **be09** Empaquetado | Imagen, ambientes, pipeline, veredicto | Igual; el veredicto incorpora el horizonte de dos años | 🟢 | — |
 
@@ -171,34 +171,38 @@ Los IDs se conservan; los títulos y los tickets se reescriben con la voz de la 
 | 01, 02, 03, 05, 06, 07, 08, 10, 20 | Setup, router, auth, caos, tests | Igual, con nombres nuevos | 🟢 |
 | 04 | Entro al detalle de otra rifa y sigo viendo la anterior | …de otra rueda… | 🟢 |
 | 09 | Guardo la rifa, se recarga y pierdo todo | Guardo la rueda… | 🟢 |
-| 11 ⭐ | Vendimos el número 0347 dos veces | **Le compensamos dos veces a la misma jugadora** (dos operadores, mismo caso) | 🔴 |
-| 12 | Un número vendido volvió solo a disponible | **Un envío confirmado volvió a "pendiente"** (el rollback pisó la confirmación) | 🟡 |
+| 11 ⭐ | Vendimos el número 0347 dos veces | **Compensamos dos veces a la misma jugadora**: en la consola, el doble clic sin guarda de origen; en el servidor, el chequeo del caso no atómico (que con dos operadores tampoco alcanza) | 🔴 |
+| 12 | Un número vendido volvió solo a disponible | **Un envío que ya estaba enviado volvió a «falló»** (el rollback del envío masivo, que busca por caso, pisó la confirmación del individual) | 🟡 |
 | 13 | Falló una venta y desde entonces no funciona ninguna | Falló un envío y desde entonces no sale ninguno | 🟢 |
 | 14 ⭐ | Cerré sesión y el servidor sigue recibiendo peticiones | Igual (el polling de compras pendientes) | 🟢 |
 | 15 | Escribo el número rápido y me valida uno viejo | **Busco a la jugadora rápido y me muestra a otra** | 🟡 |
 | 16 | La rifa siguió vendiendo después del cierre | **Seguimos enviando giros de una rueda que ya cerró** | 🟡 |
 | 17 | El resultado nunca llega y no hay error | **La compra pendiente nunca se confirma y no hay error** | 🟡 |
 | 18 | La liquidación da un centavo de diferencia | **La conciliación da un centavo**: el prorrateo del paquete de 500 | 🟡 |
-| 19 | El dashboard se arrastra al final del día | …al final de la Semana del Canal | 🟢 |
-| ➕ 21 | — | **"La rueda dice 0,5 % y el tablero muestra 2 %"**: la rueda que se acomoda, vista desde la conciliación de F09 (termina en diagnóstico y en una decisión, no en un commit) | ➕ |
+| 19 | El dashboard se arrastra al final del día | …al final de la Semana del Canal; en T6 el mecanismo pasó a los chequeos de desarrollo de Toolkit sobre la bitácora (el `useMemo` quedó como pieza forense de F09) | 🟡 |
+| ➕ 21 | — | **"La rueda dice 15 % y el tablero muestra 5 %"**: la rueda que se acomoda, vista en el tablero de F09 (termina en diagnóstico y en una decisión, no en un commit). En T6 el síntoma pasó del 2 % de la Esclusa de Oro —una tabla artificial de P7— al del mecanismo de la historia §5: el avatar común se desploma | ➕ |
 
 ### Track BE (16 → 18)
 
 | ID | Hoy | Con la rueda | Grado |
 |---|---|---|---|
-| be-01, be-03, be-05, be-08, be-15 ⭐, be-16 | Trazabilidad, caídas, pool, sesión, regla del motor, imagen | Igual, con nombres nuevos | 🟢 |
-| be-02 | El número ganador no tiene dueño | **El premio entregado no tiene jugador** | 🟡 |
-| be-04 | Las rifas se crean con la hora corrida | Las ruedas se programan con la hora corrida | 🟢 |
-| be-06 | El comprador aparece en blanco | El jugador aparece en blanco | 🟢 |
-| be-07 | Faltan datos en las liquidaciones de agosto | Faltan datos en las conciliaciones de la Semana del Canal | 🟡 |
-| be-09 ⭐ | Vendimos tres números dos veces, y solo los redondos | **Entregamos 1.047 Esclusas de Oro** (el stock) | 🔴 |
-| be-10 | Un número quedó reservado para siempre | **Un giro quedó "en proceso" para siempre** | 🟡 |
-| be-11 | A los vendedores de la costa se les cierra una hora antes | **A los jugadores de Chile la rueda les cierra una hora antes** (horario de verano) | 🟡 |
-| be-12 | Vendimos doscientos números después del cierre | Doscientos giros después del cierre | 🟢 |
-| be-13 | La liquidación dice 340.000 y las ventas 355.000 | La conciliación y el reporte de la tienda no dan lo mismo | 🟡 |
-| be-14 | Repartimos el premio dos veces | **Acreditamos la compra dos veces** (notificación duplicada) | 🟡 |
-| ➕ be-17 | — | **Cada vez que reiniciamos, la rueda da los mismos premios** (`math/rand` sin semilla en Go 1.19) | ➕ |
-| ➕ be-18 | — | **Hay jugadores que cobran el giro gratis cada hora** (el reloj del celular) | ➕ |
+| be-15 ⭐, be-16 | Regla del motor, imagen | Igual, con nombres nuevos | 🟢 |
+| be-01 | La trazabilidad funciona en Network pero no en la consola | Igual, **en be01** (T7): el mock expone el header desde F02; lo olvida el CORS del binario | 🟡 |
+| be-03 | El backend se cae solo y vuelve | **A ratos la consola da error de red, y el servidor nunca se cayó** (T7: `net/http` recupera el pánico y corta la conexión; lo dispara el asistente al abrirse) | 🟡 |
+| be-05 | Todo funciona hasta que hay gente | Igual; el `Rows` sin cerrar está en el chequeo de caso del envío, sin contexto (T7: la receta de P6 no reproducía); de be02, rama desde be03 | 🟡 |
+| be-08 | A algunos los saca de la sesión al mediodía | **A Yariela la saca de la sesión a las ocho de la noche, y a Itzel nunca** | 🟢 |
+| be-02 | El número ganador no tiene dueño | **El premio entregado no tiene rueda** (T7: las filas del giro de 2019 sin `wheelId`; el tablero no las ve) | 🟡 |
+| be-04 | Las rifas se crean con la hora corrida | **Las ruedas aparecen con la hora corrida** (T7: el `DATABASE_URL` sin la zona de la sesión; de be02, rama desde be03) | 🟢 |
+| be-06 | El comprador aparece en blanco | **El tablero dice que nadie compró giros** (T7: `origin` como `sql.NullString`) | 🟡 |
+| be-07 | Faltan datos en las liquidaciones de agosto | **Faltan datos en las conciliaciones** (T7: `bandAlarms`, `missingInApi`, `duplicatedInApi`) | 🟡 |
+| be-09 ⭐ | Vendimos tres números dos veces, y solo los redondos | **Otra vez más Esclusas de Oro que stock, y el contador dice que sobran** (T8: el `FOR UPDATE` quitado por "optimización" y el valor calculado en Go) | 🔴 |
+| be-10 | Un número quedó reservado para siempre | **Un giro quedó "en proceso" para siempre** (T8: el pedido en `spin_requests`, sin fecha límite y sin barrido) | 🟡 |
+| be-11 | A los vendedores de la costa se les cierra una hora antes | **A los jugadores de Chile la rueda les cierra una hora antes** (T9: la teoría del ticket es el horario de verano; la causa, el reloj del cliente; diff vacío, con `cy.clock`) | 🟡 |
+| be-12 | Vendimos doscientos números después del cierre | Giros anotados después del cierre (medidos: 5 a 108) | 🟢 |
+| be-13 | La liquidación dice 340.000 y las ventas 355.000 | La conciliación y el reporte de la tienda no dan lo mismo (T9: el servidor guarda la foto de la consola; `tok-ago-31` acreditada con la pantalla abierta) | 🟡 |
+| be-14 | Repartimos el premio dos veces | **Acreditamos la compra dos veces** (T9: la acreditación en pasos sueltos; el `UNIQUE` salta después de sumar los giros: 60 contra 20) | 🟡 |
+| ➕ be-17 | — | **Cada vez que reiniciamos, la rueda da los mismos premios** (`math/rand` sin semilla en Go 1.19; T8: el sorteo "simplificado" al generador global) | ➕ |
+| ➕ be-18 | — | **Hay jugadores que cobran el giro gratis cada hora** (T9: `X-Client-Now` leído en el reclamo) | ➕ |
 
 ---
 
@@ -262,3 +266,21 @@ recorta su alcance, no se suben las horas.
 Lo 🔴 y lo 🟡 suman cerca de la mitad del corpus, como se había estimado. Lo 🟢 es mecánico pero
 **no se hace con buscar y reemplazar**: el género y los ejemplos numéricos (`0347`, `$500.000`) se
 revisan a mano.
+
+## 10. 📏 Cifras de referencia de la verificación previa (P7, 14/10/2026)
+
+Lo que P7 midió en contenedor, para que cada fase tenga un punto de comparación. Son
+**referencia**, no lo que se publica: cada fase publica las cifras de **su** corrida
+(plan §5.1). Detalle y comandos en `zz-code/react-16-legacy-for-backend-devs-20261014-f462/`.
+
+| Fase | Qué se mide | Referencia de P7 |
+|---|---|---|
+| F03 (y be00, be05) | Giro ingenuo: 1.500 claves, 50 VUs, cada clave enviada dos veces, stock 1.000 | 1.014 premios, 495 claves con dos premios, 14 de stock excedido |
+| F03 (y be05) | Giro transaccional, misma carga | 1.000 premios, 0 dobles, 0 excedido, p95 54 ms (el ingenuo, 89 ms) |
+| F08 y A14 | `oddsAudit` sobre 20.000 giros, 300 corridas por escenario | Rueda honesta: alarma en 6 % (banda y chi-cuadrado juntos). Rueda que se acomoda: 100 % |
+| F08 | Prorrateo de 20,99 USD entre 500 giros, en centavos enteros | 2.099 centavos exactos: base 4, +1 en 99 giros |
+| be05 y incidente be-17 | `math/rand` sin semilla, dos arranques | Go 1.19.13 repite la secuencia; Go 1.20.14 no |
+| be09 | Pipeline validado con actionlint 1.7.9 | `actions/checkout@v3` es demasiado viejo: usar v4 o superior |
+
+La tasa de falsas alarmas del chi-cuadrado (≈ 5 % por diseño con α = 0,05) es la que A14
+debe decir, y la banda sola queda por medir.

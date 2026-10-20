@@ -1,5 +1,5 @@
 # 🏷️ Convención de git: commits y tags de progreso
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 Cómo versionas el código que escribes mientras haces el curso. Es corto a
 propósito: no es un proyecto de empresa, no hay releases ni equipo, y una
@@ -7,6 +7,10 @@ estrategia de ramas elaborada acá sobraría. Son tres cosas — un repo, commit
 con un prefijo, y un tag por fase cerrada. Más tres usos de
 los tags que en este curso rinden muchísimo por lo poco que cuestan: los
 ejercicios, los incidentes y los puntos de retorno.
+
+> **Cuándo se lee:** antes de la [Fase 0](00-setup-hola-mundo-cra.md), y cada vez que el bloque 🏷️
+> de cierre de una fase te mande aquí.
+> **Vigencia:** 2026-10-14.
 
 > 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa
 > espacio, no agrega overhead y se borra con `git tag -d`. La pregunta no es
@@ -23,7 +27,7 @@ la condición para animarte a romper.
 ## 📦 Un repo, y una raya en la arena
 
 Al empezar la Fase 0 haces `git init` en el proyecto que crea CRA
-(`raffles-app`), y ese repo te acompaña las doce fases. Si más adelante haces el
+(`esclusa-app`), y ese repo te acompaña las doce fases. Si más adelante haces el
 track BE opcional 🔥, el backend en Go **no estrena repositorio**: vive en
 `server/` dentro del mismo proyecto, con el frontend en la raíz sin moverse
 (`be01-go-y-la-forma-del-monolito.md` §5.1). Un repo, dos mundos, una raya en la
@@ -70,11 +74,11 @@ Un prefijo, y ya. El prefijo es el código del documento: `f04` en las fases,
 `a10` en los apéndices, y `be03` / `bea-02` en el track BE.
 
 ```bash
-git commit -m "f04: raffleSlice con createSlice y los tres estados de carga"
-git commit -m "f04: RaffleTable con loading, error y lista vacía"
-git commit -m "f04 ej17: filtro por estado de rifa en el listado"
+git commit -m "f04: wheelSlice con createSlice y los tres estados de carga"
+git commit -m "f04: WheelForm con loading, error y lista vacía"
+git commit -m "f04 ej17: filtro por estado de rueda en el listado"
 git commit -m "a10: money.js con toCents y formatMoney"
-git commit -m "f06 ej22: takeUntil en el epic de refresco del tablero"
+git commit -m "f06 ej22: takeUntil en el epic de cancelación al cerrar sesión"
 ```
 
 Los ejercicios llevan además su número, `ej17`, y así queda claro qué es
@@ -88,7 +92,7 @@ git log --oneline --grep '^f04 ej'     # solo los ejercicios de la Fase 4
 El mensaje va en español y el código en inglés, igual que en todo el curso: el
 commit lo lee el equipo, el identificador que cita sale del código. Commitea
 seguido y con mensajes cortos. Nadie va a revisar tu historia, pero tú vas a
-volver a ella cuando el ejercicio de la venta concurrente te deje el store
+volver a ella cuando el ejercicio del giro concurrente te deje el store
 irreconocible.
 
 > ⚠️ **La excepción son los incidentes.** El `cuaderno-incidentes.md` tiene su
@@ -108,7 +112,7 @@ recordar nada: el archivo que estás leyendo te dice cómo se llama su tag. Los
 apéndices usan `apendice-` + el slug en minúscula.
 
 ```
-04-rifas-crud.md              →   fase-04-rifas-crud
+04-ruedas-crud.md             →   fase-04-ruedas-crud
 06-redux-observable-a-fondo.md →   fase-06-redux-observable-a-fondo
 A10-aritmetica-de-dinero.md   →   apendice-a10-aritmetica-de-dinero
 be03-crud-y-el-reemplazo.md   →   fase-be03-crud-y-el-reemplazo
@@ -119,7 +123,7 @@ después te da la línea de tiempo del curso. El mensaje no se inventa: es el
 checklist de la fase, con lo que efectivamente quedó funcionando.
 
 ```bash
-git tag -a fase-04-rifas-crud -m "F4 cerrada: raffleSlice con createSlice,
+git tag -a fase-04-ruedas-crud -m "F4 cerrada: wheelSlice con createSlice,
 CRUD completo contra el mock, los tres estados de carga y el error legible.
 Tests: todavía no (F10). Persistencia de sesión: pagada en §5.5."
 ```
@@ -155,7 +159,7 @@ riesgo: pruebas la migración, mides lo que cuesta, y si no cierra vuelves al
 código de 2022 con un comando.
 
 > ⚠️ **Volver a un tag te deja en `detached HEAD`.** Es normal:
-> `git checkout fase-05-venta-de-numeros` te pone a mirar ese estado sin estar
+> `git checkout fase-05-envios-manuales` te pone a mirar ese estado sin estar
 > en ninguna rama. Si vas a escribir desde ahí, crea una rama primero
 > (`git checkout -b intento-2`). Para volver a tu línea principal,
 > `git checkout master`.
@@ -168,7 +172,7 @@ marcan un **evento**, y por eso son los únicos del curso que no siguen el patr�
 
 ```bash
 git tag -a mock-retirado -m "🪦 json-server fuera del sistema"        # en be03
-git tag -a track-be-completo -m "🔥 Track BE terminado: 10 fases, 84 horas, frontend intacto"   # en be09
+git tag -a track-be-completo -m "🔥 Track BE terminado: 10 fases, 86 horas, frontend intacto"   # en be09
 ```
 
 `mock-retirado` es el punto al que vuelves si necesitas comparar el sistema con
@@ -217,8 +221,8 @@ y queda pegado al commit que lo produjo:
 
 ```bash
 git tag -a ej/f09/26 -m "Profiler sin useMemo: 38 renders y 240 ms de commit
-al filtrar. Con el selector memoizado: 4 renders y 11 ms. Dataset: 120 rifas,
-9.600 números."
+al filtrar. Con el selector memoizado: 4 renders y 11 ms. Dataset: 120 ruedas,
+9.600 giros."
 ```
 
 Después, `git tag -n99 -l 'ej/f09/*'` te devuelve tu cuaderno de mediciones sin
@@ -234,9 +238,9 @@ abrir un archivo.
 
 ## 🚑 Incidentes: acá el tag sí es contenido
 
-El `cuaderno-incidentes.md` plantea veinte incidentes —el número vendido dos
-veces, el epic que sigue pidiendo al servidor después del logout, la rifa que
-vendió pasada la hora de cierre— y pide resolverlos con la estructura de
+El `cuaderno-incidentes.md` plantea veintiún incidentes —la jugadora compensada
+dos veces, el epic que sigue pidiendo al servidor después del logout, la rueda que
+siguió girando pasada la hora de cierre— y pide resolverlos con la estructura de
 post-mortem de ocho puntos que el propio cuaderno explica: síntoma, repro,
 evidencia, causa raíz, corrección, prueba de regresión, prevención, y el
 análisis sin culpabilización.
@@ -249,15 +253,17 @@ dos sufijos de siempre, `-roto` y `-fix`:
 ```bash
 # Puntos 1-3: el síntoma reproducido y la prueba de regresión EN ROJO
 git tag -a inc/14/suscripcion-zombi-roto -m "Síntoma: cerré sesión y el
-servidor sigue recibiendo peticiones. Repro: login, abrir el tablero de la
-rifa 3, logout, mirar Network. Evidencia: GET /raffles/3/numbers cada 5 s con
-el tablero desmontado y sin token."
+servidor sigue recibiendo peticiones. Repro: login, /purchases, consultar
+tok-oxxo-2 (pendiente diez minutos), logout, mirar Network. Evidencia: GET
+/purchases/tok-oxxo-2 cada 2 s, sin token, y [3002] sin sesión #N en el log
+del mock."
 
 # Puntos 4-6: la causa raíz, el fix, y la misma prueba EN VERDE
-git tag -a inc/14/suscripcion-zombi-fix -m "Causa raíz: boardRefreshEpic sin
-takeUntil: el interval que abre el switchMap no se cancela nunca. Fix:
-takeUntil(STOP_BOARD_REFRESH, LOGOUT) último en el pipe interno. Regresión:
-marble test que verifica que el observable completa al llegar el logout."
+git tag -a inc/14/suscripcion-zombi-fix -m "Causa raíz: el takeUntil del
+pollingEpic escucha stopPolling y no el logout, y PurchasesPage no para nada al
+desmontarse: el timer que abre el switchMap no se cancela nunca. Fix: el
+logout en el takeUntil, último en el pipe interno. Regresión: marble test que
+verifica que después del logout no sale ni una consulta más."
 ```
 
 Con eso, `git diff inc/14/suscripcion-zombi-roto inc/14/suscripcion-zombi-fix`
@@ -280,21 +286,21 @@ incidente no sea de juguete.
 > la fase que produce el incidente, y como el backend **no estrena repositorio**
 > —vive en `server/`, dentro de este mismo—, conviven con las del track base sin
 > pisarse. Tres de ellas tienen el `git diff` vacío a propósito: su causa no está
-> en el árbol de fuentes sino en una variable de entorno, en el reloj de la
-> máquina o en la zona del contenedor de Postgres. Una rama vacía también es un
+> en el árbol de fuentes sino en una variable de entorno (la vida del token, el
+> `DATABASE_URL` sin la zona de la sesión) o en el reloj de la máquina. Una rama vacía también es un
 > estado, y ese es justamente el aprendizaje.
 
 ```bash
-git checkout -b incidente/be-09 fase-be05-venta-concurrente
+git checkout -b incidente/be-09 fase-be05-giro-concurrente
 ```
 
 ---
 
 ## 🧹 El `db.json` que se ensucia (el truco que más vas a usar)
 
-El mock guarda de verdad. Vendes números, liquidas rifas, cambias estados — y
+El mock guarda de verdad. Envías premios, concilias ruedas, cambias estados — y
 todo eso se escribe en `mock/db.json`. Después de media hora de ejercicios de
-venta concurrente, tu tablero es un campo de batalla y ya no puedes reproducir
+giro concurrente, tu tablero es un campo de batalla y ya no puedes reproducir
 el caso limpio del enunciado.
 
 Como `db.json` está versionado —es el dato semilla del curso, no un artefacto
@@ -305,8 +311,8 @@ git checkout -- mock/db.json     # tablero limpio, sin tocar nada más
 ```
 
 Ese comando vale por sí solo lo que cuesta leer este archivo. Y su corolario:
-cuando un ejercicio te pida un dato particular —una rifa con 400 números
-vendidos, una liquidación con centavos que no cuadran—, cárgalo, **commitéalo
+cuando un ejercicio te pida un dato particular —una rueda con 400 segmentos
+con envíos, una conciliación con centavos que no cuadran—, cárgalo, **commitéalo
 como escenario** (`git commit -m "f08 ej24: escenario de descuadre por centavo"`)
 y etiquétalo si vas a volver. Reconstruir a mano un escenario que ya tuviste es
 el peor uso posible de tu tiempo.
@@ -324,10 +330,10 @@ git for-each-ref --sort=creatordate \
   --format='%(creatordate:short)  %(refname:short)' 'refs/tags/fase-*'
 
 # Qué costó una fase, en archivos y líneas
-git diff fase-05-venta-de-numeros..fase-06-redux-observable-a-fondo --stat
+git diff fase-05-envios-manuales..fase-06-redux-observable-a-fondo --stat
 
 # Volver a un estado sano
-git checkout fase-05-venta-de-numeros
+git checkout fase-05-envios-manuales
 git checkout -- mock/db.json
 
 # Los ejercicios de una fase, y el cuaderno de incidentes completo

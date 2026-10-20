@@ -1,6 +1,6 @@
 # 🧵 Apéndice bea-07 — Logs, `request-id` y correlación
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~2 horas
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Consulta rápida · ~2 horas
 > Lo referencian: `be01` y todas las fases posteriores
 
 ---
@@ -126,15 +126,18 @@ log.Printf("[req-id %s] %s %s → %d (%d bytes) en %s",
 ```
 
 ```
-2026/09/08 14:22:31 [req-id 9f3a1c7d2e5b] POST /raffles/1/numbers/0347/sell → 409 (46 bytes) en 12.418ms
+2026/10/19 19:56:10 [req-id 4338cb8b3706be42] POST /players/42/grants → 201 (128 bytes) en 53.033ms
 ```
+
+(Los 53 ms son la demora de entrega del juego, `GRANT_DELIVERY_MS`, que el
+laboratorio bajó a 50.)
 
 **El id va delante y entre corchetes**, y eso no es estética: es lo que lo hace
 grepeable sin comerse líneas vecinas.
 
 ```bash
-grep '9f3a1c7d2e5b' server.log
-docker compose logs api | grep '9f3a1c7d2e5b'
+grep '4338cb8b3706be42' server.log
+docker compose logs api | grep '4338cb8b3706be42'
 ```
 
 ### JSON — cuando los logs los lee una máquina
@@ -200,7 +203,7 @@ archivo de log se pelea con la rotación, con los permisos y con el contenedor.
 | El hash de `bcrypt` | Es material para atacar sin límite de intentos |
 | `JWT_SECRET` o el `DATABASE_URL` completo | Trae la contraseña de la base |
 | El cuerpo completo de una petición | Hoy no trae nada sensible; mañana sí, y nadie va a revisar el logger |
-| Datos personales de participantes | Nombre, documento, teléfono |
+| Datos personales de jugadores | Nombre, país, correo |
 
 > ⚠️ **La trampa del volcado cómodo.** Un `log.Printf("%+v", req)` parece
 > inofensivo y es la forma más habitual de filtrar un token: el struct incluye
@@ -218,7 +221,7 @@ archivo de log se pelea con la rotación, con los permisos y con el contenedor.
 - El resultado de la operación de negocio: qué error de dominio se devolvió.
 - Los eventos que solo el servidor conoce: el desfase de reloj de `be06`, la
   discrepancia de montos de `be07`, el cambio de nivel de caos, el cierre de una
-  rifa por reloj.
+  rueda por reloj.
 
 **Si tienes que registrar un token para diagnosticar**, registra su huella, nunca
 el token:
@@ -241,15 +244,15 @@ cada uno:
 | Nivel | Cuándo | Ejemplo del track |
 |---|---|---|
 | `DEBUG` | Detrás de una variable | Cada consulta SQL con su tiempo (`SQL_DEBUG`) |
-| `INFO` | Un evento por petición | La línea de acceso; el cierre de una rifa |
+| `INFO` | Un evento por petición | La línea de acceso; el cierre de una rueda |
 | `WARN` | Algo raro que no rompió | Desfase de reloj (`be06`), discrepancia de montos (`be07`) |
 | `ERROR` | Falló y alguien debería mirar | Pánico recuperado, la base no responde |
 
 > 🧭 **El criterio que evita el ruido: un log de `ERROR` es una petición de
 > atención humana.** Si nadie va a hacer nada al verlo, no es `ERROR`.
 >
-> Un `401` por token vencido es rutina: `INFO`. Un `409` por venta duplicada es el
-> sistema funcionando: `INFO`. Un pánico recuperado es `ERROR`, siempre. Confundir
+> Un `401` por token vencido es rutina: `INFO`. Un `409` por un caso ya compensado
+> es el sistema funcionando: `INFO`. Un pánico recuperado es `ERROR`, siempre. Confundir
 > esto produce el peor de los resultados: un log lleno de errores que nadie mira,
 > y entre ellos el que sí importaba.
 
@@ -265,36 +268,44 @@ acabe en un log sin que nadie lo decidiera.
 Esto es lo que el track viene construyendo desde `be00`, fase por fase. Hazlo
 entero una vez:
 
-**1. En el navegador.** Vende un número y mira la consola. El interceptor de la
-Fase 2 imprimió:
+**1. En el navegador.** Manda dos veces el mismo caso desde el asistente de envíos
+y mira la consola. El interceptor de la Fase 2 imprime, para el segundo:
 
 ```
-[req-id 9f3a1c7d2e5b] POST /raffles/1/numbers/0347/sell → 409
+[req-id 5dc7dc55d9622d6a] ERROR 409 en /players/42/grants
 ```
 
 Si **no** aparece pero el header sí está en Network, te falta
-`Access-Control-Expose-Headers` (§1). Ese es el hallazgo `C-05`.
+`Access-Control-Expose-Headers` (§1). Ese es el hallazgo `C-05`, y el incidente
+`be-01`.
 
 **2. En el log del servidor.** Con el id:
 
 ```bash
-docker compose logs api | grep 9f3a1c7d2e5b
+docker compose logs api | grep 5dc7dc55d9622d6a
 ```
 
 ```
-[req-id 9f3a1c7d2e5b] POST /raffles/1/numbers/0347/sell → 409 (46 bytes) en 12.418ms
-[req-id 9f3a1c7d2e5b] usuario 2 intentó vender 0347: ese número ya fue vendido
+2026/10/19 19:56:33 [req-id 5dc7dc55d9622d6a] POST /players/42/grants → 409 (58 bytes) en 842µs
 ```
 
-**3. En la consulta SQL.** Con `SQL_DEBUG=1`:
+Una sola línea: la de acceso. Lo que el servidor decidió —"ese caso ya estaba
+compensado"— no está en el log, porque `SendGrant` devuelve el error y nadie lo
+escribe. Agregarlo, con el id del operador, es el ejercicio 16 de `be04`.
+
+**3. En la consulta SQL.** Con la instrumentación del ejercicio 25 de `be02`
+(`SQL_DEBUG`), la misma petición deja una línea por consulta, con su tiempo y el
+mismo id. Sin ella, este paso no existe: es la diferencia entre el log que hay y
+el que te hace falta.
+
+**4. Y en la base, si hace falta.** El primer envío del caso quedó guardado con
+quién lo mandó (`be04`):
 
 ```
-[req-id 9f3a1c7d2e5b] SQL SELECT … FROM raffle_numbers WHERE raffle_id=$1 AND number=$2 FOR UPDATE → 8.1ms
-[req-id 9f3a1c7d2e5b] SQL INSERT INTO sales … → error 23505 en 1.9ms
+ grant_id | case_id | sent_by |         created_at
+----------+---------+---------+-----------------------------
+ g-1      | C-7     |       2 | 2026-10-19 19:56:10.6323+00
 ```
-
-**4. Y en la base, si hace falta.** Con la venta ya registrada, el `sold_by` y el
-`sold_at` de `sales` dicen quién ganó la carrera que este id perdió.
 
 > 🧠 **Eso es el círculo cerrado.** En `be00` el id no llegaba a ninguna parte. En
 > `be01` llegó al log. En `be02` a la consulta. En `be04` trajo la identidad. En
@@ -307,8 +318,8 @@ docker compose logs api | grep 9f3a1c7d2e5b
 hacer:
 
 ```bash
-curl -H 'X-Request-Id: diagnostico-oskar-01' localhost:3001/raffles
-docker compose logs api | grep diagnostico-oskar-01
+curl -H 'X-Request-Id: diagnostico-yariela-01' -H "Authorization: Bearer $TOKEN" localhost:3001/wheels
+docker compose logs api | grep diagnostico-yariela-01
 ```
 
 ---

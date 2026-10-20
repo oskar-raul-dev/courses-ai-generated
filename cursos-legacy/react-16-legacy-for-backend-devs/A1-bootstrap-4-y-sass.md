@@ -1,6 +1,6 @@
 # 🎨 Apéndice A1 — Bootstrap 4 y Sass
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **3 horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Apéndice de **consulta rápida** · **3 horas**
 > Lo usan: Fases 0, 1, 2, 4 y 9 (toda pantalla con markup) · No es lectura secuencial: salta al bloque que necesites.
 
 Este apéndice no se lee de corrido. Es la chuleta que abres cuando estás
@@ -61,9 +61,9 @@ variables de arriba hacia abajo, así que tus tokens y tus overrides van
 
 // 3) Tus estilos propios AL FINAL: acá ya puedes usar los tokens
 //    y pisar lo que haga falta de Bootstrap.
-.raffle-card {
-  border-top: 4px solid $raffle-primary;
-  margin-bottom: $raffle-spacing * 2;
+.wheel-card {
+  border-top: 4px solid $esclusa-primary;
+  margin-bottom: $esclusa-spacing * 2;
 }
 ```
 
@@ -89,7 +89,7 @@ El sistema de 12 columnas. Tres piezas: un `.container` (o
 <div className="container py-4">
   <div className="row">
     {/* col-md-8: 8/12 en pantallas ≥768px, 12/12 debajo */}
-    <div className="col-md-8">Listado de rifas</div>
+    <div className="col-md-8">Listado de ruedas</div>
     <div className="col-md-4">Panel lateral</div>
   </div>
 </div>
@@ -118,13 +118,13 @@ fantasma, casi siempre es una `.row` sin contenedor.
 
 ## 3. Cards
 
-La `RaffleCard` de la Fase 0 es una card. El patrón base:
+La `WheelCard` de la Fase 0 es una card. El patrón base:
 
 ```jsx
 <div className="card">
   <div className="card-body">
-    <h5 className="card-title">Rifa fin de mes</h5>
-    <p className="card-text text-muted">Precio por número: $5000</p>
+    <h5 className="card-title">Esclusa de Oro</h5>
+    <p className="card-text text-muted">Segmentos: 8</p>
     <button className="btn btn-outline-primary btn-sm">Ver detalle</button>
   </div>
 </div>
@@ -132,7 +132,7 @@ La `RaffleCard` de la Fase 0 es una card. El patrón base:
 
 En el curso vas a ver un atajo muy usado: `card card-body` juntas en el
 mismo elemento cuando la card es solo un contenedor con padding y no
-necesita header/footer. El `RaffleForm` de la Fase 4, por ejemplo, es un
+necesita header/footer. El `WheelForm` de la Fase 4, por ejemplo, es un
 `<form className="card card-body mb-4">` — la card le da el marco y el
 padding al formulario de una.
 
@@ -148,7 +148,7 @@ La `.card` no trae padding propio: tu texto queda pegado al borde. O pones
 
 ## 4. Tablas
 
-El listado de rifas (Fase 4) es una tabla Bootstrap. Las clases que usa el
+El listado de ruedas (Fase 4) es una tabla Bootstrap. Las clases que usa el
 código real:
 
 ```jsx
@@ -162,7 +162,7 @@ código real:
   </thead>
   <tbody>
     <tr>
-      <td>Rifa fin de mes</td>
+      <td>Esclusa de Oro</td>
       <td>
         <span className="badge badge-pill badge-secondary">Abierta</span>
       </td>
@@ -195,12 +195,12 @@ las filas y raya el header. Ponlo siempre explícito.
 Los formularios del curso son **controlados** (el valor vive en el estado
 de React, no en el DOM). Bootstrap 4 aporta las clases; React aporta el
 `value` + `onChange`. La estructura canónica que vas a ver en el
-`RaffleForm`:
+`WheelForm`:
 
 ```jsx
 <form onSubmit={handleSubmit} className="card card-body mb-4">
   <div className="form-group">
-    <label htmlFor="name">Nombre de la rifa</label>
+    <label htmlFor="name">Nombre de la rueda</label>
     <input
       id="name"
       className="form-control"
@@ -212,25 +212,25 @@ de React, no en el DOM). Bootstrap 4 aporta las clases; React aporta el
   {/* form-row + col-md-* pone dos campos lado a lado */}
   <div className="form-row">
     <div className="form-group col-md-6">
-      <label htmlFor="numberPrice">Precio por número</label>
+      <label htmlFor="weightBp">Peso (puntos básicos)</label>
       <input
-        id="numberPrice"
+        id="weightBp"
         type="number"
         className="form-control"
-        value={numberPrice}
-        onChange={(e) => setPricePerNumber(e.target.value)}
+        value={weightBp}
+        onChange={(e) => setWeightBp(e.target.value)}
       />
     </div>
     <div className="form-group col-md-6">
-      <label htmlFor="lotteryId">Lotería</label>
+      <label htmlFor="timezone">Zona horaria</label>
       <select
-        id="lotteryId"
+        id="timezone"
         className="form-control"
-        value={lotteryId}
-        onChange={(e) => setLotteryId(e.target.value)}
+        value={timezone}
+        onChange={(e) => setTimezone(e.target.value)}
       >
-        <option value="boyaca">Boyacá</option>
-        <option value="cundinamarca">Cundinamarca</option>
+        <option value="America/Panama">Panamá</option>
+        <option value="America/Santiago">Santiago</option>
       </select>
     </div>
   </div>
@@ -277,7 +277,7 @@ Escala: `0` a `5`. Ejemplos que ya viste: `mb-4` (margin-bottom grande),
 
 **Flexbox.** Para alinear sin pelear con CSS: `d-flex` activa el flex,
 `justify-content-between` empuja los extremos a los bordes,
-`align-items-center` centra vertical. El header de la `RaffleCard` usa
+`align-items-center` centra vertical. El header de la `WheelCard` usa
 exactamente `d-flex justify-content-between align-items-center` para poner
 el título a la izquierda y el badge a la derecha.
 
@@ -288,8 +288,8 @@ suspensivos).
 **Colores contextuales.** Los `alert alert-{tipo}`, `badge badge-{tipo}`,
 `btn btn-{tipo}` y `btn btn-outline-{tipo}` comparten la misma paleta de
 tipos: `primary`, `secondary`, `success`, `danger`, `warning`, `info`,
-`light`, `dark`. En el curso el estado de las rifas se mapea a estos: una
-rifa `open` va con `badge-success`, una `closed` con `badge-secondary`, un
+`light`, `dark`. En el curso el estado de las ruedas se mapea a estos: una
+rueda `live` va con `badge-success`, una `ended` con `badge-secondary`, un
 error de carga con `alert alert-danger`. Ese mapeo dato→color es el que
 customizas en §7.
 
@@ -304,7 +304,7 @@ para lo que Bootstrap no cubre (§7 y el mini design system de A2).
 ## 7. Customización de la paleta con Sass
 
 Acá está el corazón "de sistema" de este apéndice y la línea que lo separa
-del A2. **A1 cubre cómo hacer que la paleta de marca (`$raffle-*`) alimente
+del A2. **A1 cubre cómo hacer que la paleta de marca (`$esclusa-*`) alimente
 las utilidades de Bootstrap** para que `btn-primary`, `badge-success`,
 `alert-danger` reflejen tus colores. El design system completo —mixins,
 tokens jerárquicos, cómo el equipo estructura todo esto en serio— vive en
@@ -320,18 +320,18 @@ toques ni una clase en el JSX.
 
 ```scss
 // src/styles/_tokens.scss
-// Paleta de marca de Rifas y chances (ya viene de la Fase 0).
-$raffle-primary: #0066cc;  // azul de marca
-$raffle-success: #28a745;  // "rifa abierta / número disponible"
-$raffle-danger:  #dc3545;  // "cerrada / vendido"
-$raffle-spacing: 0.5rem;   // unidad base de espaciado
+// Paleta de marca de La Esclusa (ya viene de la Fase 0).
+$esclusa-primary: #0066cc;  // azul de marca
+$esclusa-success: #28a745;  // "rueda en vivo"
+$esclusa-danger:  #dc3545;  // "terminada / agotado"
+$esclusa-spacing: 0.5rem;   // unidad base de espaciado
 
 // Mapeamos NUESTROS tokens a las variables que Bootstrap espera.
 // Estas líneas van ANTES del @import de Bootstrap en index.scss,
 // por eso Bootstrap las lee al construir sus clases.
-$primary: $raffle-primary;
-$success: $raffle-success;
-$danger:  $raffle-danger;
+$primary: $esclusa-primary;
+$success: $esclusa-success;
+$danger:  $esclusa-danger;
 ```
 
 Con eso, y el `@import "./styles/tokens"` antes de Bootstrap en tu
@@ -341,25 +341,28 @@ del curso queda pintado con la marca. Cero cambios en los componentes.
 ### 7.2 `$theme-colors`: agregar colores propios al set contextual
 
 Pisar `$primary` cambia un color existente. Pero a veces quieres un color
-**nuevo** que genere su propia familia de clases —un `btn-raffle`,
-`badge-raffle`—. Para eso Bootstrap 4 expone el mapa `$theme-colors`:
+**nuevo** que genere su propia familia de clases —un `btn-wheel`,
+`badge-wheel`—. Para eso Bootstrap 4 expone el mapa `$theme-colors`:
 extiéndelo antes del `@import` y Bootstrap te genera las clases
 automáticamente.
 
 ```scss
 // _tokens.scss — sigue ANTES del @import de Bootstrap.
-// map-merge conserva los colores de Bootstrap y suma los nuestros.
+// Bootstrap define $theme-colors en su propio @import; declararlo aquí
+// con !default evita que la variable no exista, y Bootstrap mezcla sus
+// colores encima de los nuestros.
+$theme-colors: () !default;
 $theme-colors: map-merge(
   $theme-colors,
   (
-    "raffle":  $raffle-primary,
-    "sold":    $raffle-danger,
-    "available": $raffle-success,
+    "wheel":   $esclusa-primary,
+    "soldout": $esclusa-danger,
+    "available": $esclusa-success,
   )
 );
 ```
 
-Ahora existen `btn-raffle`, `bg-sold`, `text-available`, `badge-available`,
+Ahora existen `btn-wheel`, `bg-soldout`, `text-available`, `badge-available`,
 etc., derivadas por Bootstrap con sus estados de hover/focus incluidos. Es
 más limpio que escribir esas variantes a mano, y mantiene un solo origen de
 verdad para el color.
@@ -400,7 +403,7 @@ que el código usa y achicar el bundle.
 @import "~bootstrap/scss/utilities";  // §6 (spacing, flex, text…)
 
 // Tus estilos propios al final.
-.raffle-card { border-top: 4px solid $raffle-primary; }
+.wheel-card { border-top: 4px solid $esclusa-primary; }
 ```
 
 **Error común.** Importar `grid` o `buttons` **sin** `functions`,
@@ -433,7 +436,7 @@ Referencia de decisión rápida. Todo con clases de Bootstrap **4.6**.
 | Dos campos lado a lado en un form | `form-row` + `col-md-6` | — |
 | Separar/espaciar elementos | `mb-4`, `mr-2`, `p-3`, `py-4` | `me-2` / `ms-2` (son de la 5) |
 | Alinear con flex | `d-flex justify-content-between align-items-center` | — |
-| Estado de rifa como color | `badge-success`/`-secondary`/`-danger` | — |
+| Estado de rueda como color | `badge-success`/`-secondary`/`-danger` | — |
 | Cambiar un color de marca global | pisar `$primary` **antes** del `@import` | tapar con CSS después (parche) |
 | Agregar un color nuevo con sus clases | `map-merge` sobre `$theme-colors` | escribir cada variante a mano |
 | Reducir el bundle | importar partials Sass sueltos | importar `bootstrap` completo |
@@ -446,35 +449,35 @@ Cortos, de consulta: compruebas que sabes dónde mirar, no construyes features.
 
 **🟢 Básico**
 
-1. Toma la `RaffleCard` de la Fase 0 y envuelve el título y el badge en un
+1. Toma la `WheelCard` de la Fase 0 y envuelve el título y el badge en un
    `d-flex justify-content-between align-items-center`. Confirma que el
    badge queda pegado a la derecha sin escribir CSS.
-2. Arma una `.row` con tres `.col-md-4` que muestren tres rifas de mentira,
+2. Arma una `.row` con tres `.col-md-4` que muestren tres ruedas de mentira,
    una al lado de la otra en desktop y apiladas en móvil. Redimensiona la
    ventana para verlo colapsar en el breakpoint `md`.
-3. Convierte un listado de rifas en una `<table table-striped table-hover>`
+3. Convierte un listado de ruedas en una `<table table-striped table-hover>`
    con `thead-dark`, columnas Nombre / Estado / Acciones, y `text-right` en
    la última.
 
 **🟡 Intermedio**
 
-4. Pisa `$primary` con `$raffle-primary` (#0066cc) en `_tokens.scss`,
+4. Pisa `$primary` con `$esclusa-primary` (#0066cc) en `_tokens.scss`,
    **antes** del `@import` de Bootstrap. Confirma que todos los
    `btn-primary` del curso cambian de azul sin tocar ningún JSX. Después
    moviste la línea a *después* del import y explica por qué deja de
    funcionar.
 5. Agrega un color `"available"` (verde) al mapa `$theme-colors` con
    `map-merge` y usa la clase generada `badge-available` en el estado
-   "disponible" de un número. Verifica que Bootstrap generó también el
+   "disponible" de un segmento. Verifica que Bootstrap generó también el
    hover.
-6. Reescribe un form de dos campos (precio y lotería) usando `form-row` +
+6. Reescribe un form de dos campos (peso y zona horaria) usando `form-row` +
    `col-md-6` para ponerlos lado a lado, con `form-group` y `form-control`
    en cada uno. Enlaza cada `label` con su input por `htmlFor`.
 
 **🟠 Difícil**
 
 7. **Diagnóstico:** te paso un `index.scss` donde la línea `$primary:
-   $raffle-primary;` está **después** del `@import "~bootstrap/scss/bootstrap"`.
+   $esclusa-primary;` está **después** del `@import "~bootstrap/scss/bootstrap"`.
    Los botones salen azul-Bootstrap, no azul-marca. Identifica por qué,
    corrígelo con el cambio mínimo, y escribe dos líneas de post-mortem
    sobre por qué el orden de imports en Sass no es cosmético.

@@ -1,5 +1,5 @@
 # ✍️ Guía de estilo, tono y convenciones
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 Esta guía es la fuente de verdad editorial del proyecto. Cualquier chat que
 produzca un `.md` la sigue. Su objetivo es simple: que los ~50 documentos del
@@ -115,7 +115,7 @@ condimento, no plato principal.
   Formato recomendado para comparativas:
 
   ```markdown
-  **Opción A — `thunk` para la carga inicial de rifas**
+  **Opción A — `thunk` para la carga inicial de ruedas**
 
   Qué es: una función async despachada por Redux Toolkit, sin RxJS de por medio.
   Cuándo conviene: cuando la operación es "pide una vez y guarda el resultado".
@@ -161,10 +161,10 @@ condimento, no plato principal.
 > de Express y los scripts. No hay código legacy "demasiado feo" ni ejemplo
 > "demasiado rápido" que quede fuera de esta regla.
 
-El código de Rifas y Chances está en inglés porque lo arrancó un contratista de
+El código de la Esclusa está en inglés porque lo arrancó un contratista de
 fuera en 2019 y la convención quedó (ver `00-historia-del-sistema.md` §3). Es
 también lo que va a encontrar el estudiante en casi cualquier base real: si el
-tutorial usara `crearRifa` y `rifasSlice`, el vocabulario que practica durante un
+tutorial usara `crearRueda` y `ruedasSlice`, el vocabulario que practica durante un
 mes no sería el que va a leer en producción.
 
 Y la contraparte importa igual: **los comentarios van siempre en español**,
@@ -183,20 +183,19 @@ Lo que cambia a inglés es el código que lee y mantiene el equipo.
 
 - **En inglés:** nombres de función, variable, componente, archivo, slice, epic,
   thunk, selector, acción y `actionType`; propiedades de estado y props
-  (`state.raffles.items`, `<RaffleForm initialRaffle={…} />`); rutas y endpoints
-  (`/raffles`, `/raffles/:id/numbers`, `/login`); constantes y valores de enum
-  internos (`status: 'open'`, no `'abierta'`); clases CSS y Sass propias del
-  proyecto (`.raffle-card`, no `.tarjeta-rifa`); atributos `data-testid`
-  (`data-testid="number-sold"`).
-- **En español:** los comentarios de código (`// la reserva expira a los 5 min:
-  si no, el número queda bloqueado para siempre`), los textos de interfaz
-  (`<button>Vender número</button>`, `"Cargando rifas…"`, placeholders, `alt` de
+  (`state.wheels.items`, `<WheelForm initialWheel={…} />`); rutas y endpoints
+  (`/wheels`, `/wheels/:id/segments`, `/login`); constantes y valores de enum
+  internos (`status: 'live'`, no `'en vivo'`); clases CSS y Sass propias del
+  proyecto (`.wheel-card`, no `.tarjeta-rueda`); atributos `data-testid`
+  (`data-testid="segment-landed"`).
+- **En español:** los comentarios de código (`// la ventana de deshacer dura 10 s: si no, el envío queda pendiente para siempre`), los textos de interfaz
+  (`<button>Enviar premio</button>`, `"Cargando ruedas…"`, placeholders, `alt` de
   imágenes, `title` de tooltips), y toda la narrativa, ejercicios, títulos y
   callouts del tutorial.
 
-Y en la narrativa seguimos hablando en español del dominio: "rifa", "número",
-"liquidación", "participante", aunque el código diga `raffle`, `number`,
-`settlement`, `participant`.
+Y en la narrativa seguimos hablando en español del dominio: "rueda", "segmento",
+"conciliación", "jugador", aunque el código diga `wheel`, `segment`,
+`reconciliation`, `player`.
 
 > ⚠️ **Caso mixto frecuente.** Un objeto de error lleva las *keys* en inglés y el
 > *valor* legible por el usuario en español: `{ message: 'El servidor no
@@ -217,8 +216,8 @@ sistema** —un identificador, una ruta, un valor de estado interno, una clase
 CSS, un `data-testid`—, va en inglés. Si la lee **la persona que usa la app** —un
 label, un botón, un mensaje de alerta— o **el estudiante** —un comentario, una
 explicación, un enunciado de ejercicio—, va en español. Los nombres del dominio
-de negocio en la narrativa no se traducen: el texto sigue hablando de "rifas",
-"números" y "liquidación".
+de negocio en la narrativa no se traducen: el texto sigue hablando de "ruedas",
+"segmentos" y "conciliación".
 
 ### 4.3 Diccionario mínimo del dominio
 
@@ -226,17 +225,20 @@ El diccionario completo y jerarquizado vive en `diccionario-codigo-ingles.md` �
 se consulta ahí para cualquier término nuevo. Como referencia mínima, los
 términos centrales:
 
-- rifa / rifas → `raffle` / `raffles`
-- número / números → `number` / `numbers`
-- disponible → `available`
-- reservado → `reserved`
-- vendido → `sold`
-- participante → `participant`
-- resultado → `result`
-- liquidación → `settlement`
-- premio (base) → `(base)Prize`
+- rueda / ruedas → `wheel` / `wheels`
+- segmento / segmentos → `segment` / `segments`
+- peso (en puntos básicos, suma 10.000) → `weightBp`
+- premio → `prize` / `prizeType`
+- jugador / jugadores → `player` / `players`
+- envío manual (consola) → `grant`; giro (juego) → `spin`
+- ventana de deshacer → `undoWindow`
+- resultado del giro → `spinResult`
+- conciliación → `reconciliation` (de compras) y `oddsAudit` (de probabilidades)
 - hora de cierre → `closingTime` / `closesAt`
-- estados de rifa: `draft` → `open` → `closed` → `resolved` → `settled`
+- estados de rueda: `draft` → `scheduled` → `live` → `ended` → `reconciled`
+
+Ese es el contrato de nombres de la reescritura de 2026 (`propuesta-fases-y-alcance.md` §2 y
+§17.5 de esta guía); el diccionario completo lo adopta en `diccionario-codigo-ingles.md`.
 
 Los nombres de componentes, thunks, epics y acciones se arman combinando estos
 términos con los verbos técnicos habituales: `get`, `fetch`, `create`, `update`,
@@ -244,23 +246,23 @@ términos con los verbos técnicos habituales: `get`, `fetch`, `create`, `update
 
 ### 4.4 Convenciones de nombrado
 
-- **Componentes:** `PascalCase` en inglés — `RaffleTable`, `RaffleForm`,
-  `SaleWizard`.
+- **Componentes:** `PascalCase` en inglés — `WheelTable`, `WheelForm`,
+    `GrantWizard`.
 - **Archivos de componente:** mismo nombre que el componente, `.jsx` o `.js`
-  según venga usando el proyecto — `RaffleTable.jsx`.
-- **Funciones y variables:** `camelCase` en inglés — `sellNumber`,
-  `isRaffleOpen`, `closingTime`.
-- **Slices:** `<dominio>Slice.js` — `raffleSlice.js`, `saleSlice.js`.
-- **Thunks:** verbo + dominio — `fetchRaffles`, `createRaffle`, `sellNumber`.
-- **Epics:** `<propósito>Epic` — `pollingEpic`, `sellNumberEpic`.
+  según venga usando el proyecto — `WheelTable.jsx`.
+- **Funciones y variables:** `camelCase` en inglés — `sendGrant`,
+  `isWheelLive`, `closingTime`.
+- **Slices:** `<dominio>Slice.js` — `wheelSlice.js`, `grantSlice.js`.
+- **Thunks:** verbo + dominio — `fetchWheels`, `createWheel`, `sendGrant`.
+- **Epics:** `<propósito>Epic` — `pollingEpic`, `sendGrantEpic`.
 - **Action types (Redux clásico):** `SCREAMING_SNAKE_CASE` en inglés —
-  `SELL_NUMBER`, `START_POLLING`, `STOP_POLLING`. Aplica solo a los types que el
+  `SEND_GRANT`, `START_POLLING`, `STOP_POLLING`. Aplica solo a los types que el
   sistema declara a mano; los que genera Redux Toolkit (`auth/logout`,
   `sales/sellNumber/pending`) **no se escriben nunca a mano**: se toman del
   action creator (`logout.type`). Ver Fase 6 §5.
-- **Selectores:** `select` + dominio — `selectRaffleCount`, `selectOpenRaffles`.
-- **Endpoints REST:** sustantivo plural en inglés — `/raffles`,
-  `/raffles/:id/numbers`, `/results`.
+- **Selectores:** `select` + dominio — `selectWheelCount`, `selectLiveWheels`.
+- **Endpoints REST:** sustantivo plural en inglés — `/wheels`,
+  `/wheels/:id/segments`, `/spins`.
 - **Constantes de configuración:** `SCREAMING_SNAKE_CASE` — `CHAOS_LEVEL`,
   `POLLING_INTERVAL_MS`.
 
@@ -268,7 +270,7 @@ términos con los verbos técnicos habituales: `get`, `fetch`, `create`, `update
 
 Los comentarios de código son 100% español y explican el porqué (§5.3). Los
 textos de interfaz son 100% español. La narrativa del tutorial es 100% español.
-Y los nombres del dominio en la narrativa —"rifa", "número", "liquidación"—
+Y los nombres del dominio en la narrativa —"rueda", "segmento", "conciliación"—
 siguen siendo las palabras que usas para *hablar* del sistema, aunque el código
 diga `raffle`, `number`, `settlement`.
 
@@ -339,8 +341,8 @@ el código que abras difiera del ejemplo. Cada decisión relevante lleva su porq
 aunque sea media línea entre paréntesis.
 
 Eso vale también para los comentarios de código: **explican el porqué, no el
-qué, y siempre en español**. `// la reserva expira a los 5 min: si no, el número
-queda bloqueado para siempre` sí; `// incrementa i` no, ni en español ni en
+qué, y siempre en español**. `// la ventana de deshacer dura 10 s: si no, el envío
+queda pendiente para siempre` sí; `// incrementa i` no, ni en español ni en
 inglés.
 
 Y cuando el porqué es histórico y no técnico —que en legacy pasa seguido—, se
@@ -360,7 +362,7 @@ mejores y ninguna te sirve porque no vas a migrar"*.
 ### 5.5 Anclado al dominio y a código que corre
 
 - **Nada de teoría suelta.** Si se explica `switchMap`, se explica sobre el epic
-  de polling del resultado de la lotería, no en abstracto.
+  de polling de las compras pendientes, no en abstracto.
 - **Código ejecutable y coherente.** Todo fragmento debe correr con las
   versiones fijadas y no contradecir fases anteriores. Nada de pseudocódigo que
   "se entiende".
@@ -414,7 +416,7 @@ No lo hacemos.
   funcionales y callbacks cortos.
 - Dinero en enteros (centavos), nunca floats.
 - Fechas con zona horaria explícita. Nunca un `new Date()` suelto donde importe
-  el día: las rifas que cierran a medianoche viven de esa precisión.
+  el día: las ruedas que cierran a medianoche viven de esa precisión.
 - Los epics con `.pipe()` y operadores nombrados, no encadenamientos crípticos.
 - Identificadores, endpoints y constantes en inglés (§4); comentarios y textos
   de interfaz en español (§4.5).
@@ -432,7 +434,7 @@ reconozca de un vistazo.
   propósito para reproducir cómo envejece un sistema. Se declara en una fase y se **paga**
   explícitamente en otra (§7.3).
 - 🔥 **Opcional o ampliación.** Fases, secciones y ejercicios fuera del alcance
-  base. No cuentan en las 96h.
+  base. No cuentan en las 98 h del track base (DR-06).
 - ⭐ **Pieza central.** Las fases 5 y 6, y los incidentes más formativos del
   curso.
 - 🟢🟡🟠🔴 **Dificultad de ejercicios.** Fácil, intermedio, difícil, muy difícil.
@@ -522,7 +524,7 @@ que abre los 📌 Pendientes:
 > verde y `git status` limpio:
 >
 > ```bash
-> git tag -a fase-04-rifas-crud -m "F4 cerrada: <el checklist, en una línea por ítem>"
+> git tag -a fase-04-ruedas-crud -m "F4 cerrada: <el checklist, en una línea por ítem>"
 > ```
 >
 > Los commits de la fase llevan su prefijo (`f04: …`) y los de ejercicio su
@@ -533,7 +535,7 @@ que abre los 📌 Pendientes:
 ````
 
 El nombre del tag es **`fase-` + el mismo slug del archivo `.md`**, sin
-excepciones (`04-rifas-crud.md` → `fase-04-rifas-crud`,
+excepciones (`04-ruedas-crud.md` → `fase-04-ruedas-crud`,
 `be03-crud-y-el-reemplazo.md` → `fase-be03-crud-y-el-reemplazo`), y el prefijo
 de commit es `f` + dos dígitos en el track base (`f04`) o el código de fase en
 el track BE (`be03`). Nada más se reexplica en la fase: se enlaza.
@@ -585,16 +587,15 @@ cortas, una guía final de "cuándo usar qué" y 5-10 ejercicios cortos.
   El título lleva el conteo total.
 - **Progresión real.** Los 🟢 calientan; los 🔴 exigen integrar varias fases o
   depurar algo esquivo.
-- **Accionables y verificables.** *"Haz que el número 0347 no pueda venderse dos
-  veces bajo doble click rápido"* — no *"reflexiona sobre concurrencia"*.
+- **Accionables y verificables.** *"Haz que un envío no se pueda confirmar dos veces bajo doble clic rápido"* — no *"reflexiona sobre concurrencia"*.
 - **Al menos un tercio son de diagnóstico**, no de construcción: se entrega algo
   roto y se pide reproducir, localizar y explicar. Es el músculo que este curso
   entrena.
-- **Enganchados al dominio.** Rifas, números, participantes, resultados y
-  liquidaciones. Nunca `foo` y `bar`.
+- **Enganchados al dominio.** Ruedas, segmentos, jugadores, giros y
+  conciliaciones. Nunca `foo` y `bar`.
 - **Con el identificador vigente.** Si el ejercicio nombra código, usa el nombre
-  en inglés que ya existe en la fase ("agrega el thunk `createRaffle`", no
-  "agrega el thunk `crearRifa`"), aunque el enunciado esté en español.
+  en inglés que ya existe en la fase ("agrega el thunk `createWheel`", no
+  "agrega el thunk `crearRueda`"), aunque el enunciado esté en español.
 - Los 🔥 son opcionales y se listan aparte, sin numeración continua.
 
 En apéndices bastan 5-10 ejercicios cortos de consulta.
@@ -683,8 +684,8 @@ De ahí salen cuatro prohibiciones concretas al escribir:
 
 📝 **De dónde viene esta sección.** Antes decía "Confidencialidad (NDA)" y
 regulaba cómo hablar de un sistema corporativo real que el curso usaba como
-referencia sin poder describirlo. Ese encuadre se eliminó: Rifas y Chances
-S.A.S. es una empresa ficticia y su historia se cuenta entera. La regla que
+referencia sin poder describirlo. Ese encuadre se eliminó: Interoceanic Games
+es una empresa ficticia y su historia se cuenta entera. La regla que
 sobrevive del original es la buena — **ante la duda, se explicita** — solo que
 ahora explicitar es gratis, porque no hay nada que ocultar.
 
@@ -697,7 +698,7 @@ ahora explicitar es gratis, porque no hay nada que ocultar.
 - **No reescribir decisiones aprobadas** sin señalar explícitamente la
   incompatibilidad y explicar por qué.
 - **Nombres de archivo del curso, todos en minúscula.** Las fases son
-  `NN-slug-en-minusculas.md` (`04-rifas-crud.md`), los apéndices
+  `NN-slug-en-minusculas.md` (`04-ruedas-crud.md`), los apéndices
   `AN-slug-en-minusculas.md` (`A3-node-y-npm.md`), y los documentos de encuadre
   y editoriales igual (`00-alcance-del-proyecto.md`,
   `00-decisiones-y-versiones.md`). Sin guiones bajos, sin mayúsculas
@@ -774,6 +775,12 @@ regresión en rojo en el primero, la causa raíz y el fix en el segundo, y el
 que `cuaderno-incidentes.md` ya tiene reservado, nunca uno inventado. El detalle
 está en `00-convencion-de-git-y-tags.md`, y las fases lo enlazan desde su bloque
 🏷️ sin reexplicarlo.
+
+
+Los incidentes de la reescritura siguen la misma estructura. El cuaderno base suma el 21 (la rueda
+que se acomoda, visible en el tablero), y el track BE, be-17 (la trampa de `math/rand` en Go 1.19) y
+be-18 (el reloj del celular). En el 21 el punto 6 no es un test que falla antes y pasa después, sino
+un diagnóstico: su rama termina sin commit (DR-03).
 
 ---
 
@@ -922,7 +929,7 @@ Los dieciséis incidentes del track BE (`be-01`–`be-16`) están en
 divergencia deliberada de la frase *"este es el único archivo de incidentes del
 curso"*, escrita antes de que el track existiera, y su motivo está declarado en
 los dos archivos: el track BE es opcional y no debe filtrarse al cuaderno de
-quien solo hace las 96 horas base.
+quien solo hace las 98 horas base.
 
 La estructura, las reglas y el tono son **idénticos**; lo único que cambia son las
 herramientas —logs, `psql`, `pg_stat_activity`, `EXPLAIN`, `go test -race`,
@@ -983,6 +990,18 @@ ningún otro curso del catálogo**, exista o no uno de contenedores. Todo lo que
 alumno necesite para construir la imagen y el pipeline vive en `bea-02`,
 escrito como receta cerrada y verificable de principio a fin.
 
+
+### 16.6 Pruebas de carga con k6 (DR-04)
+
+El giro concurrente de `be05` y el nivel de carga de `be08` se miden con k6. Se usa siempre la imagen
+oficial `grafana/k6:1.5.0` (fijada en P7 el 14/10/2026, con arm64 verificado; la decisión entra en
+`00-decisiones-y-versiones.md` en T0), nunca `latest`. Como el resto del track, no se instala nada en el host: k6 corre en
+contenedor contra el backend del alumno, y su script vive junto al código. Las cifras que se publican
+salen de esa corrida, con fecha y versión de la imagen. Los tres errores que dan números falsos, y que
+`bea-11` demuestra, son medir el generador en vez del servidor, no calentar antes de medir, y la red
+del contenedor. Cuando importa el pico se usa `constant-arrival-rate`, y los `thresholds` se escriben
+antes de correr, no después.
+
 ---
 
 ## 17. 🧾 Excepciones a los lineamientos del repositorio
@@ -1032,9 +1051,9 @@ monoespaciado se leen mejor:
 
 Criterios para los que vengan, en el orden en que se eligen:
 
-- **`stateDiagram-v2`** para los ciclos de vida: los estados de un número
-  (`available` → `reserved` → `sold`), los de una rifa (`draft` → `open` →
-  `closed` → `resolved` → `settled`). Los nombres de estado van en inglés, como
+- **`stateDiagram-v2`** para los ciclos de vida: los estados de un segmento
+  (`available` → `reserved` → `sold`), los de una rueda (`draft` → `scheduled` →
+  `live` → `ended` → `reconciled`). Los nombres de estado van en inglés, como
   en el código (§4); las etiquetas de transición, con el nombre de la acción.
 - **`sequenceDiagram`** para lo que pasa en el tiempo entre capas: componente →
   store → epic → mock, o navegador → backend Go → PostgreSQL en el track BE.
@@ -1073,9 +1092,11 @@ se crean a posteriori. Esto es lo que cumple cada función:
   también lo lee. Para el track BE, además, `propuesta-fases-backend.md`.
 - **Propuesta de fases y de apéndices:** del track base no se conservó como
   documento aparte; su papel lo hacen el alcance (§6 y §7) y los bloques de
-  `prompts-a-por-fase.md` y `prompts-a-por-apendice.md`. Del BE,
+  `prompts-a-por-fase.md` y `prompts-a-por-apendice.md`, borrados al cerrar la reescritura y
+  recuperables de la historia de git. Del BE,
   `propuesta-fases-backend.md` §7 y §8.
-- **Plan de producción:** no hay. El curso se escribió antes de que existiera la
+- **Plan de edición:** el de la reescritura de 2026, borrado al cerrar T12 con copia en `zz-code/` (§17.5).
+  El curso original se escribió antes de que existiera la
   plantilla; su estado vive en el README del curso y en §15.
 - **Diccionario de términos:** §3 (qué se queda en inglés) y
   `diccionario-codigo-ingles.md` (el código del dominio).
@@ -1166,9 +1187,77 @@ mismo día, en dos pasos: primero `prompts/`, después el curso.
 
 **Lo que queda:**
 
-- **Validar el curso ejecutándolo de nuevo.** Las salidas se ejecutaron al
-  escribirlo, pero el curso es anterior al método de tandas con casillas de
-  *escrita* y *corrida*, y no quedó registro. La revalidación está planificada
-  en `_desechable-plan-de-validacion.md`, para hacerse en una sesión futura.
-- **La licencia** del repositorio público: la elige el autor en la etapa de
-  publicación.
+- **La verificación a mano** de lo que solo se ve en un navegador (§17.5). La
+  revalidación por ejecución que planeaba `_desechable-plan-de-validacion.md` quedó
+  absorbida en las tandas de la reescritura de 2026, que corrieron cada documento,
+  y el plan se borró al cerrar T12.
+- ~~**La licencia**~~ ✅ 20/10/2026: CC BY-SA 4.0 en `LICENSE.md`, el mismo texto base
+  que los cursos hermanos (angular-8, angular-16, vue2).
+
+### 17.5 La reescritura de 2026
+
+Vigencia: 2026-10-14. El curso pasa del dominio de Rifas y Chances a la rueda de premios de Jewel
+Locks, en la consola «La Esclusa». Esta sección declara lo que la reescritura obliga y que las reglas
+de arriba no cubren. Su plan, `prompts/_desechable-plan-de-edicion.md`, se borró al cerrar T12
+(20/10/2026) con permiso del autor; queda una copia en
+`zz-code/react-16-legacy-for-backend-devs-20261018-6436/copia-planes/`, junto con el plan de
+validación.
+
+- **Versión nueva para los que entran.** La versión de Rifas y Chances queda en git para quien ya la
+  cursa. Lo que se descubra de ella al reescribir se anota en el plan y no se arregla.
+- **Contrato de nombres.** Manda `propuesta-fases-y-alcance.md` §2: rueda, segmento, envío, giro,
+  conciliación, y los usuarios `ibatista`, `ypinzon` y `mdegracia`. El diccionario lo adopta antes de
+  usarse, y ninguna fase inventa un identificador nuevo.
+- **Renombres de archivo y tags (DR-05).** La tabla es la de la propuesta §8.1. El repo del alumno pasa
+  de `raffles-app` a `esclusa-app`.
+- **Horas (DR-06).** Diez horas nuevas en total: el track base pasa a 98 h y el BE a 86 h. Los
+  apéndices se cuentan aparte, como antes.
+- **Grados.** Las fases 🔴 se crean sobre el esqueleto de la plantilla de nueve secciones, con la
+  versión vieja abierta solo como fuente de concepto, de pieza forense y de errores comunes. Ningún
+  párrafo se copia sin releerlo contra la historia v2.
+- **Piezas nuevas.** Los apéndices `A14` (estadística para auditar una rueda, DR-01) y `bea-11` (k6
+  101, DR-04). Los incidentes 21 del cuaderno base, y be-17 y be-18 del BE. La trampa de Go 1.19 es
+  be-17, descubierta por el alumno; no tiene sección propia (DR-02).
+- **Imágenes de prueba (P7).** `node:14.21.3`, `golang:1.19.13`, `postgres:13` y
+  `cypress/included:10.11.0` publican `linux/arm64` nativo: no hace falta emulación. El pipeline de
+  `be09` se valida con `rhysd/actionlint:1.7.9`, y su `actions/checkout` tiene que ser v4 o superior;
+  v3 ya no corre en GitHub Actions.
+- **Andamiaje de F00 (P7, H7).** El comando `npx create-react-app@4.0.3` del plan aborta mientras
+  exista una versión más nueva en el registro; `npm init react-app` instala el template actual
+  (React 19), que no sirve. React 16.14.0, react-scripts 4.0.3 y jest 26.6.0 sí se resuelven juntos
+  con npm 6. La forma de generar el proyecto de F00 se decide en T1, antes de escribirla.
+- **Verificación.** Un documento está corrido cuando pasa lo que su tanda exige (plan §2.4 y §5.1). Lo
+  que no corre lleva «no verificado por ejecución»; lo que se mira en el navegador, «verificado a
+  mano», con fecha. Las cifras publicadas salen de corridas fechadas.
+- **Residuos.** En los documentos publicados no queda ninguna mención a rifa, chance, vendedor,
+  Bogotá, pesos ni al número `0347`, salvo las deliberadas. Medido al cerrar T12 (20/10/2026) con el
+  `grep` del plan, fuera de `prompts/`: cero restos del dominio viejo, y tres familias de falsos
+  positivos que se quedan:
+  - **`pesos`** son los pesos de la rueda (`weightBp`), no dinero: «versión de pesos», «gira con los
+    pesos publicados», y en A2 la fuente monoespaciada «para pesos».
+  - **`Bogot`** es Bogotá como ciudad o zona horaria legítima: Juliana es de Bogotá, la historia y
+    `D` sobre `America/Panama` comparan las tres zonas en UTC−5, F10 corre la suite «en la zona de
+    Bogotá», y el incidente 20 cita `America/Bogota`.
+  - **`rifa`** aparece dentro de «tarifa» (la comisión de Google Play en la historia).
+- **R19.** F01 nació con la ruta `/bitacora` y el componente `BitacoraPage`, contra §4.1. En T12 se
+  renombraron a `/spin-log` y `SpinLogPage` en F01–F07 y en toda la historia del repo de prueba
+  (`filter-branch`); la etiqueta visible de la barra sigue siendo «Bitácora», que es texto de UI.
+- **El resultado (T12, 20/10/2026).** Las doce fases y catorce apéndices del track base, las diez
+  fases y once apéndices del BE, y los dos cuadernos (21 y 18 incidentes) quedaron escritos y
+  corridos. La regresión final, desde un clon limpio del repo de prueba:
+  - En los diez tags de cierre, `npm ci` en verde; el build en F02–F08 y Jest 25/25 desde F11;
+    `go test -race -p 1` contra `postgres:13` en verde en be04, be05, be07 y be09 (be09 con
+    `-tags sqlite`). La regla del track BE, vacía.
+  - F03 se volvió a medir con el `measure.js` corregido (solo las claves `spin-N`): la misma forma, y
+    el rango publicado pasó a las doce corridas (1.000 a 1.048 premios).
+  - Los incidentes 11, 14 y 21 del cuaderno base, y be-09, be-15, be-17 y be-18, reproducen su síntoma
+    en la rama y pasan en la fase. El 21 da otra vez χ² = 808,35 y 505 avatares comunes.
+  - El k6 de be05 y el de be08 repiten la forma. La única cifra fuera del rango es el giro de 2019
+    con 200 jugadores: 1.070 Esclusas, que be05 anota bajo su tabla.
+  - La smoke de F10 y una spec de R19 en Cypress, 2/2.
+- **Lo verificado a mano, y lo que no corrió.** Lo que solo se ve en un navegador (el Profiler, los
+  avisos en consola, el gráfico real, la pieza forense de F01, el HAR de be00) quedó como
+  verificación a mano, con sus pasos en `verificacion-a-mano-T1-T3.md` a `-T10.md` de los
+  directorios de `zz-code/` de cada tanda; el autor no la ha firmado todavía. La hermana
+  «arquitectura» del incidente be-16 (`exec format error`) se describe y no se reprodujo en esta
+  máquina: lleva «no verificado por ejecución».

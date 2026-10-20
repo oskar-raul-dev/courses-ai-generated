@@ -1,368 +1,387 @@
 # 💸 Apéndice A12 — Mapa de deuda técnica
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
-> Tutorial React 16 — Rifas y chances · Registro vivo · **~1,5 horas** la primera lectura
-> Lo produce: Fase 11 · Lo citan: Fases 1, 4, 5 y 11 · Lo alimentan todas · Se consulta antes de cada cambio.
+> **Registro vivo** · **~1,5 horas** la primera lectura · Lo produce la Fase 11 · Lo citan las Fases 1, 2, 4, 5, 6, 7, 8,
+> 9 y 11 · Lo alimentan todas · Se consulta antes de cada cambio.
 
-Este archivo es el **inventario de decisiones deliberadas** del sistema. No lista
-bugs: ninguna de estas líneas está rota. Lista sitios donde alguien eligió
-conscientemente no hacer lo "correcto" todavía, porque el costo superaba al
+Este archivo es el **inventario de decisiones deliberadas** de la Esclusa. No lista bugs: ninguna de estas líneas está
+rota. Lista sitios donde alguien eligió conscientemente no hacer lo "correcto" todavía, porque el costo superaba al
 beneficio en ese momento.
 
-Es el artefacto más directamente transferible del curso. En un equipo real, este
-archivo es lo que convierte "el código está lleno de cosas raras" en un backlog
-priorizable, y lo que le permite a la persona que entra mañana responder la
-pregunta que decide todo: **¿esto está así a propósito o por error?**
+Es el artefacto más directamente transferible del curso. En un equipo real, este archivo es lo que convierte "el código
+está lleno de cosas raras" en un backlog priorizable, y lo que le permite a quien entra mañana responder la pregunta que
+decide todo: **¿esto está así a propósito o por error?**
 
-> 📝 **De dónde sale este apéndice, y por qué es un archivo aparte.** El mapa
-> vivía dentro de la §5.1 de la Fase 11, y esa misma fase declaraba la
-> incongruencia con una 💸 explícita: *"este mapa debería vivir en un archivo
-> versionado, no en el `.md` de la última fase del tutorial"*. Extraerlo paga esa
-> meta-deuda. Y hay una razón práctica encima de la coherencia: un inventario que
-> vive en la última fase se lee una vez, y un inventario que no se relee no sirve
-> de nada.
+Y en esta consola tiene una pregunta más, que la historia le impone: la Esclusa tiene **dos años de horizonte** (§3 de
+la historia). En 2028 se decomisiona —sus funciones pasan al editor de Unity— o se migra a la versión actual de todo.
+Una deuda que muere con el decomiso no se paga igual que una que sobrevive a cualquiera de los dos caminos.
 
 ---
 
 ## 1. Cómo se lee este mapa
 
-Cada entrada tiene cuatro partes, y **la cuarta es la que importa**:
+Cada entrada tiene cinco partes, y **las dos últimas son las que importan**:
 
 - **Qué se hizo en su lugar** — la solución que está en el código hoy.
-- **Por qué se dejó** — el razonamiento de quien decidió. Sin esto, la entrada
-  es inútil: dentro de un año nadie recordará si fue criterio o pereza.
-- **Qué la vuelve exigible** — el **disparador**. La condición concreta que
-  convierte esta deuda en un bug con fecha.
+- **Por qué se dejó** — el razonamiento de quien decidió. Sin esto, la entrada es inútil: dentro de un año nadie
+  recordará si fue criterio o pereza.
 - **Fase** — dónde está documentada en detalle.
+- **Qué la vuelve exigible** — el **disparador**: la condición concreta que convierte esta deuda en un bug con fecha.
+- **En el horizonte** — qué le pasa en 2028, con una de tres marcas:
+  - 🔴 **Se paga antes del corte.** Duele dentro de los dos años, decida lo que decida el estudio: seguridad, dinero, el
+    próximo evento. No espera.
+  - ⚪ **Muere con el decomiso.** Solo importa si la consola sigue viva. Si se apaga, pagarla es trabajo tirado.
+  - 🟢 **Se paga al migrar.** La migración la paga de paso, porque reescribe esa parte; pagarla antes es pagarla dos
+    veces.
 
-El trabajo del equipo no es pagar todo. Es **vigilar los disparadores**.
+El trabajo del equipo no es pagar todo. Es **vigilar los disparadores**, y saber cuáles no hay que pagar nunca.
 
-Mientras el disparador no ocurra, pagar la deuda es trabajo sin retorno — peor,
-es *riesgo* sin retorno, porque estás tocando código que funciona. El día que el
-disparador ocurre, la deuda deja de ser deuda y pasa a ser un bug con fecha de
-vencimiento.
-
-> 🧭 **La distinción operativa que gobierna todo el archivo.** Deuda deliberada
-> tiene un motivo documentado y, con frecuencia, un test que fija el
-> comportamiento actual como *esperado* —el `formatCents` que **lanza** con un
-> float, por ejemplo, que la Fase 10 testea como correcto—. "Arreglarlo" rompería
-> algo que dependía de ese comportamiento. El descuido no tiene ni motivo ni
-> test, y ahí sí se corrige sin preguntar. Confundir las dos es la forma más
-> común de que un hotfix bienintencionado genere el próximo incidente.
+> 🧭 **La distinción operativa que gobierna todo el archivo.** La deuda deliberada tiene un motivo documentado y, con
+> frecuencia, una prueba que fija el comportamiento actual como *esperado* —`formatCents`, que **lanza** con un float, y
+> la Fase 10 lo prueba como correcto—. "Arreglarla" rompería algo que dependía de eso. El descuido no tiene motivo ni
+> prueba, y ahí sí se corrige sin preguntar. Confundir las dos es la forma más común de que un hotfix bienintencionado
+> genere el próximo incidente.
 
 ---
 
 ## 2. El inventario
 
-### 💸 `window.confirm` en el borrado de rifas
+### 2.1 En la consola
 
-**Fase 4.** Se usa la confirmación nativa del navegador en vez de un modal de
-Bootstrap.
+#### 💸 `window.confirm` para borrar una rueda
 
-Se dejó porque un modal es UI pura: no cambia una línea de lógica, y diferirlo
-costaba cero. `window.confirm` es feo, bloquea el hilo y no se puede estilar,
-pero funciona y es honesto sobre lo que hace.
+**Fase 4.** La confirmación nativa del navegador en vez de un modal de Bootstrap. Se dejó porque un modal es interfaz
+pura: no cambia una línea de lógica, y diferirlo costaba cero. Es feo y bloquea el hilo, pero es honesto sobre lo que
+hace. La Fase 11 lo conservó a propósito al migrar `WheelTable` a hooks: migrar no paga deuda de interfaz.
 
-**Se vuelve exigible** cuando aparezca un requisito de consistencia visual del
-producto, o cuando el smoke test de Cypress necesite cubrir el flujo de borrado
-—`cy` no puede interactuar con un `confirm` nativo sin stubbearlo.
+**Se vuelve exigible** cuando borrar una rueda deje de ser reversible desde el backend, o cuando el smoke de Cypress
+tenga que cubrir el borrado (`cy` no interactúa con un `confirm` nativo sin simularlo).
 
----
+**En el horizonte:** ⚪ muere con el decomiso; 🟢 si se migra, un modal es una línea del rediseño.
 
-### 💸 `raffleSlice` sin normalizar
+#### 💸 Validación mínima del formulario de ruedas
 
-**Fase 4** (declarada) / **Fase 8** (donde empieza a doler). Las rifas viven
-como array en `items`, y el cruce rifa↔liquidación se hace con `find`, que es
-O(n).
+**Fase 4.** `required` de HTML y la regla de los pesos (que sumen 10.000). No se valida el formato de la fecha de cierre
+ni que el nombre no sea solo espacios. Se dejó porque la regla que importa —los pesos— sí está, en la consola y en el
+mock.
 
-Se dejó porque con decenas de rifas el costo es literalmente imperceptible, y
-`createEntityAdapter` habría metido una capa de indirección que en este tamaño
-solo agrega ruido. La Fase 4 lo pensó y decidió que no.
+**Se vuelve exigible** el día que una rueda mal cargada llegue a `live`.
 
-**Se vuelve exigible** cuando el listado crezca a cientos o miles de rifas y el
-render del dashboard se sienta lento. El síntoma va a aparecer primero en el
-Profiler de la Fase 9, no en la tabla.
+**En el horizonte:** ⚪ muere con el decomiso.
 
-> 📖 `A6-redux-clasico-vs-toolkit.md` §8 tiene el `createEntityAdapter` listo
-> para el día que toque.
+#### 💸 El estado de una rueda se elige libre en el formulario
 
----
+**Fase 4.** Cualquier rueda pasa a cualquier estado desde el formulario; la consola no hace cumplir
+`draft → scheduled → live → ended → reconciled`, salvo la última transición (Fase 8). Se dejó porque las transiciones
+con reglas son del servidor (track BE).
 
-### 💸 Dinero en enteros nativos, sin librería
+**Se vuelve exigible** cuando alguien pase una rueda de `ended` a `live` sin querer y la Fase 7 vuelva a ofrecer giros
+de ella.
 
-**Fase 8.** `money.js` con `toCents`/`formatCents` como única frontera; sin
-`dinero.js` ni `big.js`.
+**En el horizonte:** 🔴 antes del corte, del lado del servidor (track BE): es una regla de negocio, no de interfaz.
 
-Se dejó porque los montos del dominio caben holgadamente en el entero seguro,
-las operaciones son sumar, multiplicar por entero y dividir con resto, y hay una
-sola moneda. Agregar una dependencia a un sistema congelado cuesta —una versión
-más que auditar, un peer dependency más que puede romper el lock— y acá no
-compraba nada.
+#### 💸 El detalle de una rueda lee un arreglo de demo
 
-**Se vuelve exigible** con varias monedas de subdivisión distinta, con conversión
-de divisas, o con montos que puedan desbordar `Number.MAX_SAFE_INTEGER`.
+**Fases 1 a 4.** `WheelDetailPage` busca la rueda con `findWheel` en `src/mock/wheels.js`, no en el API. La Fase 4 migró
+el listado y dejó el detalle, a propósito: migrar de a un consumidor por vez.
 
-> 📖 El razonamiento completo está en `A10-aritmetica-de-dinero.md` §7.
+**Se vuelve exigible** el día que un operador necesite ver el detalle de una rueda creada desde la consola (hoy dice que
+no existe).
 
----
+**En el horizonte:** ⚪ muere con el decomiso; 🟢 si se migra, es lo primero que se reescribe.
 
-### 💸 Reloj del cliente sin `serverNow`
+#### 💸 La pantalla *Jugadores* sigue con `demoPlayers`
 
-**Fase 7.** El cierre por hora dura se evalúa contra `Date.now()` del navegador.
+**Fases 1 a 5.** El asistente de envíos ya lee los jugadores del API (Fase 5); la pantalla de jugadores, no.
 
-Se dejó porque el desfase típico de un reloj de escritorio es de segundos, y
-tolerable en desarrollo y UAT. Sincronizar con el servidor exige un endpoint de
-hora, un cálculo de offset y una política de qué hacer cuando el offset es
-grande: es una feature, no un ajuste.
+**Se vuelve exigible** cuando soporte use esa pantalla para buscar a alguien y confíe en lo que ve.
 
-**Se vuelve exigible** el día que un cliente con el reloj corrido venda después
-del cierre real. Es una de las tres deudas que sobreviven al curso entero, y la
-más probable de las tres.
+**En el horizonte:** ⚪ muere con el decomiso.
 
-> ⚠️ Ya tiene una manifestación visible: el ejercicio 🟠 23 de la Fase 10 falla
-> en CI por zona horaria. Eso no es el test estando mal; es la deuda avisando.
+#### 💸 Sin roles ni permisos
 
----
+**Fase 2.** Cualquiera con usuario puede enviar giros y conciliar ruedas (historia §11). Se dejó porque la consola la
+usan unas diez personas, todas de confianza, y los roles son un cambio de modelo, no de pantalla.
 
-### 💸 `selectIsRaffleClosed` sin unificar
+**Se vuelve exigible** el día que entre a la consola alguien que no deba poder compensar, o que una auditoría pregunte
+quién concilió.
 
-**Fase 7.** La lógica de "esta rifa está cerrada" vive repetida en varios
-selectores en vez de en uno solo.
+**En el horizonte:** 🔴 antes del corte si entra gente nueva; del lado del servidor.
 
-Se dejó porque, en el momento de escribirla, nadie la reusaba lo suficiente como
-para que la duplicación doliera. Unificar prematuramente también tiene costo:
-crea un punto de acoplamiento entre consumidores que quizá necesiten cosas
-distintas.
+#### 💸 La contraseña en claro, el token como constante, y la sesión en `localStorage` sin expiración
 
-**Se vuelve exigible** en cuanto un tercer o cuarto consumidor necesite la misma
-verdad. El síntoma de que ya pasó el punto: dos copias empiezan a divergir y
-aparece un bug donde una pantalla dice "cerrada" y otra "abierta".
-
----
-
-### 💸 Participantes sin slice propio
-
-**Fase 5** (origen) / **Fase 9** (donde se nota). `byNumber` no guarda
-`participantId`, así que `computeRecurringParticipants` devuelve `0` — con
-honestidad, no fingiendo un cálculo.
-
-Se dejó porque el modelo de datos no tiene identidad de participante y agregarla
-es una feature de dominio completa: formulario de comprador, colección propia,
-relación con la venta.
-
-**Se vuelve exigible** el día que se agregue identidad de participante. Cuando
-pase, hay que reimplementar el selector **y** su test — está fijado en el
-ejercicio 17 de la Fase 10 para que no se olvide.
-
-> 🧠 **Por qué devolver `0` y no ocultar el KPI.** Un indicador que muestra cero
-> con una nota explicando por qué es información. Un indicador que desaparece es
-> una pregunta sin respuesta para quien mire el dashboard dentro de seis meses.
-
----
-
-### 💸 `RaffleDetailPage` sigue leyendo el array hardcodeado
-
-**Fase 1** (origen) / **Fase 4** (donde se paga a medias). El listado de rifas
-migró al store en la Fase 4, pero el detalle sigue importando `findRaffle` de
-`src/mock/raffles.js`, así que la app tiene **dos fuentes de verdad** para la
-misma entidad: el store para la lista, un array en memoria para el detalle.
-
-Se dejó porque migrar el detalle exige `activeId` en `raffleSlice` —que recién
-aparece en la Fase 7— y porque hacerlo en medio de la Fase 7, que ya tiene hora
-dura y polling encima, sería exactamente el «ya que estoy» que este curso enseña
-a no hacer.
-
-**Se vuelve exigible** en cuanto alguien edite una rifa desde el listado y entre
-al detalle: va a ver los datos viejos, porque el array nunca se enteró. Es un
-bug con síntoma claro y causa poco obvia, del tipo que se reporta como «a veces
-muestra información desactualizada».
-
-> 🧠 **Por qué esta entrada vale más que las otras.** Es la única deuda del
-> inventario que produce una **inconsistencia visible al usuario**, no solo un
-> costo interno. Casi todo sistema en migración tiene una pantalla que se quedó
-> atrás; lo que distingue a un equipo que la controla de uno que no es que la
-> primera la tenga escrita en algún lado. Esta línea es esa escritura.
-
----
-
-### 💸 Tipo `'stale'` reservado sin materializar
-
-**Fase 7.** Está en el catálogo de `error.type` pero ningún código lo emite.
-
-Se dejó porque se anticipó el caso —una respuesta que llega tarde y ya no
-aplica— sin tener todavía el escenario concreto que lo dispara.
-
-**Se vuelve exigible** cuando aparezca esa condición de dato viejo. Si nunca
-aparece, **la deuda correcta es borrarlo**: un valor de enum que nadie emite es
-una mentira en el catálogo, y alguien va a escribir un `case` para él.
-
----
-
-### 💸 Registro manual de epics en `rootEpic.js`
-
-**Fase 6.** Cada epic se importa a mano y se agrega a `combineEpics`.
-
-Se dejó porque con seis epics el registro explícito se lee mejor que cualquier
-barrel automático: abres el archivo y ves exactamente qué está corriendo.
-
-**Se vuelve exigible** cuando el sistema crezca a decenas de epics y el archivo
-se vuelva inmanejable. No antes: un import glob que descubre epics
-automáticamente es cómodo hasta el día que uno no se registra y nadie entiende
-por qué.
-
----
-
-### ✅ Versiones de `rxjs-marbles` y `cypress` sin pinear — **pagada**
-
-**Fase 10.** *Estaba* declarada como deuda: las versiones se dejaban al
-`package-lock`.
-
-**Se pagó** al crear `00-decisiones-y-versiones.md`: `rxjs-marbles@6.0.1` y
-`cypress@10.11.0` van pineadas en `package.json`, y el porqué del pin de
-`rxjs-marbles` —su major está atado al de RxJS— está documentado en D9.
-
-Se deja la entrada tachada en vez de borrarla, porque un mapa de deuda que
-solo muestra lo pendiente no le enseña a nadie cómo se paga.
-
----
-
-### 💸 Smoke stubbeado en vez de servicios reales
-
-**Fase 10.** El smoke de Cypress usa `cy.intercept` en vez de levantar
-json-server efímero.
-
-Se dejó porque el happy path no necesita backend real para dar señal, y un
-smoke que depende de levantar dos servidores es un smoke que va a fallar por
-motivos que no son el código.
-
-**Se vuelve exigible** cuando se quiera cobertura de integración real y no solo
-verificación del contrato de red.
-
----
-
-### 💸 Token en `localStorage`, sin expiración ni firma
-
-**Fase 2** (declarada) / **Fase 3** (persistida). El token es una string en el
-`db.json`, se guarda en `localStorage` y no caduca.
-
-Se dejó porque hacerlo bien es trabajo de backend —emitir un JWT firmado,
-validarlo, rotar— y este curso es de frontend. Lo que sí se construyó es el
-*andamiaje* correcto: un punto único de contacto con `localStorage`
-(`authStorage.js`), para que cambiar de mecanismo el día de mañana toque un solo
-archivo.
-
-**Se vuelve exigible** el día que exista un backend de identidad real. Y hay que
-decirlo con todas las letras: **fuera de un contexto pedagógico esto no es
-deuda, es un hallazgo de seguridad.** Está acá porque el curso lo declara como
+**Fases 2 y 3.** json-server compara strings; el token es una etiqueta fija; la sesión persiste en `localStorage` sin
+fecha de vencimiento. Se dejó porque el foco del track base es el flujo de autenticación en el frontend, no un servidor de
+identidad. **Esta no es una deuda cualquiera: es un hallazgo de seguridad**, que está acá porque el curso lo declara como
 simplificación consciente, no porque sea aceptable en producción.
 
+**Se vuelve exigible** ya. El track BE la paga en `be04`, con un JWT firmado y su expiración.
+
+**En el horizonte:** 🔴 antes del corte, sin discusión.
+
+#### 💸 La cola de envíos no sobrevive a un F5
+
+**Fase 5.** Un envío en su ventana de deshacer vive en el store; si el operador recarga, se pierde, no sale nunca y nadie
+se entera.
+
+**Se vuelve exigible** el día que un operador pierda un envío en un evento, que es exactamente cuando más recarga.
+
+**En el horizonte:** 🔴 antes del próximo evento si la consola sigue operando eventos; ⚪ si no.
+
+#### 💸 El registro manual de epics
+
+**Fase 6.** Cada epic se importa a mano en `rootEpic.js`. Con seis epics, el explícito se lee mejor que un registro
+automático.
+
+**Se vuelve exigible** cuando haya decenas, o cuando alguien escriba un epic y se olvide de registrarlo.
+
+**En el horizonte:** ⚪ muere con el decomiso.
+
+#### 💸 `sendGrantEpic` y `retryGrantEpic` comparten el cuerpo
+
+**Fase 6, y A7.** El optimista, la petición y el rollback están escritos dos veces. Se dejó para que los dos flujos se
+lean completos lado a lado; la extracción (`grantRequest$`) es el ejercicio 27 de la Fase 6.
+
+**Se vuelve exigible** el día que alguien arregle un bug en uno y se olvide del otro, o que haga falta un tercer epic
+con el mismo ciclo.
+
+**En el horizonte:** ⚪ muere con el decomiso; 🟢 si se migra.
+
+#### 💸 `groupBy` sin `durationSelector`
+
+**Fase 6.** El doble clic se resuelve con un grupo por envío, y los grupos no se cierran mientras la consola esté
+abierta.
+
+**Se vuelve exigible** si una sesión de soporte llega a miles de envíos sin recargar.
+
+**En el horizonte:** ⚪ muere con el decomiso.
+
+#### 💸 El reloj del navegador decide el cierre
+
+**Fase 7.** `isWheelClosed` compara bien los instantes, pero contra `Date.now()` de la máquina del operador. Un operador
+con la hora corrida decide mal el cierre. Se dejó porque la autoridad del tiempo es del servidor, y la consola no tiene
+servidor propio.
+
+**Se vuelve exigible** con el primer giro mandado después del cierre por una máquina con la hora mal. Tiene consecuencia
+económica directa, y es el incidente `be-12`.
+
+**En el horizonte:** 🔴 antes del corte, en `be06`.
+
+#### 💸 Un código de compra equivocado polea para siempre
+
+**Fase 7.** El servicio responde `404` en cada tick, el `catchError` lo vuelve un `pollingFailed` y el `timer` sigue.
+
+**Se vuelve exigible** cuando soporte pegue un código mal y deje la pestaña abierta (el ejercicio 21 de la Fase 7).
+
+**En el horizonte:** ⚪ muere con el decomiso.
+
+#### 💸 Las compras que soporte sigue viven en el store, y el intervalo es fijo
+
+**Fase 7.** Un F5 pierde el seguimiento, y el polling pregunta cada dos segundos aunque la compra tarde horas.
+
+**Se vuelve exigible** cuando el proveedor cuente consultas, como en el incidente 14.
+
+**En el horizonte:** ⚪ muere con el decomiso.
+
+#### 💸 La consola baja la bitácora entera para contar
+
+**Fases 8 y 9.** La conciliación y el tablero piden todos los giros de una rueda y cuentan en el navegador. Con una
+rueda de semanas alcanza; con la Semana del Canal son 180.000 filas. La Fase 9 las guarda fuera de los chequeos de
+desarrollo (`ignoredPaths`), y la Fase 11 deja escrito por qué eso es la corrección mínima y no la refactorización.
+
+**Se vuelve exigible** cuando el tablero tarde más de un segundo en cargar una rueda, o cuando la consola tenga que
+mostrar varias ruedas a la vez.
+
+**En el horizonte:** 🟢 se paga al migrar, o en `be07` con la consulta agregada; ⚪ muere con el decomiso.
+
+#### 💸 La bitácora no guarda la versión de los pesos ni los segmentos elegibles
+
+**Fase 8.** La historia §9 pide las dos cosas; la bitácora del laboratorio no las tiene, porque con una sola versión de
+pesos por rueda no hacen falta para auditar.
+
+**Se vuelve exigible** el día que una rueda publique una versión nueva de pesos a mitad de un evento: conciliar las dos
+versiones juntas da una alarma falsa (ejercicio 25 de la Fase 8).
+
+**En el horizonte:** 🔴 antes del corte, en el API (`be07`): es la bitácora de auditoría, y sobrevive a la consola.
+
+#### 💸 El reporte de la tienda se lee completo, y un gráfico hecho a medida
+
+**Fases 8 y 9.** La conciliación lee todo el reporte de ganancias sin filtrar por mes; `BandChart` es un wrapper de
+chart.js para un solo gráfico.
+
+**Se vuelve exigible** con el segundo mes de reporte, o con el tercer tipo de gráfico.
+
+**En el horizonte:** ⚪ muere con el decomiso.
+
+#### 💸 El smoke necesita levantar los servicios a mano
+
+**Fase 10.** El smoke de Cypress corre contra los mocks reales, pero hay que levantar los dos mocks y el servidor de
+desarrollo antes. No hay un script que los orqueste.
+
+**Se vuelve exigible** cuando el smoke tenga que correr en integración continua.
+
+**En el horizonte:** 🟢 se paga al migrar, porque la migración necesita esa red corriendo sola.
+
+### 2.2 En el API heredado (la parte que la consola no ve)
+
+Estas no están en el código de la consola, y por eso son las más peligrosas: la consola las muestra sin saber que
+existen (historia §5). El track BE las paga.
+
+#### 💸 La rueda que se acomoda
+
+**API de 2021, historia §5.** Al girar, el API saca los premios que el jugador ya tiene y reparte su peso entre los demás.
+La tabla del juego dice una cosa y la rueda hace otra. La salida que propone el equipo es la protección de duplicados con
+sustituto. La Fase 8 la detecta (χ² = 808 con la regla vieja) y el incidente 21 la muestra en el tablero.
+
+**Se vuelve exigible** ya: es la reseña de *"la rueda está arreglada"*, y la tienda exige que las probabilidades
+publicadas sean verdad.
+
+**En el horizonte:** 🔴 antes del corte. Sobrevive a la consola: es del juego.
+
+#### 💸 La consola no conoce la regla
+
+**Historia §5.** La consola muestra los pesos tal como se configuraron, y nadie que la mire puede saber que en producción
+la rueda corre con otros. La Fase 8 y la 9 lo pagan a medias: la conciliación y el tablero muestran lo que pasó, no solo
+lo configurado.
+
+**Se vuelve exigible** cada vez que alguien conteste una reseña mirando solo la configuración.
+
+**En el horizonte:** 🔴 la parte del API; ⚪ la de la consola.
+
+#### 💸 La bitácora vieja guardaba solo el premio entregado
+
+**API de 2021.** Con eso no hay forma de reconstruir en qué segmento cayó la rueda ni qué probabilidad tenía cada giro.
+La Fase 8 muestra por qué hacen falta las dos columnas: auditar el premio entregado acusa a una rueda honesta.
+
+**Se vuelve exigible** con la primera auditoría externa de las probabilidades.
+
+**En el horizonte:** 🔴 antes del corte, en el API.
+
+#### 💸 El giro sin transacción
+
+**API de 2019, Fase 3.** El giro lee el stock, decide y escribe en tres viajes, sin transacción, y la clave de
+idempotencia se anota pero nadie la hace cumplir. Es lo que entregó 1.047 Esclusas de Oro de un stock de 1.000.
+
+**Se vuelve exigible** con el próximo evento. Lo paga `be05`.
+
+**En el horizonte:** 🔴 antes del corte, sin discusión.
+
+#### 💸 El chequeo del caso de compensación no es atómico
+
+**Fase 5, incidente 11.** El mock —y el API— comprueban si el caso ya fue compensado y recién después anotan; dos pedidos
+simultáneos pasan los dos. La consola cierra el doble clic en el origen (Fase 6), pero la garantía tiene que ser del
+servidor.
+
+**Se vuelve exigible** con el primer jugador compensado dos veces por dos operadores distintos.
+
+**En el horizonte:** 🔴 antes del corte, con una restricción en la base (track BE).
+
 ---
 
-## 3. Las tres que sobreviven al curso
+## 3. Las que ya se pagaron ✅
 
-De todo el inventario, tres deudas no se pagan nunca dentro del curso y merecen
-que se diga explícitamente:
+No se borran: se marcan con qué las disparó y cómo se pagaron. El registro de deudas pagadas es lo que enseña cómo se
+paga una, y evita que alguien la reintroduzca sin saber que ya se discutió.
 
-**`serverNow`** — el reloj del cliente. Es la más probable de manifestarse y la
-que tiene consecuencia económica directa (vender después del cierre).
-
-**El slice de participantes** — bloquea un KPI del dashboard y no se puede pagar
-sin cambiar el modelo de datos.
-
-**La normalización de `raffleSlice`** — puramente de escala; hoy no duele.
-
-Que estén declaradas como eternas es lo honesto. Una deuda eterna reconocida es
-información útil; una deuda diferida cinco veces con promesas de "el próximo
-sprint" es ruido que nadie vuelve a leer.
-
-> 🧠 **La diferencia importa más de lo que parece.** "Esto no lo vamos a hacer, y
-> estas son las condiciones bajo las que reconsideraríamos" es una decisión de
-> ingeniería. "Esto lo hacemos más adelante" repetido durante dos años es la
-> forma en que un backlog técnico se vuelve invisible hasta que explota.
+- ✅ **La rueda escrita a mano en el componente** (Fase 0) → el listado lee el API desde la Fase 4. Quedan el detalle y
+  la pantalla de jugadores (§2.1).
+- ✅ **La sesión que no sobrevivía al F5** (Fase 2) → pagada en la Fase 3, con la persistencia en `localStorage` (que
+  dejó su propia deuda de seguridad, §2.1).
+- ✅ **Los temporizadores de la ventana de deshacer en un `Map` de módulo** (Fase 5) → pagados en la Fase 6 con
+  `undoWindowEpic`, que se limpia solo con `takeUntil`.
+- ✅ **El refresco de compras con leak** (Fase 6, a propósito) → pagado en la Fase 7 con `pollingEpic` y sus dos salidas.
+- ✅ **Las versiones de `rxjs-marbles` y `cypress` sin fijar** → fijadas en la Fase 10 con `--save-exact` (6.0.1 y
+  10.11.0), como pide D9.
+- ✅ **El smoke que simulaba la red** → la Fase 10 lo corre contra los mocks reales, con su interceptor y su
+  `Authorization`.
 
 ---
 
-## 4. Cómo se mantiene este archivo
+## 4. El horizonte, en números
 
-**Cuando declares una deuda nueva** (una 💸 en cualquier fase o incidente),
-agrégala acá con sus cuatro partes. Una 💸 que solo existe en un comentario del
-código es una 💸 que nadie va a encontrar.
+Contar las entradas por su marca es la mitad del veredicto de la Fase 11 (§9):
 
-**Cuando pagues una**, no la borres: márcala ✅ con qué la disparó y cómo se
-pagó, como la de `rxjs-marbles`. El registro de deudas pagadas es lo que enseña
-a la siguiente persona cómo se paga una, y evita que alguien la reintroduzca sin
-saber que ya se discutió.
+| En el horizonte | Entradas | Qué quiere decir |
+|---|---|---|
+| 🔴 Se paga antes del corte | 11 (6 de la consola o su servidor, 5 del API) | trabajo que hay que hacer en cualquiera de los dos caminos |
+| ⚪ Muere con el decomiso | 13 | trabajo que no se hace si la consola se apaga |
+| 🟢 Se paga al migrar | 5 | trabajo que la migración hace de paso |
 
-**Cuando un disparador ocurra**, la entrada cambia de estado: deja de ser deuda y
-pasa a ser un ticket. Ese es el único momento en que este archivo genera trabajo,
-y es exactamente el momento en que debe generarlo.
+(Son 23 entradas, y algunas llevan dos marcas, una por camino: por eso la suma no da 23.)
 
-**Revísalo antes de cada cambio grande.** Es cinco minutos y responde por
-adelantado la pregunta que más tiempo hace perder en mantenimiento: *¿esto está
-así a propósito?*
+Lo que dice la tabla, sin decidir nada: **casi todo lo urgente vive del lado del servidor y del API**, y sobrevive a
+cualquier decisión sobre la consola. Lo que muere con el decomiso es, en su mayoría, comodidad de la consola. Es un dato
+para la reunión de Abdiel, Itzel y Juliana, no una conclusión.
+
+> 🧠 **"Esto no lo vamos a hacer, y estas son las condiciones bajo las que lo reconsideraríamos" es una decisión de
+> ingeniería.** "Esto lo hacemos más adelante" repetido durante dos años es la forma en que un backlog técnico se vuelve
+> invisible hasta que explota. La marca ⚪ es la forma honesta de decir lo primero.
+
+---
+
+## 5. Cómo se mantiene este archivo
+
+**Cuando declares una deuda nueva** (una 💸 en cualquier fase o incidente), agrégala acá con sus cinco partes. Una 💸
+que solo existe en un comentario del código es una 💸 que nadie va a encontrar.
+
+**Cuando pagues una**, no la borres: muévela a §3 con qué la disparó y cómo se pagó.
+
+**Cuando un disparador ocurra**, la entrada deja de ser deuda y pasa a ser un ticket. Ese es el único momento en que este
+archivo genera trabajo, y es exactamente cuando debe generarlo.
+
+**Cuando el estudio decida el horizonte**, las marcas ⚪ o 🟢 de la opción que no se tomó se tachan, y la tabla de §4
+se rehace. Ese día este archivo pasa a ser el plan de trabajo de los dos años.
+
+**Revísalo antes de cada cambio grande.** Son cinco minutos y responden por adelantado la pregunta que más tiempo hace
+perder en mantenimiento: *¿esto está así a propósito?*
 
 ---
 
 ## 🧪 Ejercicios (6)
 
-1. **🟢** Recorre las once fases buscando cada 💸 en el texto. Compara tu lista
-   con el inventario de §2. Toda 💸 que encuentres y no esté acá es un hallazgo:
-   agrégala con sus cuatro partes.
-2. **🟢** Para cada entrada de §2, escribe en una línea **cómo detectarías** que
-   su disparador ocurrió. Si para alguna no se te ocurre nada observable, ese
-   disparador está mal formulado: reescríbelo.
-3. **🟡** Ordena el inventario por riesgo real —probabilidad de que el disparador
-   ocurra × costo si ocurre— y defiende tu orden en un párrafo. No hay respuesta
-   única; lo que se evalúa es el criterio.
-4. **🟠** Toma la deuda de `serverNow` y escribe el ticket completo que abrirías
-   el día que se dispare: síntoma esperado, cómo reproducirlo, qué capa tocar,
-   qué test escribir primero, y el estimado. Es el ejercicio que convierte una
-   línea de inventario en trabajo ejecutable.
-5. **🟠** Elige una entrada y escribe el **test que fija el comportamiento actual
-   como esperado** (como el `formatCents` que lanza). Ese test es lo que impide
-   que alguien "arregle" la deuda por accidente en un refactor.
-6. **🔴** Para la deuda del token en `localStorage`, escribe el análisis que le
-   presentarías a alguien de seguridad: qué expone exactamente, qué ataque
-   habilita, qué mitigaciones existen del lado del frontend —y cuáles **no**
-   pueden resolverse sin backend—. Distingue con claridad lo que es decisión de
-   producto de lo que es limitación técnica. Es la conversación más difícil de
-   este archivo y la que más se parece a un trabajo real.
+1. **🟢** Recorre las once fases buscando cada 💸 en el texto. Compara tu lista con el inventario de §2. **Criterio:**
+   toda 💸 que encuentres y no esté acá es un hallazgo; agrégala con sus cinco partes.
+2. **🟢** Para cada entrada de §2, escribe en una línea **cómo detectarías** que su disparador ocurrió. **Criterio:** si
+   para alguna no se te ocurre nada observable, el disparador está mal formulado: reescríbelo.
+3. **🟡** Ordena las 🔴 por riesgo real —probabilidad de que el disparador ocurra por costo si ocurre— y defiende tu
+   orden en un párrafo. Lo que se evalúa es el criterio.
+4. **🟠** Toma la deuda del reloj del navegador y escribe el ticket que abrirías el día que se dispare: síntoma
+   esperado, cómo reproducirlo, qué capa tocar, qué prueba escribir primero y el estimado.
+5. **🟠** Elige una entrada y escribe **la prueba que fija el comportamiento actual como esperado** (como la de
+   `formatCents`). **Criterio:** la prueba falla si alguien "arregla" la deuda por accidente en un refactor.
+6. **🔴** Para la deuda de la sesión en `localStorage`, escribe el análisis que le presentarías a alguien de
+   seguridad: qué expone, qué ataque habilita, qué mitigaciones existen del lado de la consola y cuáles **no** pueden
+   resolverse sin el servidor. Distingue lo que es decisión de producto de lo que es limitación técnica.
 
 ---
 
 ## 📚 Referencias
 
 **Del curso**
-- Fase 11 §5.3 — el caso trabajado de hotfix mínimo frente a refactorización,
-  que es la aplicación práctica de este archivo.
-- `00-historia-del-sistema.md` §4 — por qué cada cosa quedó como quedó.
-- `00-decisiones-y-versiones.md` — las decisiones que **no** son deuda, sino
-  restricciones firmes del proyecto. La diferencia importa: una restricción no
-  se paga, se respeta.
+- Fase 11 §5.3 — el caso trabajado de corrección mínima contra refactorización, sobre el incidente 19.
+- Fase 11 §9 — el veredicto de los dos años, que usa la tabla de §4.
+- `00-historia-del-sistema.md` §5 y §11 — por qué cada cosa quedó como quedó, y lo que el sistema no tiene.
+- `00-decisiones-y-versiones.md` — las decisiones que **no** son deuda sino restricciones del proyecto. Una restricción
+  no se paga: se respeta.
 
 **Lectura de fondo**
-- La metáfora original de la deuda técnica es de Ward Cunningham (1992), y su
-  formulación es más precisa que el uso habitual: la deuda es lo que asumes
-  conscientemente para entregar antes, sabiendo que pagarás intereses. Código
-  malo por descuido no es deuda: es código malo.
-- Martin Fowler escribió sobre el *Technical Debt Quadrant*, que cruza
-  deliberado/inadvertido con prudente/temerario. Este archivo inventaría el
-  cuadrante deliberado-prudente; los otros tres no se declaran, se descubren.
+- Ward Cunningham, *"The WyCash Portfolio Management System"* (OOPSLA 1992), donde aparece la metáfora de la deuda: la
+  que se asume a conciencia para entregar antes, sabiendo que se pagan intereses.
+- Martin Fowler, *Technical Debt Quadrant* — https://martinfowler.com/bliki/TechnicalDebtQuadrant.html — el cruce de
+  deliberado/inadvertido con prudente/temerario. Este archivo inventaría el cuadrante deliberado y prudente; los otros
+  tres no se declaran, se descubren.
 
-> ⚠️ Ambas referencias se citan de memoria: verifica autor, fecha y formulación
-> exacta antes de citarlas en una discusión de equipo.
+> ⚠️ Verifica autor, fecha y formulación exacta antes de citarlas en una discusión de equipo.
 
 ---
 
-> **La señal de que este archivo hace su trabajo:** cuando alguien nuevo abra el
-> proyecto, encuentre una línea rara, venga acá, la encuentre explicada — y no la
-> toque.
+> **La señal de que este archivo hace su trabajo:** cuando alguien nuevo abra el proyecto, encuentre una línea rara,
+> venga acá, la encuentre explicada —y sepa, además, si vale la pena tocarla antes de 2028.
 
 ---
 
-> 🏷️ **Este apéndice no lleva tag propio.** Es material de consulta: si no
-> cambia el repo, no hay nada que apuntar. Cuando de leerlo sí salga código
-> —una deuda pagada o una nueva declarada—, commitéalo con el prefijo de la
-> fase desde la que llegaste (`f06: …`), no con el del apéndice, para que el
-> `git log --oneline --grep '^f06'` de esa fase siga estando completo. Y si el
-> ejercicio produjo una medición, el número va en el mensaje del tag
-> (`ej/a12/3`), que es donde no se pierde. Todo eso está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
+> 🏷️ **Este apéndice no lleva tag propio.** Es material de consulta: si no cambia el repo, no hay nada que apuntar.
+> Cuando de leerlo sí salga código —una deuda pagada o una nueva declarada—, commitéalo con el prefijo de la fase desde
+> la que llegaste (`f06: …`), no con el del apéndice, para que el `git log --oneline --grep '^f06'` de esa fase siga
+> completo. Y si el ejercicio produjo una medición, el número va en el mensaje del tag (`ej/a12/3`), que es donde no se
+> pierde. Todo eso está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).

@@ -1,5 +1,5 @@
 # 🧩 Plantilla de fase (esqueleto)
-## Tutorial React 16 — Rifas y chances
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
 Copia este esqueleto al iniciar cada fase y rellena los `{{placeholders}}`.
 Mantiene la estructura de 9 secciones idéntica en todo el curso. Borra las
@@ -17,7 +17,7 @@ notas entre paréntesis antes de entregar.
 ```markdown
 # {{emoji}} Fase {{NN}} — {{Nombre}}
 
-> Tutorial React 16 — Rifas y chances · Fase {{N}} de 11 · **{{X}} horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Fase {{N}} de 11 · **{{X}} horas**
 > Depende de: {{fase previa}} · Habilita: {{fase siguiente}}
 
 ---
@@ -25,7 +25,7 @@ notas entre paréntesis antes de entregar.
 ## 🎯 1. Propósito
 
 {{Una o dos frases: qué resuelve esta fase y por qué importa para
-mantenimiento. Anclar al dominio de rifas.}}
+mantenimiento. Anclar al dominio de ruedas.}}
 
 ---
 
@@ -104,7 +104,7 @@ Incluir al menos un ejercicio de "rompe a propósito y observa".}}
 
 {{Mínimo 25, ideal 30-35. Reparto equilibrado entre niveles (no cargar todo
 en fácil). Numeración continua; el título lleva el conteo. Accionables y
-verificables, anclados al dominio de rifas. Incluir varios de diagnóstico:
+verificables, anclados al dominio de ruedas. Incluir varios de diagnóstico:
 entregar un bug y pedir reproducir y localizar, no solo construir. Cuando
 un enunciado nombra código, usar el identificador en inglés vigente
 (ej. "agrega el thunk `createRaffle`").}}

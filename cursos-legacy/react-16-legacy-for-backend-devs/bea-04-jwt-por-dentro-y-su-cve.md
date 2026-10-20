@@ -1,6 +1,6 @@
 # 🔑 Apéndice bea-04 — JWT por dentro y su CVE
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
 > Lo referencian: `be04`; `bea-08` lo cruza
 
 ---
@@ -85,7 +85,7 @@ por qué los otros no.
 | `sub` | El sujeto: **quién** | El `id` del usuario. **La única fuente de identidad que el backend acepta** |
 | `exp` | Cuándo deja de valer | `JWT_TTL`, 12 h en laboratorio, 1 h en UAT y producción |
 | `iat` | Cuándo se emitió | Diagnóstico: permite saber la edad de un token |
-| `iss` | Quién lo emitió | `raffles-api` |
+| `iss` | Quién lo emitió | `esclusa-api` |
 | `aud` | **Para quién** es | **No se usa** — y ver el §6, porque es justo el del CVE |
 | `nbf` | No válido antes de | No se usa: no hay tokens programados |
 | `jti` | Identificador único | No se usa: haría falta para una lista de revocación (§5) |
@@ -138,10 +138,15 @@ _, err := jwt.ParseWithClaims(tokenString, &claims, func(t *jwt.Token) (interfac
 })
 ```
 
-> ⚠️ Las librerías modernas se niegan a aceptar `none` aunque tú no lo
-> compruebes. **Eso no te exime**: si tu defensa consiste en que la librería se
-> porte bien, tu defensa es la política de mantenimiento de un tercero. Que es,
-> exactamente, de lo que trata el §6.
+> ⚠️ Medido en `be04`: las dos librerías del track, `dgrijalva/jwt-go` v3.2.0 y
+> `golang-jwt/jwt/v4` v4.4.2, rechazan `none` aunque quites la comprobación, con
+> `'none' signature type is not allowed`: solo lo aceptan si la clave es una
+> constante especial que lo autoriza. **Eso no te exime**: si tu defensa consiste
+> en que la librería se porte bien, tu defensa es la política de mantenimiento de
+> un tercero, que es exactamente de lo que trata el §6. Y la comprobación protege
+> de lo que la librería sí deja pasar: el día que firmes con RSA, un token que
+> cambie `RS256` por `HS256` y se firme con tu clave **pública** se verifica con
+> ella si tu función devuelve "la clave" sin mirar el método.
 
 Y el secreto: **32 bytes como mínimo** para HS256. Un secreto corto se rompe por
 fuerza bruta *offline* — el atacante tiene el token y todo el tiempo del mundo.
@@ -184,13 +189,16 @@ Las salidas, con su precio:
 ## 6. El CVE de `dgrijalva/jwt-go`
 
 `D16` manda adoptar `dgrijalva/jwt-go` v3.2.0 **a propósito** en `be04`,
-descubrir su estado y migrar. Este es el aviso, con los datos verificados contra
-la fuente oficial al escribir este apéndice:
+descubrir su estado y migrar. Este es el aviso. El id de Go, los alias, el símbolo
+y la falta de corrección salen de `govulncheck` v1.0.0 (19/10/2026); la severidad
+y la fecha, de la NVD (verificadas el 19/10/2026):
 
 | Dato | Valor |
 |---|---|
+| Aviso de Go | `GO-2020-0017` |
 | Aviso de GitHub | `GHSA-w73w-5m7g-f7qc` |
 | CVE | **`CVE-2020-26160`** |
+| Símbolo afectado | `MapClaims.VerifyAudience` |
 | Paquete | `github.com/dgrijalva/jwt-go` |
 | Versiones afectadas | **hasta la v3.2.0 inclusive** |
 | Severidad | **Alta — CVSS 7.5** |
@@ -204,7 +212,9 @@ puede aceptar un token que no era para ella.
 
 **¿Afecta a este backend?** Hazte la pregunta en serio, porque hacérsela **es** el
 trabajo. Este sistema no emite `aud`, no lo verifica, y tiene un solo servicio: el
-vector concreto no aplica.
+vector concreto no aplica. Y `govulncheck` lo confirma con datos: pone el aviso en
+la sección *Informational*, porque ningún camino del código llega a
+`MapClaims.VerifyAudience` (el backend usa `StandardClaims`).
 
 **Y aun así se migra.** Porque el CVE es el síntoma y no el problema:
 
@@ -302,15 +312,27 @@ Los tres cambios de la v4, con su porqué:
   registrados". El nombre anterior nunca fue el correcto.
 - **`int64` → `*jwt.NumericDate`.** Con `int64`, "sin expiración" y "expira en el
   epoch" son el mismo valor: `0`. Con un puntero, ausente y cero son distintos. Es
-  la misma lección del `participantId` de `be03`, en otra capa.
+  la misma lección del `origin` de `be03`, en otra capa.
 - **La verificación de `aud` cambió**, que es lo que arregla el CVE.
 
 Verifica que la deuda se pagó de verdad:
 
 ```bash
-grep -rn "dgrijalva" .        # no debe devolver nada
-go list -m all | grep jwt     # solo golang-jwt
+grep -rn "dgrijalva" --include=*.go .            # no debe devolver nada
+go version -m ./api | grep jwt                   # en el binario, solo golang-jwt
 ```
+
+Ojo con `go list -m all | grep jwt`: medido en `be04`, **sigue mostrando
+`dgrijalva/jwt-go`**, porque está en el grafo de módulos que arrastra
+`golang-migrate`; `go mod why -m github.com/dgrijalva/jwt-go` contesta que el
+módulo principal no lo necesita. El grafo dice qué podría compilarse; el binario,
+qué se compiló.
+
+> 🧠 **Y la historia se repite.** Medido en la misma fecha, `govulncheck` encuentra
+> en la `v4.4.2` del fork dos avisos que el código sí alcanza: `GO-2024-3250`
+> (corregido en la v4.5.1) y `GO-2025-3553` (corregido en la v4.5.2). El curso
+> deja la versión congelada (`D16`) y lo cuenta en `be04` §5.7 bis: lo que te
+> llevas no es una versión limpia para siempre, sino el mecanismo que avisa.
 
 > 📝 Y una nota de lectura para el `go.mod`: el
 > `github.com/dgrijalva/jwt-go v3.2.0+incompatible` lleva ese sufijo porque el

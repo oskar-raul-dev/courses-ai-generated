@@ -1,5 +1,10 @@
 # 🗺️ Propuesta de fases, apéndices y alcance — Track BE
 
+> ⏳ **Superada en lo que cambia la reescritura de 2026** (`propuesta-fases-y-alcance.md`, DR-01–DR-06):
+> el track BE se renombra (`be05-giro-concurrente`, `be07-compras-y-conciliacion`), suma `be-17`, `be-18`,
+> `bea-11` y las cifras de k6, y el dominio pasa a la rueda. Lo que este documento dice de Rifas y Chances
+> queda como historia de la versión anterior.
+
 Documento de encuadre del **track opcional de backend** del tutorial *React 16
 Legacy — Rifas y Chances S.A.S.* Define por qué existe, qué cobra, cuánto pesa,
 qué versiones congela y cómo se reparte en fases y apéndices.
@@ -481,7 +486,7 @@ tengan a qué referirse.
 7. **`CLAUDE.md`** (raíz del repositorio) — la convención de nombres de archivo
    del track BE en la sección de *File Naming Conventions*.
 8. **`prompts/prompts-backend-fase.md`** y
-   **`prompts/prompts-backend-apendice.md`** — archivos nuevos, no adiciones a
+   **`prompts/prompts-backend-apendice.md`** (borrados al cerrar la reescritura de 2026; están en la historia de git) — archivos nuevos, no adiciones a
    los juegos existentes: el track BE tiene sus propias fuentes de verdad y
    mezclarlo con los prompts del track base haría que un chat de la Fase 4
    arrastrara contexto de Go que no necesita. Contienen los prompts **A** —los

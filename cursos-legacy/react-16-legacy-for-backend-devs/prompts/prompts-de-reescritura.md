@@ -1,8 +1,9 @@
 # 🗺️ Prompts de la reescritura
 ## Tutorial React 16 — La Esclusa, la consola de Jewel Locks — 21 sesiones (P4–P8, T0–T12)
 
-Cada sección es el prompt completo de una tanda del
-[plan de edición](_desechable-plan-de-edicion.md), listo para pegar en la sesión que la hace.
+Cada sección es el prompt completo de una tanda del plan de edición (borrado al cerrar T12, el
+20/10/2026; copia en `zz-code/react-16-legacy-for-backend-devs-20261018-6436/copia-planes/`), listo
+para pegar en la sesión que la hace.
 **El alcance de cada documento no se copia aquí**: vive en su fila de
 [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) (§4 base, §5 BE, §6 apéndices, §7
 incidentes), y el prompt la cita. Lo que el prompt agrega es lo que la fila no dice: qué vigilar, qué

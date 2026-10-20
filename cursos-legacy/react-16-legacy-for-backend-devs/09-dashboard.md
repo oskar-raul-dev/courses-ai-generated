@@ -1,490 +1,578 @@
 # 📊 Fase 09 — Dashboard
 
-> Tutorial React 16 — Rifas y chances · Fase 9 de 11 · **6 horas**
-> Depende de: Fase 8 — Liquidación + cálculo de premio · Habilita: Fase 10 — Testing mínimo
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Fase 9 de 11 · **6 horas**
+> Depende de: Fase 8 — Conciliación · Habilita: Fase 10 — Testing mínimo
 
 ---
 
 ## 🎯 1. Propósito
 
-Desde la Fase 1 hay una ruta `/dashboard` que muestra un `<div className="alert alert-info">` prometiendo que "el dashboard con métricas y gráficos se construye en la Fase 9". Esta es la Fase 9. Toca cumplir esa promesa.
+Antes de contestar la reseña de *"la rueda está arreglada"*, Itzel quiere verlo en una pantalla: cuántos giros dio una rueda, de dónde salieron —gratis, pagos, mandados a mano por soporte—, cuánto dejaron, y si cada segmento cayó cerca de lo que la tabla del juego promete (`00-historia-del-sistema.md` §5 y §8). La Fase 8 hizo la cuenta una vez, para conciliar. Esta fase la pone en un tablero que se mira todos los días.
 
-El dashboard no agrega ninguna regla de negocio nueva: **lee** datos que las fases anteriores ya dejaron en el store —rifas, estado de cada número, liquidaciones— y los presenta como cuatro indicadores y un par de gráficos. Ese "solo lee" es justo lo que lo hace valioso para mantenimiento: es la primera pantalla del curso cuyo trabajo entero es **derivar** información de un estado que ya existe, sin mutarlo. Y derivar mal —recalcular en cada render lo que no cambió, o memoizar lo que no hacía falta— es una de las causas más comunes y peor diagnosticadas de lentitud en apps React reales. Por eso la pieza forense de esta fase no es un bug de dominio: es de **performance**. Vas a aprender a ver un `useMemo` que miente, y a mover el cálculo al lugar donde de verdad tiene memoria: un selector.
+Desde la Fase 1 hay una ruta `/dashboard` que muestra un `<div className="alert alert-info">` prometiendo que "el dashboard con métricas y gráficos se construye en la Fase 9". Esta es la Fase 9.
+
+El tablero no agrega ninguna regla de negocio: **lee** lo que el mock ya tiene —la bitácora, los envíos manuales, el reporte de la tienda— y lo presenta como cuatro indicadores y un gráfico. Ese "solo lee" es justo lo que lo hace valioso para mantenimiento: es la primera pantalla del curso cuyo trabajo entero es **derivar** información de un estado que ya existe, sin mutarlo. Y derivar mal —recalcular en cada render lo que no cambió, o memoizar algo que no memoiza— es una de las causas más comunes y peor diagnosticadas de lentitud en una app React. Por eso la pieza forense de esta fase es de **rendimiento**: vas a ver un `useMemo` que miente, y a mover el cálculo al lugar donde de verdad tiene memoria, un selector.
 
 ---
 
 ## ✅ 2. Qué queda listo al terminar
 
-- [ ] `DashboardPage` reemplaza el placeholder de Fase 1 y muestra 4 KPIs reales leídos del store: números más vendidos, margen por rifa, tasa de venta y participantes recurrentes.
-- [ ] Los agregados se calculan con **selectores memoizados** (`createSelector`, reselect embebido en RTK 1.8), no inline en el componente; recalculan solo cuando cambian sus entradas del store.
-- [ ] Al menos dos gráficos con **chart.js** (barras de números más vendidos y de margen por rifa) integrados al ciclo de vida de React 16 sin fugar la instancia del chart al desmontar.
-- [ ] El estudiante puede reproducir y diagnosticar re-renders excesivos por `useMemo` mal aplicado con el Profiler de React DevTools, y corregirlos.
+- [ ] `DashboardPage` reemplaza el placeholder de la Fase 1 y muestra, para la rueda que elijas, cuatro indicadores: giros (gratis y pagos), giros manuales, ingresos netos y el estado de las probabilidades.
+- [ ] El gráfico **observado contra configurado**: una barra por segmento y los dos bordes de su banda de ±3σ, con chart.js 2.9.4 en modo imperativo (D12), que se destruye al desmontar.
+- [ ] Los agregados se calculan en **selectores memoizados** (`createSelector`): una pasada por bitácora, no una por render. Cambiar el filtro de origen no vuelve a recorrer los giros.
+- [ ] `MetricCard` muestra el instante de los datos, que le llega por props, en hora de Panamá: no consulta el reloj de la máquina.
+- [ ] El store guarda la bitácora del tablero **fuera de los chequeos de desarrollo** de Toolkit, que de otro modo la recorrerían en cada acción.
+- [ ] Sabes reproducir y diagnosticar con el Profiler un `useMemo` mal aplicado, y corregirlo.
 
 ---
 
 ## 🚫 3. Qué queda fuera por ahora
 
-- **BI real** (cubos, dimensiones, agregación en servidor) → nunca en este curso; el dashboard es cálculo en el cliente sobre un store chico.
-- **Drill-down** (click en una barra → detalle filtrado) → fuera de alcance; se sugiere como ejercicio 🔥.
-- **Series temporales "liquidaciones por día"** → difuminado a propósito: agrupar por fecha reabre el 💸 de `serverNow` (reloj cliente vs servidor, heredado de Fase 7) porque `settledAt` se compararía contra el reloj local. Si aparece, va como 🔥 con esa advertencia.
-- **Export a CSV/PDF del dashboard** → fuera de alcance; ejercicio 🔥.
-- **Slice propio de dashboard** → no hace falta: los KPIs son cálculo derivado sobre slices existentes (ver §4). No se agrega estado nuevo al store.
+- **Agregar en el servidor.** El tablero baja la bitácora de la rueda y cuenta en el navegador. Con una rueda de semanas alcanza; con varias ruedas de un evento, no. La consulta agregada es `be07`. 💸
+- **Series temporales** ("giros por hora de la Semana del Canal") → difuminado a propósito: agrupar por hora reabre la pregunta de la Fase 7, de quién tiene autoridad sobre el reloj. Va como 🔥, con esa advertencia.
+- **Drill-down** (clic en una barra → los giros de ese segmento) → ejercicio 🔥.
+- **Los giros manuales en la banda.** Son compensaciones, no giros de la rueda: se cuentan aparte y no entran en la auditoría.
+- **La teoría de la banda** → `A14-estadistica-para-auditar-una-rueda.md`. Acá se dibuja.
 
 ---
 
 ## 🧠 4. Conceptos mínimos
 
-### El dashboard no tiene datos propios: los deriva
+### El tablero no tiene datos propios: los deriva
 
-Todo lo que el dashboard muestra ya vive en el store gracias a fases anteriores. La tabla de correspondencia es la base de esta fase:
+Todo lo que el tablero muestra ya existe en el mock desde fases anteriores. La tabla de correspondencia es la base de esta fase:
 
-| KPI | Fuente en el store | Selector base heredado |
+| Indicador | De dónde sale | Fase que lo dejó |
 |---|---|---|
-| Números más vendidos | `state.sales.byNumber` (los `'sold'`) | `selectStatusCounts` (Fase 5) |
-| Margen por rifa | `state.settlements.byRaffleId` (`margin`, centavos) | `selectSettlement(raffleId)` (Fase 8) |
+| Giros, gratis y pagos | la bitácora de la rueda (`spinLog`, campo `origin`) | 8 |
+| Giros manuales | los envíos de soporte con premio `spin:<id>` (`grants`) | 5 |
+| Ingresos netos | el reporte de la tienda: cobrado menos comisión, renglón por renglón | 8 |
+| Observado contra configurado | la bitácora contada por `landedSegment`, contra los pesos | 8 |
 
-Todo lo que el dashboard muestre en dinero sale del store en **centavos** y se pinta con `formatCents` (`A10-aritmetica-de-dinero.md` §3). Un KPI que muestre el entero crudo está mal por un factor de cien, y es el tipo de error que nadie nota hasta que alguien compara la pantalla contra la liquidación.
-| Tasa de venta | `state.sales.byNumber` (vendidos / total) | `selectStatusCounts` (Fase 5) |
-| Participantes recurrentes | `participantId` repetidos entre los `'sold'` | — (se deriva, ver 💸 abajo) |
-
-No hay slice nuevo, no hay thunk nuevo, no hay epic. El dashboard **lee**. La única llamada de red que podría hacer es asegurarse de que las liquidaciones estén cargadas (`GET /settlements` sobre `apiClient`, puerto 3001 —nunca la lotería del 3002), pero incluso eso lo hace reutilizando lo que Fase 8 ya montó.
+Hay un slice nuevo, `dashboardSlice`, y es deliberadamente tonto: guarda los datos crudos que trae el thunk, y nada más. Todo lo que es un número lo derivan los selectores. Todo lo que el tablero muestre en dinero sale en **centavos** y se pinta con `formatCents` (`A10-aritmetica-de-dinero.md` §3).
 
 ### Dónde vive la memoria del cálculo: selector, no componente
 
 Éste es el concepto central de la fase, y la razón de su pieza forense.
 
-Un componente funcional se vuelve a ejecutar entero en cada render. Si dentro escribes `const topNumbers = computeTopNumbers(byNumber)`, ese cálculo corre **cada vez que el componente renderiza**, aunque `byNumber` no haya cambiado. La tentación inmediata es envolverlo en `useMemo(() => computeTopNumbers(byNumber), [byNumber])`. Y a veces está bien. Pero `useMemo` tiene dos problemas que la gente subestima: su caché es **local a esa instancia del componente** (si dos componentes piden el mismo cálculo, se computa dos veces) y **se pierde al desmontar** (si navegas afuera del dashboard y vuelves, se recalcula desde cero). Además, es fácil poner mal las dependencias y que memoice contra un array que se recrea en cada render —con lo cual no memoiza nada y solo agregaste ruido.
+Un componente funcional se vuelve a ejecutar entero en cada render. Si dentro escribes `const summary = summarizeSpins(spinLog, segments)`, esa pasada sobre la bitácora corre **cada vez que el componente renderiza**, aunque la bitácora no haya cambiado. La tentación inmediata es envolverla en `useMemo`. Y a veces está bien. Pero `useMemo` tiene dos problemas que la gente subestima: su caché es **local a esa instancia del componente** (si dos componentes piden el mismo cálculo, se computa dos veces) y **se pierde al desmontar** (si sales del tablero y vuelves, se recalcula desde cero). Además, es fácil poner mal las dependencias y que memoice contra un arreglo que se recrea en cada render, con lo cual no memoiza nada y solo agregaste ruido.
 
-`createSelector` (de reselect, que viene embebido en Redux Toolkit 1.8 —no instalas nada) resuelve esto poniendo la memoria **en el selector, junto al store**, no en el componente:
+`createSelector` (de reselect, que viene dentro de Redux Toolkit 1.8: no instalas nada) pone la memoria **en el selector, junto al store**:
 
 ```javascript
-import { createSelector } from '@reduxjs/toolkit';
+// --- Selectores de entrada: devuelven ramas del store tal cual (referencias estables).
+// Si derivaran algo nuevo acá (un filter, un Object.values), romperían la memoria de abajo.
+const selectSpinLog = (state) => state.dashboard.spinLog;
+const selectSegments = (state) => state.dashboard.segments;
+const selectGrantsLog = (state) => state.dashboard.grants;
+const selectEarnings = (state) => state.dashboard.earnings;
+const selectWheelId = (state) => state.dashboard.wheelId;
 
-// Selectores de entrada: baratos, solo leen una rama del store.
-const selectByNumber = (state) => state.sales.byNumber;
-
-// Selector memoizado: la función pesada solo corre si selectByNumber
-// devuelve una referencia distinta a la de la vez anterior.
-export const selectTopSoldNumbers = createSelector(
-  [selectByNumber],
-  (byNumber) => computeTopNumbers(byNumber) // corre solo cuando byNumber cambia
+// La pasada sobre la bitácora: corre UNA vez por bitácora, no una vez por render.
+export const selectSpinSummary = createSelector([selectSpinLog, selectSegments], (spinLog, segments) =>
+  summarizeSpins(spinLog, segments)
 );
 ```
 
-La diferencia con `useMemo` es de **ubicación de la caché**, y por eso importa para mantenimiento: la memoria del selector es global al store y sobrevive a que el componente se monte y desmonte. Dos componentes que llamen `useSelector(selectTopSoldNumbers)` comparten el mismo resultado memoizado. La regla que te llevas: **el agregado del dominio se memoiza en un selector; `useMemo` queda para lo que es genuinamente local al render** (derivar props para chart.js, estabilizar un handler con `useCallback`, formatear para mostrar).
+La diferencia con `useMemo` es de **ubicación de la caché**, y por eso importa para mantenimiento: la memoria del selector es global al store y sobrevive a que el componente se monte y se desmonte. La regla que te llevas: **el agregado del dominio se memoiza en un selector; `useMemo` queda para lo que es genuinamente local al render** (dar forma a las props de chart.js, estabilizar un handler).
 
-> ⚠️ **La trampa de `createSelector`.** Su memoización es de un solo nivel y compara referencias. Si un selector de entrada devuelve un objeto o array **nuevo cada vez** (por ejemplo `(state) => Object.values(state.sales.byNumber)`), el selector de salida recalcula siempre y la memoización no sirve de nada. Los selectores de entrada deben devolver referencias estables del store (`state.x.y`), no valores derivados al vuelo. Este error es la contracara exacta del `useMemo` mal aplicado, y los dos aparecen en la pieza forense.
+> ⚠️ **La trampa de `createSelector`.** Su memoria es de un solo nivel y compara referencias. Si un selector de entrada devuelve un objeto o un arreglo **nuevo cada vez** —por ejemplo `(state) => Object.values(state.dashboard.spinLog)`—, el selector de salida recalcula siempre y la memoización no sirve de nada. Los selectores de entrada devuelven ramas del store tal cual. Este error es la contracara exacta del `useMemo` mal aplicado, y los dos aparecen en la pieza forense.
+
+### Una rama grande del store y los chequeos de desarrollo
+
+En desarrollo, `configureStore` monta dos middlewares que cuidan al equipo: uno avisa si alguien muta el estado y otro si mete algo no serializable. Los dos **recorren el estado entero en cada acción**. Con el estado de las fases anteriores, eso son microsegundos. Con la bitácora de un evento en el store —180.000 filas— son cientos de milisegundos por acción, en **todas** las pantallas, y la consola entera se arrastra. Las dos opciones aceptan `ignoredPaths`: la bitácora del tablero nadie la muta, así que se excluye de los dos, solo esa rama. En producción esos middlewares no existen; el problema es de desarrollo, y es el incidente 19.
 
 ### chart.js 2.x dentro de React 16
 
-El stack fija **chart.js** (D12; no recharts). En un proyecto React 16 con CRA 4, chart.js es una librería imperativa: le das un elemento `<canvas>` y una config, y te devuelve una instancia que dibuja. React, en cambio, es declarativo. El puente entre ambos mundos es el patrón clásico de "wrappear una librería imperativa":
+El stack fija **chart.js 2.9.4** (D12), sin wrapper de React. chart.js es una librería imperativa: le das un `<canvas>` y una configuración, y te devuelve una instancia que dibuja. React es declarativo. El puente entre los dos mundos es el patrón clásico:
 
-- un `useRef` al `<canvas>`,
-- un `useRef` que guarda **la instancia del chart** (no va en el estado: no es serializable ni provoca render),
-- un `useEffect` que **crea** el chart al montar y **lo destruye** (`chart.destroy()`) en el cleanup,
-- y —si los datos cambian— actualizar la instancia existente en vez de recrearla.
+- un `useRef` al `<canvas>`;
+- un `useRef` que guarda **la instancia del gráfico** (no va en el estado: no es serializable ni debe provocar render);
+- un `useEffect` que **crea** el gráfico al montar y **lo destruye** (`chart.destroy()`) en la limpieza;
+- y, cuando cambian los datos, **actualizar** la instancia existente en vez de recrearla.
 
-Olvidar el `chart.destroy()` del cleanup es una fuga real: cada vez que el componente se re-monta, queda una instancia vieja de chart.js con sus listeners colgados. Es el equivalente en esta fase a la "suscripción que no se cancela" que perseguiste en los epics de Fase 6, solo que del lado de una librería de UI.
+Olvidar el `chart.destroy()` es una fuga real: cada visita al tablero deja una instancia vieja con sus listeners colgados. Es, del lado de una librería de interfaz, la misma "suscripción que no se cancela" que perseguiste en los epics de la Fase 6.
 
-> 📖 Las clases de Bootstrap de las tarjetas de KPI (`card`, `card-body`, `text-muted`, la grilla) están en `A1-bootstrap-4-y-sass.md` §2 y §3; los tokens de color de estado, en `A2-mini-design-system.md` §4.
+> 📖 Las clases de Bootstrap de las tarjetas (`card`, `card-body`, `text-muted`, la grilla) están en `A1-bootstrap-4-y-sass.md` §2 y §3; los colores de estado, en `A2-mini-design-system.md` §4.
 
-> Nota de compatibilidad: este curso usa la API de chart.js **2.x** (constructor `new Chart(ctx, config)` con `config.data` / `config.options`). chart.js 3+ cambió imports y opciones; si instalas una versión moderna, el código de §5 no aplica tal cual. Fija la versión en `package-lock.json` como manda D7 y no la muevas sin justificar.
+> ⚠️ **Nota de versión.** Este código usa la API de chart.js **2.x**: el constructor `new Chart(ctx, config)`, ejes en `scales.yAxes`. chart.js 3 cambió imports y opciones; un ejemplo de 3 o 4 no corre sobre 2.9.4.
 
-### El dinero sigue siendo entero en centavos
+### El reloj no se consulta: llega por props
 
-Fase 8 dejó una frontera clara: el dinero se guarda y se suma como **enteros de centavos**, y se formatea **una sola vez, al final**, con `formatCents` (en `src/features/settlements/money.js`). El dashboard hereda esa regla sin excepción: cuando sume márgenes de varias rifas, suma enteros; cuando lo muestre, formatea el total. Formatear cada parte y después "sumar" strings es el bug de agregación que la pieza forense de la nota de continuidad anticipó. `formatCents` **lanza si recibe un float** —es una alarma deliberada, no la desactives.
+`MetricCard` muestra cuándo se cargaron los datos ("Actualizado: …"). Ese instante lo pone el thunk en el store (`loadedAt`) y le llega a la tarjeta por props; la tarjeta solo lo formatea, y lo formatea **en hora de Panamá** de forma explícita, porque la hora de Panamá es solo de presentación (historia §9). Una tarjeta que llamara a `new Date()` adentro y formateara en la zona de la máquina mostraría cosas distintas en dos computadoras, y su prueba pasaría en una y fallaría en la otra. Es el incidente 20, y por eso la tarjeta no lo hace.
 
 ---
 
 ## 💻 5. Implementación y código comentado
 
-Distinguimos con claridad las cuatro capas, aunque esta fase casi no toca dos de ellas:
+Las cuatro capas, aunque esta fase casi no toca dos:
 
-- **backend:** nada nuevo. El dashboard consume `GET /settlements` y los datos ya cargados de ventas y rifas.
-- **epic:** nada. El dashboard no tiene asincronía propia que justifique un epic.
-- **store:** ningún slice nuevo; solo **selectores derivados** sobre `raffleSlice`, `saleSlice` y `settlementSlice`.
-- **frontend:** los componentes de página, tarjetas y gráficos.
+- **backend (mock):** nada nuevo en las rutas. La siembra de la Fase 8 suma una bandera, `--event`, para tener el volumen de un evento.
+- **epic:** nada. El tablero no tiene asincronía propia que justifique un epic.
+- **store:** `dashboardSlice` (datos crudos) y `dashboardSelectors` (todo lo derivado).
+- **frontend:** la página, la tarjeta y el gráfico.
+
+Primero, la dependencia de la fase, fijada:
+
+```bash
+npm install --save-exact chart.js@2.9.4
+```
 
 ### 5.1 Cálculos puros — `src/features/dashboard/dashboardMath.js`
 
-Igual que Fase 8 separó la aritmética del dinero en `settlementMath.js`, acá separamos la lógica de agregación en funciones puras, sin React ni Redux. Puras = testeables solas en Fase 10.
+Igual que la Fase 8 separó la aritmética en `reconciliationMath.js`, acá la agregación vive en funciones puras, sin React ni Redux. Puras quiere decir que la Fase 10 las prueba solas.
 
 ```javascript
-// src/features/dashboard/dashboardMath.js
+// Cálculos puros del tablero: sin React, sin Redux, sin red. Entra la bitácora (u otra
+// colección del mock), sale un número o una lista. La Fase 10 los prueba solos.
+import { TOTAL_BP } from "../wheels/weightRules";
 
 /**
- * Cuenta cuántas veces se vendió cada número y devuelve el top N.
- * @param {Record<string, string>} byNumber - mapa '0347' -> 'available' | 'reserved' | 'sold'
- * @param {number} limit - cuántos devolver
- * @returns {Array<{ number: string, count: number }>}
- *
- * Nota: en el modelo actual un número se vende UNA vez por rifa (unicidad
- * estricta de Fase 5), así que "más vendidos" sobre una sola rifa es 0 o 1.
- * Esta función queda general a propósito para cuando el dashboard agregue
- * varias rifas (ver ejercicio 🔴 26): ahí el conteo por número > 1 sí aparece.
+ * Cuántos giros de cada origen, y los de cada segmento por origen, en una sola pasada.
+ * @param {{ landedSegment: string, origin: string }[]} spinLog
+ * @param {{ segmentId: string }[]} segments
+ * @returns {{ total: number, free: number, paid: number, countsByOrigin: { all: number[], free: number[], paid: number[] } }}
  */
-export function computeTopNumbers(byNumber, limit = 10) {
-  const counts = [];
-  for (const number in byNumber) {
-    if (byNumber[number] === 'sold') {
-      counts.push({ number, count: 1 });
+export function summarizeSpins(spinLog, segments) {
+  const index = new Map(segments.map((s, i) => [s.segmentId, i]));
+  const countsByOrigin = { all: segments.map(() => 0), free: segments.map(() => 0), paid: segments.map(() => 0) };
+  let free = 0;
+  let paid = 0;
+  for (const row of spinLog) {
+    const i = index.get(row.landedSegment);
+    if (i === undefined) continue;
+    countsByOrigin.all[i] += 1;
+    if (row.origin === "paid") {
+      paid += 1;
+      countsByOrigin.paid[i] += 1;
+    } else {
+      free += 1;
+      countsByOrigin.free[i] += 1;
     }
   }
-  // orden estable: primero por count desc, después por número asc
-  counts.sort((a, b) => b.count - a.count || a.number.localeCompare(b.number));
-  return counts.slice(0, limit);
+  return { total: free + paid, free, paid, countsByOrigin };
 }
 
 /**
- * Tasa de venta = vendidos / total de números del tablero.
- * @param {{ available: number, reserved: number, sold: number }} statusCounts
- * @returns {number} fracción entre 0 y 1 (no porcentaje; el formateo es de UI)
+ * Giros mandados a mano desde la consola en esta rueda: los envíos con premio spin:<id>.
+ * No están en la bitácora de la rueda: son compensaciones, y se cuentan aparte.
+ * @param {{ prize: string }[]} grants
+ * @param {number} wheelId
+ * @returns {number}
  */
-export function computeSalesRate(statusCounts) {
-  const total =
-    statusCounts.available + statusCounts.reserved + statusCounts.sold;
-  if (total === 0) return 0; // sin números todavía: evita dividir por cero
-  return statusCounts.sold / total;
+export function countManualSpins(grants, wheelId) {
+  return grants.filter((grant) => grant.prize === `spin:${wheelId}`).length;
 }
 
 /**
- * Suma de márgenes de todas las liquidaciones. TODO en centavos enteros.
- * @param {Record<number, { margin: number }>} byRaffleId
- * @returns {number} margen total en centavos (puede ser negativo: la casa perdió)
+ * Ingresos netos de los giros pagos: lo cobrado menos la comisión, renglón por renglón,
+ * como lo informa la tienda. Centavos enteros.
+ * @param {{ chargedCents: number, feeCents: number }[]} earnings
+ * @returns {number}
  */
-export function computeTotalMargin(byRaffleId) {
-  let total = 0;
-  for (const raffleId in byRaffleId) {
-    // sumamos enteros de centavos; nunca floats, nunca formateamos acá
-    total += byRaffleId[raffleId].margin;
-  }
-  return total;
+export function netRevenueCents(earnings) {
+  return earnings.reduce((sum, row) => sum + row.chargedCents - row.feeCents, 0);
 }
 
 /**
- * Participantes recurrentes: participantId que aparece en 2+ números vendidos.
- * @param {Array<{ participantId: number | null }>} soldEntries
- * @returns {number} cantidad de participantes con más de una compra
+ * Lo que el gráfico de la banda necesita por segmento: esperado y bordes de ±3σ.
+ * Tiene decimales y está bien: es para mostrar. La alarma la decide oddsAudit, con enteros.
+ * @param {number[]} counts
+ * @param {number[]} weightsBp
+ * @returns {{ expected: number, low: number, high: number, observed: number }[]}
  */
-export function computeRecurringParticipants(soldEntries) {
-  const byParticipant = {};
-  for (const entry of soldEntries) {
-    if (entry.participantId == null) continue; // placeholder sin comprador real
-    byParticipant[entry.participantId] =
-      (byParticipant[entry.participantId] || 0) + 1;
-  }
-  let recurring = 0;
-  for (const id in byParticipant) {
-    if (byParticipant[id] > 1) recurring += 1;
-  }
-  return recurring;
+export function bandRows(counts, weightsBp) {
+  const n = counts.reduce((sum, c) => sum + c, 0);
+  return weightsBp.map((w, i) => {
+    const p = w / TOTAL_BP;
+    const sigma = Math.sqrt(n * p * (1 - p));
+    const expected = n * p;
+    return { expected, low: Math.max(0, expected - 3 * sigma), high: expected + 3 * sigma, observed: counts[i] };
+  });
 }
 ```
 
-> 💸 **Deuda técnica intencional — participantes recurrentes es una aproximación.** No existe un slice de participantes (Fase 5 lo dejó explícito: una venta guarda a lo sumo un `participantId` placeholder, sin formulario de comprador). Contamos recurrencia sobre esos ids embebidos en las ventas. Cuando el curso agregue participantes reales (fuera de alcance acá), este KPI debe recalcularse contra ese slice, no contra las ventas. Se marca para que nadie lo tome como definitivo.
+`summarizeSpins` hace **una sola pasada** y devuelve todo lo que el tablero necesita de la bitácora: los totales por origen y los conteos por segmento de cada origen. Con eso, cambiar el filtro de origen en la pantalla es elegir una de tres listas ya calculadas.
 
-### 5.2 Selectores memoizados — `src/features/dashboard/dashboardSelectors.js`
-
-Acá vive la memoria de los cálculos. Cada `createSelector` toma selectores de entrada **estables** (leen una rama del store) y una función de salida que solo corre cuando alguna entrada cambia de referencia.
+### 5.2 El slice y los selectores
 
 ```javascript
-// src/features/dashboard/dashboardSelectors.js
-import { createSelector } from '@reduxjs/toolkit';
-import {
-  computeTopNumbers,
-  computeSalesRate,
-  computeTotalMargin,
-  computeRecurringParticipants,
-} from './dashboardMath';
-import { selectStatusCounts } from '../sales/saleSlice';
-
-// --- Selectores de entrada: baratos, referencia estable del store ---
-// Devuelven state.x.y directamente. NO derivan valores nuevos acá dentro:
-// si devolvieran un array/objeto nuevo, romperían la memoización de abajo.
-const selectByNumber = (state) => state.sales.byNumber;
-const selectSettlementsById = (state) => state.settlements.byRaffleId;
-
-// --- Números más vendidos ---
-export const selectTopSoldNumbers = createSelector(
-  [selectByNumber],
-  (byNumber) => computeTopNumbers(byNumber, 10)
-);
-
-// --- Tasa de venta ---
-// selectStatusCounts YA es un selector de Fase 5. Ojo: si NO estuviera
-// memoizado y devolviera un objeto nuevo cada vez, este createSelector
-// recalcularía siempre. Ver la nota de la §4 y el ejercicio 🟠 22.
-export const selectSalesRate = createSelector(
-  [selectStatusCounts],
-  (statusCounts) => computeSalesRate(statusCounts)
-);
-
-// --- Margen total (centavos enteros) ---
-export const selectTotalMargin = createSelector(
-  [selectSettlementsById],
-  (byRaffleId) => computeTotalMargin(byRaffleId)
-);
-
-// --- Margen por rifa: lista lista para graficar ---
-export const selectMarginByRaffle = createSelector(
-  [selectSettlementsById],
-  (byRaffleId) =>
-    Object.keys(byRaffleId).map((raffleId) => ({
-      raffleId: Number(raffleId),
-      margin: byRaffleId[raffleId].margin, // centavos; se formatea al render
-    }))
-);
-
-// --- Cantidad de liquidaciones cerradas ---
-export const selectSettledCount = createSelector(
-  [selectSettlementsById],
-  (byRaffleId) => Object.keys(byRaffleId).length
-);
-
-// --- Participantes recurrentes (aproximación, ver 💸 en 5.1) ---
-export const selectRecurringParticipants = createSelector(
-  [selectByNumber],
-  (byNumber) => {
-    // reconstruimos las entradas vendidas; en el modelo actual byNumber
-    // solo guarda el status, no el participantId, así que esta derivación
-    // es la parte más floja del KPI (ver 💸). Cuando exista participantSlice
-    // esto se reemplaza por una lectura directa de ese slice.
-    const soldEntries = [];
-    for (const number in byNumber) {
-      if (byNumber[number] === 'sold') {
-        soldEntries.push({ participantId: null }); // placeholder honesto
-      }
-    }
-    return computeRecurringParticipants(soldEntries);
-  }
-);
-```
-
-> 💸 **Segunda cara del mismo 💸.** `selectRecurringParticipants` no puede hacer más que Fase 5 le permite: `byNumber` no lleva `participantId`. El selector queda escrito para el día en que sí lo lleve (o exista un slice de participantes); hoy devuelve 0 con honestidad en vez de inventar un número. Es preferible un KPI que dice "0 recurrentes" y un 💸 visible, que uno que miente con datos que no tiene.
-
-### 5.3 El wrapper de chart.js — `src/features/dashboard/BarChart.jsx`
-
-Un único wrapper de barras, reutilizable para los dos gráficos. Encapsula todo el ciclo de vida imperativo de chart.js para que el resto del dashboard no lo vea.
-
-```javascript
-// src/features/dashboard/BarChart.jsx
-import React, { useRef, useEffect } from 'react';
-import Chart from 'chart.js'; // chart.js 2.x: default export es el constructor
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import apiClient from "../../api/apiClient";
+import apiStore from "../../api/apiStore";
+import { toReadableError } from "../../api/readableError";
 
 /**
- * Wrapper declarativo sobre chart.js 2.x para un gráfico de barras.
- * @param {{ labels: string[], values: number[], label: string }} props
+ * Trae lo que el tablero de una rueda necesita. El slice guarda los datos crudos;
+ * los números los derivan los selectores (dashboardSelectors.js), con memoria.
  */
-export default function BarChart({ labels, values, label }) {
+export const fetchDashboard = createAsyncThunk("dashboard/fetch", async (wheelId, { rejectWithValue }) => {
+  try {
+    const [segmentsRes, logRes, grantsRes, earningsRes] = await Promise.all([
+      apiClient.get("/segments", { params: { wheelId } }),
+      apiClient.get("/spinLog", { params: { wheelId } }),
+      apiClient.get("/grants"),
+      apiStore.get("/earnings"),
+    ]);
+    return {
+      wheelId,
+      segments: segmentsRes.data,
+      spinLog: logRes.data,
+      grants: grantsRes.data,
+      earnings: earningsRes.data,
+      loadedAt: Date.now(), // el instante de los datos: la tarjeta lo muestra, no consulta el reloj
+    };
+  } catch (error) {
+    return rejectWithValue(toReadableError(error));
+  }
+});
+
+const dashboardSlice = createSlice({
+  name: "dashboard",
+  initialState: {
+    wheelId: null,
+    segments: [],
+    spinLog: [], // la bitácora entera: el store la registra fuera de los chequeos de desarrollo (store.js)
+    grants: [],
+    earnings: [],
+    loadedAt: null,
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchDashboard.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchDashboard.fulfilled, (state, action) => {
+        state.loading = false;
+        Object.assign(state, action.payload);
+      })
+      .addCase(fetchDashboard.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
+});
+
+export default dashboardSlice.reducer;
+```
+
+```javascript
+import { createSelector } from "@reduxjs/toolkit";
+import { summarizeSpins, countManualSpins, netRevenueCents, bandRows } from "./dashboardMath";
+import { oddsAudit } from "../reconciliation/oddsAudit";
+
+// --- Selectores de entrada: devuelven ramas del store tal cual (referencias estables).
+// Si derivaran algo nuevo acá (un filter, un Object.values), romperían la memoria de abajo.
+const selectSpinLog = (state) => state.dashboard.spinLog;
+const selectSegments = (state) => state.dashboard.segments;
+const selectGrantsLog = (state) => state.dashboard.grants;
+const selectEarnings = (state) => state.dashboard.earnings;
+const selectWheelId = (state) => state.dashboard.wheelId;
+
+// La pasada sobre la bitácora: corre UNA vez por bitácora, no una vez por render.
+export const selectSpinSummary = createSelector([selectSpinLog, selectSegments], (spinLog, segments) =>
+  summarizeSpins(spinLog, segments)
+);
+
+export const selectManualSpins = createSelector([selectGrantsLog, selectWheelId], (grants, wheelId) =>
+  countManualSpins(grants, wheelId)
+);
+
+export const selectNetRevenueCents = createSelector([selectEarnings], (earnings) => netRevenueCents(earnings));
+
+/**
+ * La banda de cada origen, ya calculada: cambiar el filtro de la pantalla no recalcula nada.
+ * Cada entrada trae las filas del gráfico y la auditoría de esos conteos.
+ */
+export const selectBands = createSelector([selectSpinSummary, selectSegments], (summary, segments) => {
+  const weights = segments.map((s) => s.weightBp);
+  const bands = {};
+  for (const origin of ["all", "free", "paid"]) {
+    const counts = summary.countsByOrigin[origin];
+    bands[origin] = { rows: bandRows(counts, weights), audit: oddsAudit(counts, weights) };
+  }
+  return bands;
+});
+```
+
+`selectBands` calcula las tres bandas (todos, gratis, pagos) de una vez, con su auditoría. La auditoría es la misma `oddsAudit` de la Fase 8, con enteros: el tablero no inventa otra regla para decidir qué es una alarma.
+
+### 5.3 El registro en el store, y la rama que no se chequea
+
+```javascript
+    dashboard: dashboardReducer, // Fase 9
+  },
+  // getDefaultMiddleware trae thunk, immutable-check y serializable-check.
+  // Se concatena el de epics; NO se reemplaza el default (se romperían los thunks de F04).
+  // F09: los chequeos de desarrollo recorren el estado entero en cada acción. La bitácora del
+  // tablero tiene miles de filas que nadie muta: se excluye de los dos, solo esa rama.
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: { ignoredPaths: ["dashboard.spinLog"] },
+      serializableCheck: {
+        ignoredPaths: ["dashboard.spinLog"],
+        // y la acción que la trae: este chequeo también mira el payload de cada acción.
+        ignoredActionPaths: ["meta.arg", "meta.baseQueryMeta", "payload.spinLog"],
+      },
+    }).concat(epicMiddleware),
+```
+
+### 5.4 El gráfico de la banda — `src/features/dashboard/BandChart.jsx`
+
+```jsx
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js"; // chart.js 2.x: el export por defecto es el constructor
+
+/**
+ * Observado contra configurado: una barra por segmento (lo que dio la rueda) y dos
+ * líneas, los bordes de la banda de ±3σ. chart.js 2.9.4, imperativo, sin wrapper de React.
+ * @param {{ labels: string[], observed: number[], low: number[], high: number[] }} props
+ */
+function BandChart({ labels, observed, low, high }) {
   const canvasRef = useRef(null);
-  // La instancia del chart va en un ref, NO en estado: no es serializable
-  // y no queremos que provoque re-render. Mismo criterio que los ids de
-  // setTimeout de Fase 5, que tampoco viven en el store.
+  // La instancia va en un ref, no en el estado: no es serializable y no debe provocar render.
   const chartRef = useRef(null);
 
-  // Efecto 1: crear una vez al montar, destruir al desmontar.
+  // Crear una vez al montar; destruir al desmontar. Sin el destroy, cada visita al
+  // tablero deja una instancia de chart.js viva, con sus listeners: el leak de esta fase.
   useEffect(() => {
-    const ctx = canvasRef.current.getContext('2d');
-    chartRef.current = new Chart(ctx, {
-      type: 'bar',
-      data: { labels, datasets: [{ label, data: values }] },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: { yAxes: [{ ticks: { beginAtZero: true } }] }, // API 2.x
+    chartRef.current = new Chart(canvasRef.current.getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          { label: "Observado", data: [], backgroundColor: "rgba(0, 123, 255, 0.6)" },
+          { label: "Banda (−3σ)", type: "line", data: [], fill: false, borderColor: "#dc3545", pointRadius: 0 },
+          { label: "Banda (+3σ)", type: "line", data: [], fill: false, borderColor: "#dc3545", pointRadius: 0 },
+        ],
       },
+      options: { responsive: true, maintainAspectRatio: false, scales: { yAxes: [{ ticks: { beginAtZero: true } }] } },
     });
-
-    // Cleanup: sin esto, cada re-montaje deja una instancia colgada con
-    // sus listeners. Es la "suscripción sin cancelar" de esta fase.
     return () => {
       chartRef.current.destroy();
       chartRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // se crea una sola vez; los datos se actualizan en el efecto 2
+  }, []);
 
-  // Efecto 2: cuando cambian los datos, ACTUALIZAR la instancia existente
-  // en vez de recrearla (recrear en cada cambio es la fuga lenta clásica).
+  // Cuando cambian los datos, se ACTUALIZA la instancia; recrearla es la fuga lenta.
   useEffect(() => {
     const chart = chartRef.current;
-    if (!chart) return;
     chart.data.labels = labels;
-    chart.data.datasets[0].data = values;
+    chart.data.datasets[0].data = observed;
+    chart.data.datasets[1].data = low;
+    chart.data.datasets[2].data = high;
     chart.update();
-  }, [labels, values]);
+  }, [labels, observed, low, high]);
 
   return (
-    <div style={{ position: 'relative', height: 280 }}>
-      <canvas ref={canvasRef} data-testid="bar-chart" />
+    <div style={{ position: "relative", height: 320 }}>
+      <canvas ref={canvasRef} data-testid="band-chart" />
     </div>
   );
 }
+
+export default BandChart;
 ```
 
-> 💸 **Deuda reconocida — un wrapper específico, no una librería de charting.** `BarChart` cubre lo que esta fase necesita (barras) y nada más. Un wrapper genérico (`Chart` que acepte `type`, ejes configurables, tooltips custom) es más prolijo pero es sobre-ingeniería para dos gráficos. Si el dashboard crece a cinco tipos de gráfico, extrae el genérico entonces —no antes. Marcado para que la decisión sea consciente.
+Un gráfico mixto de chart.js 2: la barra es el observado, y las dos líneas son los bordes de la banda. Una barra que se sale de entre sus líneas es un segmento fuera de su banda, y es lo primero que Itzel va a mirar.
 
-### 5.4 La tarjeta de KPI — `src/features/dashboard/MetricCard.jsx`
+> 💸 **Deuda reconocida: un gráfico específico, no una librería de gráficos.** `BandChart` hace una sola cosa. Un wrapper genérico (que acepte `type`, ejes configurables) es más prolijo y es sobreingeniería para un gráfico. Si el tablero llega a tres tipos de gráfico, se extrae el genérico entonces, no antes.
 
-Un componente de presentación puro. Recibe título y valor **ya formateados** y los muestra. No calcula nada: esa es justamente la línea que separa "presentación" de "derivación".
+### 5.5 La tarjeta — `src/features/dashboard/MetricCard.jsx`
 
-```javascript
-// src/features/dashboard/MetricCard.jsx
-import React from 'react';
+```jsx
+import React from "react";
+
+// La hora de Panamá es solo de presentación (historia §9), y se dice explícita:
+// la tarjeta muestra lo mismo en cualquier máquina, en cualquier zona.
+const UPDATED_FORMAT = new Intl.DateTimeFormat("es-PA", {
+  timeZone: "America/Panama",
+  day: "2-digit",
+  month: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23", // 00:18 y no 24:18: con hour12: false, algunos motores cuentan la medianoche como 24
+});
 
 /**
- * Tarjeta de un indicador. Puramente presentacional.
- * @param {{ title: string, value: string, hint?: string }} props
+ * Tarjeta de un indicador. Presentacional: no calcula ni consulta el reloj.
+ * @param {{ title: string, value: string, hint?: string, updatedAt?: number }} props
+ *   updatedAt: el instante de los datos (milisegundos), que llega por props.
  */
-function MetricCard({ title, value, hint }) {
+function MetricCard({ title, value, hint, updatedAt }) {
   return (
     <div className="card h-100" data-testid="metric-card">
       <div className="card-body">
         <h6 className="card-subtitle mb-2 text-muted">{title}</h6>
         <p className="card-text h3 mb-0">{value}</p>
-        {hint && <small className="text-muted">{hint}</small>}
+        {hint && <small className="text-muted d-block">{hint}</small>}
+        {updatedAt && <small className="text-muted d-block">Actualizado: {UPDATED_FORMAT.format(updatedAt)}</small>}
       </div>
     </div>
   );
 }
 
-// React.memo: la tarjeta solo re-renderiza si sus props cambian.
-// Como recibe strings ya formateados, la comparación superficial basta.
+// React.memo: solo vuelve a renderizar si cambian sus props (todas primitivas).
 export default React.memo(MetricCard);
 ```
 
-### 5.5 La página — `src/features/dashboard/DashboardPage.jsx`
+Presentacional pura: recibe título, valor y pista **ya formateados**, y el instante de los datos. No calcula ni consulta nada; esa es la línea que separa presentación de derivación.
 
-Reemplaza el placeholder `DashboardPage.jsx` que Fase 1 dejó en `src/pages/`. Orquesta: lee del store vía los selectores memoizados, formatea para mostrar, y reparte a las tarjetas y gráficos. Fíjate qué **poco** cálculo hay acá dentro: casi todo ya vino resuelto y memoizado desde los selectores.
+### 5.6 La página — `src/features/dashboard/DashboardPage.jsx`
 
-```javascript
-// src/features/dashboard/DashboardPage.jsx
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { formatCents } from '../settlements/money';
-import MetricCard from './MetricCard';
-import BarChart from './BarChart';
-import {
-  selectTopSoldNumbers,
-  selectSalesRate,
-  selectTotalMargin,
-  selectMarginByRaffle,
-  selectSettledCount,
-  selectRecurringParticipants,
-} from './dashboardSelectors';
+```jsx
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchWheels, selectWheels } from "../wheels/wheelSlice";
+import { fetchDashboard } from "./dashboardSlice";
+import { selectSpinSummary, selectManualSpins, selectNetRevenueCents, selectBands } from "./dashboardSelectors";
+import { formatCents } from "../reconciliation/money";
+import MetricCard from "./MetricCard";
+import BandChart from "./BandChart";
 
-export default function DashboardPage() {
-  // Cada useSelector consume un selector YA memoizado: el cálculo pesado
-  // no corre en este render salvo que su rama del store haya cambiado.
-  const topNumbers = useSelector(selectTopSoldNumbers);
-  const salesRate = useSelector(selectSalesRate);
-  const totalMargin = useSelector(selectTotalMargin);
-  const marginByRaffle = useSelector(selectMarginByRaffle);
-  const settledCount = useSelector(selectSettledCount);
-  const recurring = useSelector(selectRecurringParticipants);
+const ORIGINS = [
+  { value: "all", label: "Todos" },
+  { value: "free", label: "Gratis" },
+  { value: "paid", label: "Pagos" },
+];
 
-  // useMemo AQUÍ sí corresponde: derivamos props para chart.js a partir
-  // de datos ya memoizados. Es transformación LOCAL de render (dar forma a
-  // labels/values), no el agregado del dominio —ese ya vive en el selector.
-  const topNumbersChart = useMemo(
-    () => ({
-      labels: topNumbers.map((n) => n.number),
-      values: topNumbers.map((n) => n.count),
-    }),
-    [topNumbers]
-  );
+// El tablero de una rueda: cuántos giros, de qué origen, cuánto dejaron, y si la rueda
+// da lo que publica. No calcula: lee selectores que ya tienen la cuenta hecha.
+function DashboardPage() {
+  const dispatch = useDispatch();
+  const wheels = useSelector(selectWheels);
+  const { wheelId, segments, loadedAt, loading, error } = useSelector((state) => state.dashboard);
+  const summary = useSelector(selectSpinSummary);
+  const manual = useSelector(selectManualSpins);
+  const net = useSelector(selectNetRevenueCents);
+  const bands = useSelector(selectBands);
+  const [origin, setOrigin] = useState("all");
 
-  const marginChart = useMemo(
-    () => ({
-      labels: marginByRaffle.map((m) => `Rifa #${m.raffleId}`),
-      // chart.js grafica números; pasamos centavos a pesos SOLO para el eje.
-      // El formateo "bonito" con separadores va en el tooltip/tarjeta, no acá.
-      values: marginByRaffle.map((m) => m.margin / 100),
-    }),
-    [marginByRaffle]
-  );
+  useEffect(() => {
+    dispatch(fetchWheels());
+  }, [dispatch]);
+
+  // useMemo SÍ va acá: dar forma a las props del gráfico es local al render.
+  // El agregado del dominio (los conteos, la banda) ya viene memoizado del selector.
+  const chart = useMemo(() => {
+    const rows = bands[origin].rows;
+    return {
+      labels: segments.map((s) => s.segmentId),
+      observed: rows.map((r) => r.observed),
+      low: rows.map((r) => Math.round(r.low)),
+      high: rows.map((r) => Math.round(r.high)),
+    };
+  }, [bands, origin, segments]);
+
+  const audit = bands[origin].audit;
+  const alarm = audit.chi2Alarm || audit.bandAlarms.length > 0;
 
   return (
-    <div>
-      <h1 className="mb-4">Dashboard</h1>
-
-      <div className="row mb-4">
-        <div className="col-md-3 mb-3">
-          <MetricCard
-            title="Tasa de venta"
-            value={`${(salesRate * 100).toFixed(1)}%`}
-            hint="Vendidos sobre el total del tablero"
-          />
+    <div className="container mt-4">
+      <h2 className="mb-4">Dashboard</h2>
+      <div className="form-row mb-3">
+        <div className="col-md-6">
+          <label htmlFor="dashboardWheel">Rueda</label>
+          <select id="dashboardWheel" className="form-control" value={wheelId || ""}
+            onChange={(e) => dispatch(fetchDashboard(Number(e.target.value)))}>
+            <option value="">Elige una rueda</option>
+            {wheels.map((w) => (
+              <option key={w.id} value={w.id}>{w.name}</option>
+            ))}
+          </select>
         </div>
-        <div className="col-md-3 mb-3">
-          <MetricCard
-            title="Margen total"
-            // sumamos enteros en el selector; formateamos UNA vez, acá
-            value={formatCents(totalMargin)}
-            hint="Suma de márgenes liquidados"
-          />
-        </div>
-        <div className="col-md-3 mb-3">
-          <MetricCard
-            title="Rifas liquidadas"
-            value={String(settledCount)}
-          />
-        </div>
-        <div className="col-md-3 mb-3">
-          <MetricCard
-            title="Participantes recurrentes"
-            value={String(recurring)}
-            hint="2+ compras (aproximado)"
-          />
+        <div className="col-md-6">
+          <label htmlFor="dashboardOrigin">Origen de los giros</label>
+          <select id="dashboardOrigin" className="form-control" value={origin} onChange={(e) => setOrigin(e.target.value)}>
+            {ORIGINS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
         </div>
       </div>
+      {loading && <p className="text-muted">Cargando…</p>}
+      {error && <p className="text-danger">{error.message}</p>}
 
-      <div className="row">
-        <div className="col-md-6 mb-4">
-          <div className="card">
-            <div className="card-header">Números más vendidos</div>
-            <div className="card-body">
-              <BarChart
-                labels={topNumbersChart.labels}
-                values={topNumbersChart.values}
-                label="Veces vendido"
-              />
+      {wheelId && !loading && (
+        <>
+          <div className="row mb-4">
+            <div className="col-md-3 mb-3">
+              <MetricCard title="Giros" value={String(summary.total)} hint={`${summary.free} gratis · ${summary.paid} pagos`} updatedAt={loadedAt} />
+            </div>
+            <div className="col-md-3 mb-3">
+              <MetricCard title="Giros manuales" value={String(manual)} hint="Compensaciones desde la consola" updatedAt={loadedAt} />
+            </div>
+            <div className="col-md-3 mb-3">
+              <MetricCard title="Ingresos netos" value={formatCents(net)} hint="Cobrado menos la comisión de la tienda" updatedAt={loadedAt} />
+            </div>
+            <div className="col-md-3 mb-3">
+              <MetricCard title="Probabilidades" value={alarm ? "Con alarma" : "Sin alarma"} hint={`χ² = ${audit.chi2.toFixed(2)}`} updatedAt={loadedAt} />
             </div>
           </div>
-        </div>
-        <div className="col-md-6 mb-4">
           <div className="card">
-            <div className="card-header">Margen por rifa</div>
+            <div className="card-header">Observado contra configurado, con la banda de ±3σ</div>
             <div className="card-body">
-              <BarChart
-                labels={marginChart.labels}
-                values={marginChart.values}
-                label="Margen (pesos)"
-              />
+              <BandChart labels={chart.labels} observed={chart.observed} low={chart.low} high={chart.high} />
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
+
+export default DashboardPage;
 ```
 
-### 5.6 Conectar la ruta
+Fíjate qué **poco** cálculo hay acá: todo vino resuelto y memoizado de los selectores. El único `useMemo` da forma a las props del gráfico, que es local al render.
 
-Fase 1 registró `/dashboard` apuntando al placeholder `src/pages/DashboardPage.jsx`. El cambio es de una línea: apuntar la ruta al componente real. No se toca el router ni el resto de la navegación.
+### 5.7 Conectar la ruta
+
+La Fase 1 registró `/dashboard` apuntando al placeholder `src/pages/DashboardPage.jsx`. El cambio es de una línea:
+
+```jsx
+// El placeholder de la Fase 1 ahora reexporta el tablero real: el router no se toca
+// y el diff queda en una línea. (La alternativa —cambiar el import del router y
+// borrar este archivo— también es válida; lo que no vale es dejarlo ambiguo.)
+export { default } from "../features/dashboard/DashboardPage";
+```
+
+> Es un buen momento para practicar el reflejo de mantenimiento: entre "cambio el import del router" y "dejo un reexport", elige el diff más chico que no confunda al próximo que lea el código. Un reexport de una línea con su comentario es defendible; un placeholder que sigue "pareciendo" el tablero real, no.
+
+### 5.8 El volumen de un evento
+
+La siembra de la Fase 8 suma una bandera: con `--event`, la Semana del Canal (rueda 2) queda terminada con **180.000 giros** de un día, el último día de un evento según la historia §8.
 
 ```javascript
-// src/pages/DashboardPage.jsx
-// El placeholder de Fase 1 ahora solo reexporta el dashboard real.
-// (Alternativa: cambiar el import en el router directamente a
-//  features/dashboard/DashboardPage y borrar este archivo. Se deja el
-//  reexport para no tocar el router y mantener el diff mínimo —criterio
-//  de hotfix: cambiar lo menos posible.)
-export { default } from '../features/dashboard/DashboardPage';
+// F09: el volumen de un evento. La Semana del Canal (rueda 2) cerró el 15/08, y su último
+// día tuvo unos 180.000 giros (historia §8). Sus compras no se siembran: el tablero no las cruza.
+if (process.argv.includes("--event")) {
+  const EVENT_ID = 2;
+  const eventSegments = db.segments.filter((s) => s.wheelId === EVENT_ID);
+  const eventLog = generateSpinLog({
+    seed: 2025,
+    spins: 180000,
+    wheelId: EVENT_ID,
+    segments: eventSegments,
+    players: 40000,
+    startsAt: "2026-08-15T00:00:00-05:00",
+    intervalMs: 480, // un día entero de giros
+  });
+  db.spinLog = db.spinLog.filter((row) => row.wheelId !== EVENT_ID).concat(eventLog);
+  db.spinLog.forEach((row, i) => { row.id = i + 1; });
+  db.wheels.find((w) => w.id === EVENT_ID).status = "ended";
+}
 ```
 
-> Éste es un buen momento para practicar el reflejo de mantenimiento: entre "cambio el import del router" y "dejo un reexport", elige el diff más chico que no confunda al próximo que lea el código. Un reexport de una línea con comentario es defendible; un archivo placeholder que sigue "pareciendo" el dashboard real, no. Márcalo o bórralo, no lo dejes ambiguo.
+```bash
+node mock/seed-reconciliation.js --event   # con los mocks parados; el db.json pasa a unos 50 MB
+```
+
+No se commitea así: el `db.json` del repo sigue con la siembra de la Fase 8, y el volumen se genera cuando hace falta (la pieza forense y el incidente 19). Para volver, `git checkout -- mock/db.json`.
 
 ---
 
@@ -493,145 +581,126 @@ export { default } from '../features/dashboard/DashboardPage';
 ### Errores comunes
 
 **1. `useMemo` con dependencias que se recrean → memoización fantasma.**
-*Síntoma:* metiste `useMemo` "para optimizar" y el Profiler muestra que el cálculo corre igual en cada render. *Causa:* la dependencia es un array/objeto que se crea nuevo en cada render (por ejemplo `useMemo(() => f(list), [list])` donde `list = data.filter(...)` se calcula arriba, sin memoizar). Cada render `list` es una referencia nueva, así que `useMemo` invalida su caché siempre. *Fix mínimo:* mueve el agregado a un `createSelector` (referencia estable garantizada por el store) o memoiza también la dependencia intermedia. La refactorización correcta es la primera: el cálculo del dominio no debería estar en el componente.
+*Síntoma:* metiste `useMemo` "para optimizar" y el Profiler muestra que el cálculo corre igual en cada render. *Causa:* la dependencia es un arreglo o un objeto nuevo en cada render (por ejemplo `[Object.values(spinLog)]`), así que `useMemo` invalida su caché siempre. *Fix mínimo:* mover el agregado a un `createSelector`, o memoizar también la dependencia intermedia. La refactorización correcta es la primera: el cálculo del dominio no debería estar en el componente.
 
-**2. Olvidar `chart.destroy()` en el cleanup.**
-*Síntoma:* navegas a `/dashboard`, sales, vuelves, repites; la pestaña se pone lenta y la memoria sube. *Causa:* cada montaje crea una instancia de chart.js y ninguna se destruye. *Fix mínimo:* el `return () => chartRef.current.destroy()` del `useEffect`. Es la misma disciplina de cancelación que los epics de Fase 6, aplicada a una librería de UI.
+**2. Una rama grande del store bajo los chequeos de desarrollo.**
+*Síntoma:* después de cargar el tablero de un evento, toda la consola se arrastra en desarrollo, y la consola del navegador repite *"SerializableStateInvariantMiddleware took … ms"*. *Causa:* los middlewares de desarrollo recorren las 180.000 filas en cada acción. *Fix mínimo:* `ignoredPaths` para esa rama, como en §5.3. Es el incidente 19.
 
-**3. Formatear antes de sumar (bug de agregación de dinero).**
-*Síntoma:* el "margen total" muestra algo absurdo o `NaN`. *Causa:* formateaste cada margen a string y después intentaste sumarlos, o mezclaste pesos con centavos. *Fix mínimo:* suma enteros de centavos con el selector (`computeTotalMargin`) y llama `formatCents` **una sola vez** sobre el total. Regla heredada de Fase 8, sin excepciones.
+**3. Olvidar `chart.destroy()` en la limpieza.**
+*Síntoma:* entras y sales del tablero varias veces, la pestaña se pone lenta y la memoria sube. *Causa:* cada montaje crea una instancia de chart.js y ninguna se destruye. *Fix mínimo:* el `return () => chartRef.current.destroy()` del `useEffect`.
 
-**4. Recrear el chart en cada cambio de datos en vez de actualizarlo.**
-*Síntoma:* el gráfico "parpadea" al cambiar datos y el rendimiento cae con actualizaciones frecuentes. *Causa:* pusiste la creación del chart en un `useEffect` con `[labels, values]` en las dependencias, así que se destruye y recrea entero cada vez. *Fix:* separa creación (una vez, `[]`) de actualización (`chart.update()` con `[labels, values]`), como en §5.3.
+**4. Formatear antes de sumar.**
+*Síntoma:* los ingresos muestran algo absurdo o `NaN`. *Causa:* se formateó cada renglón a texto y después se intentó sumar, o se mezclaron dólares con centavos. *Fix mínimo:* sumar enteros de centavos en la función pura (`netRevenueCents`) y llamar a `formatCents` **una sola vez**, sobre el total.
 
-### Pieza forense de esta fase — performance del dashboard: `useMemo` mal aplicado
+**5. Recrear el gráfico en cada cambio de datos en vez de actualizarlo.**
+*Síntoma:* el gráfico parpadea al cambiar el filtro. *Causa:* la creación del gráfico está en un `useEffect` con los datos en las dependencias, así que se destruye y se recrea entero cada vez. *Fix:* separar creación (una vez, `[]`) de actualización (`chart.update()`), como en §5.4.
 
-El recorrido completo está en el incidente **19** de `cuaderno-incidentes.md`, que trae además el juego de datos con volumen suficiente para que el problema se vea.
+### Pieza forense de esta fase — rendimiento del tablero: `useMemo` mal aplicado
 
-La habilidad que entrena esta fase no es "poner `useMemo` en todos lados" —eso es cómo se **crea** el problema— sino **leer el Profiler y decidir si un cálculo se está repitiendo sin necesidad, y dónde debería vivir su caché**. Flujo de diagnóstico:
+La habilidad que entrena esta fase no es "poner `useMemo` en todos lados" —así es como se **crea** el problema— sino **leer el Profiler y decidir si un cálculo se repite sin necesidad, y dónde debería vivir su caché**. Para que se vea, hace falta volumen: siembra la Semana del Canal con `--event`.
 
-1. Abre **React DevTools → Profiler**, activa "Record", interactúa con el dashboard (cambia de rifa, vende un número en otra pestaña, vuelve) y frena la grabación.
-2. Mira qué componentes re-renderizaron y **por qué** (el Profiler te dice si fue por props, estado o el padre). Un `DashboardPage` que re-renderiza cuando cambió una rama del store que no usa es una señal.
-3. Pon un `console.count('computeTopNumbers')` dentro de la función pura (temporalmente) y confirma cuántas veces corre por interacción. Con el selector memoizado, debería correr **solo** cuando `byNumber` cambia.
+1. Abre **React DevTools → Profiler**, activa "Record", abre el tablero de la Semana del Canal, cambia el filtro de origen varias veces y frena la grabación.
+2. Mira qué componentes renderizaron y **por qué** (el Profiler dice si fue por props, estado o el padre), y cuánto tardó cada commit.
+3. Pon un `console.count('summarizeSpins')` dentro de la función pura, temporalmente, y confirma cuántas veces corre por interacción. Con el selector memoizado, corre **una vez por bitácora cargada**, no una por cambio de filtro.
 
-> 🧪 **Ejercicio de "rompe a propósito y observa".** Reemplaza el `useSelector(selectTopSoldNumbers)` de `DashboardPage` por el cálculo inline: `const topNumbers = computeTopNumbers(useSelector((s) => s.sales.byNumber))` envuelto en un `useMemo` con una dependencia mal puesta —por ejemplo `useMemo(() => computeTopNumbers(byNumber), [Object.values(byNumber)])` (un array nuevo en cada render). Graba el Profiler y mira con el `console.count` cómo `computeTopNumbers` ahora corre en **cada** render, aunque nada haya cambiado. Después revierte al selector y confirma que vuelve a correr solo cuando toca. Ese contraste —el mismo cálculo, memoizado bien y memoizado mal— es la lección entera de la fase.
+> 🧪 **Ejercicio de "rompe a propósito y observa".** En `DashboardPage`, reemplaza `useSelector(selectSpinSummary)` por el cálculo en el componente: `useMemo(() => summarizeSpins(spinLog, segments), [Object.values(spinLog), segments])`, y calcula también ahí las bandas. Graba el Profiler y mira con el `console.count` cómo `summarizeSpins` corre ahora en **cada** cambio de filtro. Medido el 18/10/2026 con la Semana del Canal (180.000 giros), en Jest con jsdom, la mediana de diez cambios de filtro: **12,5 ms** con el `useMemo` roto contra **2,2 ms** con el selector; con la Rueda de fin de mes (10.000 giros), 2,5 contra 2,3 ms. Después revierte al selector y confirma que vuelve a correr solo cuando toca. Ese contraste —el mismo cálculo, memoizado bien y memoizado mal, que crece con el volumen— es la lección de la fase.
+
+> 📓 De esta fase salen los incidentes **19**, **20** y **21** de `cuaderno-incidentes.md`.
 
 ---
 
 ## 🧪 7. Ejercicios (28)
 
 **🟢 Fácil (1–8)**
-1. Levanta la app, entra a `/dashboard` y confirma que el placeholder de Fase 1 fue reemplazado por las cuatro tarjetas y los dos gráficos. Verifica en el DOM que existe `data-testid="metric-card"` cuatro veces.
-2. Cambia el `limit` de `selectTopSoldNumbers` de 10 a 5 y confirma que el gráfico de números más vendidos muestra a lo sumo cinco barras.
-3. Agrega una quinta `MetricCard` que muestre el total de números vendidos usando `selectStatusCounts`. No agregues un selector nuevo si uno existente ya te da el dato.
-4. Cambia el color de las barras del `BarChart` pasando `backgroundColor` en el `dataset`. Confirma que ambos gráficos cambian (comparten wrapper) y decide si eso es lo que quieres.
-5. Identifica en el código por qué la instancia del chart vive en un `useRef` y no en `useState`. Escríbelo en una frase.
-6. Provoca el estado "sin datos": arranca con `byNumber` vacío y confirma que `computeSalesRate` devuelve 0 y no `NaN`. Localiza la guarda que lo evita.
-7. Agrega un JSDoc completo a `DashboardPage` describiendo qué selectores consume y qué NO calcula por sí mismo.
-8. Con la app corriendo, abre React DevTools y confirma que `MetricCard` está envuelto en `React.memo` (aparece como "Memo" en el árbol).
+1. Entra a `/dashboard`, elige la Rueda de fin de mes y confirma que el placeholder de la Fase 1 fue reemplazado. **Criterio:** cuatro `data-testid="metric-card"` en el DOM, y "10000" en la primera.
+2. Cambia el filtro de origen a "Pagos" y confirma que el gráfico cambia y las tarjetas no. **Criterio:** 2434 giros pagos en la pista de la primera tarjeta, antes y después.
+3. Agrega una quinta `MetricCard` con el total de giros pagos usando `selectSpinSummary`. No agregues un selector si uno existente ya te da el dato.
+4. Cambia el color de las barras del `BandChart` y confirma que cambia solo el observado.
+5. Explica en una frase por qué la instancia del gráfico vive en un `useRef` y no en `useState`.
+6. Provoca el estado "sin datos": elige una rueda sin giros (la Esclusa de Oro) y confirma que el tablero no muestra `NaN`. **Criterio:** localizas la línea que lo evita.
+7. Agrega un JSDoc completo a `DashboardPage` con los selectores que consume y lo que NO calcula.
+8. Con React DevTools, confirma que `MetricCard` aparece como "Memo" en el árbol.
 
 **🟡 Intermedio (9–18)**
-9. Escribe un selector `selectAvailableCount` con `createSelector` sobre `selectStatusCounts` y úsalo en una tarjeta. Explica por qué usar `createSelector` acá es casi cosmético (la entrada ya está memoizada) pero mantiene consistencia.
-10. Muévete a `/dashboard` y a otra ruta varias veces con el Profiler grabando. Confirma que no se acumulan instancias de chart.js (agrega un `console.count` en el `useEffect` de creación y otro en el cleanup: deben ir parejos).
-11. Haz que el gráfico de margen por rifa muestre en rojo las barras con margen negativo y en verde las positivas. El margen negativo es dato válido (Fase 8), no lo escondas.
-12. Formatea el eje del gráfico de margen con separador de miles usando `formatCents` en un callback de tick de chart.js. Cuidado: `formatCents` espera centavos enteros, el eje ya está en pesos —resuelve la conversión sin reintroducir floats en la suma.
-13. Agrega un `useCallback` para un handler de click en una barra (por ahora solo `console.log` del número) y explica por qué `useCallback` acá sí aporta (estabilidad de referencia hacia un hijo memoizado).
-14. Reproduce el error común #3 a propósito: formatea cada margen con `formatCents` y después concatena los strings. Observa el resultado y explica por qué `formatCents` no te "salvó".
-15. Agrega un estado de carga: si `state.settlements.loading` es true, muestra un spinner en lugar de las tarjetas de dinero. Reutiliza `selectSettlementLoading` de Fase 8.
-16. Escribe un test manual documentado (en comentario, no Jest todavía —eso es Fase 10) que describa cómo verificar que `selectTotalMargin` solo recalcula cuando cambia `state.settlements.byRaffleId`.
-17. Agrega `data-testid` descriptivos a los dos gráficos (`top-numbers-chart`, `margin-by-raffle-chart`) para que Fase 10 pueda seleccionarlos. Respeta kebab-case.
-18. Explica con tus palabras la diferencia entre dónde cachea `useMemo` y dónde cachea `createSelector`, y da un caso donde la diferencia se nota (pista: dos componentes pidiendo el mismo agregado).
+9. Escribe un selector `selectFreeShare` (fracción de giros gratis) con `createSelector` sobre `selectSpinSummary` y úsalo en una tarjeta. Explica por qué acá el `createSelector` casi no aporta (la entrada ya está memoizada) y por qué igual conviene.
+10. Entra y sal del tablero diez veces con un `console.count` en la creación y otro en la limpieza del gráfico. **Criterio:** los dos contadores van parejos.
+11. Pinta de rojo las barras de los segmentos con alarma de banda (`audit.bandAlarms`).
+12. Haz que las líneas de la banda sean rectas entre segmentos (`lineTension: 0` en chart.js 2) y explica por qué una curva entre categorías es engañosa.
+13. Agrega un `useCallback` a un handler de clic en una barra (`console.log` del segmento) y explica por qué acá sí aporta.
+14. Reproduce el error común #4: formatea cada renglón del reporte con `formatCents` y concatena. Explica por qué `formatCents` no te salvó.
+15. Muestra un estado de carga distinto para la primera carga y para el cambio de rueda.
+16. Escribe, en un comentario, cómo verificarías que `selectBands` solo recalcula cuando cambia la bitácora o los segmentos (la prueba la escribes en la Fase 10).
+17. Agrega `data-testid` descriptivos a los dos selects del tablero, en kebab-case, para que la Fase 10 los use.
+18. Explica con tus palabras la diferencia entre dónde cachea `useMemo` y dónde cachea `createSelector`, con un caso donde se nota.
 
 **🟠 Difícil (19–24)**
-19. **Diagnóstico:** te entregan un `DashboardPage` donde `computeTopNumbers` corre en cada render. Con el Profiler y un `console.count`, localiza si la causa es un `useMemo` con dependencia inestable o un selector de entrada que devuelve un array nuevo. Aplica el fix mínimo y confirma la mejora.
-20. **Diagnóstico:** en un repo modificado, el gráfico de margen "parpadea" y la memoria sube al cambiar de rifa. Identifica que el `useEffect` de creación tiene `[labels, values]` en dependencias (recrea el chart siempre) y sepáralo en creación + actualización.
-21. **Diagnóstico:** una `MetricCard` re-renderiza en cada tick aunque su valor no cambia. Descubre que el padre le pasa un objeto nuevo como prop (rompe `React.memo`) y corrígelo pasando primitivos ya formateados.
-22. Rompe a propósito la memoización de `selectSalesRate` haciendo que `selectStatusCounts` devuelva un objeto nuevo cada vez (por ejemplo agregando `{ ...counts }`). Con el Profiler muestra que `computeSalesRate` ahora corre siempre, y explica por qué la culpa es del selector de entrada, no de `createSelector`.
-23. Mide con el Profiler el costo de renderizar el dashboard con 50 rifas liquidadas mockeadas vs 1. Identifica si el cuello es el cálculo (selectores) o el render (chart.js) y justifica con datos del Profiler.
-24. El `raffleSlice` guarda las rifas en un array `items` (sin normalizar, 💸 heredado de Fase 8). Si el dashboard cruza margen por rifa **con el nombre** de la rifa, cada lookup es un `find` O(n). Implementa el cruce y mide si a 50 rifas el `find` importa. ¿Vale normalizar acá o es prematuro?
+19. **Diagnóstico:** un tablero donde `summarizeSpins` corre en cada render. Con el Profiler y un `console.count`, decide si la causa es un `useMemo` con dependencia inestable o un selector de entrada que devuelve un arreglo nuevo. Aplica el fix mínimo y mide la mejora con la Semana del Canal.
+20. **Diagnóstico:** el gráfico parpadea al cambiar el filtro. Identifica la creación con los datos en las dependencias y sepárala en creación y actualización.
+21. **Diagnóstico:** una `MetricCard` renderiza en cada cambio de filtro aunque su valor no cambia. Descubre qué prop nueva le llega y corrígelo.
+22. Rompe a propósito un selector de entrada (`(state) => [...state.dashboard.spinLog]`) y muestra con `selectSpinSummary.recomputations()` que ahora recalcula siempre.
+23. Mide con el Profiler el commit del tablero con 10.000 y con 180.000 giros. **Criterio:** una tabla con las dos medidas, y una frase sobre si el cuello es el cálculo o el gráfico.
+24. Quita las `ignoredPaths` del store, carga la Semana del Canal y escribe una letra en el buscador del asistente. **Criterio:** el aviso de Toolkit en la consola, con su número de milisegundos, y la explicación de por qué en producción no pasa.
 
 **🔴 Muy difícil (25–28)**
-25. **Diagnóstico end-to-end:** te reportan "el dashboard se pone lento después de usar la app un rato". Reproduce (navega dentro/fuera de `/dashboard` 20 veces), diagnostica con Profiler + pestaña Memory de Chrome DevTools que son instancias de chart.js sin destruir, corrige el cleanup, y escribe el post-mortem (síntoma → reproducción → evidencia → causa raíz → corrección → regresión → prevención) sin culpabilizar.
-26. Extiende el dashboard para agregar **varias rifas a la vez** (no solo la activa): números más vendidos globales sumando el `byNumber` de todas. Vas a necesitar que las ventas de varias rifas convivan en el store —diseña el cambio mínimo de shape sin romper Fase 5, o justifica por qué es un refactor mayor y propón el plan.
-27. Construye un selector `createSelector` **parametrizado** por `raffleId` (margen de UNA rifa) y explica por qué la memoización ingenua de reselect falla cuando lo llamas con ids distintos en el mismo render (caché de tamaño 1). Propón la solución (factory de selectores o `createSelector` por instancia) sin traer una librería nueva sin justificar.
-28. **Race sutil de datos:** el dashboard puede montar antes de que `GET /settlements` haya resuelto, mostrando "margen total: $0" que después salta al valor real. Diagnostica si es un bug o un estado de carga legítimo, y resuélvelo mostrando carga en vez de un cero engañoso. Distingue en tu respuesta qué parte es de frontend (mostrar spinner), de store (flag `loading`) y de backend (cuándo responde la liquidación).
+25. **Diagnóstico de punta a punta:** "el tablero se pone lento después de usarlo un rato". Reproduce (entra y sal del tablero veinte veces), diagnostica con el Profiler y la pestaña Memory que son instancias de chart.js sin destruir, corrige la limpieza y escribe el post-mortem sin culpables.
+26. Haz que el tablero muestre **varias ruedas a la vez**. Diseña el cambio mínimo del slice y de los selectores, o justifica por qué es un refactor y propón el plan.
+27. Construye un selector parametrizado por rueda y explica por qué la memoria de reselect (caché de tamaño 1) falla cuando lo llamas con dos ruedas en el mismo render. Propón la solución sin traer una librería nueva.
+28. **El estado de carga engañoso:** el tablero puede pintar "Ingresos netos: US$0,00" antes de que llegue el reporte de la tienda. Decide si es un bug o un estado de carga legítimo y resuélvelo, distinguiendo qué parte es de pantalla, de store y de servicio.
 
 **🔥 Opcionales**
-- 🔥 Drill-down: click en una barra de "números más vendidos" filtra una tabla debajo con los participantes de ese número. (Requiere resolver el 💸 de participantes primero.)
-- 🔥 Serie temporal "liquidaciones por día" agrupando por `settledAt`. Antes de empezar, explica por qué esto reabre el 💸 de `serverNow` (reloj cliente vs servidor) heredado de Fase 7.
-- 🔥 Export del dashboard a CSV (los KPIs) sin librería nueva, generando el CSV a mano desde los selectores.
-- 🔥 Reemplaza `BarChart` específico por un wrapper genérico configurable por `type`. Documenta qué ganaste y qué complejidad agregaste —y si a dos gráficos valía la pena.
+- 🔥 Drill-down: clic en una barra muestra debajo los últimos giros que cayeron en ese segmento.
+- 🔥 Serie temporal "giros por hora" de la Semana del Canal. Antes de empezar, explica por qué agrupar por hora reabre la pregunta del reloj de la Fase 7.
+- 🔥 Exporta los indicadores a CSV a mano, desde los selectores.
 
 ---
 
 ## 📚 8. Referencias
 
 **Documentación oficial**
-- https://reactjs.org/docs/hooks-reference.html#usememo — `useMemo` y `useCallback` (docs de React 16; la API no cambió en 16.8+).
-- https://reactjs.org/docs/react-api.html#reactmemo — `React.memo` (React 16.6+).
-- https://redux-toolkit.js.org/api/createSelector — `createSelector` reexportado por RTK (envuelve reselect; RTK 1.8.x).
-- https://github.com/reduxjs/reselect#readme — reselect: cómo funciona la memoización de un nivel y la caché de tamaño 1 (clave para el ejercicio 🔴 27).
-- https://www.chartjs.org/docs/2.9.4/ — chart.js **2.x** (API del constructor, `data`/`options`, ejes `yAxes`). ⚠️ chart.js 3+ tiene otra API.
-- https://reactjs.org/blog/2018/09/10/introducing-the-react-profiler.html — React Profiler, base de la pieza forense.
+- https://reactjs.org/docs/hooks-reference.html#usememo — `useMemo` y `useCallback` (React 16.8+).
+- https://reactjs.org/docs/react-api.html#reactmemo — `React.memo`.
+- https://redux-toolkit.js.org/api/createSelector — `createSelector` reexportado por Toolkit (RTK 1.8.x).
+- https://redux-toolkit.js.org/api/getDefaultMiddleware — los dos middlewares de desarrollo y sus `ignoredPaths`.
+- https://github.com/reduxjs/reselect#readme — la memoria de un nivel y la caché de tamaño 1 (el ejercicio 27).
+- https://www.chartjs.org/docs/2.9.4/ — chart.js **2.x**: el constructor, `data` y `options`, gráficos mixtos.
+- https://reactjs.org/blog/2018/09/10/introducing-the-react-profiler.html — el Profiler de React, base de la pieza forense.
 
-**Video / apoyo**
-- Busca en YouTube "React DevTools Profiler tutorial" y "reselect createSelector explained" — hay crash courses cortos y buenos. Verifica que usen React 16 / reselect clásico, no APIs nuevas.
+**Orden de lectura sugerido:** `useMemo` y `React.memo` → `createSelector` y el README de reselect → `getDefaultMiddleware` → la documentación de chart.js 2.x (gráficos de barras y mixtos, y el ciclo de vida) → `dashboardSelectors.js`, que es el corazón de la fase.
 
-**Orden de lectura sugerido:** `useMemo`/`React.memo` (para entender qué memoiza el componente) → `createSelector` + README de reselect (para entender dónde vive la otra caché y por qué es distinta) → docs de chart.js 2.x (solo la sección de bar chart y lifecycle) → volver al `dashboardSelectors.js` de la §5.2, que es el corazón de la fase.
-
-> ⚠️ URLs, versiones y contenidos pueden estar desactualizados o haber cambiado de lugar; verifica cada enlace y confirma que la versión que muestra coincide con el stack fijado. En particular, la doc de chart.js suele mostrar por defecto la versión más nueva (3/4): asegúrate de estar leyendo la **2.x**. No tengo acceso a una base de datos de enlaces en vivo y podría equivocarme en una URL: compruébalas antes de fiarte.
+> ⚠️ Las URL pueden haber cambiado; verifícalas. La documentación de chart.js muestra por defecto la versión más nueva (3 o 4): asegúrate de estar leyendo la **2.x**.
 
 ---
 
 ## 🚀 9. Cierre y conexión con la siguiente fase
 
-Cerraste el flujo de la aplicación: de crear una rifa (Fase 4) a venderla (Fase 5), orquestarla con epics (Fase 6), cerrarla por hora y traer su resultado (Fase 7), liquidarla sin un centavo de más (Fase 8) y ahora **verla entera de un vistazo** (Fase 9). Y lo hiciste sin agregar una regla de negocio: solo derivando, con la memoria del cálculo puesta en el lugar correcto —el selector— y `useMemo` reservado para lo que de verdad es local al render.
+Cerraste el recorrido de la aplicación: de crear una rueda (Fase 4) a compensar a mano (Fase 5), orquestar con epics (Fase 6), cerrar a hora exacta y seguir compras (Fase 7), conciliar sin perder un centavo (Fase 8) y ahora **verla entera de un vistazo** (Fase 9). Y sin agregar una regla de negocio: solo derivando, con la memoria del cálculo en el lugar correcto —el selector— y `useMemo` reservado para lo que es local al render.
 
-Eso te deja perfectamente parado para la **Fase 10 — Testing mínimo**. No es casualidad que el testing venga después del dashboard: los selectores puros (`dashboardMath.js`, `dashboardSelectors.js`) son lo más fácil y agradecido de testear en todo el curso —entra un objeto, sale un número, sin red ni tiempo ni React. Son el mejor primer test unitario que vas a escribir, y el contraste con testear un epic (que sí tiene tiempo, y necesita marbles) va a hacer que entiendas de una por qué cada cosa se testea distinto. El dashboard es, además, una superficie ideal para un test de componente con React Testing Library: renderizas con un store mockeado y verificas que las cuatro tarjetas muestran los valores esperados.
+Eso te deja parado para la **Fase 10 — Testing mínimo**. Los cálculos puros (`dashboardMath.js`) y los selectores son lo más agradecido de probar en todo el curso: entra un objeto, sale un número, sin red, sin tiempo, sin React. Y la tarjeta, que no consulta el reloj, es la que va a tener la prueba más interesante: la que pasa en cualquier zona horaria porque el componente no depende de ella.
 
-> **La señal de que quedó bien:** cuando abres el Profiler, interactúas con el dashboard, y los cálculos pesados **no corren** salvo cuando su dato de origen cambió —ni una vez de más. Cuando puedes señalar, para cada número en pantalla, exactamente de qué rama del store salió y qué selector lo derivó. Cuando el dashboard se siente instantáneo no porque optimizaste todo, sino porque no hiciste trabajo que no hacía falta.
+> **La señal de que quedó bien:** cuando abres el Profiler, cambias el filtro diez veces con la Semana del Canal cargada, y `summarizeSpins` no corre ni una vez de más. Cuando puedes señalar, para cada número en pantalla, de qué colección del mock salió y qué selector lo derivó.
 
-
-> 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en
-> verde y `git status` limpio:
+> 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en verde y `git status` limpio:
 >
 > ```bash
 > git tag -a fase-09-dashboard -m "F9 cerrada: <el checklist, en una línea por ítem>"
 > ```
 >
-> Los commits de la fase llevan su prefijo (`f09: …`) y los de ejercicio su
-> número (`f09 ej17: …`). Si un ejercicio merece su propio marcador va en
-> `ej/f09/17`, y un incidente resuelto en el par `inc/<ID>/<slug>-roto` /
-> `-fix`, con el ID que le reserva `cuaderno-incidentes.md`. Todo eso está en
-> [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
+> Los commits de la fase llevan su prefijo (`f09: …`) y los de ejercicio su número (`f09 ej17: …`). Si un ejercicio merece su propio marcador va en `ej/f09/17`, y un incidente resuelto en el par `inc/<ID>/<slug>-roto` / `-fix`, con el ID que le reserva `cuaderno-incidentes.md`. Todo eso está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
 
 ---
 
 ## 📌 Pendientes sugeridos
 
-> Material de autoría, no de lectura. Va acá abajo, fuera de la plantilla de nueve
-> secciones, porque es lo que apareció al escribir la fase y no cabía adentro — y
-> porque no debe competir con el cierre.
+> Material de autoría, no de lectura. Va acá abajo, fuera de la plantilla de nueve secciones, porque es lo que apareció al escribir la fase y no cabía adentro — y porque no debe competir con el cierre.
 
-- **`participantSlice` propio.** Sin él, `selectRecurringParticipants` devuelve
-  `0` con honestidad en vez de inventar un número 💸. Es la deuda más visible del
-  dashboard porque el KPI está en pantalla. → Fase 🔥 o ejercicio 🔴.
-- **La serie temporal "liquidaciones por día" 🔥 reabre la deuda de `settledAt`**
-  de Fase 8. → Dejar el vínculo explícito en el enunciado del ejercicio, para que
-  quien lo intente sepa qué está tocando.
-- **El wrapper `BarChart` frente a una librería de charting 💸 no tiene
-  disparador.** → Proponer uno concreto: "cuando haga falta el tercer tipo de
-  gráfico".
-- **`chart.destroy()` en el cleanup (error común #2)** es un memory leak igual de
-  real que el del epic de Fase 6, pero se cuenta en dos líneas. → Ejercicio 🟠 con
-  medición en el Profiler, para cerrar el paralelo entre los dos leaks.
+- **El formato de la hora depende del motor.** El mismo `Intl.DateTimeFormat("es-PA", …)` da "20/12 21:00" en el Node 14 de Jest y "18/10, 20:16" (con coma) en Electron. La prueba de la Fase 10 está escrita contra el de Jest. → Si la suite corre algún día en un navegador real, la aserción tiene que tolerar el separador.
+- **Las líneas de la banda son curvas** (la tensión por defecto de chart.js 2) entre categorías que no tienen orden. → Es el ejercicio 12; podría ir en el código base.
+- **La agregación en el servidor 💸** no tiene disparador cuantificado. → Proponer uno: "cuando el tablero tarde más de un segundo en cargar una rueda".
 
 ### Reservas para el cuaderno de incidentes
 
-Los IDs quedan reservados en `cuaderno-incidentes.md`, donde el enunciado ya
-está redactado con sus pistas y su solución de referencia. El ID nunca se reasigna.
+Los IDs quedan reservados en `cuaderno-incidentes.md`, donde el enunciado ya está redactado con sus pistas y su solución de referencia. El ID nunca se reasigna.
 
-- **19** — *El dashboard se arrastra al final del día* · Performance · 🟠. Sale
-  del `useMemo` con dependencias que se recrean en cada render: la memoización
-  existe y no sirve. Solo se nota con volumen, así que el enunciado tiene que
-  decir cuántas rifas y cuántos números hacen falta para verlo.
+- **19** — *El dashboard se arrastra al final de la Semana del Canal* · Rendimiento · 🟠. Sale del error común #2: la bitácora del evento bajo los chequeos de desarrollo, cientos de milisegundos por acción en todas las pantallas.
+- **20** — *El test pasa en mi máquina y falla en la de al lado* · Testing · 🔴. Sale de la tarjeta que consulta el reloj; se abre en la Fase 10 y se cierra en la 11.
+- **21** ➕ — *La rueda que dice 15 % y el tablero muestra 5 %* · Dominio · 🟠. La regla vieja de la rueda que se acomoda, vista en el tablero. Termina en diagnóstico y decisión, no en un commit.

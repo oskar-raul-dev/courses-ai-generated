@@ -1,6 +1,6 @@
 # 🧰 Apéndice A4 — CRA por Dentro
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **~2 horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Apéndice de **consulta rápida** · **~2 horas**
 > Lo usa: Fase 0 · Lo complementa: `A13-depurar-el-build-de-produccion.md`
 
 Material de **consulta rápida**, no de lectura secuencial. Lo abres cuando una
@@ -19,7 +19,7 @@ performance que vas a necesitar cuando el bundle empiece a pesar.
 > nunca) vale la pena.
 
 Contexto que damos por sabido: Node y npm (Apéndice A3), y que la app corre en
-el puerto `3000`, el CRUD mock en `3001` y la lotería mock en `3002` (Fase 3).
+el puerto `3000`, el mock de la API en `3001` (Fase 3) y el mock de Google Play en `3002` (Fases 3 y 7).
 
 ---
 
@@ -80,11 +80,11 @@ medio nativo.
 qué una imagen no carga en producción.
 
 ```
-raffles-app/
+esclusa-app/
 ├── public/              # servido tal cual, sin procesar por Webpack
 │   ├── index.html       # la única página; el div#root vive acá
 │   ├── favicon.ico
-│   └── logo-lottery.png # assets que referencias por URL absoluta
+│   └── logo-esclusa.png # assets que referencias por URL absoluta
 ├── src/                 # todo lo que Webpack procesa y empaqueta
 │   ├── index.js         # punto de entrada: ReactDOM.render en #root
 │   ├── App.jsx
@@ -110,10 +110,10 @@ HTML o necesitas una ruta estable y conocida, va en `public/` y lo pides con
 ```jsx
 // src/components/Header.jsx
 // Import procesado por Webpack: hash, optimización, error en build si no existe.
-import logo from "../assets/logo-lottery.png";
+import logo from "../assets/logo-esclusa.png";
 
 function Header() {
-  return <img src={logo} alt="Rifas y chances" />; // alt en español (UI)
+  return <img src={logo} alt="La Esclusa" />; // alt en español (UI)
 }
 ```
 
@@ -207,7 +207,7 @@ fino —varias rutas, reescrituras, varios destinos— usas
 `src/setupProxy.js`, que CRA detecta y carga solo (no se importa en ningún
 lado). Necesita `http-proxy-middleware`, que ya viene con `react-scripts`.
 
-**Ejemplo mínimo — `/api` al CRUD, `/lottery` a la lotería:**
+**Ejemplo mínimo — `/api` al mock de la API, `/play` al de Google Play:**
 
 ```js
 // src/setupProxy.js
@@ -215,19 +215,19 @@ lado). Necesita `http-proxy-middleware`, que ya viene con `react-scripts`.
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = function (app) {
-  // El CRUD de rifas vive en el mock de la Fase 3, puerto 3001.
+  // El mock de la API vive en la Fase 3, puerto 3001.
   app.use(
     "/api",
     createProxyMiddleware({
       target: "http://localhost:3001",
       changeOrigin: true,
-      pathRewrite: { "^/api": "" }, // /api/raffles → /raffles en el mock
+      pathRewrite: { "^/api": "" }, // /api/wheels → /wheels en el mock
     })
   );
 
-  // La lotería simulada vive aparte, en 3002 (Fase 7).
+  // El mock de Google Play vive aparte, en 3002 (Fase 7).
   app.use(
-    "/lottery",
+    "/play",
     createProxyMiddleware({ target: "http://localhost:3002", changeOrigin: true })
   );
 };
@@ -411,9 +411,9 @@ errores (Sentry y similares), no al público.
    en `src/index.js`. Después saca el prefijo `REACT_APP_` (déjala como
    `API_URL`) y confirma que ahora imprime `undefined`. Explica por qué.
 
-3. 🟡 Escribe un `src/setupProxy.js` que mande `/api/*` al CRUD de `3001` y
-   `/lottery/*` a la lotería de `3002`. Verifica con el Network tab que un
-   `GET /api/raffles` desde la app sale sin error de CORS.
+3. 🟡 Escribe un `src/setupProxy.js` que mande `/api/*` al mock de la API en `3001` y
+   `/play/*` al mock de Google Play de `3002`. Verifica con el Network tab que un
+   `GET /api/wheels` desde la app sale sin error de CORS.
 
 4. 🟡 Tienes `REACT_APP_API_URL` en `.env` y otra distinta en `.env.development`.
    Corre `npm start` y determina cuál gana. Después agrega `.env.local` con una

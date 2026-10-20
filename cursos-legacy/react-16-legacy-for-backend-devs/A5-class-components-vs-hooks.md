@@ -1,6 +1,6 @@
 # 🔀 Apéndice A5 — Class Components vs Hooks
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · ~3 h
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Apéndice de **consulta rápida** · ~3 h
 > Lo referencian: Fases 0, 1, 4 y 11 · React/React DOM **16.14.0** (D1) · JavaScript plano ES2019 (D3)
 
 > 📝 **Cómo se lee esto.** No es una fase: es material de mesa de trabajo. Cuando abras un archivo del proyecto y no sepas si estás mirando una clase o una función con hooks —o cuando tengas que traducir mentalmente un `componentDidMount` a un `useEffect` para arreglar algo—, saltas acá, buscas la sección y vuelves a lo tuyo. No hace falta leerlo de corrido.
@@ -27,7 +27,7 @@
 
 ## 1. Por qué esto importa en mantenimiento
 
-El código que vas a mantener es **mixto**. Desde la Fase 2 conviven, por ejemplo, `RaffleListPage` —una clase con `connect()`— y componentes funcionales con hooks que leen del mismo store con `useSelector()`. Esto no es un descuido: es el estado natural de una base que empezó antes de React 16.8 (febrero de 2019, cuando llegaron los hooks) y fue creciendo sin reescribir lo que ya funcionaba. Vas a encontrar clases de 2019 al lado de funciones de 2022, y tienes que leer las dos con la misma soltura.
+El código que vas a mantener es **mixto**. Desde la Fase 1 conviven, por ejemplo, `WheelListPage` —una clase con `withRouter`, que vive de la Fase 1 a la 3— y `WheelDetailPage`, una función con `useParams`. Desde la Fase 4 hay también clases con `connect()` que leen del store, junto a funciones con `useSelector()`. Esto no es un descuido: es el estado natural de una base que empezó antes de React 16.8 (febrero de 2019, cuando llegaron los hooks) y fue creciendo sin reescribir lo que ya funcionaba. Vas a encontrar clases de 2019 al lado de funciones de 2022, y tienes que leer las dos con la misma soltura.
 
 No vienes a migrar. Vienes a **entender, reproducir y arreglar**. La mitad de los bugs de ciclo de vida que vas a tocar (una suscripción que no se limpia, un efecto que corre de más, un `setState` sobre un componente desmontado) se diagnostican igual en los dos estilos una vez que tienes clara la equivalencia. Convertir una clase a hooks "porque sí" en un hotfix es la forma más rápida de introducir un bug nuevo mientras arreglas otro. Este apéndice te da el mapa mental; la conversión real de un módulo es una fase extra 🔥 aparte, no algo que se hace de pasada.
 
@@ -35,88 +35,74 @@ No vienes a migrar. Vienes a **entender, reproducir y arreglar**. La mitad de lo
 
 ## 2. Anatomía lado a lado
 
-Misma vista, `RaffleDetail`: carga una rifa por `id` de la URL al montar, muestra un loading mientras tanto y limpia al desmontar. A la izquierda el estilo legacy (clase + `connect()`), a la derecha el moderno (función + hooks). Fíjate que **hacen exactamente lo mismo**; cambia el andamiaje, no la lógica.
+Misma vista, `WheelDetail`: busca una rueda por `id` de la URL al montar y cada vez que el `id` cambia. A la izquierda el estilo legacy (clase con ciclo de vida), a la derecha el moderno (función + hooks). Fíjate que **hacen exactamente lo mismo**; cambia el andamiaje, no la lógica.
 
 **Clase (legacy):**
 
 ```jsx
-// RaffleDetail.jsx — estilo clase, el que vas a encontrar en módulos viejos
+// WheelDetail.jsx — estilo clase, el que vas a encontrar en módulos viejos
 import React from 'react';
-import { connect } from 'react-redux';
-import { fetchRaffleById, clearRaffleDetail } from '../store/raffleSlice';
+import { findWheel } from '../mock/wheels';
 
-class RaffleDetail extends React.Component {
+class WheelDetail extends React.Component {
   constructor(props) {
     super(props);
-    // estado local: solo la UI, no lo que vive en el store
-    this.state = { expanded: false };
+    // estado local: lo que la pantalla muestra, ya resuelto
+    this.state = { wheel: null };
   }
 
   componentDidMount() {
-    // al montar: pedimos la rifa de la URL
-    this.props.fetchRaffleById(this.props.match.params.id);
+    // al montar: buscamos la rueda de la URL
+    this.setState({ wheel: findWheel(this.props.match.params.id) });
   }
 
   componentDidUpdate(prevProps) {
-    // si cambia el id de la URL, recargamos (navegar de /raffles/1 a /raffles/2)
+    // si cambia el id de la URL, la buscamos de nuevo (navegar de /wheels/1 a /wheels/2)
     if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.props.fetchRaffleById(this.props.match.params.id);
+      this.setState({ wheel: findWheel(this.props.match.params.id) });
     }
   }
 
-  componentWillUnmount() {
-    // al salir: limpiamos el detalle para que la próxima rifa no muestre datos viejos
-    this.props.clearRaffleDetail();
-  }
-
   render() {
-    const { raffle, loading } = this.props;
-    if (loading) return <p>Cargando rifa…</p>;
-    if (!raffle) return null;
-    return <h1>{raffle.name}</h1>;
+    const { wheel } = this.state;
+    if (!wheel) return null;
+    return <h1>{wheel.name}</h1>;
   }
 }
 
-const mapStateToProps = (state) => ({
-  raffle: state.raffles.detail,
-  loading: state.raffles.loadingDetail,
-});
-export default connect(mapStateToProps, { fetchRaffleById, clearRaffleDetail })(RaffleDetail);
+export default WheelDetail;
 ```
 
 **Función con hooks (moderno):**
 
 ```jsx
-// RaffleDetail.jsx — estilo hooks, el de los módulos nuevos
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+// WheelDetail.jsx — estilo hooks, el de los módulos nuevos
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchRaffleById, clearRaffleDetail } from '../store/raffleSlice';
+import { findWheel } from '../mock/wheels';
 
-function RaffleDetail() {
+function WheelDetail() {
   const { id } = useParams();               // la URL, sin this.props.match
-  const dispatch = useDispatch();
-  const raffle = useSelector((s) => s.raffles.detail);
-  const loading = useSelector((s) => s.raffles.loadingDetail);
+  const [wheel, setWheel] = useState(null);
 
   useEffect(() => {
     // corre al montar Y cada vez que cambia id: cubre didMount + didUpdate de un saque
-    dispatch(fetchRaffleById(id));
-    // el return es el cleanup: hace de componentWillUnmount
-    return () => dispatch(clearRaffleDetail());
-  }, [id, dispatch]);                        // deps: de qué depende este efecto
+    setWheel(findWheel(id));
+  }, [id]);                                  // deps: de qué depende este efecto
 
-  if (loading) return <p>Cargando rifa…</p>;
-  if (!raffle) return null;
-  return <h1>{raffle.name}</h1>;
+  if (!wheel) return null;
+  return <h1>{wheel.name}</h1>;
 }
 
-export default RaffleDetail;
+export default WheelDetail;
 ```
 
-Lo que la versión de clase reparte en tres métodos (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`), la de hooks lo junta en **un solo `useEffect`**. Esa es la idea de fondo: los hooks agrupan por *preocupación* ("cargar y limpiar la rifa"), no por *momento del ciclo de vida*.
+Lo que la versión de clase reparte en dos métodos (`componentDidMount` y `componentDidUpdate`), la de hooks lo junta en **un solo `useEffect`**. Esa es la idea de fondo: los hooks agrupan por *preocupación* ("buscar la rueda de esta URL"), no por *momento del ciclo de vida*.
 
-> 📝 **Nota de época.** El detalle de Redux (`connect` vs `useSelector`/`useDispatch`) es su propio tema: vive en el **Apéndice A6 — Redux clásico vs Toolkit**. Acá lo mostramos solo para que reconozcas el paquete completo tal como aparece en el código real.
+> 📝 **Qué falta a propósito.** Ninguna de las dos versiones necesita limpiar nada al desmontar: `findWheel` es síncrono y no deja nada abierto. Cuando el efecto sí deja algo abierto (un temporizador, un polling, una suscripción), aparece el `componentWillUnmount` de la clase y el `return` del `useEffect`. Es el caso de la Fase 7 con el polling de compras.
+
+> 📝 **Nota de época.** Cuando el detalle viene del store, la versión de clase usa `connect()` y la de hooks, `useSelector()`/`useDispatch()`. Ese es su propio tema: vive en el **Apéndice A6 — Redux clásico vs Toolkit**. Acá lo dejamos sin Redux para que la diferencia que se ve sea la del ciclo de vida.
+
 
 ---
 
@@ -151,7 +137,7 @@ El corazón de este apéndice. Guárdala a mano: es lo que vas a mirar cuando te
 
 ```jsx
 // Clase
-class RaffleFilter extends React.Component {
+class WheelFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = { query: '', onlyOpen: false };
@@ -170,7 +156,7 @@ class RaffleFilter extends React.Component {
 
 ```jsx
 // Hooks
-function RaffleFilter() {
+function WheelFilter() {
   const [query, setQuery] = useState('');
   const [onlyOpen, setOnlyOpen] = useState(false);
   // un useState por cosa; no hay objeto que fusionar
@@ -200,7 +186,7 @@ setForm((prev) => ({ ...prev, query: 'abc' }));
 
 ```jsx
 // Clase
-class RaffleBadge extends React.Component {
+class WheelBadge extends React.Component {
   render() {
     const { status } = this.props;               // this.props
     return <span className={`badge badge-${status}`}>{labelFor(status)}</span>;
@@ -210,7 +196,7 @@ class RaffleBadge extends React.Component {
 
 ```jsx
 // Hooks
-function RaffleBadge({ status }) {               // desestructurado del argumento
+function WheelBadge({ status }) {               // desestructurado del argumento
   return <span className={`badge badge-${status}`}>{labelFor(status)}</span>;
 }
 
@@ -229,13 +215,13 @@ function labelFor(status) {
 ```jsx
 // 💸 patrón legacy: casi siempre era estado derivado mal hecho
 componentWillReceiveProps(nextProps) {
-  if (nextProps.raffle.id !== this.props.raffle.id) {
-    this.setState({ localName: nextProps.raffle.name });
+  if (nextProps.wheel.id !== this.props.wheel.id) {
+    this.setState({ localName: nextProps.wheel.name });
   }
 }
 ```
 
-El problema: duplicas en estado local algo que ya viene en props, y ahora tienes dos fuentes de verdad que se desincronizan. En hooks casi nunca lo traduces literal. Si solo necesitas *mostrar* el valor, **derívalo en el render** (`const localName = raffle.name`). Si de verdad necesitas disparar un efecto cuando la prop cambia, ese es el trabajo de `useEffect([raffle.id])`.
+El problema: duplicas en estado local algo que ya viene en props, y ahora tienes dos fuentes de verdad que se desincronizan. En hooks casi nunca lo traduces literal. Si solo necesitas *mostrar* el valor, **derívalo en el render** (`const localName = wheel.name`). Si de verdad necesitas disparar un efecto cuando la prop cambia, ese es el trabajo de `useEffect([wheel.id])`.
 
 ---
 
@@ -250,12 +236,12 @@ Acá es donde más tiempo vas a pasar traduciendo, porque los tres métodos de c
 ```jsx
 // Solo al montar → componentDidMount
 useEffect(() => {
-  dispatch(fetchRaffles());
+  dispatch(fetchWheels());
 }, []);                          // deps vacías: una vez y listo
 
 // Al montar y cuando cambia una dep → didMount + didUpdate
 useEffect(() => {
-  dispatch(fetchRaffleById(id));
+  dispatch(fetchWheelById(id));
 }, [id]);                        // corre de nuevo cada vez que cambia id
 
 // Suscripción con limpieza → didMount + componentWillUnmount
@@ -269,10 +255,10 @@ useEffect(() => {
 
 ```jsx
 // ❌ sin deps: fetch en bucle infinito
-useEffect(() => { dispatch(fetchRaffles()); });
+useEffect(() => { dispatch(fetchWheels()); });
 
 // ✅ una sola vez
-useEffect(() => { dispatch(fetchRaffles()); }, []);
+useEffect(() => { dispatch(fetchWheels()); }, []);
 ```
 
 **Error común #2 — cleanup ausente = memory leak.** Todo lo que arranques (interval, suscripción a un observable, listener) tienes que apagarlo en el `return`. Si no, el timer sigue vivo después de que el componente desapareció, intentando actualizar algo que ya no existe. En React 16 esto se manifiesta como el warning *"Can't perform a React state update on an unmounted component"*.
@@ -296,27 +282,27 @@ useEffect(() => {
 
 ## 7. Estado complejo ⟷ `useReducer`
 
-**Cuándo usarlo.** Cuando el estado local tiene varias piezas que cambian juntas o transiciones con reglas ("de `idle` no puedo pasar a `success` sin pasar por `loading`"). Ahí un puñado de `useState` sueltos se vuelve frágil, y un reducer local lo ordena. Un wizard de venta con pasos, por ejemplo, es candidato natural.
+**Cuándo usarlo.** Cuando el estado local tiene varias piezas que cambian juntas o transiciones con reglas ("de `idle` no puedo pasar a `success` sin pasar por `loading`"). Ahí un puñado de `useState` sueltos se vuelve frágil, y un reducer local lo ordena. Un asistente con pasos, como el de los envíos de la Fase 5, es candidato natural.
 
 **Ejemplo mínimo:**
 
 ```jsx
-// máquina chica de estados para un pedido de reserva local (no es el store)
-function reservationReducer(state, action) {
+// máquina chica de estados para un pedido local (no es el store)
+function requestReducer(state, action) {
   switch (action.type) {
     case 'start':   return { status: 'loading', error: null };
-    case 'success': return { status: 'reserved', error: null };
+    case 'success': return { status: 'done', error: null };
     case 'fail':    return { status: 'idle', error: action.error };
     default:        return state;
   }
 }
 
-function ReserveButton({ number }) {
-  const [state, localDispatch] = useReducer(reservationReducer, { status: 'idle', error: null });
+function ResendButton({ playerName }) {
+  const [state, localDispatch] = useReducer(requestReducer, { status: 'idle', error: null });
   // state.status controla el render; las transiciones viven en un solo lugar
   return (
     <button disabled={state.status === 'loading'} onClick={() => localDispatch({ type: 'start' })}>
-      Reservar {number}
+      Reenviar a {playerName}
     </button>
   );
 }
@@ -370,7 +356,7 @@ Lo primero que haces al abrir un archivo desconocido: identificar de qué estilo
 
 Dos reglas que evitan el mareo:
 
-- **El estilo del componente y el estilo de Redux son ejes independientes.** Puedes tener una clase con `useSelector`… no (los hooks no van en clases), pero sí una clase con `connect()` **y** una función con `connect()`, además de la función con `useSelector`. No asumas "clase ⇒ connect, función ⇒ hooks": mira el final del archivo. En el proyecto, `RaffleListPage` es clase con `connect()`, y hay funcionales que leen el mismo store con `useSelector()`.
+- **El estilo del componente y el estilo de Redux son ejes independientes.** Puedes tener una clase con `useSelector`… no (los hooks no van en clases), pero sí una clase con `connect()` **y** una función con `connect()`, además de la función con `useSelector`. No asumas "clase ⇒ connect, función ⇒ hooks": mira el final del archivo. En el proyecto, `WheelTable` es clase con `connect()` (de la Fase 4 a la 10), y hay funcionales que leen el mismo store con `useSelector()`.
 - **No hay que unificar para arreglar un bug.** Un fix vive dentro del estilo del archivo que tocas. Reescribir de clase a hooks es una decisión aparte (fase 🔥), nunca un efecto colateral de un hotfix.
 
 ---
@@ -379,9 +365,9 @@ Dos reglas que evitan el mareo:
 
 Esto es **didáctico**: sirve para entender la equivalencia y, si algún día hay una tarea 🔥 de migración, para hacerla con método. **No** es algo que se hace dentro de un hotfix. La conversión automatizada (herramientas que reescriben por ti) queda fuera: acá se hace a mano, entendiendo cada paso.
 
-Sobre el `RaffleDetail` de la sección 2, el proceso es:
+Sobre el `WheelDetail` de la sección 2, el proceso es:
 
-1. **Cambia la firma.** De `class RaffleDetail extends React.Component` a `function RaffleDetail(props) {`. El cuerpo de `render()` pasa a ser el cuerpo de la función (lo de antes del `return` y el `return` mismo).
+1. **Cambia la firma.** De `class WheelDetail extends React.Component` a `function WheelDetail(props) {`. El cuerpo de `render()` pasa a ser el cuerpo de la función (lo de antes del `return` y el `return` mismo).
 2. **`this.state` → `useState`.** Cada campo del `state` inicial se vuelve un `useState`. `this.state.expanded` → `const [expanded, setExpanded] = useState(false)`. Cada `this.setState({ expanded: v })` → `setExpanded(v)`.
 3. **`this.props` → argumento.** Borras los `this.`: `this.props.match.params.id` → `props.match.params.id`, o mejor, con Router 5, `const { id } = useParams()`.
 4. **Ciclo de vida → `useEffect`.** Junta `componentDidMount` + `componentDidUpdate` + `componentWillUnmount` que compartan lógica en un `useEffect`. El cuerpo de mount/update va adentro; el de unmount va en el `return` (cleanup); las deps salen de las condiciones del `componentDidUpdate` (ej. `if (prevProps.id !== id)` → `[id]`).
@@ -411,22 +397,22 @@ Cortos, de consulta y diagnóstico. La idea no es construir features, sino afila
 
 **🟢 Fácil (1–3)**
 
-1. Abre `RaffleListPage` (clase con `connect()`) y `RaffleDetail` en su versión con hooks. Sin ejecutar nada, lista para cada uno: dónde vive el estado, dónde se leen las props y dónde está el efecto de carga. Usa la tabla de §9 como checklist.
+1. Abre `WheelTable` (clase con `connect()`, en el tag de cualquier fase de la 4 a la 10) y `WheelDetailPage`, la función con hooks. Sin ejecutar nada, lista para cada uno: dónde vive el estado, dónde se leen las props y dónde está el efecto de carga. Usa la tabla de §9 como checklist.
 2. Traduce a hooks, en papel, esta clase: `constructor` con `this.state = { count: 0 }`, un `componentDidMount` que hace `console.log('montado')` y un botón que hace `this.setState({ count: this.state.count + 1 })`. Marca qué `useState` y qué `useEffect` te quedan.
-3. Dado `useEffect(() => { dispatch(fetchRaffles()); })` (sin segundo argumento), explica en una frase por qué entra en loop y escribe la corrección.
+3. Dado `useEffect(() => { dispatch(fetchWheels()); })` (sin segundo argumento), explica en una frase por qué entra en loop y escribe la corrección.
 
 **🟡 Intermedio (4–6)**
 
 4. **Diagnóstico.** Te pasan un componente funcional con `useEffect(() => { const t = setInterval(...); }, [])` sin `return`. Reproduce el warning de "state update on an unmounted component" navegando fuera de la vista, explica la causa y aplica el fix mínimo.
-5. Convierte el `componentWillReceiveProps` 💸 de §5 (el que copia `raffle.name` a `this.state.localName`) a la solución correcta con hooks. Justifica por qué desaparece el estado local en vez de traducirse a un `useState`.
-6. Toma el `RaffleDetail` de clase de §2 y haz solo el **paso 4** de la conversión (§10): unifica `componentDidMount` + `componentDidUpdate` + `componentWillUnmount` en un único `useEffect` con sus deps y su cleanup. No toques todavía la parte de `connect`.
+5. Convierte el `componentWillReceiveProps` 💸 de §5 (el que copia `wheel.name` a `this.state.localName`) a la solución correcta con hooks. Justifica por qué desaparece el estado local en vez de traducirse a un `useState`.
+6. Toma el `WheelDetail` de clase de §2 y haz solo el **paso 4** de la conversión (§10): unifica `componentDidMount` + `componentDidUpdate` + `componentWillUnmount` en un único `useEffect` con sus deps y su cleanup. No toques todavía la parte de `connect`.
 
 **🟠 Difícil (7–8)**
 
-7. **Diagnóstico.** Un `React.memo(RaffleBadge)` no evita re-renders: el padre le pasa `style={{ color: 'red' }}` inline. Demuéstralo con un `console.count` en el render del hijo, explica por qué el `memo` no corta, y corrígelo estabilizando la referencia. Relaciona el problema con `shouldComponentUpdate` de la tabla de §3.
-8. **Diagnóstico integrador.** Te dan un `useEffect` que usa una prop `raffleId` adentro pero tiene `[]` como deps. Reproduce la *stale closure* (el efecto sigue pidiendo la rifa vieja al cambiar de `raffleId`), muestra cómo lo delata `eslint-plugin-react-hooks`, y arregla las deps. Explica por qué en la versión de clase (`componentDidUpdate` comparando `prevProps.raffleId`) este bug no aparecía igual.
+7. **Diagnóstico.** Un `React.memo(WheelBadge)` no evita re-renders: el padre le pasa `style={{ color: 'red' }}` inline. Demuéstralo con un `console.count` en el render del hijo, explica por qué el `memo` no corta, y corrígelo estabilizando la referencia. Relaciona el problema con `shouldComponentUpdate` de la tabla de §3.
+8. **Diagnóstico integrador.** Te dan un `useEffect` que usa una prop `wheelId` adentro pero tiene `[]` como deps. Reproduce la *stale closure* (el efecto sigue pidiendo la rueda vieja al cambiar de `wheelId`), muestra cómo lo delata `eslint-plugin-react-hooks`, y arregla las deps. Explica por qué en la versión de clase (`componentDidUpdate` comparando `prevProps.wheelId`) este bug no aparecía igual.
 
-> 🔥 **Opcional.** Migra `RaffleListPage` completa de clase con `connect()` a función con `useSelector`/`useDispatch`, siguiendo los seis pasos de §10. Compara ambas versiones lado a lado y anota cualquier diferencia de timing que notes. (Es la fase extra de migración; no cuenta en las horas base.)
+> 🔥 **Opcional.** Migra `WheelTable` completa de clase con `connect()` a función con `useSelector` y `useDispatch`, siguiendo los seis pasos de §10, antes de leer la Fase 11 —que hace exactamente eso, con la prueba de la Fase 10 como oráculo—. Compara tu versión con la suya y anota cualquier diferencia.
 
 ---
 
@@ -443,7 +429,7 @@ Cortos, de consulta y diagnóstico. La idea no es construir features, sino afila
 
 - Busca un screencast del tipo "class components to hooks" que sea de React 16.8–16.14; abundan en YouTube. Verifica que **no** use APIs de React 18 y que el `useEffect` incluya cleanup. Los títulos y URLs pueden haber cambiado: confirma la versión antes de fiarte.
 
-**Orden de lectura sugerido:** ciclo de vida de `React.Component` en legacy.reactjs.org → "Using the Effect Hook" (mismo modelo, otra forma) → la tabla de equivalencias de §3 de este apéndice → vuelve al código mixto del proyecto y relee `RaffleDetail` en sus dos versiones con la tabla al lado.
+**Orden de lectura sugerido:** ciclo de vida de `React.Component` en legacy.reactjs.org → "Using the Effect Hook" (mismo modelo, otra forma) → la tabla de equivalencias de §3 de este apéndice → vuelve al código mixto del proyecto y relee `WheelDetail` en sus dos versiones con la tabla al lado.
 
 ---
 

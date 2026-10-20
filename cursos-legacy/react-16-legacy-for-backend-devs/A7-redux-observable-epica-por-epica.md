@@ -1,58 +1,67 @@
 # 🌀 Apéndice A7 — Redux-Observable Épica por Épica
+## Tutorial React 16 — La Esclusa, la consola de Jewel Locks
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **~3 horas**
-> Lo usan: Fases 5 (como adelanto), 6, 7 y 11 · Prioridad: 🔴 Alta
+> **Material de consulta rápida** · **~3 horas** · Lo usan las Fases 6, 7, 10 y 11 ·
+> Prioridad: 🔴 Alta
 >
-> Material de **consulta rápida**, no de lectura secuencial. Se usa desde la
-> Fase 6 en adelante. Cuando estés escribiendo un epic y no te acuerdas si va
-> `switchMap` o `mergeMap`, saltas acá, miras el patrón, copias el molde y
-> vuelves. Cada patrón trae lo mismo: **cuándo usarlo · ejemplo mínimo (un
-> epic real de rifas) · el error común que te va a morder · cómo probarlo con
-> marbles**.
+> No se lee de corrido. Cuando estés escribiendo un epic y no te acuerdes de si va
+> `switchMap` o `mergeMap`, saltas acá, miras el patrón, copias el molde y vuelves.
+> Cada patrón trae lo mismo: **cuándo usarlo · el epic de la consola que lo usa · el
+> error común que te va a morder · su prueba de canicas**.
 
-Stack fijado (no lo cambies sin justificar): **redux-observable 1.2.0 · RxJS
-6.6.7 · rxjs-marbles 6.0.1 para marble testing (D9) · JavaScript plano ES2019**.
-Todos los epics de acá son los mismos de la Fase 6 —`sellNumberEpic`,
-`validateNumberEpic`, `reservationExpirationEpic`, `retrySellEpic`,
-`cancelOnLogoutEpic`— o extensiones coherentes con ellos.
+Stack fijado (no lo cambies sin justificar): **redux-observable 1.2.0 · RxJS 6.6.7 ·
+rxjs-marbles 6.0.1 para las pruebas de canicas · JavaScript plano**. Los epics de
+acá son los de la consola tal como quedan al cerrar la Fase 7 —`undoWindowEpic`,
+`sendGrantEpic`, `searchPlayerEpic`, `retryGrantEpic`, `cancelOnLogoutEpic` y
+`pollingEpic`—, copiados de los archivos, no reescritos para el apéndice. La única
+excepción es `concatMap`, que la consola no usa y va con un epic de consulta
+declarado como tal.
+
+Las pruebas de cada patrón también son reales: están escritas contra esos epics y
+pasan contra el código de la Fase 7. Todas reciben el cliente HTTP por el tercer
+argumento —`{ api }`, `{ store }`—, que es lo que la Fase 6 preparó al pasarlo por
+`createEpicMiddleware({ dependencies })`. La metodología de las canicas (la
+gramática del diagrama, `hot` contra `cold`, el molde) está en
+`A11-marble-testing.md`; acá alcanza con el recordatorio de la sección 🔬.
 
 ---
 
 ## ⚡ Cómo usar este apéndice (mapa de 30 segundos)
 
-Los ocho operadores se parten en dos familias. La primera decide **qué pasa
-con la operación anterior cuando llega una nueva acción**: esa decisión es,
-en la práctica, el 80% de los bugs de epics. La segunda familia se ocupa de
-**no morir**: cancelar limpio, reintentar con cabeza y sobrevivir a un error.
+Los ocho operadores se parten en dos familias. La primera decide **qué pasa con la
+operación anterior cuando llega una acción nueva**, y esa decisión es, en la
+práctica, el 80 % de los bugs de epics. La segunda se ocupa de **no morir**: cortar
+limpio, reintentar con cabeza y sobrevivir a un error.
 
-- **Mapeo (flattening):** `debounceTime`, `switchMap`, `mergeMap`, `concatMap`, `exhaustMap`.
-- **Cancelación y resiliencia:** `takeUntil`, `retry`/`retryWhen`, `catchError`.
+- **Mapeo (aplanamiento):** `debounceTime`, `switchMap`, `mergeMap`, `concatMap`, `exhaustMap`.
+- **Cancelación y resiliencia:** `takeUntil`, `retryWhen`, `catchError`.
 
-Si solo tienes diez segundos: elegir mal entre `switchMap` y `mergeMap` es la
-causa raíz más común de "pintó un estado viejo" y de "se me duplicó la venta".
-Anda directo a la [tabla maestra](#-tabla-maestra-cuándo-usar-qué-operador).
+Si solo tienes diez segundos: elegir mal entre `switchMap` y `mergeMap` es la causa
+raíz más común de "me mostró a otra jugadora" y de "se compensó dos veces". Anda
+directo a la [tabla maestra](#-tabla-maestra-cuándo-usar-qué-operador).
 
 ---
 
 ## 🧭 Salto rápido
 
 **Mapeo**
-1. [`debounceTime` — esperar a que pare de tipear](#1-debouncetime--esperar-a-que-pare-de-tipear)
+1. [`debounceTime` — esperar a que pare de escribir](#1-debouncetime--esperar-a-que-pare-de-escribir)
 2. [`switchMap` — el último gana, cancela lo anterior](#2-switchmap--el-último-gana-cancela-lo-anterior)
 3. [`mergeMap` — todo en paralelo](#3-mergemap--todo-en-paralelo)
 4. [`concatMap` — encolar y respetar el orden](#4-concatmap--encolar-y-respetar-el-orden)
 5. [`exhaustMap` — ignorar lo nuevo mientras proceso](#5-exhaustmap--ignorar-lo-nuevo-mientras-proceso)
 
 **Cancelación y resiliencia**
-6. [`takeUntil` — apagar el stream ante un trigger](#6-takeuntil--apagar-el-stream-ante-un-trigger)
-7. [`retryWhen` — reintentar transitorios con backoff](#7-retrywhen--reintentar-transitorios-con-backoff)
+6. [`takeUntil` — apagar el stream ante una señal](#6-takeuntil--apagar-el-stream-ante-una-señal)
+7. [`retryWhen` — reintentar los transitorios con backoff](#7-retrywhen--reintentar-los-transitorios-con-backoff)
 8. [`catchError` — que un error no mate el epic](#8-catcherror--que-un-error-no-mate-el-epic)
 
 **Soporte**
 - [Tabla maestra: cuándo usar qué operador](#-tabla-maestra-cuándo-usar-qué-operador)
 - [Chuleta de imports (RxJS 6, ojo con RxJS 7)](#-chuleta-de-imports-rxjs-6-ojo-con-rxjs-7)
 - [🩸 Memory leaks en epics: cómo se ven, cómo se previenen](#-memory-leaks-en-epics-cómo-se-ven-cómo-se-previenen)
-- [🔬 Marble testing → **A11**](#-marble-testing--a11)
+- [💸 La deuda: dos epics con el mismo cuerpo](#-la-deuda-dos-epics-con-el-mismo-cuerpo)
+- [🔬 Pruebas de canicas → **A11**](#-pruebas-de-canicas--a11)
 - [🧪 Ejercicios (8)](#-ejercicios-8)
 - [📚 Referencias](#-referencias)
 
@@ -60,342 +69,378 @@ Anda directo a la [tabla maestra](#-tabla-maestra-cuándo-usar-qué-operador).
 
 ## 📊 Tabla maestra: cuándo usar qué operador
 
-| Situación en Rifas y chances | Operador | Qué hace con lo anterior | Antipatrón si te equivocas |
+| Situación en la consola | Operador | Qué hace con lo anterior | Antipatrón si te equivocas |
 |---|---|---|---|
-| El usuario tipea un número y validas contra la API | `switchMap` | **Cancela** la validación anterior en vuelo | `mergeMap` → la respuesta de `034` llega tras la de `0347` y pinta un estado viejo |
-| Validación/búsqueda: esperar a que pare de tipear | `debounceTime(300)` | Descarta lo intermedio, deja pasar el último | Sin él: una petición por tecla, floodeas el mock |
-| Expiración de reservas de números **distintos**, en paralelo | `mergeMap` | **Nada**: corren todas concurrentes | `switchMap` → reservar `0912` cancela la expiración del `0347` |
-| Cola de operaciones que deben aplicarse **en orden** | `concatMap` | **Espera** a que termine la anterior | `mergeMap` → orden no garantizado, estado inconsistente |
-| Submit de "Vender" (evitar doble venta por doble click) | `exhaustMap` | **Ignora** disparos mientras hay uno en curso | `mergeMap` → dos POST de venta para el mismo número |
-| Cortar cualquier stream al `LOGOUT` / desmontar | `takeUntil(logout$)` | Completa y ejecuta el teardown | Olvidarlo → suscripción zombi, acciones fantasma |
-| Fallo transitorio (`timeout`, `http` 5xx) al vender | `retryWhen` + backoff | Reintenta N veces con espera creciente | `retry` a secas → martillas el server; reintentar un `conflict` → vendes dos veces |
-| Que un error no mate el epic | `catchError(e => of(action))` | Reemplaza el error por una acción | Sin él → el epic se completa y **deja de escuchar para siempre** |
+| Buscar jugadores mientras el operador escribe | `switchMap` | **Cancela** la búsqueda anterior en vuelo | `mergeMap` → la respuesta de `Ana` llega después de la de `Anaís` y pinta a la jugadora equivocada (incidente 15) |
+| La misma búsqueda: esperar a que pare de escribir | `debounceTime(300)` | Descarta lo intermedio, deja pasar el último | Sin él, una petición por tecla contra el mock |
+| La ventana de deshacer de **cada** envío encolado | `mergeMap` | **Nada**: corren todas a la vez | `switchMap` → encolar a María cancela la ventana de Juan, que no sale nunca |
+| Consultar otra compra pendiente | `switchMap` | Cancela el polling de la anterior | `mergeMap` → dos pollings vivos, el doble de consultas al `3002` |
+| Operaciones que deben aplicarse **en orden** | `concatMap` | **Espera** a que termine la anterior | `mergeMap` → el orden no está garantizado y el estado queda inconsistente |
+| «Enviar ahora» con doble clic | `exhaustMap` (por envío, con `groupBy`) | **Ignora** los clics mientras el envío está en vuelo | `mergeMap` → dos `POST` del mismo envío (incidente 11) |
+| Cortar un stream al logout o al «Deshacer» | `takeUntil` | Completa y ejecuta el teardown | Olvidarlo → suscripción zombi, consultas sin sesión (incidente 14) |
+| Un `timeout` o un `5xx` en el envío masivo | `retryWhen` + backoff | Reintenta N veces con espera creciente | `retry` a secas → martillas el servidor; reintentar un `409` da diez `409` |
+| Que un error no mate el epic | `catchError(e => of(action))` adentro | Reemplaza el error por una acción | Sin él, o afuera → el epic deja de escuchar para siempre (incidentes 13 y 17) |
 
-> 💡 **Mnemotecnia que cierra la tabla:** *switch* = el último gana · *merge*
-> = todos a la vez · *concat* = uno detrás de otro · *exhaust* = el primero
-> manda hasta que termine. Los cuatro reciben acciones y devuelven un
-> Observable interno; lo único que cambia es **qué hacen con el interno
-> anterior cuando llega uno nuevo.**
+> 💡 **La mnemotecnia que cierra la tabla:** *switch* = el último gana · *merge* =
+> todos a la vez · *concat* = uno detrás de otro · *exhaust* = el primero manda hasta
+> que termine. Los cuatro reciben acciones y devuelven un Observable interno; lo único
+> que cambia es **qué hacen con el interno anterior cuando llega uno nuevo**.
 
 ---
 
 ## 🧾 Chuleta de imports (RxJS 6, ojo con RxJS 7)
 
-Fijado RxJS **6.6.7**. Los operadores viven en `rxjs/operators` y los
-creadores de Observable en `rxjs`. Esto **no** es intercambiable con RxJS 7.
+Fijado RxJS **6.6.7**. Los operadores viven en `rxjs/operators` y los creadores de
+Observable en `rxjs`. Es lo mismo que importa `retryGrantEpic`, el epic con más
+piezas de la consola:
 
 ```javascript
-// ✅ RxJS 6 — así se importa en todo el curso
-import { from, of, timer, interval, throwError } from 'rxjs';
-import {
-  map, filter, debounceTime,
-  switchMap, mergeMap, concatMap, exhaustMap,
-  takeUntil, retryWhen, catchError,
-} from 'rxjs/operators';
-
-// ❌ RxJS 7 (NO usar en código principal) — firstValueFrom/lastValueFrom no existen en 6,
-//    y en 7 se desalienta retryWhen a favor de retry({ delay }). Acá seguimos en 6.
+import { ofType } from "redux-observable";
+import { concat, defer, from, of, throwError, timer } from "rxjs";
+import { catchError, map, mergeMap, retryWhen } from "rxjs/operators";
 ```
 
-> ⚠️ **Trampa de versión.** Mucho tutorial de RxJS que encuentras online es 7+.
-> Si ves `retry({ count, delay })`, `firstValueFrom`, o imports de operadores
-> desde `rxjs` directo (no `rxjs/operators`), es RxJS 7 y **no compila igual
-> acá**. En 6 usamos `retryWhen` con `timer` para el backoff (patrón 7).
+> ⚠️ **Trampa de versión.** Mucho tutorial de RxJS que encuentras en línea es 7+. Si
+> ves `retry({ count, delay })`, `firstValueFrom` o imports de operadores desde `rxjs`
+> directo (no desde `rxjs/operators`), es RxJS 7 y **no compila igual acá**. En 6 el
+> backoff se arma con `retryWhen` y `timer` (patrón 7).
 
 ---
 
-## Patrones de mapeo (flattening)
+## Patrones de mapeo (aplanamiento)
 
-### 1. `debounceTime` — esperar a que pare de tipear
+### 1. `debounceTime` — esperar a que pare de escribir
 
-**Cuándo.** Cuando llegan muchas emisiones seguidas y solo te importa la
-última *después de una pausa*. El caso canónico: el usuario tipea el número
-que quiere vender y no quieres pegarle a la API en cada tecla.
+**Cuándo.** Cuando llegan muchas emisiones seguidas y solo te importa la última
+*después de una pausa*. El caso de la consola: el buscador del asistente de
+compensaciones, que despacha `playerSearchRequested(texto)` en cada tecla.
 
-**Ejemplo mínimo** (el `validateNumberEpic` de Fase 6, recortado a lo esencial):
+**El epic que lo usa** (`searchPlayerEpic`, Fase 6):
 
 ```javascript
-// El componente despacha numberValidationRequested({ raffleId, number }) en cada cambio del input.
-export const validateNumberEpic = (action$) =>
+export const SEARCH_DEBOUNCE_MS = 300;
+
+/**
+ * La búsqueda de jugadores del asistente. El componente despacha
+ * playerSearchRequested(texto) en cada tecla, y el epic:
+ *  - debounceTime: espera a que el operador pare de escribir.
+ *  - switchMap: cada búsqueda nueva CANCELA la anterior en vuelo. Sin eso, la
+ *    respuesta de «Ana» puede llegar después de la de «Anaís» y pintar otra jugadora.
+ */
+export const searchPlayerEpic = (action$, state$, { api }) =>
   action$.pipe(
-    ofType(numberValidationRequested.type),
-    debounceTime(300),        // espera 300ms de silencio antes de dejar pasar el último
-    switchMap((action) => {   // debounce + switchMap es el dúo clásico de validación
-      const { raffleId, number } = action.payload;
-      return from(apiClient.get(`/raffles/${raffleId}/numbers/${number}`)).pipe(
-        map((response) => numberValidationSucceeded({ number, status: response.data.status })),
-        catchError((error) => of(numberValidationFailed({ number, error: toReadableError(error) })))
+    ofType(playerSearchRequested.type),
+    debounceTime(SEARCH_DEBOUNCE_MS),
+    switchMap((action) => {
+      const query = action.payload;
+      return from(api.get("/players", { params: query ? { name_like: query } : {} })).pipe(
+        map((response) => playerSearchSucceeded({ query, results: response.data })),
+        catchError((error) => of(playerSearchFailed({ query, error: toReadableError(error) })))
       );
     })
   );
 ```
 
-**Error común.** Poner `debounceTime` pero olvidar `switchMap` y usar
-`mergeMap`. El debounce reduce la cantidad de peticiones, pero si el usuario
-tipea `034`, espera, y sigue con `0347`, dos validaciones pueden quedar en
-vuelo y la lenta pisar a la rápida. `debounceTime` controla *cuándo sales*;
-`switchMap` controla *que la anterior muera*. Necesitas los dos.
+**Error común.** Creer que el debounce resuelve el orden de las respuestas. Reduce la
+cantidad de peticiones, pero si el operador escribe `Ana`, hace una pausa y sigue
+con `Anaís`, dos búsquedas pueden quedar en vuelo, y con `mergeMap` la lenta pisa a
+la rápida. `debounceTime` controla *cuándo sales*; `switchMap` controla *que la
+anterior muera*. Necesitas los dos, y el incidente 15 es lo que pasa cuando falta el
+segundo.
 
-**Cómo probarlo con marbles.** Se testea que emisiones dentro de la ventana se
-colapsan en una sola:
+**Su prueba de canicas.** Tres teclas dentro de la ventana se colapsan en una sola
+búsqueda, con el último texto:
 
 ```javascript
-it('debounceTime(300): colapsa tecleos rápidos en una sola validación', marbles((m) => {
-  // Tres cambios de input separados por menos de 300ms; solo el último debe disparar.
-  const action$ = m.hot('  -a-b-c-------|', {
-    a: { type: numberValidationRequested.type, payload: { raffleId: 1, number: '03' } },
-    b: { type: numberValidationRequested.type, payload: { raffleId: 1, number: '034' } },
-    c: { type: numberValidationRequested.type, payload: { raffleId: 1, number: '0347' } },
+test("debounceTime: tipear rápido busca una sola vez, con el último texto", marbles((m) => {
+  const calls = [];
+  const api = { get: (url, { params }) => { calls.push(params.name_like); return m.cold("r|", { r: { data: [] } }); } };
+  // Tres teclas separadas por 2 ms: ninguna deja pasar los 300 ms de silencio, salvo la última.
+  const action$ = m.hot("-a-b-c", { a: playerSearchRequested("A"), b: playerSearchRequested("An"), c: playerSearchRequested("Ana") });
+  m.expect(searchPlayerEpic(action$, null, { api })).toBeObservable("----- 300ms s", {
+    s: playerSearchSucceeded({ query: "Ana", results: [] }),
   });
-  // La aserción del debounce en sí: solo 'c' sobrevive la ventana de silencio.
-  // (El mock de apiClient responde inmediato para aislar el comportamiento del debounce.)
-  m.expect(action$.pipe(debounceTime(300, m.scheduler))).toBeObservable('-------c----|', {
-    c: { type: numberValidationRequested.type, payload: { raffleId: 1, number: '0347' } },
-  });
+  m.flush();
+  expect(calls).toEqual(["Ana"]); // una sola petición
 }));
 ```
 
-> 💡 En marbles cada carácter es un *frame*. `debounceTime(300, m.scheduler)`
-> le pasa el `TestScheduler` de rxjs-marbles para que el tiempo virtual
-> avance con el diagrama y no con el reloj real.
+> 💡 Cada carácter del diagrama es un *frame* de un milisegundo virtual, y `300ms`
+> avanza trescientos de golpe. El epic no recibe ningún scheduler: rxjs-marbles 6
+> corre adentro de `TestScheduler.run`, que hace que `debounceTime`, `timer` y
+> compañía usen el tiempo virtual solos.
 
 ---
 
 ### 2. `switchMap` — el último gana, cancela lo anterior
 
 **Cuándo.** Cuando solo te importa el resultado de la **última** acción y las
-respuestas viejas son basura que puede corromper el estado. Validación
-mientras se tipea, navegación (cargar el detalle de la rifa que se abrió
-*ahora*), y la venta que gana la carrera.
+respuestas viejas son basura que puede corromper el estado. En la consola hay dos:
+la búsqueda de jugadores (arriba) y el polling de compras, donde consultar otra
+compra cancela el polling de la anterior.
 
-**Ejemplo mínimo** (`sellNumberEpic` de Fase 6):
+**El epic que lo usa** (`pollingEpic`, Fase 7, en su forma completa):
 
 ```javascript
-export const sellNumberEpic = (action$) =>
+export const pollingEpic = (action$, state$, { store }) =>
   action$.pipe(
-    ofType(SELL_NUMBER),
-    switchMap((action) => {   // si llega otra venta del mismo número, la anterior se aborta EN EL ORIGEN
-      const { raffleId, number, participant } = action.payload;
-      return from(apiClient.post(`/raffles/${raffleId}/numbers/${number}/sell`, { participant })).pipe(
-        map((response) => numberSoldOptimistic({ raffleId, number, participantId: response.data.participantId })),
-        catchError((error) => of(rollbackSale({ raffleId, number, error: toReadableError(error) })))
+    ofType(startPolling.type),
+    switchMap((action) => {
+      const token = action.payload;
+      return timer(0, POLLING_INTERVAL_MS).pipe(
+        mergeMap(() =>
+          from(store.get(`/purchases/${token}`)).pipe(
+            map((response) =>
+              purchaseStatusReceived({ token, state: response.data.state, checkedAt: new Date().toISOString() })
+            ),
+            catchError((error) => of(pollingFailed({ token, error: toReadableError(error) })))
+          )
+        ),
+        takeWhile((result) => !(purchaseStatusReceived.match(result) && result.payload.state === "confirmed"), true),
+        takeUntil(action$.pipe(filter((other) => stopPolling.match(other) || logout.match(other))))
       );
     })
   );
 ```
 
-Lo valioso es que el perdedor de la carrera **nunca llega a despachar su
-rollback**: `switchMap` cancela su petición HTTP en vuelo. En Fase 5, sin
-epic, ese rollback llegaba tarde y revertía una venta legítima.
+Lo valioso es que la búsqueda perdedora **nunca llega a despachar su resultado**:
+`switchMap` se desuscribe de ella, y con la desuscripción se va todo lo que venía
+detrás. Lo mismo con el polling: un `startPolling` nuevo apaga el `timer` del
+anterior sin que nadie llame a nada.
 
-**Error común.** Usar `switchMap` cuando las operaciones son **independientes
-y no deben cancelarse entre sí**. Si lo usas para expirar reservas, reservar
-el `0912` cancelaría la expiración del `0347` en curso, y ese número quedaría
-reservado para siempre. Regla: `switchMap` solo si *el anterior ya no importa*.
+**Error común.** Usar `switchMap` cuando las operaciones son **independientes y no
+deben cancelarse entre sí**. Si lo usaras en la ventana de deshacer, encolar el envío
+de María cancelaría la ventana de Juan, y el de Juan no saldría nunca. Regla:
+`switchMap` solo si *el anterior ya no importa*.
 
-**Cómo probarlo con marbles.** Se prueba la **cancelación**: el resultado del
-primero no debe aparecer.
+**Su prueba de canicas.** Se prueba la **cancelación**: el resultado de la búsqueda
+vieja no aparece, aunque llegue después.
 
 ```javascript
-it('switchMap: la venta anterior del mismo número se cancela al re-disparar', marbles((m) => {
-  // apiClient.post tarda 30ms en responder (cold que emite tras el retardo).
-  const apiPost = () => m.cold('---a|', { a: { data: { participantId: 7 } } });
-
-  // Dos SELL_NUMBER del mismo número separados por 10ms: el 2do llega antes de que responda el 1ro.
-  const action$ = m.hot('  -a-b|', {
-    a: { type: SELL_NUMBER, payload: { raffleId: 1, number: '0347', participant: 'A' } },
-    b: { type: SELL_NUMBER, payload: { raffleId: 1, number: '0347', participant: 'B' } },
-  });
-
-  const output$ = action$.pipe(
-    ofType(SELL_NUMBER),
-    switchMap(() => apiPost().pipe(map((res) => numberSoldOptimistic({ raffleId: 1, number: '0347', participantId: res.data.participantId }))))
-  );
-
-  // Solo emite el resultado del segundo. El del primero fue abortado: no aparece.
-  m.expect(output$).toBeObservable('-----c|', {
-    c: numberSoldOptimistic({ raffleId: 1, number: '0347', participantId: 7 }),
+test("switchMap: la búsqueda nueva cancela la vieja aunque la vieja responda después", marbles((m) => {
+  const ANA = [{ id: 44, name: "Ana", status: "banned" }, { id: 45, name: "Anaís", status: "active" }];
+  const ANAIS = [{ id: 45, name: "Anaís", status: "active" }];
+  // «Ana» tarda 500 ms; «Anaís», 100 ms.
+  const api = {
+    get: (url, { params }) =>
+      params.name_like === "Ana" ? m.cold("500ms r|", { r: { data: ANA } }) : m.cold("100ms r|", { r: { data: ANAIS } }),
+  };
+  const action$ = m.hot("-a 400ms b", { a: playerSearchRequested("Ana"), b: playerSearchRequested("Anaís") });
+  // Solo llega «Anaís». La respuesta de «Ana» no aparece: la ausencia ES la aserción.
+  m.expect(searchPlayerEpic(action$, null, { api })).toBeObservable("802ms s", {
+    s: playerSearchSucceeded({ query: "Anaís", results: ANAIS }),
   });
 }));
 ```
 
-> La aserción *es la ausencia*: probar una cancelación con marbles significa
-> demostrar que algo **no** aparece en el diagrama esperado.
+> La aserción *es la ausencia*: probar una cancelación con canicas significa demostrar
+> que algo **no** aparece en el diagrama esperado. Es la misma prueba que cierra el
+> incidente 15.
 
 ---
 
 ### 3. `mergeMap` — todo en paralelo
 
-**Cuándo.** Cuando cada acción arranca una operación **independiente** que no
-debe cancelar ni bloquear a las demás. El caso de rifas: la expiración de la
-reserva de cada número corre en su propio timer, en paralelo.
+**Cuándo.** Cuando cada acción arranca una operación **independiente** que no debe
+cancelar ni bloquear a las demás. El caso de la consola: la ventana de deshacer de
+cada envío encolado corre en su propio `timer`, en paralelo con las demás.
 
-**Ejemplo mínimo** (`reservationExpirationEpic` de Fase 6):
+**El epic que lo usa** (`undoWindowEpic`, Fase 6):
 
 ```javascript
-export const reservationExpirationEpic = (action$) =>
+export const undoWindowEpic = (action$) =>
   action$.pipe(
-    ofType(reserveNumber.fulfilled.type),
-    // mergeMap y NO switchMap: dos reservas de números distintos deben expirar en paralelo.
-    // switchMap cancelaría la expiración anterior cada vez que se reserva otro número.
+    ofType(grantQueued.type),
+    // mergeMap y no switchMap: cada envío tiene su ventana. switchMap cancelaría
+    // la ventana del primero en cuanto se encola el segundo.
     mergeMap((action) => {
-      const { number } = action.payload;
-      return timer(RESERVATION_TTL_MS).pipe(
-        map(() => reservationExpired({ number })),
-        takeUntil(action$.pipe(  // pero se cancela si ESE número se vende antes
-          ofType(sellNumber.fulfilled.type),
-          filter((sold) => sold.payload.number === number)
-        ))
+      const grantId = action.payload.id;
+      return timer(UNDO_WINDOW_MS).pipe(
+        map(() => sendGrantRequested(grantId)),
+        takeUntil(
+          action$.pipe(
+            filter(
+              (other) =>
+                logout.match(other) ||
+                ((undoGrant.match(other) || grantSending.match(other) || sendGrantRequested.match(other)) &&
+                  other.payload === grantId)
+            )
+          )
+        )
       );
     })
   );
 ```
 
-**Error común.** `mergeMap` sin freno en una fuente rápida crea concurrencia
-ilimitada: cientos de suscripciones internas vivas. Si la operación no es
-naturalmente acotada, pon un límite (`mergeMap(fn, concurrency)`) o cambia el
-operador. En rifas está acotado por la cantidad de reservas activas, pero el
-antipatrón existe.
+**Error común.** `mergeMap` sin freno sobre una fuente rápida crea concurrencia
+ilimitada: cientos de suscripciones internas vivas a la vez. Si la operación no está
+acotada por naturaleza, ponle un límite con el segundo argumento. Es lo que hace
+`retryGrantEpic` con «Enviar todos ahora»: `mergeMap(…, BULK_CONCURRENCY)` manda de a
+cuatro, y no los cuarenta envíos encolados de golpe contra el mock.
 
-**Cómo probarlo con marbles.** Se prueba que dos entrantes producen dos
-internos **solapados en el tiempo**:
+**Su prueba de canicas.** Dos encolados producen dos ventanas **solapadas en el
+tiempo**, y cada una vence a su hora:
 
 ```javascript
-it('mergeMap: dos reservas expiran en paralelo, sin cancelarse', marbles((m) => {
-  const action$ = m.hot('  -a-b------|', {
-    a: { type: reserveNumber.fulfilled.type, payload: { number: '0347' } },
-    b: { type: reserveNumber.fulfilled.type, payload: { number: '0912' } },
-  });
-  // TTL virtual de 4 frames. Cada expiración cae 4 frames después de SU reserva → solapan.
-  const epic = (a$) => a$.pipe(
-    ofType(reserveNumber.fulfilled.type),
-    mergeMap((action) => timer(4, m.scheduler).pipe(map(() => reservationExpired({ number: action.payload.number }))))
-  );
-  m.expect(epic(action$)).toBeObservable('-----x-y--|', {
-    x: reservationExpired({ number: '0347' }),
-    y: reservationExpired({ number: '0912' }),
+test("mergeMap: dos ventanas de deshacer corren en paralelo y vencen cada una a su hora", marbles((m) => {
+  // Juan se encola en el frame 1; María, tres segundos después.
+  const action$ = m.hot("-j 3000ms q", { j: juanQueued, q: mariaQueued });
+  // Cada una vence UNDO_WINDOW_MS (10 s) después de SU encolado. Con switchMap, la de Juan no saldría.
+  m.expect(undoWindowEpic(action$)).toBeObservable("- 10000ms a 3000ms b", {
+    a: sendGrantRequested(juan.id),
+    b: sendGrantRequested(maria.id),
   });
 }));
 ```
 
-Si esto fuera `switchMap`, `x` **no** aparecería: la reserva de `0912`
-cancelaría la expiración de `0347`. El test protege exactamente esa decisión.
+Si esto fuera `switchMap`, `a` **no** aparecería: el encolado de María cancelaría la
+ventana de Juan. La prueba protege exactamente esa decisión.
 
 ---
 
 ### 4. `concatMap` — encolar y respetar el orden
 
-**Cuándo.** Cuando las operaciones deben ejecutarse **una después de otra, en
-el orden en que llegaron**, sin solaparse. Escenario de rifas: aplicar en cola
-una serie de liquidaciones sobre la misma rifa, donde cada una depende del
-saldo que dejó la anterior.
+**Cuándo.** Cuando las operaciones deben ejecutarse **una después de otra, en el
+orden en que llegaron**, sin solaparse, porque cada una parte del estado que dejó la
+anterior.
 
-> 📝 `concatMap` no aparece en el código de Fase 6 (que se concentra en
-> switch/merge/debounce/takeUntil/retry/catchError). Va acá como patrón de
-> consulta, con un ejemplo de dominio nuevo pero coherente. Aparece en el
-> terreno real recién con liquidaciones (Fase 8).
+> 📝 **La consola no usa `concatMap`.** Va acá como patrón de consulta, con un epic
+> que no existe en el código: ajustes de existencias de un segmento limitado, donde
+> cada ajuste parte del `remaining` que dejó el anterior. Las acciones son objetos
+> escritos a mano, sin slice, para que quede claro que es un molde y no una pieza de
+> la Esclusa.
 
-**Ejemplo mínimo:**
+**El molde:**
 
 ```javascript
-// Cada settlementRequested debe procesarse en orden estricto: la nº2 no arranca
-// hasta que la nº1 terminó, porque ambas mutan el saldo de la misma rifa.
-export const settlementQueueEpic = (action$) =>
+const stockAdjustmentEpic = (action$, state$, { api }) =>
   action$.pipe(
-    ofType(SETTLEMENT_REQUESTED),
-    concatMap((action) =>   // cola FIFO: espera a que termine la anterior antes de la siguiente
-      from(apiClient.post(`/raffles/${action.payload.raffleId}/settlements`, action.payload)).pipe(
-        map((response) => settlementApplied({ raffleId: action.payload.raffleId, balance: response.data.balance })),
-        catchError((error) => of(settlementFailed({ raffleId: action.payload.raffleId, error: toReadableError(error) })))
-      )
-    )
+    ofType("stock/adjustmentRequested"),
+    concatMap((action) => {
+      const { segmentId, delta } = action.payload;
+      return from(api.patch(`/stock/${segmentId}`, { delta })).pipe(
+        map((response) => stockAdjusted(segmentId, response.data.remaining)),
+        catchError((error) => of(stockAdjustmentFailed(segmentId, toReadableError(error))))
+      );
+    })
   );
 ```
 
-**Error común.** Usar `concatMap` para algo que **debería** ser paralelo:
-cargar cinco rifas independientes con `concatMap` las serializa y multiplica
-la latencia por cinco. `concatMap` es correcto solo cuando el orden importa o
-las operaciones comparten un recurso mutable. Si no, es `mergeMap`.
+**Error común.** Usar `concatMap` para algo que **debería** ser paralelo: cargar
+cinco ruedas independientes con `concatMap` las serializa y multiplica la latencia
+por cinco. Es correcto solo cuando el orden importa o las operaciones comparten un
+recurso mutable. Si no, es `mergeMap`.
 
-**Cómo probarlo con marbles.** Se prueba la **serialización**: aunque las
-acciones lleguen casi juntas, los resultados salen en orden y sin solaparse.
+**Su prueba de canicas.** Se prueba la **serialización**: aunque las acciones lleguen
+casi juntas, la segunda no sale hasta que vuelve la primera.
 
 ```javascript
-it('concatMap: procesa liquidaciones en orden, sin solapar', marbles((m) => {
-  const action$ = m.hot('  -a-b|', {
-    a: { type: SETTLEMENT_REQUESTED, payload: { raffleId: 1 } },
-    b: { type: SETTLEMENT_REQUESTED, payload: { raffleId: 2 } },
+test("concatMap: el segundo ajuste espera a que vuelva el primero", marbles((m) => {
+  let remaining = 10;
+  // Cada PATCH tarda 3 frames y responde con el remaining que quedó.
+  const api = { patch: (url, { delta }) => { remaining += delta; return m.cold("---r|", { r: { data: { remaining } } }); } };
+  const action$ = m.hot("-a-b", {
+    a: stockAdjustmentRequested("esclusa-de-oro", -1),
+    b: stockAdjustmentRequested("esclusa-de-oro", -2),
   });
-  // Cada operación dura 3 frames. Con concatMap, la de 'b' NO empieza hasta que 'a' termina.
-  const epic = (a$) => a$.pipe(
-    ofType(SETTLEMENT_REQUESTED),
-    concatMap((action) => m.cold('---r|', { r: settlementApplied({ raffleId: action.payload.raffleId, balance: 0 }) }))
-  );
-  m.expect(epic(action$)).toBeObservable('----x--y|', {
-    x: settlementApplied({ raffleId: 1, balance: 0 }),
-    y: settlementApplied({ raffleId: 2, balance: 0 }),
+  // a sale en el frame 1 y vuelve en el 4; b, encolada, sale en el 5 (al completar a) y vuelve en el 8.
+  m.expect(stockAdjustmentEpic(action$, null, { api })).toBeObservable("----x---y", {
+    x: stockAdjusted("esclusa-de-oro", 9),
+    y: stockAdjusted("esclusa-de-oro", 7),
   });
 }));
 ```
 
-`y` cae **después** de que `x` completó, no en paralelo. Con `mergeMap` ambas
-saldrían casi juntas y el test fallaría — que es justo lo que queremos vigilar.
+`y` cae **cuatro frames después** de `x`, no uno: la segunda petición esperó a que la
+primera completara. Con `mergeMap`, `y` caería en el frame 6 y el `remaining` de
+cada respuesta dependería de cuál llegó primero al servidor.
 
 ---
 
 ### 5. `exhaustMap` — ignorar lo nuevo mientras proceso
 
-**Cuándo.** Cuando hay una operación en curso y los nuevos disparos deben
-**descartarse hasta que termine**. El caso de manual: el botón "Vender" y el
-doble click nervioso. Con `exhaustMap`, el segundo click se ignora mientras el
-primer POST está en vuelo.
+**Cuándo.** Cuando hay una operación en curso y los disparos nuevos deben
+**descartarse hasta que termine**. El caso de manual: el «Enviar ahora» y el doble
+clic nervioso. Con `exhaustMap`, el segundo clic se ignora mientras el primer `POST`
+está en vuelo.
 
-> 📝 Igual que `concatMap`, `exhaustMap` no está en el código de Fase 6. Se
-> incluye como patrón de consulta porque es la respuesta correcta al doble
-> submit, un problema que la venta concurrente (Fase 5) roza de cerca.
-
-**Ejemplo mínimo:**
+**El epic que lo usa** (`sendGrantEpic`, Fase 6, con la guarda de cierre de la Fase 7):
 
 ```javascript
-// SUBMIT_SALE se dispara al click de "Vender". exhaustMap ignora clicks repetidos
-// mientras la venta anterior sigue resolviéndose: no hay doble POST.
-export const submitSaleEpic = (action$) =>
+export const sendGrantEpic = (action$, state$, { api, now }) =>
   action$.pipe(
-    ofType(SUBMIT_SALE),
-    exhaustMap((action) =>   // descarta disparos entrantes hasta que el interno complete
-      from(apiClient.post(`/raffles/${action.payload.raffleId}/numbers/${action.payload.number}/sell`, action.payload)).pipe(
-        map((response) => numberSoldOptimistic({ ...action.payload, participantId: response.data.participantId })),
-        catchError((error) => of(rollbackSale({ ...action.payload, error: toReadableError(error) })))
+    ofType(sendGrantRequested.type),
+    groupBy((action) => action.payload),
+    mergeMap((byGrant$) =>
+      byGrant$.pipe(
+        exhaustMap((action) => {
+          const grantId = action.payload;
+          const grant = state$.value.grants.byId[grantId];
+          // La guarda de origen de la Fase 5 se queda: un pedido sobre un envío
+          // que ya salió (y ya terminó) no crea la petición.
+          if (!canSend(grant)) return EMPTY;
+          // F07: un giro de una rueda que ya cerró se rechaza acá, en el instante del envío.
+          const closed = closedWheelRejection(grant, state$.value, now);
+          if (closed) return closed;
+          return concat(
+            // el optimista, como en la Fase 5: enviado antes de que el servidor conteste
+            of(grantSending(grantId), grantSent({ grantId })),
+            from(
+              api.post(`/players/${grant.playerId}/grants`, {
+                grantId,
+                caseId: grant.caseId,
+                prize: grant.prize,
+                reason: grant.reason,
+              })
+            ).pipe(
+              map(() => grantConfirmed(grantId)),
+              // catchError DENTRO del stream de este envío: un envío fallido no mata la épica.
+              catchError((error) =>
+                of(
+                  rollbackGrant({
+                    grantId,
+                    caseId: grant.caseId,
+                    playerId: grant.playerId,
+                    error: toReadableError(error),
+                  })
+                )
+              )
+            )
+          );
+        })
       )
     )
   );
 ```
 
-**Error común.** Confundir `exhaustMap` con `switchMap`. Los dos "resuelven" el
-doble click, pero al revés: `switchMap` **cancela el primero y se queda con el
-último**; `exhaustMap` **se queda con el primero e ignora el resto**. Para un
-submit de venta quieres `exhaustMap` (que se complete el POST que ya salió); si
-usaras `switchMap`, el segundo click abortaría una venta que quizá ya impactó
-en el server → estado incierto. La distinción no es cosmética: cambia qué
-venta queda registrada.
+El `groupBy` es lo que hace que la exclusión sea **por envío**: el doble clic sobre
+Juan se ignora, y el clic sobre María, un frame después, sale igual. Un `exhaustMap`
+sin `groupBy` ignoraría a María también, porque "hay algo en vuelo" sería cierto para
+toda la consola.
 
-**Cómo probarlo con marbles.** Se prueba que el disparo intermedio **se
-ignora**:
+**Error común.** Confundir `exhaustMap` con `switchMap`. Los dos "resuelven" el doble
+clic, pero al revés: `switchMap` **cancela el primero y se queda con el último**;
+`exhaustMap` **se queda con el primero e ignora el resto**. Para un envío quieres
+`exhaustMap`: cancelar del lado del navegador una petición que ya salió no la
+cancela en el servidor, y la compensación puede haber llegado igual. La distinción
+no es cosmética: cambia qué envío queda registrado.
+
+**Su prueba de canicas.** Se prueba que el disparo intermedio **se ignora**, y que
+salió una sola petición:
 
 ```javascript
-it('exhaustMap: ignora el segundo click mientras el primero está en vuelo', marbles((m) => {
-  const action$ = m.hot('  -a-b----|', {   // 'b' llega mientras 'a' aún procesa
-    a: { type: SUBMIT_SALE, payload: { raffleId: 1, number: '0347' } },
-    b: { type: SUBMIT_SALE, payload: { raffleId: 1, number: '0347' } },
+test("exhaustMap: el doble clic da un solo envío", marbles((m) => {
+  let calls = 0;
+  const api = { post: () => { calls += 1; return m.cold("----r|", { r: { data: {} } }); } };
+  // El segundo clic llega en el frame 3, con el primer POST todavía en vuelo.
+  const action$ = m.hot("-a-b", { a: sendGrantRequested(juan.id), b: sendGrantRequested(juan.id) });
+  m.expect(sendGrantEpic(action$, stateWith(juan), { api })).toBeObservable("-(st)c", {
+    s: grantSending(juan.id),
+    t: grantSent({ grantId: juan.id }),
+    c: grantConfirmed(juan.id),
   });
-  const epic = (a$) => a$.pipe(
-    ofType(SUBMIT_SALE),
-    exhaustMap((action) => m.cold('----r|', { r: numberSoldOptimistic({ ...action.payload, participantId: 1 }) }))
-  );
-  // Solo el resultado de 'a'. 'b' cayó dentro de la ventana ocupada → descartado.
-  m.expect(epic(action$)).toBeObservable('-----r--|', {
-    r: numberSoldOptimistic({ raffleId: 1, number: '0347', participantId: 1 }),
-  });
+  m.flush();
+  expect(calls).toBe(1);
 }));
 ```
 
@@ -403,315 +448,391 @@ it('exhaustMap: ignora el segundo click mientras el primero está en vuelo', mar
 
 ## Patrones de cancelación y resiliencia
 
-### 6. `takeUntil` — apagar el stream ante un trigger
+### 6. `takeUntil` — apagar el stream ante una señal
 
-**Cuándo.** Siempre que un stream de larga vida deba **cortarse ante un
-evento**: logout, desmontaje del componente, o que ocurra la acción que
-vuelve irrelevante la espera. Es el operador de cancelación de todo el curso y
-la única defensa real contra los memory leaks de epics (siguiente sección).
+**Cuándo.** Siempre que un stream de larga vida deba **cortarse ante un evento**: el
+logout, el «Deshacer», o la acción que vuelve irrelevante la espera. Es el operador
+de cancelación de todo el curso y la única defensa real contra los memory leaks de
+epics (sección 🩸).
 
-**Ejemplo mínimo** — el corte de la expiración cuando el número se vende
-(dentro de `reservationExpirationEpic`):
+**Dónde está en la consola.** Dos veces, en los dos epics de arriba. En
+`undoWindowEpic`, corta la ventana de **ese** envío si llega su «Deshacer», su
+«Enviar ahora», el envío masivo o el logout —el `filter` compara el id—. En
+`pollingEpic`, corta el `timer` con el stop del operador o el logout:
 
 ```javascript
-timer(RESERVATION_TTL_MS).pipe(
-  map(() => reservationExpired({ number })),
-  takeUntil(action$.pipe(          // corta la espera si...
-    ofType(sellNumber.fulfilled.type),
-    filter((sold) => sold.payload.number === number)   // ...se vende ESTE número
-  ))
-)
+        takeUntil(action$.pipe(filter((other) => stopPolling.match(other) || logout.match(other))))
 ```
 
-Y el patrón que la Fase 7 va a reutilizar para el polling:
-`takeUntil(action$.pipe(ofType(STOP_POLLING, logout.type)))`.
+**Error común.** Dos, y los dos duelen:
 
-**Error común.** Dos, y ambos duelen:
+1. **Olvidarlo**, o dejarle una señal afuera, en un stream infinito (`interval`,
+   `timer`, polling). No rompe nada visible hoy, y deja la suscripción viva mandando
+   consultas sin sesión después del logout. Es el incidente 14 ⭐.
+2. **Ponerlo en el pipe equivocado.** `takeUntil` corta todo lo que está antes de él
+   en el pipe donde vive. En el pipe interno corta el `timer`; en el externo corta el
+   epic entero, y el primer logout lo apaga para siempre. Regla práctica: casi
+   siempre va **último, en el pipe interno**.
 
-1. **Olvidarlo** en un stream infinito (`interval`, `timer`, polling). No rompe
-   nada visible hoy, pero deja la suscripción viva disparando acciones fantasma
-   después del unmount o el logout.
-2. **Creer que `takeUntil` emite el valor del notifier hacia afuera.** No lo
-   hace: usa el notifier solo como señal de corte. Si necesitas despachar una
-   acción *al cancelar* (p. ej. `sellCancelled`), no la metas dentro del
-   `takeUntil`; ponla en su propio epic (`cancelOnLogoutEpic`). Este es
-   exactamente el matiz que la Fase 6 marca con ⚠️.
-
-**Cómo probarlo con marbles.** Se prueba que tras el notifier **deja de
-emitir**:
+**Sus pruebas de canicas.** Las dos pruebas de un corte tienen la misma forma: el
+diagrama esperado **termina** donde el corte lo dice.
 
 ```javascript
-it('takeUntil: la expiración se corta cuando el número se vende', marbles((m) => {
-  const source$ = m.cold('----e|', { e: reservationExpired({ number: '0347' }) }); // expiraría en frame 4
-  const sold$   = m.hot('  --s--', { s: { type: sellNumber.fulfilled.type, payload: { number: '0347' } } });
-  // La venta (frame 2) llega antes de la expiración (frame 4): el stream se completa vacío.
-  m.expect(source$.pipe(takeUntil(sold$))).toBeObservable('--|');
+test("takeUntil: «Deshacer» dentro de la ventana corta el timer y no sale nada", marbles((m) => {
+  const action$ = m.hot("-q 5000ms u", { q: juanQueued, u: undoGrant(juan.id) });
+  m.expect(undoWindowEpic(action$)).toBeObservable("");
 }));
 ```
 
-El `|` sin ningún valor antes es la prueba: se completó por cancelación, sin
-llegar a emitir `reservationExpired`.
+```javascript
+test("takeUntil: después del logout el polling no pregunta más", marbles((m) => {
+  let calls = 0;
+  const store = { get: () => { calls += 1; return m.cold("r|", { r: { data: { state: "pending" } } }); } };
+  const action$ = m.hot(`a ${POLLING_INTERVAL_MS + 500}ms L`, { a: startPolling("tok-oxxo-2"), L: logout() });
+  // Dos ticks (0 y 2 s) antes del logout, y nada en los diez segundos siguientes.
+  m.expect(pollingEpic(action$, null, { store }), `^ ${POLLING_INTERVAL_MS + 10500}ms !`).toBeObservable(
+    `p ${POLLING_INTERVAL_MS - 1}ms q`,
+    {
+      p: expect.objectContaining({ type: "purchases/purchaseStatusReceived" }),
+      q: expect.objectContaining({ type: "purchases/purchaseStatusReceived" }),
+    }
+  );
+  m.flush();
+  expect(calls).toBe(2);
+}));
+```
+
+El diagrama vacío de la primera y el `!` de la segunda (la suscripción que la prueba
+corta diez segundos después del logout) son toda la aserción. Sin canicas,
+"comprobar que algo no pasa nunca más" requiere esperar para siempre.
 
 ---
 
-### 7. `retryWhen` — reintentar transitorios con backoff
+### 7. `retryWhen` — reintentar los transitorios con backoff
 
-**Cuándo.** Cuando un fallo puede ser pasajero (`timeout`, `http` 5xx) y vale
-la pena reintentar con espera creciente. La regla dura de rifas: **nunca
-reintentes un `conflict`** — si el número ya se vendió, reintentar diez veces
-son diez `409` y quizás una venta doble.
+**Cuándo.** Cuando un fallo puede ser pasajero (`timeout`, `5xx`) y vale la pena
+reintentar con espera creciente. La regla dura de la consola: **nunca reintentes un
+`409`**. Si el caso ya está compensado para ese jugador, reintentar diez veces da
+diez `409`.
 
-**Ejemplo mínimo** (`retrySellEpic` de Fase 6, núcleo del `retryWhen`):
+**El epic que lo usa** (`retryGrantEpic`, Fase 6; el núcleo del reintento):
 
 ```javascript
-retryWhen((errors$) =>
-  errors$.pipe(
-    mergeMap((error, index) => {
-      const readable = toReadableError(error);
-      const isTransient = readable.type === 'timeout' || readable.type === 'http';
-      // No transitorio o pasado el tope → rendirse: re-lanzar para que lo agarre catchError.
-      if (!isTransient || index >= MAX_RETRIES) {
-        return throwError(error);
-      }
-      // Backoff exponencial: 500ms, 1000ms, 2000ms.
-      return timer(500 * 2 ** index);
-    })
-  )
-)
+              defer(() =>
+                api.post(`/players/${grant.playerId}/grants`, {
+                  grantId: grant.id,
+                  caseId: grant.caseId,
+                  prize: grant.prize,
+                  reason: grant.reason,
+                })
+              ).pipe(
+                retryWhen((errors$) =>
+                  errors$.pipe(
+                    mergeMap((error, index) => {
+                      const { type } = toReadableError(error);
+                      const transient = type === "timeout" || (type === "http" && error.response && error.response.status >= 500);
+                      if (!transient || index >= MAX_RETRIES) return throwError(error);
+                      return timer(500 * 2 ** index); // 500 ms, 1 s, 2 s
+                    })
+                  )
+                ),
 ```
 
-> ⚠️ **RxJS 6, no 7.** En RxJS 7 esto se escribe `retry({ count, delay })`.
-> En 6.6.7 no existe esa firma; el backoff se arma a mano con `retryWhen` +
-> `timer`, como acá.
+Dos detalles que la Fase 6 explica y que acá conviene ver juntos. El `defer`: una
+promesa ya cumplida no se vuelve a pedir, así que reintentar `from(promesa)` repite
+el fallo sin salir a la red; `defer` crea la petición de nuevo en cada intento. Y el
+`index`, que `mergeMap` le pasa como segundo argumento: es el número de error, y con
+él se calcula el backoff (500 ms, 1 s, 2 s) y el tope (`MAX_RETRIES`).
 
-**Error común.** `retry(3)` a secas. Reintenta **cualquier** error, incluido
-el `conflict` que jamás va a mejorar, y sin espera: tres golpes instantáneos
-al server. `retryWhen` te deja filtrar *qué* error reintentar y *cuánto*
-esperar. Si no distingues el tipo de error, no reintentes.
+> ⚠️ **RxJS 6, no 7.** En RxJS 7 esto se escribe `retry({ count, delay })`. En 6.6.7
+> no existe esa firma; el backoff se arma a mano con `retryWhen` y `timer`, como acá.
 
-**Cómo probarlo con marbles.** Marble testing de backoff con tiempos reales es
-incómodo; en la práctica se combina con `TestScheduler`/rxjs-marbles para
-tiempos cortos, o —más legible— se testea la **decisión** (¿reintenta o se
-rinde?) con un `apiClient` mockeado que falla N veces y luego responde:
+**Error común.** `retry(3)` a secas. Reintenta **cualquier** error, incluido el `409`
+que jamás va a mejorar, y sin espera: tres golpes instantáneos al servidor.
+`retryWhen` te deja filtrar *qué* error reintentar y *cuánto* esperar. Si no
+distingues el tipo de error, no reintentes.
+
+**Sus pruebas de canicas.** El contraste es el objetivo: un `503` se reintenta y un
+`409` no.
 
 ```javascript
-it('retryWhen: reintenta un timeout y se rinde ante un conflict', marbles((m) => {
-  // Primer intento: timeout (transitorio) → reintenta. Segundo: éxito.
+test("retryWhen: un 503 se reintenta con backoff (500 ms, 1 s) y confirma al tercer intento", marbles((m) => {
   let call = 0;
-  const apiPost = () => {
-    call += 1;
-    return call === 1
-      ? m.cold('#', {}, { type: 'timeout' })         // error transitorio
-      : m.cold('r|', { r: { data: { participantId: 9 } } });
-  };
-  const epic = (a$) => a$.pipe(
-    ofType(SELL_NUMBER_WITH_RETRY),
-    switchMap(() => apiPost().pipe(
-      map((res) => numberSoldOptimistic({ raffleId: 1, number: '0347', participantId: res.data.participantId })),
-      retryWhen((e$) => e$.pipe(mergeMap((err, i) => (err.type === 'timeout' && i < 3 ? timer(1, m.scheduler) : throwError(err))))),
-      catchError((err) => of(rollbackSale({ raffleId: 1, number: '0347', error: err })))
-    ))
-  );
-  const action$ = m.hot('-a|', { a: { type: SELL_NUMBER_WITH_RETRY, payload: {} } });
-  m.expect(epic(action$)).toBeObservable('--x|', { x: numberSoldOptimistic({ raffleId: 1, number: '0347', participantId: 9 }) });
+  const api = { post: () => { call += 1; return call < 3 ? m.cold("-#", {}, httpError(503)) : m.cold("-r|", { r: {} }); } };
+  const action$ = m.hot("-a", { a: sendAllRequested() });
+  // 1 + 500 + 1 + 1000 + 1 frames después del pedido llega la confirmación.
+  m.expect(retryGrantEpic(action$, stateWith(juan), { api })).toBeObservable("-(st) 1499ms c", {
+    s: grantSending(juan.id),
+    t: grantSent({ grantId: juan.id }),
+    c: grantConfirmed(juan.id),
+  });
 }));
 ```
 
-> 💡 Para el caso `conflict`, el mismo test con `{ type: 'conflict' }` debe
-> emitir `rollbackSale` sin reintentar. Ese contraste (transitorio reintenta /
-> conflict se rinde) es el ejercicio 7.
+```javascript
+test("retryWhen: un 409 no se reintenta, cae directo en el rollback", marbles((m) => {
+  let calls = 0;
+  const conflict = httpError(409, { error: "Ese caso ya fue compensado para este jugador." });
+  const api = { post: () => { calls += 1; return m.cold("----#", {}, conflict); } };
+  const action$ = m.hot("-a", { a: sendAllRequested() });
+  m.expect(retryGrantEpic(action$, stateWith(juan), { api })).toBeObservable("-(st)f", {
+    s: grantSending(juan.id),
+    t: grantSent({ grantId: juan.id }),
+    f: rollbackGrant({
+      grantId: juan.id, caseId: "C-2210", playerId: 42,
+      error: { message: "Ese caso ya fue compensado para este jugador.", type: "conflict" },
+    }),
+  });
+  m.flush();
+  expect(calls).toBe(1); // reintentar un conflict da diez 409
+}));
+```
+
+El `1499ms` de la primera es el backoff entero escrito en el diagrama: 500 ms del
+primer reintento, 1000 del segundo, más un frame por cada respuesta del `cold`. Si
+alguien cambia la fórmula del backoff, esta prueba se pone roja.
 
 ---
 
 ### 8. `catchError` — que un error no mate el epic
 
-**Cuándo.** Siempre que un Observable interno pueda fallar. Sin `catchError`,
-un error **completa el epic entero** y este deja de escuchar acciones para
+**Cuándo.** Siempre que un Observable interno pueda fallar. Sin `catchError`, un
+error **completa el epic entero** con error, y deja de escuchar acciones para
 siempre: el bug más silencioso y más grave de todos.
 
-**Ejemplo mínimo** — el detalle que importa es **dónde** va el `catchError`:
+**Dónde va.** El detalle que importa es la posición. En `sendGrantEpic` (patrón 5)
+el `catchError` envuelve **la petición de ese envío**, adentro del `exhaustMap`. En
+`pollingEpic` (patrón 2) envuelve **la consulta de ese tick**, adentro del `mergeMap`.
+Los dos están en el lugar donde quieres que el error muera:
 
 ```javascript
-// ✅ Correcto: catchError DENTRO del map interno. El error de una venta
-//    se convierte en rollbackSale y el epic sigue vivo para la próxima.
-action$.pipe(
-  ofType(SELL_NUMBER),
-  switchMap((action) =>
-    from(apiClient.post(/* ... */)).pipe(
-      map((res) => numberSoldOptimistic(/* ... */)),
-      catchError((error) => of(rollbackSale({ error: toReadableError(error) })))  // ← acá adentro
-    )
-  )
-);
-
-// ❌ Fatal: catchError al final del pipe EXTERNO. El primer error mata el
-//    stream principal y el epic no vuelve a reaccionar a ningún SELL_NUMBER.
-action$.pipe(
-  ofType(SELL_NUMBER),
-  switchMap((action) => from(apiClient.post(/* ... */)).pipe(map(/* ... */))),
-  catchError((error) => of(rollbackSale({ error })))  // ← MAL: mata el epic entero
+// ❌ Afuera del tick: el primer 500 completa el timer entero (incidente 17).
+timer(0, POLLING_INTERVAL_MS).pipe(
+  mergeMap(() => from(store.get(`/purchases/${token}`)).pipe(map(/* … */))),
+  catchError((error) => of(pollingFailed({ token, error: toReadableError(error) })))
 );
 ```
 
-**Error común.** Justo el de arriba: `catchError` en el pipe externo. Es un
-error de *posición*, no de olvido, y por eso es traicionero: el código
-"maneja errores", el primer fallo hasta se despacha bien… y a partir de ahí el
-epic está muerto y nadie lo nota hasta que otra venta simplemente no responde.
-Regla: **el `catchError` va dentro del Observable interno**, aislando el error
-a esa operación.
+**Error común.** Justo el de arriba. Es un error de *posición*, no de olvido, y por
+eso es traicionero: el código "maneja errores", el primer fallo hasta se despacha
+bien… y a partir de ahí el stream está muerto y nadie lo nota. Regla: **el
+`catchError` va dentro del Observable interno**, aislando el error a esa operación.
+Y su primo, el olvido, es el incidente 13: sin `catchError`, el error sube hasta
+`combineEpics` y se lleva a **todos** los epics con él.
 
-**Cómo probarlo con marbles.** Se prueba que **tras un error, el epic sigue
-respondiendo** a la siguiente acción:
+**Sus pruebas de canicas.** Se prueba que **tras un error, el epic sigue
+respondiendo**:
 
 ```javascript
-it('catchError interno: un fallo no mata el epic; la próxima venta sigue funcionando', marbles((m) => {
-  const responses = [
-    m.cold('#', {}, { type: 'http' }),                          // 1ª venta: falla
-    m.cold('r|', { r: { data: { participantId: 5 } } }),        // 2ª venta: ok
-  ];
-  let i = 0;
-  const epic = (a$) => a$.pipe(
-    ofType(SELL_NUMBER),
-    mergeMap((action) => responses[i++].pipe(
-      map((res) => numberSoldOptimistic({ ...action.payload, participantId: res.data.participantId })),
-      catchError((err) => of(rollbackSale({ ...action.payload, error: err })))   // interno
-    ))
-  );
-  const action$ = m.hot('-a-b|', {
-    a: { type: SELL_NUMBER, payload: { number: '0347' } },
-    b: { type: SELL_NUMBER, payload: { number: '0912' } },
-  });
-  m.expect(epic(action$)).toBeObservable('-x-y|', {
-    x: rollbackSale({ number: '0347', error: { type: 'http' } }),
-    y: numberSoldOptimistic({ number: '0912', participantId: 5 }),
+test("catchError adentro: un envío que falla no mata el epic; el siguiente sale", marbles((m) => {
+  const api = {
+    post: (url, body) => (body.grantId === juan.id ? m.cold("----#", {}, httpError(503)) : m.cold("----r|", { r: {} })),
+  };
+  const action$ = m.hot("-a 10ms b", { a: sendGrantRequested(juan.id), b: sendGrantRequested(maria.id) });
+  m.expect(sendGrantEpic(action$, stateWith(juan, maria), { api })).toBeObservable("-(st)f 6ms (uv)c", {
+    s: grantSending(juan.id),
+    t: grantSent({ grantId: juan.id }),
+    f: rollbackGrant({
+      grantId: juan.id, caseId: "C-2210", playerId: 42,
+      error: { message: "El servidor tuvo un problema. Intenta de nuevo.", type: "http" },
+    }),
+    u: grantSending(maria.id),
+    v: grantSent({ grantId: maria.id }),
+    c: grantConfirmed(maria.id),
   });
 }));
 ```
 
-Que `y` aparezca **después** de que `x` fue un error es la prueba de que el
-epic sobrevivió. Si el `catchError` estuviera afuera, `y` nunca llegaría.
+```javascript
+test("catchError por tick: después de un 500, el polling pregunta igual", marbles((m) => {
+  let call = 0;
+  const store = {
+    get: () => {
+      call += 1;
+      return call === 1 ? m.cold("#", {}, httpError(500)) : m.cold("r|", { r: { data: { state: "confirmed" } } });
+    },
+  };
+  const action$ = m.hot("a", { a: startPolling("tok-efecty-1") });
+  // El primer tick falla; el segundo, dos segundos después, trae la confirmación y el polling termina.
+  m.expect(pollingEpic(action$, null, { store })).toBeObservable(`f ${POLLING_INTERVAL_MS - 1}ms c`, {
+    f: pollingFailed({ token: "tok-efecty-1", error: { message: "El servidor tuvo un problema. Intenta de nuevo.", type: "http" } }),
+    c: expect.objectContaining({ type: "purchases/purchaseStatusReceived", payload: expect.objectContaining({ state: "confirmed" }) }),
+  });
+}));
+```
+
+Que el envío de María aparezca **después** del rollback de Juan, y que el segundo
+tick traiga la confirmación después del `500`, es la prueba de que los epics
+sobrevivieron. Un test que solo mire el primer fallo pasa con el bug adentro.
 
 ---
 
 ## 🩸 Memory leaks en epics: cómo se ven, cómo se previenen
 
-Un epic es un Observable que **nunca se completa**: escucha `action$` para
-siempre, que es lo que quieres. El problema aparece con los Observables
-**internos** de larga vida —`interval`, `timer`, polling— que arrancas dentro
-de un `mergeMap`/`switchMap`. Si no les das una condición de corte, quedan
-vivos aunque el componente que los originó ya no exista.
+Un epic es un Observable que **nunca se completa**: escucha `action$` para siempre,
+que es lo que quieres. El problema aparece con los Observables **internos** de larga
+vida —`interval`, `timer`, polling— que arrancas dentro de un `mergeMap` o un
+`switchMap`. Si no les das una condición de corte, quedan vivos aunque la pantalla
+que los originó ya no exista.
+
+La consola tuvo uno a propósito: el refresco de compras de la Fase 6 (§5.8), un
+`interval(5000)` sin `takeUntil` que seguía consultando `GET /purchases?status=pending`
+después del logout. La Fase 7 lo borró y lo reemplazó por `pollingEpic`, con sus dos
+salidas.
 
 **Cómo se ve un leak (la evidencia forense):**
 
-- En **Redux DevTools**, acciones que siguen llegando después de que el usuario
-  hizo logout o cambió de pantalla: `pollingTick`, `reservationExpired` de una
-  rifa que ya cerraste. Acciones fantasma.
-- En **Chrome DevTools → Performance / Memory**, el heap crece escalonado y no
-  baja tras navegar: cada visita a la pantalla suma una suscripción que no se
-  liberó.
-- En **Network**, peticiones periódicas que siguen saliendo hacia el mock
-  después de cerrar sesión.
+- En **Redux DevTools**, acciones que siguen llegando después del logout o de salir
+  de la pantalla: `purchases/purchaseStatusReceived` de una compra que ya nadie mira.
+  Acciones fantasma.
+- En **Network**, peticiones periódicas que siguen saliendo, ya sin `Authorization`.
+- En el **log del mock**, el contador de peticiones sin sesión: `[3001] sin sesión #N`
+  en el refresco de la Fase 6, `[3002] sin sesión #N` en el polling de la Fase 7. Ese
+  número no lo deduces: lo cuentas.
+- En **Chrome DevTools → Memory**, el heap que crece escalonado y no baja: cada visita
+  suma una suscripción que no se liberó.
 
-**Cómo se previene** — una sola idea, tres formas de la misma idea:
+**Cómo se previene** — una sola idea, de tres formas:
 
-1. **Todo stream infinito lleva `takeUntil`** con un notifier de fin de vida:
-   `takeUntil(action$.pipe(ofType(STOP_POLLING, logout.type)))`. Sin esto, no hay
-   polling seguro.
-2. **El teardown de RxJS es tu amigo:** cuando `takeUntil` corta o el operador
-   externo cambia de interno (`switchMap`), RxJS ejecuta el teardown y limpia
-   `timer`/`interval` solos. No hay `clearInterval` que recordar — esa es la
-   razón de existir de los epics frente a los `setTimeout` de Fase 5. 💸 La
-   deuda de `reservationTimers.js` se paga exactamente así.
-3. **Elige bien el operador de mapeo.** `switchMap` cancela el interno anterior
-   por diseño; usarlo donde corresponde previene leaks *gratis*. `mergeMap` sin
-   corte es donde se acumulan.
+1. **Todo stream infinito lleva `takeUntil`** con sus señales de fin de vida, el
+   logout entre ellas, en el mismo pipe donde nació.
+2. **El teardown de RxJS es tu aliado:** cuando `takeUntil` corta o `switchMap`
+   cambia de interno, RxJS limpia el `timer` o el `interval` solo. No hay
+   `clearTimeout` que recordar —esa es la razón de existir de los epics frente a los
+   `setTimeout` de la Fase 5—, y por eso `undoWindowEpic` no tiene un `Map` de ids.
+3. **Elige bien el operador de aplanamiento.** `switchMap` cancela el interno anterior
+   por diseño; usarlo donde corresponde previene leaks gratis. `mergeMap` sin corte es
+   donde se acumulan.
 
-> 📚 Checklist operativo de cancelación/teardown: la sección de memory leaks de este mismo apéndice, más la pieza forense de la Fase 6 §6
-> (memory leaks, cancelación, unsubscribe). Este apéndice te da los patrones;
-> esa checklist te da el procedimiento de caza.
+> 📚 El procedimiento de caza está en la pieza forense de la Fase 6 (§6) y en la de la
+> Fase 7. Este apéndice te da los patrones; esas piezas te dan el procedimiento.
 
 ---
 
-## 🔬 Marble testing → **A11**
+## 💸 La deuda: dos epics con el mismo cuerpo
 
-Cada patrón de arriba trae su "cómo probarlo con marbles" porque el test es
-parte del patrón, no un añadido. Lo que **no** está acá es la metodología: la
-gramática del diagrama, `hot` frente a `cold`, el molde base, los errores
-comunes y los tests trabajados de `debounceTime`, `switchMap` y `takeUntil`.
+La Fase 6 deja declarada una deuda que este apéndice no paga: `sendGrantEpic` y
+`retryGrantEpic` repiten casi el mismo cuerpo. Los dos arman el `concat` del
+optimista, el `POST /players/:id/grants`, el `grantConfirmed` y el `rollbackGrant`, y
+desde la Fase 7 los dos llaman a `closedWheelRejection`. Lo único que cambia es el
+`retryWhen` del masivo.
 
-Todo eso vive en **`A11-marble-testing.md`**, y se enseña de lleno en la Fase 10.
+La extracción natural es una función que devuelve el Observable de **un** envío, y
+que cada epic compone con su operador:
 
-El recordatorio mínimo, para que puedas leer los ejemplos de este apéndice sin
-saltar de archivo:
+```javascript
+// Lo que comparten: el ciclo de un envío. retry decide si se reintenta.
+const grantRequest$ = (grant, api, retry = (request$) => request$) =>
+  concat(
+    of(grantSending(grant.id), grantSent({ grantId: grant.id })),
+    retry(defer(() => api.post(`/players/${grant.playerId}/grants`, { /* … */ }))).pipe(
+      map(() => grantConfirmed(grant.id)),
+      catchError((error) => of(rollbackGrant({ /* … */ error: toReadableError(error) })))
+    )
+  );
+```
 
-- `-` es un frame de tiempo · una letra es una emisión · `|` completa · `#`
-  error · `(ab)` son dos emisiones en el mismo frame.
-- `m.hot(...)` para `action$` (ya está corriendo); `m.cold(...)` para respuestas
+No se paga en el curso porque los dos epics están cubiertos por pruebas y el costo de
+la duplicación, hoy, es leerla dos veces. Se paga el día que un tercer epic necesite
+el mismo ciclo, o el día que alguien arregle un bug en uno y se olvide del otro. Es el
+ejercicio 27 de la Fase 6, y las pruebas de los patrones 5, 7 y 8 son la red para
+hacerlo sin miedo.
+
+---
+
+## 🔬 Pruebas de canicas → **A11**
+
+Cada patrón de arriba trae su prueba porque la prueba es parte del patrón, no un
+añadido. Lo que **no** está acá es la metodología: la gramática del diagrama, `hot`
+contra `cold`, el molde base, los errores comunes al escribir canicas y las pruebas
+trabajadas paso a paso.
+
+Todo eso vive en **`A11-marble-testing.md`**, y se aplica de lleno en la Fase 10.
+
+El recordatorio mínimo, para leer las pruebas de este apéndice sin saltar de archivo:
+
+- `-` es un frame (un milisegundo virtual) · una letra es una emisión · `|` completa ·
+  `#` error · `(ab)` son dos emisiones en el mismo frame · `300ms` avanza trescientos
+  frames de golpe.
+- `m.hot(...)` para `action$` (ya está corriendo); `m.cold(...)` para las respuestas
   HTTP (nacen con la suscripción).
-- `m.expect(epic(action$)).toBeObservable(esperado, valores)` es la aserción.
-- Los espacios tras las comillas no cuentan como frames: están para que alinees
-  los diagramas verticalmente y el timing se lea de un vistazo.
+- `m.expect(epic(action$, state$, deps)).toBeObservable(esperado, valores)` es la
+  aserción; `m.flush()` corre el tiempo virtual hasta el final, para mirar contadores
+  después.
+- Los epics reciben un `state$` mínimo (`{ value: … }`) y un `api` o un `store` falso:
+  por eso las dependencias del middleware importan.
 
-> 🧠 **Y el principio que gobierna todos los tests de este apéndice:** testea
-> *timing* y *cancelación*, no valores. El valor lo cubre un test de reducer,
-> que es más barato. Lo que **solo** los marbles pueden probar es cuándo emite
-> un stream y —sobre todo— qué deja de emitir tras un corte. Si tu marble test
-> no depende del tiempo, probablemente no necesitabas marbles.
+> 🧠 **Y el principio que gobierna todas las pruebas de este apéndice:** prueba
+> *tiempo* y *cancelación*, no valores. El valor lo cubre una prueba de reducer, que es
+> más barata. Lo que **solo** las canicas pueden probar es cuándo emite un stream y
+> —sobre todo— qué deja de emitir tras un corte. Si tu prueba de canicas no depende
+> del tiempo, probablemente no necesitabas canicas.
 
 ---
 
 ## 🧪 Ejercicios (8)
 
-Cortos, de consulta. Los que dicen **(marbles)** se resuelven escribiendo un
-marble test. Recuerda: identificadores en inglés, comentarios y UI en español.
+Cortos, de consulta. Los que dicen **(canicas)** se resuelven escribiendo una prueba
+de canicas con rxjs-marbles 6, contra el epic real. Recuerda: identificadores en
+inglés, comentarios y UI en español.
 
 **🟢 Fácil**
 
 1. Escribe de memoria la línea de imports de RxJS 6 para un epic que use
-   `debounceTime`, `switchMap`, `map` y `catchError`. Verifica que ninguno
-   venga de `rxjs` en vez de `rxjs/operators`.
-2. Dada la tabla maestra, decide el operador para cada caso y justifica en una
-   frase: (a) cargar el detalle de la rifa que el usuario acaba de abrir;
-   (b) expirar reservas de tres números distintos; (c) evitar doble submit del
-   botón "Vender".
+   `debounceTime`, `switchMap`, `map` y `catchError`. **Criterio:** ninguno de los
+   cuatro viene de `rxjs`, y el archivo compila con `npm run build`.
+2. Con la tabla maestra, decide el operador para cada caso y justifícalo en una frase:
+   (a) cargar el detalle de la rueda que el operador acaba de abrir; (b) la ventana de
+   deshacer de tres envíos encolados; (c) el doble clic en «Enviar ahora».
+   **Criterio:** (a) `switchMap`, (b) `mergeMap`, (c) `exhaustMap`, cada uno con lo que
+   pasaría con el operador equivocado.
 
 **🟡 Intermedio**
 
-3. Toma `validateNumberEpic` y explica qué bug reaparece si cambias `switchMap`
-   por `mergeMap`, manteniendo el `debounceTime(300)`. ¿El debounce solo
-   alcanza para evitarlo? ¿Por qué no?
-4. **(marbles)** Escribe un marble test que pruebe que `debounceTime` colapsa
-   tres tecleos dentro de la ventana en una sola emisión (la última).
-5. Reescribe un epic que hoy tiene `catchError` en el pipe externo para moverlo
-   al Observable interno. Explica, en un comentario en español, qué se rompía
-   antes.
+3. Cambia el `switchMap` de `searchPlayerEpic` por `mergeMap`, dejando el
+   `debounceTime(300)`, y corre la prueba del patrón 2. **Criterio:** la prueba se
+   pone roja con dos `playerSearchSucceeded`, y puedes explicar en dos frases por qué
+   el debounce solo no alcanza.
+4. **(canicas)** Escribe una prueba que demuestre que `searchPlayerEpic` busca
+   **dos** veces si el operador hace una pausa de 400 ms en mitad del nombre.
+   **Criterio:** el diagrama esperado tiene dos `playerSearchSucceeded`, y la prueba
+   pasa contra el epic sin tocarlo.
+5. Mueve el `catchError` de `pollingEpic` afuera del `mergeMap` (como el ❌ del patrón
+   8) y corre la prueba del patrón 8. **Criterio:** la prueba se pone roja y el
+   diagrama recibido termina en `f`; vuelve a dejarlo adentro y escribe en un
+   comentario en español qué se rompía.
 
 **🟠 Difícil**
 
-6. **(marbles)** Prueba con un diagrama que `switchMap` cancela la operación
-   anterior: dos acciones del mismo número, la segunda antes de que responda la
-   primera; el resultado de la primera **no** debe aparecer en `expected`.
-7. **(marbles)** Escribe dos tests para `retrySellEpic`: uno donde un `timeout`
-   se reintenta y luego tiene éxito, y otro donde un `conflict` **no** se
-   reintenta y cae directo en `rollbackSale`. El contraste es el objetivo.
+6. **(canicas)** Prueba que consultar una segunda compra **cancela** el polling de la
+   primera: `startPolling("tok-a")` y, tres segundos después, `startPolling("tok-b")`.
+   **Criterio:** después del segundo `startPolling` no aparece ningún
+   `purchaseStatusReceived` de `tok-a`, y el `store.get` falso registra que
+   `/purchases/tok-a` dejó de pedirse.
+7. **(canicas)** Escribe la prueba de `retryGrantEpic` para un `timeout` (axios lo
+   marca con `code: "ECONNABORTED"`): se reintenta y confirma. **Criterio:** el
+   diagrama esperado incluye el backoff, y la misma prueba con un `409` cae directo en
+   `rollbackGrant` con una sola petición.
 
 **🔴 Muy difícil**
 
-8. **(marbles)** Diagnóstico: te entregan un `pollingEpic` con
-   `interval(2000)` dentro de un `mergeMap` **sin `takeUntil`**. Primero,
-   describe la evidencia que verías en Redux DevTools, Memory y Network tras un
-   logout. Después, corrígelo con `takeUntil(action$.pipe(ofType(logout.type,
-   STOP_POLLING)))` y escribe un marble test que demuestre que, tras el
-   notifier de logout, el epic **deja de emitir** `pollingTick`.
+8. **(canicas)** Diagnóstico: quita el `logout` del `takeUntil` de `pollingEpic`.
+   Primero describe la evidencia que verías en Redux DevTools, en Network y en el log
+   del `3002` tras un logout con la pantalla de compras abierta (pista: la pantalla se
+   desmonta y despacha su `stopPolling`; ¿qué otra cosa tendrías que quitar para ver
+   el leak en el navegador?). Después corre la segunda prueba del patrón 6.
+   **Criterio:** la prueba se pone roja con `calls` mayor que 2, y tu descripción
+   nombra las dos salidas que faltan.
 
 **🔥 Opcionales**
 
-- 🔥 Reimplementa `settlementQueueEpic` con `mergeMap` y demuestra con un marble
-  test que el orden de los `settlementApplied` deja de estar garantizado.
-  Después vuelve a `concatMap` y muestra el test en verde.
-- 🔥 Compara el backoff de `retryWhen` (RxJS 6) con la firma
-  `retry({ count, delay })` de RxJS 7. Escribe ambos y explica por qué el
-  segundo **no** compila en el stack fijado.
+- 🔥 Reimplementa `stockAdjustmentEpic` con `mergeMap` y demuestra con una prueba de
+  canicas que el orden de los `stockAdjusted` deja de estar garantizado cuando el
+  segundo `PATCH` responde antes. Después vuelve a `concatMap` y muestra la prueba en
+  verde.
+- 🔥 Paga la deuda de la sección 💸: extrae `grantRequest$` y deja `sendGrantEpic` y
+  `retryGrantEpic` usándola. **Criterio:** las pruebas de los patrones 5, 7 y 8 siguen
+  en verde sin cambiar una línea.
 
 ---
 
@@ -719,55 +840,49 @@ marble test. Recuerda: identificadores en inglés, comentarios y UI en español.
 
 ### Documentación oficial
 
-- **redux-observable (1.x)** — README, epics y `combineEpics`, dependencies de
-  epic: https://redux-observable.js.org
-  > ⚠️ La doc actual cubre 1.x y 2.x; el curso está fijado en **1.2.0**. Ignora
-  > cualquier nota de migración a 2.x.
-- **RxJS 6** — operadores, `pipe`, creación de Observables:
-  https://rxjs.dev
-  > ⚠️ El sitio documenta **RxJS 7+** por defecto. Estamos en **6.6.7**:
-  > operadores desde `rxjs/operators`, y `retryWhen` en lugar de
-  > `retry({ delay })`. Verifica siempre la firma contra la 6.
-- **Referencia de operadores concretos** (busca cada uno en rxjs.dev, leyendo la
-  sección de RxJS 6): `debounceTime`, `switchMap`, `mergeMap`, `concatMap`,
-  `exhaustMap`, `takeUntil`, `retryWhen`, `catchError`.
-- **rxjs-marbles** — sintaxis de diagramas, integración con Jest, helpers
-  `cold`/`hot`/`expect`: https://github.com/cartant/rxjs-marbles
-- **Marble testing (concepto)** — guía oficial de testing de RxJS con
-  `TestScheduler`, útil para entender qué hace rxjs-marbles por debajo:
-  https://rxjs.dev/guide/testing/marble-testing
+- **redux-observable (1.x)** — README, epics, `combineEpics` y las dependencias de los
+  epics: https://redux-observable.js.org
+  > ⚠️ La documentación actual cubre 1.x y 2.x; el curso está fijado en **1.2.0**.
+  > Ignora cualquier nota de migración a 2.x.
+- **RxJS 6** — operadores, `pipe`, creación de Observables: https://rxjs.dev
+  > ⚠️ El sitio documenta **RxJS 7+** por defecto. Estamos en **6.6.7**: operadores
+  > desde `rxjs/operators`, y `retryWhen` en lugar de `retry({ delay })`. Verifica
+  > siempre la firma contra la 6.
+- **Los operadores de este apéndice** (búscalos en rxjs.dev, en la sección de RxJS 6):
+  `debounceTime`, `switchMap`, `mergeMap`, `concatMap`, `exhaustMap`, `groupBy`,
+  `takeUntil`, `retryWhen`, `catchError`.
+- **rxjs-marbles** — sintaxis de diagramas, integración con Jest, `cold`, `hot` y
+  `expect`: https://github.com/cartant/rxjs-marbles
+- **Pruebas de canicas (el concepto)** — la guía oficial de `TestScheduler`, que es lo
+  que rxjs-marbles usa por debajo: https://rxjs.dev/guide/testing/marble-testing
 
-> 📝 Las URLs y títulos pueden haber cambiado desde la redacción; verifícalos.
-> No se citan versiones exactas de página ni anclas internas que envejecen
-> rápido.
+> 📝 Las URL y los títulos pueden haber cambiado desde la redacción; verifícalos. No
+> se citan versiones exactas de página ni anclas internas, que envejecen rápido.
 
 ### Orden de lectura sugerido
 
-README de redux-observable → sección de operadores de RxJS 6 (empieza por
-`switchMap` vs `mergeMap`) → vuelve a la [tabla maestra](#-tabla-maestra-cuándo-usar-qué-operador)
-de este apéndice → `A11-marble-testing.md` para escribir el primer test → Fase 10
-para aplicarlo sobre los epics del proyecto.
+README de redux-observable → los operadores de RxJS 6 (empieza por `switchMap` contra
+`mergeMap`) → vuelve a la [tabla maestra](#-tabla-maestra-cuándo-usar-qué-operador) de
+este apéndice → `A11-marble-testing.md` para escribir la primera prueba → Fase 10 para
+aplicarlo sobre los epics del proyecto.
 
 ### Dentro del curso
 
-- **Fase 6 — redux-observable a fondo:** el código real de todos los epics que
-  citas acá.
-- **Fase 7 — cierre y polling:** donde `takeUntil` + `interval` se vuelven
-  polling de verdad.
-- **Fase 8 — liquidación:** el terreno natural de `concatMap`.
-- **`A11-marble-testing.md`:** la metodología completa de marble testing, con
-  un test trabajado por operador.
-- **Fase 6 §6 y este apéndice §Memory leaks:** el procedimiento de caza de leaks
-  y suscripciones sin cancelar.
-- **`cuaderno-incidentes.md`, incidentes 13, 14, 15 y 17:** los cuatro bugs de
-  epics con su ticket delante.
+- **Fase 6 — redux-observable a fondo:** el código completo de los epics de envíos y
+  búsqueda, y el leak a propósito.
+- **Fase 7 — cierre y polling:** donde `timer`, `takeWhile` y `takeUntil` se vuelven
+  polling de verdad, y la guarda de cierre entra en los epics.
+- **`A11-marble-testing.md`:** la metodología completa de las pruebas de canicas.
+- **Fase 6 §6 y la sección 🩸 de este apéndice:** el procedimiento de caza de leaks.
+- **`cuaderno-incidentes.md`, incidentes 13, 14, 15 y 17:** los cuatro bugs de epics
+  con su ticket delante.
 
 ---
 
-> 🏷️ **Este apéndice no lleva tag propio.** Es material de consulta: si no
-> cambia el repo, no hay nada que apuntar. Cuando de leerlo sí salga código
-> —un operador cambiado en un epic—, commitéalo con el prefijo de la
-> fase desde la que llegaste (`f06: …`), no con el del apéndice, para que el
-> `git log --oneline --grep '^f06'` de esa fase siga estando completo. Y si el
-> ejercicio produjo una medición, el número va en el mensaje del tag
-> (`ej/a7/3`), que es donde no se pierde. Todo eso está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
+> 🏷️ **Este apéndice no lleva tag propio.** Es material de consulta: si no cambia el
+> repo, no hay nada que apuntar. Cuando de leerlo sí salga código —un operador
+> cambiado en un epic—, commitéalo con el prefijo de la fase desde la que llegaste
+> (`f06: …`), no con el del apéndice, para que el `git log --oneline --grep '^f06'` de
+> esa fase siga completo. Y si el ejercicio produjo una medición, el número va en el
+> mensaje del tag (`ej/a7/3`), que es donde no se pierde. Todo eso está en
+> [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).

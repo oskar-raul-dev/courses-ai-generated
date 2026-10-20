@@ -1,6 +1,6 @@
 # 🎨 Apéndice A2 — Mini Design System con Sass
 
-> Tutorial React 16 — Rifas y chances · Apéndice de **consulta rápida** · **~2 horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Apéndice de **consulta rápida** · **~2 horas**
 > Lo usan: Fases 0, 4 y 9 · Prerrequisito: `A1-bootstrap-4-y-sass.md`
 >
 > **Material de consulta rápida, no lectura secuencial.** Lo abres cuando una
@@ -27,7 +27,7 @@
 4. [Tokens](#4-tokens)
 5. [Cómo el código real extiende Bootstrap](#5-cómo-el-código-real-extiende-bootstrap)
 6. [Functions](#6-functions)
-7. [Mixins del dominio de rifas](#7-mixins-del-dominio-de-rifas)
+7. [Mixins del dominio de la rueda](#7-mixins-del-dominio-de-la-rueda)
 8. [Convenciones de nombramiento](#8-convenciones-de-nombramiento)
 9. [Tabla: cuándo usar qué](#9-tabla-cuándo-usar-qué)
 10. [Errores comunes en un vistazo](#10-errores-comunes-en-un-vistazo)
@@ -46,9 +46,9 @@ par de mixins que encapsulan patrones visuales repetidos del dominio.** Nada
 más.
 
 Su razón de existir es de mantenimiento, no de estética. Cuando el estado
-"vendido" de un número deja de ser rojo `#dc3545` y pasa a ser un gris apagado
+"agotado" de un segmento deja de ser rojo `#dc3545` y pasa a ser un gris apagado
 porque negocio lo pidió, quieres cambiarlo **en un solo lugar** y que se propague
-a la tabla de números, al badge del detalle y al dashboard. Si el color está
+a la tabla de segmentos, al badge del detalle y al dashboard. Si el color está
 hardcodeado en quince `.scss` distintos, ese cambio de una línea se convierte en
 una cacería y en un bug ("me olvidé del dashboard").
 
@@ -121,20 +121,22 @@ empujar `@use` pero las librerías (Bootstrap 4 entre ellas) seguían en
 `src/index.scss` — el orquestador, con el orden que importa:
 
 ```scss
-// 1) Overrides de Bootstrap PRIMERO. Redefinen los !default de BS4,
-//    así que tienen que estar en scope global ANTES de importar Bootstrap.
-//    Por eso este archivo también entra con @import (globalidad).
-@import "./styles/bootstrap-overrides";
-
-// 2) Bootstrap completo. Ahora lee nuestros overrides como si fueran suyos.
-//    💸 Deuda: importamos todo BS. Achicar a solo-lo-usado se ve en A1.
-@import "~bootstrap/scss/bootstrap";
-
-// 3) Nuestros estilos propios. Estos sí usan @use: son código nuestro.
+// 1) Los @use van PRIMERO: Sass exige que todas las reglas @use estén
+//    antes de cualquier @import o regla de estilo.
 @use "./styles/mixins" as mx;
 @use "./styles/tokens" as tokens;
 
-.raffle-card {
+// 2) Overrides de Bootstrap. Redefinen los !default de BS4, así que
+//    tienen que estar en scope global ANTES de importar Bootstrap.
+//    Por eso este archivo entra con @import (globalidad).
+@import "./styles/bootstrap-overrides";
+
+// 3) Bootstrap completo. Ahora lee nuestros overrides como si fueran suyos.
+//    💸 Deuda: importamos todo BS. Achicar a solo-lo-usado se ve en A1.
+@import "~bootstrap/scss/bootstrap";
+
+// 4) Nuestros estilos propios, con el módulo de mixins.
+.wheel-card {
   border-top: 4px solid tokens.$primary;
   margin-bottom: tokens.$spacing * 2;
 }
@@ -162,16 +164,16 @@ es token solo si se repite.**
 `src/styles/_tokens.scss`:
 
 ```scss
-// Tokens del mini design system de Rifas y chances.
+// Tokens del mini design system de La Esclusa.
 // Valores crudos, sin lógica. Los consume Bootstrap (vía overrides),
 // las functions, los mixins y los componentes.
 
 // --- Color de marca ---
 $primary: #0066cc;   // azul de acción principal
-$success: #28a745;   // verde "abierta / disponible"
-$danger:  #dc3545;   // rojo "cerrada / vendido"
-$warning: #f0ad4e;   // ámbar "reservado / por vencer"
-$muted:   #6c757d;   // gris "resuelta / liquidada / inactivo"
+$success: #28a745;   // verde "en vivo / disponible"
+$danger:  #dc3545;   // rojo "terminada / agotado"
+$warning: #f0ad4e;   // ámbar "programada / por vencer"
+$muted:   #6c757d;   // gris "conciliada / inactivo"
 
 // --- Espaciado (múltiplos de una unidad base) ---
 $spacing: 0.5rem;          // unidad base (heredada de Fase 0)
@@ -179,18 +181,19 @@ $spacing-lg: $spacing * 3; // separaciones grandes
 
 // --- Tipografía ---
 $font-base: 1rem;
-$font-mono: "SFMono-Regular", "Consolas", monospace; // para los números 0000-9999
+$font-mono: "SFMono-Regular", "Consolas", monospace; // para pesos, contadores y IDs
 
 // --- Radios y bordes ---
 $radius: 0.25rem;
 $border-accent: 4px;  // el filete de color arriba de las cards
 ```
 
-> 💡 **Por qué `$font-mono` importa en este dominio.** Los números de rifa son
-> `0000`–`9999`, siempre cuatro dígitos con ceros a la izquierda. En una fuente
-> proporcional, `1111` es más angosto que `0000` y las columnas de la tabla
-> bailan. Monoespaciada, todos los números ocupan lo mismo y la tabla queda
-> prolija. Es una decisión de diseño con causa de dominio, no capricho.
+> 💡 **Por qué `$font-mono` importa en este dominio.** Los pesos de los
+> segmentos se muestran en puntos básicos (`3000`, `2000`, `50`), y los
+> contadores de la bitácora suben de a uno. En una fuente proporcional, `1111`
+> es más angosto que `0000` y las columnas de la tabla bailan. Monoespaciada,
+> todos los números ocupan lo mismo y la tabla queda prolija. Es una decisión
+> de diseño con causa de dominio, no capricho.
 
 > ⚠️ **Error común.** Meter en tokens cosas que no son valores de diseño sino
 > decisiones de un componente puntual (el ancho exacto de *esa* tabla, el
@@ -265,13 +268,15 @@ lados.
 // Devuelve el color asociado a un estado del dominio.
 // Los estados van en INGLÉS (son valores de código, no UI): ver A5 / guía.
 @function status-color($status) {
-  @if $status == "available" or $status == "open" {
+  @if $status == "available" or $status == "live" or $status == "sent" {
     @return tokens.$success;
-  } @else if $status == "reserved" {
+  } @else if $status == "limited" or $status == "scheduled" or $status == "queued" {
     @return tokens.$warning;
-  } @else if $status == "sold" or $status == "closed" {
+  } @else if $status == "sending" {
+    @return tokens.$primary;
+  } @else if $status == "soldout" or $status == "failed" or $status == "ended" {
     @return tokens.$danger;
-  } @else if $status == "settled" or $status == "resolved" {
+  } @else if $status == "reverted" or $status == "reconciled" or $status == "draft" {
     @return tokens.$muted;
   }
   @warn "status-color: estado no reconocido '#{$status}'";
@@ -282,17 +287,17 @@ lados.
 Uso:
 
 ```scss
-.number-cell--sold { background: status-color("sold"); }
+.segment-cell--soldout { background: status-color("soldout"); }
 ```
 
 > ⚠️ **Error común.** Confundir **function** con **mixin**. La function
-> *devuelve un valor* (`color: status-color("sold")`). El mixin *inyecta un
-> bloque de reglas* (`@include number-state("sold")`). Si estás escribiendo
+> *devuelve un valor* (`color: status-color("soldout")`). El mixin *inyecta un
+> bloque de reglas* (`@include segment-state("soldout")`). Si estás escribiendo
 > `@return`, es function; si estás escribiendo propiedades CSS, es mixin.
 
 ---
 
-## 7. Mixins del dominio de rifas
+## 7. Mixins del dominio de la rueda
 
 Un mixin inyecta un bloque de reglas reutilizable. Derivados del dominio y de
 lo que el código de esta época realmente repite, estos son los patrones que
@@ -304,19 +309,19 @@ justifican un mixin. No inventamos más de los que se usan.
 @use "./tokens" as tokens;
 @use "./functions" as fn;
 
-// --- 1) Filete de color arriba de una card, según estado de rifa ---
+// --- 1) Filete de color arriba de una card, según estado de la rueda ---
 // El patrón visual "card con borde superior de color" se repite en el
-// listado de rifas, el detalle y el dashboard. Un mixin lo centraliza.
-@mixin raffle-accent($status) {
+// listado de ruedas, el detalle y el dashboard. Un mixin lo centraliza.
+@mixin wheel-accent($status) {
   border-top: tokens.$border-accent solid fn.status-color($status);
   border-radius: tokens.$radius;
 }
 
-// --- 2) Celda de número según estado (disponible/reservado/vendido) ---
-// La grilla 0000-9999 pinta 10.000 celdas por estado. Este es EL mixin
-// más usado de la app de rifas.
-@mixin number-state($status) {
-  font-family: tokens.$font-mono;   // números alineados
+// --- 2) Celda de segmento según su stock (disponible/limitado/agotado) ---
+// La tabla de segmentos pinta una celda por segmento y por estado. Este es
+// EL mixin más usado de la consola en el listado de segmentos.
+@mixin segment-state($status) {
+  font-family: tokens.$font-mono;   // pesos alineados
   background: fn.status-color($status);
   color: #fff;
   @if $status == "available" {
@@ -327,7 +332,8 @@ justifican un mixin. No inventamos más de los que se usan.
   }
 }
 
-// --- 3) Badge de estado de rifa (texto + color de fondo) ---
+// --- 3) Badge de estado de envío o de rueda (texto + color de fondo) ---
+// El mismo badge sirve al estado de un envío (queued, sent…) y al de una rueda.
 @mixin status-badge($status) {
   display: inline-block;
   padding: (tokens.$spacing * 0.5) tokens.$spacing;
@@ -353,19 +359,19 @@ justifican un mixin. No inventamos más de los que se usan.
 Uso combinado:
 
 ```scss
-.raffle-card {
-  @include raffle-accent("open");
+.wheel-card {
+  @include wheel-accent("live");
 }
 
-.number-cell {
-  &--available { @include number-state("available"); }
-  &--reserved  { @include number-state("reserved"); }
-  &--sold      { @include number-state("sold"); }
+.segment-cell {
+  &--available { @include segment-state("available"); }
+  &--limited   { @include segment-state("limited"); }
+  &--soldout   { @include segment-state("soldout"); }
 }
 
-.raffle-status { @include status-badge("closed"); }
+.grant-status { @include status-badge("sent"); }
 
-.number-grid {
+.segment-grid {
   grid-template-columns: repeat(10, 1fr);
   @include above("md") { grid-template-columns: repeat(20, 1fr); }
 }
@@ -395,18 +401,18 @@ Uso combinado:
 
 Coherentes con la convención de idioma del curso (README, §Convenciones):
 
-- **Clases, variables, mixins y functions van en inglés.** `.raffle-card`, no
-  `.tarjeta-rifa`. `status-color`, no `color-estado`. Solo la narrativa y el
+- **Clases, variables, mixins y functions van en inglés.** `.wheel-card`, no
+  `.tarjeta-rueda`. `status-color`, no `color-estado`. Solo la narrativa y el
   texto que ve el usuario van en español.
-- **Estados en inglés como valores de código.** `"open"`, `"sold"`, `"reserved"`
-  — nunca `"abierta"` en un token o mixin. La traducción a español ocurre en la
+- **Estados en inglés como valores de código.** `"live"`, `"soldout"`, `"limited"`
+  — nunca `"en vivo"` en un token o mixin. La traducción a español ocurre en la
   UI (ver A5), no en el Sass.
-- **Modificadores con BEM ligero.** Bloque `.number-cell`, modificador
-  `.number-cell--sold` (doble guion). No mezclamos con la convención de utilidad
+- **Modificadores con BEM ligero.** Bloque `.segment-cell`, modificador
+  `.segment-cell--soldout` (doble guion). No mezclamos con la convención de utilidad
   de Bootstrap; las clases propias son BEM, las de Bootstrap son de Bootstrap.
 - **Prefijo de dominio, sin sobre-namespacing.** El proyecto es chico y todo
   vive bajo el mismo repo, así que no hace falta prefijar todo con `rc-`. Usamos
-  nombres de dominio claros (`raffle-`, `number-`, `status-`) que ya funcionan
+  nombres de dominio claros (`wheel-`, `segment-`, `status-`) que ya funcionan
   como namespace semántico.
 - **Parciales con `_` y sin extensión al importarlos.** Archivo `_mixins.scss`,
   import `@use "./mixins"`.
@@ -419,12 +425,12 @@ Coherentes con la convención de idioma del curso (README, §Convenciones):
 |---|---|---|
 | Un valor que se repite (color, espaciado, radio) | **Token** en `_tokens.scss` | `$primary`, `$spacing` |
 | Que Bootstrap use mis colores/espaciado | **Override** en `_bootstrap-overrides.scss` (antes de importar BS) | `$theme-colors`, `$spacer` |
-| Traducir un dato a un valor (estado → color) | **Function** (`@return`) | `status-color("sold")` |
-| Inyectar un bloque de reglas repetido | **Mixin** (`@include`) | `number-state("available")` |
+| Traducir un dato a un valor (estado → color) | **Function** (`@return`) | `status-color("soldout")` |
+| Inyectar un bloque de reglas repetido | **Mixin** (`@include`) | `segment-state("available")` |
 | Un media query legible | **Mixin `above`** con `@content` | `@include above("md") { … }` |
 | Traer código propio (parciales) | **`@use`** con namespace | `@use "./tokens" as tokens` |
 | Traer / customizar Bootstrap 4 | **`@import`** (scope global) | `@import "~bootstrap/scss/bootstrap"` |
-| Estilo de un solo componente, no transversal | **`.scss` del componente**, sin token | `RaffleForm.scss` |
+| Estilo de un solo componente, no transversal | **`.scss` del componente**, sin token | `WheelForm.scss` |
 
 ---
 
@@ -436,7 +442,7 @@ Coherentes con la convención de idioma del curso (README, §Convenciones):
 | `@use rules must be written before any other rules` | `@use` mezclado después de un `@import` | Agrupar `@use` al inicio; aislar Bootstrap en `_vendor.scss` |
 | No puedo sobrescribir variables de Bootstrap | Intentaste `@use` sobre Bootstrap 4 (namespaced, no global) | Usar `@import` para el borde con BS4 |
 | Los estilos responsive desaparecen sin error | Falta `@content;` dentro del mixin de breakpoint | Agregar `@content;` donde va el bloque |
-| Las columnas de números "bailan" | Fuente proporcional en la grilla | Aplicar `$font-mono` vía `number-state` |
+| Las columnas de pesos "bailan" | Fuente proporcional en la tabla | Aplicar `$font-mono` vía `segment-state` |
 | Recompilo y nada cambia (Mac) | `node-sass` colado en vez de dart-sass | `npm i sass`, quitar `node-sass` (ver Fase 0) 💸 |
 | `!important` por todos lados | Peleando especificidad cuando el problema era orden | Revisar orden de imports antes de tocar especificidad |
 
@@ -448,11 +454,11 @@ Cortos, para consulta rápida. Los de 🔥 son opcionales / ampliación.
 
 - 🟢 **1.** Agrega un token `$radius-pill: 50rem` y úsalo para que los badges de
   estado sean redondeados. ¿Dónde va el token y dónde el uso?
-- 🟢 **2.** El verde de "abierta" cambió a `#2e9e4f`. Cámbialo en **un solo
+- 🟢 **2.** El verde de "en vivo" cambió a `#2e9e4f`. Cámbialo en **un solo
   lugar** y verifica que se propaga a `.badge-success` de Bootstrap y a
-  `number-state("available")`. ¿Por qué basta un lugar?
+  `segment-state("available")`. ¿Por qué basta un lugar?
 - 🟡 **3.** Escribe una function `status-label-color($status)` que devuelva
-  `#fff` para estados oscuros y `#212529` para `"reserved"` (fondo ámbar claro).
+  `#fff` para estados oscuros y `#212529` para `"limited"` (fondo ámbar claro).
   Intégrala en `status-badge`.
 - 🟡 **4.** Convierte un `@media (min-width: 992px)` hardcodeado de un componente
   a `@include above("lg")`. Confirma que el resultado compilado es idéntico.
@@ -462,7 +468,7 @@ Cortos, para consulta rápida. Los de 🔥 son opcionales / ampliación.
 - 🟠 **6.** Un mixin `above("xxl")` no aplica nada y no da error. Diagnostica por
   qué (pista: `map-has-key`) y agrega el manejo correcto.
 - 🟠 **7.** Refactoriza tres bloques `.scss` que repiten el filete superior de
-  color hacia el mixin `raffle-accent`. Mide cuántas líneas se eliminaron.
+  color hacia el mixin `wheel-accent`. Mide cuántas líneas se eliminaron.
 - 🟠 **8.** Escribe un test manual: cambia `$spacer` y documenta qué utilidades
   de Bootstrap (`.m-*`, `.p-*`) se ven afectadas y cuáles no. ¿Por qué el grid
   no cambia?
@@ -497,7 +503,7 @@ después.
 ---
 
 > 🚀 **Cómo se conecta.** Desde Fase 1 en adelante, cada vez que un componente
-> necesite un color de estado, un badge de rifa o una celda de número, la
+> necesite un color de estado, un badge de rueda o una celda de segmento, la
 > respuesta vive acá: token, function o mixin. Si te encuentras hardcodeando un
 > `#dc3545` o un `@media (min-width: 768px)` en un componente, para y vuelve a
 > este apéndice — casi seguro ya existe la pieza.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verificador del curso React 16 Legacy — Rifas y chances (guía de estilo §17.3).
+"""Verificador del curso React 16 Legacy — La Esclusa, la consola de Jewel Locks (guía de estilo §17.3).
 
 Hereda las validaciones base de `verificador_base.py` (enlaces, anclas, restos de plantilla,
 codificación, emoji en ###, callouts, encabezado de fase) con el perfil del repositorio, y agrega
@@ -30,7 +30,7 @@ RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # correspondencias `a → b` y los registros de acciones de DevTools no llevan ninguna en dos líneas, y
 # se quedan como texto (guía §17.1).
 DIAGRAMA_RE = re.compile(r"[┌┐┘▼▲►↓]")
-CITA_PROMPTS_RE = re.compile(r"prompts/[\w.-]+\.md")
+CITA_PROMPTS_RE = re.compile(r"prompts/[\w.-]+\.md|_desechable-[\w.-]+\.md|zz-code/[\w./-]*")
 
 
 class VerificadorDelCurso(PerfilCoursesIA):
@@ -51,7 +51,7 @@ class VerificadorDelCurso(PerfilCoursesIA):
                 "💎", "🎡", "🧊", "🌊"}
     EMOJI_PERMITIDOS_H3 = (PerfilCoursesIA.EMOJI_PERMITIDOS_H3 | CALLOUTS | EMOJI_H3
                            | {c.replace("️", "") for c in CALLOUTS | EMOJI_H3})
-    # El encabezado de fase (guía §8): «Tutorial React 16 — Rifas y chances · Fase N de 11 · N horas».
+    # El encabezado de fase (guía §8): «Tutorial React 16 — La Esclusa, la consola de Jewel Locks · Fase N de 11 · N horas».
     # El curso no fecha sus fases: las versiones viven congeladas en decisiones-y-versiones.md.
     CAMPOS_ENCABEZADO = ("Tutorial React 16", "horas")
     # 00-alcance, 00-convencion, 00-decisiones y 00-historia llevan número pero son encuadre o

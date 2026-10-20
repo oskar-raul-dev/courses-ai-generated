@@ -1,169 +1,108 @@
 # 🧪 Fase be08 — Pruebas por niveles y la regla del motor
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Fase be08 de be09 · **10 horas**
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Fase be08 de be09 · **10 horas**
 > Depende de: be07 — el dominio está completo del lado del servidor · Habilita: be09 — Empaquetado y pipeline
 
 ---
 
 ## 🎯 1. Propósito
 
-Hasta acá el track agregó comportamiento. Esta fase no agrega ninguno: **demuestra
-que el que hay es cierto**, y lo hace con una suite organizada por niveles, cada
-uno con un trabajo distinto y un costo distinto.
+*"La suite estaba en verde y producción se rompió. ¿Para qué tenemos suite?"* Juliana lo pregunta sin enojo, con la pregunta que importa. Hasta acá el track agregó comportamiento. Esta fase no agrega ninguno: **demuestra que el que hay es cierto**, con una suite organizada por niveles, cada uno con un trabajo y un costo distintos.
 
-Pero el contenido central de la fase no es la suite. Es una regla, y su
-demostración:
+Pero el contenido central no es la suite. Es una regla, y su demostración:
 
-> 🧭 **SQLite vale para pruebas que no tocan concurrencia, bloqueos, zonas
-> horarias ni SQL específico del motor. En cuanto una prueba toca cualquiera de
-> las cuatro, corre contra PostgreSQL o no vale.**
+> 🧭 **SQLite vale para pruebas que no tocan concurrencia, bloqueos, zonas horarias ni SQL específico del motor. En cuanto una prueba toca cualquiera de las cuatro, corre contra PostgreSQL o no vale.** (`D18`)
 
-Esa regla no se enuncia como opinión: se demuestra con **una prueba que pasa en
-SQLite y falla en Postgres, y otra que hace exactamente lo contrario**. Las dos
-existen, las dos van al repositorio, y las dos son correctas.
+La regla no se enuncia como opinión: se demuestra con **una prueba que pasa en SQLite y falla en Postgres, y otra que hace exactamente lo contrario**. Las dos existen, las dos van al repositorio, y las dos son correctas.
 
-Y el argumento que la fase tiene que dejar clavado, porque es el que cambia cómo
-trabajas:
+Y el argumento que la fase tiene que dejar clavado:
 
-> 🧠 **Una suite verde contra el motor equivocado es PEOR que no tener suite.**
-> No tener suite te deja desconfiado y prudente. Una suite verde te da **permiso
-> para desplegar**, y ese permiso es exactamente lo que no tenías derecho a
-> recibir.
+> 🧠 **Una suite verde contra el motor equivocado es PEOR que no tener suite.** No tener suite te deja desconfiado y prudente. Una suite verde te da **permiso para desplegar**, y ese permiso es justo lo que no tenías derecho a recibir.
 
-La deuda 💸 que cobra: la suite de la Fase 10 del track base —Jest, RTL, marbles—
-no podía probar absolutamente nada del servidor, porque el servidor era un
-`json-server` con un archivo. La mitad invisible del sistema queda cubierta acá.
+Hay una prueba de eso en el repositorio, y es de la fase anterior: con el código de `be07` y sin `TEST_DATABASE_URL`, `go test ./...` dice `ok` en `spin` y en `purchase` **sin haber corrido ninguna de sus pruebas de base**. Se saltaron, y nadie lee los `SKIP` de una salida que termina en `ok`.
+
+La deuda 💸 que cobra: la suite de la Fase 10 del track base —Jest, RTL, marbles— no podía probar nada del servidor, porque el servidor era un `json-server` con un archivo. Y suma dos piezas que `be05` y `be07` dejaron a medias: **la prueba estadística que no falla una de cada veinte veces**, y **el nivel de carga** que mira la base después de k6.
 
 ---
 
 ## ✅ 2. Qué queda listo al terminar
 
-- [ ] La suite está organizada en cinco niveles y cada uno se puede correr solo.
-- [ ] Pruebas unitarias puras —aritmética, transiciones, bordes de tiempo— que
-      corren **sin base de datos** en menos de un segundo.
-- [ ] Pruebas de handler con `httptest`, con el servicio sustituido, que verifican
-      la traducción HTTP: códigos, cuerpos y las **dos formas de `404`** (`C-04`).
-- [ ] La **suite de contrato** verifica el checklist de `be00` endpoint por
-      endpoint, incluidos los tres cambios observables que el track introdujo a
-      propósito.
-- [ ] Pruebas de integración contra PostgreSQL 13 en contenedor, con datos
-      propios y aislamiento entre casos.
-- [ ] `TestConcurrentSell` corre con N goroutines y **falla contra el código de
-      `be03`**.
-- [ ] `go test -race ./...` pasa limpio, y hay al menos un caso que lo habría
-      hecho fallar antes de `be05`.
-- [ ] `mustPostgres` está implementado y **falla** —no salta— cuando una prueba
-      que toca las cuatro áreas corre contra el motor equivocado.
-- [ ] Existen las dos pruebas contradictorias, documentadas en
-      `server/evidence/regla-del-motor.md`.
-- [ ] `./server/smoke.sh` sigue entero.
+- [ ] La suite está organizada por niveles —unitario, handler, integración, contrato, concurrencia y carga— y cada uno se corre solo, con un objetivo del `Makefile`.
+- [ ] Pruebas unitarias puras —transiciones, el borde del cierre, `OddsAudit`, el cruce de compras, el sorteo— que corren **sin base** en un segundo.
+- [ ] Pruebas de handler con `httptest` y un doble del servicio, que fijan la traducción a HTTP: códigos, mensajes y el `404` con `{}` (`C-04`).
+- [ ] La **suite de contrato** verifica el régimen estricto de `be00` y los cambios que el track introdujo a propósito, con la aplicación entera contra Postgres.
+- [ ] `testsupport.OpenPostgres` y `MustPostgres` **fallan** —no saltan— cuando una prueba que necesita Postgres corre sin él.
+- [ ] Las regresiones de los incidentes que aplican a la fase final están en la suite.
+- [ ] La prueba estadística está sembrada y da el mismo χ² en cada corrida.
+- [ ] Existen las dos pruebas contradictorias, detrás de `-tags regla`, y `server/evidence/regla-del-motor.md` las documenta con la clasificación de la suite por motor.
+- [ ] El nivel de carga corre `giro.js` con sus `thresholds` y comprueba las invariantes en SQL después.
+- [ ] `go test -race ./...` pasa contra Postgres, y `./server/smoke.sh` sigue entero.
 
 ---
 
 ## 🚫 3. Qué queda fuera por ahora
 
-- **Las pruebas de extremo a extremo del frontend.** Ya viven en la Fase 10 del
-  track base, con Cypress. No se duplican acá y no se mezclan: son otra pirámide,
-  con otro dueño.
-- **El pipeline de integración continua** → `be09`. Acá se construye la suite que
-  **puede** correr en CI; hacerla correr allá es la otra fase.
-- **Pruebas de carga y de rendimiento.** Medimos concurrencia para verificar
-  **corrección**, no para saber cuántas ventas por segundo aguanta el sistema.
-  Son disciplinas distintas y confundirlas produce suites lentas que no prueban
-  nada.
-- **Mutación, fuzzing y verificación formal.** Se mencionan como comparación 🔥.
-  El *fuzzing* nativo de Go llegó en 1.18 y sí está disponible, pero queda como
-  ejercicio opcional.
+- **Las pruebas de extremo a extremo del frontend.** Viven en la Fase 10 del track base, con Cypress. No se duplican: son otra pirámide, con otro dueño.
+- **El pipeline** → `be09`. Acá se construye la suite que **puede** correr en CI; hacerla correr allá es la otra fase.
+- **El rendimiento.** El nivel de carga de esta fase mide **corrección bajo carga** —las invariantes de `be05` con la forma de la noche—, no cuántos giros por segundo aguanta el sistema. Un umbral de latencia depende de la máquina; una invariante, no (5.6).
+- **Mutación, fuzzing y verificación formal.** Se mencionan como comparación 🔥. El *fuzzing* nativo de Go llegó en 1.18 y está disponible, como ejercicio opcional.
 
 ---
 
 ## 🧠 4. Conceptos mínimos
 
-### 4.1 Los cinco niveles, y qué prueba cada uno
+### 4.1 Los niveles, y qué prueba cada uno
 
-Un nivel se justifica por lo que puede fallar en él **y no en los otros**. Si dos
-niveles atrapan siempre los mismos bugs, sobra uno.
+Un nivel se justifica por lo que puede fallar en él **y no en los otros**. Si dos niveles atrapan siempre los mismos bugs, sobra uno.
 
-| Nivel | Qué prueba | Necesita base | Cuánto tarda |
+| Nivel | Qué prueba | Necesita | Cuánto tarda (medido) |
 |---|---|---|---|
-| Unitario | Aritmética, transiciones, bordes de tiempo | No | ms |
-| Handler | La traducción a HTTP: código, cuerpo, forma | No | ms |
+| Unitario | Transiciones, el borde del cierre, `OddsAudit`, el cruce de compras, el sorteo sembrado | nada | ~1 s con la compilación |
+| Handler | La traducción a HTTP: código, mensaje, forma | nada | ms |
 | Integración | Que el SQL haga lo que dices que hace | Postgres | s |
-| Contrato | Que el frontend siga funcionando | Postgres | s |
-| Concurrencia | Que las garantías se sostengan bajo carrera | Postgres | s |
+| Contrato | Que la consola siga funcionando | Postgres y la aplicación entera | ~1,3 s |
+| Concurrencia | Que las garantías se sostengan bajo carrera | Postgres, `-race` | la suite entera: ~30 s |
+| Carga | Que las invariantes se sostengan con la forma de la noche | el binario, k6 y Postgres | minutos |
 
-Los dos primeros son gratis, así que vive ahí todo lo que pueda vivir. Y hay una
-consecuencia de diseño que conviene decir al revés: **si algo importante solo se
-puede probar en el nivel de integración, muchas veces el problema es el diseño y
-no la prueba**. `PrizeShare` es unitaria porque `be07` la separó del store; la
-hora dura es unitaria porque `be06` inyectó el reloj. Las decisiones de diseño de
-las fases anteriores son las que hacen barata esta.
+Los dos primeros son gratis, así que vive ahí todo lo que pueda vivir. Y una consecuencia de diseño que conviene decir al revés: **si algo importante solo se puede probar en integración, muchas veces el problema es el diseño y no la prueba**. El borde del cierre es unitario porque `be06` sacó `wheel.IsClosed` a una función pura; `OddsAudit` es unitario porque `be07` lo separó del SQL. Las decisiones de las fases anteriores son las que hacen barata esta.
 
-### 4.2 La regla del motor, y por qué es una regla y no un consejo
+### 4.2 La regla del motor, y por qué falla en vez de saltar
 
-Correr las pruebas contra SQLite en memoria es tentador y en parte es correcto:
-arranca en milisegundos, no necesita contenedor, y cada caso puede tener su base
-limpia. Para la mitad de la suite es la decisión adecuada.
+Correr las pruebas contra SQLite en memoria es tentador y en parte correcto: arranca en milisegundos y no necesita contenedor. Para el store de ruedas es la decisión adecuada, y esa prueba corre en los dos motores desde `be02`.
 
-El problema es que SQLite y PostgreSQL **no son el mismo sistema con distinta
-velocidad**: son sistemas con garantías distintas. `be02` lo midió con siete
-divergencias y `be05` lo remató mostrando que la concurrencia ni siquiera se
-puede simular. Cuando una prueba cruza una de esas fronteras, no está probando tu
-código: está probando cómo se comporta tu código **en un motor que no vas a
-desplegar**.
+El problema es que SQLite y PostgreSQL **no son el mismo sistema con distinta velocidad**: tienen garantías distintas. `be02` midió siete divergencias, y `be05` mostró que la concurrencia ni siquiera se puede simular: la carrera del stock dio verde contra SQLite con el código roto de `be-09`. Cuando una prueba cruza una de esas fronteras, no prueba tu código: prueba cómo se comporta en un motor que no vas a desplegar.
 
-Y acá hay una asimetría que hace la situación peor de lo que parece. Un falso
-negativo —una prueba que falla en SQLite y pasaría en Postgres— es molesto: lo
-investigas y lo entiendes. Un **falso positivo** —verde en SQLite, roto en
-Postgres— no produce ninguna señal. Nadie investiga una prueba que pasa. El bug
-llega a producción con la bendición de la suite.
+Y la asimetría la empeora. Un falso negativo —falla en SQLite, pasaría en Postgres— es molesto: lo investigas. Un **falso positivo** —verde en SQLite, roto en Postgres— no produce ninguna señal. Nadie investiga una prueba que pasa.
 
-> 🧭 **Corolario operativo: `t.Skip` es la forma en que una suite miente.** Si una
-> prueba de concurrencia se salta cuando no hay Postgres, la salida dice `ok` y
-> nadie mira los `SKIP`. Por eso el helper de esta fase **falla** en vez de
-> saltar: una prueba que no puede correr donde importa es un error de
-> configuración, no un caso omitido.
+> 🧭 **Corolario operativo: `t.Skip` es la forma en que una suite miente.** Las pruebas de `be05` a `be07` se saltaban sin `TEST_DATABASE_URL`. Desde esta fase, **fallan**, y dicen por qué: una prueba que no puede correr donde importa es un error de configuración, no un caso omitido.
 
 ### 4.3 Dobles: qué se sustituye y qué no
 
-En Go los dobles de prueba casi no necesitan librería: las interfaces implícitas
-de `be01` hacen que cualquier struct con los métodos correctos sirva. No hace
-falta un framework de *mocks* y este track no usa ninguno.
+En Go los dobles casi no necesitan librería: las interfaces implícitas de `be01` hacen que cualquier struct con los métodos correctos sirva. Este track no usa ningún framework de *mocks*. La decisión importante es **qué sustituir**:
 
-La decisión importante no es cómo hacer el doble, es **qué sustituir**:
-
-- **El reloj: siempre.** `be06` lo hizo inyectable justamente para esto.
-- **El store, en las pruebas de handler: sí.** Ahí se prueba la traducción HTTP,
-  y meter una base solo la hace lenta y frágil.
-- **El store, en las pruebas de service: casi nunca.** Un service cuya lógica
-  está en el SQL —y en este backend, gran parte lo está— probado contra un store
-  falso prueba el doble, no el sistema. Es el error más común de este nivel: una
-  suite de services con *mocks* que verifica que el código llama a los métodos
-  que el propio autor decidió llamar.
+- **El reloj: siempre.** `be06` lo hizo inyectable para esto.
+- **El servicio, en las pruebas de handler: sí.** Ahí se prueba la traducción HTTP, y por eso el handler del giro depende ahora de una interfaz (`spinService`) y no del tipo concreto.
+- **La tienda (`purchase.Play`): sí.** Es un tercero; en la suite de contrato la reemplaza un doble que lee el mismo `earnings.json` que sirve el `3002`.
+- **El store, en las pruebas de servicio: casi nunca.** Un servicio cuya lógica está en el SQL —en este backend, mucha—, probado contra un store falso, prueba el doble.
 - **La base: nunca.** No hay forma honesta de simular un `FOR UPDATE`.
 
 ### 4.4 Aislamiento entre casos
 
-Dos pruebas que comparten datos producen fallos que dependen del orden, y un
-fallo que depende del orden se investiga durante horas. Hay tres estrategias y
-conviene elegir a conciencia:
+Dos pruebas que comparten datos producen fallos que dependen del orden. Hay tres estrategias, y en este backend la barata no sirve:
 
-**Base nueva por caso.** El aislamiento perfecto y el costo más alto. Con SQLite
-en memoria es gratis; con Postgres, no.
+**Truncado entre casos.** Un `TRUNCATE … RESTART IDENTITY CASCADE` antes de cada prueba: rápido y simple. Inservible acá:
 
-**Transacción revertida por caso.** Cada prueba abre una transacción y hace
-`Rollback` al final. Rápido y limpio — pero **inservible para esta suite**, porque
-el código bajo prueba abre sus propias transacciones y las anidaría. Justo lo que
-`be05` y `be07` hacen.
+```text
+ERROR:  spin_log solo se agrega: TRUNCATE rechazado
+```
 
-**Truncado entre casos.** Un `TRUNCATE … RESTART IDENTITY CASCADE` antes de cada
-prueba. Es la que usamos: sencilla, compatible con el código real, y rápida en
-tablas pequeñas.
+Es el disparador de `be05` (`D35`) haciendo su trabajo. Desactivarlo para las pruebas sería probar otra base.
 
-> ⚠️ Y una regla que ahorra un día entero de tu vida: **la base de pruebas nunca
-> es la de desarrollo**. Un `TRUNCATE` apuntando a la base equivocada borra las
-> rifas con las que llevas seis fases trabajando. El *helper* de 5.2 lo comprueba
-> por nombre y se niega a correr si no cuadra.
+**Transacción revertida por caso.** Inservible también: el código bajo prueba abre sus propias transacciones (`be05`, `be07`).
+
+**Esquema nuevo por caso.** `migrate down` y `migrate up` antes de cada prueba, con la misma herramienta que se usa a mano (`D20`). Cuesta ~120–170 ms por caso, medido. Es la que se usa.
+
+> ⚠️ **La base de pruebas nunca es la de desarrollo.** Cada prueba borra el esquema entero; apuntada a la base equivocada, borra siete fases de trabajo. `OpenPostgres` comprueba el nombre y se niega a correr si no es `esclusa_test`.
 
 ---
 
@@ -173,340 +112,447 @@ tablas pequeñas.
 cd server && go get github.com/stretchr/testify@v1.8.1
 ```
 
-> 📝 `testify` entra solo por `require` y `assert`, que ahorran ruido en las
-> aserciones. **No** usamos su paquete de *mocks*: con interfaces implícitas no
-> hace falta (§4.3), y un *mock* generado esconde justo lo que queremos ver.
+> 📝 `testify` entra solo por `require`, que ahorra ruido en las aserciones. **No** usamos su paquete de *mocks* (4.3).
 
-### 5.1 Nivel 1 y 2: lo que no necesita base
+### 5.1 La base de las pruebas: `testsupport`
 
 ```go
-// server/internal/raffle/transitions_test.go
+// MustPostgres es el corazón de la regla del motor (D18).
 //
-// Sin base, sin red, sin reloj real. Corre en microsegundos y cubre la
-// máquina de estados entera. Este es el nivel donde debería vivir todo lo
-// que pueda vivir acá.
-func TestTransiciones(t *testing.T) {
-	casos := []struct {
-		desde, hasta string
-		legal        bool
-	}{
-		{"draft", "open", true},
-		{"open", "closed", true},
-		{"closed", "resolved", true},
-		{"resolved", "settled", true},
-		{"open", "open", true},        // el PUT que no cambia estado (be04)
-		{"draft", "settled", false},   // el salto que rompía el sistema
-		{"settled", "open", false},    // no se resucita una rifa liquidada
-		{"closed", "open", false},
+// 🧭 FALLA, no salta. Un t.Skip produce una suite verde que no probó lo que
+// dice probar, y nadie lee los SKIP de una salida que termina en "ok". Si una
+// prueba de concurrencia, bloqueos, zonas horarias o SQL propio del motor no
+// tiene Postgres, eso es un error de configuración, no un caso que se omite.
+func MustPostgres(t *testing.T, db *storage.DB, why string) {
+	t.Helper()
+	if db.Dialect != storage.Postgres {
+		t.Fatalf("esta prueba requiere PostgreSQL porque %s.\n"+
+			"Levanta el contenedor de pruebas y exporta TEST_DATABASE_URL (server/evidence/regla-del-motor.md).", why)
 	}
-	for _, c := range casos {
-		t.Run(c.desde+"→"+c.hasta, func(t *testing.T) {
-			require.Equal(t, c.legal, raffle.CanTransition(c.desde, c.hasta))
-		})
+}
+
+// OpenPostgres abre la base de PRUEBAS, con el esquema recién creado. Sin
+// TEST_DATABASE_URL, falla.
+func OpenPostgres(t *testing.T) *storage.DB {
+	t.Helper()
+	url := os.Getenv("TEST_DATABASE_URL")
+	if url == "" {
+		t.Fatal("TEST_DATABASE_URL no está definida: esta prueba necesita PostgreSQL (D18)")
+	}
+	// ⚠️ La red que evita el peor día: cada prueba borra el esquema entero, y
+	// una variable que quedó exportada de otra terminal apuntaría a la base
+	// con la que llevas siete fases trabajando.
+	if !strings.Contains(url, "/esclusa_test") {
+		t.Fatalf("TEST_DATABASE_URL tiene que apuntar a la base esclusa_test, no a %q", url)
+	}
+	return open(t, url)
+}
+```
+
+```go
+func open(t *testing.T, url string) *storage.DB {
+	t.Helper()
+	db, err := storage.Open(context.Background(), url)
+	if err != nil {
+		t.Fatalf("no se pudo abrir la base de prueba: %v", err)
+	}
+	t.Cleanup(func() { db.Close() })
+	// Las migraciones corren en un pool aparte, que se cierra al terminar:
+	// postgres.WithInstance se queda con una conexión del pool para su lock
+	// hasta que se cierra el migrador, y en el pool de la prueba sería una
+	// conexión tomada para siempre (la regresión de be-05 la cuenta).
+	migrator, err := storage.Open(context.Background(), url)
+	if err != nil {
+		t.Fatalf("no se pudo abrir la base para migrar: %v", err)
+	}
+	defer migrator.Close()
+	recreate(t, migrator)
+	return db
+}
+```
+
+Ese pool aparte no estaba en el primer intento, y lo encontró una prueba. La regresión de `be-05` cuenta las conexiones tomadas al final, y con el helper ingenuo daba *"quedaron 1 conexiones tomadas"* en cada corrida. `postgres.WithInstance` de golang-migrate reserva una conexión del pool para su lock y la retiene hasta que se cierra el migrador. En el pool de la prueba, era una conexión perdida por caso.
+
+Las pruebas de `spin`, `purchase`, `wheel` y las demás abren su base con `testsupport`. Sin `TEST_DATABASE_URL`:
+
+```text
+race_test.go:22: TEST_DATABASE_URL no está definida: esta prueba necesita PostgreSQL (D18)
+--- FAIL
+```
+
+### 5.2 Niveles 1 y 2: lo que no necesita base
+
+```go
+// server/internal/wheel/closing_unit_test.go
+
+package wheel_test
+
+import (
+	"testing"
+	"time"
+
+	"github.com/interoceanic-games/esclusa-api/internal/wheel"
+)
+
+// Nivel 1: el borde del cierre, sin base y sin reloj real. La hora dura es una
+// prueba unitaria porque be06 sacó la regla a una función pura.
+func TestIsClosed(t *testing.T) {
+	closesAt, _ := time.Parse(time.RFC3339, "2026-08-30T20:00:00-05:00")
+	cases := []struct {
+		name   string
+		status string
+		now    time.Time
+		closed bool
+	}{
+		{"un milisegundo antes", "live", closesAt.Add(-time.Millisecond), false},
+		{"el instante exacto", "live", closesAt, true},
+		{"el mismo instante en UTC", "live", closesAt.UTC(), true},
+		{"terminada antes de su hora", "ended", closesAt.Add(-time.Hour), true},
+		{"conciliada", "reconciled", closesAt.Add(-time.Hour), true},
+	}
+	for _, c := range cases {
+		if got := wheel.IsClosed(c.status, closesAt, c.now); got != c.closed {
+			t.Errorf("%s: %v, esperaba %v", c.name, got, c.closed)
+		}
 	}
 }
 ```
 
 ```go
-// server/internal/http/handlers_test.go
-//
-// Nivel 2: la traducción a HTTP. El servicio es un doble; lo que se prueba
-// es que cada error de dominio salga con su código y su cuerpo.
-type stubNumberService struct {
-	err error
-	out rafflenumber.RaffleNumber
+// Nivel 1: los conteos de la bitácora sembrada de la Fase 8 (semilla 42) dan el
+// mismo χ² que oddsAudit.test.js: 4,4877. Las dos implementaciones, la misma tabla.
+func TestOddsAuditMatchesTheConsole(t *testing.T) {
+	a := reconciliation.OddsAudit([]int64{3017, 1962, 1515, 1483, 1040, 784, 142, 57}, weights)
+	require.Empty(t, a.BandAlarms)
+	require.False(t, a.Chi2Alarm)
+	require.InDelta(t, 4.4877, a.Chi2, 0.00005)
 }
 
-func (s stubNumberService) SellNumber(context.Context, int64, string, *int64) (rafflenumber.RaffleNumber, error) {
-	return s.out, s.err
+// La regla que se acomoda (incidente 21): el avatar común en 505 de 10.000.
+func TestOddsAuditCatchesTheAccommodatingWheel(t *testing.T) {
+	a := reconciliation.OddsAudit([]int64{3404, 2179, 505, 1704, 1161, 877, 106, 64}, weights)
+	require.True(t, a.Chi2Alarm)
+	require.Contains(t, fmt.Sprint(a.BandAlarms), "2") // avatar-comun
+	require.InDelta(t, 808.35, a.Chi2, 0.005)
 }
+```
 
-func TestSellNumberHandlerTraduceErrores(t *testing.T) {
-	casos := []struct {
-		nombre       string
-		err          error
-		quiereCodigo int
-		quiereCuerpo string
+Los mismos conteos y el mismo χ² que `oddsAudit.test.js` de la Fase 10 y que el incidente 21: el servidor y la consola, la misma tabla.
+
+```go
+// Nivel 2: la traducción a HTTP. Sin base, sin red, sin reloj. Los mensajes son
+// CONTRATO: los lee el juego, y la consola los muestra con toReadableError. Que
+// estén escritos acá, literales, impide que alguien los "mejore" sin notarlo.
+func TestSpinHandlerTranslatesErrors(t *testing.T) {
+	cases := []struct {
+		name     string
+		err      error
+		wantCode int
+		wantBody string
 	}{
-		{"venta correcta", nil, 200, ""},
-		// Los mensajes son CONTRATO: los lee toReadableError y terminan a
-		// la vista del usuario. Que estén escritos acá, literales, es lo
-		// que impide que alguien los "mejore" sin darse cuenta.
-		{"ya vendido", rafflenumber.ErrAlreadySold, 409, "Ese número ya fue vendido"},
-		{"rifa cerrada", rafflenumber.ErrRaffleClosed, 409, "La rifa ya cerró: no se pueden vender más números"},
-		{"no existe", rafflenumber.ErrNotFound, 404, "Ese número no existe en la rifa"},
+		{"giro correcto", nil, 200, ""},
+		{"sin clave", spin.ErrMissingKey, 400, "falta idempotencyKey"},
+		{"jugador inexistente", spin.ErrPlayerNotFound, 404, "No existe el jugador 42."},
+		{"sin saldo", spin.ErrNoSpins, 409, "sin giros"},
+		{"en proceso", spin.ErrInProgress, 409, "giro en proceso"},
+		{"sin rueda abierta", spin.ErrNoLiveWheel, 409, "no hay rueda activa"},
+		{"agotado sin sustituto", spin.ErrSoldOut, 409, "agotado"},
 		{"error inesperado", errors.New("boom"), 500, "Error interno del servidor"},
 	}
-
-	for _, c := range casos {
-		t.Run(c.nombre, func(t *testing.T) {
-			// httptest.NewRecorder es un ResponseWriter que guarda todo en
-			// memoria: no hay puerto, no hay socket, no hay servidor.
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			h := &handlers{spins: stubSpins{err: c.err}}
+			req := httptest.NewRequest(http.MethodPost, "/players/42/spins", nil)
+			req = mux.SetURLVars(req, map[string]string{"id": "42"})
 			rec := httptest.NewRecorder()
-			req := httptest.NewRequest("POST", "/raffles/1/numbers/0347/sell", nil)
+			h.spin(rec, req)
 
-			handler := httpapi.SellNumberHandler(stubNumberService{err: c.err})
-			handler.ServeHTTP(rec, withUser(req, 1))
-
-			require.Equal(t, c.quiereCodigo, rec.Code)
-			if c.quiereCuerpo != "" {
-				var body struct{ Message string `json:"message"` }
+			require.Equal(t, c.wantCode, rec.Code)
+			if c.wantBody != "" {
+				var body struct{ Error string }
 				require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &body))
-				require.Equal(t, c.quiereCuerpo, body.Message)
+				require.Equal(t, c.wantBody, body.Error)
 			}
 		})
 	}
 }
 ```
 
-> 🧠 **Y el que casi nadie escribe:** la prueba de que el `404` de los recursos
-> automáticos llega con **cuerpo vacío** y el de las rutas propias con
-> `{"message":…}`. Es el hallazgo `C-04` de `be00`, y la única cosa que impide que
-> alguien los uniforme en un rato de limpieza. Escríbela: son ocho líneas y
-> protege una rareza que nadie va a recordar dentro de un año.
+### 5.3 Probar algo aleatorio sin que la prueba sea intermitente
 
-### 5.2 Nivel 3: integración contra Postgres de verdad
+`be07` dejó una simulación que no exige *"sin alarma"*: una rueda honesta da alarma de χ² en una de cada veinte corridas. Para la suite hace falta otra cosa. La Fase 10 lo resolvió en JavaScript con dos técnicas, y en Go son las mismas:
 
 ```go
-// server/internal/testsupport/db.go
-package testsupport
-
-// mustPostgres es el corazón de la regla del motor.
-//
-// 🧭 FALLA, no salta. Un t.Skip produce una suite verde que no probó lo que
-// dice probar, y nadie lee los SKIP de una salida que termina en "ok". Si
-// una prueba de concurrencia, bloqueos, zonas horarias o SQL específico no
-// tiene Postgres, eso es un error de configuración del entorno, no un caso
-// que se pueda omitir.
-func mustPostgres(t *testing.T, db *storage.DB, motivo string) {
-	t.Helper()
-	if db.Dialect != storage.Postgres {
-		t.Fatalf(
-			"esta prueba requiere PostgreSQL porque %s.\n"+
-				"Levanta el contenedor y exporta TEST_DATABASE_URL.\n"+
-				"Ver la regla del motor: D18 y server/evidence/regla-del-motor.md",
-			motivo)
-	}
-}
-
-// OpenPostgres abre la base de PRUEBAS y la deja limpia.
-func OpenPostgres(t *testing.T) *storage.DB {
-	t.Helper()
-	url := os.Getenv("TEST_DATABASE_URL")
-	if url == "" {
-		t.Fatal("TEST_DATABASE_URL no está definida: esta prueba necesita Postgres")
-	}
-
-	// ⚠️ La red de seguridad que evita el peor día. TRUNCATE contra la base
-	// de desarrollo borra seis fases de trabajo, y el error es fácil: una
-	// variable de entorno que quedó exportada de otra terminal.
-	if !strings.Contains(url, "rifas_test") {
-		t.Fatalf("TEST_DATABASE_URL debe apuntar a una base llamada rifas_test, no a %q", url)
-	}
-
-	db, err := storage.Open(context.Background(), url)
-	require.NoError(t, err)
-	t.Cleanup(func() { db.Close() })
-
-	truncateAll(t, db)
-	return db
-}
-
-func truncateAll(t *testing.T, db *storage.DB) {
-	t.Helper()
-	// RESTART IDENTITY reinicia las secuencias: sin eso, los ids crecen
-	// entre pruebas y cualquier aserción sobre un id concreto se vuelve
-	// dependiente del orden de ejecución.
-	_, err := db.Exec(`TRUNCATE prize_payouts, settlements, sales,
-	                            raffle_numbers, participants, raffles, users
-	                   RESTART IDENTITY CASCADE`)
-	require.NoError(t, err)
+// NewDrawerFrom sortea con la fuente que le den. Es para las pruebas (be08): con
+// una semilla fija, el mismo sorteo sale siempre igual, y una prueba
+// estadística deja de fallar una de cada veinte corridas.
+func NewDrawerFrom(src rand.Source) *Drawer {
+	return &Drawer{rng: rand.New(src)}
 }
 ```
 
-```bash
-# server/scripts/test-db.sh — el contenedor de pruebas, separado del de
-# desarrollo. Dos contenedores y dos puertos es más barato que un susto.
-docker run -d --name rifas-pg-test \
-  -e POSTGRES_USER=rifas -e POSTGRES_PASSWORD=rifas -e POSTGRES_DB=rifas_test \
-  -p 5433:5432 postgres:13
+```go
+// Técnica 1, la semilla (la misma de oddsAudit.test.js): 100.000 sorteos, el
+// mismo χ² en cada corrida. Una prueba estadística de CI se siembra: sin
+// semilla, una rueda honesta da alarma en una de cada veinte corridas.
+func TestDrawerSeededFollowsPublishedOdds(t *testing.T) {
+	a := audit(spin.NewDrawerFrom(rand.NewSource(42)), 100000)
+	t.Logf("semilla 42 · χ² %.4f · banda %v", a.Chi2, a.BandAlarms)
+	if a.Chi2Alarm || len(a.BandAlarms) > 0 {
+		t.Fatalf("el sorteo no sigue la tabla publicada: χ² %.4f, banda %v", a.Chi2, a.BandAlarms)
+	}
+}
 
-export TEST_DATABASE_URL="postgres://rifas:rifas@localhost:5433/rifas_test?sslmode=disable"
-migrate -path migrations/postgres -database "$TEST_DATABASE_URL" up
+// Técnica 2, la tolerancia calculada: sin semilla, mil auditorías de 10.000
+// sorteos. La tasa de alarmas del χ² tiene que rondar el 5 % (D32): con mil
+// corridas, entre 2 % y 9 % sale fuera menos de una vez cada diez mil.
+func TestDrawerUnseededFalseAlarmRate(t *testing.T) {
+	d := spin.NewDrawer()
+	alarms := 0
+	for i := 0; i < 1000; i++ {
+		if audit(d, 10000).Chi2Alarm {
+			alarms++
+		}
+	}
+	t.Logf("sin semilla · %d alarmas de χ² en 1.000 auditorías (%.1f %%)", alarms, float64(alarms)/10)
+	if alarms < 20 || alarms > 90 {
+		t.Fatalf("%d alarmas en 1.000: fuera de lo que da una rueda honesta", alarms)
+	}
+}
 ```
 
-### 5.3 Nivel 4: la suite de contrato
+```text
+drawer_test.go:39: semilla 42 · χ² 5.2493 · banda []
+drawer_test.go:56: sin semilla · 42 alarmas de χ² en 1.000 auditorías (4.2 %)
+```
 
-Es la traducción a Go del `smoke.sh` que escribiste en `be00`, y la pregunta
-razonable es por qué existen las dos. La respuesta importa:
+Cincuenta corridas de la técnica 1 dieron **cincuenta veces** χ² = 5,2493: es determinista, y por eso puede ir en CI. La técnica 2 dio 3,6 % y 4,2 % de alarmas en dos corridas: la tasa de `D32`, medida. La primera prueba es la que se queda en la suite; la segunda es la que te explica por qué.
 
-`smoke.sh` corre **contra un servidor levantado** —el mock, tu binario, el de un
-compañero— sin compilar nada. Es la herramienta del reemplazo y de la
-verificación en un ambiente. La suite de Go corre **en cada `go test`**, verifica
-la forma exacta de cada respuesta y falla antes de que el código llegue a
-ninguna parte. Una atrapa "el ambiente está mal", la otra "el código está mal".
+### 5.4 Nivel 4: la suite de contrato
+
+Es la traducción a Go del `smoke.sh` de `be00`, y conviene decir por qué existen las dos. `smoke.sh` corre **contra un servidor levantado** —el mock, tu binario, el del compose— sin compilar nada: atrapa *"el ambiente está mal"*. La suite corre **en cada `go test`**, con la aplicación entera —router, middlewares, servicios, base sembrada desde el `db.json`—: atrapa *"el código está mal"*.
 
 ```go
-// server/internal/http/contract_test.go
-//
-// Verifica el régimen estricto de server/CONTRACT.md, endpoint por
-// endpoint. Cuando esta suite falla, el frontend heredado se rompe. No hay
-// matices: es la traducción ejecutable de la regla que ordena el track.
-func TestContratoRegimenEstricto(t *testing.T) {
-	srv := testsupport.NewServer(t) // app real, base real, datos sembrados
-	token := testsupport.Login(t, srv)
-
-	t.Run("GET /raffles devuelve un array, nunca null", func(t *testing.T) {
-		body := srv.GET(t, "/raffles", token).ExpectStatus(200).Raw()
-		// El caso que un require.NotNil no atrapa: "null" es JSON válido,
-		// se deserializa a un slice nil sin error, y rompe el .map() del
-		// componente de la Fase 4. Hay que mirar los bytes.
-		require.True(t, strings.HasPrefix(strings.TrimSpace(string(body)), "["))
-	})
-
-	t.Run("los tipos de una rifa son los del contrato", func(t *testing.T) {
-		// Deserializar a map[string]interface{} y mirar el tipo dinámico es
-		// justo lo que hace el navegador. Contra un struct tipado, un id
-		// que llegara como string se convertiría solito y la prueba pasaría.
-		var r map[string]interface{}
-		srv.GET(t, "/raffles/1", token).ExpectStatus(200).JSON(t, &r)
-
-		require.IsType(t, float64(0), r["id"], "id debe ser número")
-		require.IsType(t, "", r["closesAt"], "closesAt debe ser string")
-		require.Regexp(t, `[+-]\d{2}:\d{2}$`, r["closesAt"], "closesAt debe traer offset, no Z")
-	})
-
-	t.Run("participantId nulo llega como null y no como objeto", func(t *testing.T) {
-		// El Caso A de la pieza forense de be03, convertido en regresión.
-		body := srv.GET(t, "/raffles/1/numbers", token).ExpectStatus(200).Raw()
-		require.Contains(t, string(body), `"participantId":null`)
-		require.NotContains(t, string(body), `"Valid":`)
+	t.Run("los tipos de una rueda son los del contrato", func(t *testing.T) {
+		// map[string]interface{} y el tipo dinámico: es lo que hace el navegador.
+		var wheels []map[string]interface{}
+		require.NoError(t, json.Unmarshal(srv.Do(t, "GET", "/wheels?_embed=segments", token, "").Body, &wheels))
+		w := wheels[0]
+		require.IsType(t, float64(0), w["id"], "id debe ser número")
+		require.Regexp(t, `[+-]\d{2}:\d{2}$`, w["closesAt"], "closesAt debe traer offset, no Z")
+		seg := w["segments"].([]interface{})[0].(map[string]interface{})
+		require.IsType(t, float64(0), seg["weightBp"])
+		require.IsType(t, "", seg["segmentId"])
 	})
 
 	t.Run("las dos formas de 404 conviven (C-04)", func(t *testing.T) {
-		srv.GET(t, "/raffles/9999", token).ExpectStatus(404).ExpectEmptyBody(t)
-		srv.GET(t, "/raffles/1/numbers/9999", token).ExpectStatus(404).ExpectMessage(t)
+		res := srv.Do(t, "GET", "/wheels/9999", token, "")
+		require.Equal(t, 404, res.Code)
+		require.JSONEq(t, `{}`, string(res.Body))
+		res = srv.Do(t, "PUT", "/wheels/9999", token, `{"segments":[]}`)
+		require.Equal(t, 404, res.Code)
+		require.Contains(t, string(res.Body), `"error"`)
 	})
-
-	t.Run("C-01: la ruta que el frontend consume desde la Fase 6", func(t *testing.T) {
-		srv.GET(t, "/raffles/1/numbers/0347", token).ExpectStatus(200)
-	})
-
-	t.Run("credenciales inválidas dan 401, no 200 con array vacío", func(t *testing.T) {
-		// El contrato CAMBIÓ en be04 (D27) y esta prueba fija el cambio.
-		srv.POST(t, "/login", nil, `{"email":"nadie@x.test","password":"x"}`).ExpectStatus(401)
-	})
-}
-
-// Y los tres cambios observables que el track introdujo A PROPÓSITO. Que
-// tengan prueba propia es lo que los distingue de una regresión: alguien
-// decidió esto, lo escribió en CONTRACT.md, y acá está verificado.
-func TestCambiosDeliberadosDelContrato(t *testing.T) {
-	// be06: el settledAt que vuelve es el del servidor, no el del cliente.
-	// be07: los montos se recalculan desde sales.
-	// be07: POST /settlements es idempotente.
-}
 ```
 
-### 5.4 Nivel 5: concurrencia y `-race`
+`map[string]interface{}` y no un struct: deserializar a un tipo propio hace que `"1"` y `1` terminen en el mismo `int64`, y la prueba pasaría con el contrato roto. El navegador no hace eso.
+
+Y los cambios que el track hizo **a propósito** tienen prueba propia: es lo que los distingue de una regresión.
 
 ```go
-// server/internal/rafflenumber/concurrency_test.go
-
-func TestVentaConcurrenteSoloUnGanador(t *testing.T) {
-	db := testsupport.OpenPostgres(t)
-	// La regla del motor, aplicada. Sin Postgres esta prueba no puede
-	// existir: no hay FOR UPDATE que probar.
-	testsupport.MustPostgres(t, db, "verifica el bloqueo de fila con FOR UPDATE bajo concurrencia real")
-
-	svc := newService(t, db)
-	seedRaffleWithNumbers(t, db, 1, "0347")
-
-	const contenders = 20
-	var start sync.WaitGroup
-	start.Add(1)
-	var wg sync.WaitGroup
-	errs := make([]error, contenders)
-
-	for i := 0; i < contenders; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			start.Wait() // la barrera: sin esto la carrera no ocurre (be05)
-			_, errs[i] = svc.SellNumber(ctxConUsuario(1), 1, "0347", nil)
-		}(i)
-	}
-	start.Done()
-	wg.Wait()
-
-	var ganadores, conflictos int
-	for _, err := range errs {
-		switch {
-		case err == nil:
-			ganadores++
-		case errors.Is(err, ErrAlreadySold):
-			conflictos++
-		default:
-			t.Fatalf("error inesperado: %v", err) // cualquier otro es un bug
+	t.Run("be07: la conciliación es la del servidor, mande lo que mande la consola", func(t *testing.T) {
+		res := srv.Do(t, "POST", "/wheels/4/reconciliation", token,
+			`{"spins":1,"counts":[1,0,0,0,0,0,0,0],"chi2":0,"chi2Alarm":false,"bandAlarms":[],
+			  "purchases":{"chargedCents":1,"feeCents":0,"netCents":1,"missingInApi":[],"duplicatedInApi":[]}}`)
+		require.Equal(t, 201, res.Code)
+		var body struct {
+			Reconciliation struct {
+				Spins     int
+				Counts    []int
+				Purchases struct {
+					ChargedCents    int64
+					MissingInAPI    []string `json:"missingInApi"`
+					DuplicatedInAPI []string `json:"duplicatedInApi"`
+				}
+			}
 		}
-	}
-
-	require.Equal(t, 1, ganadores, "exactamente uno debe ganar")
-	require.Equal(t, contenders-1, conflictos)
-
-	// Y la verificación que de verdad importa: la base. Un servicio que
-	// devolviera un solo 200 y hubiera insertado dos filas pasaría todas
-	// las aserciones de arriba.
-	var ventas int
-	require.NoError(t, db.Get(&ventas, `SELECT count(*) FROM sales WHERE raffle_id=1 AND number='0347'`))
-	require.Equal(t, 1, ventas)
-}
+		require.NoError(t, json.Unmarshal(res.Body, &body))
+		r := body.Reconciliation
+		require.Equal(t, 10000, r.Spins)
+		require.Equal(t, []int{3017, 1962, 1515, 1483, 1040, 784, 142, 57}, r.Counts)
+		require.Equal(t, int64(15960), r.Purchases.ChargedCents)
+		require.Equal(t, []string{"tok-ago-31"}, r.Purchases.MissingInAPI)
+		require.Equal(t, []string{"tok-ago-17"}, r.Purchases.DuplicatedInAPI)
+	})
 ```
+
+### 5.5 Nivel 5: concurrencia, `-race` y las regresiones
+
+Las pruebas de carrera de `be05` se quedan como están —con su barrera y su verificación en la base— y suman `MustPostgres`. Y entran a la suite las regresiones de los incidentes que siguen valiendo en la fase final:
+
+| Incidente | Dónde | Qué fija |
+|---|---|---|
+| `be-01` | `http/cors_test.go` | `X-Request-Id` expuesto a CORS |
+| `be-03` | `http/panic_test.go` y la suite de contrato | el pánico como `500` legible; `GET /players` sin filtro |
+| `be-05` | `player/pool_test.go` | veinte envíos repetidos no agotan el pool |
+| `be-06` | `spin/spin_json_test.go` | `origin` como texto |
+| `be-07` | `reconciliation/shape_test.go` | los tres campos de la `000003`, calculados por el servidor |
+| `be-09` | `spin/race_test.go` | el stock bajo carrera |
+| `be-10` | `spin/processing_test.go` | el giro cortado durante la entrega |
+| `be-12` | `spin/clock_test.go` | el cierre dentro del giro |
+| `be-13` | `reconciliation/stale_client_test.go` | la conciliación con datos viejos |
+| `be-14` | `purchase/service_test.go` | la notificación duplicada |
+| `be-17` | `spin/random_test.go` | dos arranques, dos secuencias |
+| `be-18` | `http/free_spin_test.go` | el reloj del celular |
+
+Portarlas encontró dos cosas que una regresión vieja suele esconder. La de `be-01` armaba el router sin reloj, y desde `be06` el middleware de `X-Server-Time` revienta con un puntero nulo: `NewRouter` usa ahora el reloj del sistema si no le pasan uno. Y la de `be-07` comprobaba que se guardara lo que mandaba la consola, lo que dejó de ser cierto en `be07`: ahora comprueba que los tres campos salgan del cálculo del servidor. **Una regresión que nadie corre deja de compilar en silencio, o sigue compilando y fija el comportamiento equivocado.**
 
 ```bash
-# -race instrumenta el binario para detectar accesos concurrentes sin
-# sincronizar. Es entre dos y veinte veces más lento, y encuentra bugs que
-# no fallan nunca hasta que fallan en producción un viernes.
-go test -race ./...
+TEST_DATABASE_URL="postgres://esclusa:esclusa@localhost:5432/esclusa_test?sslmode=disable" \
+  go test -race -count=1 -p 1 ./...
 ```
 
-> 🧠 **`-race` y `TestVentaConcurrente` prueban cosas distintas, y confundirlas es
-> un clásico.** `-race` detecta carreras **en la memoria de tu proceso** —dos
-> goroutines tocando el mismo `string` sin candado, como el `ChaosController` de
-> `be01` antes de su `RWMutex`—. La prueba de concurrencia detecta carreras **en
-> la base**, donde `-race` no ve absolutamente nada porque ahí no hay memoria
-> compartida: hay dos transacciones. Necesitas las dos y ninguna sustituye a la
-> otra.
+```text
+ok  	github.com/interoceanic-games/esclusa-api/internal/http	8.015s
+ok  	github.com/interoceanic-games/esclusa-api/internal/player	0.316s
+ok  	github.com/interoceanic-games/esclusa-api/internal/purchase	0.513s
+ok  	github.com/interoceanic-games/esclusa-api/internal/reconciliation	0.312s
+ok  	github.com/interoceanic-games/esclusa-api/internal/spin	17.069s
+ok  	github.com/interoceanic-games/esclusa-api/internal/wheel	0.984s
+```
 
-### 5.5 🩻 El par contradictorio
+Unos 30 segundos, la mayoría en `spin`, que recrea el esquema en cada caso y hace mil quinientos giros con `-race`.
 
-Acá está el contenido central. Dos pruebas, las dos correctas, que se contradicen
-según el motor. Van al repositorio y van explicadas.
+> 🧠 **`-race` y las pruebas de carrera prueban cosas distintas.** `-race` detecta carreras **en la memoria del proceso** —el `*rand.Rand` de `be05` sin su mutex—. Las pruebas de carrera detectan carreras **en la base**, donde `-race` no ve nada, porque ahí no hay memoria compartida: hay dos transacciones. Hacen falta las dos.
+
+### 5.6 Nivel 6: la carga, con la base mirando
+
+`giro.js` de `be05` ya traía `thresholds`. Le falta la otra mitad, la que no depende de la máquina:
+
+```sql
+-- server/load/invariantes.sql
+-- El nivel de carga de be08: lo que tiene que ser cierto después de una corrida
+-- de giro.js, sea cual sea la máquina. Las latencias las vigilan los
+-- thresholds de k6; esto vigila la corrección, y no depende de la máquina.
+-- Se corre con psql -v ON_ERROR_STOP=1: si algo no cuadra, sale con código 3.
+DO $$
+DECLARE
+  delivered int; doubled int; negative int; min_stock int;
+BEGIN
+  SELECT count(*) INTO delivered FROM spin_log
+   WHERE idempotency_key LIKE 'k6-%' AND coalesce(delivered_prize, landed_segment) = 'esclusa-de-oro';
+  SELECT count(*) INTO doubled FROM (SELECT idempotency_key FROM spin_log WHERE idempotency_key LIKE 'k6-%'
+   GROUP BY idempotency_key HAVING count(*) > 1) d;
+  SELECT count(*) INTO negative FROM players WHERE free_spins < 0 OR paid_spins < 0;
+  SELECT min(remaining) INTO min_stock FROM stock WHERE wheel_id = 900;
+  RAISE NOTICE 'Esclusas entregadas %, claves con dos giros %, saldos negativos %, stock mínimo %',
+    delivered, doubled, negative, min_stock;
+  IF delivered > 1000 OR doubled > 0 OR negative > 0 OR min_stock < 0 THEN
+    RAISE EXCEPTION 'la carga rompió una invariante del giro';
+  END IF;
+END $$;
+```
+
+Medido con el binario en contenedor, la rueda de medición y k6 1.5.0:
+
+| Corrida | k6 (`thresholds`) | Invariantes |
+|---|---|---|
+| fase, `pico` a 50 giros por segundo | 0 (p95 11,93 ms) | 0: 1.000 Esclusas |
+| fase, 200 jugadores a la vez | **99** (p95 581,98 ms > 500) | 0: 1.000 Esclusas |
+| `incidente/be-09`, 50 jugadores a la vez | 0 (p95 110,15 ms) | **3**: 1.500 Esclusas |
+
+Las dos filas que importan son las de abajo. Con el código correcto y 200 jugadores a la vez, el umbral de latencia **falla** en esta máquina —en `be05` el p95 de ese escenario dio entre 333 y 509 ms—: un umbral de latencia es una afirmación sobre una máquina. Y con el código roto de `be-09`, k6 sale con 0 y las invariantes dicen que se entregaron 1.500 Esclusas de un stock de mil. **Una carga en verde no dice nada de la corrección**: por eso el nivel de carga termina en la base.
+
+### 5.7 La suite, por niveles, desde la terminal
+
+```makefile
+# server/Makefile
+# Un comando por nivel, porque cada nivel tiene su costo. El de arriba corre en
+# un segundo y es el que se usa cien veces al día; el de abajo necesita el
+# binario levantado, k6 y unos minutos.
+#
+#   make test-unit      sin base: aritmética, transiciones, bordes, el sorteo sembrado
+#   make test-handler   sin base: la traducción a HTTP, con dobles
+#   make test-all       todo lo de go test, contra Postgres y con -race
+#   make test-contract  el régimen estricto de be00, contra Postgres
+#   make test-engine    el par contradictorio, en los dos motores (no corre en CI)
+#   make test-load      k6 contra el binario y las invariantes en SQL
+#
+# -count=1 en todos: Go cachea resultados, y una prueba de integración
+# cacheada es una prueba que no corrió aunque diga ok.
+
+TEST_DB ?= postgres://esclusa:esclusa@localhost:5432/esclusa_test?sslmode=disable
+DEV_DB  ?= postgres://esclusa:esclusa@localhost:5432/esclusa?sslmode=disable
+# k6 corre en su contenedor: para él, localhost es su contenedor (bea-11 §6.3).
+# Va en la red de Docker del backend y le habla por su nombre.
+K6_NET   ?=
+BASE_URL ?= http://api:3001
+
+UNIT    = TestTransitions|TestIsClosed|TestValidateWeights|TestOddsAudit|TestReconcilePurchases|TestDrawer
+HANDLER = TestSpinHandler|TestWritePurchase|TestUnknownRoute|TestRequestIDIsExposed|TestPanicBecomes
+
+test-unit:
+	go test -count=1 -run '$(UNIT)' ./...
+
+test-handler:
+	go test -count=1 -run '$(HANDLER)' ./internal/http/
+
+test-all:
+	TEST_DATABASE_URL='$(TEST_DB)' go test -race -count=1 -p 1 ./...
+
+test-contract:
+	TEST_DATABASE_URL='$(TEST_DB)' go test -count=1 -run 'TestStrictContract|TestDeliberate' ./internal/http/
+
+test-engine:
+	@echo "--- SQLite ---";   go test -tags regla -count=1 -run 'TestA_|TestB_' ./internal/storage/ || true
+	@echo "--- Postgres ---"; TEST_DATABASE_URL='$(TEST_DB)' go test -tags regla -count=1 -run 'TestA_|TestB_' ./internal/storage/ || true
+
+# Necesita el binario en BASE_URL con la rueda de medición sembrada
+# (load/rueda-de-medicion.sql), Docker para k6 y psql.
+test-load:
+	@test -n '$(K6_NET)' || (echo "K6_NET: la red de Docker del backend (docker network ls)"; exit 2)
+	docker run --rm -i --network '$(K6_NET)' -e BASE_URL='$(BASE_URL)' -e SCENARIO=pico -e RATE=50 \
+	  grafana/k6:1.5.0 run --quiet - < load/giro.js
+	psql -v ON_ERROR_STOP=1 '$(DEV_DB)' -f load/invariantes.sql
+
+.PHONY: test-unit test-handler test-all test-contract test-engine test-load
+```
+
+> ⚠️ **`-count=1` en todos.** Go cachea resultados de pruebas, y una prueba de integración cacheada es una prueba que **no corrió** aunque diga `ok`. El `(cached)` es fácil de pasar por alto: es la segunda forma en que una suite miente.
+
+### 5.8 🩻 El par contradictorio
+
+Acá está el contenido central. Dos pruebas, las dos correctas, que se contradicen según el motor. Van al repositorio, explicadas, y detrás de una etiqueta: no corren en CI.
 
 ```go
-// server/internal/storage/regla_del_motor_test.go
+//go:build regla
+
+// server/internal/storage/engine_rule_test.go
 //
-// ⚠️ ESTE ARCHIVO EXISTE PARA DEMOSTRAR UNA REGLA, NO PARA PROBAR EL
-// SISTEMA. Las dos pruebas de abajo se contradicen a propósito. Antes de
-// "arreglar" cualquiera de las dos, lee D18 y regla-del-motor.md.
+// ⚠️ ESTE ARCHIVO EXISTE PARA DEMOSTRAR UNA REGLA, NO PARA PROBAR EL SISTEMA.
+// Las dos pruebas se contradicen a propósito según el motor, y por eso solo
+// compilan con -tags regla: no corren en la suite. Antes de "arreglar"
+// cualquiera de las dos, lee D18 y server/evidence/regla-del-motor.md.
+package storage_test
+
+import (
+	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/interoceanic-games/esclusa-api/internal/testsupport"
+)
 
 // PRUEBA A — pasa en SQLite, FALLA en Postgres.
 //
-// LastInsertId es la forma "obvia" de recuperar el id recién insertado, y
-// es la que sale en la mitad de los tutoriales. mattn/go-sqlite3 lo
-// implementa; lib/pq NO —el protocolo de Postgres sencillamente no lo
-// ofrece— y devuelve "LastInsertId is not supported by this driver".
-//
-// Un equipo que pruebe solo contra SQLite escribe este código, ve la suite
-// verde, despliega, y TODA creación de rifas devuelve 500. La suite no
-// falló. La suite dio permiso.
+// LastInsertId es la forma "obvia" de recuperar el id recién insertado.
+// mattn/go-sqlite3 lo implementa; lib/pq no, porque el protocolo de Postgres
+// no lo ofrece. Un equipo que prueba solo contra SQLite escribe esto, ve la
+// suite verde, despliega, y toda alta devuelve 500. Es el incidente be-15.
 func TestA_LastInsertId(t *testing.T) {
 	db := testsupport.OpenAny(t)
-
-	res, err := db.Exec(db.Rebind(
-		`INSERT INTO participants (name) VALUES (?)`), "Ana")
+	res, err := db.Exec(db.Rebind(`INSERT INTO players (name) VALUES (?)`), "Ana")
 	require.NoError(t, err)
-
 	id, err := res.LastInsertId()
 	require.NoError(t, err, "lib/pq no implementa LastInsertId: usa RETURNING")
 	require.Greater(t, id, int64(0))
@@ -514,76 +560,37 @@ func TestA_LastInsertId(t *testing.T) {
 
 // PRUEBA B — FALLA en SQLite, pasa en Postgres.
 //
-// La comparación de instantes. En Postgres, closes_at es TIMESTAMPTZ y la
-// comparación es entre instantes: 22:00-05:00 es el 31 a las 03:00 UTC, o
-// sea posterior a las 01:00 UTC del 31, y la rifa se devuelve.
-//
-// En SQLite no existe el tipo fecha: la columna es TEXT y la comparación
-// es LEXICOGRÁFICA. '2026-08-30…' contra '2026-08-31…' compara "30" con
-// "31", y la rifa NO se devuelve.
-//
-// Los dos motores están funcionando correctamente según su propia
-// especificación. Y tu regla de negocio —"no se vende después del
-// cierre"— da resultados OPUESTOS. Es la Divergencia 2 de be02,
-// convertida en prueba.
-func TestB_ComparacionDeInstantes(t *testing.T) {
+// La comparación de instantes en el WHERE. En Postgres, closes_at es
+// TIMESTAMPTZ: 20:00-05:00 del 30 es la 01:00 UTC del 31, posterior a las
+// 23:00 UTC del 30. En SQLite no hay tipo fecha: compara texto, y
+// '2026-08-30T20…' es menor que '2026-08-30T23…'. Los dos motores cumplen su
+// especificación, y la regla "¿ya cerró?" da resultados opuestos. Es la
+// Divergencia 2 de be02, y la razón por la que be06 compara en Go.
+func TestB_InstantComparison(t *testing.T) {
 	db := testsupport.OpenAny(t)
-	insertRaffle(t, db, "Rifa fin de mes", "2026-08-30T22:00:00-05:00")
-
-	var nombres []string
-	require.NoError(t, db.Select(&nombres, db.Rebind(
-		`SELECT name FROM raffles WHERE closes_at > ?`), "2026-08-31T01:00:00Z"))
-
-	require.Len(t, nombres, 1,
-		"el cierre es posterior al umbral; si esto falla, el motor está comparando cadenas")
+	db.MustExec(`INSERT INTO wheels (id, name, closes_at, status) VALUES (4, 'Rueda de fin de mes', '2026-08-30T20:00:00-05:00', 'ended')`)
+	var names []string
+	require.NoError(t, db.Select(&names, db.Rebind(`SELECT name FROM wheels WHERE closes_at > ?`), "2026-08-30T23:00:00Z"))
+	require.Len(t, names, 1, "el cierre es posterior al umbral; si esto falla, el motor está comparando cadenas")
 }
 ```
 
-Y la ejecución que lo demuestra, que es lo que hay que pegar en el documento:
-
 ```bash
-# Contra SQLite: A pasa, B falla.
-TEST_DATABASE_URL="" go test -run 'TestA_|TestB_' ./internal/storage/
-
-# Contra Postgres: A falla, B pasa.
-TEST_DATABASE_URL="postgres://…/rifas_test" go test -run 'TestA_|TestB_' ./internal/storage/
+make test-engine TEST_DB="postgres://…/esclusa_test?sslmode=disable"
 ```
 
-> 🧭 **Qué se hace con estas dos pruebas.** No se "arreglan": se **clasifican**.
-> La A documenta una trampa y no debe correr en CI —el código correcto usa
-> `RETURNING`, y `be03` ya lo hace—. La B es una prueba legítima del sistema y
-> tiene que correr **solo contra Postgres**, con su `MustPostgres` y su motivo
-> escrito. Clasificar cada prueba por el motor que necesita es el trabajo real de
-> esta fase, y `regla-del-motor.md` es donde queda esa clasificación.
-
-### 5.6 La suite, por niveles, desde la terminal
-
-```makefile
-# server/Makefile
-# Cinco comandos porque son cinco niveles con costos distintos. El de
-# arriba corre en un segundo y es el que se usa cien veces al día.
-
-test-unit:            ## sin base, milisegundos
-	go test ./internal/... -run 'TestPrizeShare|TestTransiciones|TestSell.*Handler|TestHoraDura' -count=1
-
-test-integration:     ## contra Postgres en contenedor
-	TEST_DATABASE_URL=$(TEST_DB) go test ./internal/... -count=1
-
-test-contract:        ## el régimen estricto de be00
-	TEST_DATABASE_URL=$(TEST_DB) go test ./internal/http/ -run TestContrato -count=1
-
-test-race:            ## carreras en memoria
-	TEST_DATABASE_URL=$(TEST_DB) go test -race ./... -count=1
-
-test-engine-rule:     ## el par contradictorio, contra los dos motores
-	@echo "--- SQLite ---";   TEST_DATABASE_URL= go test -run 'TestA_|TestB_' ./internal/storage/ || true
-	@echo "--- Postgres ---"; TEST_DATABASE_URL=$(TEST_DB) go test -run 'TestA_|TestB_' ./internal/storage/ || true
+```text
+--- SQLite ---
+--- PASS: TestA_LastInsertId (0.01s)
+    engine_rule_test.go:47: "[]" should have 1 item(s), but has 0
+--- FAIL: TestB_InstantComparison (0.01s)
+--- Postgres ---
+    engine_rule_test.go:30: Received unexpected error: LastInsertId is not supported by this driver
+--- FAIL: TestA_LastInsertId (0.13s)
+--- PASS: TestB_InstantComparison (0.13s)
 ```
 
-> ⚠️ **`-count=1` en todos.** Go cachea resultados de pruebas, y una prueba de
-> integración cacheada es una prueba que **no corrió** aunque diga `ok`. El
-> símbolo `(cached)` en la salida es fácil de pasar por alto y es la segunda
-> forma en que una suite miente.
+> 🧭 **Qué se hace con estas dos pruebas.** No se "arreglan": se **clasifican**. La A documenta una trampa —el código usa `RETURNING`, y `be03` explica por qué—. La B es la regla *"¿ya cerró?"* escrita en el `WHERE`, y por eso `be06` la resolvió en Go con `time.Time`. Clasificar cada prueba por el motor que necesita es el trabajo real de esta fase, y `server/evidence/regla-del-motor.md` es donde queda escrito.
 
 ---
 
@@ -591,144 +598,93 @@ test-engine-rule:     ## el par contradictorio, contra los dos motores
 
 ### Errores comunes
 
-**1. `t.Skip` cuando falta el entorno.** Síntoma: la suite dice `ok` y la
-concurrencia nunca se probó. Causa: saltar en vez de fallar. Fix: `MustPostgres`.
-Corrección mínima frente a refactorización: cambiar `Skip` por `Fatal` es la
-corrección; reorganizar la suite por etiquetas de compilación es la
-refactorización, y probablemente no hace falta.
+**1. `t.Skip` cuando falta el entorno.** Síntoma: la suite dice `ok` y la concurrencia nunca se probó. Medido en `be07`: `spin` y `purchase` en `ok` sin `TEST_DATABASE_URL`. Fix: `OpenPostgres` y `MustPostgres` fallan.
 
-**2. Probar el service contra un store falso.** Síntoma: cobertura altísima y
-bugs en producción. Causa: cuando la lógica está en el SQL, un store falso prueba
-el doble. Fix: el service contra base real; los dobles, para el reloj y para los
-handlers.
+**2. Truncar una tabla de solo inserción.** Síntoma: el helper de las pruebas revienta con `spin_log solo se agrega: TRUNCATE rechazado`. Causa: el disparador de `D35`. Fix: esquema nuevo por caso; nunca desactivar el disparador para probar.
 
-**3. Pruebas que dependen del orden.** Síntoma: pasan solas y fallan en la suite,
-o al revés. Causa: datos compartidos, o secuencias que siguen creciendo. Fix:
-`TRUNCATE … RESTART IDENTITY` antes de cada caso. Y `go test -shuffle=on`, que
-existe desde Go 1.17 y desenmascara esto en un minuto.
+**3. Migrar sobre el pool de la prueba.** Síntoma: *"quedaron 1 conexiones tomadas"*, o un pool que se agota en la suite larga. Causa: `postgres.WithInstance` retiene una conexión. Fix: migrar con un pool aparte y cerrarlo.
 
-**4. Prueba de concurrencia sin barrera.** Síntoma: pasa contra el código de
-`be03`. Causa: las goroutines se lanzan escalonadas. Fix: el `WaitGroup` de
-barrera. **La prueba de que tu prueba de concurrencia sirve es que falle contra el
-código vulnerable.** Si nunca la corriste contra él, no sabes qué tienes.
+**4. Probar el servicio contra un store falso.** Síntoma: cobertura altísima y bugs en producción. Causa: cuando la lógica está en el SQL, un store falso prueba el doble. Fix: el servicio contra base real; los dobles, para el reloj, la tienda y los handlers.
 
-**5. Aserciones sobre structs en vez de sobre JSON.** Síntoma: el contrato se
-rompe y la suite no se entera. Causa: deserializar a un tipo propio hace que el
-JSON `"1"` y el `1` acaben en el mismo `int64`. Fix: en las pruebas de contrato,
-mirar los bytes o un `map[string]interface{}`.
+**5. Una prueba estadística sin semilla en CI.** Síntoma: la suite falla una vez cada veinte corridas y alguien la marca como *"flaky"* y la desactiva. Fix: la semilla para la suite, la tolerancia calculada para entender (5.3).
 
-**6. Confundir cobertura con confianza.** Síntoma: 85 % de cobertura y el bug de
-la venta duplicada intacto. Causa: la cobertura mide líneas ejecutadas, no
-propiedades verificadas — el `SellNumber` de `be03` tenía cobertura completa. Fix:
-usar la cobertura para encontrar lo que **nadie** ejecuta, nunca como objetivo.
+**6. Prueba de concurrencia sin barrera.** Síntoma: pasa contra el código roto. Fix: el `WaitGroup` de barrera de `be05`. **La prueba de que tu prueba de concurrencia sirve es que falle contra el código vulnerable.**
+
+**7. Aserciones sobre structs en vez de sobre JSON.** Síntoma: el contrato se rompe y la suite no se entera. Fix: en las pruebas de contrato, `map[string]interface{}` o los bytes.
+
+**8. Un umbral de latencia como prueba de corrección.** Síntoma: la carga falla en tu laptop con el código bien, o pasa en el servidor de CI con el código roto. Medido: las dos cosas (5.6). Fix: los `thresholds` vigilan la latencia de una máquina; las invariantes, la corrección.
 
 ### 🩻 Pieza forense de esta fase
 
-**El par de pruebas contradictorias, y la suite que da permiso para desplegar.**
+**El par contradictorio, y la suite que da permiso para desplegar.**
 
-*Paso 1 — la contradicción, medida.* Corre `make test-engine-rule` y pega las dos
-salidas en `server/evidence/regla-del-motor.md`. Cuatro resultados: A verde y B
-roja en SQLite; A roja y B verde en Postgres. Escribe al lado de cada una **por
-qué el motor tiene razón**. Ninguno de los dos está fallando.
+*Paso 1 — la contradicción, medida.* Corre `make test-engine` y pega las dos salidas en `server/evidence/regla-del-motor.md`. Cuatro resultados: A verde y B roja en SQLite; A roja y B verde en Postgres. Escribe al lado de cada una **por qué el motor tiene razón**.
 
-*Paso 2 — la simulación del despliegue, que es la parte que convence.* Ponte en
-la piel del equipo que solo prueba contra SQLite:
+*Paso 2 — la suite que miente, con tus manos.* En una rama descartable, cambia `t.Fatal` por `t.Skip` en `OpenPostgres` —*"para que la suite corra en cualquier máquina"*— y corre `go test ./...` sin `TEST_DATABASE_URL`. Todo `ok`. Ahora corre `go test -v ./internal/spin/ | grep -c SKIP` y cuenta lo que no se probó. Esa es la mitad del incidente `be-15`; la otra mitad es lo que se cuela por ese agujero.
 
-1. Escribe `CreateRaffle` con `LastInsertId` en vez de `RETURNING`.
-2. Corre la suite completa contra SQLite. **Verde.**
-3. Haz `git commit`. Con la suite verde, es lo que cualquiera haría.
-4. Ahora corre exactamente lo mismo contra Postgres y mira cuántas pruebas caen.
-5. Y peor: levanta el binario contra Postgres y crea una rifa desde la
-   aplicación. `500`. **La funcionalidad más básica del sistema, rota, con la
-   suite en verde.**
+*Paso 3 — la concurrencia, que ni siquiera puede fingirse.* `be05` §6 ya lo midió: la carrera del stock contra SQLite da **1.000 Esclusas y stock en 0** con el código de la fase **y** con el de `be-09`. Contra Postgres, `be-09` entrega 1.500. Escribe en cuatro líneas por qué la propuesta *"quitemos el `FOR UPDATE` para que las pruebas corran en cualquier lado"*, que suena razonable, desmantela `be05` entero.
 
-Escríbelo con tus palabras: *la suite no falló en detectar el bug; la suite
-autorizó el bug*. Esa distinción es la fase entera.
+*Paso 4 — la prueba que se prueba a sí misma.* Corre `TestStockNeverExceeded` contra la rama `incidente/be-09`. **Tiene que fallar**, y falla con *"entregadas 1500, sustitutos 0, stock 919"*. Si pasara, la prueba no serviría.
 
-*Paso 3 — la concurrencia, que ni siquiera puede fingirse.* Corre
-`TestVentaConcurrenteSoloUnGanador` contra SQLite quitando el `MustPostgres`.
-Anota el error exacto —`near "FOR": syntax error`, o `database is locked` si
-quitas también el `FOR UPDATE`—. Después piensa en la tentación real: alguien va
-a proponer quitar el `FOR UPDATE` "para que las pruebas corran en cualquier
-lado". Escribe en cuatro líneas por qué esa propuesta, que suena razonable,
-desmantela `be05` entero.
-
-*Paso 4 — la prueba que se prueba a sí misma.* Vuelve al `SellNumber` de `be03`
-(sin transacción) y corre la prueba de concurrencia contra Postgres. **Tiene que
-fallar**, y tiene que fallar diciendo que hubo dos ganadores. Si pasa, tu prueba
-no sirve — arréglala y repite. Este paso es el único que te dice si tu red tiene
-agujeros.
-
-*Paso 5 — `-race` sobre el bug real.* Vuelve al `ChaosController` de `be01` sin
-su `RWMutex`, corre `go test -race`, y lee el informe entero: te dice las dos
-goroutines, las dos líneas y el tipo de acceso. Compáralo con lo que verías sin
-`-race`: nada. Durante meses.
-
-*Paso 6 — el círculo, cerrado del todo.* Corre la suite de contrato con
-`SQL_DEBUG=1` y sigue un `X-Request-Id` desde la petición de la prueba hasta la
-consulta SQL. En `be00` ese id no llegaba a ninguna parte. Ahora recorre el
-sistema entero, y lo hace **dentro de una prueba automatizada** — que es la forma
-final de la trazabilidad: no un ejercicio de diagnóstico, sino una propiedad
-verificada.
+*Paso 5 — la carga que miente.* Corre el nivel de carga contra la misma rama, con 50 jugadores a la vez: k6 sale con 0, las invariantes con 3. Pega las dos salidas una al lado de la otra. Es la pieza que convence a quien cree que *"lo probamos con k6"* es lo mismo que *"está bien"*.
 
 ---
 
-> 📓🔥 De esta fase sale el incidente **be-15** ⭐ de `cuaderno-incidentes-be.md`, hermano del **20** del track base. Los dos enseñan lo mismo desde orillas opuestas, y con una simetría que conviene notar: allá la suite está **roja** y dice la verdad; acá lleva tres semanas en **verde** y miente.
+> 📓🔥 De esta fase sale el incidente **be-15** ⭐ de `cuaderno-incidentes-be.md`, hermano del **20** del track base. Los dos enseñan lo mismo desde orillas opuestas: allá la suite está **roja** y dice la verdad; acá lleva tres semanas en **verde** y miente.
 
 ---
 
-## 🧪 7. Ejercicios (33)
+## 🧪 7. Ejercicios (32)
 
 **🟢 Fácil (1–8)**
 
-1. Levanta el contenedor de pruebas en el `5433` y aplica las migraciones sobre `rifas_test`.
-2. Corre `make test-unit` y comprueba que tarda menos de un segundo.
-3. Corre la suite completa contra Postgres y anota cuánto tarda.
-4. Ejecuta `make test-engine-rule` y pega las cuatro salidas.
-5. Comprueba que `OpenPostgres` se niega a correr si `TEST_DATABASE_URL` no apunta a `rifas_test`.
-6. Corre `go test -race ./...` y confirma que pasa limpio.
-7. Escribe la prueba de handler de las dos formas de `404` (`C-04`).
+1. Crea la base `esclusa_test` en tu Postgres de contenedor y corre `make test-all` con su URL.
+2. Corre `make test-unit` y comprueba cuánto tarda la segunda vez, con la caché de compilación caliente.
+3. Corre `go test ./...` sin `TEST_DATABASE_URL` y lee el mensaje de cada paquete que falla.
+4. Ejecuta `make test-engine` y pega las cuatro salidas.
+5. Comprueba que `OpenPostgres` se niega a correr si `TEST_DATABASE_URL` apunta a la base `esclusa`.
+6. Corre `go test -race ./...` contra Postgres y confirma que pasa limpio.
+7. Corre `make test-handler` y rompe a propósito un mensaje en el handler del giro. Mira qué caso falla.
 8. Corre `go test ./...` dos veces seguidas sin `-count=1` y encuentra el `(cached)`.
 
 **🟡 Intermedio (9–19)**
 
-9. Escribe la tabla de transiciones completa como prueba unitaria, con los casos ilegales.
-10. **Diagnóstico.** Quita `-count=1` de `test-integration`, cambia el código para romperlo, y comprueba que la suite sigue diciendo `ok`. Explica el mecanismo.
-11. Escribe la prueba de contrato que verifica que `GET /raffles` devuelve `[` y no `null`, y compruébala rompiendo el código.
-12. **Diagnóstico.** Escribe la aserción de tipos contra un struct tipado en vez de un `map` y demuestra que no detecta un `id` que llegue como string.
-13. Escribe la prueba de regresión del Caso A de `be03` (`participantId` como objeto).
-14. Implementa `MustPostgres` y aplícalo a todas las pruebas que tocan las cuatro áreas. Enumera cuántas son.
-15. **Diagnóstico.** Cambia `MustPostgres` por `t.Skip`, corre la suite sin Postgres, y cuenta cuántas pruebas se saltaron sin que la salida lo destaque.
+9. Corre la prueba sembrada de 5.3 con `-count=50` y comprueba que el χ² no cambia. Después cambia la semilla y anota el nuevo.
+10. **Diagnóstico.** Quita `-count=1` de `test-all`, rompe el código, y comprueba que la suite sigue diciendo `ok`. Explica el mecanismo.
+11. Escribe la prueba de contrato que verifica que `GET /spinLog?wheelId=4` devuelve `[` y no `null` para una rueda sin giros.
+12. **Diagnóstico.** Escribe la aserción de tipos contra un struct tipado y demuestra que no detecta un `id` que llegue como string.
+13. Agrega a la suite de contrato el alta de una rueda (`POST /wheels`) y su `201`. Explica qué incidente habría atrapado.
+14. **Diagnóstico.** Vuelve a migrar sobre el pool de la prueba (sin el pool aparte de 5.1) y corre la regresión de `be-05`. Explica el número que da.
+15. **Diagnóstico.** Intenta el truncado entre casos de 4.4 y copia el error. Explica por qué no se desactiva el disparador.
 16. Corre la suite con `go test -shuffle=on` diez veces y determina si alguna prueba depende del orden.
-17. **Diagnóstico.** Quita `RESTART IDENTITY` del truncado y encuentra qué prueba empieza a fallar y por qué.
-18. Escribe las tres pruebas de los cambios deliberados del contrato (`settledAt` del servidor, montos recalculados, idempotencia).
+17. Mide cuánto tarda recrear el esquema por caso en tu máquina y cuántas pruebas lo hacen. Calcula qué parte del tiempo de la suite se va en eso.
+18. Agrega una prueba de handler para `claimFreeSpin`, con el doble del servicio: `200`, `404` y el `409` con su `nextFreeSpinAt`.
 19. Mide la cobertura con `go test -cover` y anota el número. No lo persigas: úsalo para encontrar un archivo que nadie ejecuta.
 
-**🟠 Difícil (20–28)**
+**🟠 Difícil (20–27)**
 
-20. **Diagnóstico.** Ejecuta el paso 2 de la pieza forense completo —el despliegue autorizado por una suite verde— y escribe el informe.
-21. **Diagnóstico.** Ejecuta el paso 4: corre la prueba de concurrencia contra el `SellNumber` de `be03` y demuestra que falla. Pega el mensaje.
-22. Escribe `regla-del-motor.md`: la regla, las cuatro áreas, el par contradictorio con su evidencia, y **la clasificación de cada prueba de tu suite** por el motor que necesita.
-23. **Diagnóstico.** Ejecuta el paso 5 y transcribe el informe de `-race` completo, explicando qué significa cada bloque.
-24. Encuentra una tercera divergencia de `be02` que puedas convertir en prueba contradictoria y agrégala al par. Justifica en qué categoría de las cuatro cae.
-25. **Diagnóstico.** Determina cuántas de tus pruebas podrían correr contra SQLite sin mentir. Argumenta si vale la pena mantener esa capacidad o si es una comodidad peligrosa.
-26. Escribe la prueba que verifica el apagado ordenado de `be01`: una petición en vuelo, un `SIGTERM`, y la respuesta completa.
-27. **Diagnóstico.** Introduce a propósito una regresión de contrato en un endpoint y comprueba que la suite la atrapa. Si no la atrapa, escribe la prueba que faltaba.
-28. Mide cuánto tarda la suite completa y decide qué correría en cada momento: al guardar un archivo, antes de un commit, y en CI. Justifica con los tiempos.
+20. **Diagnóstico.** Ejecuta el paso 2 de la pieza forense completo y escribe el informe: cuántas pruebas se saltaron, y en qué paquetes.
+21. **Diagnóstico.** Ejecuta los pasos 4 y 5 y explica, con las dos salidas, por qué una prueba de carrera y un nivel de carga no se sustituyen.
+22. Completa `regla-del-motor.md` con la clasificación de **cada** prueba de tu suite por el motor que necesita.
+23. Encuentra una tercera divergencia de `be02` que se pueda convertir en prueba contradictoria y agrégala al par. Justifica en qué categoría de las cuatro cae.
+24. Cambia los `thresholds` de `giro.js` para que el nivel de carga no dependa de la máquina —o argumenta por qué no se puede— con tus mediciones.
+25. Escribe la prueba del apagado ordenado de `be01`: una petición en vuelo, un `SIGTERM`, y la respuesta completa.
+26. **Diagnóstico.** Introduce a propósito una regresión de contrato en un endpoint y comprueba que la suite la atrapa. Si no, escribe la prueba que faltaba.
+27. Mide cuánto tarda cada nivel y decide qué correría en cada momento: al guardar, antes de un commit y en CI.
 
-**🔴 Muy difícil (29–33)**
+**🔴 Muy difícil (28–32)**
 
-29. Diseña el mecanismo que impide que alguien agregue una prueba de concurrencia sin `MustPostgres`. Puede ser una etiqueta de compilación, una convención de nombres verificada por un script, o un `go vet` propio. Impleméntalo.
-30. Argumenta por escrito si SQLite debería seguir en el proyecto. Defiende primero eliminarlo —una sola verdad, cero divergencias, cero riesgo de falso positivo— y después conservarlo, y decide con un criterio operativo. Si decides eliminarlo, enumera qué se pierde.
-31. **Diagnóstico + regresión.** Ticket: *"la suite lleva tres semanas en verde y ayer se rompió la creación de rifas en producción"*. Reconstruye las tres hipótesis más probables, di cómo descartas cada una, y escribe la prueba que faltaba.
-32. Diseña la prueba basada en propiedades del sistema completo: para cualquier secuencia de ventas, reservas y liquidaciones, ninguna rifa termina con más ventas que números ni con pagos que no sumen su premio. Impleméntala con generación aleatoria y semilla fija.
-33. **Post-mortem.** Escribe el post-mortem de *"la suite verde autorizó un despliegue roto"* según los ocho puntos del post-mortem de `cuaderno-incidentes.md`, con la causa raíz en el motor de pruebas. **Sin culpabilización**: usar SQLite en las pruebas es una práctica extendida y razonable, y quien la eligió tenía buenos motivos. La prevención tiene que ser un mecanismo, no una advertencia.
+28. Diseña el mecanismo que impide que alguien agregue una prueba de base sin `testsupport`: una convención verificada por un script o un análisis propio de `go vet`. Impleméntalo.
+29. Argumenta si SQLite debería seguir en el proyecto. Defiende primero eliminarlo —una sola verdad, cero falsos positivos— y después conservarlo, y decide con un criterio operativo.
+30. **Diagnóstico + regresión.** Ticket: *"la suite lleva tres semanas en verde y ayer se rompió el alta de ruedas en producción"*. Reconstruye las tres hipótesis más probables, di cómo descartas cada una, y escribe la prueba que faltaba.
+31. Diseña una prueba basada en propiedades del sistema completo: para cualquier secuencia de giros, compras y reclamos de giro gratis, ningún saldo queda negativo, ninguna clave da dos giros y el stock no se excede. Con generación aleatoria y semilla fija.
+32. **Post-mortem.** Escribe el post-mortem de *"la suite verde autorizó un despliegue roto"* según los ocho puntos del post-mortem de `cuaderno-incidentes.md`, con la causa raíz en el motor de pruebas. **Sin culpas**: usar SQLite en las pruebas es una práctica extendida y razonable. La prevención tiene que ser un mecanismo, no una advertencia.
 
 **🔥 Opcionales**
 
-- 🔥 Escribe una prueba de *fuzzing* con `go test -fuzz` (nativo desde Go 1.18) sobre `PrizeShare` y sobre el parseo de fechas del contrato. Anota qué encontró.
-- 🔥 Corre pruebas de mutación con alguna herramienta del ecosistema Go sobre `settlement/math.go` y compara el resultado con tu cobertura. La diferencia entre los dos números es la conversación honesta sobre calidad de suite.
-- 🔥 Sustituye el contenedor manual por `testcontainers-go` y compara: menos guion, una dependencia más, y arranque más lento por caso. Decide con el criterio de autocontención del track.
+- 🔥 Escribe una prueba de *fuzzing* con `go test -fuzz` sobre `ReconcilePurchases` y sobre el parseo de `closesAt`. Anota qué encontró.
+- 🔥 Corre pruebas de mutación sobre `reconciliation/audit.go` y compara el resultado con tu cobertura.
+- 🔥 Sustituye el contenedor de pruebas por `testcontainers-go` y compara: menos guion, una dependencia más, arranque más lento.
 
 ---
 
@@ -736,75 +692,48 @@ verificada.
 
 **Documentación oficial**
 - https://pkg.go.dev/testing — `T.Helper`, `T.Cleanup`, subpruebas y `-shuffle`.
-- https://pkg.go.dev/net/http/httptest — `NewRecorder` y `NewServer`, el nivel 2 entero.
-- https://go.dev/doc/articles/race_detector — cómo funciona `-race`, qué detecta y qué no. Léelo antes del paso 5.
+- https://pkg.go.dev/net/http/httptest — `NewRecorder`, el nivel 2 entero.
+- https://go.dev/doc/articles/race_detector — qué detecta `-race` y qué no.
 - https://go.dev/blog/subtests — el patrón de tabla con subpruebas que usa toda esta fase.
-- https://github.com/stretchr/testify — `require` (aborta) contra `assert` (continúa); saber cuál usar en cada aserción evita cascadas de fallos ilegibles.
-- https://www.sqlite.org/quirks.html — otra vez, porque es la fuente primaria de la regla del motor.
+- https://pkg.go.dev/github.com/stretchr/testify/require — `require` aborta; `assert` continúa.
+- https://pkg.go.dev/math/rand#NewSource — la fuente sembrada de 5.3.
+- https://www.sqlite.org/quirks.html — la fuente primaria de la regla del motor.
+- https://grafana.com/docs/k6/latest/using-k6/thresholds/ — los umbrales de 5.6. La página es de la versión vigente: cambia `latest` por la `v1.5.x` antes de creerle.
 
 **Libros**
-- *Unit Testing: Principles, Practices, and Patterns* (Vladimir Khorikov) — su tratamiento de qué sustituir y qué no es exactamente §4.3, y su crítica a las pruebas con *mocks* de todo es la mejor que conozco.
-- *Working Effectively with Legacy Code* (Michael Feathers) — la definición de "prueba" que exige que falle cuando el código está mal. El paso 4 de la pieza forense es esa idea.
+- *Unit Testing: Principles, Practices, and Patterns* (Vladimir Khorikov) — su tratamiento de qué sustituir y qué no es exactamente 4.3.
+- *Working Effectively with Legacy Code* (Michael Feathers) — una prueba es la que falla cuando el código está mal: el paso 4 de la pieza forense.
 
 **Video / apoyo**
-- Busca "Go testing best practices" y "table driven tests Go". Y si encuentras alguna charla sobre el detector de carreras de Go, vale mucho la pena: entender cómo funciona cambia cuánto confías en él.
+- Busca "table driven tests Go" y alguna charla sobre el detector de carreras de Go.
 
-**Orden de lectura sugerido:** el blog de subpruebas primero, que fija el patrón →
-`httptest` para el nivel 2 → el artículo del detector de carreras antes de correr
-`-race` en serio → y Khorikov cuando quieras la teoría sobre qué sustituir.
+**Orden de lectura sugerido:** el blog de subpruebas → `httptest` para el nivel 2 → el artículo del detector de carreras antes de correr `-race` en serio → la página de `thresholds` de k6 antes de 5.6 → Khorikov cuando quieras la teoría.
 
-> ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las
-> referencias a libros son de memoria y pueden ser inexactas. Cualquier
-> discrepancia de versiones la resuelve `00-decisiones-y-versiones.md` §7.
+> ⚠️ URLs, títulos y ediciones pueden haber cambiado: verifícalos. Las referencias a libros son de memoria y pueden ser inexactas. Las cifras de esta fase son de las corridas del 20/10/2026 en la máquina del autor. Cualquier discrepancia de versiones la resuelve `00-decisiones-y-versiones.md` §7.
 
 ---
 
 ## 🚀 9. Cierre y conexión con la siguiente fase
 
-La mitad invisible del sistema quedó cubierta. Cinco niveles, cada uno con su
-trabajo: lo que se puede probar sin base se prueba en milisegundos, lo que
-depende del motor se prueba contra el motor de verdad, y lo que depende de la
-concurrencia se prueba con veinte goroutines y una barrera.
+La mitad invisible del sistema quedó cubierta. Seis niveles, cada uno con su trabajo: lo que se puede probar sin base se prueba en un segundo, lo que depende del motor se prueba contra el motor de verdad, lo que depende de la concurrencia se prueba con una barrera, y la carga termina mirando la base. Las pruebas que necesitan Postgres fallan si no lo tienen, y la estadística no falla una de cada veinte veces.
 
-Y quedó demostrada la regla que da nombre a la fase, con dos pruebas que se
-contradicen y las dos tienen razón. Ahora puedes decir con autoridad —tuya, con
-tus salidas pegadas en un archivo— cuál de tus pruebas te estaría engañando si
-corriera contra el motor equivocado, y por qué una suite verde no es lo mismo que
-un sistema correcto.
+Y quedó demostrada la regla que da nombre a la fase, con dos pruebas que se contradicen y las dos tienen razón.
 
-`be09` cierra el track. Build multi-stage, la decisión entre cgo y Go puro **con
-su medición** de tamaño de imagen y tiempo de compilación, configuración para los
-cuatro ambientes, migraciones al arrancar frente a paso previo del despliegue, y
-un workflow de GitHub Actions que compila, prueba contra los dos motores y publica
-la imagen. Con la separación de edades que hay que explicar y no esconder: la
-aplicación es de 2022 y el pipeline es de hoy.
+`be09` cierra el track: la imagen, la decisión entre cgo y Go puro **con su medición**, la configuración por ambiente, las migraciones como paso previo del despliegue, y un workflow que corre esta suite contra Postgres. Con la separación de edades que hay que declarar: la aplicación es de 2022 y el pipeline es de hoy. Y después, el veredicto, con una decisión que no es tuya: la de 2028.
 
-Y después, el **veredicto honesto**: qué quedó mejor que el mock, qué quedó peor,
-qué deudas siguen vivas y cuándo **no** vale la pena reemplazar un mock por un
-backend propio.
+> **La señal de que quedó bien:** *"sé exactamente cuál de mis pruebas me estaría mintiendo si la corriera contra el otro motor, y tengo la salida que lo demuestra."*
 
-> **La señal de que quedó bien:** *"sé exactamente cuál de mis pruebas me estaría
-> mintiendo si la corriera contra el otro motor, y tengo la salida que lo
-> demuestra."*
-
-> 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en
-> verde y `git status` limpio:
+> 🏷️ **No cierres la fase sin el tag.** Con el checklist de la sección 2 en verde y `git status` limpio:
 >
 > ```bash
 > git tag -a fase-be08-pruebas-y-la-regla-del-motor -m "be08 cerrada: \
-> suite en cinco niveles, cada uno ejecutable por separado; handlers con httptest; \
-> suite de contrato que verifica el régimen estricto de be00 y los tres cambios deliberados; \
-> integración contra Postgres en contenedor con truncado y red de seguridad; \
-> TestVentaConcurrente que falla contra el código de be03; go test -race limpio; \
-> MustPostgres que falla en vez de saltar; \
-> par de pruebas contradictorias documentado en server/evidence/regla-del-motor.md"
+> suite por niveles (unitario, handler, integración, contrato, concurrencia, carga); \
+> MustPostgres falla en vez de saltar; par contradictorio medido en los dos motores; \
+> prueba estadística sembrada; regresiones de los incidentes en la suite; \
+> nivel de carga con thresholds e invariantes en SQL"
 > ```
 >
-> Los commits de la fase llevan su prefijo (`be08: …`) y los de ejercicio su
-> número (`be08 ej20: …`). Si un ejercicio merece su propio marcador va en
-> `ej/be08/20`, y un incidente resuelto en el par `inc/<ID>/<slug>-roto` /
-> `-fix`, con el ID que le reserva `cuaderno-incidentes.md`. Todo eso está en
-> [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
+> Los commits de la fase llevan su prefijo (`be08: …`) y los de ejercicio su número (`be08 ej20: …`). Si un ejercicio merece su propio marcador va en `ej/be08/20`, y un incidente resuelto en el par `inc/<ID>/<slug>-roto` / `-fix`, con el ID que le reserva `cuaderno-incidentes-be.md`. Todo eso está en [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
 
 ---
 
@@ -812,29 +741,10 @@ backend propio.
 
 *(Fuera de lo que lee el estudiante.)*
 
-- **`be09` hereda la suite tal cual y no debería tocarla:** su trabajo es hacerla
-  correr en CI contra los dos motores, no reorganizarla. Los cinco objetivos del
-  `Makefile` son la interfaz que el workflow debe usar.
-- **El par contradictorio es material de `bea-03`.** El apéndice de dialectos
-  debería citarlo como su cierre: el diccionario de divergencias explica **qué**
-  difiere, y estas dos pruebas demuestran **qué cuesta**.
-- **La prueba B (comparación de instantes) también es de `bea-06`.** Es la misma
-  Divergencia 2 que arrastra el track desde `be02`, y aparecer en tres sitios con
-  el mismo ejemplo es deliberado: es el hilo conductor de la portabilidad.
-- **El ejercicio 30 —¿debería seguir SQLite en el proyecto?— es candidato a
-  entrar en el veredicto honesto de `be09`.** La respuesta defendible del track
-  es que sí, pero solo bajo la regla y con `MustPostgres` haciéndola cumplir; sin
-  ese mecanismo, la respuesta sería que no.
-- **El ejercicio 29 (impedir pruebas de concurrencia sin `MustPostgres`)** debería
-  terminar en el pipeline de `be09` como paso de verificación, no como buena
-  intención.
-- **Deudas declaradas:** 💸 el contenedor de pruebas se levanta a mano con un
-  guion (el ejercicio 🔥 de `testcontainers` lo discute, y `be09` lo resuelve para
-  CI); 💸 no hay medición de cobertura en CI, a propósito, y conviene que el
-  veredicto de `be09` explique por qué no se puso.
-- **Reserva para el cuaderno de incidentes:** `be-15` — *"la suite lleva tres
-  semanas en verde y ayer se rompió producción"* (categoría 🔥 contrato,
-  dificultad 🔴), el ejercicio 31, que es el incidente más formativo del track BE
-  después de la venta duplicada, y el hermano directo del incidente 20 del track
-  base —*"el test pasa en mi máquina y falla en la de al lado"*— con la causa raíz
-  desplazada del entorno al motor.
+- **`D18` se cumple con un mecanismo**: `OpenPostgres` y `MustPostgres` fallan. **`D32`**: la tasa de alarmas del χ², medida otra vez en Go (3,6 % y 4,2 %). **`D37`**: `NewDrawerFrom` es solo para pruebas; el servidor sigue sembrando desde `crypto/rand`.
+- **`be09` hereda la suite tal cual**: su trabajo es hacerla correr en CI, no reorganizarla. Los objetivos del `Makefile` son la interfaz que el workflow usa; `be09` les agrega `-tags sqlite`.
+- **El par contradictorio es material de `bea-03`** (el diccionario de divergencias explica qué difiere; estas dos pruebas, qué cuesta) y la B, de `bea-06` §6.
+- **El ejercicio 29 (¿sigue SQLite?) entra en el veredicto de `be09`.** La respuesta defendible del track es que sí, pero solo bajo la regla y con `MustPostgres` haciéndola cumplir.
+- **La suite de contrato no crea ruedas** (la siembra va directo a la base), y por eso no habría atrapado `be-15`: es el ejercicio 13, y la prevención del incidente.
+- **Deudas declaradas:** 💸 el contenedor de pruebas se crea a mano; 💸 no hay cobertura en CI, a propósito; 💸 los `thresholds` de latencia dependen de la máquina (ejercicio 24).
+- **Reserva para el cuaderno de incidentes:** `be-15` ⭐ — *la suite lleva tres semanas en verde y ayer se rompió producción* (🔥 contrato, 🔴), hermano del 20 del track base.

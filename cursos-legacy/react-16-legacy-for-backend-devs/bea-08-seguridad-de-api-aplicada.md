@@ -1,15 +1,15 @@
 # 🛡️ Apéndice bea-08 — Seguridad de API aplicada
 
-> Tutorial React 16 — Rifas y chances · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
+> Tutorial React 16 — La Esclusa, la consola de Jewel Locks · **Track BE opcional 🔥** · Consulta rápida · ~3 horas
 > Lo referencian: `be04` principalmente; `be03` y `be09` lo consultan
 
 ---
 
 Esto es **seguridad defensiva aplicada a esta API**, nunca en abstracto. Cada
-sección responde a una pregunta concreta sobre el backend de rifas: *¿puede
-alguien vender un número que no le corresponde? ¿puede fijar el precio desde el
-cuerpo de un `POST`? ¿qué le estamos contando a un atacante en cada mensaje de
-error?*
+sección responde a una pregunta concreta sobre el backend de la rueda: *¿puede
+alguien mandar un envío como si fuera otro operador? ¿puede cambiar los pesos de
+una rueda desde el cuerpo de un `PUT`? ¿qué le estamos contando a un atacante en
+cada mensaje de error?*
 
 No hay listas genéricas de OWASP copiadas. Hay seis riesgos que **este** sistema
 tiene, con la comprobación que los detecta y la defensa que los cierra. Y al
@@ -42,29 +42,33 @@ viajan por placeholder, siempre**.
 ```go
 // ✅ El valor nunca es parte de la sentencia. El driver lo manda aparte y
 //    Postgres jamás lo interpreta como SQL.
-query := s.db.Rebind(`SELECT … FROM raffles WHERE status = ? AND id = ?`)
-s.db.GetContext(ctx, &r, query, status, id)
+query := s.db.Rebind(`SELECT … FROM wheels WHERE status = ? AND id = ?`)
+s.db.GetContext(ctx, &w, query, status, id)
 
 // ❌ Un solo caso de esto y el sistema es de quien lo encuentre.
-query := "SELECT … FROM raffles WHERE status = '" + status + "'"
+query := "SELECT … FROM wheels WHERE status = '" + status + "'"
 ```
 
-Con el segundo, un `status` igual a `open'; DROP TABLE sales; --` no es una
-hipótesis de manual: es una tarde mala.
+Con el segundo, un `status` igual a `live'; DROP TABLE spin_log; --` no es una
+hipótesis de manual: es la bitácora que respondía *"la rueda está arreglada"*,
+borrada en una tarde.
 
 ### La excepción, que hay que entender para no imitarla mal
 
-El track **sí** concatena, exactamente una vez:
+El track **sí** concatena, en dos sitios:
 
 ```go
-// be02, en el UPDATE de raffles
+// be03, en el UPDATE de wheels
 `… updated_at = ` + s.db.Now() + ` WHERE id = ?`
+
+// be02, en las lecturas de la versión vigente
+`… WHERE ` + currentVersion + ` ORDER BY w.id`
 ```
 
 Y es legítimo por una razón precisa: **`s.db.Now()` devuelve `"now()"` o
-`"datetime('now')"`, dos constantes elegidas por un `if` sobre el dialecto**. El
-valor no viene del usuario, no viene de la red, no viene de la base. No hay
-entrada que envenenar.
+`"datetime('now')"`, dos constantes elegidas por un `if` sobre el dialecto, y
+`currentVersion` es una constante del paquete**. Ningún valor viene del usuario,
+de la red ni de la base. No hay entrada que envenenar.
 
 > 🧭 **La regla que separa los dos casos, y conviene poder recitarla:** los
 > **datos** van por placeholder, sin excepción; los **fragmentos de dialecto**
@@ -93,33 +97,38 @@ Cada resultado tiene que poder justificarse con el párrafo de arriba.
 tuyo. `be04` resolvió la primera. La segunda está declarada como deuda 💸 y esta
 sección explica exactamente qué falta.
 
-El escenario, con nombres: el usuario 2 —Beto— pide
-`PUT /raffles/7` sobre una rifa que creó otra persona. Hoy el backend **verifica
-el token, ve que es un usuario válido, y le deja**. La rifa no tiene dueño y
-nadie pregunta.
+El escenario, con nombres: el usuario 3 —la contadora— pide `PUT /wheels/2` y
+cambia los pesos de la Semana del Canal, que arma operación. Hoy el backend
+**verifica el token, ve que es un operador válido, y le deja**. La rueda no tiene
+dueño, los operadores no tienen roles, y nadie pregunta.
 
 ```go
 // Lo que hay hoy: identidad verificada, propiedad no verificada.
-userID := httpapi.UserIDFrom(ctx)   // ✅ sabemos quién es
+userID := auth.UserIDFrom(ctx)   // ✅ sabemos quién es
 if userID == 0 { return ErrUnauthenticated }
-// ❌ y nadie pregunta si la rifa 7 es suya
+// ❌ y nadie pregunta si la rueda 2 es de su área
 ```
 
 **La defensa**, cuando el dominio la exija:
 
 ```sql
-ALTER TABLE raffles ADD COLUMN owner_id BIGINT REFERENCES users(id);
+ALTER TABLE wheels ADD COLUMN created_by BIGINT REFERENCES users(id);
 ```
 
 ```go
-raffle, err := s.store.FindByID(ctx, id)
+w, err := s.store.FindByID(ctx, id)
 if err != nil { return err }
-if raffle.OwnerID != httpapi.UserIDFrom(ctx) {
+if w.CreatedBy != auth.UserIDFrom(ctx) {
 	// 404 y no 403, a propósito: un 403 confirma que el recurso existe.
 	// Ver §4.
 	return ErrNotFound
 }
 ```
+
+En un estudio de doce personas lo más probable es que la regla no sea "es tuya"
+sino "es de tu área" —operación arma ruedas, soporte manda envíos, la contadora
+concilia—, y eso es una columna de rol en `users`. La técnica es la misma: se
+decide en el servicio, con la identidad del contexto.
 
 > ⚠️ **El error que se repite en todas partes:** verificar la propiedad **en el
 > handler** y no en el servicio. Funciona en las cinco rutas que revisaste y falla
@@ -142,35 +151,40 @@ En este dominio, tres campos son peligrosos y por motivos distintos:
 
 | Campo | Si el cliente lo fija… |
 |---|---|
-| `status` | Salta el flujo: una rifa en borrador pasa a `settled` |
-| `numberPrice`, `basePrize` | Cambia cuánto se cobra y cuánto se paga |
-| `ownerId` (si existiera) | Se apropia de un recurso ajeno |
+| `status` | Salta el flujo: una rueda conciliada vuelve a `live` |
+| `segments[].weightBp` | Cambia lo que la tabla de probabilidades publica |
+| `sentBy` | Manda un envío a nombre de otro operador |
+| `counts`, `chi2`, `purchases` de la conciliación | Concilia con los números que quiera |
 
 **Lo que ya protege el track**, y conviene ver que son tres capas distintas:
 
 1. **Las transiciones custodiadas** (`be04`): el `status` que llega en el cuerpo
-   se comprueba contra la tabla de transiciones legales. `draft → settled`
-   devuelve `409`.
-2. **El recálculo de montos** (`be07`): `totalCollected`, `prizeAmount` y `margin`
-   **no se leen del cuerpo**. Se recalculan desde `sales`. La discrepancia se
-   registra en el log y se ignora el valor del cliente.
-3. **La identidad desde el contexto** (`be04`): un `ownerId` en el cuerpo se
-   **ignora**, no se valida.
+   se comprueba contra la tabla de transiciones legales. `reconciled → live`
+   devuelve `409` (medido).
+2. **La rueda en vivo** (Fase 4, `be03`): sus pesos no cambian; un `PUT` que los
+   cambia devuelve `409`. En las demás, un cambio de pesos publica una versión
+   nueva y la bitácora sabe con cuál se giró.
+3. **La identidad desde el contexto** (`be04`): un `sentBy` en el cuerpo se
+   **ignora**, no se valida. Medido: un envío de Yariela con `"sentBy": 3` queda
+   guardado con `sentBy: 2`, el suyo.
 
 > 🧭 **La diferencia entre ignorar y validar, que no es sutil.** Validar un campo
 > de identidad admite que a veces el cliente puede decidir quién es. Ignorarlo
 > dice que nunca. Cuando el dato correcto ya lo tienes de otra fuente —el token,
 > la base—, **el campo del cuerpo no se valida: se descarta**.
 
-**Lo que falta**, y es una deuda 💸 real: `numberPrice` y `basePrize` sí se leen
-del cuerpo en `PUT /raffles/:id`, porque el CRUD de la Fase 4 manda la rifa
-entera. Un vendedor podría bajar el precio de una rifa ajena. La defensa es la
-del §2 —propiedad— más una regla de dominio: **el precio no se cambia después de
-la primera venta**.
+**Lo que falta**, y son dos deudas 💸 reales. La primera: los pesos de una rueda
+que no está en vivo se leen del cuerpo de cualquier operador, porque el CRUD de la
+Fase 4 manda la rueda entera; la defensa es la del §2. La segunda, más seria: la
+conciliación **guarda lo que manda el navegador** (`be00`, `C-07`), conteos y
+chi-cuadrado incluidos. La defensa es que el servidor recalcule desde la bitácora
+y desde las compras, y registre la discrepancia sin creerle al cliente: eso es
+`be07`.
 
 ```go
-if len(sales) > 0 && incoming.NumberPrice != current.NumberPrice {
-	return ErrPriceLocked   // 409: el estado del recurso no lo permite
+// be07: el servidor recalcula; lo que mandó el navegador solo se compara.
+if !reflect.DeepEqual(incoming.Counts, recalculated.Counts) {
+	log.Printf("[req-id %s] la consola mandó otros conteos", RequestIDFrom(ctx))
 }
 ```
 
@@ -188,17 +202,29 @@ fugas de este dominio:
 
 **Enumeración de cuentas.** Si el login distingue "ese email no existe" de
 "contraseña incorrecta", acabas de regalar un verificador de cuentas válidas.
-`be04` devuelve **el mismo error** para los dos casos, y `bcrypt.CompareHashAndPassword`
-tarda lo mismo acierte o falle — porque la diferencia de tiempo también filtra.
+`be04` devuelve **el mismo error** para los dos casos. Y el tiempo, que también
+filtra, **no** es el mismo, medido el 19/10/2026 contra el binario de `be04`:
 
-**Existencia de recursos.** Un `403` sobre la rifa 7 confirma que existe; un `404`
+```
+email que no existe          401 en 0.001014s, 0.000812s, 0.000670s
+email válido, clave mal      401 en 0.067493s, 0.067562s, 0.067220s
+```
+
+`bcrypt.CompareHashAndPassword` tarda lo mismo acierte o falle, pero solo corre
+cuando el email existe: si no existe, `Login` responde antes. Sesenta y seis
+milisegundos de diferencia son un verificador de cuentas tan bueno como un
+mensaje distinto. La defensa es comparar igual contra un hash de relleno cuando el
+email no existe, para que los dos caminos paguen el mismo `bcrypt`: es el
+ejercicio 2.
+
+**Existencia de recursos.** Un `403` sobre la rueda 7 confirma que existe; un `404`
 no dice nada. Cuando la autorización falla por propiedad, **`404` es la respuesta
 más discreta** (§2).
 
 **Detalle interno en un `500`.** Lo que jamás debe salir:
 
 ```go
-// ❌ pq: relation "raffles" does not exist  → le acabas de contar el motor,
+// ❌ pq: relation "wheels" does not exist  → le acabas de contar el motor,
 //    el esquema y probablemente la versión
 writeError(w, 500, err.Error())
 
@@ -212,10 +238,10 @@ writeError(w, 500, "Error interno del servidor")
 > "me salió un error, id `9f3a…`" y que tú encuentres el detalle exacto sin
 > haberlo publicado (`bea-07`).
 
-**Y la fuga del ejemplo perfecto:** en `be06`, el `409` de rifa cerrada. El
-mensaje al cliente es *"La rifa ya cerró: no se pueden vender más números"*. El
-log dice *"cerró a las 22:00-05:00 y ahora son las 22:03-05:00"*. Diagnóstico
-completo dentro, información mínima fuera.
+**Y la fuga del ejemplo perfecto:** en `be06`, el `409` de un giro en una rueda
+que ya cerró. El mensaje al cliente dice que la rueda cerró; el log dice a qué hora
+cerró y qué hora era en el servidor. Diagnóstico completo dentro, información
+mínima fuera.
 
 > ⚠️ Y un caso menos obvio: los mensajes de error del track **están en español y
 > son legibles** porque los muestra `toReadableError` al usuario final. Eso es
@@ -231,8 +257,8 @@ El track **no** los tiene, y hay tres sitios donde harían falta:
 | Dónde | Qué evita |
 |---|---|
 | `POST /login` | Probar contraseñas indefinidamente |
-| `POST /…/sell` | Un guion acaparando el tablero entero |
-| `POST /…/reserve` | Un usuario reservando todos los números y no comprando ninguno |
+| `POST /players/:id/spins` | Un guion girando sin parar: la ruta es **pública** (el juego no tiene sesión de operador) |
+| `POST /players/:id/grants` | Un operador, o un token robado, mandando premios en bucle |
 
 El del login es el más grave, porque hoy **puedes probar contraseñas todo el
 día**. `bcrypt` con costo 10 hace cada intento lento, y eso es una mitigación
@@ -270,9 +296,9 @@ pena decirlo sin rodeos:
 Compruébalo, que se entiende en diez segundos:
 
 ```bash
-# Origen no permitido, y responde igual. CORS no rechaza nada del lado del
-# servidor: solo omite el header, y es el NAVEGADOR el que descarta.
-curl -i localhost:3001/raffles -H 'Origin: http://evil.example' \
+# Origen no permitido, y responde igual: 200, con los datos. El servidor manda
+# su Allow-Origin de siempre (el 3000), y es el NAVEGADOR el que descarta.
+curl -i localhost:3001/wheels -H 'Origin: http://evil.example' \
      -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -316,14 +342,15 @@ y saber enumerarlas es parte de lo que el track enseña.
 
 | No hay | Consecuencia | Dónde se discute |
 |---|---|---|
-| **Autorización a nivel de objeto** | Cualquier usuario puede editar cualquier rifa | §2, `be04` |
+| **Autorización a nivel de objeto y roles** | Cualquier operador puede editar cualquier rueda y mandar cualquier premio | §2, `be04` |
+| **Autenticación del juego** | `POST /players/:id/spins` es público: cualquiera que conozca la ruta gira | §5, `be04` |
 | **Límites de tasa** | Fuerza bruta sin freno sobre el login | §5 |
 | **HTTPS** | Todo viaja en claro; el token es interceptable | Se resuelve fuera del proceso, en un proxy |
 | **`sslmode=require` en desarrollo** | El tráfico a la base va en claro | `be02`, `be09` §4.3 |
 | **Rotación de secretos** | `JWT_SECRET` es fijo; rotarlo invalida todas las sesiones | `be09` |
 | **Revocación de tokens** | Un token robado sirve hasta su `exp` | `bea-04` §5 |
 | **Gestor de secretos** | Variables de entorno y ya | `be09` |
-| **Auditoría de accesos** | Se registra quién vendió, no quién consultó qué | `be07` |
+| **Auditoría de accesos** | Se registra quién mandó cada envío (`sent_by`), no quién consultó qué | `be04`, `be07` |
 | **Validación de longitud de entrada** | Un `name` de 10 MB entra sin problema | Ejercicio 10 de `be01` |
 | **`POST /_chaos` fuera de producción** | Un endpoint para romper tu propio sistema | `be09` §4.3, ejercicio 24 |
 | **Cabeceras de seguridad** (`HSTS`, `X-Content-Type-Options`…) | Van en el proxy, no en la API | — |
@@ -346,9 +373,9 @@ y saber enumerarlas es parte de lo que el track enseña.
 | Inyección SQL | Placeholders, siempre | Escapar a mano |
 | Un identificador dinámico en el SQL | Lista blanca | Escapar el nombre |
 | Alguien tocando lo ajeno | Propiedad verificada **en el servicio** | Verificar en cada handler |
-| El cliente fijando `status` o precio | Un struct de entrada con solo lo permitido | Validar la entidad entera |
+| El cliente fijando `status` o pesos | Un struct de entrada con solo lo permitido, y las reglas en el servicio | Validar la entidad entera |
 | El cliente fijando identidad | **Ignorar** el campo; usar el contexto | Validarlo |
-| Enumerar cuentas | El mismo error y el mismo tiempo | Mensajes "útiles" |
+| Enumerar cuentas | El mismo error **y** el mismo tiempo (medido) | Mensajes "útiles" |
 | Filtrar el esquema en un `500` | Detalle al log, genérico al cliente | `err.Error()` en la respuesta |
 | Confirmar que un recurso existe | `404` en vez de `403` | `403` |
 | Fuerza bruta | Límite de tasa | Confiar en que `bcrypt` es lento |
@@ -360,12 +387,12 @@ y saber enumerarlas es parte de lo que el track enseña.
 ## 🧪 Ejercicios (9)
 
 1. **🟢** Recorre los stores con `grep` buscando concatenación en consultas y justifica cada resultado con la regla del §1.
-2. **🟢** Comprueba con `curl` que `POST /login` devuelve el mismo error y tarda parecido con un email inexistente y con una contraseña incorrecta.
-3. **🟡 Diagnóstico.** Manda un `PUT /raffles/1` con un `ownerId` y un `status` inventados. Determina qué hace el backend con cada uno y por qué son casos distintos.
+2. **🟡** Mide con `curl -w %{time_total}` el `POST /login` con un email inexistente y con una contraseña incorrecta. Después compara contra un hash de relleno cuando el email no existe y mide otra vez. **Criterio:** los dos caminos tardan lo mismo dentro de un 10 %.
+3. **🟡 Diagnóstico.** Manda un envío con un `sentBy` inventado y un `PUT /wheels/3` que lleve la rueda a `live`. Determina qué hace el backend con cada uno y por qué son casos distintos.
 4. **🟡** Comprueba con `curl` y un `Origin` no permitido que la API responde igual. Explica en tres líneas qué protege CORS entonces.
-5. **🟠** Implementa la propiedad del §2: columna `owner_id`, comprobación en el servicio, y una prueba con dos usuarios por cada operación sensible.
+5. **🟠** Implementa los roles del §2: columna `role` en `users`, comprobación en el servicio (operación arma ruedas, soporte manda envíos, la contadora concilia), y una prueba con dos operadores por cada operación sensible.
 6. **🟠 Diagnóstico.** Haz que un `500` devuelva `err.Error()` al cliente, provoca un error de base, y anota exactamente cuánta información acabas de publicar.
-7. **🟠** Implementa la regla de `ErrPriceLocked` del §3 y demuestra con una prueba que el precio no cambia después de la primera venta.
+7. **🟠** Manda a `POST /wheels/4/reconciliation` unos conteos inventados y demuestra que se guardan tal cual. Escribe la prueba que va a fallar hasta que `be07` recalcule en el servidor.
 8. **🔴** Implementa un límite de tasa en `POST /login`, decide las tres cuestiones del §5 y documenta qué pasa en el frontend heredado cuando recibe un `429`.
 9. **🔴** Escribe la evaluación de riesgo de este backend como si fuera a producción mañana: toma la tabla del §7, ordénala por riesgo real para **este** dominio, y estima el esfuerzo de cada mitigación. Es el insumo directo de `bea-09`.
 

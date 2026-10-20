@@ -1,6 +1,6 @@
 # 🔒 Decisiones y versiones congeladas
 
-> Tutorial React 16 — Rifas y Chances · Documento de referencia · **Fuente de verdad de versiones**
+> Tutorial React 16 — La Esclusa · Documento de referencia · **Fuente de verdad de versiones**
 > Lo citan: todas las fases y apéndices · No es lectura secuencial: se consulta.
 
 Este archivo existe para que el curso se sostenga solo. Cada vez que una fase
@@ -276,7 +276,7 @@ cualquier momento contra dónde deberías estar.
 
 ```json
 {
-  "name": "raffles-app",
+  "name": "esclusa-app",
   "version": "1.0.0",
   "private": true,
   "engines": {
@@ -288,6 +288,7 @@ cualquier momento contra dónde deberías estar.
     "axios": "0.21.4",
     "bootstrap": "4.6.2",
     "chart.js": "2.9.4",
+    "history": "4.10.1",
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "react-redux": "7.2.9",
@@ -298,6 +299,9 @@ cualquier momento contra dónde deberías estar.
     "rxjs": "6.6.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "5.16.5",
+    "@testing-library/react": "11.2.7",
+    "@testing-library/user-event": "12.8.3",
     "concurrently": "6.5.1",
     "cors": "2.8.5",
     "cypress": "10.11.0",
@@ -312,8 +316,10 @@ cualquier momento contra dónde deberías estar.
     "build": "react-scripts build",
     "test": "react-scripts test",
     "mock:api": "node mock/server.js",
-    "mock:lottery": "node mock/lottery/server.js",
-    "mock:all": "concurrently \"npm run mock:api\" \"npm run mock:lottery\"",
+    "mock:googleplay": "node mock/googlePlay/server.js",
+    "mock:all": "concurrently \"npm run mock:api\" \"npm run mock:googleplay\"",
+    "traffic": "node scripts/traffic.js",
+    "measure": "node scripts/measure.js",
     "dev": "concurrently \"npm run mock:all\" \"npm start\"",
     "cypress": "cypress open"
   },
@@ -329,7 +335,7 @@ cualquier momento contra dónde deberías estar.
 ```
 
 > 🧠 **Por qué las versiones van sin `^` ni `~`.** El rango `^16.14.0` significa
-> "cualquier 16.x mayor o igual", y eso convierte tu instalación en una lotería
+> "cualquier 16.x mayor o igual", y eso convierte tu instalación en un sorteo
 > dependiente del día. En una app en mantenimiento no quieres el parche nuevo:
 > quieres **la versión que corre en producción**. El lockfile (D7) ya congela el
 > árbol entero, pero pinear también en `package.json` hace explícita la
@@ -349,16 +355,16 @@ entra cada dependencia, para que puedas verificar que vas al día.
 
 | Fase | Comando |
 |---|---|
-| 0 | `npm install bootstrap@4.6.2` · `npm install --save-dev sass@1.32.5` |
-| 1 | `npm install react-router-dom@5.3.4` |
-| 2 | `npm install @reduxjs/toolkit@1.8.6 react-redux@7.2.9 redux@4.1.2 axios@0.21.4` |
-| 3 | `npm install --save-dev json-server@0.16.3 express@4.17.1 cors@2.8.5 dotenv@10.0.0 concurrently@6.5.1` |
-| 6 | `npm install redux-observable@1.2.0 rxjs@6.6.7` |
-| 9 | `npm install chart.js@2.9.4` |
-| 10 | `npm install --save-dev rxjs-marbles@6.0.1 cypress@10.11.0` |
+| 0 | `npm install --save-exact bootstrap@4.6.2` · `npm install --save-dev --save-exact sass@1.32.5` · `npm install --save-dev --save-exact @testing-library/react@11.2.7 @testing-library/user-event@12.8.3 @testing-library/jest-dom@5.16.5` (las que trae la plantilla de CRA 4, D6) |
+| 1 | `npm install --save-exact react-router-dom@5.3.4` |
+| 2 | `npm install --save-exact @reduxjs/toolkit@1.8.6 react-redux@7.2.9 redux@4.1.2 axios@0.21.4` · `npm install --save-dev --save-exact json-server@0.16.3` |
+| 3 | `npm install --save-exact history@4.10.1` · `npm install --save-dev --save-exact express@4.17.1 cors@2.8.5 dotenv@10.0.0 concurrently@6.5.1` |
+| 6 | `npm install --save-exact redux-observable@1.2.0 rxjs@6.6.7` |
+| 9 | `npm install --save-exact chart.js@2.9.4` |
+| 10 | `npm install --save-dev --save-exact rxjs-marbles@6.0.1 cypress@10.11.0` |
 
 Las fases 4, 5, 7, 8 y 11 no agregan dependencias: construyen sobre lo que ya
-está. Que una fase entera de venta concurrente no necesite ni un paquete nuevo
+está. Que una fase entera de giro concurrente no necesite ni un paquete nuevo
 es, en sí, una lección sobre dónde vive la complejidad real.
 
 ---
@@ -370,13 +376,14 @@ cualquiera, así que conviene tenerlos a mano:
 
 - **`3000`** — el dev server de CRA (`npm start`). Sirve la SPA.
 - **`3001`** — `json-server` con el middleware de caos. Es el backend propio:
-  `raffles`, `numbers`, `participants`, `settlements`, `users`. Lo consume
-  `apiClient`. 🔥 En el track BE opcional, a partir de `be03` este mismo puerto
-  lo sirve el binario de Go: el puerto no cambia justamente para que el
-  frontend no se entere (ver §7.4).
-- **`3002`** — el mock de lotería (Express propio, caos `high` por defecto).
-  Sirve `GET /results/:raffleId`. Lo consume `apiLottery`, **nunca**
-  `apiClient`.
+  `wheels`, `segments`, `players`, `inventory`, `purchases` y `users`, con los
+  nombres del diccionario. Lo consume `apiClient`. 🔥 En el track BE opcional, a
+  partir de `be03` este mismo puerto lo sirve el binario de Go: el puerto no
+  cambia justamente para que el frontend no se entere (ver §7.4).
+- **`3002`** — el mock de Google Play (Express propio, `mock/googlePlay/server.js`):
+  verifica compras, deja en `pending` las de pago en efectivo hasta que pasa la
+  demora configurable, y puede repetir una notificación. Lo consume `apiStore`,
+  **nunca** `apiClient`.
 
 La separación no es cosmética: el backend propio y el servicio externo tienen
 perfiles de fallo distintos, y aprender a distinguir "se cayó lo nuestro" de "se
@@ -400,7 +407,12 @@ lo que instaló npm, gana lo que instaló npm y hay que averiguar por qué.
 
 ---
 
-## 7. Track BE (opcional) — decisiones D14–D29 🔥
+## 7. Track BE (opcional) — decisiones D14–D38 🔥
+
+> 📝 **Las D30–D38 son las más recientes**, y salen de mediciones hechas en contenedor
+> en octubre de 2026. Tocan los dos tracks: `D30` (k6), `D32` (`oddsAudit`), `D33` (pesos en
+> puntos básicos, F04) y `D36` (el mock de Google Play, F03 y F07) se usan en la base, y
+> las demás viven en el BE. Van al final de la lista para no renumerar D14–D29.
 
 Todo lo de esta sección pertenece al **track opcional de backend** (`be00`–`be09`
 y sus apéndices `bea-NN`). El track base se completa con el mock y **no depende
@@ -467,6 +479,12 @@ contenido de la fase; quitarla vaciaría `be04`.
 cita `be04`. Si los necesitas para un post-mortem, cítalos desde ahí y no de
 memoria.
 
+📏 **Medido el 19/10/2026 con `govulncheck` v1.0.0.** La v3.2.0 trae `GO-2020-0017`
+(alias `CVE-2020-26160`), sin versión corregida. Y la v4.4.2 trae hoy `GO-2024-3250`
+y `GO-2025-3553`, corregidos en la v4.5.1 y la v4.5.2. **Se congela igual**, por
+fidelidad a 2022 y por decisión del autor: `be04` §5.7 bis lo cuenta, y subir de
+versión es un ejercicio de la fase.
+
 ---
 
 #### D17 — `database/sql` + `sqlx` 1.3.5, sin ORM
@@ -506,7 +524,7 @@ demostrada con una prueba que pasa en SQLite y falla en Postgres.
 
 **Qué se fijó.** Driver de Postgres `lib/pq` v1.10.7; driver de SQLite
 `mattn/go-sqlite3` v1.14.16. La alternativa pura Go `modernc.org/sqlite`
-v1.19.x se evalúa y se mide en `be09`, no se adopta por defecto.
+v1.19.5 se evalúa y se mide en `be09`, no se adopta por defecto.
 
 📝 **Nota de época.** `lib/pq` era el driver clásico y hoy está en modo
 mantenimiento, con `pgx` como sucesor recomendado. `mattn/go-sqlite3` exige
@@ -524,7 +542,9 @@ compilación** —el `import` del driver vive en un archivo `//go:build sqlite`�
 modo que producción compila con `CGO_ENABLED=0`, estático y sin cgo, y las
 pruebas conservan `mattn/go-sqlite3`, que es más rápido en ejecución que
 `modernc`. No se cambia de driver. La medición de los tres escenarios queda en
-`server/evidence/imagen.md`.
+`server/evidence/imagen.md`: con cgo, 13,6 MB de binario y 27,4 s de compilación
+en frío; puro Go con la etiqueta, 8,8 MB y 1,9 s; con `modernc.org/sqlite`
+v1.19.5, 14,0 MB y 6,4 s (20/10/2026, `golang:1.19.13`, arm64).
 
 ---
 
@@ -665,51 +685,244 @@ renegociarla por escrito en la fase que lo pida.
 
 ---
 
-#### D28 — La venta se modela como hecho, no como estado
+#### D28 — El giro se modela como hecho, no como estado
 
-**Qué se fijó.** En `be05` se crea la tabla `sales`, donde cada venta es una fila
-nueva con `UNIQUE (raffle_id, number)`. Vender pasa de ser un `UPDATE` sobre
-`raffle_numbers` a ser un `INSERT` en `sales` más la actualización del estado, las
-dos en la misma transacción. El `status` de `raffle_numbers` sigue existiendo
-—el contrato de `be00` lo exige— pero pasa de ser la verdad a ser una proyección.
+**Qué se fijó.** En `be05` cada giro es una fila nueva en `spin_log` (la bitácora),
+con `UNIQUE (idempotency_key)`. Girar pasa de ser un `UPDATE` sobre el saldo a ser
+un `INSERT` en `spin_log` más el descuento del saldo y, si el segmento es de
+edición limitada, el descuento de `stock.remaining`: las tres cosas en la misma
+transacción. El saldo de `freeSpins` y `paidSpins` sigue existiendo —el contrato de
+`be00` lo exige— pero deja de ser la única verdad: el registro del giro es el hecho,
+y el saldo se puede reconstruir desde la bitácora.
 
 📝 **Por qué.** Un `UNIQUE` no puede proteger un `UPDATE` sobre una fila que ya
 existe: no hay segunda fila que rechazar. Sin cambiar el modelo, la defensa más
 fuerte de las tres —una restricción de la base— sencillamente no está disponible.
 El camino principal es el bloqueo pesimista (`SELECT … FOR UPDATE`) por
-**observabilidad**, no por rendimiento: se puede mirar en `pg_stat_activity`. La
-variante optimista se implementa y se mide en la misma fase.
+**legibilidad**, no por rendimiento: el bloqueo se lee en el código antes de la
+decisión que protege. En la base, `pg_stat_activity` muestra quién espera a quién
+con las dos variantes, porque en PostgreSQL la escritura condicional también espera
+a la fila sin confirmar. La variante de escritura condicional se implementa y se
+mide en la misma fase.
 
-📎 **Consecuencias.** `be07` usa `sales` como el registro inmutable de su
-trazabilidad; `be08` hereda `TestConcurrentSell` y la evidencia de SQLite.
+📎 **Consecuencias.** `be07` usa `spin_log` como registro inmutable de su
+trazabilidad y de su conciliación; `be08` hereda la prueba de concurrencia de `be05`
+y la evidencia de SQLite.
 
 **Qué la vuelve revisable.** Nada dentro del track. Volver al modelo de estado
 implicaría renunciar al índice único, que es el punto.
 
 ---
 
-#### D29 — El proceso corre en UTC; la zona de Bogotá es solo de presentación
+#### D29 — El proceso corre en UTC; la zona de Panamá es solo de presentación
 
-**Qué se fijó.** En `be06`: el proceso corre con `TZ=UTC`, todo instante se
+**Qué se fijó.** En `be06`: el proceso corre en UTC, todo instante se
 guarda en `TIMESTAMPTZ` y toda comparación se hace entre instantes. La sesión de
-base fija `TimeZone=America/Bogota` **solo** para que la serialización de salida
+base fija `TimeZone=America/Panama` **solo** para que la serialización de salida
 coincida con el contrato que el frontend ya consume. El borde del cierre es el
-mismo que en el frontend: `now >= closesAt` significa cerrada, heredado de
-`isPastClosing`.
+mismo que en el frontend: `now >= closesAt` significa cerrada.
 
 📝 **Por qué con esa jerarquía.** La zona de presentación no participa en
 ninguna decisión. Un servidor que compara en hora local depende de la
 configuración de la máquina donde corre, y el mismo binario decide distinto en
-tu laptop y en el contenedor.
+tu laptop y en el contenedor. Panamá, Bogotá y Lima están en UTC−5 todo el año,
+así que cambiar de Bogotá a Panamá no mueve ni un instante: cambia el nombre de la
+zona que aparece en la salida. La trampa del horario de verano está en Chile
+(`be06`), no aquí; y la de una ley que cambia la zona, en Paraguay, que dejó el
+horario de verano en octubre de 2024 y que la base de zonas de `golang:1.19.13`
+todavía no conoce (`be06` §4.2).
 
-📎 **Consecuencias.** `main.go` fija `TZ=UTC` al arrancar (`be06` §5), así que
-la decisión no depende de la imagen ni del runner. `be08` prueba la comparación
+📎 **Consecuencias.** `main.go` fija `time.Local = time.UTC` al arrancar, y
+`storage.Open` pone la zona de presentación en el DSN de cada conexión (`be06`
+§5.1), así que la decisión no depende de la imagen, del runner ni de quien
+escriba el `DATABASE_URL`. Medido: `os.Setenv("TZ", "UTC")` en `main` llega
+tarde, y un `SET TIME ZONE` vale para una sola conexión del pool. `be08` prueba la comparación
 de instantes contra PostgreSQL (la regla del motor de `D18`) y comprueba que
 `closesAt` sale con offset y no con `Z`.
 
 **Qué la vuelve revisable.** Que el contrato cambie a UTC explícito (`Z`) en la
 salida. Ahí la sesión de base deja de necesitar la zona, y el frontend tiene que
 aceptarlo primero.
+
+---
+
+#### D30 — `grafana/k6` fijado en 1.5.0
+
+**Qué se fijó.** El arnés de carga del curso es la imagen oficial `grafana/k6:1.5.0`,
+con `linux/arm64` nativo. Se verificó el 14/10/2026 con los manifiestos de 1.0.0,
+0.57.0 y de 1.1.0 a 1.5.0. `latest` queda descartado.
+
+📝 **Por qué.** Las cifras que el curso publica (F03, `be05`, `be08`) salen de una
+corrida, y una cifra sin versión no se reproduce. Fijar la imagen hace que la
+medición del lector se parezca a la del autor.
+
+📎 **Consecuencias.** `bea-11` enseña con esta versión; `be05` y `be08` publican sus
+cifras con ella.
+
+**Qué la vuelve revisable.** Una versión nueva con cambios en `thresholds` o en
+`constant-arrival-rate`: entonces se vuelve a medir.
+
+---
+
+#### D31 — El pipeline de be09 se valida con actionlint 1.7.9 y `actions/checkout@v4`
+
+**Qué se fijó.** El curso no tiene repositorio ni runner para `be09`. El workflow se
+valida con `rhysd/actionlint:1.7.9` (imagen fija) y con sus mismos comandos dentro de
+`golang:1.19.13` y `postgres:13`. El workflow usa `actions/checkout@v4`: con `@v3`,
+actionlint 1.7.9 avisa de que la versión es demasiado vieja. El trabajo que publica
+la imagen usa `docker/setup-buildx-action@v3`, `docker/login-action@v3` y
+`docker/build-push-action@v6`, validadas con la misma versión de actionlint
+(20/10/2026).
+
+📝 **Por qué.** Sin runner no hay forma de ver el pipeline correr. Lo que sí se puede
+es comprobar su sintaxis y sus comandos con versiones fijadas, sin instalar nada en
+la máquina del lector.
+
+📎 **Consecuencias.** `be09` dice qué versión de actionlint y de checkout usó. El
+apéndice `bea-09` no lleva código.
+
+**Qué la vuelve revisable.** Un runner real en el repositorio del alumno, o una
+versión de `checkout` que actionlint marque como vieja.
+
+---
+
+#### D32 — `oddsAudit` reporta sus dos señales por separado
+
+**Qué se fijó.** `oddsAudit(counts, weightsBp)` devuelve `{ bandAlarms, chi2,
+chi2Alarm }`: la alarma de la banda ±3σ y la del chi-cuadrado con α = 0,05 (valor
+crítico 14,067 con 7 grados de libertad). No las combina en un veredicto único.
+
+📝 **Por qué.** En la medición del laboratorio del curso, una rueda honesta dio alarma en el 6 % de las
+corridas, y una rueda que reparte el 2 % en un segmento de 0,5 % dio alarma en el
+100 %. Las dos señales no tienen la misma tasa de falsas alarmas: el chi-cuadrado
+alarma por diseño en cerca del 5 %, y la banda aporta el resto. Un veredicto único
+esconde cuál de las dos disparó.
+
+📎 **Consecuencias.** `F08` y `A14` dicen la tasa del chi-cuadrado, no cero. La tasa
+de la banda sola queda por medir: no se publica hasta medirla.
+
+**Qué la vuelve revisable.** Que la medición de la banda sola cambie la lectura de
+las dos señales.
+
+---
+
+#### D33 — Los pesos se guardan en puntos básicos y suman exactamente 10.000
+
+**Qué se fijó.** Cada segmento tiene su `weightBp` en puntos básicos (1 pb = 0,01 %).
+Los pesos de una rueda suman exactamente 10.000, y F04 lo valida. Una rueda en `live`
+no cambia sus pesos: para cambiarlos se publica una versión nueva (`wheelVersion`).
+
+📝 **Por qué.** Enteros, como el dinero: una probabilidad de 0,5 % son 50 puntos
+básicos, y se compara sin redondeo. La `wheelVersion` deja que cada giro diga con
+qué pesos se tiró.
+
+📎 **Consecuencias.** F04 valida suma y enteros. `be02` guarda la versión de pesos
+en una tabla propia. `be07` concilia por `wheel_version` y `landed_segment`.
+
+**Qué la vuelve revisable.** Una rueda que necesite una resolución menor a un punto
+básico.
+
+---
+
+#### D34 — La protección de duplicados entrega un sustituto
+
+**Qué se fijó.** Si la rueda cae en un premio que el jugador ya tiene, se entrega el
+sustituto publicado de antemano para ese segmento (gemas o un giro). La bitácora
+guarda por separado el segmento en que cayó y el premio que se entregó. La rueda no
+cambia sus pesos.
+
+📝 **Por qué.** La promesa de la consola, *"nunca te repite"*, se mantiene sin
+mentirle a la tabla de probabilidades, que sigue siendo la que cualquiera puede
+verificar. El costo es que el premio entregado y el segmento de la rueda dejan de ser
+lo mismo, y eso hay que medirlo.
+
+📎 **Consecuencias.** `be07` mide, en simulación, que la protección mantiene las
+proporciones que promete. El incidente 21 del cuaderno base nombra este arreglo como
+trabajo del backend.
+
+**Qué la vuelve revisable.** Que el sustituto cambie la probabilidad efectiva de un
+premio lo bastante para que la tabla publicada deje de ser verdad: entonces se publica
+otra versión.
+
+---
+
+#### D35 — La bitácora de giros solo se agrega
+
+**Qué se fijó.** `spin_log` no se actualiza ni se borra. En `be05` la base lo garantiza
+con permisos o con un disparador que rechaza `UPDATE` y `DELETE`, y la prueba lo
+verifica.
+
+📝 **Por qué.** La conciliación de probabilidades (`A14`, `F08`, `be07`) solo sirve si
+la bitácora es la que se escribió el día del giro. Una bitácora que se puede editar no
+permite auditar nada.
+
+📎 **Consecuencias.** `be07` concilia sobre ella con SQL, y la protección de duplicados
+de D34 se apoya en ella.
+
+**Qué la vuelve revisable.** La retención y el particionado de la bitácora, que quedan
+fuera del alcance del curso.
+
+---
+
+#### D36 — El mock de Google Play vive en el 3002
+
+**Qué se fijó.** El servicio de compras (Google Play) es un mock propio en
+`mock/googlePlay/server.js`, en el puerto 3002, con el script `mock:googleplay`. Lo
+consume `apiStore.js`, nunca `apiClient`. Modela la verificación de compras, las compras
+pendientes que se confirman tras una demora configurable, y las notificaciones
+duplicadas.
+
+📝 **Por qué.** El 3002 separa el servicio externo del backend propio, y sus fallos son
+de otra clase. Un pago en efectivo pendiente se modela con json-server más una ruta
+Express, y eso basta para F07.
+
+📎 **Consecuencias.** F03, F07 y `be07` lo usan.
+
+**Qué la vuelve revisable.** Un cambio en el contrato real de Google Play.
+
+---
+
+#### D37 — `be05` siembra el aleatorio de forma explícita
+
+**Qué se fijó.** `be05` usa `math/rand` con una fuente sembrada de forma explícita
+(`rand.New(rand.NewSource(seed))`). La semilla no es constante: se lee de `crypto/rand`
+al arrancar. El texto de `be05` no explica por qué; el incidente be-17 muestra qué pasa
+sin semilla.
+
+📝 **Por qué.** Go 1.19 no siembra `math/rand` solo. Sin semilla, cada reinicio repite
+la misma secuencia de premios (medido en contenedor: 1.19.13 repite; 1.20.14 no). La conciliación de
+probabilidades no lo ve, porque las frecuencias salen perfectas. Esa es la lección de
+be-17, y por eso el curso la deja para el incidente.
+
+📎 **Consecuencias.** `bea-10` usa semillas fijas en los datos de prueba, y lo dice
+explícitamente.
+
+**Qué la vuelve revisable.** Que una versión de Go cambie el sembrado por defecto:
+entonces be-17 se reescribe.
+
+---
+
+#### D38 — Las imágenes base del track BE, fijadas por digest
+
+**Qué se fijó.** Las imágenes de ejecución de `be09` y `bea-02` se fijan por
+digest, no por etiqueta: `gcr.io/distroless/static-debian12:nonroot@sha256:afa5c872c891853ca7fcf1f12c3edb23f7eeef36189728842dd51042ff57f7ab`
+para el binario sin cgo (`be09`) y
+`gcr.io/distroless/base-debian12:nonroot@sha256:7f0c72cd138b442ae0deeb69c08b1acf5525439ba251a49ad93c320a061567e5`
+para la versión con cgo de `bea-02`. El compose de `bea-02` migra con
+`migrate/migrate:v4.15.2`, la versión de `D20`. Verificadas el 20/10/2026, las dos
+distroless con `linux/amd64` y `linux/arm64`.
+
+📝 **Por qué.** La etiqueta `nonroot` se mueve, y el incidente `be-16` existe porque
+*"la imagen de ayer"* no se puede comparar con la de anteayer si las dos dicen lo
+mismo en el `FROM`. Debian 12 y no 11: `golang:1.19.13` es Debian 12 (glibc 2.36),
+y el binario con cgo necesita la misma `glibc`.
+
+📎 **Consecuencias.** `be09` publica el `Dockerfile` con el digest de *static*;
+`bea-02`, el de *base*. Medido: distroless *static* trae la base de zonas, así que
+el API no necesita `import _ "time/tzdata"`.
+
+**Qué la vuelve revisable.** Un aviso de seguridad sobre la imagen fijada: se
+cambia el digest, se vuelve a medir y se anota la fecha.
 
 ---
 
@@ -720,7 +933,7 @@ acá está el destino, para comparar en cualquier momento contra dónde debería
 estar.
 
 ```
-module github.com/rifas-y-chances/raffles-api
+module github.com/interoceanic-games/esclusa-api
 
 go 1.19
 
@@ -741,7 +954,7 @@ require (
 `be04` y su sección de migración**, y sale de ahí en la misma fase. Que quede
 fuera del listado final es el punto: la deuda se pagó.
 
-`github.com/brianvoe/gofakeit/v6` v6.19.x entra solo si haces el apéndice
+`github.com/brianvoe/gofakeit/v6` v6.19.0 entra solo si haces el apéndice
 opcional `bea-10`, y no es dependencia del backend: vive en el paquete de
 utilidades de siembra.
 
