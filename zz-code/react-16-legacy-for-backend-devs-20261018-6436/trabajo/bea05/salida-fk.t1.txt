@@ -1,0 +1,18 @@
+BEGIN;
+BEGIN
+INSERT INTO demo_requests (idempotency_key, player_id) VALUES ('giro-a', 42);
+INSERT 0 1
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT free_spins FROM demo_players WHERE id = 42 FOR UPDATE;
+ERROR:  deadlock detected
+DETAIL:  Process 4263 waits for ShareLock on transaction 127640; blocked by process 4264.
+Process 4264 waits for ShareLock on transaction 127639; blocked by process 4263.
+HINT:  See server log for query details.
+CONTEXT:  while locking tuple (0,1) in relation "demo_players"
+COMMIT;
+ROLLBACK

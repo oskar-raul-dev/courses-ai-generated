@@ -1,0 +1,241 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "ibatista@esclusa.test",
+      "password": "esclusa123",
+      "name": "Itzel Batista",
+      "token": "tok_ibatista_3c7e"
+    },
+    {
+      "id": 2,
+      "email": "ypinzon@esclusa.test",
+      "password": "esclusa123",
+      "name": "Yariela Pinzón",
+      "token": "tok_ypinzon_8b41"
+    },
+    {
+      "id": 3,
+      "email": "mdegracia@esclusa.test",
+      "password": "esclusa123",
+      "name": "Marisol De Gracia",
+      "token": "tok_mdegracia_d0a9"
+    }
+  ],
+  "wheels": [
+    {
+      "id": 1,
+      "name": "Esclusa de Oro",
+      "timezone": "America/Panama",
+      "closesAt": "2026-10-31T20:00:00-05:00",
+      "status": "live"
+    },
+    {
+      "id": 2,
+      "name": "Semana del Canal",
+      "timezone": "America/Panama",
+      "closesAt": "2026-08-15T20:00:00-05:00",
+      "status": "scheduled"
+    },
+    {
+      "id": 3,
+      "name": "Rueda de la costa",
+      "timezone": "America/Panama",
+      "closesAt": "2026-02-15T20:00:00-05:00",
+      "status": "reconciled"
+    }
+  ],
+  "segments": [
+    {
+      "id": 1,
+      "wheelId": 1,
+      "segmentId": "sin-premio",
+      "prizeType": "none",
+      "weightBp": 3000
+    },
+    {
+      "id": 2,
+      "wheelId": 1,
+      "segmentId": "vidas-2",
+      "prizeType": "lives",
+      "weightBp": 2000
+    },
+    {
+      "id": 3,
+      "wheelId": 1,
+      "segmentId": "avatar-comun",
+      "prizeType": "avatar",
+      "weightBp": 1500
+    },
+    {
+      "id": 4,
+      "wheelId": 1,
+      "segmentId": "set-gemas-basico",
+      "prizeType": "gemSet",
+      "weightBp": 1500
+    },
+    {
+      "id": 5,
+      "wheelId": 1,
+      "segmentId": "vidas-5",
+      "prizeType": "lives",
+      "weightBp": 1000
+    },
+    {
+      "id": 6,
+      "wheelId": 1,
+      "segmentId": "set-gemas-plata",
+      "prizeType": "gemSet",
+      "weightBp": 800
+    },
+    {
+      "id": 7,
+      "wheelId": 1,
+      "segmentId": "avatar-raro",
+      "prizeType": "avatar",
+      "weightBp": 150
+    },
+    {
+      "id": 8,
+      "wheelId": 1,
+      "segmentId": "esclusa-de-oro",
+      "prizeType": "gemSet",
+      "weightBp": 50
+    },
+    {
+      "id": 101,
+      "wheelId": 2,
+      "segmentId": "sin-premio",
+      "prizeType": "none",
+      "weightBp": 3000
+    },
+    {
+      "id": 102,
+      "wheelId": 2,
+      "segmentId": "vidas-2",
+      "prizeType": "lives",
+      "weightBp": 2000
+    },
+    {
+      "id": 103,
+      "wheelId": 2,
+      "segmentId": "avatar-comun",
+      "prizeType": "avatar",
+      "weightBp": 1500
+    },
+    {
+      "id": 104,
+      "wheelId": 2,
+      "segmentId": "set-gemas-basico",
+      "prizeType": "gemSet",
+      "weightBp": 1500
+    },
+    {
+      "id": 105,
+      "wheelId": 2,
+      "segmentId": "vidas-5",
+      "prizeType": "lives",
+      "weightBp": 1000
+    },
+    {
+      "id": 106,
+      "wheelId": 2,
+      "segmentId": "set-gemas-plata",
+      "prizeType": "gemSet",
+      "weightBp": 800
+    },
+    {
+      "id": 107,
+      "wheelId": 2,
+      "segmentId": "avatar-raro",
+      "prizeType": "avatar",
+      "weightBp": 150
+    },
+    {
+      "id": 108,
+      "wheelId": 2,
+      "segmentId": "esclusa-de-oro",
+      "prizeType": "gemSet",
+      "weightBp": 50
+    },
+    {
+      "id": 109,
+      "wheelId": 3,
+      "segmentId": "sin-premio",
+      "prizeType": "none",
+      "weightBp": 3000
+    },
+    {
+      "id": 110,
+      "wheelId": 3,
+      "segmentId": "vidas-2",
+      "prizeType": "lives",
+      "weightBp": 2000
+    },
+    {
+      "id": 111,
+      "wheelId": 3,
+      "segmentId": "avatar-comun",
+      "prizeType": "avatar",
+      "weightBp": 1500
+    },
+    {
+      "id": 112,
+      "wheelId": 3,
+      "segmentId": "set-gemas-basico",
+      "prizeType": "gemSet",
+      "weightBp": 1500
+    },
+    {
+      "id": 113,
+      "wheelId": 3,
+      "segmentId": "vidas-5",
+      "prizeType": "lives",
+      "weightBp": 1000
+    },
+    {
+      "id": 114,
+      "wheelId": 3,
+      "segmentId": "set-gemas-plata",
+      "prizeType": "gemSet",
+      "weightBp": 800
+    },
+    {
+      "id": 115,
+      "wheelId": 3,
+      "segmentId": "avatar-raro",
+      "prizeType": "avatar",
+      "weightBp": 150
+    },
+    {
+      "id": 116,
+      "wheelId": 3,
+      "segmentId": "esclusa-de-oro",
+      "prizeType": "gemSet",
+      "weightBp": 50
+    }
+  ],
+  "players": [
+    {
+      "id": 42,
+      "name": "Juan P.",
+      "country": "Colombia"
+    },
+    {
+      "id": 43,
+      "name": "María R.",
+      "country": "Chile"
+    }
+  ],
+  "inventory": [],
+  "purchases": [],
+  "spinLog": [],
+  "stock": [
+    {
+      "id": 1,
+      "wheelId": 1,
+      "segmentId": "esclusa-de-oro",
+      "remaining": 1000
+    }
+  ]
+}

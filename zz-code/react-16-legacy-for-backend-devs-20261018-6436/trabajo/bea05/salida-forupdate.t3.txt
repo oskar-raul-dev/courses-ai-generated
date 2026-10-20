@@ -1,0 +1,25 @@
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT pid, state, wait_event_type, wait_event, left(query, 60) AS consulta
+FROM pg_stat_activity
+WHERE datname = 'bea05' AND state <> 'idle' AND query NOT LIKE '%pg_stat_activity%'
+ORDER BY xact_start;
+ pid  | state  | wait_event_type |  wait_event   |                           consulta                           
+------+--------+-----------------+---------------+--------------------------------------------------------------
+ 4108 | active | Timeout         | PgSleep       | SELECT pg_sleep(2);
+ 4107 | active | Lock            | transactionid | SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa
+(2 rows)
+
+SELECT blocked.pid AS bloqueado, blocking.pid AS bloqueante,
+       left(blocked.query, 40) AS espera, left(blocking.query, 40) AS culpable
+FROM pg_stat_activity blocked
+JOIN pg_stat_activity blocking ON blocking.pid = ANY(pg_blocking_pids(blocked.pid));
+ bloqueado | bloqueante |                  espera                  |      culpable       
+-----------+------------+------------------------------------------+---------------------
+      4107 |       4108 | SELECT remaining FROM demo_stock WHERE s | SELECT pg_sleep(2);
+(1 row)
+

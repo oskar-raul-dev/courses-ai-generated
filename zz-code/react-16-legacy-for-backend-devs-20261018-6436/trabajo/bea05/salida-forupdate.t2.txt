@@ -1,0 +1,23 @@
+SELECT pg_sleep(0.5);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+BEGIN;
+BEGIN
+SELECT clock_timestamp() AS pide_el_bloqueo \gset
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro' FOR UPDATE;
+ remaining 
+-----------
+         0
+(1 row)
+
+SELECT round(extract(epoch FROM clock_timestamp() - :'pide_el_bloqueo')::numeric, 2) AS segundos_esperando;
+ segundos_esperando 
+--------------------
+               1.51
+(1 row)
+
+COMMIT;
+COMMIT

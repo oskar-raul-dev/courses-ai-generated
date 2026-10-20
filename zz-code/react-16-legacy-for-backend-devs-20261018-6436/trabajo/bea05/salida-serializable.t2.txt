@@ -1,0 +1,25 @@
+SELECT pg_sleep(0.5);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+BEGIN ISOLATION LEVEL SERIALIZABLE;
+BEGIN
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro';
+ remaining 
+-----------
+         1
+(1 row)
+
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+UPDATE demo_stock SET remaining = remaining - 1 WHERE segment_id = 'esclusa-de-oro';
+ERROR:  40001: could not serialize access due to concurrent update
+LOCATION:  ExecUpdate, nodeModifyTable.c:1562
+ROLLBACK;
+ROLLBACK

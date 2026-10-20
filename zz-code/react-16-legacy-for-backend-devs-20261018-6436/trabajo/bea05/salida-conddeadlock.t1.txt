@@ -1,0 +1,19 @@
+BEGIN;
+BEGIN
+UPDATE demo_stock SET remaining = remaining - 1 WHERE segment_id = 'esclusa-de-oro' AND remaining > 0;
+UPDATE 1
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+UPDATE demo_stock SET remaining = remaining - 1 WHERE segment_id = 'avatar-raro' AND remaining > 0;
+ERROR:  40P01: deadlock detected
+DETAIL:  Process 5499 waits for ShareLock on transaction 191321; blocked by process 5500.
+Process 5500 waits for ShareLock on transaction 191320; blocked by process 5499.
+HINT:  See server log for query details.
+CONTEXT:  while updating tuple (0,2) in relation "demo_stock"
+LOCATION:  DeadLockReport, deadlock.c:1149
+COMMIT;
+ROLLBACK

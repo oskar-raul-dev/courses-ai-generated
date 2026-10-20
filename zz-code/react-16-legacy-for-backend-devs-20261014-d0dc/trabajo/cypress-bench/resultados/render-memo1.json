@@ -1,0 +1,13 @@
+{
+  "rows": 10000,
+  "memo": true,
+  "measurementsMs": [
+    68,
+    54,
+    56,
+    51,
+    59
+  ],
+  "meanMs": 58,
+  "browser": "Electron (Chromium) de cypress/included:10.11.0, headless"
+}

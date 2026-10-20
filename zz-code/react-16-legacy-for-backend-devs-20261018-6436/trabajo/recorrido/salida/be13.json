@@ -1,0 +1,9 @@
+{
+  "chargedCents": 15960,
+  "feeCents": 2400,
+  "netCents": 13560,
+  "missingInApi": [],
+  "duplicatedInApi": [
+    "tok-ago-17"
+  ]
+}

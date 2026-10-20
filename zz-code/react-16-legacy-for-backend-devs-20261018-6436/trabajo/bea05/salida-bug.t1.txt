@@ -1,0 +1,20 @@
+BEGIN;
+BEGIN
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro';
+ remaining 
+-----------
+         1
+(1 row)
+
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+UPDATE demo_stock SET remaining = remaining - 1 WHERE segment_id = 'esclusa-de-oro';
+UPDATE 1
+INSERT INTO demo_spins (idempotency_key, player_id, delivered_prize) VALUES ('k-1', 42, 'esclusa-de-oro');
+INSERT 0 1
+COMMIT;
+COMMIT

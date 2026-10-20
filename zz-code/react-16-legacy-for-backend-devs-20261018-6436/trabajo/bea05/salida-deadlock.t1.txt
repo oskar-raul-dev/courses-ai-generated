@@ -1,0 +1,23 @@
+BEGIN;
+BEGIN
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro' FOR UPDATE;
+ remaining 
+-----------
+         1
+(1 row)
+
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT remaining FROM demo_stock WHERE segment_id = 'avatar-raro' FOR UPDATE;
+ERROR:  40P01: deadlock detected
+DETAIL:  Process 4443 waits for ShareLock on transaction 127707; blocked by process 4444.
+Process 4444 waits for ShareLock on transaction 127706; blocked by process 4443.
+HINT:  See server log for query details.
+CONTEXT:  while locking tuple (0,2) in relation "demo_stock"
+LOCATION:  DeadLockReport, deadlock.c:1149
+COMMIT;
+ROLLBACK

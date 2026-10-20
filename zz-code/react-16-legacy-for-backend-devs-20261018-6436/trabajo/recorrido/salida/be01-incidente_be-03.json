@@ -1,0 +1,7 @@
+{
+  "go_health": "status=200 x-request-id(js)=ff78fdc9df4ad1cf",
+  "mock_wheels": "status=200 x-request-id(js)=03b122a6",
+  "go_players_sin_filtro": "fetch lanzó: TypeError: Failed to fetch",
+  "go_players_con_filtro": "status=200 x-request-id(js)=3e417e3322e284a5",
+  "axios": "axios: message=Network Error response=undefined"
+}

@@ -1,0 +1,22 @@
+# trabajo/be09/compose-lab.yml — el compose de be09, en el laboratorio de la tanda:
+# sin puertos publicados, con la etiqueta del curso, la base en la red r16t7-net y el API en el
+# espacio de red de la consola (r16t7-app), donde Cypress ve localhost:3001 y el API ve el 3002.
+services:
+  db:
+    ports: !reset []
+    labels: { curso: react16 }
+  migrate:
+    build: { context: ., labels: { curso: react16 } }
+    labels: { curso: react16 }
+  api:
+    build: { context: ., labels: { curso: react16 } }
+    ports: !reset []
+    extra_hosts: !reset []
+    network_mode: "container:r16t7-app"
+    environment:
+      PLAY_URL: http://localhost:3002
+    labels: { curso: react16 }
+networks:
+  default:
+    name: r16t7-net
+    external: true

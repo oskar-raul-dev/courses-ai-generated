@@ -1,0 +1,18 @@
+BEGIN;
+BEGIN
+INSERT INTO demo_requests (idempotency_key, player_id) VALUES ('giro-a', 42);
+INSERT 0 1
+SELECT pg_sleep(1);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT free_spins FROM demo_players WHERE id = 42 FOR NO KEY UPDATE;
+ free_spins 
+------------
+          1
+(1 row)
+
+COMMIT;
+COMMIT

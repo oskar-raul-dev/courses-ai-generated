@@ -1,3 +1,5 @@
+> ⚠️ **Reemplazada el 14/10/2026** por `../react-16-legacy-for-backend-devs-20261014-d0dc/verificacion-a-mano-T1-T3.md`: el repo de prueba se rehízo en `d0dc` (revisión de continuidad P1–T3) y esta lista apunta a la historia anterior.
+
 # Verificación a mano de T1 (para el autor)
 
 Estas comprobaciones necesitan un navegador y DevTools; no se automatizan en el contenedor (plan §2.4, punto 4).

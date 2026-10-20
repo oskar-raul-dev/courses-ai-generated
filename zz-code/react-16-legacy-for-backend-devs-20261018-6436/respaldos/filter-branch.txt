@@ -1,0 +1,6 @@
+previo-revision/fase-00-setup-hola-mundo-cra -> previo-revision/fase-00-setup-hola-mundo-cra (fb5f6d851a951ba8e04fc20eab18273ebad3d828 -> c3086b7be4c1192af742aab280015f97706a36b1)
+previo-revision/fase-01-estructura-base-router-5 -> previo-revision/fase-01-estructura-base-router-5 (5c68396d7d6ef80f48fe0fde2c56acf69cb6e1b7 -> fbfd7dadaab751bc4d50df1cfdc1b464932cc31b)
+previo-revision/fase-02-autenticacion-minima -> previo-revision/fase-02-autenticacion-minima (ef9e210d0069ae2052f561d2ec8c3a7652c28067 -> f26a5e293d223415ac291a890eeac7b85ccad6f0)
+previo-revision/fase-03-mock-api-express-caos -> previo-revision/fase-03-mock-api-express-caos (cde23ea1671c0a12ceb72259bfd1cd73620acd97 -> 19f2db341ad9b0c00147d2439c4810348c74d2ea)
+previo-revision/fase-04-ruedas-crud -> previo-revision/fase-04-ruedas-crud (770d9efd0159514bb147bd36dc7b8b80fe004c6d -> c2ad05e6a171355030e8d292e20e0731291a34c1)
+previo-revision/fase-05-envios-manuales -> previo-revision/fase-05-envios-manuales (c21ca65cacecc06d95a957acf332bb533286e05d -> af5efc19db0fc55528be31a0fa4f059c48cd05d9)

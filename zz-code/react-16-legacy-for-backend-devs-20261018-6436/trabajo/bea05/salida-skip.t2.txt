@@ -1,0 +1,14 @@
+SELECT pg_sleep(0.5);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro' FOR UPDATE SKIP LOCKED;
+ remaining 
+-----------
+(0 rows)
+
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro' FOR UPDATE NOWAIT;
+ERROR:  55P03: could not obtain lock on row in relation "demo_stock"
+LOCATION:  heap_lock_tuple, heapam.c:4698

@@ -1,0 +1,7 @@
+{
+  "primerLogin": 401,
+  "pantallaTrasError": "/login",
+  "mensaje": "Email o contraseña incorrectos",
+  "segundoLogin": 200,
+  "partesDelToken": 3
+}

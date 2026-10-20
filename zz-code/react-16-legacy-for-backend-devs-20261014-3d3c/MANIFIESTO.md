@@ -4,7 +4,7 @@
 - **Tanda:** T1 (F00–F02, incidentes 01–06, apéndices A1–A5), cerrada con la verificación a mano entregada
 - **Creado:** 2026-10-14
 - **Propósito:** repo de prueba `esclusa-app` (tags `fase-00` a `fase-02`), ramas `incidente/01` a `incidente/06`, y las pruebas de render, rutas y auth
-- **Estado:** vigente (T2 la usará como base)
+- **Estado:** extraído (T12, 20/10/2026)
 - **Cómo regenerar lo que limpiar.py borra:** `npm ci` en `esclusa-app/` (node:14.21.3); `npm install` para `node_modules`; `docker pull node:20` y `ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:11.4.2` (imágenes)
 
 ## Qué hay

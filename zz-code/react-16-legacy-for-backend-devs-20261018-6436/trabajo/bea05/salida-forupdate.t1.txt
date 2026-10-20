@@ -1,0 +1,18 @@
+BEGIN;
+BEGIN
+SELECT remaining FROM demo_stock WHERE segment_id = 'esclusa-de-oro' FOR UPDATE;
+ remaining 
+-----------
+         1
+(1 row)
+
+SELECT pg_sleep(2);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+UPDATE demo_stock SET remaining = remaining - 1 WHERE segment_id = 'esclusa-de-oro';
+UPDATE 1
+COMMIT;
+COMMIT

@@ -4,7 +4,7 @@
 - **Tanda:** T0 (la raíz)
 - **Creado:** 2026-10-14
 - **Propósito:** pruebas de §5.1 de T0: `package.json` y `go.mod` de referencia, tags de la convención, diagrama de estados del alcance
-- **Estado:** vigente
+- **Estado:** archivado (T12, 20/10/2026)
 - **Cómo regenerar lo que limpiar.py borra:** `npm install --package-lock-only --ignore-scripts` en `node:14.21.3` (el lockfile de `trabajo/paquete`); `bash trabajo/tags/prueba-tags.sh <dir>` (el repo de prueba); `docker pull ghcr.io/mermaid-js/mermaid-cli/mermaid-cli:11.4.2` (la imagen)
 
 ## Qué hay

@@ -1,0 +1,23 @@
+SELECT pg_sleep(0.5);
+ pg_sleep 
+----------
+ 
+(1 row)
+
+SELECT clock_timestamp() AS empieza \gset
+INSERT INTO demo_spins (idempotency_key, player_id, delivered_prize) VALUES ('doble-toque', 42, 'vidas-5')
+ON CONFLICT (idempotency_key) DO NOTHING;
+INSERT 0 0
+SELECT round(extract(epoch FROM clock_timestamp() - :'empieza')::numeric, 2) AS segundos;
+ segundos 
+----------
+     1.50
+(1 row)
+
+INSERT INTO demo_spins (idempotency_key, player_id, delivered_prize) VALUES ('doble-toque', 42, 'vidas-5');
+ERROR:  23505: duplicate key value violates unique constraint "demo_spins_idempotency_key_key"
+DETAIL:  Key (idempotency_key)=(doble-toque) already exists.
+SCHEMA NAME:  public
+TABLE NAME:  demo_spins
+CONSTRAINT NAME:  demo_spins_idempotency_key_key
+LOCATION:  _bt_check_unique, nbtinsert.c:649

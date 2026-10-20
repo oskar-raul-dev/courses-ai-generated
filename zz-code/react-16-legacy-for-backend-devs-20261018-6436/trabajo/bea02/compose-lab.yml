@@ -1,0 +1,20 @@
+# trabajo/bea02/compose-lab.yml — el compose de bea-02 en el laboratorio: sin puertos, con la etiqueta del curso,
+# la red r16t7-net y el API en el espacio de red de la consola.
+services:
+  db:
+    ports: !reset []
+    labels: { curso: react16 }
+  migrate:
+    labels: { curso: react16 }
+  api:
+    build: { context: ., labels: { curso: react16 } }
+    ports: !reset []
+    network_mode: "container:r16t7-app"
+    labels: { curso: react16 }
+networks:
+  default:
+    name: r16t7-net
+    external: true
+volumes:
+  esclusa-pgdata:
+    labels: { curso: react16 }
