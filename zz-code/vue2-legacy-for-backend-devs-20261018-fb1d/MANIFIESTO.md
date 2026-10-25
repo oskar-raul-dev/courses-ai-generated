@@ -11,7 +11,7 @@
 
 - `f11/`, `q/`, `backend/`: árboles de prueba copiados de `…-b44a`.
 - `devc/`: el devcontainer candidato de a7 §6 sobre F11.
-- `t0-*.sh`: las pruebas de T0; logs en `salidas/t0/`.
+- `t0-*.sh`: las pruebas de T0; logs en `salidas/t0/`, que ya no está en disco (comprobado el 25/10/2026; ver README §8).
 
 ## Qué sirvió
 

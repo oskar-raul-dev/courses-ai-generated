@@ -92,6 +92,7 @@ Lo de §1. Los alias: frontend 200, API 200 en `/tickets` y sockets 200 en el po
 ## 8. 📂 Salidas
 
 `salidas/`: los logs de arriba, `rama-incidente-05.diff`, `TicketsView-rama.vue`, `ticketService-f05.js`, `package-f07.json`.
+La carpeta ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Las cifras de §1 son el registro y se rehacen con §4.
 
 ## 9. 🧹 Limpieza
 

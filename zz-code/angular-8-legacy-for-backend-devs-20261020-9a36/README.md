@@ -217,7 +217,9 @@ Lo de §1, del 20/10/2026.
 
 ## 8. 📂 Salidas
 
-`salidas/t0/`, un archivo por prueba con el nombre que da el bloque de §4. Los `dist/` de cada build en
+`salidas/t0/`, un archivo por prueba con el nombre que da el bloque de §4. La carpeta ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Las cifras de §1
+son el registro y los logs se rehacen con §4; los inventarios de Docker (`t0/inventario-docker-antes.txt`,
+`t4/inventario-docker-despues.txt`) y `t4/limpieza.log` eran de una sola vez y se perdieron. Los `dist/` de cada build en
 `devc/clinical-lab-sass/dist/` y `devc/clinical-lab-dart/dist/`.
 
 ## 9. 🧹 Limpieza
@@ -242,4 +244,4 @@ uno por nombre.
   1.2.13 en LabCore, que tiene `node-gyp` 3.8.0 en la raíz de `node_modules` (de `node-sass`): por eso F0 y A12 no
   citan el mensaje exacto. Es el H-host opcional del plan: `npm ci` de LabCore en el Mac con Node x64.
 
-**Limpieza final (20/10/2026, cierre del curso):** regenerables borrados con `limpiar.py` y a mano; se conservan `salidas/` (evidencia citada en este README) y las copias de los dos planes borrados del curso: `plan-apple-silicon-final.md` y `plan-de-edicion-a14-a15-final.md`.
+**Limpieza final (20/10/2026, cierre del curso):** regenerables borrados con `limpiar.py` y a mano; se conservan las copias de los dos planes borrados del curso: `plan-apple-silicon-final.md` y `plan-de-edicion-a14-a15-final.md`. `salidas/` también se conservaba como evidencia, pero ya no está en disco (ver §8).

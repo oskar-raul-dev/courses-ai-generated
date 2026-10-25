@@ -2,7 +2,8 @@
 
 Máquina: macOS, arm64 (Apple Silicon), Docker 29.8.0. Todo corrió en contenedores con
 `--label curso=react16`, sin puertos publicados al host, sin nada instalado en el host.
-Salidas en `salidas/`; código de prueba en `trabajo/`.
+Salidas en `salidas/`, que ya no está en disco (comprobado el 25/10/2026; `limpiar.py` la libera como
+regenerable): las cifras de este documento son el registro. Código de prueba en `trabajo/`.
 
 ## H1 · Imágenes congeladas y arm64
 

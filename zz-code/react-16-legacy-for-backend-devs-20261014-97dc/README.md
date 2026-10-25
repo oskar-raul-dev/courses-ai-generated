@@ -97,6 +97,10 @@ el tag? Cada una devuelve código de salida 0 o un error en su log.
 
 ## 8. 📂 Salidas
 
+`salidas/` ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Los resultados de §7 son el registro y los
+logs se rehacen corriendo §4; los inventarios inicial y final de Docker eran de una sola vez y se perdieron. Lo
+que tenía:
+
 - `salidas/t0-*.log`: registros de las cuatro pruebas de arriba.
 - `salidas/inventario-inicial-*.txt`: **ojo, aviso.** Hubo un error en esta sesión. Al tomar el
   inventario, el comando de salida apuntó al directorio de P7 (`…-20261014-f462`) y sobrescribió sus

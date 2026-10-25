@@ -58,7 +58,8 @@ Portátil arm64, todo en contenedores de la misma red. Tres errores del arnés, 
 
 ## 8. 📂 Salidas
 
-Todo en `salidas/`, con el nombre del script. Al curso pasaron F03 §5.4 y la nota de be05 §8.
+Todo en `salidas/`, con el nombre del script. Ya no está en disco (comprobado el 25/10/2026); las cifras de §7 son
+el registro y se rehacen corriendo §4. Al curso pasaron F03 §5.4 y la nota de be05 §8.
 
 ## 9. 🧹 Limpieza
 

@@ -176,7 +176,7 @@ reemplazó los literales exactos de la tabla en el curso. El resto de las prueba
 
 ## 7. ✅ Qué se espera ver
 
-Corrida del 2026-10-07, guardada en `salidas/`:
+Corrida del 2026-10-07. Se guardó en `salidas/`, que ya no está en disco (ver §8); las cifras de abajo son el registro:
 
 - `t1-datepipe-iana.txt`: `formatDate(…, 'America/Toronto')` sale en la zona del contenedor
   (`2022-01-01 00:30 Z` con TZ=UTC); `'-0500'` y `'EST'` sí funcionan.
@@ -218,7 +218,8 @@ Corrida del 2026-10-07, guardada en `salidas/`:
 
 ## 8. 📂 Salidas
 
-Todo en `salidas/`, regenerable corriendo §4. Al curso no se copió nada de aquí: los cambios están en
+Todo en `salidas/`, regenerable corriendo §4. La carpeta ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Para que `corrida-final.sh` tenga
+contra qué comparar, primero hay que volver a correr T1–T4 con §4. Al curso no se copió nada de aquí: los cambios están en
 el markdown y salen de `ediciones/` y de `fechas/aplicar.py`.
 
 ## 9. 🧹 Limpieza

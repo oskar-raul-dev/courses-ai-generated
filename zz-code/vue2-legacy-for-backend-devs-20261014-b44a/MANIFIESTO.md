@@ -12,7 +12,7 @@
 - `README.md`: cómo correr, resultados y hallazgos de V0.
 - `repo/tiquetera-legacy/`: el repo del alumno (tronco, estado final de F11; sin `.git`; `node_modules` y `dist` regenerables).
 - `rutas/`, `backend/`, `incidentes/`, `k/` y los directorios de K: las rutas, el backend del Curso 02, los incidentes de los dos cuadernos y las herramientas de la revisión de código (ver el README, §11 a §19).
-- `salidas/`: inventario de Docker, registro de npm, corridas del verificador, diagramas exportados e instantáneas por fase en `salidas/fases/`.
+- `salidas/`: inventario de Docker, registro de npm, corridas del verificador, diagramas exportados e instantáneas por fase en `salidas/fases/`. Ya no está en disco (comprobado el 25/10/2026; ver README §8).
 
 ## Qué sirvió
 

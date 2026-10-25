@@ -6,7 +6,8 @@
 
 - `esclusa-app/`: el repo del alumno, clonado desde `fase-02-autenticacion-minima` (rama `f03`). Tags `fase-00` a `fase-03`. Rama `incidente/07` (sin timeout).
 - `trabajo/`: pruebas y plantillas de la fase: `F03.pagos.test.js` (pagos #1 y #2, y el 5xx), `incidentes/inc07.test.js`, `F03-plantilla.md` y `render_f03.py` (el documento se genera con los bloques de los archivos probados), `db.inicial.json` (la semilla de la base, para restaurarla antes de cada corrida).
-- `salidas/`: registros de las comprobaciones.
+- `salidas/`: registros de las comprobaciones. Ya no está en disco (comprobado el 25/10/2026); los resultados de
+  referencia de abajo son el registro y se rehacen corriendo las pruebas.
 - `verificacion-a-mano-T2.md`: lo que mira el autor en el navegador.
 
 ## Resultados de referencia (14/10/2026)

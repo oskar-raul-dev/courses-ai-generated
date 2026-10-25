@@ -88,4 +88,6 @@ La red `kind`, `kindest/node:<none>` y `alpine:3.20` eran de antes y quedan. Que
 
 El H-host se corrió en el Mac del autor (H-H-1); su `node_modules` y `dist` se borran con el comando de §9.
 
-**Limpieza final (20/10/2026, cierre del curso):** regenerables borrados con `limpiar.py` y a mano; se conservan `salidas/` (evidencia citada en este README).
+**Limpieza final (20/10/2026, cierre del curso):** regenerables borrados con `limpiar.py` y a mano; `salidas/` se conservó como evidencia citada en este README, pero ya no está en disco (comprobado el 25/10/2026;
+`limpiar.py` la libera como regenerable). Las cifras de §1 son el registro. Se rehace con §4, salvo los logs del
+H-host (H-H-1), que corrió el autor en su Mac, y `limpieza.log`, que eran de una sola vez.

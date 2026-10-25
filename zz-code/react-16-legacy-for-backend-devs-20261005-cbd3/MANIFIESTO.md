@@ -11,6 +11,8 @@
 
 ## Qué hay
 
+`salidas/` ya no está en disco (comprobado el 25/10/2026); se regenera con los comandos de arriba. Lo que tenía:
+
 - `salidas/courses-ia.txt` y `salidas/publicacion.txt` — el verificador base con los perfiles del
   repositorio, antes de la subclase del curso.
 - `salidas/curso.txt` y `salidas/curso-pub.txt` — la subclase del curso: 3 `ANCLA-FE0F` + 1

@@ -19,7 +19,8 @@
 - `ediciones/`: los scripts con que se editó el curso en T1–T3 (y los fragmentos largos que insertan).
 - `verificar-curso.py`, `verificar-secciones.py`: los verificadores de T5 (el curso no tiene uno propio).
 - `corrida-final.sh`: T1–T4 de cero contra el markdown final.
-- `salidas/`: lo que imprimió cada prueba el 2026-10-07; `salidas/final/`, la corrida final.
+- `salidas/`: lo que imprimió cada prueba el 2026-10-07; `salidas/final/`, la corrida final. Ya no está en disco
+  (comprobado el 25/10/2026); las cifras quedan en el README §7 y se regeneran corriendo §4.
 
 ## Qué sirvió
 

@@ -79,6 +79,11 @@ No hay mediciones en esta tanda. Son pruebas de contenido: una prueba pasa o no,
 
 ## 8. 📂 Salidas
 
+`salidas/` ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Los resultados de §7 son el registro y los
+logs se rehacen corriendo §4. Se perdieron dos archivos de una sola vez: el inventario inicial de Docker y
+`tags-previos-al-rehacer.txt` (el historial previo sigue en la rama `historial-previo` de `esclusa-app.bundle`).
+Lo que tenía:
+
 - `salidas/`: registros de cada comprobación de F00, F01 y F02, y de las instalaciones (`f00-*`, `f01-*`, `f02-*`, `rehacer-*`).
 - `salidas/inventario-inicial-*.txt`: el inventario de Docker al empezar esta tanda. **Aviso:** el 14/10 a las 01:43 se sobrescribió por error el inventario inicial de P7 (`zz-code/…-f462/salidas/inventario-inicial-*.txt`) con este snapshot. Los originales de P7 no se recuperan; cada archivo de P7 lleva ahora un aviso.
 - `salidas/tags-previos-al-rehacer.txt`: las etiquetas que existían antes de rehacer el historial de F01 y F02.

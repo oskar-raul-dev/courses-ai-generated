@@ -179,7 +179,8 @@ Corrido el 18 y 19/10/2026:
 ## 8. 📂 Salidas
 
 Todo en `salidas/`, un archivo por medición, nombrado por fase (`be01-…`, `be02-…`) o incidente (`inc-…`). Se regenera
-corriendo el script de §4 correspondiente. Al curso se copiaron, rendidos, be01–be04 (desde sus plantillas), F09 y F10;
+corriendo el script de §4 correspondiente. La carpeta ya no está en disco (comprobado el 25/10/2026; `limpiar.py`
+la libera): las cifras de §7 son el registro, y el inventario inicial de Docker, que era de una sola vez, se perdió. Al curso se copiaron, rendidos, be01–be04 (desde sus plantillas), F09 y F10;
 be00 y los incidentes se escribieron a mano con las cifras de aquí. `server/evidence/` del repo guarda los inventarios y
 las divergencias, como parte de la fase.
 

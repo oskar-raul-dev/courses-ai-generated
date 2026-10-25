@@ -202,7 +202,9 @@ Lo de §1, del 18–19/10/2026.
 
 ## 8. 📂 Salidas
 
-Todo en `salidas/t0/`, un log por prueba con el nombre del primer argumento del script.
+Todo en `salidas/t0/`, un log por prueba con el nombre del primer argumento del script. La carpeta ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable.
+Las cifras de §1 son el registro y los logs de T0 se rehacen con §4. No se rehacen los H-host (`h-host-*.txt`),
+que corrió el autor en su Mac, ni el inventario de Docker ni `t6-limpieza.log`, que eran de una sola vez.
 
 ## 9. 🧹 Limpieza
 

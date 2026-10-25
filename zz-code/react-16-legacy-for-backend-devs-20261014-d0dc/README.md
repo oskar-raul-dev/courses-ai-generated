@@ -99,6 +99,9 @@ Corrida del 14/10/2026: sin memo 256, 247, 221, 222, 229 ms (media 235); con mem
 
 ## 8. 📂 Salidas
 
+`salidas/` ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Los resultados de §7 son el registro y los
+logs se rehacen corriendo §4; la medición del tablero sigue en `trabajo/cypress-bench/resultados/`. Lo que tenía:
+
 | Archivo | Qué es |
 |---|---|
 | `salidas/render-memo0.json`, `render-memo1.json` | la medición del tablero (copia de `cypress-bench/resultados/`) |

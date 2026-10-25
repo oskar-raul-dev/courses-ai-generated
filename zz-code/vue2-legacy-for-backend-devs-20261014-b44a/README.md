@@ -120,13 +120,19 @@ Ninguna versión congelada faltó en el registro.
 | F2 | ✅ (con `PageTitle` de H-V1-4) | no hay prueba de servidor: el guard y el login son cliente | ⚠️ guard y login: **pendiente, manual** |
 | F3 | ✅ | `/tickets`, `/tickets/1`, `/tickets?status=open`, `/tickets/999` (404), `/users` desde dentro del contenedor | ✅ (lista y detalle en navegador: **pendiente, manual**; 🔥 caos **no corrido**, es opcional) |
 
-**Sin tags.** El plan pide un tag `fase-<slug>` por fase en el repo del alumno. No se crearon, porque para etiquetar hace falta un commit y la memoria de Oskar prohíbe commitear. Las instantáneas `.tgz` de cada fase están en `salidas/fases/`. Si quieres tags, lo decides tú y se hacen en el repo del alumno.
+**Sin tags.** El plan pide un tag `fase-<slug>` por fase en el repo del alumno. No se crearon, porque para etiquetar hace falta un commit y la memoria de Oskar prohíbe commitear. Las instantáneas `.tgz` de cada fase se guardaron en `salidas/fases/`, que ya no está en disco (ver §8). Si quieres tags, lo decides tú y se hacen en el repo del alumno.
 
 **Pendiente de V1:** la verificación en navegador de F0 a F3 (formulario de F0, navegación, guard de F2, lista y detalle de F3), y la decisión H-V1-4.
 
 **Sin verificar en V0:** que `npm install` de cada paquete termine en el contenedor; eso lo prueban las tandas V1–V7, fase por fase.
 
 ## 8. 📂 Salidas
+
+`salidas/` ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Las cifras de este README son el registro.
+Los registros, las corridas del verificador y los diagramas se rehacen corriendo las pruebas; **no** se rehacen
+las instantáneas de `salidas/fases/` ni los `backend-*.tgz` (el estado de cada fase hay que reconstruirlo desde su
+documento), ni el inventario inicial de Docker. La de F11 sobrevive desempacada en `…-20261018-fb1d/f11/`. Lo que
+tenía:
 
 | Archivo | Qué es |
 |---|---|

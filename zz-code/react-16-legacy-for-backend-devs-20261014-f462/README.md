@@ -5,6 +5,9 @@ Sesión de `zz-code/` para la preparación P7 del plan de edición
 [`hallazgos.md`](hallazgos.md). Lo que el autor revisa a mano está en
 [`lista-verificacion-a-mano.md`](lista-verificacion-a-mano.md).
 
+> 📝 Los archivos de `salidas/` que se citan abajo ya no está en disco (comprobado el 25/10/2026): no se versiona y `limpiar.py` la libera como regenerable. Las cifras quedan en
+> `hallazgos.md`; los inventarios de Docker eran de una sola vez y se perdieron.
+
 ## 1. Qué es esto
 
 Medidas y comprobaciones de las cifras y versiones que las fases densas van a

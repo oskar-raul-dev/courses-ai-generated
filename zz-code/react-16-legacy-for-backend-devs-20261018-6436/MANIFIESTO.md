@@ -13,7 +13,7 @@
 - `respaldos/` — `esclusa-app-antes-de-r19.bundle` (todas las ramas y tags antes del `filter-branch` de R19, T12) y `filter-branch.txt`. Fuera de `salidas/` porque `limpiar.py` borra `salidas/` y esto no se regenera.
 - `esclusa-app/` — el repo de prueba (de `f769`), con las etiquetas `pre-backend-go`, `fase-be00` … `fase-be09`, `apendice-bea-02-…` y `apendice-bea-10-…`, y las ramas `incidente/be-01` … `be-18`, `apendice/bea-02` y `apendice/bea-10`.
 - `trabajo/` — scripts para levantar el laboratorio, plantillas de las fases rendidas, pruebas extra de be01 y be02, el recorrido de Cypress, las fuentes de los incidentes BE y sus regresiones.
-- `salidas/` — cada medición de la tanda y el inventario inicial de Docker.
+- `salidas/` — cada medición de la tanda y el inventario inicial de Docker. Ya no está en disco (comprobado el 25/10/2026; ver README §8).
 - `etapas/` — `worktree` efímeros (`go3001`).
 - `verificacion-a-mano-T7.md` a `-T10.md` — lo que solo se ve en un navegador o con tres terminales.
 

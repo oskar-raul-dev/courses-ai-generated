@@ -14,7 +14,7 @@
 - `trabajo/gomod/`: `go.mod` candidato (`github.com/interoceanic-games/esclusa-api`) y su `go.sum`.
 - `trabajo/tags/prueba-tags.sh`: prueba de la convención de tags en un repo vacío.
 - `trabajo/mermaid/`: el bloque `stateDiagram-v2` extraído del alcance y su render.
-- `salidas/`: registros de las pruebas, inventarios de Docker al inicio y al final, y el aviso sobre el inventario inicial de P7 (ver el README, §8).
+- `salidas/`: registros de las pruebas, inventarios de Docker al inicio y al final, y el aviso sobre el inventario inicial de P7 (ver el README, §8). Ya no está en disco (comprobado el 25/10/2026).
 
 ## Qué sirvió
 

@@ -13,7 +13,7 @@
 - `esclusa-app/` — clon con `--no-local` de `…6436/esclusa-app` después del `filter-branch` de R19, con todas las ramas como locales (58) y los 32 tags. Es la copia final del repo de prueba del curso.
 - `etapas/<tag>/` — un worktree por tag de cierre, con su `node_modules`.
 - `trabajo/` — `regresion.sh`, `f03-medir.sh`, `incidentes.sh` (y `incidentes/` con las pruebas extraídas del cuaderno y `conteo21.js`), `be05-k6.sh`, `be08-carga.sh`, `k6-todo.sh`, `k6-be05.sh`, `e2e.sh` (y `e2e/spin-log.cy.js`).
-- `salidas/` — cada corrida, con los intentos fallidos por el arnés conservados con sufijo `-intento1-…`.
+- `salidas/` — cada corrida, con los intentos fallidos por el arnés conservados con sufijo `-intento1-…`. Ya no está en disco (comprobado el 25/10/2026).
 
 ## Qué sirvió
 

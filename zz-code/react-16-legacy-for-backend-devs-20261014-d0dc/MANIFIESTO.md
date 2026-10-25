@@ -14,7 +14,7 @@
 - `esclusa-app/` — el repo de prueba: etiquetas `fase-00` … `fase-05`, ramas `incidente/01` … `incidente/12`, y el historial anterior en `previo-revision/*` y `previo-t1/historial-previo`.
 - `etapas/f00`, `etapas/f00b` — worktrees de la reconstrucción (el primero, la etapa F00 de T1; el segundo, la historia nueva). `etapas/snap01/` — la etapa F01 de T1, extraída.
 - `trabajo/` — pruebas de F04 y F05, `incidentes/`, plantillas de F03, F04 y F05 con sus renderizadores, comparador, `correr-pruebas.sh`, `correr-incidentes.sh`, `cypress-bench/`, ejemplos de los apéndices, `revision/` (los escáneres de la revisión) y `previo-revision/`.
-- `salidas/` — logs y resultados (ver README §8).
+- `salidas/` — logs y resultados (ver README §8). Ya no está en disco (comprobado el 25/10/2026).
 - `verificacion-a-mano-T1-T3.md` — lo que el autor verifica con navegador.
 
 ## Qué sirvió

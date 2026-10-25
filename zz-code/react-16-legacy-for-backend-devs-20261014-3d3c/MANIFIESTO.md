@@ -13,7 +13,7 @@
 - `esclusa-app/`: el repo del alumno, con historial lineal F00→F02 (rama `master`), las ramas `incidente/01`…`06` (cada una en su estado roto) y la rama `historial-previo` (el historial anterior, antes de rehacer F01 y F02).
 - `trabajo/`: pruebas y comparadores de la sesión (`inc03.test.jsx`, `inc04.test.jsx`, `inc05.test.js`, `inc06.test.jsx`, `correr.sh`, `comparar-bloques.py`, `comparar-f00.py`, `editar_cuaderno_01_06.py`, `editar_apendices_a3_a4.py`, `F02.auth.test.js`, `AppRouter.routes.test.js`, `WheelCard.render.test.js`).
 - `verificacion-a-mano-T1.md`: las comprobaciones en navegador que quedan para el autor.
-- `salidas/`: registros de cada comprobación, inventarios de Docker, y la lista de etiquetas previa al rehacer el historial.
+- `salidas/`: registros de cada comprobación, inventarios de Docker, y la lista de etiquetas previa al rehacer el historial. Ya no está en disco (comprobado el 25/10/2026; ver README §8).
 
 ## Qué sirvió
 
