@@ -23,7 +23,8 @@
   pruebas de F04–F07, de A7 y A11; `incidentes/` (03–17, con `inc13.colateral` e `inc14.pantalla`); `publicados-13-17/`
   (las pruebas de regresión tal como se publican); `render_fase.py`, `comparar-bloques.py`, `correr-pruebas.sh` y
   `correr-incidentes.sh`.
-- `salidas/` — logs y resultados (ver README §8).
+- `salidas/` — logs y resultados (ver README §8). No se versiona; se limpió el 25/10/2026 y se regenera corriendo
+  las pruebas, salvo los ids de las reescrituras de T6 y el inventario inicial de Docker, que se perdieron.
 - `verificacion-a-mano-T4.md`, `-T5.md` y `-T6.md` — lo que el autor verifica con navegador.
 
 ## Qué sirvió

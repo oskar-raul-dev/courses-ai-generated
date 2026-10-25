@@ -41,8 +41,8 @@
 mkdir -p salidas
 ```
 
-- El inventario de Docker del inicio está en `salidas/inventario-inicial-docker.txt`. Había contenedores de otros cursos
-  (angular-16, vue2): no se tocan.
+- El inventario de Docker del inicio se guardó en `salidas/inventario-inicial-docker.txt`, que ya no se conserva (ver
+  §8). Había contenedores de otros cursos (angular-16, vue2): no se tocan.
 - Los contenedores llevan `--label curso=react16` y ninguno publica puertos en el host: el mock del `3001`, el del `3002`
   y Jest comparten red con `--network container:<id>`.
 - `trabajo/correr-pruebas.sh` copia `mock/db.json` a `mock/db.json.antes` y lo devuelve al terminar. Antes de cambiar de
@@ -124,8 +124,9 @@ docker run --rm --label curso=react16 -v "$PWD/etapas/a13":/app -v "$PWD/trabajo
 Ojo con `t6-puente.sh`: la variable va como argumento aparte (`… "$PWD/esclusa-app" VAR=valor`); escrita pegada a la
 ruta, el script crea un directorio con ese nombre. Los tres scripts `t6-r22.sh`, `t6-oddsaudit-vacio.sh` y
 `t6-ignored-action.sh` **no se vuelven a correr**: reescribieron la historia del repo una vez (con `filter-branch`) y
-quedaron como registro de qué cambió; los ids de antes y después están en `salidas/r22-ids.txt` y
-`salidas/t6-ids-tras-oddsaudit.txt`.
+quedaron como registro de qué cambió. Los ids de antes y después se guardaron en `salidas/r22-ids.txt` y
+`salidas/t6-ids-tras-oddsaudit.txt`, que ya no se conservan y no se pueden regenerar sin volver a reescribir la
+historia; la historia anterior sigue en las ramas `previo-*` de `esclusa-app.bundle`.
 
 Variables de `correr-pruebas.sh`: `CHAOS_LEVEL` (el `3001`), `PLAY_CHAOS_LEVEL` (el `3002`), `CHAOS_SEED`,
 `PLAY_PENDING_MS` (3000 por defecto), `TZ_PRUEBA` (UTC por defecto) y `PRE`. Deja los logs de los mocks en
@@ -167,6 +168,9 @@ cifras del puente (renders por `setTimeout`, efectos bajo StrictMode) las cuenta
 
 ## 7. ✅ Qué se espera ver
 
+Las cifras de esta sección son el registro. Los logs entre paréntesis son los que deja la corrida en `salidas/`, que
+no se versiona: para verlos hay que volver a correr la prueba (§4).
+
 - F06: canicas 12/12 (`salidas/f06-marbles-2.log`), integración 4/4 (`salidas/f06-integracion-1.log`), build compila.
 - F07: canicas de F06 y F07 22/22 (`salidas/f07-marbles-4.log`); integración 6/7, y la que falla es la del leak de F06,
   que la F07 paga (`salidas/f07-integracion-1.log`); build compila.
@@ -200,6 +204,11 @@ cifras del puente (renders por `setTimeout`, efectos bajo StrictMode) las cuenta
   `closedWheelGuard.js:24:24` (`salidas/a13/`).
 
 ## 8. 📂 Salidas
+
+`salidas/` no se versiona y `limpiar.py` la libera como regenerable (convención de `zz-code/README.md`, punto 5); se
+limpió el 25/10/2026. La tabla dice qué deja cada corrida. Casi todo se rehace volviendo a correr la prueba, salvo dos
+salidas de una sola vez que se perdieron: los ids de las reescrituras de T6 (`r22-*`, `t6-ids-tras-oddsaudit.txt`;
+la historia previa sigue en las ramas `previo-*` del bundle) y `inventario-inicial-docker.txt`.
 
 | Archivo | Qué es |
 |---|---|
