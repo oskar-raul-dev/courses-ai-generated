@@ -6,6 +6,7 @@ es la fuente: si este directorio y la sección difieren, manda la sección.
 | Archivo | Qué es |
 |---|---|
 | `portal/index.html` | La página del ejemplo |
+| `portal/glosas.csv` | El archivo que descarga «Exportar glosas» |
 | `radicar.py` | Radica una factura y descarga las glosas en el portal de una aseguradora, con Playwright |
 
 ## Cómo se corre

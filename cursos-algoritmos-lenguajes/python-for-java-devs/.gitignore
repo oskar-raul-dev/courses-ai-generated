@@ -7,6 +7,8 @@ cuadernos/
 resultado.json
 *.png
 *.html
+# Excepción: el portal falso de au03 es código de la sección, no un reporte generado.
+!src/op010-au03-playwright/portal/index.html
 *.parquet
 *.pkl
 *.onnx
