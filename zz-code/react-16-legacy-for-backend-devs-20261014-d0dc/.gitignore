@@ -1,0 +1,4 @@
+# Los repos de prueba van como bundle (esclusa-app.bundle), no como repositorios anidados.
+esclusa-app/
+etapas/f00/
+etapas/f00b/

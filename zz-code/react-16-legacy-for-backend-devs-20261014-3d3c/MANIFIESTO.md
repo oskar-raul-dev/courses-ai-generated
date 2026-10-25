@@ -9,6 +9,7 @@
 
 ## Qué hay
 
+- `esclusa-app.bundle` — **lo que se versiona** del repo de prueba: todas las ramas y tags en un archivo (git no versiona un repo dentro de otro), hecho el 24/10/2026. Se restaura con `git clone esclusa-app.bundle esclusa-app && cd esclusa-app && for b in $(git branch -r | grep -v HEAD | sed 's|origin/||'); do git branch -q "$b" "origin/$b" 2>/dev/null; done`.
 - `esclusa-app/`: el repo del alumno, con historial lineal F00→F02 (rama `master`), las ramas `incidente/01`…`06` (cada una en su estado roto) y la rama `historial-previo` (el historial anterior, antes de rehacer F01 y F02).
 - `trabajo/`: pruebas y comparadores de la sesión (`inc03.test.jsx`, `inc04.test.jsx`, `inc05.test.js`, `inc06.test.jsx`, `correr.sh`, `comparar-bloques.py`, `comparar-f00.py`, `editar_cuaderno_01_06.py`, `editar_apendices_a3_a4.py`, `F02.auth.test.js`, `AppRouter.routes.test.js`, `WheelCard.render.test.js`).
 - `verificacion-a-mano-T1.md`: las comprobaciones en navegador que quedan para el autor.

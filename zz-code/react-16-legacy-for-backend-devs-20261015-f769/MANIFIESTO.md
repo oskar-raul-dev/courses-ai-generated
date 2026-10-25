@@ -12,6 +12,7 @@
 
 ## Qué hay
 
+- `esclusa-app.bundle` — **lo que se versiona** del repo de prueba: todas las ramas y tags en un archivo (git no versiona un repo dentro de otro), hecho el 24/10/2026. Los HEAD sueltos de los worktrees de `etapas/` van como `refs/etapas/<nombre>`. Se restaura con `git clone esclusa-app.bundle esclusa-app && cd esclusa-app && for b in $(git branch -r | grep -v HEAD | sed 's|origin/||'); do git branch -q "$b" "origin/$b" 2>/dev/null; done`.
 - `esclusa-app/` — el repo de prueba: etiquetas `fase-00` … `fase-11` y `pre-modernizacion`, ramas `f03` … `f11`,
   `incidente/01` … `incidente/20` (sin 08 ni 21, que no tiene rama), y el historial anterior en `previo-revision/*` y `previo-t1/historial-previo`; la pieza forense del `useMemo` en
   `previo-t6/incidente-19-usememo`. La historia se reescribió tres veces en T6 (`t6-r22.sh`, `t6-oddsaudit-vacio.sh`,

@@ -1,0 +1,6 @@
+# Los repos de prueba van como bundle (esclusa-app.bundle), no como repositorios anidados.
+esclusa-app/
+etapas/a13/
+etapas/puente-r17/
+etapas/puente-r18/
+etapas/puente-rx7/
