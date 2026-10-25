@@ -147,6 +147,7 @@ directorio— pero ocupa disco. `limpiar.py` lo borra **solo por nombre exacto, 
 python3 zz-code/limpiar.py                                   # vista previa de todo, con tamaños
 python3 zz-code/limpiar.py 05-event-driven-20261004-a3f9     # vista previa de un directorio
 python3 zz-code/limpiar.py 05-event-driven-20261004-a3f9 --borrar
+python3 zz-code/limpiar.py 05-event-driven-20261004-a3f9 --conservar-salidas --borrar   # todo menos salidas/
 ```
 
 - Sin argumentos, lista cada directorio regenerable con su tamaño y el total.
@@ -155,6 +156,10 @@ python3 zz-code/limpiar.py 05-event-driven-20261004-a3f9 --borrar
 - `--borrar` borra exactamente la lista mostrada: `node_modules`, `target`, `.venv`, `build`, `dist`,
   `__pycache__`, `bin`/`obj` de .NET, `vendor` de PHP y Go, y los demás de `REGENERABLE`. No sigue
   enlaces simbólicos.
+- `--conservar-salidas` saca `salidas/` de la lista: no la borra ni entra en ella. Va cuando el README
+  o el MANIFIESTO del directorio citan `salidas/` como evidencia que no se puede regenerar
+  (instantáneas, corridas en el host del autor, inventarios de una sola vez). Sin el flag, `salidas/` se
+  borra como siempre.
 
 **Cuándo:** al cerrar el curso (casilla del checklist final del plan), o antes, cuando un directorio
 pasa a *extraído* o *archivado*. La sesión corre la vista previa y muestra la lista; el `--borrar` lo da

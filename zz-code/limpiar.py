@@ -6,6 +6,7 @@ Uso:
     python3 zz-code/limpiar.py --solo a,b,c                     # vista previa solo de esos directorios
     python3 zz-code/limpiar.py --solo ruta-x/prueba-1 --borrar  # borra lo listado, y nada más
     python3 zz-code/limpiar.py <id> [<id> …]                    # igual que --solo, con los ids como argumentos
+    python3 zz-code/limpiar.py <id> --conservar-salidas         # todo lo regenerable menos salidas/ (ni lo que hay dentro)
 
 <id> es el nombre de un directorio de zz-code/ o una ruta relativa a zz-code/ (p. ej. `curso/subdirectorio`).
 
@@ -14,6 +15,7 @@ Reglas, que el script hace cumplir:
     acepta como <id>: para recorrerlo, sin --solo);
   - sin --solo ni <id>, recorre todo zz-code/;
   - solo borra directorios cuyo nombre está en REGENERABLE (node_modules, target, .venv…);
+  - con --conservar-salidas, salidas/ no se borra ni se recorre;
   - no sigue enlaces simbólicos ni entra en lo que va a borrar;
   - sin --borrar no toca nada.
 El código fuente, el MANIFIESTO.md y los datos se quedan. Solo biblioteca estándar.
@@ -56,12 +58,13 @@ def legible(n):
     return f"{n:.1f} TB"
 
 
-def candidatos(directorio):
+def candidatos(directorio, conservar=frozenset()):
     for base, dirs, _ in os.walk(directorio):
-        borrables = [d for d in dirs if d in REGENERABLE and not os.path.islink(os.path.join(base, d))]
+        borrables = [d for d in dirs if d in REGENERABLE and d not in conservar
+                     and not os.path.islink(os.path.join(base, d))]
         for d in borrables:
             yield os.path.join(base, d)
-        # no se entra en lo que se va a borrar ni en enlaces simbólicos
+        # no se entra en lo que se va a borrar, en lo que se conserva ni en enlaces simbólicos
         dirs[:] = [d for d in dirs if d not in REGENERABLE and not os.path.islink(os.path.join(base, d))]
 
 
@@ -71,10 +74,13 @@ def main():
     p.add_argument("--solo", default="", metavar="A,B,C",
                    help="lista separada por comas de directorios o rutas relativas de zz-code/")
     p.add_argument("--borrar", action="store_true", help="borra de verdad; sin esto, solo lista")
+    p.add_argument("--conservar-salidas", action="store_true",
+                   help="no borra salidas/ ni entra en ella (sin esto, salidas/ se borra como regenerable)")
     p.add_argument("--raiz", default=RAIZ, help="otra raíz (solo para pruebas)")
     a = p.parse_args()
 
     raiz = os.path.realpath(a.raiz)
+    conservar = frozenset({"salidas"}) if a.conservar_salidas else frozenset()
     pedidos = a.ids + [x.strip() for x in a.solo.split(",") if x.strip()]
     ids = pedidos or sorted(d for d in os.listdir(raiz)
                             if os.path.isdir(os.path.join(raiz, d)) and not d.startswith("."))
@@ -84,7 +90,7 @@ def main():
         dentro = os.path.commonpath([raiz, ruta]) == raiz and ruta != raiz
         if not dentro or not os.path.isdir(ruta):
             sys.exit(f"No es un directorio de zz-code/: {ident}")
-        objetivos.extend(candidatos(ruta))
+        objetivos.extend(candidatos(ruta, conservar))
 
     # sin repetir: dos pedidos que se solapan (un padre y un hijo) dan el mismo directorio dos veces
     objetivos = list(dict.fromkeys(os.path.realpath(r) for r in objetivos))
