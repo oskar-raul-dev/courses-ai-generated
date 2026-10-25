@@ -27,7 +27,7 @@ no se pudieron correr conservan el rótulo «sin correr» y su motivo (guía §1
 | `humo_servicio.py` | Lo mismo, con servicios (Postgres, Valkey, Kafka…) en una red propia `pfjd-<id>`, sin puertos publicados, y los borra al final pase lo que pase | `python3 humo_servicio.py <sección.md> <id> <archivo=inicio>… --svc alias=imagen [--env alias:K=V] [--args alias:"…"] [--pip …] --cmd "…"` |
 | `probado.py` | Cambia el encabezado y los rótulos de una sección a «probado» | `python3 probado.py <sección.md>` |
 | `carta.py` | La lista única de la carta: tracks y secciones; de ahí sale la numeración `opNNN` | `python3 carta.py` imprime la numeración |
-| `plan.py` | Marca filas del plan (`prompts/plan-de-produccion-carta.md`): escrita/corrida por rango, estado de tanda, bitácora y «dónde está» | `python3 plan.py 1 7 ✅ ✅` · `python3 plan.py tanda T1 ✅` · `python3 plan.py bitacora 'texto'` · `python3 plan.py dondeesta 'texto'` |
+| `plan.py` | Marca filas del plan (hoy, la copia `plan-de-produccion-carta-final.md` de este directorio; el original se borró del curso el 25/10/2026): escrita/corrida por rango, estado de tanda, bitácora y «dónde está» | `python3 plan.py 1 7 ✅ ✅` · `python3 plan.py tanda T1 ✅` · `python3 plan.py bitacora 'texto'` · `python3 plan.py dondeesta 'texto'` |
 | `verificar_urls.py` | Pide cada URL de los `.md` dados y lista las que no responden 200 tras redirecciones, o caen en otro dominio o en una portada | `python3 verificar_urls.py <archivo.md>…` |
 
 En `<archivo=inicio>`, `inicio` es el comienzo del bloque (`'circulares.py="""Extrae las circulares'`) o
@@ -39,7 +39,7 @@ En `<archivo=inicio>`, `inicio` es el comienzo del bloque (`'circulares.py="""Ex
   contenedor.
 - Imagen `python:3.14.7` (y `python:3.14.7-slim` en algunas). Los servicios usan imágenes de otros cursos
   sin tocarlas (postgres 18.6, mysql 9.7.2, mariadb 12.3.3, valkey 9.1, mongo 8.0.20, cassandra 5.0,
-  neo4j 2026.09.0, kafka 4.3.1…) y las que la carta bajó, anotadas en `salidas/imagenes-bajadas.txt`.
+  neo4j 2026.09.0, kafka 4.3.1…) y las que la carta bajó, anotadas en `salidas/imagenes-bajadas.txt` (ya no está en disco (comprobado el 25/10/2026); ver §8).
 - Las versiones de cada paquete van en el `--pip` de cada corrida y están fijadas en la sección.
 - Rutas: `humo.py`, `humo_servicio.py`, `probado.py` y `plan.py` traen escrita la ruta absoluta del
   curso (`CARTA`/`P`, arriba de cada archivo); si el repositorio se mueve, se corrige ahí.
@@ -54,7 +54,8 @@ Z=$PWD/salidas
 ```
 
 - Ese es el inventario que tomó la sesión al empezar (`salidas/docker-inventario-inicial.log`); antes de la
-  limpieza final tomó otro más completo (`salidas/inventario-docker-antes-de-limpiar.txt`).
+  limpieza final tomó otro más completo (`salidas/inventario-docker-antes-de-limpiar.txt`). Los dos se perdieron
+  (ver §8).
 - Todo lleva `--label curso=python-for-java-devs`; los contenedores corren con `--rm` y los servicios se
   borran en el `finally` de `humo_servicio.py`.
 - **Ningún puerto publicado**: los servicios se alcanzan por alias dentro de la red `pfjd-<id>`. Cuando una
@@ -85,7 +86,7 @@ python3 ../../zz-code/python-for-java-devs-20261005-f516/verificar_urls.py op009
 cd ../../zz-code/python-for-java-devs-20261005-f516 && python3 plan.py 9 9 ✅ ✅
 ```
 
-`salidas/antes.log` es el verificador del curso antes de empezar la carta.
+`salidas/antes.log` era el verificador del curso antes de empezar la carta; ya no está en disco (comprobado el 25/10/2026).
 
 ## 5. 📏 Cómo se mide
 
@@ -104,7 +105,7 @@ procesamiento. `probado.py` solo cambia rótulos.
 
 La salida rotulada «Salida (Python 3.14.7, 05/10/2026)» de cada sección es la referencia. Al cerrar T19:
 156 de 176 secciones escritas, y el estado de cada una (escrita, corrida) en
-`prompts/plan-de-produccion-carta.md` §3; la bitácora (§7) registra, por tanda, los defectos propios que
+el plan de la carta §3 (copia en `plan-de-produccion-carta-final.md`); la bitácora (§7) registra, por tanda, los defectos propios que
 las pruebas encontraron y se corrigieron.
 
 ## 8. 📂 Salidas
@@ -114,6 +115,11 @@ las pruebas encontraron y se corrigieron.
   `../python-for-java-devs-20261006-772f/05-carta-codigo/` (se refresca con su `copiar_codigo_carta.sh`).
 - `salidas/antes.log`, `docker-inventario-inicial.log`, `inventario-docker-antes-de-limpiar.txt`,
   `imagenes-bajadas.txt` — el verificador inicial, los dos inventarios y la lista de imágenes bajadas.
+
+De `salidas/` solo queda `t24/`: el resto ya no está en disco (comprobado el 25/10/2026). `salidas/` no se versiona y `limpiar.py` la libera
+como regenerable. El código de cada sección está a salvo en la copia de 772f y en `src/opNNN-…/` del curso, y las
+salidas publicadas son el registro. Los cuatro archivos de arriba eran de una sola vez y se perdieron; la lista
+de imágenes que borró la limpieza de §9 quedó escrita en el propio comando.
 
 ## 9. 🧹 Limpieza
 
@@ -138,7 +144,7 @@ cerrar la carta. Lo regenerable dentro de `salidas/` (`.venv`, `dist`, `build`, 
 - **Del versionado:** todo `salidas/`, por la regla del `.gitignore` de `zz-code/`; el código está a salvo
   en la copia del rescate (ver §8).
 - **Binarios descargados:** `salidas/jv03/jython.jar` y `salidas/jv03/graalpy/` (el runtime de GraalPy),
-  que se bajan de nuevo con los comandos de `jv03`.
+  que se bajan de nuevo con los comandos de `jv03`. Ya no están en disco.
 - **Los comandos sueltos de la sesión:** los 864 comandos, en orden, están en
   `../python-for-java-devs-20261006-772f/04-carta-5c52573d/comandos.sh`.
 

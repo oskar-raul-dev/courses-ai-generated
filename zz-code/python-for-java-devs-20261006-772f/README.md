@@ -118,8 +118,8 @@ skl2onnx 1.20.0, onnxruntime 1.30.0, onnx 1.22.0).
 **Carta:** Docker con `python:3.14.7` (127 corridas), `python:3.14.7-slim`, `debian:trixie-slim`,
 `condaforge/miniforge3:26.7.2-0`, `valkey/valkey:9.0.6-alpine`, `axllent/mailpit:v1.31.4`,
 `greenmail/standalone:2.1.14` y las imágenes locales `pfjd-sede:humo` y `pfjd-sftp:humo` que construyen
-`au04` y `co05`. Las imágenes que se bajaron están anotadas en
-`../python-for-java-devs-20261005-f516/salidas/imagenes-bajadas.txt`.
+`au04` y `co05`. Las imágenes que se bajaron se anotaron en
+`../python-for-java-devs-20261005-f516/salidas/imagenes-bajadas.txt`, que ya no está en disco (comprobado el 25/10/2026).
 
 ## 3. 🧭 Reglas antes de correr
 
@@ -279,7 +279,8 @@ valor absoluto (lo dice `BENCHMARKS.md`).
 
 - `salidas/claude-501/` — la copia ejecutable del camino base que hace `preparar_base.sh`. Se regenera
   corriéndolo otra vez.
-- `salidas/contenedores-antes.txt` y compañía — el inventario de §3.
+- `salidas/contenedores-antes.txt` y compañía — el inventario de §3. Ni el inventario ni `claude-501/` están
+  ya en disco (comprobado el 25/10/2026); el inventario era de una sola vez y se perdió.
 - Nada se copió al curso desde este rescate: lo que sirvió ya estaba publicado.
 
 ## 9. 🧹 Limpieza

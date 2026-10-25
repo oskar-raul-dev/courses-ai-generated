@@ -16,7 +16,9 @@
 - Desde T20 (07/10/2026): `comparar.py` (salida publicada contra corrida), `ensamblar.py` (sección desde plantilla con el código y la salida reales) y `src_desde_secciones.py` (T24: extrae los archivos de cada sección y arma `src/opNNN-…/` con su README).
 - `salidas/t24/`: los andamios de la verificación final (systemd como PID 1, el servidor FTPS, los esquemas del ejercicio 4 de lg02, la firma de lg03 y la cadena de qa08).
 - `salidas/<id>/`: el código y las salidas de cada sección (no versionado; copia del código en `../python-for-java-devs-20261006-772f/05-carta-codigo/`).
-- `salidas/imagenes-bajadas.txt` y los dos inventarios de Docker.
+- `salidas/imagenes-bajadas.txt` y los dos inventarios de Docker: ya no está en disco (comprobado el 25/10/2026), como el resto de `salidas/`
+  salvo `t24/` (ver README §8).
+- `plan-de-produccion-carta-final.md`: copia del plan de la carta, borrado del curso el 25/10/2026; `plan.py` la usa.
 
 ## Qué sirvió
 

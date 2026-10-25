@@ -32,7 +32,7 @@ lo abre. Quien escribe una fase lo lee entero antes de teclear la primera línea
 >
 > ✅ **La carta, cerrada el 07/10/2026**: 176 secciones `opNNN-<tt>NN-…` en 22 tracks, 173 probadas
 > enteras en contenedor y 3 en parte, con su código en `src/opNNN-…/`. El estado, la numeración y
-> la bitácora viven en [`plan-de-produccion-carta.md`](plan-de-produccion-carta.md).
+> la bitácora vivían en `plan-de-produccion-carta.md`, que se borró el 25/10/2026, con la carta cerrada.
 
 ---
 
@@ -138,7 +138,6 @@ sección**.
 | `prompts-de-tracks-ia-ds.md` | El marco común + los 17 prompts de `ia` y `ds` | Las 17 secciones complementarias |
 | `contrato-del-cli.md` | La forma del CLI fase por fase, congelada | Las fases 01-09 y 15 |
 | `pendientes-a-futuro.md` | Los 📌 que cada fase y sección de `ia`/`ds` traía al final, sacados de lo publicado el 07/10/2026, con su revisión y la lista de lo que no se puede resolver todavía | Lo que se escriba después |
-| `plan-de-produccion-carta.md` | El plan de la carta: tandas, estado, numeración `opNNN`, bitácora y directorios de `zz-code/` | El orden y el estado de la carta |
 | `inventario-verificado.md` | Las versiones de PyPI por track, verificadas; lo genera `check-inventario.py` | Toda versión que nombra una sección de la carta |
 | `check-inventario.py` | Consulta PyPI y regenera el inventario (`python3 prompts/check-inventario.py <tt>`) | — |
 | `verificador_base.py` · `verificar-corpus.py` | El verificador de los lineamientos del repositorio y la subclase del curso, con los chequeos de la carta (`python3 prompts/verificar-corpus.py`) | — |

@@ -1,7 +1,7 @@
 """Marca filas del plan de la carta: python3 plan.py <desde> <hasta> <escrita> <corrida>
 y tandas: python3 plan.py tanda T1 ✅   ·   bitácora: python3 plan.py bitacora 'texto'"""
 import re, sys, pathlib
-P = pathlib.Path("/Users/oskar/Developer/Learning/courses-ia-generated/cursos-algoritmos-lenguajes/python-for-java-devs/prompts/plan-de-produccion-carta.md")
+P = pathlib.Path(__file__).with_name("plan-de-produccion-carta-final.md")  # copy of the plan, removed from the course on 2026-10-25
 t = P.read_text(encoding="utf-8")
 a = sys.argv[1:]
 if a[0] == "tanda":

@@ -677,8 +677,8 @@ nombra.
 ### 14.1 Lo que el autor decidió (05/10/2026)
 
 - **Se escribe la carta entera**, encadenada, en el orden de `propuestas-temas-opcionales.md` §19
-  (primero los tracks con encargo en Áurea, después los demás). El orden y el estado viven en
-  [`plan-de-produccion-carta.md`](plan-de-produccion-carta.md).
+  (primero los tracks con encargo en Áurea, después los demás). El orden y el estado vivieron en
+  `plan-de-produccion-carta.md`, que se borró el 25/10/2026, con la carta cerrada.
 - **Forma ligera, unas 400 líneas por sección**: problema → modelo → ejemplo que corre → lo que se
   rompe → cuándo NO usarla → ejercicios → referencias → cierre. El esqueleto está en
   [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md), *Plantilla de sección de la carta*.
@@ -790,9 +790,9 @@ excepciones propias de la carta están en §14.2.
   (los nombres del CLI de Patricia, congelados fase a fase) y §5.1. No se renombran, por el bloqueo
   de contenido.
 - **Plan de producción del camino base y de los complementos:** se escribieron antes de que los
-  lineamientos lo pidieran, y su registro está en `README.md` (las tandas T0–T13). La carta sí tiene
-  el suyo: [`plan-de-produccion-carta.md`](plan-de-produccion-carta.md), con la forma de la
-  plantilla (§1–§9, incluido el registro de directorios de `zz-code/`).
+  lineamientos lo pidieran, y su registro está en `README.md` (las tandas T0–T13). La carta sí tuvo
+  el suyo, `plan-de-produccion-carta.md`, con la forma de la plantilla (§1–§9, incluido el registro de
+  directorios de `zz-code/`); se borró el 25/10/2026, con la carta cerrada.
 - **Propuesta de apéndices y prompts de apéndice:** no hay apéndices.
 - **Fecha de versión en el encabezado** de cada documento de `prompts/`: solo la llevan el plan y
   el inventario, que cambian a diario. Los demás fechan cada cambio en el propio texto, como esta
