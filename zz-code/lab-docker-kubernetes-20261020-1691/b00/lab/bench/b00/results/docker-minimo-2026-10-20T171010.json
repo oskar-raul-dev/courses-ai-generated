@@ -1,0 +1,44 @@
+{
+  "engine": "docker",
+  "profile": "minimo",
+  "date": "2026-10-20T17:10:10",
+  "create_seconds": 28.9,
+  "cluster": {
+    "vm": {
+      "total_mib": 3916,
+      "used_mib": 1199
+    },
+    "pods_total_mib": 403.0,
+    "pods_by_ns": {
+      "kube-system": 392.2,
+      "local-path-storage": 10.8
+    }
+  },
+  "base": {
+    "vm": {
+      "total_mib": 3916,
+      "used_mib": 1542
+    },
+    "pods_total_mib": 895.2,
+    "pods_by_ns": {
+      "gateway": 72.4,
+      "kube-system": 811.9,
+      "local-path-storage": 10.9
+    }
+  },
+  "todo": {
+    "vm": {
+      "total_mib": 3916,
+      "used_mib": 2245
+    },
+    "pods_total_mib": 1670.0,
+    "pods_by_ns": {
+      "cert-manager": 100.5,
+      "data": 49.8,
+      "gateway": 87.3,
+      "kube-system": 935.0,
+      "local-path-storage": 11.1,
+      "observability": 486.3
+    }
+  }
+}

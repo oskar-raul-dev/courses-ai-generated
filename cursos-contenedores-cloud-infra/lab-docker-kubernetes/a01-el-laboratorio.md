@@ -60,7 +60,7 @@ Las imágenes se fijan por digest; el tag es el nombre legible.
 | minikube | 1.39.0 | **solo [Fase 07](07-el-cluster-local.md)**; levanta Kubernetes v1.37.0 por defecto |
 | Kubernetes de Docker Desktop | 1.36.1, modo kind | **solo [Fase 07](07-el-cluster-local.md)**; se enciende en la configuración de Docker Desktop |
 | BuildKit (el de Docker Desktop) | 0.33.0 | **solo [a06](a06-arquitecturas-y-multiplataforma.md)**: el almacén de imágenes de containerd y Rosetta para amd64 vienen encendidos; verificado el 05/10/2026 |
-| Buildah | 1.43.4 | **solo [a07](a07-imagenes-sin-docker.md)**, en un contenedor: `quay.io/buildah/stable@sha256:fcbe1d59ab8eeef2fcf73a7b1fced65a55f49fdef878ac9570cca4ab24b41779` (`v1.43.4`) |
+| Buildah | 1.43.4 | **solo [a07](a07-imagenes-sin-docker.md)**, en un contenedor: `quay.io/buildah/stable@sha256:07e637ad7a1df37f44afea8287935b350224ac193d63e5cc96debb50a366853c` (`v1.43.4`; quay reconstruye sus etiquetas y borra los digests viejos: el del 05/10/2026 ya no se descarga el 24/10) |
 | Kaniko (el fork mantenido) | 1.25.19 | **solo [a07](a07-imagenes-sin-docker.md)**: `registry.gitlab.com/gitlab-ci-utils/container-images/kaniko@sha256:7795cec509a50a71378cc2c365f55c555ee3a05834d8eb1cd2552df5e66d44d8` (`v1.25.19-debug`); el original de Google está archivado |
 | ko · Jib (`jib-maven-plugin`) | 0.19.1 · 3.5.2 | **solo [a07](a07-imagenes-sin-docker.md)**: ko con `go install` dentro de la imagen de Go de `pricing`; Jib por Maven, sin instalar nada |
 | GraalVM CE (`native-image`) | 25.0.2 | **solo [a08](a08-la-jvm-nativa.md)**, para construir: `ghcr.io/graalvm/native-image-community@sha256:0d936f32bb8acb5bc60c41b33e05f064d7a6aaf36b726538296c54949bd4a3c0` (`25`); la base de la imagen nativa, `gcr.io/distroless/base-debian13@sha256:a0d70d6a97cd697d9362bc2aae4a6560dd65817e365d0043b07325a97975dc91` (`nonroot`); la compilación pide entre 5,3 y 6,0 GB |
@@ -101,10 +101,10 @@ Las imágenes se fijan por digest; el tag es el nombre legible.
 | PHP (`catalog`) | 8.5.11 | `php@sha256:fa01fb1645cd0fc566a5f146b099adace33b906571f972f71f2182a7c12d1cd7` (`8.5-fpm-alpine`) · `php@sha256:93684051146ec037620855feb77f278090bde45ddc030801cd3f2a7685bc4deb` (`8.5.11-cli-alpine`) |
 | Laravel · Composer | 13 · 2.10.3 | `composer@sha256:af98f42dfff7c68ba8d53c2164fd9fde1087b7d449514baa38c418b1f6bc4bac` |
 | Node.js (`replenish`, `storefront`) | 24.21.0 (**LTS**) | `node@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1` (`24.21.0-alpine`) |
-| NestJS · React · Vite | 12.1 · 19.3 · 8.3 | |
+| NestJS · React · Vite | 12.1 · 19.3 · 8.3 | «NestJS» es `@nestjs/core`; su CLI va por otra numeración (12.0.10 el 20/10/2026). El andamio del CLI trae el `^12` más reciente, que ese día era 12.2.0: dentro de la línea, y así se deja |
 | SQLite de G1 ([Fase 09](09-los-cuatro-servicios-dentro.md)) | `modernc.org/sqlite` 1.60.1 (Go puro) · `sqlite-jdbc` 3.53.2.1 · `node:sqlite` de Node · `pdo_sqlite` de la imagen de PHP | los cuatro sin compilar nada en la imagen; el de Java trae su biblioteca nativa para glibc |
 | Postgres de G3 ([Fase 12](12-estado-y-almacenamiento.md)) | `github.com/jackc/pgx/v5` 5.11.0 (Go puro) · `org.postgresql:postgresql` 42.7.13 (la de Spring Boot) · `pdo_pgsql` (compilada en la imagen con las cabeceras de libpq) · `pg` 8.23.1 | solo `catalog` compila algo, y borra las cabeceras al terminar |
-| Pruebas de `pricing` ([Fase 12](12-estado-y-almacenamiento.md), B-12) | `testcontainers-go` 0.44.0, con su módulo `postgres` · Ryuk 0.14.0 | `testcontainers/ryuk@sha256:7c1a8a9a47c780ed0f983770a662f80deb115d95cce3e2daa3d12115b8cd28f0`, que Testcontainers baja solo; con Docker, verificado; con Podman, no |
+| Pruebas de `pricing` ([Fase 12](12-estado-y-almacenamiento.md), B-12) | `testcontainers-go` 0.44.0, con su módulo `postgres` · Ryuk 0.14.0 | `testcontainers/ryuk@sha256:7c1a8a9a47c780ed0f983770a662f80deb115d95cce3e2daa3d12115b8cd28f0`, que Testcontainers baja solo; con Docker, verificado; con Podman, verificado sin Ryuk, que no arranca ([Fase 12](12-estado-y-almacenamiento.md)) |
 | `/metrics` de G6 ([Fase 17](17-metricas-y-dashboards.md)) | `github.com/prometheus/client_golang` 1.24.1 · Actuator y `micrometer-registry-prometheus` (los de Spring Boot) · `promphp/prometheus_client_php` 2.15.1 con APCu 5.1.28 (PECL) · `@prometheus-io/client` 0.16.1 | `prom-client` 15.1.3 quedó deprecado a favor de `@prometheus-io/client`; APCu se compila en la imagen de `catalog` |
 | La CA y los certificados del laboratorio ([Fase 19](19-tls-y-certificados.md)) | `cryptography` 50.0.2 (Python, en `scripts/tls/`) | sin `openssl` en la máquina; las claves quedan en `.secrets/tls/` |
 | La resiliencia de G9 ([Fase 22](22-resiliencia-y-caos.md)) | `resilience4j-circuitbreaker`, `-retry` y `-micrometer` 2.3.0 | el núcleo, sin la integración con Spring |
@@ -148,8 +148,8 @@ muestra con su descripción.
 | `task images:load -- minimo` | Docker: `kind load docker-image lab/<svc> --name minimo`; Podman: `podman save` y `kind load image-archive`, para los cinco ([Fase 05](05-los-dos-motores.md)) |
 | `task build -- pricing` | `<motor> build -t lab/pricing services/pricing` |
 | `task build:all` | lo mismo para los cinco, en el orden de la matriz |
-| `task compose:up` | `task build:all` y `<motor> compose -f compose/compose.yaml up -d` con los cinco servicios y el nginx de `catalog` |
-| `task compose:down` | `<motor> compose -f compose/compose.yaml rm --stop --force` de esos mismos seis |
+| `task compose:up` | `task build:all` y `<motor> compose -f compose/compose.yaml up -d`, sin nombrar servicios: compose solo toca los de los perfiles activos, que son el sistema nuevo |
+| `task compose:down` | `<motor> compose -f compose/compose.yaml rm --stop --force`, igual de acotado: el patrimonio (perfil `legacy`) no se toca |
 | `task conformance -- G0` | `<motor> compose -f compose/compose.yaml --profile conformance run --rm conformance`, con el paso en `STEP` |
 | `task contracts:docs` | `<motor> compose -f compose/compose.yaml --profile docs up -d contracts-docs` |
 | `task legacy:up` | `<motor> build` de las cuatro imágenes del patrimonio y `<motor> compose -f compose/compose.yaml --profile legacy up -d` |
@@ -160,7 +160,7 @@ muestra con su descripción.
 | `task measure -- B-04` | `python3 scripts/measure/measure.py B-04 --engine <motor>`: build en frío y con caché, tamaño y primer 200 de cada servicio ([Fase 04](04-empaquetar-los-cuatro-runtimes.md)) |
 | `task measure -- B-07` | `python3 scripts/measure/measure.py B-07 --engine <motor> --tool kind\|k3d\|minikube` ([Fase 07](07-el-cluster-local.md)) |
 | `task measure -- B-12` | `python3 scripts/measure/measure.py B-12 --engine <motor>`: `task test:pricing` contra SQLite y contra Postgres ([Fase 12](12-estado-y-almacenamiento.md)) |
-| `task deploy -- minimo` | desde la [Fase 13](13-helm-el-paquete.md): `kubectl apply -f deploy/manifests/namespace.yaml`, `task seed:image` y `helm upgrade --install lab charts/platform -n apps -f charts/platform/values-minimo.yaml --set <svc>.image.tag=…` (los de `STEP_TAGS`) `--wait`, y desde la [Fase 14](14-helm-en-operacion.md) `--rollback-on-failure --history-max 10`; con `FORCE=true`, además `--force-conflicts`. Hasta la [Fase 12](12-estado-y-almacenamiento.md) era `task migrate` y `kubectl apply -R -f deploy/manifests/` |
+| `task deploy -- minimo` | desde la [Fase 13](13-helm-el-paquete.md): `kubectl apply -f deploy/manifests/namespace.yaml`, `task seed:image` y `helm upgrade --install lab charts/platform -n apps -f charts/platform/values-minimo.yaml --set <svc>.image.tag=…` (los de `STEP_TAGS`) `--wait`, y desde la [Fase 14](14-helm-en-operacion.md) `--rollback-on-failure --history-max 10`; con `FORCE=true`, además `--force-conflicts`. **Mientras no exista `charts/platform/Chart.yaml`** (hasta la [Fase 12](12-estado-y-almacenamiento.md)) la tarea aplica los manifiestos: el namespace, el `ConfigMap` `catalog-nginx` desde `services/catalog/nginx.conf`, `kubectl apply -R -f deploy/manifests/` y un `wait` por los `Deployment`; las migraciones de la [Fase 12](12-estado-y-almacenamiento.md) van aparte, con `task migrate` |
 | `task deploy -- lab` · `task deploy -- medicion` | lo mismo con `values-lab.yaml` o `values-medicion.yaml`; `medicion` va al cluster `minimo` salvo `CLUSTER=lab` ([Fase 13](13-helm-el-paquete.md)) |
 | `task deploy TENANT=tenant-b -- minimo` | el mismo `helm upgrade --install`, como release `tenant-b` en `apps-b`, con `-f charts/platform/values-tenant-b.yaml` encima del perfil ([Fase 14](14-helm-en-operacion.md)) |
 | `task deploy:diff -- minimo` | `helm diff upgrade` con los mismos argumentos que `task deploy`, y `--three-way-merge --context 2` ([Fase 14](14-helm-en-operacion.md)) |
@@ -183,7 +183,7 @@ muestra con su descripción.
 | `task tls:ca` | `scripts/tls/.venv/bin/python scripts/tls/certs.py ca`: la CA del laboratorio en `.secrets/tls/`, una vez ([Fase 19](19-tls-y-certificados.md)) |
 | `task tls:gateway -- lab` | `certs.py leaf gateway --dns …` y `kubectl create secret tls lab-tls` en `gateway`: el certificado de la puerta a mano, antes de cert-manager ([Fase 19](19-tls-y-certificados.md)) |
 | `task platform:certs -- lab` | `task tls:ca`, `helm upgrade --install` de cert-manager y de trust-manager (`oci://quay.io/jetstack/charts/…`), el `Secret` `lab-ca`, `kubectl apply` de `issuer.yaml` y `bundle.yaml`, y la espera del `Certificate` `lab-tls` ([Fase 19](19-tls-y-certificados.md)) |
-| `task registry:up` · `task registry:down` | `certs.py leaf registry` y `<motor> run -d --name lab-registry --network kind -p 127.0.0.1:5001:5000` con el certificado montado; `<motor> rm -f lab-registry` ([Fase 19](19-tls-y-certificados.md)) |
+| `task registry:up` · `task registry:down` | `certs.py leaf registry` y `<motor> run -d --name lab-registry --network kind -p 127.0.0.1:5001:5000` con el certificado montado; `<motor> rm -fv lab-registry`, con su volumen ([Fase 19](19-tls-y-certificados.md)) |
 | `task registry:push -- pricing` | `<motor> tag` y `<motor> push localhost:5001/lab/pricing:<tag de STEP_TAGS>` |
 | `task registry:trust -- lab` · `task registry:untrust -- lab` | por cada nodo: copia la CA y `platform/registry/hosts.toml` a `/etc/containerd/certs.d/lab-registry:5000/`, o la borra (el estado del incidente 24) |
 | `task chaos:on` · `task chaos:off` | `<motor> build -t lab/chaos:f22 chaos`, `kind load`, `scripts/obs/switch.py chaos on catalog` y `task deploy CLUSTER=lab -- minimo`; al apagar, `switch.py chaos off` y el mismo `task deploy` ([Fase 22](22-resiliencia-y-caos.md)) |
@@ -297,7 +297,9 @@ tabla), el patrimonio (abajo) y los cinco servicios, que se suman con la [Fase 0
 > 📏 **Medición B-00 · La memoria de cada perfil, sin los servicios** · perfiles `minimo`, `lab` y
 > `legacy` · Docker Desktop 4.92.0 (Engine 29.8.0) y Podman 6.1.3, **los dos con 4 GiB de máquina
 > virtual** · kind 0.33.0, nodo 1.36.4 · MacBook Pro M1 Pro, 32 GB, macOS 26.7.1 · 3 corridas por
-> celda, cada una con el cluster creado desde cero · verificado el 03/10/2026
+> celda, cada una con el cluster creado desde cero · verificado el 03/10/2026; las columnas de
+> Docker, reconfirmadas el 20/10/2026 con la máquina dedicada, y las de Podman, el 24/10/2026 con
+> Docker Desktop cerrado y la máquina de Podman nueva
 >
 > **Qué se midió:** la memoria usada de la máquina virtual (`MemTotal − MemAvailable`, leída desde
 > el nodo, que comparte su `/proc/meminfo`), en MiB, 60 s después de que todo está listo. "Todo
@@ -307,18 +309,30 @@ tabla), el patrimonio (abajo) y los cinco servicios, que se suman con la [Fase 0
 > | Momento | Docker `minimo` | Podman `minimo` | Docker `lab` | Podman `lab` |
 > |---|---|---|---|---|
 > | máquina virtual disponible | 3.916 | 3.886 | 3.916 | 3.886 |
-> | cluster recién creado | 1.163 (1.124–1.210) | 1.172 (1.171–1.259) | 1.329 (1.326–1.333) | 1.348 (1.331–1.353) |
-> | + Gateway y metrics-server | 1.562 (1.538–1.608) | 1.558 (1.511–1.718) | 1.794 (1.771–1.808) | 1.826 (1.801–1.832) |
-> | todo encendido | 2.339 (2.275–2.385) | 2.278 (2.275–2.330) | 2.400 (2.373–2.478) | 2.476 (2.456–2.527) |
-> | creación del cluster (s) | 29 (27–30) | 31 (31–35) | 37 (33–38) | 37 (36–43) |
+> | cluster recién creado | 1.163 (1.124–1.210) | 1.172 (1.171–1.259) | 1.329 (1.326–1.333) | 1.379 (1.371–1.419) |
+> | + Gateway y metrics-server | 1.562 (1.538–1.608) | 1.558 (1.511–1.718) | 1.794 (1.771–1.808) | 1.840 (1.833–1.880) |
+> | todo encendido | 2.339 (2.275–2.385) | 2.278 (2.275–2.330) | 2.400 (2.373–2.478) | 2.563 (2.557–2.580) |
+> | creación del cluster (s) | 29 (27–30) | 29 (28–30) | 37 (33–38) | 37 (36–43) |
 >
 > Mediana, con mínimo y máximo entre paréntesis. Reproducir: `task measure -- B-00 --profile minimo`
-> (o `lab`) con el motor activo.
+> (o `lab`) con el motor activo, después de copiar `bench/b00/` (sus tres manifiestos) del `src/lab/` del
+> curso: la copia inicial de la [Fase 00](00-el-ambiente.md) no los trae, y sin ellos el arnés termina
+> con `FileNotFoundError: … bench/b00/results`.
 
-**Lo que dice la tabla.** Con la misma memoria asignada, **los dos motores ocupan lo mismo**: la
-diferencia entre ellos es menor que la dispersión de cada uno. Los dos workers del perfil `lab`
-suman poco en reposo (unos 170 MiB con el cluster vacío). Y con todo encendido queda alrededor del
-40 % de la máquina libre, que es el lugar de los servicios.
+> 📝 **La columna de Podman `lab` se remidió, y subió.** El 03/10/2026 decía 1.348 (1.331–1.353),
+> 1.826 (1.801–1.832) y 2.476 (2.456–2.527), con la creación en 37 s; la de `minimo`, 31 s (31–35) de
+> creación. El 24/10/2026, con Docker Desktop cerrado y la máquina de Podman creada de nuevo (el
+> cliente es el mismo 6.1.3; la imagen de la máquina trae 6.1.4 adentro), la memoria de `minimo` y el
+> perfil `legacy` reprodujeron, y `lab` salió por encima de su variación en los tres momentos: 87 MiB
+> más con todo encendido. La creación de `minimo` bajó 2 s. Por pieza, el plano de control de `minimo`
+> con todo encendido dio 841 MiB (837–868) contra los 969 de la tabla de abajo, que se queda como
+> estaba porque no publica su variación.
+
+**Lo que dice la tabla.** Con la misma memoria asignada, **en `minimo` los dos motores ocupan lo
+mismo**: la diferencia entre ellos es menor que la dispersión de cada uno. **En `lab`, Podman ocupa
+más**: unos 160 MiB con todo encendido (2.563 contra 2.400, un 7 %), y sus rangos ya no se tocan. Los
+dos workers del perfil `lab` suman poco en reposo (unos 170 MiB con el cluster vacío). Y con todo
+encendido queda alrededor del 35–40 % de la máquina libre, que es el lugar de los servicios.
 
 **Qué pieza pesa cuánto**, en el perfil `minimo` con todo encendido, sumando el *working set* de
 sus contenedores (mediana de tres corridas, en MiB):
@@ -337,18 +351,27 @@ la máquina aprieta. Y el servidor de API crece con cada CRD que se instala: con
 ya ocupaba 575 MiB, la pieza más grande del cluster.
 
 > 📏 **El perfil `legacy` (el patrimonio en compose, sin cluster)** · mismas condiciones · 3
-> corridas
+> corridas · la columna de Docker, remedida el 20/10/2026; la de Podman, del 03/10/2026 y reconfirmada el 24/10/2026
 >
 > | | Docker | Podman |
 > |---|---|---|
-> | máquina virtual antes de levantarlo | 754 (727–760) | 647 (623–656) |
-> | con el patrimonio en reposo | 1.531 (1.520–1.565) | 1.364 (1.356–1.384) |
-> | **lo que suma** | **804 (766–805)** | **709 (708–761)** |
-> | de eso, Contingencia (GlassFish) | 684 (676–685) | 644 (629–645) |
-> | hasta que Contingencia despliega (s) | 43 (43–44) | 38 (38–38) |
+> | máquina virtual antes de levantarlo | 647 (628–657) | 647 (623–656) |
+> | con el patrimonio en reposo | 1.394 (1.390–1.401) | 1.364 (1.356–1.384) |
+> | **lo que suma** | **743 (737–773)** | **709 (708–761)** |
+> | de eso, Contingencia (GlassFish) | 666 (660–686) | 644 (629–645) |
+> | hasta que Contingencia despliega (s) | 37 (37–37) | 38 (38–38) |
 >
 > Reproducir: `task measure -- B-00 --profile legacy`, con las imágenes ya construidas
-> (`task legacy:up` una vez).
+> (`task legacy:up` una vez) y `bench/b00/` copiado del curso, como arriba.
+
+> 📝 **La columna de Docker se remidió, y bajó.** El 03/10/2026 esta tabla decía 754 de línea base,
+> 1.531 con el patrimonio, 804 de suma, 684 de Contingencia y 43 s de despliegue. La medición del
+> 20/10/2026 se hizo con Docker Desktop **dedicado** —sin ningún contenedor ajeno al laboratorio— y
+> con el Kubernetes de Docker Desktop apagado y verificado como apagado, que es lo que la primera no
+> podía afirmar. Las dos primeras filas dependen del estado previo de la máquina virtual más que del
+> patrimonio, y por eso se mueven más; la fila que compara de verdad es **lo que suma**, y ahí la
+> diferencia es de 61 MiB, un 7,6 %. El despliegue de GlassFish, 6 s más rápido, es la parte que la
+> máquina dedicada explica mejor.
 
 > 📏 **Los cinco servicios del paso G0, en compose** (la tercera entrega, de la [Fase 02](02-compose-el-sistema-en-un-archivo.md)) · mismas
 > condiciones · 3 corridas · listos cuando su suite de conformidad pasa
@@ -364,7 +387,7 @@ ya ocupaba 575 MiB, la pieza más grande del cluster.
 > | hasta que la suite pasa (s) | 9 (9–9) | 7 (7–7) |
 >
 > Reproducir: `task measure -- B-00 --profile servicios`, con las imágenes ya construidas
-> (`task compose:up` una vez).
+> (`task compose:up` una vez) y `bench/b00/` copiado del curso, como arriba.
 
 Son los servicios de G0, que no hacen nada: la memoria de un servicio con datos y carga es otra
 cosa, y la miden las fases que la cambian. Pero la proporción ya dice algo que la [Fase 04](04-empaquetar-los-cuatro-runtimes.md) va a
@@ -409,22 +432,25 @@ Docker Desktop, en esta máquina, venía con 7,9 GB.
 > MemAvailable` del nodo antes y después de instalarla.
 
 > 📏 **La observabilidad, pieza por pieza** (la sexta entrega, de la [Fase 17](17-metricas-y-dashboards.md)) · cluster `lab`
-> con los valores de `minimo` · Docker Desktop, máquina virtual de 4 GiB **con el Kubernetes de Docker
-> Desktop encendido** · 3 ciclos de apagar y encender, cada lectura 60 s después · *working set* en MiB
+> con los valores de `minimo` · Docker Desktop, máquina virtual de 4 GiB, sin el Kubernetes de Docker
+> Desktop · 3 ciclos de apagar y encender, cada lectura 60 s después · *working set* en MiB · Prometheus y
+> Grafana remedidos el 22/10/2026; Loki y Fluent Bit, del 04/10/2026
 >
-> | | recién encendida | a los 20 min, con tráfico de fondo |
-> |---|---|---|
-> | Prometheus, sola | 44 (43–73) | — |
-> | Prometheus, con Grafana | 58 (52–90) | 99 |
-> | Grafana | 252 (248–254) | 231 |
-> | Loki ([Fase 18](18-logs.md)) | 117 | 91, a los 10 min de tráfico |
-> | Fluent Bit, por nodo de trabajo | 6 | 6 |
+> | | recién encendida | a los 20 min, con tráfico de fondo | lo que sube la máquina virtual |
+> |---|---|---|---|
+> | Prometheus, sola | 60 (59–70) | — | no se distingue (−15 a +78) |
+> | Prometheus, con Grafana | 68 (59–70) | 72 | — |
+> | Grafana | 269 (260–312) | 347 | 168 (103–207) |
+> | Loki ([Fase 18](18-logs.md)) | 117 | 91, a los 10 min de tráfico | — |
+> | Fluent Bit, por nodo de trabajo | 6 | 6 | — |
 >
-> Reproducir: `task obs:off -- all` y `task obs:on` con cada pieza. Loki y Fluent Bit, una sola corrida.
+> Reproducir: `task obs:off PROFILE=minimo CLUSTER=lab -- all` y `task obs:on` con cada pieza, con el mismo
+> perfil. Loki y Fluent Bit, una sola corrida.
 
-Esta entrega no tiene la columna de las demás (lo que sube la máquina virtual): con el Kubernetes de
-Docker Desktop ocupando 764 MiB, la máquina estaba en swap y la memoria usada no se movía al encender nada.
-**Pendiente:** repetirla sin él.
+La primera medición de Prometheus y Grafana (04/10/2026) se hizo con el Kubernetes de Docker Desktop
+encendido, ocupando 764 MiB de la máquina virtual: Grafana dio 252 (248–254) recién encendida y 231 a los
+20 minutos, y la columna de la máquina virtual no se pudo leer porque estaba en swap. Sin él, Grafana ocupa
+más, no menos, y la columna ya tiene número.
 
 **¿Y en un portátil de 8 GB?** Lo medido alcanza para decir esto, y no más: la infraestructura de
 `minimo` con todo encendido usa unos 2,3 GiB de una máquina virtual de 4, y los cinco servicios de G0
@@ -434,7 +460,7 @@ virtual; si con eso el sistema operativo y el navegador quedan cómodos, no lo m
 
 | Plataforma | `minimo`, todo encendido | `lab`, todo encendido | `legacy` |
 |---|---|---|---|
-| macOS arm64 (verificado) | 2.278–2.339 MiB | 2.400–2.476 MiB | 709–804 MiB |
+| macOS arm64 (verificado) | 2.278–2.339 MiB | 2.400–2.563 MiB | 709–743 MiB |
 | Windows 11 con WSL 2 | *sin medir* | *sin medir* | *sin medir* |
 | Linux amd64 | *sin medir* | *sin medir* | *sin medir* |
 
@@ -617,11 +643,14 @@ queda en el llavero sin confianza, como un resto que confunde la próxima vez.
 sigue con `--cacert`. Firefox tiene su propio almacén: para que use el del sistema, pon
 `security.enterprise_roots.enabled` en `true` en `about:config`.
 
-> ⚠️ **Lo verificado, y lo que no.** El 05/10/2026, en la máquina del autor (macOS arm64), se ejecutaron
-> los pasos 1 a 3 con el llavero `login`: los dos `verify-cert`, la instalación (con el diálogo de
-> contraseña), el `verify-cert` que pasa y el `dump-trust-settings`. La prueba en el navegador no se
-> hizo, porque no había cluster corriendo. Quitar la CA, la variante para todos los usuarios y el caso
-> sin el `ca.crt` original tampoco se ejecutaron: esos comandos vienen de `man security`.
+> ⚠️ **Lo verificado, y lo que no.** En la máquina del autor (macOS arm64): el 05/10/2026, los pasos 1 a
+> 3 con el llavero `login` (los dos `verify-cert`, la instalación con el diálogo de contraseña, el
+> `verify-cert` que pasa y el `dump-trust-settings`); el 24/10/2026, Chrome abriendo la puerta del 8443
+> sin aviso, el paso 4 (`verify-cert` de vuelta en `CSSMERR_TP_NOT_TRUSTED` y `find-certificate` sin
+> salida) y la variante para todos los usuarios, instalada, comprobada y quitada. En esa última, un
+> `delete-certificate` que falló dejó justo el resto que describe el párrafo de arriba: el certificado en
+> `System.keychain`, sin confianza, hasta repetir el borrado. Solo el caso sin el `ca.crt` original sigue
+> sin ejecutarse: sus comandos vienen de `man security`.
 
 ### Linux y Windows
 

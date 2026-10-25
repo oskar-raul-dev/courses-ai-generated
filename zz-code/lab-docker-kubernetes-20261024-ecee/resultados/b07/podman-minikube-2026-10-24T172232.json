@@ -1,0 +1,27 @@
+{
+  "engine": "podman",
+  "tool": "minikube",
+  "date": "2026-10-24T17:22:32",
+  "runs": [
+    {
+      "ready_s": 36.3,
+      "vm_before_mib": 709,
+      "vm_after_mib": 1192,
+      "cluster_mib": 483
+    },
+    {
+      "ready_s": 36.1,
+      "vm_before_mib": 736,
+      "vm_after_mib": 1185,
+      "cluster_mib": 449
+    },
+    {
+      "ready_s": 36.3,
+      "vm_before_mib": 730,
+      "vm_after_mib": 1189,
+      "cluster_mib": 459
+    }
+  ],
+  "server_version": "v1.37.0",
+  "three_nodes_error": "               │\n│                                                                                             │\n│    * Please run `minikube logs --file=logs.txt` and attach logs.txt to the GitHub issue.    │\n│                                                                                             │\n╰─────────────────────────────────────────────────────────────────────────────────────────────╯"
+}

@@ -96,6 +96,11 @@ Found 2 pods, using pod/pricing-7847d89564-b85jb
 2026/10/04 01:16:31 pricing escuchando en :8080
 ```
 
+> ⚠️ **Si `kind load` te dice `image: "lab/pricing:g0" not present locally`**, el tag que construiste
+> no es el que pide el manifiesto: revisa que `STEP_TAGS` del `Taskfile.yml` esté en el paso en el que
+> estás ([Fase 02](02-compose-el-sistema-en-un-archivo.md)), y vuelve a construir con `task build --
+> pricing`. Desde esta fase, el tag deja de ser decorativo: es lo que el pod pide por nombre.
+
 La segunda lección del mismo intento está en los eventos: **nadie te avisó**. `apply` dijo `created`,
 y el pod se quedó reintentando la descarga con esperas cada vez más largas (`BackOff`). En compose, un
 `up` que no encuentra la imagen falla en tu cara. En un cluster, el deseo queda guardado y el bucle
@@ -411,8 +416,8 @@ task inc:break -- 06
 
 Debajo, `python3 scripts/incidents/inc.py break 06`, que aplica el cambio mínimo que produce el
 incidente y lo dice (`Incidente 06: roto.`). `task inc:fix -- 06` vuelve a aplicar los manifiestos del
-repositorio, que son el estado correcto. La forma canónica de llegar a un incidente sigue siendo su
-tag (`inc/06/…-roto`), explicada en el [cuaderno](cuaderno-incidentes.md#-cómo-se-trabaja-un-incidente).
+repositorio, que son el estado correcto. Es la forma canónica de llegar a un incidente, y la otra
+(a mano) está en el [cuaderno](cuaderno-incidentes.md#-cómo-se-trabaja-un-incidente).
 
 > 🩻 **Esto sí funciona igual.** El contenedor de `pricing` es el mismo de la [Fase 04](04-empaquetar-los-cuatro-runtimes.md): la misma imagen,
 > el mismo proceso 1, el mismo puerto. Kubernetes no lo cambia; lo envuelve en un pod.
@@ -451,7 +456,9 @@ el pod es pedirle al `ReplicaSet` que cree otro.
 > en `Running` en menos de 5 segundos, cinco veces de cinco.
 >
 > **Resultado: ganada, con margen.** Cinco borrados seguidos, desde el `delete` hasta un pod nuevo
-> `Running` y listo: 0,49, 0,55, 0,57, 0,56 y 0,56 segundos.
+> `Running` y listo: 0,49, 0,55, 0,57, 0,56 y 0,56 segundos (03/10/2026). Repetida el 21/10/2026 con
+> la máquina virtual en 4 GiB y midiendo con un sondeo de `kubectl get`, que suma su propio tiempo:
+> 0,67, 0,67, 0,60, 0,60 y 0,69. Las dos ganan la apuesta por el mismo margen.
 
 El margen tiene trampa, y conviene decirla: **listo, aquí, quiere decir que el proceso arrancó**. La
 readiness de G0 es trivial y `pricing` abre el puerto en milisegundos. Con `inventory`, el mismo
@@ -511,7 +518,7 @@ suelto, nadie. Para un trabajo que tiene que terminar, un `Job` ([Fase 12](12-es
 `Deployment`.
 
 **Antes y después, con números:** borrado el pod suelto, 0 pods de reemplazo; borrado el pod del
-`Deployment`, uno nuevo listo en 0,49–0,57 segundos.
+`Deployment`, uno nuevo listo en 0,49–0,69 segundos (las dos medidas de la sección 7).
 
 ---
 
@@ -884,9 +891,9 @@ EL CLUSTER AL CERRAR LA FASE 08 (minimo, namespace default)
 > git tag -a fase-08-el-primer-despliegue -m "F08 cerrada: Deployment y Service de pricing a mano en default; el bucle en vivo; DNS del cluster; task inc:break; incidentes 05 y 06"
 > ```
 >
-> Y los pares de los incidentes: `inc/05/image-never-loaded-roto` e `inc/05/image-never-loaded-fix`,
-> `inc/06/service-no-endpoints-roto` e `inc/06/service-no-endpoints-fix`. Commits de la fase con
-> prefijo `f08:`, los de ejercicio `f08 ej17: …` ([convención de git](00-convencion-de-git-y-tags.md)).
+> Commits de la fase con prefijo `f08:`, los de ejercicio `f08 ej17: …` y los de incidente
+> `f08 inc05: …` ([convención de git](00-convencion-de-git-y-tags.md)). Los incidentes no llevan tag: se
+> provocan y se reparan con `task inc:break|fix`.
 
 ---
 

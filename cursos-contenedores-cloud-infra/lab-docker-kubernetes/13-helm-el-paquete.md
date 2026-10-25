@@ -68,7 +68,8 @@ $ find deploy/manifests deploy/jobs -name '*.yaml' -not -path '*/experimentos/*'
       24
 ```
 
-Veinticuatro archivos. Ahora, cuántas de sus líneas son la misma línea con otro nombre. El script compara
+Veinticuatro archivos. Ahora, cuántas de sus líneas son la misma línea con otro nombre. Un script
+propio —tampoco está en el repositorio— compara
 el `Deployment`, el `Service`, la `HTTPRoute` y el `Job` de migraciones de cada backend con los de
 `pricing`, sin comentarios y con el nombre del servicio reemplazado por un comodín:
 
@@ -275,7 +276,10 @@ El seed es `post-install`: corre después de que los `Deployment` están listos,
 En un upgrade los datos ya están.
 
 Y `task deploy`, desde esta fase, es un `helm upgrade --install` (un *install* si el release no existe,
-un *upgrade* si existe):
+un *upgrade* si existe). La tarea es la misma de la [Fase 09](09-los-cuatro-servicios-dentro.md): decide
+según lo que encuentre, y lo que cambia de modo es que `charts/platform/Chart.yaml` ya existe. Mientras no
+existía, aplicaba los manifiestos; desde ahora manda Helm, y `deploy/manifests/` queda de referencia —es
+lo que `task chart:compare` compara, y lo que `task inc:fix` aplicaba hasta la sección 7—:
 
 ```bash
 kubectl apply -f deploy/manifests/namespace.yaml     # el namespace es de plataforma, no del chart
@@ -373,9 +377,16 @@ kubectl -n apps delete deploy,svc,httproute -l app.kubernetes.io/part-of=lab --w
 kubectl -n apps delete configmap neighbors pricing-regulated-caps storefront-config catalog-nginx
 kubectl -n apps delete job -l app.kubernetes.io/component=migration
 task deploy -- minimo
+kubectl apply -f deploy/qa/qa.yaml     # el ambiente de QA no es del chart, y el selector se lo llevó
 ```
 
 `catalog-nginx` va por nombre porque `task deploy` lo creaba con `kubectl create configmap`, sin labels.
+
+> ⚠️ **El selector se lleva más de lo que el chart devuelve.** `storefront-qa` y `catalog-qa` de la
+> [Fase 11](11-configuracion-y-secretos.md) también son `part-of: lab`, y el chart no los instala: el
+> `delete` los borra y nadie los repone. De ahí la última línea. Si se te olvida, el síntoma es
+> `storefront-qa.localhost` contestando `500` con su `HTTPRoute` todavía en pie: la ruta sobrevive
+> —no lleva esa label— y apunta a un `Service` que ya no existe.
 Y **no** se borra el namespace: se llevaría los `Secret` `<svc>-db`. Con una sonda pidiendo
 `/pricing/health/ready` y `/config.json` cada 100 ms:
 
@@ -517,6 +528,16 @@ Error: UPGRADE FAILED: conflict occurred while applying object apps/pricing apps
 $ kubectl -n apps get deploy pricing -o jsonpath='{.spec.template.spec.containers[0].image}'
 lab/pricing:recien-construida
 ```
+
+> ⚠️ **El `task deploy` del repositorio ya lleva `--rollback-on-failure`**, la bandera que la
+> [Fase 14](14-helm-en-operacion.md) adopta como regla, así que el error que verás trae dos líneas más:
+> Helm intenta volver a la revisión anterior, **y el rollback choca con el mismo dueño**, porque el
+> campo sigue siendo de `kubectl-set`. El `Error:` final anida los dos (`an error occurred while
+> rolling back the release. original upgrade error: conflict …`), y en `helm history` quedan dos
+> revisiones: la del upgrade fallido y la del rollback fallido. El conflicto es el mismo, y
+> `task inc:fix -- 05` lo repara igual. Y en `managedFields` vas a ver **tres** dueños, no cuatro: el
+> `kubectl-client-side-apply` de la salida de arriba es el rastro de la adopción de la sección 9, que
+> el camino de borrar y reinstalar no deja.
 
 **Helm 4 aplica del lado del servidor** (*server-side apply*), y eso cambia lo que la documentación de
 Helm 3 da por hecho. Cada campo de un objeto tiene un dueño, que se ve en `managedFields`: quien lo

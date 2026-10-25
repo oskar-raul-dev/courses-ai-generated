@@ -66,8 +66,12 @@ spec:
   project: default
   source: {repoURL: https://github.com/argoproj/argocd-example-apps.git, targetRevision: HEAD, path: guestbook}
   destination: {server: https://kubernetes.default.svc, namespace: a11-guestbook}
-  syncPolicy: {automated: {prune: true, selfHeal: true}}
+  syncPolicy: {automated: {prune: true, selfHeal: true}, syncOptions: [CreateNamespace=true]}
 ```
+
+Sin `CreateNamespace=true`, Argo CD no crea el namespace de destino, y la `Application` se queda en `OutOfSync` y
+`Missing`, reintentando con `namespaces "a11-guestbook" not found` (reproducido el 24/10/2026). Si la creaste sin la
+opción, agregarla no alcanza: la operación en curso sigue con la configuración vieja; bórrala y vuelve a crearla.
 
 ```text
 NAME        SYNC STATUS   HEALTH STATUS
@@ -85,6 +89,8 @@ $ kubectl -n a11-guestbook scale deploy/guestbook-ui --replicas=3
 deployment.apps/guestbook-ui scaled
 Argo CD devolvió replicas a 1 en 0.2 s
 ```
+
+(Repetido el 24/10/2026, tres veces y mirando con `kubectl` cada 50 ms: 0,6, 1,7 y 2,8 s. Segundos, no minutos.)
 
 Dos décimas de segundo. Es la promesa entera de GitOps en una línea: **lo que no está en el repositorio no dura**. Y es
 también su filo: el `kubectl scale` de un incidente a las tres de la mañana tampoco dura. En GitOps, apagar un incendio

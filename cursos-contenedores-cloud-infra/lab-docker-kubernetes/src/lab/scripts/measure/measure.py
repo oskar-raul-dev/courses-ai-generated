@@ -486,6 +486,9 @@ class B07Run:
                             "k3d": ["k3d", "cluster", "delete", self.NAME],
                             "minikube": ["minikube", "delete", "-p", self.NAME]}[self.tool],
                            env=self.env, capture_output=True)
+            if self.tool == "minikube":
+                # minikube delete borra el cluster pero no su red (H288): la borra el arnés.
+                subprocess.run([self.engine, "network", "rm", self.NAME], capture_output=True)
         return result
 
 

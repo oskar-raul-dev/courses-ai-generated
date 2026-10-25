@@ -38,14 +38,15 @@
 			"terminal.ansiYellow": "#DDB26F"
 		},
 		"terminal.integrated.mouseWheelZoom": true,
-		"terminal.integrated.fontSize": 13,
-		"window.zoomLevel": 1.4,
+		"terminal.integrated.fontSize": 14,
+		"window.zoomLevel": 1.1,
 		"editor.mouseWheelZoom": true,
 		"claudeCode.useTerminal": true,
 		"claudeCode.useCtrlEnterToSend": true,
 		"workbench.editor.enablePreview": false,
 		"workbench.editor.enablePreviewFromQuickOpen": false,
   		"workbench.editor.enablePreviewFromCodeNavigation": false,
-		"markdown.preview.fontSize": 18
+		"markdown.preview.fontSize": 18,
+		"vsicons.presets.angular": true
 	}
 }

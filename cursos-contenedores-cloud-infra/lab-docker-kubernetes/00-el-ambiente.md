@@ -399,7 +399,10 @@ following command in your terminal session:
         export DOCKER_HOST='unix:///var/folders/yc/qgh9zjpn03x_y95vs9gj_k380000gn/T/podman/podman-machine-default-api.sock'
 ```
 
-No es un error: Docker ya tiene el socket por defecto, y Podman deja el suyo en otra ruta. **No hace
+No es un error: Docker ya tiene el socket por defecto, y Podman deja el suyo en otra ruta. En el
+orden inverso (la máquina de Podman primero y Docker Desktop después), es Docker el que pide tu
+contraseña para recuperar ese socket
+([a02](a02-problemas-del-ambiente.md#docker-desktop-pide-tu-contraseña-al-abrirlo)). **No hace
 falta exportar ese `DOCKER_HOST`**: el laboratorio llama a `podman` o a `docker` según el motor
 activo, y una variable global olvidada es la causa más larga de diagnosticar del
 [incidente 04](cuaderno-incidentes.md#-incidente-04--el-cli-no-encuentra-el-motor-que-está-corriendo).
@@ -409,25 +412,27 @@ activo, y una variable global olvidada es la causa más larga de diagnosticar de
 > `engine.py` de las tres plataformas. Si te quedó un `CONTAINER_HOST` de antes, `task engine:status`
 > te avisa ([a02](a02-problemas-del-ambiente.md#el-cli-de-podman-dice-not-a-supported-schema)).
 
-### 4.7 Tu repositorio y el del curso
+### 4.7 Tu repositorio y la referencia
 
-El último paso de la instalación no instala nada: es decidir dónde vas a trabajar. **Este curso
-tiene dos repositorios**, y conviene armarlos hoy:
+El último paso de la instalación no instala nada: es decidir dónde vas a trabajar. **Escribes en un
+solo repositorio, el tuyo**, y conviene armarlo hoy:
 
 - **El tuyo**, donde construyes `src/lab/` fase a fase. Empieza con lo que el laboratorio ya trae
-  —el Taskfile, los archivos de kind, los scripts y el patrimonio— copiado del curso, y crece con lo
-  que generas y escribes. Ahí van tus commits (`f00: …`) y tus tags (`fase-00-el-ambiente`).
-- **El del curso**, clonado aparte y sin tocar. Sirve para comparar tu fase con la del autor, para
-  leer la corrección de un incidente como un `diff`, y para levantar el estado roto de un incidente
-  sin mover tu trabajo.
+  —el Taskfile, los archivos de kind, los scripts, `deploy/incidents/` (los manifiestos que `task
+  inc:break` aplica), el `compose.yaml` y el patrimonio— copiado del curso, y crece con lo que
+  generas y escribes. De ese `compose.yaml` hoy solo te sirve el perfil
+  `legacy`, que es lo que [a16](a16-el-patrimonio.md) deja; los cinco servicios nuevos los agregas
+  tú en la [Fase 02](02-compose-el-sistema-en-un-archivo.md). Ahí van tus commits (`f00: …`) y tus tags (`fase-00-el-ambiente`).
+- **La carpeta del curso**, descargada o clonada aparte y sin tocar. Su `src/lab/` está en su estado
+  final y es la referencia contra la que te comparas. Los incidentes no salen de ahí: `task
+  inc:break` y `task inc:fix` los provocan y los reparan sobre tu laboratorio.
 
-Por qué dos y no uno, y los comandos de cada caso, están en la
-[convención de git](00-convencion-de-git-y-tags.md). La versión corta: si trabajaras dentro de un
-clon del curso, el `git tag` del cierre de cada fase chocaría con el del autor, que ya existe con el
-mismo nombre.
+Por qué no trabajar dentro de la carpeta del curso, y los comandos de cada caso, están en la
+[convención de git](00-convencion-de-git-y-tags.md). La versión corta: tus commits y las
+actualizaciones del curso se mezclarían, y perderías la referencia limpia.
 
-Con los dos repositorios listos, la prueba final de esta fase es correr `task engine:status` desde
-**tu** `src/lab/`, no desde el del curso: es ahí donde vas a trabajar las próximas veintisiete fases.
+Con tu repositorio listo, la prueba final de esta fase es correr `task engine:status` desde **tu**
+`src/lab/`, no desde el del curso: es ahí donde vas a trabajar las próximas veintisiete fases.
 
 ---
 

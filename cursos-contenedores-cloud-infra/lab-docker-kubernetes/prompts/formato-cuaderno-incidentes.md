@@ -137,29 +137,27 @@ mismos siete pasos:
 
 ---
 
-## 6. 🔁 Tres formas de llegar al sistema roto
+## 6. 🔁 Dos formas de llegar al sistema roto
 
-1. **Desde el tag**, en el clon del repositorio del curso (el lector construye en su propio
-   repositorio: `00-convencion-de-git-y-tags.md`): `git worktree add --detach ../inc-<ID>
-   inc/<ID>/<slug>-roto`, o `git switch --detach` sobre el mismo tag, y desplegar como siempre. Es
-   la forma canónica, y la única que garantiza el estado exacto.
-2. **Con la tarea:** `task inc:break -- <ID>` aplica sobre el laboratorio actual el cambio mínimo que
-   lo rompe, y `task inc:fix -- <ID>` lo revierte. Sirve cuando el lector ya avanzó y no quiere
-   volver atrás en git.
-3. **A mano:** la entrada describe el cambio en una o dos líneas, para quien quiera provocarlo sin
+Hasta el 19/10/2026 eran tres, con la primera desde un par de tags en un repositorio del curso que nunca
+se publicó; D46 la retiró.
+
+1. **Con la tarea**, la forma canónica: `task inc:break -- <ID>` aplica sobre el laboratorio actual el
+   cambio mínimo que lo rompe, y `task inc:fix -- <ID>` lo revierte. El cambio está en código
+   (`scripts/incidents/inc.py`), y por eso es la que garantiza el estado exacto.
+2. **A mano:** la entrada describe el cambio en una o dos líneas, para quien quiera provocarlo sin
    herramientas. Es la que más enseña y la que más fácil sale mal.
 
-Los incidentes de ambiente (01–04 y 27) no se provocan con las dos primeras: se describen y se
+Los incidentes de ambiente (01–04 y 27) no se provocan de ninguna de las dos: se describen y se
 reconocen, porque romper la virtualización de la máquina del lector no es un ejercicio.
 
 ---
 
 ## 7. 🏷️ Git
 
-- El par de tags `inc/<ID>/<slug>-roto` e `inc/<ID>/<slug>-fix`, con el ID reservado y nunca uno
-  inventado. El `git diff` entre los dos **es** la corrección, aislada del ruido de la fase.
+- **Sin tags** (D46): el ID reservado, nunca uno inventado, y su entrada en `inc.py`.
 - El commit que abre el incidente: `fNN inc<ID>: <título>`.
-- El slug es el del título, corto y en inglés: `inc/05/image-never-loaded-roto`.
+- La entrada lleva su `task inc:break -- <ID>` en «Cómo llegar», y el cambio a mano al lado.
 
 ---
 
@@ -256,8 +254,8 @@ Fuentes de verdad, en orden: `prompts/alcance-del-proyecto.md`,
   fase, esos dos incidentes son práctica de reconocer el síntoma desde afuera, no de adivinar la causa.
   No se abre ninguna otra excepción sin una decisión nueva.
 - El índice por síntoma empieza por lo que el lector ve, con el literal que salió.
-- Los tags `inc/<ID>/…` y las tareas `inc:break` existen para cada incidente de plataforma y de
-  certificados, y el `git diff` entre `-roto` y `-fix` es solo la corrección.
+- Las tareas `inc:break` e `inc:fix` existen para cada incidente de plataforma y de certificados, y
+  el cambio de `inc.py` es solo la corrección.
 - El método de la Fase 21 y el de §5 dicen lo mismo con las mismas palabras.
 
 ## Cómo quiero que trabajes

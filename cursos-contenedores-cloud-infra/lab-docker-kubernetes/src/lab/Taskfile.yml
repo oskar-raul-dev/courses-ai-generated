@@ -17,8 +17,6 @@ vars:
   # El último paso de generación que cambió cada servicio: su imagen lleva ese tag, y su manifiesto lo
   # pide. Desde G2 no avanzan juntos (G2 solo toca storefront, Fase 11).
   STEP_TAGS: pricing:g10 inventory:g13 catalog:g10 replenish:g13 storefront:g5
-  # Lo que corre en compose: los cinco más el nginx de catalog (Fase 04).
-  COMPOSE_SERVICES: pricing inventory catalog catalog-nginx replenish storefront
   # Con Podman, las imágenes se nombran docker.io/lab/<svc> para que kind las vea con el mismo nombre (D32).
   IMAGE_PREFIX: '{{if eq .ENGINE "podman"}}docker.io/{{end}}lab'
   LEGACY_SERVICES: contingencia-db contingencia portal braqui braqui-traslados
@@ -106,11 +104,14 @@ tasks:
     desc: Construye los cinco servicios y los levanta en compose
     cmds:
       - task: build:all
-      - '{{.COMPOSE}} up -d {{.COMPOSE_SERVICES}}'
+      # Sin nombrar servicios: compose solo toca los de los perfiles activos, así que esto levanta
+      # el sistema nuevo y nada más, estén ya todos sus servicios o no (catalog-nginx llega en la Fase 04).
+      - '{{.COMPOSE}} up -d'
 
   compose:down:
     desc: Apaga y borra los contenedores de los cinco servicios (el patrimonio sigue corriendo)
-    cmds: ['{{.COMPOSE}} rm --stop --force {{.COMPOSE_SERVICES}}']
+    # Igual que en compose:up: sin nombres, el patrimonio (perfil `legacy`) no se toca.
+    cmds: ['{{.COMPOSE}} rm --stop --force']
 
   conformance:
     desc: 'Corre la suite de un paso: task conformance -- G1 (compose) o task conformance TARGET=cluster -- G1'
@@ -194,11 +195,20 @@ tasks:
 
   # ── El cluster: manifiestos e incidentes (Parte II) ───────────────────
   deploy:
-    desc: 'Instala o actualiza el sistema con el chart, con los valores de un perfil: task deploy -- minimo|lab|medicion'
+    desc: 'Instala o actualiza el sistema con los valores de un perfil: task deploy -- minimo|lab|medicion (hasta la Fase 12, los manifiestos; desde la 13, el chart)'
     vars:
       PROFILE: '{{.CLI_ARGS | default "minimo"}}'
       # El cluster: el del perfil; medicion usa minimo salvo que digas otro (task deploy CLUSTER=lab -- medicion).
       CLUSTER: '{{.CLUSTER | default (eq .PROFILE "medicion" | ternary "minimo" .PROFILE)}}'
+      # Hasta la Fase 13 el repositorio no tiene chart, y el sistema son los manifiestos de
+      # deploy/manifests/ (Fase 09). Esta tarea aplica lo que exista: cuando charts/platform
+      # aparece, manda Helm y los manifiestos quedan de referencia.
+      MODO:
+        sh: 'test -f charts/platform/Chart.yaml && echo helm || echo manifiestos'
+      KCTX: 'kubectl --context kind-{{.CLUSTER}}'
+      # El namespace de la observabilidad existe desde la Fase 17: antes, la lista es solo el de apps.
+      OBS_NS:
+        sh: 'test -f platform/observability/namespace.yaml && echo " -f platform/observability/namespace.yaml" || echo'
       # Los tags de STEP_TAGS como --set <svc>.image.tag=<tag>: el chart no tiene otro lugar de dónde sacarlos.
       TAG_SETS: '{{range splitList " " .STEP_TAGS}} --set {{index (splitList ":" .) 0}}.image.tag={{index (splitList ":" .) 1}}{{end}}'
       # La segunda cadena (Fase 14): TENANT=tenant-b instala el mismo chart como otro release, en apps-b,
@@ -209,31 +219,49 @@ tasks:
       TENANT_VALUES: '{{if .TENANT}} -f charts/platform/values-{{.TENANT}}.yaml{{end}}'
       # Los interruptores de observabilidad de esta máquina (task obs:on, Fase 17). Solo para el release
       # lab: las piezas son del cluster, y la segunda cadena las comparte.
+      # Antes de la Fase 17 el interruptor no existe todavía: la variable queda vacía.
       OBS_FILE:
-        sh: '{{if .TENANT}}echo{{else}}{{.PYTHON}} scripts/obs/switch.py file{{end}}'
+        sh: '{{if or .TENANT (ne .MODO "helm")}}echo{{else}}{{.PYTHON}} scripts/obs/switch.py file{{end}}'
     preconditions:
-      - sh: 'test -f charts/platform/values-{{.PROFILE}}.yaml'
-        msg: 'Perfil desconocido: {{.PROFILE}}. Usa minimo, lab o medicion.'
+      - sh: '{{if eq .MODO "helm"}}test -f charts/platform/values-{{.PROFILE}}.yaml{{else}}test -f deploy/manifests/namespace.yaml{{end}}'
+        msg: '{{if eq .MODO "helm"}}Perfil desconocido: {{.PROFILE}}. Usa minimo, lab o medicion.{{else}}Todavía no hay nada que desplegar: falta deploy/manifests/namespace.yaml (Fase 09).{{end}}'
       - sh: '{{if .TENANT}}test -f charts/platform/values-{{.TENANT}}.yaml{{else}}true{{end}}'
         msg: 'Cadena desconocida: {{.TENANT}}. La única es tenant-b.'
     cmds:
+      # ── Hasta la Fase 12: los manifiestos escritos a mano ──
+      - cmd: '{{.KCTX}} apply -f deploy/manifests/namespace.yaml'
+        if: '{{if eq .MODO "manifiestos"}}true{{else}}false{{end}}'
+      # El nginx.conf de catalog tiene una sola fuente, services/catalog/nginx.conf, y entra al
+      # cluster como ConfigMap: sin él, el pod de catalog se queda en 1/2 (Fase 09).
+      - cmd: >-
+          {{.KCTX}} -n apps create configmap catalog-nginx --from-file=default.conf=services/catalog/nginx.conf
+          --dry-run=client -o yaml | {{.KCTX}} -n apps apply -f -
+        if: '{{if eq .MODO "manifiestos"}}true{{else}}false{{end}}'
+      - cmd: '{{.KCTX}} apply -R -f deploy/manifests/'
+        if: '{{if eq .MODO "manifiestos"}}true{{else}}false{{end}}'
+      # Lo que --wait le da al chart: no terminar hasta que los Deployment estén listos.
+      - cmd: '{{.KCTX}} -n apps wait --for=condition=Available deploy --all --timeout=300s'
+        if: '{{if eq .MODO "manifiestos"}}true{{else}}false{{end}}'
+      # ── Desde la Fase 13: el chart ──
       # El namespace lo crea plataforma, con sus labels (y desde la Fase 15, sus cuotas): no es del chart.
-      - cmd: kubectl --context kind-{{.CLUSTER}} apply -f deploy/manifests/namespace.yaml -f platform/observability/namespace.yaml
-        if: '{{if .TENANT}}false{{else}}true{{end}}'
+      - cmd: kubectl --context kind-{{.CLUSTER}} apply -f deploy/manifests/namespace.yaml{{.OBS_NS}}
+        if: '{{if or .TENANT (ne .MODO "helm")}}false{{else}}true{{end}}'
       - cmd: kubectl --context kind-{{.CLUSTER}} apply -f platform/tenants/{{.NS}}.yaml
-        if: '{{if .TENANT}}true{{else}}false{{end}}'
+        if: '{{if and .TENANT (eq .MODO "helm")}}true{{else}}false{{end}}'
       # La imagen del seed, que el chart corre después de instalar.
       - task: seed:image
         vars: {CLI_ARGS: '{{.CLUSTER}}'}
+        if: '{{if eq .MODO "helm"}}true{{else}}false{{end}}'
       # Desde la Fase 13: un release `lab` en `apps`. Las migraciones son hooks: corren antes, solas.
       # --wait: no termina hasta que los Deployment están listos (y el seed corre después de eso).
       # --rollback-on-failure (Fase 14): si algo falla, vuelve solo a la última revisión buena, en vez de
       # dejar el release a medias. --history-max: diez revisiones guardadas, las más viejas se borran.
       # FORCE=true: le devuelve a Helm los campos que alguien cambió a mano (--force-conflicts, Fase 13).
-      - >-
-        helm upgrade --install {{.RELEASE}} charts/platform -n {{.NS}} --kube-context kind-{{.CLUSTER}}
-        -f charts/platform/values-{{.PROFILE}}.yaml{{.TENANT_VALUES}}{{if .OBS_FILE}} -f {{.OBS_FILE}}{{end}}{{.TAG_SETS}} --wait --timeout 10m
-        --rollback-on-failure --history-max 10{{if .FORCE}} --force-conflicts{{end}}
+      - cmd: >-
+          helm upgrade --install {{.RELEASE}} charts/platform -n {{.NS}} --kube-context kind-{{.CLUSTER}}
+          -f charts/platform/values-{{.PROFILE}}.yaml{{.TENANT_VALUES}}{{if .OBS_FILE}} -f {{.OBS_FILE}}{{end}}{{.TAG_SETS}} --wait --timeout 10m
+          --rollback-on-failure --history-max 10{{if .FORCE}} --force-conflicts{{end}}
+        if: '{{if eq .MODO "helm"}}true{{else}}false{{end}}'
 
   obs:on:
     desc: 'Enciende una pieza de observabilidad y redespliega: task obs:on -- metrics|dashboards|logs|traces|all (PROFILE=lab)'
@@ -416,13 +444,17 @@ tasks:
       # golang:1.27.1-alpine, el de la etapa de build de pricing
       GO: golang@sha256:8a5910f31396cd4d89662f56c68b3ae31d374308270a1c3bd96672ee5ed43414
     cmds:
-      # Las cachés de módulos y de compilación, en volúmenes con la label del curso.
-      - '{{.ENGINE}} volume create --label curso=lab-docker-kubernetes lab-gomod > /dev/null'
-      - '{{.ENGINE}} volume create --label curso=lab-docker-kubernetes lab-gocache > /dev/null'
-      # Con Postgres, Testcontainers le pide al motor un contenedor hermano: por eso el socket.
+      # Las cachés de módulos y de compilación, en volúmenes con la label del curso. Con Podman, `volume create`
+      # falla si el volumen ya existe (Docker no hace nada): `--ignore` lo iguala.
+      - '{{.ENGINE}} volume create {{if eq .ENGINE "podman"}}--ignore {{end}}--label curso=lab-docker-kubernetes lab-gomod > /dev/null'
+      - '{{.ENGINE}} volume create {{if eq .ENGINE "podman"}}--ignore {{end}}--label curso=lab-docker-kubernetes lab-gocache > /dev/null'
+      # Con Postgres, Testcontainers le pide al motor un contenedor hermano: por eso el socket. Con Podman,
+      # SELinux de su máquina no deja usar el socket desde un contenedor (label=disable), y Ryuk, el que
+      # limpia al final, pide la red `bridge` de Docker, que en Podman no existe: se apaga, y la prueba
+      # termina su contenedor ella misma.
       - >-
         {{.ENGINE}} run --rm -v "{{.ROOT_DIR}}/services/pricing:/src" -v lab-gomod:/go/pkg/mod -v lab-gocache:/root/.cache/go-build
-        {{if eq .DB "postgres"}}-v /var/run/docker.sock:/var/run/docker.sock -e TEST_DATABASE=postgres -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal{{end}}
+        {{if eq .DB "postgres"}}{{if eq .ENGINE "podman"}}--security-opt label=disable -e TESTCONTAINERS_RYUK_DISABLED=true {{end}}-v /var/run/docker.sock:/var/run/docker.sock -e TEST_DATABASE=postgres -e TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal{{end}}
         -w /src {{.GO}} go test -count=1 -v ./...
 
   # ── Scripts de Python ─────────────────────────────────────────────────
@@ -473,7 +505,7 @@ tasks:
 
   registry:down:
     desc: Borra el registry propio (y las imágenes que tenía)
-    cmds: ['{{.ENGINE}} rm -f lab-registry']
+    cmds: ['{{.ENGINE}} rm -fv lab-registry']  # -v: el volumen anónimo de /var/lib/registry, con las imágenes
 
   registry:push:
     desc: 'Sube la imagen de un servicio al registry propio, con su tag de STEP_TAGS: task registry:push -- pricing'
@@ -494,6 +526,27 @@ tasks:
     cmds:
       - for: {var: NODES}
         cmd: '{{.ENGINE}} exec {{.ITEM}} rm -rf /etc/containerd/certs.d/lab-registry:5000'
+      # Y el nodo olvida lo que ya trajo del registry (solo esos nombres: la misma imagen cargada con kind load
+      # se queda). Si no, con IfNotPresent no hay pull, y el incidente no aparece.
+      - for: {var: NODES}
+        cmd: >-
+          {{.ENGINE}} exec {{.ITEM}} sh -c 'ctr -n k8s.io images ls -q | grep "^lab-registry:5000/" |
+          xargs -r ctr -n k8s.io images rm > /dev/null'
+
+  registry:forget:
+    desc: 'Que el kubelet de cada nodo olvide de dónde trajo imágenes del registry, para volver a kind load: task registry:forget -- lab'
+    vars:
+      PROFILE: '{{.CLI_ARGS | default "minimo"}}'
+      NODES:
+        sh: kind get nodes --name {{.PROFILE}}
+    cmds:
+      # El kubelet anota cada imagen que trae, con el registry del que vino (Fase 19, sección 5.7). Con esa nota,
+      # la misma imagen cargada con kind load da "pull access denied" en ese nodo. Borrar la nota no alcanza:
+      # el kubelet la tiene en memoria, y se reinicia, solo en los nodos que la tenían.
+      - for: {var: NODES}
+        cmd: >-
+          {{.ENGINE}} exec {{.ITEM}} sh -c 'f=$(grep -l "lab-registry:5000" /var/lib/kubelet/image_manager/pulled/* 2>/dev/null);
+          [ -z "$f" ] || { rm -f $f && systemctl restart kubelet && echo "{{.ITEM}}: kubelet reiniciado"; }'
 
   registry:trust:
     desc: 'Que el containerd de cada nodo confíe en la CA del registry: task registry:trust -- lab'

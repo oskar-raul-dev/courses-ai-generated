@@ -80,9 +80,12 @@ de la Parte IV.
 
 ## La restauración, probada de punta a punta
 
-Un respaldo que no se restauró nunca es una hipótesis. El desastre, en una base chica: **se borra la base de `pricing`**.
+Un respaldo que no se restauró nunca es una hipótesis. El desastre, en una base chica: **se borra la base de `pricing`**,
+con `WITH (FORCE)` (sin él, Postgres se niega: `pricing` tiene su pool conectado, `There are 3 other sessions using the
+database`):
 
 ```text
+$ kubectl -n data exec postgres-0 -- psql -U postgres -c 'DROP DATABASE pricing WITH (FORCE)'
 DROP DATABASE
 +8 s · precio por la puerta: 500 · venta: 503 · pricing: 0/1
 ```
@@ -145,6 +148,10 @@ una nube, un almacenamiento de objetos fuera del cluster.
 
 > ⚠️ El `extraMounts` del ejemplo no está en los archivos de kind del curso ([a01](a01-el-laboratorio.md)). Agregarlo
 > al cluster `lab` es recrearlo, con todo lo que eso borra.
+
+> ⚠️ **`kind delete cluster` deja a `kubectl` sin contexto.** Si el cluster borrado era el contexto actual (lo es recién
+> creado), `kind` lo saca del kubeconfig y no elige otro: el siguiente `kubectl -n apps …` del curso falla con
+> `current-context is not set`. `kubectl config use-context kind-lab` lo devuelve.
 
 ## Lo que este respaldo no cubre
 

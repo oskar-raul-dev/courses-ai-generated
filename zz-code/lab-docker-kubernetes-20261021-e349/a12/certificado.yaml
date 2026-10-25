@@ -1,0 +1,8 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata: {name: a12-prueba, namespace: default}
+spec:
+  secretName: a12-prueba-tls
+  dnsNames: [a12.localhost]
+  duration: 24h
+  issuerRef: {name: lab-ca, kind: ClusterIssuer}

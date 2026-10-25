@@ -223,6 +223,11 @@ Traefik apagado, su memoria en reposo baja más de 100 MiB respecto de los 681 M
 queda por debajo de kind (651 MiB).
 **Lo que pasó:** ganada: 463 MiB sin Traefik. Y en B-07, cada herramienta trae otra versión de
 Kubernetes, otros componentes y otra compatibilidad con Podman (solo kind pasó entero).
+**Y una lección sobre la medición misma (20/10/2026):** las filas de Docker de B-07 se remidieron con
+la máquina dedicada y la memoria de kind bajó de 651 a 502 MiB. Con eso, la frase que B-07 sostenía
+—que minikube ocupaba tres cuartos de la memoria de kind— dejó de ser verdad: los tres están en el
+mismo orden. **Una medición de memoria hecha en una máquina con trabajo ajeno al lado no está solo
+imprecisa: puede sostener una conclusión falsa.** Los tiempos, en cambio, reprodujeron clavados.
 **Lo que se hace en su lugar:** comparar con lo mismo encima, y elegir por versión, por motor y por lo
 que no trae.
 **Dónde sigue valiendo:** para la API: los manifiestos aplican igual en todos.

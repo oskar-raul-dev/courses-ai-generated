@@ -66,7 +66,10 @@ def podman_machine_state() -> str:
 
 def status() -> int:
     current = active_engine()
-    print(f"Motor activo del laboratorio: {current}  ({ENGINE_FILE.name})")
+    # Antes de la primera `task engine:use` el archivo no existe y el motor es el del Taskfile:
+    # decirlo evita que el lector busque un archivo que todavía no está (F00 §4.6).
+    origen = ENGINE_FILE.name if ENGINE_FILE.exists() else "por defecto, sin .engine.env"
+    print(f"Motor activo del laboratorio: {current}  ({origen})")
     for engine in ENGINES:
         installed = shutil.which(engine) is not None
         ok, detail = responds(engine) if installed else (False, "no instalado")

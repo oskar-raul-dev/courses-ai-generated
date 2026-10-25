@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: allow-waypoint-istiod, namespace: apps}
+spec:
+  podSelector: {matchLabels: {gateway.networking.k8s.io/gateway-name: waypoint}}
+  policyTypes: [Egress]
+  egress:
+    - to: [{namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: istio-system}}}]
+      ports: [{protocol: TCP, port: 15012}]

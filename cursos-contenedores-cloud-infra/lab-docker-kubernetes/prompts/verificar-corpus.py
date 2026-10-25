@@ -39,8 +39,9 @@ class _Todos:
 
 
 class VerificadorDelCurso(PerfilCoursesIA):
-    # Marcadores (guía §8.2) y callouts (guía §8.3).
-    CALLOUTS = PerfilCoursesIA.CALLOUTS | {"⭐", "🌊", "📏", "🌩️"}
+    # Marcadores (guía §8.2) y callouts (guía §8.3); el 🔑 «La frase para memorizar» viene de la
+    # plantilla de la convención de git (07/10/2026).
+    CALLOUTS = PerfilCoursesIA.CALLOUTS | {"⭐", "🌊", "📏", "🌩️", "🔑"}
     # Emoji en ### (guía §17, excepción 8): los marcadores de estado y el 🩺 de cada incidente, y el
     # 🏚️ del patrimonio. El verificador compara carácter por carácter, así que van también sin U+FE0F.
     EMOJI_H3 = {"🩺", "🦭", "🌊", "🏚️", "🚧", "🌩️", "💸"}

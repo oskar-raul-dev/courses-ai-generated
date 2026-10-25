@@ -164,6 +164,10 @@ $ helm -n apps history lab | tail -1
 7   …  deployed    platform-0.13.0  Rollback to 5
 ```
 
+(`until.py` no está en el repositorio: es una sonda de tres líneas que pide el precio cada 100 ms
+hasta que el tope sea el del argumento, y cuenta por el camino qué topes vio. Un `curl` repetido a
+mano sirve igual para el ejercicio 3.)
+
 Un rollback **es una revisión nueva** (la 7, igual a la 5): la historia queda entera. Y el precio volvió:
 
 ```text

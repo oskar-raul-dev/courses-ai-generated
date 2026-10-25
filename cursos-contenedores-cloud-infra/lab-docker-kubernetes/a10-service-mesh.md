@@ -179,7 +179,9 @@ degradado. Esas reglas, en el mesh, hay que escribirlas por ruta; en el código,
 ## Métricas por servicio y por código
 
 El *waypoint* cuenta cada petición que pasa por él, con su origen, su destino y su código, en el formato de Prometheus
-([Fase 17](17-metricas-y-dashboards.md)), en el puerto 15020 (recortada a las etiquetas que importan):
+([Fase 17](17-metricas-y-dashboards.md)), en el puerto 15020. La imagen del *waypoint* no trae `curl`; se leen con su propio
+agente, `kubectl -n apps exec deploy/waypoint -- pilot-agent request GET stats/prometheus` (recortada a las etiquetas que
+importan):
 
 ```text
 istio_requests_total{source_workload="a10-cliente",destination_service_name="chaos",response_code="200"} 648

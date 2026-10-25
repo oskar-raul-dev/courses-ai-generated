@@ -55,7 +55,7 @@ llegue el domingo.
 - **La página por HTTPS.** El `storefront` sigue en `http://`, porque su configuración apunta la API a
   `http://api.localhost:8080`: servida por HTTPS, el navegador bloquearía esas llamadas (contenido mixto).
   Es un ejercicio.
-- La confianza en el llavero del host: instalada y verificada con `security verify-cert`; el navegador y la desinstalación, sin verificar (sección 5.3).
+- La confianza en el llavero del host es opcional: la sección 5.3 la instala y [a01](a01-el-laboratorio.md#-la-ca-del-laboratorio-en-el-llavero) la quita, verificadas en macOS con `security verify-cert` y en el navegador.
 
 ---
 
@@ -176,7 +176,9 @@ $ curl -sS -o /dev/null 'https://api.localhost:8443/pricing/prices?store=DRO-007
 curl: (60) SSL certificate problem: unable to get local issuer certificate
 ```
 
-Con la CA, 200. Sin ella, la primera pregunta de la sección 5.1. Y una observación que la sección 5.4 vuelve a
+Con la CA, 200. Sin ella, la primera pregunta de la sección 5.1. (Si ya instalaste la CA en el llavero, como
+en la sección 5.3, el `curl` de macOS la lee de ahí y el segundo comando también da 200; el error sale igual
+desde un contenedor, que no tiene tu llavero.) Y una observación que la sección 5.4 vuelve a
 usar: cuando el `Secret` cambió (la CA se regeneró y el certificado con ella), **la puerta sirvió el nuevo en
 menos de cinco segundos, sin reiniciar nada**. Envoy Gateway vigila los `Secret` de sus listeners.
 
@@ -400,10 +402,13 @@ digest**— empezó a fallar en ese nodo con `pull access denied`, con la imagen
 En las versiones recientes de Kubernetes (en la 1.36 del laboratorio, activo por defecto), el kubelet anota de
 dónde trajo cada imagen y con qué credenciales, y antes de dejar que un pod use una imagen que **trajo** de un
 registry, verifica que ese pod tenga acceso al nombre que pide.
-La imagen cargada con `kind load` era la misma, pero el registro decía que se había traído de
+(El registro lo escribe el kubelet cuando él hace el pull: una imagen traída a mano con `crictl pull` no deja
+ninguno, y en ese nodo la trampa no aparece.) La imagen cargada con `kind load` era la misma, pero el registro
+decía que se había traído de
 `lab-registry`, y para `docker.io/lab/pricing` el kubelet quiso verificar contra Docker Hub. Borrar el
 registro no alcanzó: hubo que reiniciar el kubelet de ese nodo. La lección no es el comando: **una imagen con
-dos nombres en el mismo nodo ya no es una sola cosa para el kubelet**. Se elige un camino —el registry o
+dos nombres en el mismo nodo ya no es una sola cosa para el kubelet**. (`task registry:forget -- lab` hace las dos cosas en los nodos
+que tienen la nota.) Se elige un camino —el registry o
 `kind load`— y se sigue.
 
 ---
@@ -977,9 +982,7 @@ EL ESTADO AL CERRAR LA FASE 19 (cluster lab, valores de minimo)
 > git tag -a fase-19-tls-y-certificados -m "F19 cerrada: CA propia y HTTPS en la puerta; cert-manager y trust-manager con renovación medida; G8, mTLS entre inventory y pricing con recarga; registry con CA en los tres sitios; incidentes 18 a 24"
 > ```
 >
-> Y los pares: `inc/18/expired-gateway-cert-*`, `inc/19/unknown-ca-*`, `inc/20/wrong-san-*`,
-> `inc/21/key-cert-mismatch-*`, `inc/22/issuer-without-ca-*`, `inc/23/mtls-without-client-cert-*` e
-> `inc/24/registry-ca-untrusted-*`. Commits con prefijo `f19:`.
+> Commits con prefijo `f19:`, y los de incidente `f19 inc18: …` a `f19 inc24: …`.
 
 ---
 
@@ -988,4 +991,3 @@ EL ESTADO AL CERRAR LA FASE 19 (cluster lab, valores de minimo)
 - **F20:** que nadie fuera de `apps` pueda llegar al 8080 de `pricing`, que hoy sigue abierto.
 - **F22:** el timeout y el reintento de la llamada mTLS de `inventory`.
 - **`a10`:** el mTLS de todos los servicios sin tocar su código.
-- **Oskar:** la prueba en el navegador y la desinstalación de la CA, sin verificar (sección 5.3).

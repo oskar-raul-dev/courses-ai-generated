@@ -72,7 +72,9 @@ rechaza: se queda esperando, y la puerta corta a los 15 segundos. Y hay más: **
 
 ```text
 {"msg":"request",…,"method":"POST","uri":"/sales","status":201,"duration_ms":145843.719609,"service":"inventory"}
-``` Los tres "no contestan". Quien reinicia `inventory` por reflejo
+```
+
+Los tres "no contestan". Quien reinicia `inventory` por reflejo
 no arregla ninguno, y en los tres casos **borra la evidencia**: el pod nuevo no tiene el log del viejo.
 
 Y la lista de comandos no ayuda: `kubectl` tiene más de cuarenta subcomandos, y saber qué hace cada uno no dice
@@ -282,11 +284,13 @@ lo hace sin escribir. Los atajos que corresponden a esta fase:
 | `shift-f` | `port-forward` | 5.5 |
 | `s` | `exec` con un shell | 5.6 |
 
-`k9s --readonly` la abre sin poder borrar ni editar nada, que es como conviene abrirla en una guardia.
+`k9s --readonly` la abre sin poder borrar ni editar nada, que es como conviene abrirla en una guardia. Ese modo
+también apaga `s`: para un shell, `kubectl exec`, o k9s sin `--readonly`. `shift-f` sí funciona, y propone como
+puerto local el 8080, que en este laboratorio ya es de la puerta: cámbialo antes de aceptar.
 
-> ⚠️ **Lo verificado, y lo que no.** En la máquina del autor se verificó la versión (`k9s info`, 0.51.0). Abrirla
-> contra `kind-lab` y recorrer los atajos de la tabla **no se verificó** en esta tanda: la sesión de verificación no
-> tenía una terminal interactiva, y k9s la necesita. Los atajos son los de su documentación para esa versión.
+> ⚠️ **Lo verificado, y lo que no.** Verificado el 22/10/2026 contra `kind-lab`, con k9s 0.51.0 manejada desde una
+> terminal emulada: `:pods`, el filtro con `/`, `d`, `:events`, `l`, `shift-f` (con y sin `--readonly`) y `s` (solo
+> sin `--readonly`). `p` dentro de los logs no se distinguió, porque el pod no tenía una vida anterior.
 
 ---
 

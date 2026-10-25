@@ -202,7 +202,7 @@ El pod monta `/var/log` del nodo con un `hostPath`, de solo lectura: es lo que l
 los demás, y es exactamente lo que la [Fase 20](20-seguridad-del-pod-y-de-la-red.md) va a mirar con desconfianza.
 
 ```bash
-task obs:on -- logs
+task obs:on PROFILE=minimo CLUSTER=lab -- logs    # con el perfil de la fase (F17 §5.5)
 kubectl -n observability get pods -l app.kubernetes.io/name=fluent-bit -o wide
 ```
 
@@ -548,7 +548,7 @@ Enciende los logs y encuentra los pods de Fluent Bit y de Loki.
 
 <details><summary>Solución</summary>
 
-`task obs:on -- logs` (enciende también Grafana y Prometheus) y `kubectl -n observability get pods -o wide`.
+`task obs:on PROFILE=minimo CLUSTER=lab -- logs` (enciende también Grafana y Prometheus) y `kubectl -n observability get pods -o wide`.
 </details>
 
 ### 🟢 Ejercicio 3 — Los flujos

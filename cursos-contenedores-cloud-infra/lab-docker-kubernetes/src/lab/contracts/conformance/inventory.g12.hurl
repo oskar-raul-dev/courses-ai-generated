@@ -16,6 +16,15 @@ Content-Type: application/merge-patch+json
 {"reorderThreshold": 9}
 HTTP 200
 
+# Una orden pedida a mano, sin evento: la de la venta queda después de ella. Así el filtro de abajo
+# siempre encuentra dos o más (con una sola, Hurl devuelve el valor suelto y `last` falla), y la
+# diferencia queda a la vista: esta llega sin sourceEventId.
+POST {{replenish}}/replenishment-orders
+{"sku": "SKU-0002", "destinationStore": "DRO-025", "quantity": 1}
+HTTP 201
+[Asserts]
+jsonpath "$.sourceEventId" == null
+
 POST {{inventory}}/sales
 {"store": "DRO-025", "sku": "SKU-0002", "quantity": 2}
 HTTP 201

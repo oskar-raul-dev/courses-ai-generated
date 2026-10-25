@@ -247,6 +247,16 @@ defecto (`kind-minimo`): con el cluster `lab`, `PROFILE=lab`.
 
 `pricing` va primero en cada fila: es el piloto, y los otros tres lo siguen.
 
+> ⚠️ **Cada paso sube `STEP_TAGS`.** La variable del `Taskfile.yml` dice en qué paso está la imagen
+> de cada servicio, y de ella salen el tag que construye `task build`, el que `task images:load`
+> lleva al nodo del cluster y el que piden los manifiestos y el chart. Al terminar un paso, súbela
+> **solo para los servicios de la columna "Servicios" de esa fila**: después de G2, el `storefront`
+> va en `:g2` y los otros cuatro siguen en `:g1`. El `Taskfile.yml` que copiaste en la
+> [Fase 00](00-el-ambiente.md) la trae en su estado final (`pricing:g10 inventory:g13 catalog:g10
+> replenish:g13 storefront:g5`), así que la primera vez hay que bajarla a G0; la
+> [Fase 02](02-compose-el-sistema-en-un-archivo.md) lo dice donde se construyen las imágenes por
+> primera vez.
+
 ---
 
 ## 🤖 Los prompts de G0
@@ -289,6 +299,13 @@ enteros). No copies su arquitectura, ni sus mañas, ni su forma de hablar con ot
 que trae, el build adentro y el proceso corriendo ahí mismo. La Fase 04 lo reescribe; hoy tiene que
 funcionar y nada más. La base va por digest, con el tag en un comentario (las de `a01`). Comentarios
 en español con tildes; identificadores en inglés.
+
+**El `CMD` va en forma JSON** (`CMD ["java", "-jar", "…"]`), nunca en forma de texto, y **sin envolverlo
+en `sh -c`**: la forma de texto se guarda como `/bin/sh -c "…"`, y entonces el shell es el proceso 1 y
+la señal de apagado no llega al servicio. Si el proceso necesita un valor de una variable de entorno en
+su línea de comandos, el valor se resuelve en la configuración del servicio y no en el `CMD`. La
+[Fase 03](03-el-contenedor-por-dentro.md) mide lo que cuesta no hacerlo, y para medirlo necesita que el
+paso G0 parta de la forma correcta.
 
 **Y un `CLAUDE.md` corto** (menos de 150 líneas) en la carpeta del servicio: el stack, los comandos
 para construir y correr, las convenciones, y el contrato del servicio con los pasos futuros marcados
@@ -377,6 +394,12 @@ procesos de PHP-FPM con nginx llegan en la Fase 04.
 Vitest en `tsconfig.json` (si quedan, el build falla con `TS2688`). El log por petición, con un
 middleware de una línea en `main.ts`.
 
+**El andamio del CLI es ESM** (`"type": "module"` en el `package.json` y `module: nodenext` en el
+`tsconfig.json`), así que **los imports relativos llevan la extensión `.js`**
+(`from './app.module.js'`), aunque el archivo sea `.ts`. Sin ella el build falla con `TS2307`,
+*Cannot find module*. Por lo mismo, el `package.json` tiene que viajar a la imagen final (lo cobra la
+Fase 04).
+
 **Dockerfile G0:** una etapa sobre `node` (a01), que instala, compila con `npm run build` y corre
 `node dist/main.js`.
 ```
@@ -394,8 +417,10 @@ el storefront la reemplaza.
 diga que el catálogo llega en la Fase 09. **No llama a ninguna API todavía.** `GET /health/live`
 responde 200 (un archivo estático basta).
 
-**Las versiones de la plantilla no son las de a01:** `create-vite` fija versiones anteriores de React
-y de Vite; se suben a las de a01 con `npm install`.
+**Comprueba las versiones de la plantilla contra `a01`:** `create-vite` fija las suyas, que pueden ir
+por detrás o por delante de las del apéndice. El 20/10/2026 la plantilla `react-ts` ya traía React
+19.3.1 y Vite 8.3.4, las dos de `a01`, y no hubo nada que subir; si no coinciden, se suben con
+`npm install`.
 
 **Dockerfile G0:** una etapa sobre `node` (a01), que instala, construye con `npm run build` y sirve
 `dist/` con `vite preview` en el puerto de `PORT` y en todas las interfaces, con
@@ -618,8 +643,9 @@ los parámetros pasan a `$1, $2…`, que entienden los dos. **El comando de migr
 **Y sus pruebas** (las primeras del laboratorio, para B-12): `main_test.go`, contra el almacén y los
 manejadores HTTP con `httptest`, que corren contra SQLite en una carpeta temporal o, con
 `TEST_DATABASE=postgres`, contra un Postgres de Testcontainers (`testcontainers-go`, módulo
-`postgres`, la imagen de a01), un contenedor por corrida. Entre las pruebas, una que guarda un precio
-de 3.000.000.000: el contrato no le pone techo.
+`postgres`, la imagen de a01), un contenedor por corrida, que `TestMain` termina antes del `os.Exit`
+(no en un `defer`, que `os.Exit` no corre: con Podman no hay Ryuk que lo limpie). Entre las pruebas,
+una que guarda un precio de 3.000.000.000: el contrato no le pone techo.
 ```
 
 ### G3 · inventory
@@ -874,10 +900,12 @@ venga de regalo con la librería: solo `/metrics`.
 ```markdown
 {{marco común de G6}}
 
-**Servicio:** `pricing`. **La librería:** `github.com/prometheus/client_golang`. **El middleware:** el
-mismo envoltorio que ya escribe la línea de log mide el tiempo y, después de `mux.ServeHTTP`, toma el
-patrón de `r.Pattern` (`"GET /prices/{sku}"` → `/prices/{sku}`; el `ServeMux` lo deja en la petición
-al elegir la ruta). `/metrics` es `promhttp.Handler()` en el mismo mux.
+**Servicio:** `pricing`. **La librería:** `github.com/prometheus/client_golang`. **El middleware:** un
+envoltorio alrededor del mux (el que ya escribe la línea de log, si existe) mide el tiempo y, después de
+`mux.ServeHTTP`, toma el patrón de `r.Pattern` (`"GET /prices/{sku}"` → `/prices/{sku}`; el `ServeMux` lo
+deja en la petición al elegir la ruta). `/metrics` es `promhttp.Handler()` en el mismo mux. **Un
+interruptor para medir:** con `METRICS_URI=raw`, la etiqueta `uri` lleva la ruta cruda; existe solo para la
+autopsia de la Fase 17 y ningún perfil lo usa.
 ```
 
 ### G6 · inventory
@@ -903,8 +931,10 @@ que `SalesController` incrementa con cada venta registrada.
 nada sobrevive a una petición, así que los contadores tienen que vivir en la memoria compartida de los
 hijos de FPM. APCu no viene con la imagen de PHP: `pecl install apcu-<versión>` y
 `docker-php-ext-enable apcu`, en la misma capa que compila `pdo_pgsql`. **El middleware:**
-`MeasureRequest`, agregado después de `LogRequest`, con `$request->route()->uri()`; la ruta de reserva
-(`isFallback`) es `/**`. `/metrics` es una ruta más, que responde con `RenderTextFormat`.
+`MeasureRequest`, global (después del de log, si existe), con `$request->route()->uri()`; la ruta de reserva
+(`isFallback`) es `/**`. `/metrics` es una ruta más, que responde con `RenderTextFormat`. **Un interruptor
+para medir:** `METRICS_STORAGE=memory` cambia APCu por la memoria del proceso (`apcu` por defecto); existe
+solo para que la Fase 17 muestre que así no se cuenta nada.
 ```
 
 ### G6 · replenish
@@ -994,8 +1024,9 @@ sqlite-jdbc no avise en texto.
 
 **Servicio:** `catalog`. **Monolog**, con un formateador propio (`App\Logging\JsonLineFormatter`, que
 extiende `NormalizerFormatter`) puesto en `LOG_STDERR_FORMATTER`: el `JsonFormatter` de Monolog usa
-otros nombres y anida el contexto. **La petición:** `LogRequest` usa `Log::withContext` para el
-`request_id`. **PHP-FPM:** sin su línea de acceso (`access.log = /dev/null`) y con `log_level = warning`.
+otros nombres y anida el contexto. **La petición:** un middleware global `LogRequest` (antes de
+`MeasureRequest`) usa `Log::withContext` para el `request_id` y escribe la línea `request`. **PHP-FPM:** sin su línea de acceso (`access.log = /dev/null`, en el pool) y con `log_level = warning`
+(en una sección `[global]` del mismo archivo: en el pool no vale).
 **nginx:** su línea de acceso en JSON (`log_format … escape=json`, `msg` `nginx`, con el `request_id` de
 la cabecera) y un `nginx.conf` principal propio, con `error_log /dev/stderr warn`; y
 `NGINX_ENTRYPOINT_QUIET_LOGS=1` en el contenedor.
@@ -1072,7 +1103,8 @@ propio, en Go, corto y legible: el lector lo va a leer de una sentada.
 este orden: colgarse (no contestar hasta que el cliente se canse), fallar (un 503 con JSON, sin pasarle nada al
 vecino), demorar (esperar y después pasar), y romper la respuesta (un 200 con JSON cortado). Los porcentajes y la
 demora en un objeto `faults`, que se lee de `CHAOS_FAULTS` al arrancar y se cambia en caliente con `PUT /chaos`; `GET
-/chaos` devuelve la configuración y las cuentas (recibidas, pasadas, demoradas, fallidas, rotas, colgadas).
+/chaos` devuelve la configuración y las cuentas (recibidas, pasadas, demoradas, fallidas, rotas, colgadas), desde que
+arrancó: un `PUT` cambia las fallas y no las cuentas.
 `/health/live` y `/health/ready` triviales. Log en JSON como G7. Apagado limpio como G5.
 
 **Lo que NO debe tener:** dependencias fuera de la biblioteca estándar, TLS, ni nada que no sean esas cuatro fallas.
@@ -1226,7 +1258,9 @@ como el aviso de G10) y el `request_id` copiado al MDC, y contesta 202 sin esper
 **Las compensaciones**, cuando un paso falla: el préstamo pasa a `COMPENSATING` con el motivo en `failure`, y se deshacen
 en orden inverso los pasos hechos que todavía no se deshicieron (`RESERVE` con un `ADJUSTMENT` positivo y el código
 `LOAN_RELEASED`, sembrado en `data.sql`; `DISPATCH` con `POST /replenishment-orders/{id}/cancel` y `SAGA_COMPENSATION`).
-Si una compensación falla, queda anotada y el préstamo sigue en `COMPENSATING`. Con todas hechas, `COMPENSATED`.
+Si una compensación falla, queda anotada y el préstamo sigue en `COMPENSATING`. Con todas hechas, `COMPENSATED`. **Una
+cancelación que vence su plazo puede haberse hecho:** si el reintento recibe 409, se lee la orden, y si ya está
+`CANCELLED`, la compensación cuenta como hecha (hasta G12, `replenish` contesta 409 a una orden ya cancelada).
 
 **El barrido:** `@Scheduled` cada `lab.saga.sweep-ms` (30 s) busca préstamos sin estado final cuya `updated_at` sea más
 vieja que `lab.saga.stale-ms` (30 s). Los reclama con un `UPDATE … WHERE id = ? AND updated_at = ?` (si no actualiza
@@ -1314,9 +1348,11 @@ identificadores sin comillas que escapar).
 `message`; con NATS (`@nats-io/transport-node` y `@nats-io/jetstream`), el consumidor durable `replenish-stock-low`
 (ack explícito, `ack_wait` de 30 s, filtro por el sujeto) y un `consume()` que crea la orden y **después** hace `ack`;
 si falla, `nak` con 5 s. La orden se crea con el mismo `INSERT` del controlador más `source_event_id`, una columna nueva
-(con `ADD COLUMN IF NOT EXISTS` en Postgres; en SQLite, un `ALTER` que puede fallar si ya existe). El log de cada orden
-creada lleva `eventId`, `saleId` y el número de entrega (`deliveryCount`). Cierre: `close` de los mensajes, `drain` de
-la conexión.
+(con `ADD COLUMN IF NOT EXISTS` en Postgres; en SQLite, un `ALTER` que puede fallar si ya existe). Desde aquí dos
+réplicas pueden crear órdenes en el mismo instante: el número de `RO-…` sale de la secuencia que asigna la base al
+insertar, no de un `MAX + 1` leído antes, y un error al crear la orden se registra sin tumbar el proceso (con Valkey, la
+promesa del manejador de `message` lleva su `catch`). El log de cada orden creada lleva `eventId`, `saleId` y el número
+de entrega (`deliveryCount`). Cierre: `close` de los mensajes, `drain` de la conexión.
 ```
 
 Los dos compilaron al primer intento salvo por el `import` de `iovalkey` (agregado al prompt). Lo que mostró el

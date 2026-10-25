@@ -102,7 +102,12 @@ ventas: 30 · respuestas: {201: 30}
   aviso a replenish perdido para SKU-0002 en DRO-021: I/O error on POST request for "http://replenish.apps.svc.cluster.local:8080/replenishment-orders": …
 ```
 
-Dos perdidos de treinta. El `POST` sin espera y el pub/sub de Valkey tienen la misma garantía: **a lo sumo una vez**.
+Dos perdidos de treinta. Remedido el 23/10/2026, dos corridas con un pod nuevo dieron **seis** cada una, por una
+razón que vale la pena ver: el proceso de `replenish` volvió a escuchar a las 04:17:14,6, pero los `POST` siguieron
+fallando con `HTTP connect timed out` hasta las 04:17:19,9. El Service solo le manda tráfico a un pod listo, y la
+readiness se pregunta cada 5 s; hasta que la sonda pasa, el `POST` no tiene a quién llegar. El suscriptor de Valkey no
+espera a ninguna sonda: vuelve en cuanto arranca el proceso. Por eso, con el mismo reinicio, el `POST` pierde entre
+uno y seis, según dónde caiga la sonda, y Valkey uno o dos. El `POST` sin espera y el pub/sub de Valkey tienen la misma garantía: **a lo sumo una vez**.
 Funcionan cuando el otro está, y cuando no está, el mensaje se va. La diferencia con la historia de La Vecina es que
 aquí, por lo menos, queda una línea que lo dice.
 
@@ -360,7 +365,9 @@ reposición, una por segundo. **El síntoma**, en cada caso:
 | NATS JetStream | 30 | 30 | 0 | 0 | — |
 
 Una corrida por fila: esto no es una medición con dispersión, es una rotura reproducida. La cantidad exacta de perdidos
-depende del segundo en que cae el reinicio; que haya pérdidas con las dos primeras, y que no las haya con la última, no.
+depende del segundo en que cae el reinicio, y de que sea el primero del pod: un segundo `kill 1` en el mismo pod espera
+el *back-off* de kubelet, y en la pasada del 23/10/2026 dejó 12 avisos a cero suscriptores en vez de uno. Que haya
+pérdidas con las dos primeras, y que no las haya con la última, no depende de nada de eso.
 
 **Lo que costó salir:** el bus. Un servidor más en `data` (12 MiB), un stream, un consumidor durable, y cambiar el
 consumidor de `replenish` de "me llaman" a "voy a buscar y confirmo". Lo que **no** costó: tocar la venta, que sigue
@@ -525,7 +532,10 @@ Reproduce la sección 4.1 con Valkey.
 <details><summary>Solución</summary>
 
 El reinicio tiene que ser del proceso, no del pod: `kubectl -n apps exec deploy/replenish -- kill 1`. Si cae entre dos
-ventas, puede no perderse ninguna: repítelo, o haz más de una venta por segundo.
+ventas, puede no perderse ninguna: repítelo, o haz más de una venta por segundo. Al repetirlo, mira la columna
+`RESTARTS`: desde el segundo `kill 1` en el mismo pod, kubelet espera antes de levantar el contenedor (*back-off*, 10 s
+la primera vez y el doble cada vez), y la cuenta de perdidos sube de uno a una docena. Para comparar con la sección 4.1,
+empieza de un pod nuevo (`kubectl -n apps rollout restart deploy/replenish`).
 </details>
 
 ### 🟢 Ejercicio 4 — El stream, por dentro

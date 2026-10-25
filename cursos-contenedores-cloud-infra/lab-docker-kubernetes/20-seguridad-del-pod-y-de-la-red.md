@@ -262,7 +262,12 @@ nombra y no la cruza.
 ## 🔁 6. Los otros cuatro, y Postgres
 
 **`pricing` y el `storefront`** no pidieron nada más que el número de usuario que ya tenían. **`inventory`** pidió
-`/tmp` (Tomcat). **`catalog`** pidió dos usuarios en el mismo pod y `/tmp` en los dos contenedores. **`replenish`**
+`/tmp` (Tomcat). **`catalog`** pidió dos usuarios en el mismo pod y `/tmp` en los dos contenedores, y una condición
+de su imagen: que `bootstrap/cache/` (el manifiesto de paquetes de Laravel) venga armado desde el build. Si el
+`Dockerfile` corre Composer con `--no-scripts` y nadie hace `php artisan package:discover`, Laravel lo escribe en
+la primera petición, y con la raíz de solo lectura responde 500 con `The /app/bootstrap/cache directory must be
+present and writable`; las sondas fallan y el rollout no termina. La imagen del curso lo arma con `composer
+dump-autoload`, que corre ese script. **`replenish`**
 corrió con la raíz de solo lectura sin escribir nada.
 
 **Postgres** es el caso distinto, y es el incidente 25. La imagen oficial **arranca como root** y baja a su usuario
@@ -454,8 +459,9 @@ con las del upgrade anterior.
 
 ## 🧪 15. Ejercicios (20)
 
-La mitad de diagnóstico. El script de alcance de la sección 4 es `reach.js` en la verificación del curso; cualquier
-`fetch` desde un pod de Node hace lo mismo.
+La mitad de diagnóstico. El script de alcance de la sección 4 cabe en quince líneas de Node, con `fetch` y
+`net.connect` y un timeout de tres segundos; se corre desde el `replenish` de cada cadena con `kubectl exec … node -e`,
+y desde `default` con un pod de `node` de paso.
 
 ## 🟢 Fácil — leer el endurecimiento (1–6)
 
@@ -715,7 +721,7 @@ EL ESTADO AL CERRAR LA FASE 20 (cluster lab, valores de minimo, las dos cadenas)
 > git tag -a fase-20-seguridad-del-pod-y-de-la-red -m "F20 cerrada: securityContext completo en los cinco y en Postgres; RBAC mínimo con el 403 provocado; NetworkPolicy por cadena y para Postgres, con la prueba de alcance; incidentes 25 y 26"
 > ```
 >
-> Y los pares: `inc/25/runasnonroot-root-image-*` e `inc/26/default-deny-dns-*`. Commits con prefijo `f20:`.
+> Commits con prefijo `f20:`, y los de incidente `f20 inc25: …` y `f20 inc26: …`.
 
 ---
 

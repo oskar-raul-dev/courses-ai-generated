@@ -30,6 +30,7 @@ motor.
   - [`kubectl` no es el que instalaste](#kubectl-no-es-el-que-instalaste)
   - [`docker desktop status` dice `stopped` y Docker responde](#docker-desktop-status-dice-stopped-y-docker-responde)
   - [Podman avisa que otro proceso tiene el socket de Docker](#podman-avisa-que-otro-proceso-tiene-el-socket-de-docker)
+  - [Docker Desktop pide tu contraseña al abrirlo](#docker-desktop-pide-tu-contraseña-al-abrirlo)
   - [El cluster deja de contestar: `TLS handshake timeout`](#el-cluster-deja-de-contestar-tls-handshake-timeout)
   - [No puedes cambiarle la memoria a la máquina de Podman](#no-puedes-cambiarle-la-memoria-a-la-máquina-de-podman)
   - [`podman machine stop` dice que paró y no paró](#podman-machine-stop-dice-que-paró-y-no-paró)
@@ -47,6 +48,8 @@ motor.
 - **Común a las tres**
   - [El cluster no revive después de reiniciar](#el-cluster-no-revive-después-de-reiniciar)
   - [`node(s) already exist for a cluster with the name`](#nodes-already-exist-for-a-cluster-with-the-name)
+  - [El cluster sigue arriba y `kubectl` ya no tiene su contexto](#el-cluster-sigue-arriba-y-kubectl-ya-no-tiene-su-contexto)
+  - [`kubectl run --attach` avisa que no pudo adjuntarse y repite la salida](#kubectl-run---attach-avisa-que-no-pudo-adjuntarse-y-repite-la-salida)
 - [Cuándo usar qué](#-cuándo-usar-qué)
 - [Referencias](#-referencias)
 - [Ejercicios](#-ejercicios-8)
@@ -152,6 +155,22 @@ suyo en otra ruta y te dice cuál. Los comandos `podman` funcionan igual; solo l
 hablan la API de Docker sin saber de Podman necesitarían ese `DOCKER_HOST`. **El laboratorio no lo
 necesita**: el Taskfile llama a `podman` o a `docker` según el motor activo, y no exporta
 `DOCKER_HOST` en ningún momento.
+
+### Docker Desktop pide tu contraseña al abrirlo
+
+```text
+Docker Desktop requires privileged access to apply configuration
+Enter your password to allow this.
+```
+
+Es la misma convivencia, vista desde el otro lado. Si arrancaste la máquina de Podman con Docker
+Desktop cerrado, el ayudante de Podman tomó el socket por defecto: `/var/run/docker.sock` apunta a
+`~/.local/share/containers/podman/machine/podman.sock`. Al abrir Docker Desktop, quiere ese enlace de
+vuelta, y cambiarlo pide permiso de administrador. Con la contraseña, el enlace vuelve a
+`~/.docker/run/docker.sock` y no se toca nada más: ni contenedores, ni imágenes, ni la máquina de
+Podman, que al arrancar después te da el aviso de la entrada anterior. Si cancelas, Docker arranca
+igual por su propio socket, y el laboratorio funciona con los dos, porque llama a cada CLI. Para ver
+quién lo tiene: `ls -l /var/run/docker.sock`.
 
 ### El cluster deja de contestar: `TLS handshake timeout`
 
@@ -382,9 +401,46 @@ podman start minimo-control-plane      # en lab: también lab-worker y lab-worke
 kubectl wait --for=condition=Ready nodes --all --timeout=180s
 ```
 
+Si el `kubectl wait` sale enseguida con `EOF` y después `Error from server (Forbidden): unknown`, no
+es el cluster: el contenedor ya arrancó, pero el API server de adentro todavía no acepta conexiones
+(`EOF`), o ya contesta y aún no cargó sus roles (`Forbidden`). `kubectl wait` se rinde al primer
+error; espera a que el API conteste y entonces sí pregunta por los nodos:
+
+```bash
+until kubectl get nodes > /dev/null 2>&1; do sleep 5; done
+kubectl wait --for=condition=Ready nodes --all --timeout=300s
+```
+
 Al volver, los pods pasan unos segundos por `Unknown` y `ContainerCreating` antes de reprogramarse.
 Si después de eso algo sigue raro, lo más rápido es borrar el cluster y crearlo de nuevo: es
 desechable por diseño, y lo que importa vive en tus archivos, no en él.
+
+### `another operation (install/upgrade/rollback) is in progress`
+
+```text
+$ task deploy FORCE=true CLUSTER=lab -- minimo
+…
+Error: UPGRADE FAILED: another operation (install/upgrade/rollback) is in progress
+$ helm -n apps history lab --max 2
+REVISION  UPDATED                   STATUS           CHART            DESCRIPTION
+83        Fri Oct 23 13:19:09 2026  deployed         platform-0.17.0  Upgrade complete
+84        Fri Oct 23 13:57:55 2026  pending-upgrade  platform-0.17.0  Preparing upgrade
+```
+
+Nadie más está desplegando: un `deploy` anterior se cortó a la mitad (el motor se detuvo, la máquina
+se quedó sin memoria, cerraste la terminal), y Helm dejó la revisión en `pending-upgrade`, que hace de
+candado. No se suelta solo. Se suelta con un `rollback` a la última revisión `deployed`, y después
+vuelves a desplegar lo que querías:
+
+```bash
+helm -n apps rollback lab 83 --wait --timeout 5m
+task deploy FORCE=true CLUSTER=lab -- minimo
+```
+
+Si antes tocaste algo con `kubectl` (un `scale`, un `set env`), el `rollback` puede fallar con
+`conflict with "kubectl" with subresource "scale"`: Helm 4 aplica del lado del servidor, y el rollback
+no fuerza conflictos. No importa: igual marca la revisión trabada como `superseded`, el candado se
+suelta, y el `deploy` con `FORCE=true` pasa (así quedó en la pasada del 23/10/2026).
 
 ### `node(s) already exist for a cluster with the name`
 
@@ -401,6 +457,43 @@ si es uno viejo que no quieres, `task cluster:down -- minimo` y vuelve a crearlo
 motores: cada uno tiene sus propios clusters, y `kind get clusters` solo ve los del motor que le
 indica `KIND_EXPERIMENTAL_PROVIDER`. Si cambiaste de motor y no ves el cluster que creaste ayer, es
 que vive en el otro.
+
+### El cluster sigue arriba y `kubectl` ya no tiene su contexto
+
+```text
+$ kubectl --context kind-minimo get nodes
+Error in configuration: context was not found for specified context: kind-minimo
+```
+
+Pasa con los dos motores encendidos: un cluster `minimo` en Docker, y el mismo nombre en Podman, que
+falla por el puerto 8080 ([Fase 05](05-los-dos-motores.md#️-9-autopsia-los-dos-motores-encendidos-por-si-acaso)).
+Al fallar, kind limpia lo que creó, y entre eso está la entrada `kind-minimo` del kubeconfig, que
+era la del cluster de Docker. El nodo sigue corriendo (`docker ps`), solo perdiste la forma de
+hablarle. Se recupera desde el motor que lo tiene:
+
+```bash
+KIND_EXPERIMENTAL_PROVIDER=docker kind export kubeconfig --name minimo
+```
+
+### `kubectl run --attach` avisa que no pudo adjuntarse y repite la salida
+
+```text
+$ kubectl run cliente --rm --attach --restart=Never --quiet --image=… -- curl -s http://pricing:8080/health/live
+{"status":"live"}
+warning: couldn't attach to pod/cliente, falling back to streaming logs: unable to upgrade connection: container cliente not found in pod cliente_default
+{"status":"live"}
+```
+
+El curso usa este pod de un solo uso para llamar a un servicio desde dentro del cluster, y con
+kubectl 1.36.1 contra un nodo 1.36.4 la salida sale **dos veces**, con ese aviso en el medio: el
+contenedor termina tan rápido que `--attach` llega tarde, kubectl se cae a leer los logs, y lo que ya
+había impreso queda duplicado. No es un error del comando ni del servicio: el `curl` corrió una sola
+vez, y su código de salida es el bueno. Si te estorba, quita `--attach` y lee el pod después con
+`kubectl logs`, o manda la llamada a un pod que ya exista con `kubectl exec`.
+
+Ojo con el caso contrario: cuando el contenedor termina **antes** de que kubectl alcance a leer sus
+logs, la salida puede no aparecer ninguna vez. Repite el comando antes de concluir que el servicio no
+contestó.
 
 ---
 

@@ -230,11 +230,11 @@ la casa. Los cinco en `compose.yaml`, sin perfil, para que se enciendan por defe
 
 ```text
 $ task compose:up
-task: [compose:up] docker build -q -t lab/pricing services/pricing
-task: [compose:up] docker build -q -t lab/inventory services/inventory
-task: [compose:up] docker build -q -t lab/catalog services/catalog
-task: [compose:up] docker build -q -t lab/replenish services/replenish
-task: [compose:up] docker build -q -t lab/storefront services/storefront
+task: [build:all] docker build -q --build-context proto=contracts/proto -t lab/pricing -t lab/pricing:g0 services/pricing
+task: [build:all] docker build -q --build-context proto=contracts/proto -t lab/inventory -t lab/inventory:g0 services/inventory
+task: [build:all] docker build -q --build-context proto=contracts/proto -t lab/catalog -t lab/catalog:g0 services/catalog
+task: [build:all] docker build -q --build-context proto=contracts/proto -t lab/replenish -t lab/replenish:g0 services/replenish
+task: [build:all] docker build -q --build-context proto=contracts/proto -t lab/storefront -t lab/storefront:g0 services/storefront
 task: [compose:up] docker compose -f compose/compose.yaml up -d
  Container lab-catalog-1 Started
  Container lab-storefront-1 Started
@@ -242,6 +242,27 @@ task: [compose:up] docker compose -f compose/compose.yaml up -d
  Container lab-pricing-1 Started
  Container lab-replenish-1 Started
 ```
+
+> ⚠️ **El segundo tag sale de `STEP_TAGS`, y te toca ponerlo en G0 antes de construir.** El
+> `Taskfile.yml` que copiaste viene **en su estado final**: su variable `STEP_TAGS` dice
+> `pricing:g10 inventory:g13 catalog:g10 replenish:g13 storefront:g5`, que es el paso en el que cada
+> servicio deja de cambiar al terminar el curso, no el que acabas de construir. La variable nombra el
+> paso de generación de cada imagen, y de ella salen el tag que construye `task build`, el que
+> `task images:load` lleva al nodo y el que piden los manifiestos desde la
+> [Fase 08](08-el-primer-despliegue.md). Déjala hoy en el paso en el que estás:
+>
+> ```yaml
+>   STEP_TAGS: pricing:g0 inventory:g0 catalog:g0 replenish:g0 storefront:g0
+> ```
+>
+> **Y súbela en cada paso de generación 🌊**, solo para los servicios que ese paso toca: G1 en la
+> [Fase 09](09-los-cuatro-servicios-dentro.md) (los cinco), G2 en la [Fase 11](11-configuracion-y-secretos.md)
+> (solo `storefront`), y así hasta G13. Si el tag de la variable no es el de la imagen que tienes, el
+> pod va a pedir una imagen que el nodo nunca vio, que es el
+> [incidente 05](cuaderno-incidentes.md#-incidente-05--el-pod-espera-una-imagen-que-el-cluster-nunca-vio).
+>
+> 📝 Lo otro de esa salida que todavía no te toca: el `--build-context proto=…` es para los contratos
+> gRPC que `inventory` compila desde la [Fase 23](23-grpc-y-el-balanceo.md), y en G0 no aporta nada.
 
 Ningún servicio nuevo publica puerto salvo el `storefront`: `http://localhost:8082` muestra la página
 de Droguerías La Vecina. Los otros cuatro se prueban desde adentro, que es la sección siguiente.
@@ -365,11 +386,14 @@ cayó, lo corrige. Es la primera vez que ves esa idea, y la vas a ver crecer: en
 el modelo de Kubernetes.
 
 **Apagar sin apagar de más.** `docker compose down` baja **todo el proyecto**, el patrimonio incluido,
-y con `-v` borra sus volúmenes. Por eso las tareas del laboratorio nombran sus servicios:
+y con `-v` borra sus volúmenes. Las tareas del laboratorio se apoyan en que **un comando de compose
+sin perfil activo solo alcanza a los servicios sin perfil**, que son justo los del sistema nuevo; por
+eso `compose:down` no necesita nombrarlos. El patrimonio sí hay que nombrarlo, por la razón contraria
+que explica el aviso de abajo:
 
 | Tarea | Debajo |
 |---|---|
-| `task compose:down` | `docker compose -f compose/compose.yaml rm --stop --force pricing inventory catalog replenish storefront` |
+| `task compose:down` | `docker compose -f compose/compose.yaml rm --stop --force`, sin nombrar servicios |
 | `task legacy:down` | lo mismo con los cinco servicios del patrimonio |
 | `task legacy:down -- -v` | además, `docker volume rm lab_contingencia-data lab_traslados lab_braqui-estado` |
 

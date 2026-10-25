@@ -299,7 +299,7 @@ task conformance TARGET=cluster PROFILE=lab -- G13          # Success /suite/<sv
 curl -s -o /dev/null -w '%{http_code}\n' http://api.localhost:8080/<svc>/health/live        # 200
 
 # 3. El tablero: Prometheus lo descubre solo, y el panel "Peticiones por segundo" lo muestra
-task obs:on -- dashboards
+task obs:on PROFILE=minimo CLUSTER=lab -- dashboards   # el perfil explícito: sin él, obs:on despliega con el de lab
 #   en Prometheus: up{service="<svc>"} == 1, y
 #   sum by (service) (rate(http_server_requests_seconds_count{uri!~"/health.*|/metrics"}[1m])) tiene su fila
 
@@ -336,7 +336,16 @@ El build tomó 14,7 s y el despliegue 25 s; ningún pod de los otros cinco se re
 en una ruta que no existe (`/health/readyz`): `Readiness probe failed: HTTP probe failed with statuscode: 404`, el rollout
 atascado hasta `Progress deadline exceeded`, y `--rollback-on-failure` de vuelta a la revisión anterior a los 2 min 17 s,
 con el pod viejo contestando 200 todo el tiempo. Y la limpieza encontró el criterio de salida: el chart se llevó el
-`Deployment`, la ruta y el `Service`, pero dejó en NATS el consumidor durable `notify-stock-low`, que hubo que borrar a mano.
+`Deployment`, la ruta y el `Service`, pero dejó en NATS el consumidor durable `notify-stock-low`, que hubo que borrar a mano
+con la CLI de `nats-box` ([a01](a01-el-laboratorio.md)), desde un pod de `apps`, cuya política de salida ya deja llegar al bus:
+
+```bash
+kubectl -n apps run nats-box --rm -i --restart=Never --image=natsio/nats-box@sha256:be25666441c3aee65193aba33d60ff2f06ede7ee9eba58864324b33d7eb94fea \
+  -- nats consumer rm LAB_EVENTS notify-stock-low -f --server nats://nats.data.svc.cluster.local:4222
+```
+
+Repetido el 24/10/2026, con `notify` apagado y una venta bajo el umbral: `notify-stock-low` acumuló un pendiente que
+nadie iba a leer, y después del `consumer rm` el `/jsz` ya no lo lista.
 
 Lo que el proyecto **no** pide y la prueba dejó a la vista: `notify` guarda sus avisos en memoria, y un rollout los borra.
 Si tu servicio tiene datos, la [Fase 12](12-estado-y-almacenamiento.md) también es parte del proyecto.

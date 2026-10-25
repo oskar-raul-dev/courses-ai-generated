@@ -70,7 +70,8 @@ saber que algo va mal, logs para saber qué, trazas para saber dónde**. Esta fa
 ## 🧨 4. El problema, en el laboratorio
 
 Sistema en el cluster `lab`, k6 haciendo de veinte droguerías que consultan el catálogo, los precios y
-venden (`bench/trafico/la-vecina.js`, tres visitas por segundo). La pregunta de Germán, en su versión más chica: **¿cuántas ventas por
+venden (`k6 run -e RATE=3 bench/trafico/la-vecina.js`, tres visitas por segundo; el script está en el
+`src/lab/` del curso, y sin `RATE` hace diez). La pregunta de Germán, en su versión más chica: **¿cuántas ventas por
 minuto está haciendo el sistema ahora mismo, y cuánto tarda cada una?**
 
 Lo que el cluster sabe:
@@ -206,7 +207,10 @@ Success /suite/inventory.g6.hurl (2 request(s) in 95 ms)
 ### 5.3 Prometheus, con el `scrape_config` a mano
 
 Prometheus entra como un subchart más del umbrella, `charts/platform/charts/prometheus/`, con la
-condición `observability.metrics.enabled`. Sus objetos viven en el namespace `observability`, que crea
+condición `observability.metrics.enabled`. Esta sección y la siguiente muestran lo que hay que entender de
+los dos subcharts; los archivos enteros (los de Prometheus y Grafana, el JSON del tablero y el namespace
+`observability` en `platform/observability/`) se copian del `src/lab/` del curso, y la puerta suma
+`observability` a los namespaces de su `allowedRoutes`. Sus objetos viven en el namespace `observability`, que crea
 plataforma (como `apps`), aunque el release sea el de `apps`: un chart puede poner objetos en otro
 namespace si lo dice explícitamente.
 
@@ -400,6 +404,13 @@ alcanza para todo lo que mide:
 task deploy CLUSTER=lab -- minimo
 ```
 
+Y desde aquí, los interruptores **con el mismo perfil**: `task obs:on` y `task obs:off` redespliegan, y sin
+decirles otra cosa usan los valores de `lab`, que vuelven a poner dos réplicas por servicio.
+
+```bash
+task obs:on PROFILE=minimo CLUSTER=lab -- dashboards
+```
+
 ---
 
 ## 🔁 6. Los otros tres: donde no es mecánico
@@ -489,9 +500,12 @@ cuesta es la aplicación"*. Las apuestas, escritas antes de ejecutar:
 > 100 MiB después de 20 minutos; Grafana, sola, más de 300 MiB: más que Prometheus y que `pricing`,
 > `catalog` y `replenish` juntos.
 >
-> **Resultado: empate.** Prometheus quedó en 99 MiB a los 20 minutos con tráfico, por debajo y por poco, y
-> con una réplica por servicio, no dos (la sección 5.5 dice por qué). Grafana, en 231: **menos de 300**, y
-> aun así más que Prometheus y que los otros tres servicios juntos (112).
+> **Resultado: empate, y ganada al remedirla.** El 04/10/2026, con el Kubernetes de Docker Desktop encendido,
+> Prometheus quedó en 99 MiB a los 20 minutos con tráfico, por debajo y por poco, y con una réplica por
+> servicio, no dos (la sección 5.5 dice por qué); Grafana, en 231: **menos de 300**, y aun así más que
+> Prometheus y que los otros tres servicios juntos (112). El 22/10/2026, sin él: Prometheus en 72 y Grafana
+> en **347**, más de 300 y más que Prometheus y los otros tres juntos (106). La mitad de Grafana dependía de
+> la máquina (sección 8).
 
 > 🪞 **Apuesta antes de ejecutar.** Si `pricing` etiqueta con la ruta cruda en vez del patrón, 2.000 SKU
 > distintos multiplican por más de 100 sus series, y la memoria de Prometheus crece más de un 50 %.
@@ -526,29 +540,33 @@ Las entradas están en [INSTINTOS.md](INSTINTOS.md#las-métricas-son-un-tablero-
 ## 📏 8. La medición: lo que cuesta cada pieza
 
 > 📏 **Medición B-00, sexta entrega · La observabilidad, pieza por pieza** · cluster `lab` con los valores
-> de `minimo` (una réplica por servicio) · Docker Desktop (Engine 29.8.0), máquina virtual de 4 GiB **con el
-> Kubernetes de Docker Desktop encendido** · kind 0.33.0, nodo 1.36.4 · MacBook Pro M1 Pro, 32 GB, macOS
-> arm64 · 3 ciclos de apagar y encender, cada lectura 60 s después de encender · verificado el 04/10/2026
+> de `minimo` (una réplica por servicio) · Docker Desktop 4.92.0 (Engine 29.8.0), máquina virtual de 4 GiB,
+> **sin el Kubernetes de Docker Desktop** · kind 0.33.0, nodo 1.36.4 · MacBook Pro M1 Pro, 32 GB, macOS
+> arm64 · 3 ciclos de apagar y encender, cada lectura 60 s después de encender · verificado el 22/10/2026
 >
-> | *Working set*, en MiB | recién encendida | a los 20 min, con 2 visitas/s |
-> |---|---|---|
-> | Prometheus, sola | 44 (43–73) | — |
-> | Prometheus, con Grafana | 58 (52–90) | 99 |
-> | Grafana | 252 (248–254) | 231 |
+> | *Working set*, en MiB | recién encendida | a los 20 min, con 2 visitas/s | lo que sube la máquina virtual |
+> |---|---|---|---|
+> | Prometheus, sola | 60 (59–70) | — | −9 (−15 a +78): no se distingue |
+> | Prometheus, con Grafana | 68 (59–70) | 72 | — |
+> | Grafana | 269 (260–312) | 347 | 168 (103–207), sobre Prometheus |
 >
-> Mediana, con mínimo y máximo entre paréntesis. Reproducir: `task obs:off -- all`, y `task obs:on` con
-> cada pieza.
+> Mediana, con mínimo y máximo entre paréntesis; la máquina virtual, `MemTotal − MemAvailable` del nodo.
+> Reproducir: `task obs:off PROFILE=minimo CLUSTER=lab -- all`, y `task obs:on` con cada pieza, con el mismo
+> perfil. **La primera medición** (04/10/2026), con el Kubernetes de Docker Desktop encendido y la máquina
+> en swap: Prometheus sola 44 (43–73), con Grafana 58 (52–90) y 99 a los 20 minutos; Grafana 252 (248–254) y
+> 231.
 
-**Grafana cuesta entre tres y cinco veces lo que cuesta Prometheus**, y es la que menos falta hace para
+**Grafana cuesta entre cuatro y cinco veces lo que cuesta Prometheus**, y es la que menos falta hace para
 saber si algo va mal: Prometheus tiene su propia interfaz de consultas. En la verificación de preparación
-del curso, en reposo y sin servicios, Grafana había ocupado 359 MiB ([a01](a01-el-laboratorio.md)); aquí, entre 231 y 254.
-Prometheus, en cambio, **crece con lo que guarda**: 44 MiB recién encendido y 99 a los veinte minutos, con
-unas 3.700 series. La sección 9 muestra qué lo hace crecer de verdad.
+del curso, en reposo y sin servicios, Grafana había ocupado 359 MiB ([a01](a01-el-laboratorio.md)); aquí, entre 260 y 347,
+y crece con el uso: a los veinte minutos ocupaba más que recién encendida. Prometheus, en cambio, **crece con
+lo que guarda**: 60 MiB recién encendido y 72 a los veinte minutos, con unas 1.900 series. La sección 9
+muestra qué lo hace crecer de verdad.
 
-Falta una columna, y es a propósito: **lo que sube la máquina virtual** al encender cada pieza, que es como
-mide B-00 en las entregas anteriores. Con la máquina intercambiando memoria a disco (sección 5.5), la
-memoria usada se quedó en 2,6–2,7 GiB encendiera lo que encendiera: lo que entraba, empujaba otra cosa al
-swap. Esa lectura se repite sin el Kubernetes de Docker Desktop, y queda como pendiente en a01.
+La última columna es la que mide B-00 en las entregas anteriores: **lo que sube la máquina virtual** al
+encender cada pieza. Prometheus no se distingue del ruido de la máquina (entre −15 y +78 MiB de un ciclo a
+otro); Grafana suma entre 103 y 207. En la primera medición esa columna no se pudo leer: con la máquina
+intercambiando memoria a disco (sección 5.5), lo que entraba empujaba otra cosa al swap.
 
 ---
 
@@ -716,8 +734,9 @@ cada paso.
 
 <details><summary>Solución</summary>
 
-`task obs:on -- metrics`, `task obs:on -- dashboards`, `task obs:off -- dashboards`. El archivo es
-`.observability.json`; bórralo y el próximo `task deploy` apaga todo.
+`task obs:on -- metrics`, `task obs:on -- dashboards`, `task obs:off -- dashboards`, con `PROFILE=minimo
+CLUSTER=lab` si ya pasaste a `minimo` (sección 5.5). El archivo es `.observability.json`; bórralo y el
+próximo `task deploy` apaga todo.
 </details>
 
 ### 🟢 Ejercicio 3 — Los blancos

@@ -175,7 +175,7 @@ que deja los contratos en el repositorio.
 | Documento | Qué es |
 |---|---|
 | [La historia de La Vecina](00-historia-de-la-vecina.md) | la empresa, su gente y su encargo; de aquí sale todo lo narrativo |
-| [La convención de git y tags](00-convencion-de-git-y-tags.md) | los dos repositorios, los commits, los tags de fase y los pares de cada incidente |
+| [La convención de git y tags](00-convencion-de-git-y-tags.md) | tu repositorio y la referencia, los commits, los tags de fase y los incidentes con `task inc:break` y `task inc:fix` |
 | [El cuaderno de incidentes](cuaderno-incidentes.md) | los 27 incidentes, con índice por síntoma y por ID |
 | [`BENCHMARKS.md`](BENCHMARKS.md) | las mediciones, con hipótesis, condiciones, resultado, apuesta y veredicto |
 | [`INSTINTOS.md`](INSTINTOS.md) | los reflejos que el curso corrige, uno por entrada |

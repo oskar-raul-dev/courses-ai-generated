@@ -8,8 +8,8 @@ Cada incidente es el cambio mínimo que lo provoca, aplicado sobre el cluster qu
 defecto, o el que pase el Taskfile (task inc:break PROFILE=lab -- 12; con CLUSTER=lab si en ese cluster
 corren los valores de otro perfil). Los de las Fases 16 y 19 son siempre del cluster lab. Reparar es volver al estado del repositorio, no al que se recuerda: hasta la Fase 12, aplicando
 los manifiestos; desde la 13, con el chart (task deploy FORCE=true, que le devuelve a Helm los campos
-que el incidente cambió a mano). La forma canónica de llegar al estado roto sigue siendo el tag
-inc/<ID>/<slug>-roto (cuaderno, "Tres formas de llegar al sistema roto").
+que el incidente cambió a mano). Es la forma canónica de llegar al estado roto (cuaderno, "Dos formas
+de llegar al sistema roto"): el cambio de cada incidente está aquí, en INCIDENTS.
 Solo biblioteca estándar.
 """
 import os
@@ -206,8 +206,16 @@ INCIDENTS = {
     ),
     # 17 · El autoescalador no ve nada: metrics-server con su manifiesto tal cual, sin --kubelet-insecure-tls.
     "17": (
-        lambda: subprocess.run(["kubectl", "--context", LAB_CONTEXT, "apply", "-f",
-                                str(LAB / "platform" / "metrics-server" / "components.yaml")], check=True),
+        # Se borra el Deployment antes de aplicar el manifiesto: sobre uno ya parchado, el pod viejo (con el
+        # flag) seguiría sirviendo mientras el nuevo no está listo, y no se vería nada roto. Y se enciende el
+        # HPA de pricing, que es lo que Valentina había hecho.
+        lambda: (subprocess.run(["kubectl", "--context", LAB_CONTEXT, "-n", "kube-system", "delete", "deployment",
+                                 "metrics-server", "--ignore-not-found", "--wait=true"], check=True),
+                 subprocess.run(["kubectl", "--context", LAB_CONTEXT, "apply", "-f",
+                                 str(LAB / "platform" / "metrics-server" / "components.yaml")], check=True),
+                 subprocess.run(["helm", "upgrade", "lab", str(LAB / "charts" / "platform"), "-n", "apps",
+                                 "--kube-context", LAB_CONTEXT, "--reuse-values", "--set", "pricing.autoscaling.enabled=true",
+                                 "--force-conflicts"], check=True)),
         lambda: subprocess.run(["task", "platform:metrics", "--", "lab"], check=True, cwd=LAB),
     ),
     # 18 · Ayer funcionaba y hoy el navegador no entra: alguien puso a mano un certificado de dos minutos
@@ -257,8 +265,14 @@ INCIDENTS = {
                  subprocess.run(["task", "registry:push", "--", "pricing"], check=True, cwd=LAB),
                  subprocess.run(["task", "registry:untrust", "--", "lab"], check=True, cwd=LAB),
                  lab("-n", "apps", "set", "image", "deployment/pricing", "pricing=lab-registry:5000/lab/pricing:g8")),
+        # La corrección es registry:trust, y el pod siguiente trae la imagen. Después, de vuelta a kind load: los
+        # kubelet que trajeron pricing del registry olvidan esa nota (si no, el deploy siguiente cae en
+        # "pull access denied", la trampa de la Fase 19 §5.7), y el chart recupera su imagen.
         lambda: (subprocess.run(["task", "registry:trust", "--", "lab"], check=True, cwd=LAB),
-                 lab("-n", "apps", "delete", "pod", "-l", "app.kubernetes.io/name=pricing,app.kubernetes.io/component=backend")),
+                 lab("-n", "apps", "delete", "pod", "-l", "app.kubernetes.io/name=pricing,app.kubernetes.io/component=backend"),
+                 lab("-n", "apps", "rollout", "status", "deployment/pricing", "--timeout=120s"),
+                 subprocess.run(["task", "registry:forget", "--", "lab"], check=True, cwd=LAB),
+                 subprocess.run(["task", "deploy", "CLUSTER=lab", "FORCE=true", "--", "minimo"], check=True, cwd=LAB)),
     ),
     # 25 · Endurecí el pod y dejó de arrancar: runAsNonRoot en Postgres, sin decir con qué usuario. La imagen
     # oficial arranca como root y baja de privilegios sola; el kubelet no la deja ni empezar.

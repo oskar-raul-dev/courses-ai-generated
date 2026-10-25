@@ -216,6 +216,17 @@ Postgres; si no, el SQLite de G1, que sigue siendo el de compose. Los prompts es
 [a03](a03-contratos-y-prompts-de-generacion.md#-los-prompts-de-g3). Lo que cambia de verdad es **quién
 crea el esquema**: ya no cada réplica al arrancar, sino un `Job`, una vez, antes del rollout.
 
+En el `Deployment` de cada backend eso es una variable que entra y un volumen que se va: `DATABASE_URL`
+desde el `Secret` del servicio, y fuera el `emptyDir` con su `DATA_DIR`, que era el SQLite de G1 dentro
+del pod (`pricing` conserva el volumen de la tabla de topes, que no es un almacén):
+
+```yaml
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef: {name: pricing-db, key: DATABASE_URL}
+```
+
 ¿Por qué? Porque el orden se rompe solo. El `Deployment` de `pricing` con G3, aplicado antes de migrar:
 
 ```text
@@ -234,12 +245,23 @@ kind: Job
 metadata:
   name: pricing-migrate
   namespace: apps
+  labels:
+    app.kubernetes.io/name: pricing
+    app.kubernetes.io/part-of: lab
+    # El componente distingue la migración del servicio: los cuatro Job se buscan y se borran con
+    # `-l app.kubernetes.io/component=migration`, y sus pods también.
+    app.kubernetes.io/component: migration
 spec:
   # Dos reintentos: el primero suele ser Postgres que todavía no acepta conexiones.
   backoffLimit: 2
   # El Job terminado se borra solo a los diez minutos; su log se lee antes.
   ttlSecondsAfterFinished: 600
   template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pricing
+        app.kubernetes.io/part-of: lab
+        app.kubernetes.io/component: migration
     spec:
       restartPolicy: Never
       containers:
@@ -405,12 +427,15 @@ cuando la venta completa pasa por aquí.
 | Postgres / SQLite | **2,3x** | **59x** | | |
 
 El binario de pruebas tarda 59 veces más, porque arranca un Postgres; la tarea que corre una persona,
-solo 2,3, porque el contenedor y la compilación pesan igual con los dos. Y la prueba que falla guarda
+solo 2,3, porque el contenedor y la compilación pesan igual con los dos. Al remedirlo el 21/10/2026
+con la máquina virtual dedicada, los segundos bajaron a la mitad (2,11 y 4,82 s la tarea; 0,06 y 2,90
+`go test`) y las dos proporciones aguantaron: **2,3x** y **50x**. Lo que no cambia con la máquina es
+cuál es la proporción que te va a doler. Y la prueba que falla guarda
 un precio de 3.000.000.000, que el contrato permite:
 
 ```text
 --- FAIL: TestLargePrice (0.00s)
-    main_test.go:152: PUT de un precio grande: 500 map[error:internal message:failed to encode args[2]: unable to encode 3000000000 into binary format for int4 (OID 23): 3000000000 is greater than maximum value for int4]
+    main_test.go:155: PUT de un precio grande: 500 map[error:internal message:failed to encode args[2]: unable to encode 3000000000 into binary format for int4 (OID 23): 3000000000 is greater than maximum value for int4]
 ```
 
 SQLite guarda cualquier entero en una columna `INTEGER`; Postgres, solo hasta 2.147.483.647. Con SQLite
@@ -419,8 +444,15 @@ en las pruebas, ese 500 se habría descubierto en producción. La entrada comple
 El error queda en `pricing` a propósito: arreglarlo con una migración es el ejercicio 21.
 
 Testcontainers corre aquí dentro de un contenedor, con el socket del motor montado: le pide al motor un
-contenedor hermano. Es cómodo, y es darle a una prueba el control del motor entero; con Podman no se
-verificó.
+contenedor hermano. Es cómodo, y es darle a una prueba el control del motor entero.
+
+> 🦭 **Con Podman, dos ajustes que la tarea ya hace** (verificado el 24/10/2026). SELinux de la máquina de
+> Podman no deja que un contenedor use el socket del motor (`Permission denied` aun como `root`), y la
+> tarea lo monta con `--security-opt label=disable`. Y Ryuk, el contenedor de Testcontainers que borra
+> lo que quedó al terminar, pide la red `bridge` de Docker (`unable to find network with name or ID
+> bridge`): con Podman se apaga (`TESTCONTAINERS_RYUK_DISABLED=true`), y por eso la prueba termina su
+> Postgres ella misma antes del `os.Exit`, que no corre los `defer`. Sin eso, cada corrida dejaba un
+> contenedor de Postgres vivo.
 
 ---
 
@@ -597,7 +629,7 @@ seguidas no pueden ver el mismo archivo, el problema no es el planificador: es q
 archivo. La Parte IV lo cambia por un mensaje.
 
 **Y cuándo SQLite está bien.** Para lo que no depende del motor: lógica que no toca SQL específico. Para
-las pruebas del almacén, B-12 dice que el motor real cuesta 7 segundos más por corrida y encontró un
+las pruebas del almacén, B-12 dice que el motor real cuesta entre 3 y 7 segundos más por corrida y encontró un
 error que SQLite dejó pasar.
 
 **La pregunta del curso, para esta fase:** el contenedor te dio un proceso que escribe en una carpeta.
@@ -942,8 +974,7 @@ EL ESTADO AL CERRAR LA FASE 12 (minimo)
 > git tag -a fase-12-estado-y-almacenamiento -m "F12 cerrada: Postgres como StatefulSet con una base por servicio; G3 con migraciones como Job y seed como Job; B-12; la Braqui en legacy y el aviso de traslados como CronJob; incidente 11"
 > ```
 >
-> Y el par del incidente: `inc/11/pvc-storageclass-missing-roto` e `inc/11/pvc-storageclass-missing-fix`.
-> Commits con prefijo `f12:` ([convención de git](00-convencion-de-git-y-tags.md)).
+> Commits con prefijo `f12:`, y el del incidente `f12 inc11: …` ([convención de git](00-convencion-de-git-y-tags.md)).
 
 ---
 

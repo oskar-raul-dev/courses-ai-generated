@@ -201,7 +201,15 @@ otra herramienta, una caché de compilación montada en el build, y es el ejerci
 **El `.dockerignore` es la otra mitad de la caché.** Lo que entra al contexto del build entra a la
 comparación de `COPY . .`, y un archivo que no hace falta invalida la capa igual que uno que sí. Los
 `.dockerignore` del curso excluyen el `Dockerfile` y el `CLAUDE.md` de cada servicio por eso: se
-editan a menudo y no los necesita ninguna etapa. La prueba, otra vez con `replenish`, agregando una
+editan a menudo y no los necesita ninguna etapa.
+
+> 📝 **Cuánto te sirve depende de cómo copies.** Esto se nota cuando el Dockerfile copia un
+> directorio (`COPY . .`, `COPY src/ src/`): ahí el `.dockerignore` decide qué entra a la clave de la
+> capa. Si en cambio copias archivo por archivo (`COPY main.go ./`), tocar el `CLAUDE.md` no invalida
+> nada aunque no esté excluido, porque ninguna capa lo mira; el `.dockerignore` sigue valiendo para
+> que no viaje al contexto, y para lo de `catalog` que viene abajo, que es seguridad y no caché.
+> Medido el 20/10/2026 sobre `replenish`: con `COPY . .`, 0,37–0,42 s excluyéndolo contra 2,16–2,67 s
+> sin excluirlo; copiando archivo por archivo, 0,42–0,52 s contra 0,52–0,56 s, o sea nada. La prueba, otra vez con `replenish`, agregando una
 línea al `CLAUDE.md` y construyendo:
 
 | `.dockerignore` de `replenish` | Build después de tocar `CLAUDE.md` (tres corridas) |

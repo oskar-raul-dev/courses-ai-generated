@@ -99,8 +99,9 @@ salieron.
 
 ## 🔁 Cómo se trabaja
 
-**Dos repositorios.** El tuyo, donde construyes `src/lab/` fase a fase con tus commits y tus tags; y el del curso, que
-clonas aparte y no tocas: la referencia contra la que te comparas y de donde salen los incidentes. La
+**Tu repositorio y la referencia.** En tu repositorio construyes `src/lab/` fase a fase, con tus commits y tus tags; el
+`src/lab/` del curso, en su estado final, es la referencia contra la que te comparas, y no escribes en él. Los incidentes
+no salen de ningún repositorio: `task inc:break` y `task inc:fix` los provocan y los reparan sobre tu laboratorio. La
 [convención de git y tags](00-convencion-de-git-y-tags.md) lo explica una vez.
 
 **Un Taskfile como punto de entrada.** `task cluster:up`, `task deploy`, `task conformance`, `task measure`… Cada tarea
@@ -164,3 +165,10 @@ a programar los servicios · y la regulación farmacéutica de la historia.
 > 📝 **Estado:** las veintiocho fases, los dieciséis apéndices y el cuaderno completo, verificados entre el 03 y el
 > 05/10/2026 en macOS arm64. Las URL y los contenidos de terceros cambian; cada documento avisa cuando una referencia
 > apunta a otra versión.
+
+---
+
+## 📜 Licencia y ficción
+
+Texto y código, bajo **CC BY-SA 4.0**. Droguerías La Vecina y su gente son ficticias. Los detalles, y las licencias
+de lo que el código baja al correr, están en [`LICENSE.md`](LICENSE.md).

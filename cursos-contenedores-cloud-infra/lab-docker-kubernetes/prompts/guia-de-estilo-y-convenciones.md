@@ -628,7 +628,7 @@ Esto es lo que cumple cada función:
 
 - **Alcance:** [`alcance-del-proyecto.md`](alcance-del-proyecto.md).
 - **Propuesta y registro de decisiones:** [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md)
-  (§12, D1–D44) y [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md).
+  (§12, D1–D46) y [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md).
 - **Plan de producción:** no queda. Fue un desechable y se borró al cerrar (T16); el estado vive en
   `0-ESTRUCTURA-CURSO.md`, el registro de decisiones y los
   [hallazgos](verificacion-de-laboratorio/hallazgos.md).

@@ -89,6 +89,12 @@ $ kubectl -n apps describe pod pricing-6db85d47cc-265nj | sed -n '/Last State/,/
       Exit Code:    137
 ```
 
+El pod muere o deja de estar listo, y el motivo cambia de una corrida a otra: en estas fue `OOMKilled`; en dos
+repeticiones del 21/10 no hubo ningún `OOMKilled`, sino un pod saturado cuyas sondas no contestaron a tiempo
+(`Readiness probe failed: … context deadline exceeded`, y después `Container pricing failed liveness probe,
+will be restarted`, con `Exit Code: 0`). El resultado fue el mismo: sin pod listo, el autoescalador no tiene
+a quién medir.
+
 En compose, la respuesta a las dos era la misma: aguantar. Un `up -d` cortaba lo que estuviera en vuelo,
 y más réplicas eran un `--scale` a mano.
 
@@ -243,6 +249,11 @@ NAME      REFERENCE            TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
 pricing   Deployment/pricing   cpu: 2%/70%   1         4         1          2m48s
 ```
 
+Las tres piezas de la fase viven en `lab-common` como plantillas (`deploymentSpec`, con la estrategia y las
+réplicas; `shutdown`, con el `preStop`; y `hpa`), y cada subchart las pide con tres bloques de valores:
+`rollout`, `shutdown` y `autoscaling` (apagado por defecto). Cada `Deployment` agrega
+`terminationGracePeriodSeconds: 30`, y `catalog` pone el `preStop` en sus dos contenedores.
+
 El HPA es otro valor del chart (`autoscaling.enabled`), y trae una regla que no es opcional: **mientras
 el HPA existe, el `Deployment` no declara `replicas`**. El HPA las cambia, y quien las cambia es su dueño;
 si el chart también las declarara, cada `task deploy` chocaría con el HPA, como chocó con `kubectl scale`
@@ -336,7 +347,8 @@ cortesía, nadie se entera"*. Las dos cosas suenan a lo que promete cualquier nu
 > 100 ms: `pricing` con una réplica, y los otros tres con más; y una réplica de `inventory` ocupa más de
 > diez veces la memoria de una de `pricing`.
 >
-> **Resultado: perdida en las dos mitades** (sección 8).
+> **Resultado: perdida en la primera mitad; la segunda, dentro de la variación** (sección 8): la proporción
+> de memoria fue de 7,4 en la medición del 04/10 y de 5 a 21 en las repeticiones del 21/10.
 
 Las entradas están en [INSTINTOS.md](INSTINTOS.md#el-autoescalado-me-salva-del-pico).
 
@@ -357,18 +369,47 @@ Las entradas están en [INSTINTOS.md](INSTINTOS.md#el-autoescalado-me-salva-del-
 > | `replenish` (Node) | 4 (4–4) | 4 (4–5) | 4 (4–6) | 40–51 |
 >
 > Reproducir: `task deploy CLUSTER=lab -- medicion` y `task measure -- B-16 --runs 3 --rate 300`
+> (necesita `bench/b16/rate.js`, de la sección 8.1)
+
+**8.1 El generador de carga.** El arnés llama a un script de k6 de quince líneas, que es también el que
+usan el rollout y el HPA de las secciones 5.2 y 5.4 (con `RATE=200` y `RATE=1500`). Créalo en
+`bench/b16/rate.js`:
+
+```javascript
+// B-16 (Fase 16): una tasa constante de lecturas por la puerta contra un servicio. La tasa, la URL y la
+// duración llegan por variables de entorno; task measure -- B-16 las pone.
+import http from 'k6/http';
+export const options = {
+  scenarios: {
+    constante: {
+      executor: 'constant-arrival-rate',
+      rate: Number(__ENV.RATE || 400), timeUnit: '1s',
+      duration: __ENV.DURATION || '30s',
+      preAllocatedVUs: 50, maxVUs: 400,
+    },
+  },
+  summaryTrendStats: ['med', 'p(95)', 'max'],
+};
+export default function () { http.get(__ENV.URL); }
+```
 
 A 300 peticiones por segundo, **tres de los cuatro cumplen con una réplica**, y la apuesta se perdió en
 esa mitad: para una lectura corta, Java y Node atienden muchas peticiones a la vez (hilos, un bucle de
 eventos), igual que Go. **`catalog` es la excepción**: cinco procesos de PHP-FPM por pod, cinco peticiones
-a la vez, y con una réplica el p95 pasó de 100 ms. Con dos bajó a 45. Con tres **empeoró** (162 ms), y
-`inventory` tuvo una corrida mala con tres (74 ms): los tres nodos son contenedores de la misma máquina, y
-más réplicas compiten por la misma CPU y el mismo Postgres. No separé esa causa, y no la extrapolo.
+a la vez, y con una réplica el p95 pasó de 100 ms. Con dos bajó a 45. Con tres, la medición del 04/10
+dio **162 ms**, y `inventory` tuvo una corrida mala con tres (74 ms): los tres nodos son contenedores de la
+misma máquina, y más réplicas compiten por la misma CPU y el mismo Postgres. **No se repitió.** Dos
+corridas más, el 21/10, dieron 19–35 ms con tres réplicas de `catalog` y 2–3 ms con tres de `inventory`; y con
+una sola réplica `catalog` osciló entre 33 y 173 ms según la corrida. Lo que sostiene la tabla es que `catalog`
+es el único cuyo p95 depende de cuántos procesos tiene; que tres réplicas empeoren la cosa no está
+demostrado, y no lo extrapolo.
 
 **Lo que sí sostiene la tabla es el costo por réplica**: una de `inventory` ocupa 7,4 veces la memoria de
 una de `pricing` (208 contra 28 MiB, la primera réplica de cada uno). La apuesta decía más de diez, y se
-perdió también. Esa proporción, y no el número de réplicas, es la que se lleva a una nube: cada réplica
-de Java que el HPA agrega cuesta siete de Go. La entrada completa está en
+perdió también, aunque la proporción se mueve con la lectura: en dos corridas más fue de 5 (220 contra 43
+MiB) y de 21 (273 contra 13): la lectura de `pricing` con `kubectl top` es la menos estable de la tabla.
+Esa proporción, y no el número de réplicas, es la que se lleva a una nube: cada réplica de Java que
+el HPA agrega cuesta del orden de diez de Go. La entrada completa está en
 [BENCHMARKS.md](BENCHMARKS.md#b-16--cuántas-réplicas-pide-cada-runtime-para-la-misma-tasa-y-cuánto-cuesta-cada-una).
 
 ---
@@ -409,6 +450,15 @@ hasta que lleguen las demás.
 
 **Antes y después, con números:** con 64 MiB, `OOMKilled` a los 16 s en las tres corridas y una de ellas
 con el HPA ciego y el 94 % de fallos; con 128 MiB, cero reinicios y el HPA escalando a los 32 s.
+
+**Y una repetición, para saber qué parte es del límite.** El 21/10, otras tres corridas, con una réplica
+de partida y el HPA ya leyendo (`cpu: 2%/70%`). Con 64 MiB, dos veces, el HPA quedó en `<unknown>` y no escaló
+nunca, y se perdió el 40 % y el 54 % de las peticiones; pero **ningún pod murió `OOMKilled`**: dejaron de pasar
+las sondas bajo la saturación, y en una de ellas el kubelet reinició el contenedor (`Exit Code: 0`, por la
+liveness). Con 128 MiB: el HPA pidió réplicas a los 31 s, estuvieron listas a los 37 y se perdió el 9 % de las
+peticiones mientras llegaban. Lo que se sostiene entonces es el efecto —un pod saturado que no reporta CPU deja
+al autoescalador ciego— y no la causa exacta de la muerte: con esta carga, el primer síntoma puede ser la
+sonda y no el cgroup (no medí la memoria del pod durante la saturación).
 
 ---
 
@@ -728,6 +778,9 @@ hace falta para que el HPA las lea ([Fase 17](17-metricas-y-dashboards.md) y un 
 
 ### 🔴 Ejercicio 22 — Un `PodDisruptionBudget`
 Escribe un PDB para `inventory` y vacía un worker con `kubectl drain`. **Predice** qué hace el drain.
+Un `drain` a secas se niega de entrada: `kindnet` y `kube-proxy` son `DaemonSet` en cada nodo (`--ignore-daemonsets`),
+y `storefront` escribe en un `emptyDir` (`--delete-emptydir-data`). Con `--pod-selector=app.kubernetes.io/name=inventory`
+vacías solo `inventory` y no mueves Postgres, que el volumen de `local-path` ata a su nodo.
 
 **Criterio:** el drain esperando al PDB, y `inventory` sin quedarse en cero réplicas.
 
@@ -804,8 +857,7 @@ EL ESTADO AL CERRAR LA FASE 16 (perfil lab: control-plane y dos workers)
 > git tag -a fase-16-escalado-y-rollout -m "F16 cerrada: G5, la venta completa con aviso a replenish sin esperar, apagado limpio y la carrera de inventory cerrada; preStop, estrategia de rollout y plazo de progreso; metrics-server y HPA en el chart; B-16; incidentes 16 y 17"
 > ```
 >
-> Y los pares: `inc/16/rollout-progress-deadline-*` e `inc/17/metrics-server-kubelet-tls-*`. Commits con
-> prefijo `f16:`.
+> Commits con prefijo `f16:`, y los de incidente `f16 inc16: …` y `f16 inc17: …`.
 
 ---
 

@@ -1,5 +1,7 @@
 # Estado local del laboratorio: no se versiona.
 .engine.env
+# La caché de checksums de Task (sources/generates del Taskfile).
+.task/
 .venv/
 # Los archivos de imagen que task images:load arma con Podman.
 .images/

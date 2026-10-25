@@ -320,7 +320,15 @@ $ task chaos:set -- errorPercent=50
 
 Uno falló al despachar y solo hubo que liberar; siete despacharon, y de esas siete cancelaciones fallaron cuatro. Esos
 cuatro préstamos se quedaron en **`COMPENSATING` durante 33 segundos**, con la moto pedida y la unidad reservada. Ese es
-el sistema a medio compensar que pedía la fase: no está roto ni sano, está **en camino**. La traza lo muestra con los
+el sistema a medio compensar que pedía la fase: no está roto ni sano, está **en camino**.
+
+Y la compensación tiene su propio "no sé". Una cancelación que tarda más que los 2 s de G9 puede haberse hecho
+del otro lado: el orquestador anota la falla, el barrido la reintenta, y `replenish` contesta `409 … la orden está en
+CANCELLED y ya no se cancela` (hasta G12, cancelar dos veces es un conflicto). Si la saga trata ese 409 como otra
+falla, el préstamo queda en `COMPENSATING` para siempre: en la pasada de cierre del curso, cuatro préstamos se
+quedaron así, reintentando cada 30 s. Por eso `undoDispatch`, ante un 409, **pregunta por la orden** y, si ya está
+cancelada, da la compensación por hecha. Es la sección 8 del lado de las compensaciones: después de un timeout, se
+pregunta antes de concluir. La traza lo muestra con los
 spans de `UNDO` debajo del préstamo:
 
 ```text

@@ -137,6 +137,9 @@ kind: ConfigMap
 metadata:
   name: storefront-config
   namespace: apps
+  labels:
+    app.kubernetes.io/name: storefront
+    app.kubernetes.io/part-of: lab
 data:
   API_BASE_URL: http://api.localhost:8080
   BRAND_NAME: Droguerías La Vecina
@@ -215,6 +218,22 @@ Un `ConfigMap` también se puede montar como carpeta, con una entrada por clave:
         - name: regulated-caps
           configMap:
             name: pricing-regulated-caps
+```
+
+El `ConfigMap` es el archivo, con una clave por archivo y las labels de `pricing`:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pricing-regulated-caps
+  namespace: apps
+  labels:
+    app.kubernetes.io/name: pricing
+    app.kubernetes.io/part-of: lab
+data:
+  regulated-caps.csv: |
+    SKU-0003,20000
 ```
 
 Con la tabla en `SKU-0003,20000`, un precio de 21.900 sale recortado:
@@ -736,8 +755,7 @@ LA CONFIGURACIÓN AL CERRAR LA FASE 11 (minimo)
 > git tag -a fase-11-configuracion-y-secretos -m "F11 cerrada: G2 del storefront (config.json al arrancar, caché); topes de pricing en un ConfigMap; credenciales SOAP del portal y Contingencia en un Secret; incidentes 09 y 10"
 > ```
 >
-> Y los pares de los incidentes: `inc/09/configmap-not-reloaded-roto` y `…-fix`,
-> `inc/10/secret-missing-roto` y `…-fix`. Commits con prefijo `f11:`
+> Commits con prefijo `f11:`, y los de incidente `f11 inc09: …` y `f11 inc10: …`
 > ([convención de git](00-convencion-de-git-y-tags.md)).
 
 ---

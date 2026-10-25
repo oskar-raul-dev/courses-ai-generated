@@ -29,6 +29,8 @@ var testDB *sql.DB
 // TestMain abre el motor una vez para todas las pruebas: un contenedor por corrida, no por prueba.
 func TestMain(m *testing.M) {
 	ctx := context.Background()
+	// os.Exit no corre los defer: lo que haya que soltar al final va en cleanup, no en un defer.
+	cleanup := func() {}
 	if os.Getenv("TEST_DATABASE") == "postgres" {
 		container, err := postgres.Run(ctx, postgresImage,
 			postgres.WithDatabase("pricing"), postgres.WithUsername("pricing"), postgres.WithPassword("pricing"),
@@ -36,7 +38,7 @@ func TestMain(m *testing.M) {
 		if err != nil {
 			log.Fatalf("no arrancó Postgres: %v", err)
 		}
-		defer func() { _ = testcontainers.TerminateContainer(container) }()
+		cleanup = func() { _ = testcontainers.TerminateContainer(container) }
 		url, err := container.ConnectionString(ctx, "sslmode=disable")
 		if err != nil {
 			log.Fatal(err)
@@ -61,6 +63,7 @@ func TestMain(m *testing.M) {
 	testDB = db
 	code := m.Run()
 	db.Close()
+	cleanup()
 	os.Exit(code)
 }
 

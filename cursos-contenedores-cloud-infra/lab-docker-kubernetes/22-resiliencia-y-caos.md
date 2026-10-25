@@ -110,8 +110,13 @@ task chaos:set -- show                             # la configuración, y lo que
 task chaos:off
 ```
 
+`chaos:set -- campo=valor` cambia esos campos y deja los demás como estaban: para probar una falla sola, `-- clear`
+antes.
+
 El generador cuenta todo lo que recibe, y esa cuenta es la evidencia de esta fase: cuántas veces le preguntó
-`inventory` a `catalog` por cada venta.
+`inventory` a `catalog` por cada venta. (Cuenta desde que arranca: para una corrida, la diferencia entre el `show`
+de antes y el de después.) El subchart `charts/chaos/`, la variable del vecino en el `Deployment` de `inventory` y la
+prueba de la cascada (`bench/f22/cascada.js`) no se muestran enteros: se copian del `src/lab/` del curso.
 
 ### 5.2 G9: el timeout que no estaba
 

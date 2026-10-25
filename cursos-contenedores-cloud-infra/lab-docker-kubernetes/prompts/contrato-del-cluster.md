@@ -315,10 +315,11 @@ lector tiene que poder abrirla y ver qué `kubectl` o qué `helm` corre debajo.
 ## 8. 🏷️ Git
 
 - **Tags de fase:** `fase-NN-<slug>`, anotados, con el checklist de cierre en el mensaje.
-- **Commits:** `fNN: …`; los de ejercicio, `fNN ejMM: …`.
-- **Incidentes:** el par `inc/<ID>/<slug>-roto` e `inc/<ID>/<slug>-fix`, con el ID que el cuaderno ya
-  tiene reservado y nunca uno inventado. El `git diff` entre los dos **es** la corrección, aislada
-  del ruido de la fase.
+- **Commits:** `fNN: …`; los de ejercicio, `fNN ejMM: …`; los de incidente, `fNN inc<ID>: …`.
+- **Incidentes:** sin tags (D46). Se provocan y se reparan con `task inc:break|fix -- <ID>`, con el ID
+  que el cuaderno ya tiene reservado y nunca uno inventado; el cambio mínimo vive en
+  `scripts/incidents/inc.py` y en una línea de la entrada del cuaderno. No hay repositorio del curso
+  con tags del autor: la referencia es el `src/lab/` final.
 - **Apéndices:** sin tag, salvo `a01`, `a03` y `a16`, que dejan archivos versionados
   (`apendice-a01-laboratorio`, `apendice-a03-contratos`, `apendice-a16-patrimonio`).
 

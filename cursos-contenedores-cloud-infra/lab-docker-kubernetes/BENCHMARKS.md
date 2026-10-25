@@ -165,7 +165,14 @@ menos en los demás procesos), el cluster tardó +12 % y el build de `pricing` +
 máquina virtual. Después de trabajar, cuenta con la asignación entera de la máquina virtual ocupada
 en el host, con cualquiera de los dos; por eso, un motor a la vez.
 **Reproducir:** `task measure -- B-05`, con el motor que se mide como activo y el otro apagado ·
-**Fecha:** 03/10/2026 · **Plataforma:** macOS arm64
+**Fecha:** 03/10/2026; la columna de Podman, remedida el 24/10/2026 · **Plataforma:** macOS arm64
+
+> 📝 **Podman, 24/10/2026** (cliente 6.1.3, 6.1.4 dentro de la máquina, creada desde cero; Docker Desktop
+> cerrado): cluster 30,1 s (28,0–30,8), `pricing` 11,3 s (11,0–11,7), demás procesos 39 MB y máquina
+> después de trabajar 7.407 MB reproducen. La máquina recién arrancada, **1.351 MB** contra 1.479 (−9 %):
+> la tabla se queda con las cifras del 03/10, medidas el mismo día que las de Docker, y la ventaja de
+> Docker en esa fila baja del 19 % al 9 % sin cambiar el veredicto. `inventory` (45,1 s) no compara:
+> otro código, generado de nuevo con los prompts de `a03`.
 
 ### B-07 · ¿Cuánto cuesta cada cluster local?
 
@@ -181,17 +188,27 @@ reposo.
 
 | | Kubernetes | un nodo listo | memoria del cluster | tres nodos |
 |---|---|---|---|---|
-| kind, Docker | 1.36.4 | 26 s (26–27) | 651 MiB (632–668) | 36,2 s |
+| kind, Docker † | 1.36.4 | 26 s (26–28) | 502 MiB (483–561) | 31,1 s |
 | kind, Podman | 1.36.4 | 30 s (29–30) | 507 MiB (403–547) | 34,9 s |
-| k3d, Docker | 1.35.5+k3s1 | 17 s (17–17) | 681 MiB (655–697) | 29,3 s |
+| k3d, Docker † | 1.35.5+k3s1 | 17 s (17–17) | 626 MiB (562–661) | 30,9 s |
 | k3d, Docker, sin Traefik | 1.35.5+k3s1 | 17 s (16,8–17,9) | 463 MiB (366–478) | no medido |
 | k3d, Podman | — | no arrancó | — | — |
-| minikube, Docker | 1.37.0 | 39 s (38–40) | 498 MiB (494–536) | 60,7 s |
-| minikube, Podman | 1.37.0 | 36 s (35–36) | 504 MiB (496–520) | no une los workers |
+| minikube, Docker † | 1.37.0 | 44 s (42–45) | 506 MiB (465–514) | 70,1 s |
+| minikube, Podman ‡ | 1.37.0 | 36 s (35–36) | 459 MiB (449–483) | no une los workers |
 | Docker Desktop, modo kind | 1.36.1 | 35 s (34,8–36,3)* | ≈ 750 MiB** | no medido |
 
 \* Desde `docker desktop start`; el motor solo, 6 s. \*\* 1.358 MiB (1.352–1.363) con Kubernetes contra
 608 (587–642) sin él, con el cluster borrado de verdad (deshabilitarlo no lo apaga).
+† **Remedida el 20/10/2026** con Docker Desktop dedicado y su Kubernetes apagado. El 03/10/2026 estas
+tres filas daban: kind 26 s / **651 MiB** (632–668) / 36,2 s; k3d 17 s / **681 MiB** (655–697) / 29,3 s;
+minikube **39 s** (38–40) / 498 MiB (494–536) / **60,7 s**. Los tiempos de kind y k3d reprodujeron
+clavados; la memoria de kind bajó 149 MiB, y con eso los tres quedaron en el mismo orden de memoria
+(502–626 MiB), que es lo que la F07 §8 concluye ahora. La de «sin Traefik» sigue siendo del 03/10.
+‡ **Las filas de Podman, remedidas el 24/10/2026** con Docker Desktop cerrado y la máquina nueva (cliente
+6.1.3, 6.1.4 adentro): kind reprodujo dentro de la variación (29 s, 533 MiB, tres nodos en 34,2 s) y se
+deja; k3d volvió a no arrancar con el mismo error; minikube, el mismo tiempo y los workers otra vez fuera
+(`no route to host`), con la memoria fuera de la variación: 459 MiB (449–483) contra los 504 (496–520) del
+03/10, que esta fila reemplaza.
 **Apuesta:** sin apuesta en la medición principal. La de k3d sin Traefik (que bajaría más de 100 MiB y
 quedaría por debajo de kind) se ganó: 463 MiB.
 **Veredicto:** ninguno gana en todo; la memoria depende de lo que cada uno trae de serie. kind es el
@@ -222,18 +239,41 @@ para el paquete (el binario de pruebas, con el arranque del motor dentro).
 | Postgres con Testcontainers | 12,70 s (9,48–13,93) | 6,24 s (4,49–6,62) | 6 | `TestLargePrice` |
 | Postgres / SQLite | **2,3x** | **59x** | | |
 
-La primera serie, sin el tiempo de `go test`, dio 5,18 s y 10,82 s (2,1x). La prueba que falla guarda
+Remedido el **21/10/2026** con la máquina virtual en 4 GiB y dedicada, mismo arnés y mismas cinco
+corridas. Los tiempos absolutos bajaron a menos de la mitad; **las proporciones, que son lo que esta
+entrada decide, se sostienen**:
+
+| 21/10/2026 | la tarea | `go test` | pasan | fallan |
+|---|---|---|---|---|
+| SQLite | 2,11 s (1,98–2,28) | 0,06 s (0,02–0,15) | 7 | ninguna |
+| Postgres con Testcontainers | 4,82 s (4,23–5,96) | 2,90 s (2,68–3,33) | 6 | `TestLargePrice` |
+| Postgres / SQLite | **2,3x** | **50x** | | |
+
+🦭 **Con Podman, el 24/10/2026**: la misma tarea y el mismo arnés, Podman 6.1.3 (6.1.4 en la máquina), máquina
+virtual de 4 GiB, Docker Desktop cerrado y **sin cluster corriendo**; Ryuk apagado, porque con Podman no arranca
+([Fase 12](12-estado-y-almacenamiento.md)). Las mismas proporciones de la tarea, y la misma prueba que falla:
+
+| 24/10/2026, Podman | la tarea | `go test` | pasan | fallan |
+|---|---|---|---|---|
+| SQLite | 1,13 s (1,10–1,17) | 0,01 s (0,01–0,01) | 7 | ninguna |
+| Postgres con Testcontainers | 2,33 s (2,28–2,43) | 1,17 s (1,16–1,29) | 6 | `TestLargePrice` |
+| Postgres / SQLite | **2,1x** | **90x** | | |
+
+La proporción de `go test` sube porque el binario contra SQLite bajó a 0,01 s y cualquier arranque de Postgres
+la multiplica; no compara con las de Docker, que corrieron con el cluster encima y con Ryuk.
+
+La primera serie del 03/10, sin el tiempo de `go test`, dio 5,18 s y 10,82 s (2,1x). La prueba que falla guarda
 un precio de 3.000.000.000: SQLite lo acepta en una columna `INTEGER`, y Postgres lo rechaza (`unable
 to encode 3000000000 into binary format for int4 (OID 23): 3000000000 is greater than maximum value
 for int4`).
 **Apuesta:** el tiempo, **perdida** en lo que importa a quien la corre: la tarea tarda 2,3 veces,
 porque el contenedor y la compilación pesan lo mismo con los dos motores. En el binario de pruebas, 59
 veces. La fidelidad, **ganada**: SQLite dejó pasar un error de tipo que en producción es un 500.
-**Veredicto:** probar contra SQLite ahorra unos siete segundos por corrida y deja pasar errores que el
-motor real ve. Con
+**Veredicto:** probar contra SQLite ahorra entre tres y siete segundos por corrida —según la máquina—
+y deja pasar errores que el motor real ve. Con
 pruebas de almacén, conviene el motor real; SQLite sirve para lo que no toca SQL específico del motor.
-**Reproducir:** `task measure -- B-12 --runs 5` (con Docker: Testcontainers usa su socket) · **Fecha:**
-03/10/2026 · **Plataforma:** macOS arm64 · 🦭 con Podman, no medido
+**Reproducir:** `task measure -- B-12 --runs 5`, con el motor activo (Testcontainers usa su socket) · **Fecha:**
+03/10/2026, remedido el 21/10/2026, y con Podman el 24/10/2026 · **Plataforma:** macOS arm64
 
 ### B-16 · ¿Cuántas réplicas pide cada runtime para la misma tasa, y cuánto cuesta cada una?
 
@@ -263,7 +303,16 @@ y el 0,26 % con tres.
 `replenish` cumplen con una réplica; solo `catalog` necesita dos. Y una réplica de `inventory` (208 MiB)
 ocupa 7,4 veces la de `pricing` (28 MiB), no más de diez. Con tres réplicas, `catalog` empeoró (162 ms) y
 `inventory` tuvo una corrida mala (74 ms): en tres nodos-contenedor de la misma máquina, más réplicas
-compiten por la misma CPU y por el mismo Postgres, y no lo separé.
+compiten por la misma CPU y por el mismo Postgres, y no lo separé (la reconfirmación de abajo no lo repitió).
+**Reconfirmación (21/10/2026, dos corridas completas, mismas condiciones):** el p95 baja a 2–3 ms en
+`pricing`, `inventory` y `replenish` en todos los puntos (la tabla de arriba tiene el doble), y la memoria
+por réplica queda en 9–44 MiB (`pricing`), 190–280 (`inventory`), 41–95 (`catalog`) y 52–106 (`replenish`).
+`catalog` con una réplica: 33 (20–141) en una corrida y 173 (59–218) en la otra, la media del conjunto 100
+(20–218); con dos, 50 y 28; con tres, 28 (22–35) y 19 (19–26): **el empeoramiento con tres réplicas (162 ms)
+no se repitió** y la frase de arriba sobre la competencia por CPU queda como hipótesis sin probar. La
+proporción `inventory`/`pricing` de la primera réplica fue de 5 (220 contra 43) y de 21 (273 contra 13):
+el 7,4 está dentro de esa variación y se deja, pero la lectura de `pricing` con `kubectl top` es la menos
+estable de la tabla.
 **Veredicto:** para lecturas cortas, el runtime no decide cuántas réplicas hacen falta: decide **cuánto
 cuesta cada una** (siete veces más en Java que en Go) y **cuántas peticiones atiende a la vez**: PHP-FPM,
 con cinco procesos por pod, es el único que se queda corto con una. Escalar `catalog` es escalar procesos.
@@ -316,3 +365,23 @@ proxy de capa 7 (un mesh) lo resuelve sin tocar el código, a cambio de una piez
 service,client,service+age,http,http1` y `task measure -- B-23 --scale --modes client,client+age --rate 20`; después,
 `task deploy CLUSTER=lab FORCE=true -- minimo` (el `kubectl scale` de la medición se queda con `.spec.replicas`) ·
 **Fecha:** 04/10/2026
+
+**Remedido el 23/10/2026** (la pasada de cierre, mismas condiciones; los servicios generados de nuevo con los prompts
+de `a03`, y sin los modos `http` y `http1`):
+
+| Modo | La más cargada | Repartos de las 3 corridas | Mediana de la venta |
+|---|---|---|---|
+| `service` (gRPC) | **100 %** (100–100) | 1/0/0 · 1/0/0 · 1/0/0 | 22,8–29,6 |
+| `client` (gRPC) | **33 %** (33–33) | ⅓ cada una, las tres | 24,5–27,8 |
+| `service+age` (gRPC) | 53 % (52–64) | 0,52/0,48/0 · 0,64/0,36/0 · 0,53/0,35/0,12 | 22,9–26,9 |
+
+| La réplica nueva (2 → 3 a los 20 s de 60) | Llamadas que recibió la nueva |
+|---|---|
+| `client` | **0 de 1201** |
+| `client+age` | 34, 231 y 178 de 1200, en tres corridas |
+
+`service` y `client`, idénticos. Lo que cambió es lo que depende del azar: con 10 s de edad, en 30 s hay tres
+reconexiones, y cada una tira el dado de kube-proxy una vez; la primera medición sacó 100/100/70 y esta 52/64/53. Las
+dos dicen lo mismo leídas bien: **en cada instante trabaja una réplica por conexión, y el reparto de 30 s es una
+lotería de tres tiradas**. La réplica nueva con edad máxima recibió entre el 3 % y el 19 % (la primera medición, una sola
+corrida, 20 %): depende de cuándo cae la primera reconexión después de que aparece.

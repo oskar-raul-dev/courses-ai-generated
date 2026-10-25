@@ -254,7 +254,10 @@ legacy   contingencia-db-579d7bd5df-rzqdp BestEffort
 
 `BestEffort` —sin `requests` ni `limits`— es el primero que mata el kernel. Es lo que le pasó a
 Contingencia tres veces en la [Fase 12](12-estado-y-almacenamiento.md#️-13-errores-comunes-y-diagnóstico). Contingencia ocupa 601 MiB, porque GlassFish arranca con su
-`-Xmx512m` de fábrica; Postgres, 54. Los dos llevan ahora sus números (`deploy/legacy/contingencia.yaml`,
+`-Xmx512m` de fábrica; Postgres, 54. (El `deploy/legacy/` que copiaste en la
+[Fase 00](00-el-ambiente.md) ya trae los números del patrimonio, así que en tu cluster Contingencia
+nace `Burstable`: lo que te toca escribir es el de Postgres, que es tuyo desde la
+[Fase 12](12-estado-y-almacenamiento.md).) Los dos llevan ahora sus números (`deploy/legacy/contingencia.yaml`,
 `platform/data/postgres/statefulset.yaml`) y pasan a `Burstable`. Y Postgres importa más que ninguno: con
 G4, si Postgres muere, los cuatro servicios salen del tráfico.
 
@@ -280,9 +283,14 @@ Con las dos cadenas encendidas:
 ```text
 $ kubectl -n apps describe resourcequota apps | tail -3
 limits.memory    896Mi  2Gi
-pods             5      15
+pods             5      20
 requests.memory  576Mi  1280Mi
 ```
+
+> 📝 **El `namespace.yaml` del repositorio trae números más altos** —`requests.memory: 1536Mi`,
+> `limits.memory: 3Gi`, `pods: "25"`—, que son los de la [Fase 16](16-escalado-y-rollout.md): con el
+> perfil `lab` cada backend tiene dos réplicas y el sistema pide casi el doble. Los de arriba son los de
+> esta fase; si escribes los tuyos, cualquiera de los dos juegos sirve para `minimo`.
 
 Y la quincena de la otra cadena, con una petición a La Vecina cada 100 ms mientras tanto: la apuesta de
 la sección 7.
@@ -476,8 +484,9 @@ desde 2015 (historia §1.6). *"Así corre el Siga desde hace diez años sin caer
 evita que la JVM lo agrande y lo achique bajo carga, y es una práctica de afinación conocida. La JVM era
 la dueña de la máquina.
 
-**Qué pasó después, con número.** En un contenedor con límite de 512 MiB, con cuarenta usuarios sobre
-`inventory`:
+**Qué pasó después, con número.** Los parámetros entran por un valor del chart, `inventory.jvm.options` (vacío
+por defecto), que el `Deployment` pone en `JAVA_TOOL_OPTIONS`: la JVM la lee al arrancar, sin tocar la imagen. En un
+contenedor con límite de 512 MiB, con cuarenta usuarios sobre `inventory`:
 
 ```text
 11 s: inventory 407.3 MiB · reinicios: 1 OOMKilled 137
@@ -935,8 +944,7 @@ EL ESTADO AL CERRAR LA FASE 15 (minimo)
 > git tag -a fase-15-salud-y-recursos -m "F15 cerrada: G4 con readiness real en los cuatro backends; sondas, requests y limits medidos en el chart; QoS de Postgres y del patrimonio; ResourceQuota y LimitRange en apps y apps-b; incidentes 12-15; AOT cache como Dockerfile.aot"
 > ```
 >
-> Y los pares de los incidentes: `inc/12/jvm-pretouch-oomkilled-*`, `inc/13/stale-db-password-*`,
-> `inc/14/liveness-too-strict-*` e `inc/15/requests-too-big-*`. Commits con prefijo `f15:`.
+> Commits con prefijo `f15:`, y los de incidente `f15 inc12: …` a `f15 inc15: …`.
 
 ---
 

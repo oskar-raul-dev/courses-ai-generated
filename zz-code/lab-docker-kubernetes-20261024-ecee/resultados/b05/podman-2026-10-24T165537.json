@@ -1,0 +1,69 @@
+{
+  "engine": "podman",
+  "date": "2026-10-24T16:55:37",
+  "idle_fresh": [
+    {
+      "vm_mb": 1351,
+      "rest_mb": 38
+    },
+    {
+      "vm_mb": 1351,
+      "rest_mb": 38
+    },
+    {
+      "vm_mb": 1351,
+      "rest_mb": 39
+    },
+    {
+      "vm_mb": 1351,
+      "rest_mb": 39
+    },
+    {
+      "vm_mb": 1351,
+      "rest_mb": 39
+    }
+  ],
+  "cluster_s": [
+    30.8,
+    28.0,
+    29.9,
+    30.3,
+    30.1
+  ],
+  "build_pricing_s": [
+    11.3,
+    11.6,
+    11.7,
+    11.0,
+    11.0
+  ],
+  "build_inventory_s": [
+    44.1,
+    43.4,
+    45.4,
+    45.3,
+    45.1
+  ],
+  "idle_after_work": [
+    {
+      "vm_mb": 7407,
+      "rest_mb": 51
+    },
+    {
+      "vm_mb": 7407,
+      "rest_mb": 51
+    },
+    {
+      "vm_mb": 7407,
+      "rest_mb": 51
+    },
+    {
+      "vm_mb": 7407,
+      "rest_mb": 51
+    },
+    {
+      "vm_mb": 7407,
+      "rest_mb": 51
+    }
+  ]
+}

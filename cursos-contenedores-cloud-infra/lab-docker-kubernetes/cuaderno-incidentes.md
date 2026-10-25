@@ -9,8 +9,8 @@ cuaderno no entrena a encontrar la respuesta, entrena el reflejo de los primeros
 > 📝 **Los veintisiete están completos**, cada uno con el síntoma que salió al ejecutarlo en la tanda de su fase: los
 > cinco de ambiente de la [Fase 00](00-el-ambiente.md) y los de plataforma y certificados de las Fases 08 a 20. La
 > Parte IV no reserva incidentes: sus fallos son de diseño (la orden huérfana, el evento repetido) y se miden en sus
-> fases. Los síntomas literales son los del tag `inc/<ID>/…-roto`; con `task inc:break` sobre un laboratorio más
-> avanzado pueden cambiar en detalle, y la entrada lo avisa donde se comprobó.
+> fases. Los síntomas literales son los del laboratorio tal como estaba al cerrar la fase que reserva cada uno; con
+> `task inc:break` sobre un laboratorio más avanzado pueden cambiar en detalle, y la entrada lo avisa donde se comprobó.
 >
 > **Fecha de verificación:** del 03/10/2026 (incidentes 05–07) al 04/10/2026 (25 y 26); el 12 y el 13, otra vez el
 > 05/10/2026 sobre el laboratorio de la [Fase 26](26-idempotencia-y-outbox.md). Los 01 y 02 son de Windows y no los verificó el autor.
@@ -43,20 +43,18 @@ incidente.
 > 🧭 **Anota el síntoma antes de arreglarlo.** Reconstruir un error de memoria produce mensajes que no
 > existen, y un diagnóstico sobre un mensaje inventado no enseña nada.
 
-### Tres formas de llegar al sistema roto
+### Dos formas de llegar al sistema roto
 
-1. **Desde el tag**, en tu clon del repositorio del curso: un *worktree* desacoplado sobre
-   `inc/<ID>/<slug>-roto`, y despliegas como siempre desde esa carpeta. Es la forma canónica, y la
-   única que garantiza el estado exacto. Los comandos están en la
-   [convención de git](00-convencion-de-git-y-tags.md#-los-incidentes-en-git).
-2. **Con la tarea:** `task inc:break -- <ID>` aplica sobre tu laboratorio el cambio mínimo que lo
-   rompe, y `task inc:fix -- <ID>` lo revierte. Sirve cuando ya avanzaste y no quieres volver atrás. Va al cluster
-   `minimo` salvo que digas otro: `task inc:break PROFILE=lab -- <ID>` si solo tienes `lab` (y `CLUSTER=lab` si en ese
-   cluster corren los valores de otro perfil). Los de las Fases 16 y 19 van siempre a `lab`.
-3. **A mano:** cada entrada describe el cambio en una o dos líneas, para quien quiera provocarlo sin
+1. **Con la tarea**, la forma canónica: `task inc:break -- <ID>` aplica sobre tu laboratorio el cambio
+   mínimo que lo rompe, y `task inc:fix -- <ID>` lo revierte. Es la única que garantiza el estado
+   exacto, porque el cambio está escrito en código (`src/lab/scripts/incidents/inc.py`). Va al cluster
+   `minimo` salvo que digas otro: `task inc:break PROFILE=lab -- <ID>` si solo tienes `lab` (y
+   `CLUSTER=lab` si en ese cluster corren los valores de otro perfil). Los de las Fases 16 y 19 van
+   siempre a `lab`. Los detalles, en la [convención de git](00-convencion-de-git-y-tags.md#-los-incidentes-en-git).
+2. **A mano:** cada entrada describe el cambio en una o dos líneas, para quien quiera provocarlo sin
    herramientas. Es la que más enseña y la que más fácil sale mal.
 
-Los incidentes de ambiente (01–04 y 27) no se provocan de ninguna de las tres formas: se describen y
+Los incidentes de ambiente (01–04 y 27) no se provocan de ninguna de las dos formas: se describen y
 se reconocen, porque romper la virtualización de tu máquina no es un ejercicio.
 
 ### Dificultad y tiempo
@@ -385,7 +383,7 @@ laboratorio no lo necesita, y una variable olvidada es la causa más larga de di
 cambié el tag en el `Deployment`, apliqué, y `kubectl` dijo `image updated`. Media hora después, las
 cajas siguen con el precio viejo y en el cluster hay un pod que no arranca. Nadie me avisó de nada."*
 
-**Cómo llegar.** `git switch --detach inc/05/image-never-loaded-roto` · o `task inc:break -- 05` · o, a
+**Cómo llegar.** `task inc:break -- 05` · o, a
 mano: `kubectl set image deployment/pricing pricing=lab/pricing:recien-construida` sin cargar esa
 imagen en el nodo.
 
@@ -456,7 +454,7 @@ no se publicó o el nodo no tiene permiso para leerla.
 `curl` me dice que no puede conectar. Lo único que hice fue ordenar las labels del `Service` para que
 quedaran como las del `Deployment`."*
 
-**Cómo llegar.** `git switch --detach inc/06/service-no-endpoints-roto` · o `task inc:break -- 06` · o,
+**Cómo llegar.** `task inc:break -- 06` · o,
 a mano: agregar `app.kubernetes.io/component: api` al `selector` del `Service` de `pricing`.
 
 **Lo que vas a ver.**
@@ -513,7 +511,7 @@ pruebe.
 probamos que viera a `catalog` con `getent`, porque en la [Fase 16](16-escalado-y-rollout.md) lo va a llamar. No lo encuentra. Pero
 `kubectl get svc -A` muestra `catalog` ahí, vivito."*
 
-**Cómo llegar.** `git switch --detach inc/07/short-name-wrong-namespace-roto` · o `task inc:break -- 07`
+**Cómo llegar.** `task inc:break -- 07`
 · o, a mano: aplicar una copia del `Deployment` de `inventory` **sin** `namespace:` y con
 `CATALOG_URL=http://catalog:8080`, sin `-n`.
 
@@ -572,7 +570,7 @@ cualquier namespace.
 Nadie desplegó `pricing`; el equipo de precios solo 'ordenó' su ruta, dice que quitó una línea que
 sobraba. El pod está bien, ya lo miramos."*
 
-**Cómo llegar.** `git switch --detach inc/08/route-wrong-parent-roto` · o `task inc:break -- 08` · o,
+**Cómo llegar.** `task inc:break -- 08` · o,
 a mano: quitar el `namespace: gateway` del `parentRefs` de la `HTTPRoute` de `pricing` y aplicarla.
 
 **Lo que vas a ver.**
@@ -642,7 +640,7 @@ sobraba" era la que cruzaba de `apps` a `gateway`.
 salbutamol bajó a 18.000. Aquí la caja me lo sigue cobrando a 20.000. Sistemas dice que ya lo
 cambiaron. ¿Cobro lo que dice la caja o lo que dice la circular?"*
 
-**Cómo llegar.** `git switch --detach inc/09/configmap-not-reloaded-roto` · o `task inc:break -- 09` ·
+**Cómo llegar.** `task inc:break -- 09` ·
 o, a mano: aplicar `deploy/incidents/09-circular-de-precios.yaml`, que cambia el `ConfigMap` de los
 topes, y nada más.
 
@@ -703,7 +701,7 @@ una persona: el hash del `ConfigMap` en la plantilla del pod ([Fase 13](13-helm-
 y levantó el laboratorio de cero. Yo no he tocado nada del portal en meses. Y no hay logs: kubectl me
 dice que no hay nada que mostrar."*
 
-**Cómo llegar.** `git switch --detach inc/10/secret-missing-roto` · o `task inc:break -- 10` · o, a
+**Cómo llegar.** `task inc:break -- 10` · o, a
 mano: borrar el `Secret` `portal-contingencia` del namespace `legacy`, y el pod del portal.
 
 **Lo que vas a ver.**
@@ -757,7 +755,7 @@ caído en su próximo reinicio.
 tocar el del sistema. Copié el manifiesto de la prueba de concepto que hicimos en la nube, le cambié el
 nombre y lo apliqué. Hace media hora que dice Pending. No hay logs, no hay errores, no hay nada."*
 
-**Cómo llegar.** `git switch --detach inc/11/pvc-storageclass-missing-roto` · o `task inc:break -- 11`
+**Cómo llegar.** `task inc:break -- 11`
 · o, a mano: aplicar `deploy/incidents/11-postgres-reportes.yaml`, un `StatefulSet` `postgres-reportes`
 en `data`.
 
@@ -823,7 +821,7 @@ crea de nuevo.
 JVM para aprovechar lo que tiene el contenedor, como hacíamos en el WebLogic, y ahora `inventory` no
 arranca. No hay un solo error en el log. Lo único que dice es que leyó las opciones."*
 
-**Cómo llegar.** `git switch --detach inc/12/jvm-pretouch-oomkilled-roto` · o `task inc:break -- 12` · o, a
+**Cómo llegar.** `task inc:break -- 12` · o, a
 mano: `kubectl -n apps set env deployment/inventory JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=95
 -XX:InitialRAMPercentage=95 -XX:+AlwaysPreTouch"`.
 
@@ -903,7 +901,7 @@ suele ser más grande, y eso tienta a subir el límite en lugar de entender la c
 `Running`, pero la lista de órdenes da 500. No hay ningún reinicio, el pod está vivo. Nosotros no
 desplegamos nada."*
 
-**Cómo llegar.** `git switch --detach inc/13/stale-db-password-roto` · o `task inc:break -- 13` · o, a
+**Cómo llegar.** `task inc:break -- 13` · o, a
 mano: reemplazar el `Secret` `replenish-db` por uno con otra contraseña (`clave-vieja`) y borrar el pod de
 `replenish`, como si el nodo se hubiera reiniciado.
 
@@ -971,7 +969,7 @@ cualquier otra cosa.
 mirando el catálogo, el pod de `catalog` se reinicia solo, una y otra vez. Y cada reinicio es peor: el
 99 % de las peticiones fallan. Afinaron las sondas la semana pasada para que detecten antes un cuelgue."*
 
-**Cómo llegar.** `git switch --detach inc/14/liveness-too-strict-roto` · o `task inc:break -- 14` · o, a
+**Cómo llegar.** `task inc:break -- 14` · o, a
 mano: la liveness del contenedor `nginx` de `catalog` con `timeoutSeconds: 1` y `failureThreshold: 1`. Y
 la carga: `k6 run deploy/incidents/14-carga-catalog.js` (400 usuarios, dos minutos).
 
@@ -1032,7 +1030,7 @@ con un reinicio: varios fallos seguidos, tiempo de espera holgado. La capacidad 
 **El encargo.** Andrés: *"Le di a Postgres la misma memoria que tiene el servidor de Oracle, para que no
 le falte, y se cayó todo: los cuatro servicios dicen 0/1. Postgres ni siquiera arranca, y no hay logs."*
 
-**Cómo llegar.** `git switch --detach inc/15/requests-too-big-roto` · o `task inc:break -- 15` · o, a
+**Cómo llegar.** `task inc:break -- 15` · o, a
 mano: en el `StatefulSet` de Postgres, `resources.requests.memory: 4Gi` (y el mismo límite).
 
 **Lo que vas a ver.**
@@ -1101,7 +1099,7 @@ tamaño que se pidió, y la factura lo dice el mes siguiente.
 pero `kubectl rollout status` terminó con un error y en el tablero dice que hay una réplica vieja y una
 nueva."*
 
-**Cómo llegar.** `git switch --detach inc/16/rollout-progress-deadline-roto` · o `task inc:break -- 16` ·
+**Cómo llegar.** `task inc:break -- 16` ·
 o, a mano: la versión nueva de `inventory` con una `DATABASE_URL` cuya contraseña no sirve (`kubectl -n apps
 set env deployment/inventory DATABASE_URL=postgres://inventory:clave-equivocada@…`).
 
@@ -1146,8 +1144,9 @@ $ kubectl -n apps logs pod/inventory-f8dc4d4dc-lk4hj | grep 'no listo' | tail -1
 El rollout espera a que la réplica nueva esté lista para bajar una vieja, y al pasar
 `progressDeadlineSeconds` (120 s en el chart) marca `ProgressDeadlineExceeded` y `rollout status` sale con
 error. **El `Deployment` no vuelve atrás solo**: se queda así, mitad y mitad, hasta que alguien decida. En la
-verificación, además, la condición apareció a los 16 minutos y no a los 2: el controlador tardó en
-reevaluar el plazo, y no se encontró por qué. No cuentes con que el plazo se cumple al segundo.
+primera verificación, además, la condición apareció a los 16 minutos y no a los 2: el controlador tardó en
+reevaluar el plazo, y no se encontró por qué. En la repetición del 21/10 sí fue a los dos minutos (120 s
+desde el `set env`). No cuentes con que el plazo se cumple al segundo.
 
 **Corrección.** `task inc:fix -- 16`: quitar la variable que se puso a mano y volver al chart (`task deploy
 FORCE=true -- lab`). O, sin saber todavía la causa, `kubectl -n apps rollout undo deployment/inventory`,
@@ -1174,9 +1173,11 @@ caída.
 oficial, el de la página del proyecto, y le encendí el autoescalado a `pricing`. El HPA dice `<unknown>`
 y no escala nunca. `kubectl top` tampoco funciona."*
 
-**Cómo llegar.** `git switch --detach inc/17/metrics-server-kubelet-tls-roto` · o `task inc:break -- 17` ·
-o, a mano: `kubectl apply -f platform/metrics-server/components.yaml` sin el `patch` que hace `task
-platform:metrics`, y `pricing.autoscaling.enabled=true`.
+**Cómo llegar.** `task inc:break -- 17` ·
+o, a mano: borrar el `Deployment` de metrics-server, aplicar `platform/metrics-server/components.yaml` sin el
+`patch` que hace `task platform:metrics`, y `pricing.autoscaling.enabled=true`. (Borrarlo antes importa: sobre
+uno ya parchado, el pod viejo sigue sirviendo mientras el nuevo no está listo, y no se ve nada roto.)
+`task inc:fix -- 17` deja metrics-server bien pero el HPA encendido; un `task deploy FORCE=true -- lab` lo quita.
 
 **Lo que vas a ver.**
 
@@ -1240,7 +1241,7 @@ existe. Si lo instalas tú, el manifiesto oficial funciona sin el flag.
 **El encargo.** El vicepresidente comercial, un lunes: *"Desde esta mañana el navegador dice que la página no es
 segura. El viernes funcionaba. Nadie tocó nada, me juran."*
 
-**Cómo llegar.** `git switch --detach inc/18/expired-gateway-cert-roto` · o `task inc:break -- 18` (pone a mano un
+**Cómo llegar.** `task inc:break -- 18` (pone a mano un
 certificado de dos minutos; el síntoma aparece a los dos minutos) · o, a mano: borrar el `Certificate` `lab-tls` y
 poner en el `Secret` un certificado que venza pronto.
 
@@ -1305,7 +1306,7 @@ falla en silencio (un DNS que cambió, un desafío que no se puede resolver).
 **El encargo.** Daniela, del equipo del portal: *"Desde que alguien 'regeneró los certificados' el viernes, mi
 `curl` contra la API falla con un error de certificado. Tengo la CA del laboratorio, la misma de siempre."*
 
-**Cómo llegar.** `git switch --detach inc/19/unknown-ca-roto` · o `task inc:break -- 19` · o, a mano: una CA nueva
+**Cómo llegar.** `task inc:break -- 19` · o, a mano: una CA nueva
 (`certs.py ca --name otra`), un certificado firmado por ella, y ese certificado en el `Secret` de la puerta sin
 `Certificate`.
 
@@ -1366,7 +1367,7 @@ certificados emitidos solo por el emisor. Cambiar de CA es un proyecto con orden
 **El encargo.** Valentina: *"La API por HTTPS anda perfecto. La página, en la misma puerta, con el mismo
 certificado, no. ¿Cómo puede un certificado servir para una dirección y no para otra?"*
 
-**Cómo llegar.** `git switch --detach inc/20/wrong-san-roto` · o `task inc:break -- 20` · o, a mano: un certificado
+**Cómo llegar.** `task inc:break -- 20` · o, a mano: un certificado
 con solo `api.localhost` en el SAN, en el `Secret` de la puerta.
 
 **Lo que vas a ver.**
@@ -1421,7 +1422,7 @@ una `HTTPRoute`, el `Certificate` de la puerta tiene que cambiar en el mismo com
 **El encargo.** Valentina, después de renovar a mano: *"Generé el certificado nuevo, armé el `Secret` en YAML porque
 `kubectl create secret tls` me daba un error raro, lo apliqué, y ahora HTTPS no responde para ningún nombre."*
 
-**Cómo llegar.** `git switch --detach inc/21/key-cert-mismatch-roto` · o `task inc:break -- 21` · o, a mano: un
+**Cómo llegar.** `task inc:break -- 21` · o, a mano: un
 `Secret` en YAML con el certificado de la puerta y la clave de otro certificado.
 
 **Lo que vas a ver.**
@@ -1474,7 +1475,7 @@ lo escribe siempre completo. Y comparar antes de aplicar: `openssl x509 -noout -
 **El encargo.** Valentina: *"Alguien 'limpió' el namespace de cert-manager el jueves. Hoy reinicié `pricing` y no
 arranca: lleva diez minutos creando el contenedor. `inventory` no puede vender."*
 
-**Cómo llegar.** `git switch --detach inc/22/issuer-without-ca-roto` · o `task inc:break -- 22` · o, a mano: borrar el
+**Cómo llegar.** `task inc:break -- 22` · o, a mano: borrar el
 `Secret` `lab-ca` de `cert-manager` y el `Secret` `pricing-tls` de `apps`, y reiniciar `pricing`.
 
 **Lo que vas a ver.**
@@ -1538,7 +1539,7 @@ un `Certificate` que no llega a `Ready` y un `Secret` que no aparece.
 **El encargo.** Wilson, desde logística: *"Las droguerías no pueden vender: la caja dice que precios no contesta.
 Pero si abro la página, los precios están ahí."*
 
-**Cómo llegar.** `git switch --detach inc/23/mtls-without-client-cert-roto` · o `task inc:break -- 23` · o, a mano: quitar
+**Cómo llegar.** `task inc:break -- 23` · o, a mano: quitar
 de `inventory` las variables del certificado y la clave del bundle `pricing`, dejando la CA.
 
 **Lo que vas a ver.**
@@ -1591,9 +1592,10 @@ dice "no contesta" esconde la causa: el log de `inventory` sí la tiene, y por e
 **El encargo.** Valentina: *"Subí `pricing` al registry nuevo sin problema, con Docker. Pero el pod no la puede traer.
 ¿Cómo va a fallar el `pull` si el `push` pasó?"*
 
-**Cómo llegar.** `git switch --detach inc/24/registry-ca-untrusted-roto` · o `task inc:break -- 24` · o, a mano: `task
-registry:up`, `task registry:push -- pricing`, quitar `/etc/containerd/certs.d/lab-registry:5000/` de los nodos, y
-`pricing` con la imagen `lab-registry:5000/lab/pricing:g8`.
+**Cómo llegar.** `task inc:break -- 24` · o, a mano: `task
+registry:up`, `task registry:push -- pricing`, quitar `/etc/containerd/certs.d/lab-registry:5000/` de los nodos (y
+las imágenes que ya trajeron de `lab-registry`, o con `IfNotPresent` no hay pull y no hay incidente: `task
+registry:untrust -- lab` hace las dos cosas), y `pricing` con la imagen `lab-registry:5000/lab/pricing:g8`.
 
 **Lo que vas a ver.**
 
@@ -1635,7 +1637,10 @@ cluster no puede traer la imagen porque el segundo no confía.
 **Corrección.** `task inc:fix -- 24`, que es `task registry:trust -- lab`: la CA y un `hosts.toml` en
 `/etc/containerd/certs.d/lab-registry:5000/` de cada nodo. containerd lee esa carpeta en cada `pull` (la activa el
 `config_path` de los archivos de kind desde la [Fase 07](07-el-cluster-local.md)): no se reinicia nada, y el pod siguiente trae la imagen en
-141 ms. Para `curl`, `--cacert` o la confianza del host.
+141 ms. Para `curl`, `--cacert` o la confianza del host. Y después, la vuelta: el `fix` también corre `task
+registry:forget -- lab` y `task deploy FORCE=true`, porque el kubelet que trajo `pricing` del registry anotó de dónde
+la trajo, y sin olvidarlo el `deploy` siguiente cae en `pull access denied` en ese nodo (la trampa de la sección 5.7
+de la [Fase 19](19-tls-y-certificados.md)).
 
 **Prevención.** La lista de los tres sitios, escrita, y la configuración de los nodos en la creación del cluster, no
 después (un nodo nuevo no la tiene). Y una sola forma de llevar cada imagen al nodo: después de traer `pricing:g8`
@@ -1665,7 +1670,7 @@ nodos que el proveedor te deja configurar.
 único que faltaba. Ahora no arranca, y ninguna venta pasa. Revertir me da miedo: la revisión dice que es
 obligatorio."*
 
-**Cómo llegar.** `git switch --detach inc/25/runasnonroot-root-image-roto` · o `task inc:break -- 25` · o, a mano: en el
+**Cómo llegar.** `task inc:break -- 25` · o, a mano: en el
 `StatefulSet` de Postgres, `securityContext: {runAsNonRoot: true}` en el pod, sin `runAsUser`, y borrar `postgres-0`.
 
 **Lo que vas a ver.**
@@ -1723,7 +1728,7 @@ número va en `runAsUser`.
 entre los servicios, y a Postgres. Lo revisé dos veces. Ahora la página tarda dieciséis segundos y devuelve un
 error, y ni siquiera `inventory` llega a `pricing`, que está permitido."*
 
-**Cómo llegar.** `git switch --detach inc/26/default-deny-dns-roto` · o `task inc:break -- 26` · o, a mano: borrar la
+**Cómo llegar.** `task inc:break -- 26` · o, a mano: borrar la
 `NetworkPolicy` `allow-dns` de `apps`.
 
 **Lo que vas a ver.**

@@ -221,6 +221,11 @@ kind: HTTPRoute
 metadata:
   name: pricing
   namespace: apps
+  # Las mismas labels del Deployment y del Service (Fase 08): la ruta es parte del servicio, y las
+  # cinco las llevan. Sin ellas, un `delete … -l app.kubernetes.io/part-of=lab` no se las lleva.
+  labels:
+    app.kubernetes.io/name: pricing
+    app.kubernetes.io/part-of: lab
 spec:
   # De qué puerta cuelga: el Gateway compartido, en otro namespace.
   parentRefs:
@@ -294,10 +299,15 @@ name: localhost
 ip_address: 127.0.0.1
 ```
 
-Hay clientes y sistemas donde no pasa —algunas configuraciones de Linux y algunas herramientas que
-usan su propio resolutor—, y entonces la salida es una línea en `/etc/hosts` o la cabecera `Host` a
-mano (`curl -H 'Host: api.localhost' http://127.0.0.1:8080/…`). Lo de Windows 11 y Linux no lo verificó
-el autor; se confirma al hacer el curso.
+El orden de las dos direcciones no está garantizado: al repetir la verificación el 21/10/2026, el
+mismo `getaddrinfo` devolvió primero `('::1', 8080, 0, 0)`. Da igual mientras el motor publique el
+8080 en las dos, que es lo que hace kind; si tu cliente prefiere IPv6 y el puerto está publicado solo
+en `127.0.0.1`, el síntoma es un `Connection refused` que no tiene nada que ver con el cluster.
+
+Hay clientes y sistemas donde `*.localhost` no resuelve —algunas configuraciones de Linux y algunas
+herramientas que usan su propio resolutor—, y entonces la salida es una línea en `/etc/hosts` o la
+cabecera `Host` a mano (`curl -H 'Host: api.localhost' http://127.0.0.1:8080/…`). Lo de Windows 11 y
+Linux no lo verificó el autor; se confirma al hacer el curso.
 
 > 🩻 **Esto sí funciona igual.** Los `Service` de la [Fase 08](08-el-primer-despliegue.md) no cambian: la puerta les manda tráfico a
 > ellos, no a los pods. Lo que se agregó está delante, y si mañana se cambia de controlador, los
@@ -366,6 +376,21 @@ prometía la [Fase 02](02-compose-el-sistema-en-un-archivo.md).
 mismas imágenes de [a16](a16-el-patrimonio.md), cargadas en el nodo, con los `.sql` de la base como
 `ConfigMap`. Contingencia desplegó en 8,9 segundos, y sigue contestando SOAP como siempre.
 
+> ⚠️ **Antes de ese comando, las credenciales SOAP.** Contingencia y el portal comparten un `Secret`
+> (`portal-contingencia`), y la tarea lo crea desde un archivo que **no** se versiona. Sin él, los dos
+> pods se quedan en `CreateContainerConfigError` y la tarea te lo avisa
+> (`⚠️ falta .secrets/portal-contingencia.env`). Son las credenciales que el portal trae horneadas en
+> su imagen desde 2019 ([a16](a16-el-patrimonio.md)), copiadas tal cual; la [Fase 11](11-configuracion-y-secretos.md)
+> explica el objeto, y de paso las rota:
+>
+> ```bash
+> mkdir -p .secrets
+> cat > .secrets/portal-contingencia.env <<'EOF'
+> CONTINGENCIA_SOAP_USER=portal
+> CONTINGENCIA_SOAP_PASSWORD=Vecina2019*
+> EOF
+> ```
+
 Sacarle tráfico sin apagarla exige tres cosas que esta fase construyó, y ninguna es Kubernetes:
 
 1. **Que el viejo y el nuevo contesten la misma pregunta.** Contingencia sabe precios, pero por SOAP.
@@ -377,7 +402,12 @@ Sacarle tráfico sin apagarla exige tres cosas que esta fase construyó, y ningu
    nginx en el mismo pod de Contingencia, en el 8081: la fachada.
 2. **Que el nuevo sepa lo mismo.** Un `Job` copió los 64 precios de las ocho droguerías de Contingencia
    a `pricing` (`precios migrados: 64`). Sin ese paso, la mitad de las cajas vería precios distintos según
-   a quién le tocara.
+   a quién le tocara. **Espera a que Contingencia despliegue antes de lanzarlo:** `kubectl rollout
+   status` da el pod por listo en cuanto sus dos contenedores arrancan, y GlassFish tarda unos 40
+   segundos más en publicar la aplicación. Lanzado antes, el `Job` recibe 64 respuestas `502` de la
+   fachada y termina **en éxito** diciendo `precios migrados: 0`; se vuelve a lanzar y ya. Es la
+   [Fase 15](15-salud-y-recursos.md) otra vez, con otra cara: nada de lo que hay hoy sabe que
+   "arrancado" y "listo" no son lo mismo.
 3. **Permiso para cruzar namespaces.** La ruta vive en `apps` y Contingencia en `legacy`: el dueño del
    destino lo autoriza con un `ReferenceGrant`.
 
@@ -843,8 +873,7 @@ LA ENTRADA AL CERRAR LA FASE 10 (minimo)
 > git tag -a fase-10-la-entrada-al-sistema -m "F10 cerrada: Envoy Gateway con NodePort fijo; una HTTPRoute por servicio; CORS para el storefront; patrimonio en legacy con su fachada; strangler 80/20 a 0/100; incidente 08"
 > ```
 >
-> Y el par del incidente: `inc/08/route-wrong-parent-roto` e `inc/08/route-wrong-parent-fix`. Commits
-> con prefijo `f10:` ([convención de git](00-convencion-de-git-y-tags.md)).
+> Commits con prefijo `f10:`, y el del incidente `f10 inc08: …` ([convención de git](00-convencion-de-git-y-tags.md)).
 
 ---
 

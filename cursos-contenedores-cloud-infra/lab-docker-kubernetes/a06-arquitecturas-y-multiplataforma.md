@@ -63,6 +63,10 @@ Corre, pero no gratis. El primer `200` en `/health/live`, desde `docker run`, tr
 | `pricing` (Go) | 0,33 s (0,32–0,42) | 0,46 s (0,45–0,62) | 1,4x |
 | `inventory` (Java) | 5,68 s (5,44–5,72) | 20,34 s (20,16–21,09) | **3,6x** |
 
+Remedido el 24/10/2026, en la misma máquina con el cluster `lab` encendido: `pricing` 0,23 s (0,23–0,26) contra 0,38 s
+(0,31–0,47), 1,7x; `inventory` 4,83 s (4,73–4,98) contra 22,35 s (21,54–22,51), **4,6x**. Fuera de los rangos de la
+primera fecha, y en la misma dirección: la emulación castiga a la JVM bastante más que a Go.
+
 Go casi no lo siente: un binario compilado se traduce una vez. La JVM, sí: además de traducir el intérprete, traduce lo
 que el compilador JIT genera mientras arranca. **Un servicio de Java emulado arranca casi cuatro veces más lento**, y si su
 sonda de arranque se midió con la imagen nativa ([Fase 15](15-salud-y-recursos.md)), el kubelet lo mata antes de que
@@ -80,6 +84,11 @@ termine.
 |---|---|---|---|
 | `pricing` (Go) | 23,2 s (23,2–32,6) | 80,1 s (73,1–83,8) | 28,8 s (27,8–29,0) |
 | `inventory` (Java), una corrida | 108,3 s | **falló** | 111,0 s |
+
+Remedido el 24/10/2026, una corrida por celda: `pricing` 31,3 s, 92,2 s y 27,6 s; `inventory` 57,9 s, **falló** (el mismo
+`tar … Cannot open: Function not implemented`) y 52,4 s. Los de `inventory` salieron en la mitad de tiempo que el
+05/10, sin caché de capas en ninguna de las dos fechas (lo que cambió fue la descarga de dependencias, que no separé). La
+conclusión no se mueve: compilar en nativo cuesta lo mismo que el build nativo, y emular el compilador de Java no termina.
 
 El de Java no fue lento: **no terminó**. El wrapper de Maven descomprime su distribución con `tar`, y bajo emulación:
 

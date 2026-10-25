@@ -130,6 +130,10 @@ kind: ConfigMap
 metadata:
   name: neighbors
   namespace: apps
+  # Es del sistema, no de un servicio: solo part-of. Las labels recomendadas valen para todo objeto
+  # del laboratorio, y son las que después permiten borrarlo o buscarlo por selector y no por nombre.
+  labels:
+    app.kubernetes.io/part-of: lab
 data:
   CATALOG_URL: http://catalog.apps.svc.cluster.local:8080
   INVENTORY_URL: http://inventory.apps.svc.cluster.local:8080
@@ -730,8 +734,7 @@ EL SISTEMA AL CERRAR LA FASE 09 (minimo, namespace apps, paso G1)
 > git tag -a fase-09-los-cuatro-servicios-dentro -m "F09 cerrada: namespace apps; G1 en los cinco servicios; ConfigMap de vecinos; catalog en un pod de dos contenedores; suite G1 en compose y en el cluster; incidente 07"
 > ```
 >
-> Y el par del incidente: `inc/07/short-name-wrong-namespace-roto` e
-> `inc/07/short-name-wrong-namespace-fix`. Commits con prefijo `f09:` ([convención de git](00-convencion-de-git-y-tags.md)).
+> Commits con prefijo `f09:`, y el del incidente `f09 inc07: …` ([convención de git](00-convencion-de-git-y-tags.md)).
 
 ---
 

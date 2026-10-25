@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -313,11 +314,21 @@ public class LoanSaga {
                     }
                     orderId = String.valueOf(((Map<?, ?>) found.getFirst()).get("id"));
                 }
-                sales.replenish().post().uri("/replenishment-orders/{id}/cancel", orderId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(Map.of("reasonCode", "SAGA_COMPENSATION", "note", loan.loanId() + ": " + loan.failure()))
-                        .retrieve().toBodilessEntity();
-                step(loan.id(), "DISPATCH", "UNDO", "OK", orderId + " cancelada");
+                try {
+                    sales.replenish().post().uri("/replenishment-orders/{id}/cancel", orderId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(Map.of("reasonCode", "SAGA_COMPENSATION", "note", loan.loanId() + ": " + loan.failure()))
+                            .retrieve().toBodilessEntity();
+                    step(loan.id(), "DISPATCH", "UNDO", "OK", orderId + " cancelada");
+                } catch (HttpClientErrorException.Conflict e) {
+                    // Una cancelación que venció su plazo puede haberse hecho, y hasta G12 cancelar dos veces es un 409:
+                    // se pregunta por la orden antes de concluir. Si ya está CANCELLED, la compensación está hecha.
+                    Map<?, ?> order = sales.replenish().get().uri("/replenishment-orders/{id}", orderId).retrieve().body(Map.class);
+                    if (order == null || !"CANCELLED".equals(order.get("status"))) {
+                        throw e;
+                    }
+                    step(loan.id(), "DISPATCH", "UNDO", "OK", orderId + " ya estaba cancelada");
+                }
                 return true;
             } catch (RuntimeException e) {
                 step(loan.id(), "DISPATCH", "UNDO", "FAILED", "replenish: " + e.getMessage());

@@ -18,7 +18,7 @@ propio repositorio. Quien vaya a editar una fase lo lee entero antes de teclear 
 | [`alcance-del-proyecto.md`](alcance-del-proyecto.md) | qué enseña el curso, a quién y con qué límites | antes de tocar el contenido de una fase |
 | [`guia-de-estilo-y-convenciones.md`](guia-de-estilo-y-convenciones.md) | cómo se escribe; checklist en §16, excepciones en §17 y alineación con los lineamientos en §19 | en cada sesión, siempre |
 | [`contrato-del-cluster.md`](contrato-del-cluster.md) | los nombres técnicos congelados: namespaces, servicios, puertos, tags | cada vez que haga falta un nombre |
-| [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) | la ficha de cada fase y el registro de decisiones D1–D44 (§12) | antes de tocar qué entra en una fase |
+| [`propuesta-fases-y-alcance.md`](propuesta-fases-y-alcance.md) | la ficha de cada fase y el registro de decisiones D1–D46 (§12) | antes de tocar qué entra en una fase |
 | [`propuesta-apendices-y-alcance.md`](propuesta-apendices-y-alcance.md) | la ficha de cada apéndice | antes de tocar un apéndice |
 | [`plantillas-de-capitulo.md`](plantillas-de-capitulo.md) | los esqueletos de fase y de apéndice | al empezar y al cerrar cada documento |
 | [`prompts-de-fase.md`](prompts-de-fase.md) y [`prompts-de-apendice.md`](prompts-de-apendice.md) | el marco común y un bloque por documento, con la escena de la historia | si se reescribe una fase o un apéndice entero |

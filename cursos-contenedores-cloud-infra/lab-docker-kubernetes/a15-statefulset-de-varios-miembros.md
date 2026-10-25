@@ -136,8 +136,10 @@ confirma está en dos copias antes de contestar. Una caída limpia (un rollout, 
 dura cuesta unos segundos de escrituras que el cliente tiene que reintentar, y el `Nats-Msg-Id` hace que reintentar no
 duplique.
 
-> 📝 Que `nats-ha-2` volviera en el mismo segundo no lo hace líder otra vez: vuelve con su disco, se pone al día y queda
-> de réplica. El liderazgo no "vuelve a casa".
+> 📝 Que `nats-ha-2` volviera en el mismo segundo no lo hizo líder otra vez: volvió con su disco, se puso al día y quedó
+> de réplica. Pero tampoco está prohibido: en la remedición del 24/10/2026, el miembro muerto volvió en el mismo segundo
+> y **fue él** quien ganó la elección, 5,4 s después; en la prueba siguiente ganó otro. El liderazgo no tiene casa: lo
+> gana quien la elección elija entre los que están al día.
 
 ## Perder el quórum
 
@@ -155,7 +157,10 @@ Lo esperado era que el stream no aceptara escrituras. Lo que pasó fue peor, y v
 503 en `/healthz`, **la readiness lo saca del `Service`**, y el `Service` queda sin destinos. Los clientes no fallan al
 escribir: **no conectan**. Ni escrituras ni lecturas. Es la misma regla de la [Fase 15](15-salud-y-recursos.md) —la
 readiness decide el tráfico— con una consecuencia que en un servicio sin estado no se ve: la readiness de un miembro
-depende de sus vecinos. Al volver los otros dos, todo lo confirmado estaba.
+depende de sus vecinos. Al volver los otros dos, todo lo confirmado estaba. Repetido el 24/10/2026 (fallidas de +10 a +42 s, 90 de 211,
+ninguna confirmada perdida), apareció el caso inverso: **tres publicaciones que el cliente dio por fallidas sí quedaron
+en el stream**, porque la escritura llegó y la confirmación se perdió en el corte. Es "al menos una vez" visto desde el
+que publica, y la razón para que cada reintento lleve el mismo `Nats-Msg-Id`.
 
 ## La deduplicación sobrevive al líder
 

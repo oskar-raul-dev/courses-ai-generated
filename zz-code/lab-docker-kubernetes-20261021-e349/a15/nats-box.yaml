@@ -1,0 +1,12 @@
+# a15: la CLI de nats, en un pod de data, para crear el stream y publicar.
+apiVersion: v1
+kind: Pod
+metadata: {name: a15-nats-box, namespace: data, labels: {app.kubernetes.io/name: a15-nats-box}}
+spec:
+  securityContext: {runAsNonRoot: true, runAsUser: 1000, seccompProfile: {type: RuntimeDefault}}
+  containers:
+    - name: box
+      image: natsio/nats-box@sha256:be25666441c3aee65193aba33d60ff2f06ede7ee9eba58864324b33d7eb94fea
+      imagePullPolicy: IfNotPresent
+      command: ["sleep", "3600"]
+      securityContext: {allowPrivilegeEscalation: false, capabilities: {drop: [ALL]}}

@@ -60,6 +60,13 @@ de forma importante. Y la nativa cuesta **2,4 veces el tiempo de build** y una m
 > el límite de 512 MiB del chart ([Fase 15](15-salud-y-recursos.md)), la JVM ocupa menos; la proporción con la nativa se
 > achica, y no la medí con límite.
 
+Remedido el 24/10/2026, solo la JVM y el AOT cache, en una máquina virtual de 3,8 GiB: JVM lista en 2,36 s (2,33–2,37),
+196 MiB en reposo y 217 después de las 1.000; con AOT cache, 1,18 s (1,17–1,27), 195 y 212 MiB; builds de 57,9 y 56,5 s,
+imágenes de 688 y 712 MB. El AOT cache arrancó 2,0 veces más rápido sin cambiar la memoria, como la primera vez; la
+memoria absoluta bajó un tercio porque el heap se dimensionó contra 3,8 GiB y no contra 7,75 (la advertencia de arriba,
+medida). **La nativa no se repitió**: con 3,8 GiB de máquina virtual no entra aunque el cluster esté detenido, y darle más
+memoria a Docker Desktop no era parte de la pasada.
+
 ## El AOT cache, puesto al día
 
 El `Dockerfile.aot` de la [Fase 15](15-salud-y-recursos.md) era de G4: con el código de G13 no compilaba, porque desde G10 `inventory` necesita el

@@ -135,6 +135,8 @@ task build -- inventory   # Java: el protobuf-maven-plugin lo genera al compilar
 ```
 
 El contexto de build aparte evita copiar el `.proto` en cada servicio: el `Dockerfile` lo toma con `COPY --from=proto`.
+El de `pricing` también tiene que copiar `pricingv1/`, además de sus `.go`. El subchart de Tempo, el `bench/b23/ventas.js`
+de B-23 y las variables de OpenTelemetry del chart (`lab-common.otelEnv`) se copian del `src/lab/` del curso.
 En Go, el código generado se versiona (costumbre del ecosistema); en Java, no (costumbre de Maven).
 
 ### 5.2 G10: `pricing` habla gRPC, e `inventory` le pregunta
@@ -229,7 +231,8 @@ normal y 10 s de edad:
 ```
 
 Las reconexiones ocurren (conntrack ve una nueva cada diez segundos), pero cada una cae en **una** réplica: en treinta
-segundos, tres tiradas. Con una muestra de tres minutos, las dieciocho
+segundos, tres tiradas. (La pasada de cierre, el 23/10/2026, sacó otras tres: 52 %, 64 % y 53 % para la más cargada. Es
+el mismo dado.) Con una muestra de tres minutos, las dieciocho
 reconexiones quedaron 6/6/6: **el promedio largo se empareja; en cada instante, sigue trabajando una sola réplica.**
 Rota la carga; no la reparte.
 
@@ -259,7 +262,9 @@ $ task measure -- B-23 --scale --modes client,client+age --rate 20
 ```
 
 **Cero de mil doscientas**: el HPA de la [Fase 16](16-escalado-y-rollout.md) escalando para nada, con el arreglo puesto. Con la edad máxima, el
-`GOAWAY` obliga a reconectar, y reconectar es volver a resolver: 237, cerca de las ~267 que le tocaban.
+`GOAWAY` obliga a reconectar, y reconectar es volver a resolver: 237, cerca de las ~267 que le tocaban. Ese número
+varía: en la pasada de cierre, tres corridas dieron 34, 231 y 178, según cuándo cae la primera reconexión después de
+que la réplica aparece.
 
 El laboratorio queda con **las dos cosas**: `round_robin` sobre el *headless* para repartir, y 10 s de edad máxima
 para descubrir réplicas nuevas (`global.grpc.balancing: client`, `global.grpc.maxConnectionAge: 10s`). En producción,
@@ -372,7 +377,9 @@ líneas de texto al arrancar que la suite de G7 tuvo que declarar como excepcion
 
 **PHP** es el que más se resiste. La instrumentación de Laravel necesita la extensión `opentelemetry` de PECL para
 engancharse a las funciones, y Composer se niega a armar el autoload sin ella: la extensión se compila **dos veces**,
-en la etapa de build y en la final (ignorar el requisito de plataforma no alcanza). Y FPM tiene una particularidad que los otros tres no: cada petición es un proceso
+en la etapa de build y en la final (ignorar el requisito de plataforma no alcanza cuando el autoload lo arma `composer
+dump-autoload`, que corre los scripts de los paquetes; con `composer install --no-scripts` sí alcanza, y la extensión se
+compila solo en la final). Y FPM tiene una particularidad que los otros tres no: cada petición es un proceso
 que arranca limpio, así que el SDK se carga en cada una (`OTEL_PHP_AUTOLOAD_ENABLED=true`) y los spans se vacían al
 terminarla, **dentro de la misma petición**.
 
@@ -422,12 +429,14 @@ El instinto, en su mejor versión: *"si la llamada es lenta o el servicio no da 
 > 🪞 **Apuesta antes de ejecutar.** Con `pricing` cortando cada conexión a los 10 s y el `Service` normal, la réplica más
 > cargada recibe entre el 40 % y el 70 % en treinta segundos.
 >
-> **Resultado: perdida:** 100 %, 100 % y 70 % (sección 5.4).
+> **Resultado: perdida:** 100 %, 100 % y 70 % (sección 5.4). Remedida el 23/10/2026: 52 %, 64 % y 53 %, dentro de la
+> apuesta. Con tres reconexiones por corrida, la apuesta mide la suerte de la tirada, no la edad máxima.
 
 > 🪞 **Apuesta antes de ejecutar.** Con balanceo en el cliente, una réplica que aparece a mitad de las ventas recibe
 > menos del 5 %; con la edad máxima, más del 15 %.
 >
-> **Resultado: ganada:** 0 de 1200, y 237 de 1201 (sección 5.5).
+> **Resultado: ganada:** 0 de 1200, y 237 de 1201 (sección 5.5). Remedida el 23/10/2026: 0 de 1201, y 34, 231 y 178:
+> ganada dos de tres veces.
 
 > 🪞 **Apuesta antes de ejecutar.** Una venta aparece en Tempo como una sola traza con los cuatro servicios.
 >

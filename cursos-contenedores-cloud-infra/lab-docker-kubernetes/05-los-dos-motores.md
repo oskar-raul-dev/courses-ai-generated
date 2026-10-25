@@ -181,10 +181,11 @@ no se le dice, la nombra `localhost/lab/<svc>` ([Fase 01](01-primer-contenedor-y
         if: '{{if eq .ENGINE "podman"}}true{{else}}false{{end}}'
       # Docker: kind lee la imagen del motor. Podman: kind no ve sus imágenes ("not present locally"),
       # así que viajan como archivo, y ya se llaman docker.io/lab/<svc> como las pide el pod (D32, Fase 05).
-      - for: {var: SERVICES, split: ' '}
+      # Cada ITEM es servicio:tag, de STEP_TAGS.
+      - for: {var: STEP_TAGS, split: ' '}
         cmd: >-
-          {{if eq .ENGINE "podman"}}podman save -o .images/{{.ITEM}}.tar {{.IMAGE_PREFIX}}/{{.ITEM}} &&
-          kind load image-archive .images/{{.ITEM}}.tar --name {{.PROFILE}} && rm .images/{{.ITEM}}.tar{{else}}kind
+          {{if eq .ENGINE "podman"}}podman save -o .images/{{index (splitList ":" .ITEM) 0}}.tar {{.IMAGE_PREFIX}}/{{.ITEM}} &&
+          kind load image-archive .images/{{index (splitList ":" .ITEM) 0}}.tar --name {{.PROFILE}} && rm .images/{{index (splitList ":" .ITEM) 0}}.tar{{else}}kind
           load docker-image {{.IMAGE_PREFIX}}/{{.ITEM}} --name {{.PROFILE}}{{end}}
 ```
 
@@ -193,16 +194,16 @@ Con Podman, después de `task build:all` y `task cluster:up -- minimo`:
 ```text
 $ time task images:load -- minimo
 task: [images:load] mkdir -p .images
-task: [images:load] podman save -o .images/pricing.tar docker.io/lab/pricing && kind load image-archive .images/pricing.tar --name minimo && rm .images/pricing.tar
+task: [images:load] podman save -o .images/pricing.tar docker.io/lab/pricing:g0 && kind load image-archive .images/pricing.tar --name minimo && rm .images/pricing.tar
 …
-real	0m20.666s
+real	0m18.52s
 $ podman exec minimo-control-plane crictl images | grep -E "IMAGE|lab/"
 IMAGE                                           TAG                  IMAGE ID            SIZE
-docker.io/lab/catalog                           latest               7c1a83bfc9e39       132MB
-docker.io/lab/inventory                         latest               714f136dd462c       397MB
-docker.io/lab/pricing                           latest               26d5d5e0d77be       9.41MB
-docker.io/lab/replenish                         latest               4fdc9f71ef99b       182MB
-docker.io/lab/storefront                        latest               0a6c2117f27b0       55.7MB
+docker.io/lab/catalog                           g0                   c8fa271e7d79b       132MB
+docker.io/lab/inventory                         g0                   af337107fdfae       397MB
+docker.io/lab/pricing                           g0                   34884207f795a       9.6MB
+docker.io/lab/replenish                         g0                   370a04600b43f       182MB
+docker.io/lab/storefront                        g0                   cf49e55760e55       55.7MB
 ```
 
 Y con Docker, la misma tarea corre `kind load docker-image`:
@@ -220,6 +221,10 @@ docker.io/lab/inventory                         latest               aca6f078dce
 docker.io/lab/pricing                           latest               4abb5ea99f8db       3.43MB
 …
 ```
+
+La salida de Docker es del 03/10/2026, de antes de que las imágenes llevaran el tag de su paso: con
+`STEP_TAGS` en G0 ([Fase 02](02-compose-el-sistema-en-un-archivo.md)), la línea dice `kind load docker-image lab/pricing:g0` y `crictl`
+muestra `g0` en la columna `TAG`, como en la de Podman, que es del 24/10/2026.
 
 Las cinco quedan en el nodo como `docker.io/lab/<svc>` con los dos motores (los tamaños de `crictl`
 difieren porque cada carga los cuenta distinto; para comparar vale la columna "viaja" de B-04). La
@@ -307,6 +312,16 @@ por eso [a01](a01-el-laboratorio.md#-la-memoria-que-ocupa-cada-perfil) dimension
 > ⚠️ **No sumes las dos columnas.** Cada motor se midió con el otro apagado, que es como recomienda
 > trabajar el curso (sección 9).
 
+> 📝 **La columna de Podman, remedida el 24/10/2026** con el mismo arnés, Docker Desktop cerrado y la
+> máquina creada desde cero (cliente 6.1.3; la imagen de la máquina trae 6.1.4 adentro). Reproducen el
+> cluster (30,1 s, 28,0–30,8), el build de `pricing` (11,3 s, 11,0–11,7), los demás procesos (39 MB) y
+> la máquina después de trabajar (7.407 MB). La máquina recién arrancada dio **1.351 MB** (cinco
+> lecturas iguales) contra 1.479: un 9 % menos, con otra versión adentro. La tabla queda con las cifras
+> del 03/10, que se midieron el mismo día que las de Docker; contra los 1.244 de Docker, la máquina de
+> Podman sigue ocupando más (un 9 %, no un 19 %), y la conclusión de la sección no cambia. El build de
+> `inventory` (45,1 s) no compara: es otro código, generado de nuevo con los prompts de
+> [a03](a03-contratos-y-prompts-de-generacion.md).
+
 ---
 
 ## ⚰️ 9. Autopsia: los dos motores encendidos, por si acaso
@@ -327,7 +342,10 @@ Command Output: Error: something went wrong with the request: "listen tcp 127.0.
 ```
 
 Es el mismo error de la [Fase 00](00-el-ambiente.md), y el mensaje no dice cuál de los dos motores
-tiene el puerto.
+tiene el puerto. Hay un segundo costo que el mensaje tampoco cuenta: si los dos clusters se llaman
+igual, kind, al limpiar el que falló, borra del kubeconfig el contexto `kind-minimo`, que era el del
+cluster de Docker. Ese cluster sigue corriendo y `kubectl` ya no lo encuentra
+([a02](a02-problemas-del-ambiente.md#el-cluster-sigue-arriba-y-kubectl-ya-no-tiene-su-contexto)).
 
 **Cuánto cuesta salir, con número.** Un comando: `task engine:use -- <motor>` activa uno y avisa si
 el otro sigue encendido; `task engine:stop -- <motor>` lo apaga. Cambiar de motor cuesta lo que

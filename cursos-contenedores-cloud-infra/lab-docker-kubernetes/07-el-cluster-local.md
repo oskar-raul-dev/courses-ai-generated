@@ -255,10 +255,19 @@ no verificado por el autor; se confirma al hacer el curso.
 - **minikube** con el driver de Docker o de Podman: un nodo por contenedor, como kind, y su versión
   de Kubernetes por defecto es la v1.37.0, una más nueva que la del curso.
 - **El Kubernetes de Docker Desktop** se enciende en la configuración de Docker Desktop (en esta
-  versión, en modo kind, con la v1.36.1). Dos sorpresas medidas: **deshabilitarlo no lo apaga** —el
-  nodo siguió respondiendo `Ready` dos minutos después de quedar `State: disabled`—, y `reset-cluster`
-  con Kubernetes habilitado no lo borra: lo recrea. Para apagarlo de verdad hay que deshabilitarlo y
-  después borrarlo.
+  versión, en modo kind, con la v1.36.1); **no hay forma de encenderlo desde la CLI**
+  (`docker desktop enable` solo gestiona el *model runner*). Tres sorpresas medidas, y la primera es
+  la que importa: **deshabilitarlo no lo apaga, ni siquiera un poco.** Con `State: disabled`, y
+  después de un `docker desktop stop` y `start` completos, el nodo seguía contestando
+  `kubectl --context docker-desktop get nodes` como `Ready`, con `kubelet`, `etcd`, `kube-apiserver` y
+  `kube-controller-manager` vivos dentro de la máquina virtual, que marcaba 1.288–1.318 MiB contra
+  631–648 con el cluster borrado: **gasta más deshabilitado que habilitado**. La segunda:
+  `reset-cluster` con Kubernetes habilitado no lo borra, lo recrea; con Kubernetes deshabilitado sí lo
+  borra, y ahí la memoria vuelve a la línea base. La tercera: el `status` se equivoca en los dos
+  sentidos —dice `disabled` mientras el cluster atiende, y sigue diciendo `Node Count: 1` cuando ya no
+  existe—. Para apagarlo de verdad hay que deshabilitarlo **y después borrarlo**, y comprobarlo no es
+  con `docker ps`, donde este cluster no aparece nunca, sino con la memoria de la VM o con su vista de
+  procesos.
 
 > 🦭 **Con Podman, solo kind pasó entero.** k3d no arrancó: *"Node k3d-b07-server-0 failed to get
 > ready: error waiting for log line `k3s is up and running` … context deadline exceeded"*. minikube
@@ -285,7 +294,11 @@ compatibilidad con Podman.
 > kind (651 MiB).
 >
 > **Resultado: ganada.** Tres corridas: 478, 366 y 463 MiB, mediana 463, contra 681 con Traefik y
-> 651 de kind. Y sigue arrancando en 17 segundos.
+> 651 de kind. Y sigue arrancando en 17 segundos.>
+> 📝 **Las cifras de referencia de esta apuesta son las del 03/10/2026**, el día en que se corrió, y se
+> dejan como estaban: una apuesta es un registro con fecha. La remedición del 20/10 bajó kind a 502 MiB
+> y k3d a 626, así que los 463 MiB de k3d sin Traefik siguen quedando por debajo de kind y la apuesta
+> sigue ganada, con menos margen.
 
 Lo que enseña: **comparar clusters con su configuración de fábrica compara sus fábricas.** k3d sin
 lo que trae de serie es más liviano que kind; con todo, más pesado. La comparación justa es la que
@@ -297,16 +310,17 @@ deja a cada uno con lo mismo encima, y eso B-07 no lo hizo para minikube ni para
 
 > 📏 **Medición B-07 · Los clusters locales** · un nodo, sin nada desplegado · Docker Desktop 4.92.0
 > (Engine 29.8.0) y Podman 6.1.3, máquinas virtuales de 4 GiB · MacBook Pro M1 Pro, 32 GB, macOS
-> arm64 · 3 corridas, con las imágenes de cada herramienta ya descargadas · verificado el 03/10/2026
+> arm64 · 3 corridas, con las imágenes de cada herramienta ya descargadas · las filas de Docker,
+> remedidas el 20/10/2026 con la máquina dedicada; las de Podman, el 24/10/2026 con Docker Desktop cerrado
 >
 > | | Kubernetes | un nodo listo | memoria del cluster | tres nodos |
 > |---|---|---|---|---|
-> | kind, Docker | 1.36.4 | 26 s (26–27) | 651 MiB (632–668) | ✅ 36,2 s |
+> | kind, Docker | 1.36.4 | 26 s (26–28) | 502 MiB (483–561) | ✅ 31,1 s |
 > | kind, Podman | 1.36.4 | 30 s (29–30) | 507 MiB (403–547) | ✅ 34,9 s |
-> | k3d, Docker | 1.35.5+k3s1 | 17 s (17–17) | 681 MiB (655–697) | ✅ 29,3 s |
+> | k3d, Docker | 1.35.5+k3s1 | 17 s (17–17) | 626 MiB (562–661) | ✅ 30,9 s |
 > | k3d, Podman | — | no arrancó | — | — |
-> | minikube, Docker | 1.37.0 | 39 s (38–40) | 498 MiB (494–536) | ✅ 60,7 s |
-> | minikube, Podman | 1.37.0 | 36 s (35–36) | 504 MiB (496–520) | ❌ los workers no se unen |
+> | minikube, Docker | 1.37.0 | 44 s (42–45) | 506 MiB (465–514) | ✅ 70,1 s |
+> | minikube, Podman | 1.37.0 | 36 s (35–36) | 459 MiB (449–483) | ❌ los workers no se unen |
 > | Docker Desktop (modo kind) | 1.36.1 | 35 s (35–36)* | ≈ 750 MiB** | no medido |
 >
 > *Memoria del cluster*: lo que sube la memoria usada de la máquina virtual (`MemTotal −
@@ -315,13 +329,28 @@ deja a cada uno con lo mismo encima, y eso B-07 no lo hizo para minikube ni para
 > Kubernetes 1.358 MiB (1.352–1.363) contra 608 (587–642) sin él. Reproducir: `task measure -- B-07
 > --tool kind|k3d|minikube`; el de Docker Desktop, a mano, con el procedimiento de la sección 6.
 
-**Lo que dice, en proporciones.** Ninguno gana en todo. k3d arranca en dos tercios de lo que tarda
-kind, y minikube ocupa tres cuartos de su memoria, pero tarda una vez y media en arrancar y casi el
-doble en dar tres nodos. Las diferencias de memoria están en el orden de lo que trae cada uno de
-serie, como mostró la apuesta. **kind es el cluster del curso** por razones que la tabla muestra y
-no por velocidad: es el único que corrió entero con los dos motores, corre la versión de Kubernetes
-que el curso fija, no trae nada que el curso tenga que apagar, y su archivo de configuración versiona
-los puertos y los registries. La comparación queda archivada aquí: ninguna otra fase vuelve a ella.
+**Lo que dice, en proporciones.** Ninguno gana en todo, y donde se separan es en el tiempo, no en la
+memoria. k3d arranca en dos tercios de lo que tarda kind (17 s contra 26); minikube tarda una vez y
+media en levantar un nodo (44 s) y más del doble en dar tres (70,1 s contra 31,1). **En memoria los
+tres están en el mismo orden**: entre 502 y 626 MiB, con los rangos de kind y minikube solapados, así
+que no hay nada que elegir ahí. Eso es lo que trae cada uno de serie, y es lo que la apuesta de la
+sección 7 predijo.
+
+> 📝 **Las filas de Docker se remidieron, y la de kind bajó.** El 03/10/2026 esta tabla daba 651 MiB
+> (632–668) para kind, 681 (655–697) para k3d y 39 s para un nodo de minikube. El 20/10/2026, con
+> Docker Desktop **dedicado** y su Kubernetes apagado, kind dio 502 MiB y k3d 626, mientras los
+> tiempos de kind y k3d reprodujeron clavados (26 s y 17 s). Con kind en 502, la frase que esta
+> sección decía antes —que minikube ocupaba tres cuartos de la memoria de kind— **dejó de
+> sostenerse**: 506 contra 502 es lo mismo. Las filas de Podman se remidieron el 24/10/2026, con
+> Docker Desktop cerrado y la máquina de Podman nueva: kind reprodujo dentro de la variación (29 s,
+> 533 MiB, tres nodos en 34,2 s) y su fila se deja; k3d volvió a no arrancar, con el mismo mensaje; y
+> minikube volvió a dejar los workers fuera (`dial tcp 192.168.49.2:8443: connect: no route to host`),
+> con el mismo tiempo y menos memoria: 459 MiB (449–483), que reemplaza a los 504 (496–520) del 03/10.
+
+**kind es el cluster del curso** por razones que la tabla muestra y no por velocidad: es el único que
+corrió entero con los dos motores, corre la versión de Kubernetes que el curso fija, no trae nada que
+el curso tenga que apagar, y su archivo de configuración versiona los puertos y los registries. La
+comparación queda archivada aquí: ninguna otra fase vuelve a ella.
 
 ---
 

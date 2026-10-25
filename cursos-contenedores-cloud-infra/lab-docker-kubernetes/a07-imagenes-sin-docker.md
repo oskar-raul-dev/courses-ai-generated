@@ -124,6 +124,16 @@ Build en frío (cada constructor en un contenedor nuevo) y primer `200`, tres co
 
 \* Primer 200 en `/health/ready`, sin el agente de OpenTelemetry y con `DATA_DIR=/tmp` en la de Jib (sección siguiente).
 
+Remedido el 24/10/2026, con el código de G13 y el cluster encendido: Buildah 43,4 s, Kaniko 66,5 y 64,6 s, ko 27,0 y
+25,0 s de `ko build` (más 31–35 s de instalarlo con `go install`), Jib 40,1 s; la referencia con Docker, 31,3 s
+([a06](a06-arquitecturas-y-multiplataforma.md)). Las proporciones se achican (Buildah 1,4 veces, Kaniko 2,1) y el orden
+no cambia. Las capas, iguales (14 en Buildah, 15 en Kaniko y ko, 10 en Jib; `inventory` con Docker tiene 15, una más por
+el *sidecar* de G13), y la capa del binario, 24,4 MB y 35,6 → 35,8 MB en ko. Arranque: los cuatro de `pricing` entre 0,17
+y 0,20 s; `inventory` 2,46 s con el Dockerfile y 2,20 s con Jib. **El digest de Buildah de la primera fecha ya no se
+descarga**: quay reconstruye `v1.43.4` y borra el digest anterior; [a01](a01-el-laboratorio.md) tiene el nuevo. Y si
+repites el build en la misma carpeta, borra antes `out/buildah.tar`: `docker-archive` no escribe sobre un archivo que ya
+existe (`docker-archive doesn't support modifying existing images`).
+
 **Lo que dice la tabla.** Los que leen el Dockerfile producen **la misma imagen**: las mismas capas de la base y la misma
 capa de 24,3 MB del binario. (El tamaño total que informa Docker para la de Buildah, 57,7 MB contra 39,6 MB, sale de cómo
 cuenta el archivo importado; las capas son iguales, y no separé por qué.) Lo que cambia es el costo: **Buildah dentro de un

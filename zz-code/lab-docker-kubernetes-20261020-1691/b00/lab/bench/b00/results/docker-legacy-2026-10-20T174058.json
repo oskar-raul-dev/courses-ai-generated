@@ -1,0 +1,21 @@
+{
+  "engine": "docker",
+  "profile": "legacy",
+  "date": "2026-10-20T17:40:58",
+  "before": {
+    "total_mib": 3916,
+    "used_mib": 657
+  },
+  "ready_seconds": 36.6,
+  "after": {
+    "total_mib": 3916,
+    "used_mib": 1394
+  },
+  "containers_mib": {
+    "lab-portal-1": 41.1,
+    "lab-contingencia-1": 666.4,
+    "lab-braqui-1": 37.3,
+    "lab-braqui-traslados-1": 0.6,
+    "lab-contingencia-db-1": 50.6
+  }
+}

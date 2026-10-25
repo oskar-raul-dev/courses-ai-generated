@@ -110,7 +110,10 @@ ventas confirmadas en la base: 387 · órdenes: 386 · eventos distintos: 386 ·
 **387 ventas en la base y 386 respuestas `201`**: una venta se confirmó y el cliente nunca supo, porque el proceso murió
 antes de contestar. Y esa misma venta no tiene orden: murió también antes de publicar. Es la **escritura dual**: dos
 escrituras en dos sistemas distintos —la venta en Postgres, el evento en NATS— sin nada que las haga atómicas. La
-ventana es de pocos milisegundos, y por eso apareció una vez en tres corridas. En La Vecina, con 11.000 domicilios por día
+ventana es de pocos milisegundos, y por eso apareció una vez en tres corridas. Remedido el 23/10/2026 con un pod nuevo
+en cada corrida, apareció en las tres (2, 1 y 3 ventas sin orden, con 3, 2 y 3 ventas en la base de más que respuestas
+`201`): con 16 clientes, en el instante del `kill -9` hay varios avisos en vuelo en sus hilos virtuales, y cada uno es
+una ventana. En La Vecina, con 11.000 domicilios por día
 (historia §7), una ventana de milisegundos no es rara: es el lunes.
 
 ### 4.3 El cliente que reintenta

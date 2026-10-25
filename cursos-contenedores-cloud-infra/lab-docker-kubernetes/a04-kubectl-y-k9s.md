@@ -732,7 +732,9 @@ kubectl -n apps get deploy inventory \
   caída de verdad, `kill -9` al proceso desde el nodo ([Fase 26](26-idempotencia-y-outbox.md); en
   [a15](a15-statefulset-de-varios-miembros.md), 1 publicación fallida contra 47).
 - **`kubectl scale` o `kubectl set` sobre algo que instaló Helm** crea una deriva que el próximo `task deploy` choca o
-  deshace ([Fase 13](13-helm-el-paquete.md)): despliega con `FORCE=true` después.
+  deshace ([Fase 13](13-helm-el-paquete.md)): despliega con `FORCE=true` después. `FORCE=true` le devuelve a Helm los
+  campos que el chart escribe; lo que el chart **no** tiene se queda, porque Helm no borra campos ajenos: una variable
+  agregada con `kubectl set env` sigue ahí después del `deploy` (quítala con `kubectl set env … NOMBRE-`).
 - **`logs` sin `--tail` y sin `--since`** trae lo que el runtime guardó, que en un pod viejo es mucho; y sin
   `--previous`, nada del contenedor que murió.
 - **`port-forward` llega a un pod**, no al `Service`: no balancea, y se corta si ese pod se va.

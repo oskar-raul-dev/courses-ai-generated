@@ -1,0 +1,8 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata: {name: chaos-reintentos, namespace: apps}
+spec:
+  parentRefs: [{group: "", kind: Service, name: chaos, port: 8080}]
+  rules:
+    - backendRefs: [{name: chaos, port: 8080}]
+      retry: {attempts: 3, codes: [503]}
