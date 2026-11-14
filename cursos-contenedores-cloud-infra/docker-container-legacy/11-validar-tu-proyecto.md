@@ -580,8 +580,9 @@ puede rellenar —la hipótesis, el veredicto, lo no resuelto— déjalo como pl
 
 Valida `00-node-smoke` contra las cuatro generaciones de Node y construye la matriz completa.
 
-**Pregunta:** ¿pasa en las cuatro? Si algo cambia con Node 16, ya sabes por dónde mirar. Esta
-matriz es un pendiente declarado del curso y **[F20](20-validacion-sistematica-y-evidencia.md)** la retoma.
+**Pregunta:** ¿pasa en las cuatro? Si algo cambia con Node 16, ya sabes por dónde mirar. Compara tu
+matriz con la que **[F20](20-validacion-sistematica-y-evidencia.md)** §7.1 publica corrida sobre
+`linux/amd64`: doce ceros de doce. Una casilla distinta es un problema de tu laboratorio, no del fixture.
 
 ## 💀 Boss fight
 

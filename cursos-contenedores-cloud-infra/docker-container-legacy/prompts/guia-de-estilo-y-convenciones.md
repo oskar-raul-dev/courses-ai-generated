@@ -984,7 +984,7 @@ Los dos se cierran en la pasada del autor como lector: tomar el curso desde
 cero, montar todos los contenedores y rehacer todas las pruebas. Desde el
 19/10/2026 el curso **se publica antes de esa pasada**, porque lo no ejecutado
 ya está declarado al lector; la pasada queda como edición posterior. Sus
-reglas, lo que pide atención en cada tramo y la decisión que sigue esperando al
-autor (la matriz de F11) están en
-[`pendientes-a-futuro.md`](pendientes-a-futuro.md), junto con las dos cerradas
-(el solucionario y publicar antes de la pasada).
+reglas y lo que pide atención en cada tramo están en
+[`pendientes-a-futuro.md`](pendientes-a-futuro.md), junto con las tres decisiones
+del autor, ya cerradas: el solucionario, publicar antes de la pasada y la matriz
+de F11 (basta la de F20).

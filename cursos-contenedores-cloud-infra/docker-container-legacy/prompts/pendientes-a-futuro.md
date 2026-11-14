@@ -3,7 +3,7 @@
 
 > **Qué es este documento:** la hoja de trabajo de la pasada que cierra el curso: el autor lo toma
 > como lector, desde cero, en cada sistema, monta todos los contenedores y rehace todas las pruebas.
-> Al final, las decisiones del autor: una abierta y dos cerradas el 19/10/2026. No se cita desde el curso.
+> Al final, las decisiones del autor: las tres cerradas (dos el 19/10/2026 y la matriz el 14/11/2026). No se cita desde el curso.
 > **Fecha:** 05/10/2026. Ese día la redacción quedó cerrada: `verificar-corpus.py` (los dos modos) y
 > `check-course.sh` salen limpios.
 
@@ -38,7 +38,7 @@ empieza de cero, llevan a la imagen que prometen.
 | Tramo | Además de lo de cada fase | Cierra |
 |---|---|---|
 | Parte I (F00–F11) | La imagen incremental fase a fase, con las versiones fijadas de la guía §5.1 y §5.2, y la validación de F11 con un proyecto real | — |
-| F11, ejercicio 24 (🔥) | La matriz de `00-node-smoke` contra las cuatro generaciones de Node | ver la decisión 2 |
+| F11, ejercicio 24 (🔥) | La matriz de `00-node-smoke` contra las cuatro generaciones de Node: debe dar los doce ceros de F20 §7.1 (decisión 2) | F20 §7.1, si algo cambió |
 | F12–F16, F20, F21, F27 | Volver a correr lo que ya tiene fecha, con la versión de Docker del momento | las cabeceras, si algo cambió |
 | F22–F23 | Apple Silicon: ARM64 nativo contra AMD64 emulado | — |
 | **F24–F26** | **Los comandos `podman`, ejecutados por primera vez.** Ojo: el curso no trae una receta de instalación de Podman (el ejercicio 11 de F22 solo dice «instala Podman Desktop o Colima»); si al lector le hace falta, la pasada decide si F24 suma un bloque de instalación con `podman machine init` | la advertencia «Alcance de la verificación» de las tres cabeceras, `0-programa-del-curso.md` §9 y la guía §16.4 |
@@ -76,12 +76,13 @@ guía §16, que es la primera autoridad. El programa §9 se reescribió para dec
 hay solucionario —la línea `Objetivo:` o `Pregunta:` es la verificación, y la máquina responde—, y
 dejó de decir que es "un pendiente común a todos los cursos" (ya no lo era: la Ruta SQL trae el suyo).
 
-### 2. La matriz de compatibilidad completa
+### 2. La matriz de compatibilidad completa — 🪦 cerrada el 14/11/2026
 
-F11 (ejercicio 24, 🔥) llama a la matriz contra las cuatro generaciones de Node "un pendiente
-declarado del curso", que F20 retoma; F20 publica la suya corrida sobre `linux/amd64` emulado. La
-pasada da los datos para decidir si basta con la de F20 (y F11 deja de decir "pendiente") o si hace
-falta la corrida en ARM64 nativo.
+**Basta con la de F20** (decisión del autor). F20 §7.1 publica la matriz completa de `00-node-smoke`
+contra las cuatro generaciones, corrida sobre `linux/amd64`, que es la arquitectura base de la guía
+(§5): doce ceros de doce. El ejercicio 24 de F11 dejó de llamarla "un pendiente declarado del curso" y
+ahora manda a compararse con esa tabla. La corrida en ARM64 nativo no es un pendiente de la matriz:
+entra en la fila F22–F23 de la pasada, como cualquier otra comparación de arquitecturas.
 
 ### 3. Publicar antes de la pasada — 🪦 cerrada el 19/10/2026
 
