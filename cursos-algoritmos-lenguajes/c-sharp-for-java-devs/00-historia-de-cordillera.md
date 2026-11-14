@@ -373,7 +373,7 @@ formularios**. WinForms sobre .NET 10 sigue siendo una opción legítima y hay q
 Blazor Hybrid y una web interna son las otras tres. El curso mide las cuatro contra lo que de
 verdad importa — que noventa personas en nueve países puedan seguir trabajando el lunes.
 
-### 🌐 CatalogAPI — el catálogo hacia afuera · *el ultimátum de Almenara*
+### CatalogAPI — el catálogo hacia afuera · *el ultimátum de Almenara*
 
 Los datos del catálogo están presos dentro del sistema. Los distribuidores, la web, la app y
 tres socios comerciales reciben cada uno un volcado CSV nocturno distinto, generado por cuatro
@@ -395,7 +395,7 @@ ningún tutorial reproduce: sin llaves foráneas, con banderas de borrado, con f
 con treinta tablas anuales. Aquí se aprende cuándo configurar EF Core a mano, cuándo rendirse y
 usar Dapper, y cuándo lo correcto es arreglar el esquema.
 
-### 🏛️ Redacción — el back-office · *el flujo que vive en el correo*
+### Redacción — el back-office · *el flujo que vive en el correo*
 
 El camino de un manuscrito —recepción, lectura, informe de lectura, contrato, edición,
 maquetación, pruebas, imprenta— vive hoy en correos, en una hoja compartida y en una carpeta de
@@ -413,7 +413,7 @@ proyecto trae la comparación que solo este ecosistema permite hacer con honesti
 Server contra Blazor WebAssembly contra MVC clásico**— con la latencia medida desde Bogotá, desde
 Ciudad de México y desde el depósito de Lima, que es donde la conexión es mala de verdad.
 
-### 🌙 NightPress — el cierre nocturno · *la liquidación que nadie puede reproducir*
+### NightPress — el cierre nocturno · *la liquidación que nadie puede reproducir*
 
 Las regalías son el problema difícil del negocio. Las ventas llegan de nueve países, tres
 distribuidores y dos plataformas digitales; cada uno manda un archivo distinto, en su moneda, en

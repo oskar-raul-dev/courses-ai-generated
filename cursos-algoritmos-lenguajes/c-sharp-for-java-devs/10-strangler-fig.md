@@ -440,7 +440,7 @@ public sealed record ReconciliationReport(
   comportamiento con datos fijos— y la conciliación sirve para lo otro. El cobro de la deuda no es
   reemplazar: es **dejar de usar la foto donde la foto no llegaba**.
 
-### 5.4 🧩 El track `cv` en el camino base: envolver Convivir sin tocarlo
+### 5.4 El track `cv` en el camino base: envolver Convivir sin tocarlo
 
 Aquí está el momento del curso que más se parece a la vida real del lector después del curso, y conviene
 decirlo así: **la mitad de las empresas que adoptan .NET moderno lo hacen con algo en Java al lado que

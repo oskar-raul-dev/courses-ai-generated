@@ -116,7 +116,7 @@ expectativa, y **el umbral cuyo valor la ejecución tiene que determinar**.
 > una decisión. Existe como encargo, no como dato. Es preferible una tabla honestamente vacía a un
 > número inventado que veinticinco fases van a arrastrar.
 
-### ⚙️ El arnés cambió en la fase 06, y eso afecta a las entradas anteriores
+### El arnés cambió en la fase 06, y eso afecta a las entradas anteriores
 
 Hasta la fase 05 el arnés medía **tiempo**: mediana, p95 y dispersión. En la **fase 06** se cobra la
 deuda de la fase 00 y pasa a medir también asignaciones, pico de memoria administrada y **colecciones
@@ -142,7 +142,7 @@ reescribir el material de otra (`prompts/propuesta-fases-y-alcance.md` §8).
 > ⚠️ Una celda 🔜 **tampoco se cita**, por la misma razón que una ⏳: no hay dato. Y tiene una obligación
 > adicional — **nombrar la fase que la va a llenar**. Un 🔜 sin destino es un hueco, no un encargo.
 
-> ✅ **Y ya se llenó.** La **F18** completó la cuarta columna con la metodología congelada, y las celdas que
+> 🪦 **Y ya se llenó.** La **F18** completó la cuarta columna con la metodología congelada, y las celdas que
 > decían 🔜 dicen ⏳: pasaron de *"no se puede medir"* a *"se puede medir y falta correrla"*. Quedó registrada
 > la única adaptación que hubo que hacer —construir el **formulario de existencias** también en el modelo de
 > render ganador, porque la F18 construye la recepción de manuscritos y el módulo medido tenía que seguir
@@ -946,7 +946,7 @@ dotnet run -c Release --project src\modern\Cordillera.Ops -- deploy --measure --
 > **Y el veredicto no está prejuzgado.** Si los números dicen WinForms, dice WinForms — como resultado, no
 > como concesión. La fase está escrita para que las tres respuestas sean posibles.
 
-> 🧵 **La cuarta columna, cuatro fases después (F18).** Entró con la metodología congelada intacta y con una
+> 🪦 **La cuarta columna, cuatro fases después (F18).** Entró con la metodología congelada intacta y con una
 > adaptación declarada: el formulario de existencias se construyó **también** en el modelo de render ganador,
 > para que el módulo medido siguiera siendo el mismo. Y entró con una asimetría que conviene leer antes de
 > sacar conclusiones: **la web gana el criterio 4 por definición** —no hay nada que instalar en noventa

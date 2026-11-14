@@ -402,6 +402,8 @@ Vocabulario visual compartido por todos los documentos.
 - 🪦 **Pendiente cerrado.** Un 📌 que se resolvió: se marca así en vez de borrarlo, con dónde
   quedó la respuesta.
 - 🧨 **Rompe a propósito.** Un experimento destructivo con resultado observable.
+- 💲 **Cifra de costo.** Precio publicado, con fuente, fecha y región (`formato-de-mediciones.md`
+  §2.7). Ya se usaba así en BENCHMARKS y en las fases 17–20; se declaró el 14/11/2026.
 
 ### 7.2 Callouts en blockquote
 
@@ -740,3 +742,12 @@ están, por ser de las clases de arriba.
 - **Verificador:** `prompts/verificar-corpus.py`, subclase del perfil `courses-ia` de
   `prompts/verificador_base.py`, con los callouts y marcadores de §7. Se corre desde la raíz del
   curso con `python3 prompts/verificar-corpus.py`.
+  **Desde el 14/11/2026 da 0 errores y 0 avisos en los tres modos** (sin perfil,
+  `--perfil=courses-ia` y `--perfil=publicacion`). Ese día se recopió `verificador_base.py` de los
+  lineamientos, y `verificar-corpus.py` registra sus propias clases en `PERFILES`: antes, `--perfil=`
+  cambiaba la clase entera por la del repositorio, se perdían los callouts, el encabezado y los
+  chequeos de fase, y `publicacion` daba 92 errores `EMOJI` falsos. `VerificadorDePublicacion` suma
+  las restricciones de E9 a las del curso. Para cerrar los avisos: 💲 entró a §7.1; el 🔑 de la
+  convención de git pasó a 🧠; dos callouts de BENCHMARKS (✅ y 🧵) pasaron a 🪦, porque cuentan
+  un 🔜 que se cerró; y seis `###` perdieron su emoji (tres en la historia, uno en las fases 10 y 14
+  y uno en BENCHMARKS), por la moderación de §3.

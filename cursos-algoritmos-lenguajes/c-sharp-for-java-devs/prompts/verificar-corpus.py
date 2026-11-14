@@ -19,7 +19,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from verificador_base import PerfilCoursesIA, main  # noqa: E402
+from verificador_base import PERFILES, PerfilCoursesIA, PerfilPublicacion, main  # noqa: E402
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,7 +36,8 @@ class VerificadorDelCurso(PerfilCoursesIA):
     CALLOUTS = {"💸", "🔥", "⭐", "🧬", "🧱", "📏", "🏷️", "🪦", "🧨", "📌",
                 "📝", "📚", "⚠️", "💡", "🧭", "⚖️", "🧠",
                 "🪞", "🩻", "⚰️", "📖",
-                "⏳", "🔜"}  # las dos convenciones de lo pendiente (formato-de-mediciones §2.6 y §2.9)
+                "⏳", "🔜",  # las dos convenciones de lo pendiente (formato-de-mediciones §2.6 y §2.9)
+                "💲"}        # la cifra de costo con precio publicado (formato-de-mediciones §2.7)
     # Emoji con moderación en ###: los de las secciones recurrentes y los marcadores no avisan.
     # (el verificador revisa carácter por carácter: van también sin el U+FE0F).
     EMOJI_PERMITIDOS_H3 = PerfilCoursesIA.EMOJI_PERMITIDOS_H3 | CALLOUTS | {c.replace("\ufe0f", "") for c in CALLOUTS}
@@ -90,6 +91,20 @@ class VerificadorDelCurso(PerfilCoursesIA):
                 bloque = None
             elif bloque is not None:
                 bloque.append(linea)
+
+
+class VerificadorDePublicacion(VerificadorDelCurso):
+    """`--perfil=publicacion` con las reglas del curso: las restricciones de E9 (nada que entre en
+    `prompts/` ni que nombre material privado) sobre los callouts, el encabezado y los chequeos de fase."""
+    AUTOCONTENIDO = PerfilPublicacion.AUTOCONTENIDO
+    PROHIBIR_ENLACES_A_PROMPTS = PerfilPublicacion.PROHIBIR_ENLACES_A_PROMPTS
+    PROHIBIDOS_EN_PUBLICADOS = PerfilPublicacion.PROHIBIDOS_EN_PUBLICADOS
+
+
+# Sin esto, `--perfil=` cambia la clase entera por la del repositorio y se pierden los callouts, el
+# encabezado y los chequeos de fase (92 errores EMOJI falsos con `publicacion` el 14/11/2026).
+PERFILES["courses-ia"] = VerificadorDelCurso
+PERFILES["publicacion"] = VerificadorDePublicacion
 
 
 if __name__ == "__main__":

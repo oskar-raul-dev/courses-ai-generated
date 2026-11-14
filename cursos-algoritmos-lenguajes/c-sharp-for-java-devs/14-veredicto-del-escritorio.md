@@ -367,7 +367,7 @@ dotnet run -c Release --project src\modern\Cordillera.Ops -- deploy --measure --
 
 **Resultado:** ⏳ pendiente de ejecución en tu máquina.
 
-### 📋 La tabla del veredicto
+### La tabla del veredicto
 
 | Criterio | WinForms (.NET 10) | WPF + MVVM | WinUI 3 | Web (Blazor) |
 |---|---|---|---|---|
