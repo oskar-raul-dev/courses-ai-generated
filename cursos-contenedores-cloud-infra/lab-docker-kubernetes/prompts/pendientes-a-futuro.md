@@ -82,8 +82,8 @@ verificado por el autor"* en el README, `0-ESTRUCTURA-CURSO.md`, F00–F03, F05,
   1.37. Cuando salga una versión que lo soporte, se reabre D32 y se reverifica el camino base; las
   versiones viven solo en `a01`, así que el cambio empieza allí.
 - **La publicación (etapa E9).** Cerrada por D45 el 19/10/2026: se publica ya. `verificar-corpus.py
-  --publicacion` sale limpio y ningún enlace relativo sale del curso. Lo que queda (el repositorio
-  público, sin tags por D46) es O5, abajo.
+  --publicacion` sale limpio y ningún enlace relativo sale del curso. El repositorio público sin
+  `prompts/` (O5) quedó retirado el 14/11/2026: ningún curso del repositorio lleva esa copia.
 
 ---
 
@@ -112,7 +112,7 @@ esta; Windows y Linux quedan fuera de este plan.
 | ~~**O2**~~ | ~~**Quitar la CA**~~. **Hecha el 24/10/2026** (H377): paso 4 de `a01` en el llavero `login` y la variante del sistema, instalada, comprobada y quitada | — |
 | ~~**O3**~~ | ~~**Decidir si la máquina de Podman se queda** al cerrar A4~~. **Decidido el 24/10/2026:** se queda; el autor vacía sus imágenes y contenedores | — |
 | **O4** | **Windows 11 y Linux**, según la sección de arriba | no son esta máquina |
-| **O5** | **El repositorio público**: crearlo sin `prompts/`, sin tags (D46) | git y la publicación los maneja el autor |
+| ~~**O5**~~ | ~~**El repositorio público**: crearlo sin `prompts/`, sin tags (D46)~~. **Retirada el 14/11/2026** (decisión del autor): ningún curso del repositorio lleva una copia para estudiantes sin `prompts/` | — |
 
 ### 🧭 El plan de cierre en macOS
 
@@ -131,7 +131,7 @@ lab-docker-kubernetes`, anota sus hallazgos desde H271 con su log en
    del curso; si no da vacío, cada diferencia es un hallazgo.
 4. **C3 · Docker Desktop cerrado.** El autor instala Podman y cierra Docker Desktop; la sesión hace A4.
    Al terminar, el autor decide O3 y vuelve a abrir Docker Desktop.
-5. **C4 · El autor.** O1 con el laboratorio de C2 todavía arriba, después O2, y O5. O4 queda para
+5. **C4 · El autor.** O1 con el laboratorio de C2 todavía arriba, después O2 (O5 retirada el 14/11/2026). O4 queda para
    cuando haya máquinas.
 
 Lo que la pasada corrija en el curso publicado entra como edición: la marca *"no verificado por el
