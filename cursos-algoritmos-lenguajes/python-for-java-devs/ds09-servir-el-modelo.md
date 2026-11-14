@@ -284,16 +284,17 @@ No en el servidor. El endpoint **carga** un modelo; no entrena, no actualiza y n
 lo que ve. El entrenamiento es un trabajo del **cierre nocturno de la Fase 15**, mensual, que
 produce un archivo nuevo con su fecha en el nombre y **no lo publica solo**:
 
-```
-cierre nocturno (mensual)
-  → entrena con los datos hasta el mes cerrado
-  → exporta a ONNX y comprueba contra el pickle
-  → compara su AUC con el del modelo en producción sobre el mismo tramo
-  → si baja, NO publica: deja el archivo y avisa
-  → si sube, deja el archivo listo y avisa. Publica una persona.
+```mermaid
+flowchart TD
+    C["cierre nocturno (mensual)"] --> E["entrena con los datos hasta el mes cerrado"]
+    E --> X["exporta a ONNX y comprueba contra el pickle"]
+    X --> A{"compara su AUC con el del modelo<br/>en producción sobre el mismo tramo"}
+    A -- "baja" --> N["NO publica: deja el archivo y avisa"]
+    A -- "sube" --> S["deja el archivo listo y avisa"]
+    S --> P(["Publica una persona"])
 ```
 
-Las dos últimas líneas son la decisión importante y no es técnica: **en este dominio el modelo
+Las dos ramas del final son la decisión importante y no es técnica: **en este dominio el modelo
 no se despliega solo**. No porque el proceso no pueda automatizarse —puede—, sino porque lo
 que cambia cuando cambia el modelo es a quién llama Yuli mañana, y eso tiene una persona
 responsable. Un despliegue automático convierte un error de datos en una decisión sobre

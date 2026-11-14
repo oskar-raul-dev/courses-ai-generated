@@ -405,12 +405,18 @@ función del cierre: la respuesta no era optimizar `wait`, era no llamarlo veint
 
 ### 5.6 El orden correcto
 
-```text
-1. ¿Cuánto tarda de verdad?          → mide el total, con el arnés de la Fase 02
-2. ¿Dónde se va el tiempo?           → perfila: cProfile en desarrollo, py-spy en producción
-3. ¿Cuánto de eso es MÍO?            → si es esperar a la base o a la red, sigue en 4; si no, ve a 5
-4. Arregla la consulta               → índice, una consulta en vez de N, menos filas
-5. Y AHORA sí, el código Python      → y vuelve al paso 1 después de cada cambio
+```mermaid
+flowchart TD
+    P1["1 · ¿Cuánto tarda de verdad?<br/>mide el total, con el arnés de la Fase 02"]
+    P2["2 · ¿Dónde se va el tiempo?<br/>perfila: cProfile en desarrollo, py-spy en producción"]
+    P3{"3 · ¿Cuánto de eso es MÍO?"}
+    P4["4 · Arregla la consulta<br/>índice, una consulta en vez de N, menos filas"]
+    P5["5 · Y AHORA sí, el código Python"]
+    P1 --> P2 --> P3
+    P3 -- "esperar a la base o a la red" --> P4
+    P3 -- "es mío" --> P5
+    P4 --> P5
+    P5 -- "después de cada cambio" --> P1
 ```
 
 El paso 3 es el que casi nadie hace, y es el que evita el trabajo inútil.
