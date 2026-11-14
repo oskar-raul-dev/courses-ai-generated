@@ -353,4 +353,4 @@ No se rediscuten en los chats de redacción.
 | Ejercicios | **20 mínimo, 24 ideal, hasta 30** en las densas | El rango que fija la guía de estilo del curso |
 | CLI | **Eje transversal**, con sección fija en cada fase | El alumno sale sabiendo mover el toolchain sin IDE |
 | Diagramas | **Mermaid** (D-12, 05/10/2026, en la revisión del curso) | Árboles de archivos, salidas y correspondencias siguen en `text`; guía §14.1 |
-| Gemelo Spring Boot | **Deuda declarada** (05/10/2026): `reference/clearinghouse-spring/` no se publicó | La F16 y el README lo avisan; la fase se lee y se prepara, el duelo espera al gemelo; guía §14.2 |
+| Gemelo Spring Boot | **Publicado el 14/11/2026** en `src/clearinghouse-spring/`, en Spring Boot 4.1 sobre Java 21, con suite de contrato | La F16 lo anuncia; guía §14.2 |

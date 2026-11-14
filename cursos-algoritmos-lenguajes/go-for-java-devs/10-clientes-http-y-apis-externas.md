@@ -163,22 +163,22 @@ if err != nil {
 	return fmt.Errorf("enviando la entrega: %w", err)
 }
 
-// 1. CERRAR. Siempre, en todos los caminos. Sin esto, la conexión se fuga.
-//    ⚠️ Esto es el LADO CLIENTE. En el servidor (Fase 05), net/http lo cierra
-//    por ti. Confundirlos es el error común #2 de aquella fase.
+//  1. CERRAR. Siempre, en todos los caminos. Sin esto, la conexión se fuga.
+//     ⚠️ Esto es el LADO CLIENTE. En el servidor (Fase 05), net/http lo cierra
+//     por ti. Confundirlos es el error común #2 de aquella fase.
 defer resp.Body.Close()
 
-// 2. DRENAR antes de cerrar, si quieres reutilizar la conexión. Una conexión
-//    keep-alive solo vuelve al pool si el cuerpo se consumió ENTERO. Si cierras
-//    a medias, Go cierra la conexión TCP y la siguiente petición hace handshake
-//    otra vez.
+//  2. DRENAR antes de cerrar, si quieres reutilizar la conexión. Una conexión
+//     keep-alive solo vuelve al pool si el cuerpo se consumió ENTERO. Si cierras
+//     a medias, Go cierra la conexión TCP y la siguiente petición hace handshake
+//     otra vez.
 //
-//    El límite evita que un servidor malicioso te haga leer un gigabyte solo
-//    para poder reutilizar una conexión.
+//     El límite evita que un servidor malicioso te haga leer un gigabyte solo
+//     para poder reutilizar una conexión.
 defer io.Copy(io.Discard, io.LimitReader(resp.Body, 64<<10))
 
-// 3. LIMITAR lo que lees. Sin esto, un socio puede devolver diez gigas y tu
-//    ReadAll se los traga.
+//  3. LIMITAR lo que lees. Sin esto, un socio puede devolver diez gigas y tu
+//     ReadAll se los traga.
 body, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBytes))
 ```
 
@@ -206,7 +206,7 @@ func (c *Client) SendWithRetry(ctx context.Context, d relay.Delivery) error {
 			return nil
 		}
 		lastErr = err
-		time.Sleep(time.Second)   // ← retroceso fijo
+		time.Sleep(time.Second) // ← retroceso fijo
 	}
 	return lastErr
 }
@@ -304,14 +304,16 @@ curl -s -o /dev/null -w '
   total:      %{time_total}s
   estado:     %{http_code}
   tamaño:     %{size_download} bytes
-' https://api.frankfurter.app/latest
+' https://api.frankfurter.dev/v1/latest
 
 # Refrescar el corpus grabado de testdata/ desde las APIs reales. Es el único
 # comando de la fase que toca internet, y es deliberado y explícito.
-curl -s 'https://restcountries.com/v3.1/all?fields=name,cca2,cca3,currencies,languages,timezones,region,subregion' \
+# La v3.1 de REST Countries está retirada (§6.5): el corpus sale del dataset abierto
+# que la alimentaba. -L sigue la redirección de GitHub.
+curl -sL 'https://raw.githubusercontent.com/mledoze/countries/master/countries.json' \
   -o services/atlassync/testdata/restcountries_all.json
 
-curl -s 'https://api.frankfurter.app/latest?from=EUR' \
+curl -s 'https://api.frankfurter.dev/v1/latest?base=EUR' \
   -o services/atlassync/testdata/frankfurter_latest.json
 
 # Ver el tamaño de lo grabado: si crece mucho, el repositorio sufre.
@@ -322,7 +324,7 @@ du -h services/atlassync/testdata/*.json
 GODEBUG=http2debug=1 go run ./cmd/atlassync
 
 # El generador de mocks. Se instala como cualquier herramienta.
-go install go.uber.org/mock/mockgen@latest
+go install go.uber.org/mock/mockgen@v0.6.0
 
 # Generación por directiva: el //go:generate vive junto a la interfaz.
 go generate ./...
@@ -355,6 +357,13 @@ ss -s                                     # Linux, resumen de sockets
 > es `time_namelookup` o `time_connect`, el problema es de red o de DNS. Ese
 > desglose evita discusiones enteras con un proveedor.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 en un
+> contenedor `linux/arm64`: el histograma de amplificación y tres llamadas reales
+> a las APIs, que revelaron que la v3.1 de REST Countries está retirada y que
+> Frankfurter cambió de dominio (§6.5). Los clientes de EventRelay, AtlasSync y
+> `storeagent sync` no se reprodujeron: usan paquetes que la fase no muestra
+> (`backoff` interno, DTO, ayudantes).
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -370,21 +379,21 @@ package timeouts
 // Los cuatro escenarios de fallo, cada uno servido por un httptest.Server.
 // Para cada uno: qué timeout lo ataja y cuál NO sirve.
 
-// 1. El servidor que acepta la conexión y no responde nunca.
-//    Lo ataja: ResponseHeaderTimeout, o el Timeout global.
-//    NO lo ataja: DialContext.Timeout (la conexión SÍ se estableció).
+//  1. El servidor que acepta la conexión y no responde nunca.
+//     Lo ataja: ResponseHeaderTimeout, o el Timeout global.
+//     NO lo ataja: DialContext.Timeout (la conexión SÍ se estableció).
 func ServerNeverResponds() *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		<-r.Context().Done()   // esperar hasta que el cliente se rinda
+		<-r.Context().Done() // esperar hasta que el cliente se rinda
 	}))
 }
 
-// 2. El servidor que responde las cabeceras y el cuerpo a gotas.
-//    Lo ataja: SOLO el Timeout global del cliente.
-//    NO lo ataja: ResponseHeaderTimeout (las cabeceras llegaron rápido).
+//  2. El servidor que responde las cabeceras y el cuerpo a gotas.
+//     Lo ataja: SOLO el Timeout global del cliente.
+//     NO lo ataja: ResponseHeaderTimeout (las cabeceras llegaron rápido).
 //
-//    Es el Slowloris de la Fase 05, en dirección contraria: un servidor
-//    malicioso atacando a su cliente.
+//     Es el Slowloris de la Fase 05, en dirección contraria: un servidor
+//     malicioso atacando a su cliente.
 func ServerDripsBody() *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Length", "10000")
@@ -393,21 +402,21 @@ func ServerDripsBody() *httptest.Server {
 		for i := 0; i < 10000; i++ {
 			w.Write([]byte("x"))
 			flusher.Flush()
-			time.Sleep(100 * time.Millisecond)   // 1000 segundos en total
+			time.Sleep(100 * time.Millisecond) // 1000 segundos en total
 		}
 	}))
 }
 
-// 3. El servidor que responde un cuerpo gigantesco.
-//    Lo ataja: io.LimitReader. NINGÚN timeout lo ataja si el servidor es rápido:
-//    diez gigas a gran velocidad llegan antes del timeout y te dejan sin memoria.
+//  3. El servidor que responde un cuerpo gigantesco.
+//     Lo ataja: io.LimitReader. NINGÚN timeout lo ataja si el servidor es rápido:
+//     diez gigas a gran velocidad llegan antes del timeout y te dejan sin memoria.
 func ServerReturnsHuge() *httptest.Server { /* ... */ }
 
-// 4. El host que no resuelve o no acepta conexiones.
-//    Lo ataja: DialContext.Timeout.
-//    ⚠️ Y una trampa: la resolución DNS puede tardar más que el timeout del
-//    Dialer si el resolutor del sistema no coopera. El contexto es la única
-//    garantía real.
+//  4. El host que no resuelve o no acepta conexiones.
+//     Lo ataja: DialContext.Timeout.
+//     ⚠️ Y una trampa: la resolución DNS puede tardar más que el timeout del
+//     Dialer si el resolutor del sistema no coopera. El contexto es la única
+//     garantía real.
 func UnreachableHost() string { return "http://192.0.2.1:9999" } // TEST-NET-1
 ```
 
@@ -450,6 +459,14 @@ Las tres funciones del reintento, escritas y probadas.
 // labs/backoff-lab/classify.go
 package backoff
 
+import (
+	"context"
+	"crypto/tls"
+	"errors"
+	"net"
+	"net/http"
+)
+
 // Outcome dice qué hacer con el resultado de un intento.
 type Outcome int
 
@@ -487,9 +504,9 @@ func Classify(resp *http.Response, err error) Outcome {
 		}
 		return Retryable
 
-	case resp.StatusCode == http.StatusRequestTimeout,     // 408
-		resp.StatusCode == http.StatusBadGateway,          // 502
-		resp.StatusCode == http.StatusGatewayTimeout,      // 504
+	case resp.StatusCode == http.StatusRequestTimeout, // 408
+		resp.StatusCode == http.StatusBadGateway,     // 502
+		resp.StatusCode == http.StatusGatewayTimeout, // 504
 		resp.StatusCode >= 500:
 		return Retryable
 
@@ -561,6 +578,14 @@ func classifyError(err error) Outcome {
 ```go
 // labs/backoff-lab/policy.go
 package backoff
+
+import (
+	"math"
+	"math/rand/v2"
+	"net/http"
+	"strconv"
+	"time"
+)
 
 type Policy struct {
 	Base        time.Duration // espera del primer reintento
@@ -722,6 +747,12 @@ func drainAndClose(resp *http.Response) {
 // bien probados — y después de escribir este, sabrás leer su configuración.
 package circuit
 
+import (
+	"errors"
+	"sync"
+	"time"
+)
+
 type State int
 
 const (
@@ -802,8 +833,8 @@ cortacircuitos mínimo y no pretende otra cosa**; para producción, importa uno.
 type Sender struct {
 	client   *http.Client
 	policy   backoff.Policy
-	breakers *circuit.Registry   // uno por endpoint
-	limiters *rate.Registry      // uno por endpoint
+	breakers *circuit.Registry // uno por endpoint
+	limiters *rate.Registry    // uno por endpoint
 	clock    Clock
 	logger   *slog.Logger
 	maxBody  int64
@@ -855,7 +886,7 @@ func (s *Sender) Send(ctx context.Context, ep relay.Endpoint, ev relay.Event, d 
 // Ese es un bug real y muy común del reintento escrito a mano.
 func (s *Sender) doOnce(ctx context.Context, ep relay.Endpoint, ev relay.Event, d relay.Delivery) (*http.Response, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, ep.URL,
-		bytes.NewReader(ev.Payload))   // ← Reader NUEVO en cada intento
+		bytes.NewReader(ev.Payload)) // ← Reader NUEVO en cada intento
 	if err != nil {
 		return nil, fmt.Errorf("construyendo la petición: %w", err)
 	}
@@ -910,11 +941,29 @@ Meridian opera en once países. Cada uno tiene su moneda, su código ISO, su zon
 horaria y su tipo de cambio del día. Hoy esos datos están copiados a mano en
 cuatro archivos de configuración distintos, ligeramente distintos entre sí.
 
-**Las dos fuentes, las dos públicas y sin clave de API:**
+**Las dos fuentes, públicas y sin clave de API cuando se escribió el curso:**
 
 - **REST Countries** — `https://restcountries.com/v3.1/all` — países, códigos ISO,
   monedas, idiomas, zonas horarias.
-- **Frankfurter** — `https://api.frankfurter.app/latest` — tipos de cambio del BCE.
+- **Frankfurter** — `https://api.frankfurter.dev/v1/latest` — tipos de cambio del
+  BCE. Antes vivía en `api.frankfurter.app`, que ahora responde con un 301.
+
+> ⚠️ **La v3.1 de REST Countries se retiró en 2026**, y la forma en que lo hace es
+> una lección en sí misma. Comprobado el 14/11/2026: `GET /v3.1/all` responde 301
+> hacia un archivo que devuelve **200** con `{"success": false, "data": null,
+> "errors": [{"message": "This API version has been deprecated…"}]}`. Un cliente que
+> solo mira el código de estado lo da por bueno. El tuyo no, porque decodifica a
+> `[]countryDTO` y devuelve `ErrUnexpectedShape`. La v5 pide una clave (el plan
+> gratuito da 1.000 peticiones al mes) y tiene otra forma.
+>
+> Para el curso hay dos salidas. La primera es registrarte y adaptar `countryDTO` a
+> la v5. La segunda, que es la que siguen los tests de esta fase, es grabar el corpus
+> de `testdata/` desde el **dataset abierto que alimentaba la v3.1**,
+> `mledoze/countries` (licencia ODbL). Conserva `name`, `cca2`, `cca3`,
+> `currencies`, `languages`, `region` y `subregion` con la misma forma, pero no trae
+> `timezones` ni `population`, y el nombre nativo se llama `name.native`, no
+> `name.nativeName`. El test `live` de §6.6, contra la v3.1, ya no puede pasar: es
+> exactamente la clase de rotura que esa etiqueta aísla de tu CI.
 
 ```go
 // services/atlassync/internal/countries/client.go
@@ -932,6 +981,15 @@ cuatro archivos de configuración distintos, ligeramente distintos entre sí.
 // Que un curso dependa de que un servicio gratuito siga vivo en 2029 es un
 // defecto de diseño, y aquí se evita a propósito.
 package countries
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"log/slog"
+	"net/http"
+)
 
 // Fetcher es lo que AtlasSync necesita de este paquete. Se declara en el
 // consumidor (Fase 02); esta copia está aquí solo como documentación.
@@ -1075,7 +1133,7 @@ func (s *Service) Latest(ctx context.Context, base string) (Rates, error) {
 // Se desarrolla en serio en la Fase 12.
 func (s *Service) ttlWithJitter() time.Duration {
 	base := s.ttl
-	jitter := time.Duration(rand.N(int64(base / 5)))   // ±20%
+	jitter := time.Duration(rand.N(int64(base / 5))) // ±20%
 	return base + jitter
 }
 ```
@@ -1190,7 +1248,7 @@ func TestClient_RetriesOn503(t *testing.T) {
 	p := backoff.Policy{
 		Base: time.Millisecond, Max: 10 * time.Millisecond,
 		Multiplier: 2, MaxAttempts: 5,
-		Rand: rand.New(rand.NewPCG(42, 0)),   // semilla fija: determinista
+		Rand: rand.New(rand.NewPCG(42, 0)), // semilla fija: determinista
 	}
 	c := countries.NewClient(srv.Client(), srv.URL, p)
 
@@ -1250,6 +1308,13 @@ func TestAtlasSync_EndToEnd(t *testing.T) {
 // cambió de forma. Se corre a mano, periódicamente, y cuando falla la acción es
 // refrescar el corpus de testdata/ y adaptar el DTO.
 package countries_test
+
+import (
+	"context"
+	"net/http"
+	"testing"
+	"time"
+)
 
 func TestLive_RESTCountriesShapeUnchanged(t *testing.T) {
 	if testing.Short() {
@@ -1358,7 +1423,7 @@ type RatesFetcher interface {
 ```go
 // Y el test que justifica el generador:
 func TestService_DoesNotRefetchAfterPermanentError(t *testing.T) {
-	ctrl := gomock.NewController(t)   // desde 1.5 no hace falta ctrl.Finish()
+	ctrl := gomock.NewController(t) // desde 1.5 no hace falta ctrl.Finish()
 
 	mockFetcher := NewMockRatesFetcher(ctrl)
 
@@ -1624,33 +1689,43 @@ verifica.
 
 ```go
 // labs/backoff-lab/amplification_test.go
+package backoff_test
+
+import (
+	"math/rand/v2"
+	"testing"
+	"time"
+
+	backoff "github.com/meridian/labs/backoff-lab"
+)
 
 // TestAmplification mide cuántas peticiones llegan al socio en los primeros 10
 // segundos tras un fallo, con las dos políticas.
 func TestAmplification(t *testing.T) {
 	const pending = 500
 
+	jitter := backoff.Policy{
+		Base: 500 * time.Millisecond, Max: 30 * time.Second,
+		Multiplier: 2, MaxAttempts: 5,
+		Rand: rand.New(rand.NewPCG(1, 0)),
+	}
+
 	for _, tc := range []struct {
-		name   string
-		policy backoff.Policy
+		name  string
+		delay func(attempt int) time.Duration
 	}{
-		{"retroceso fijo sin jitter", backoff.Policy{
-			Base: 2 * time.Second, Multiplier: 1, MaxAttempts: 5,
-			Rand: rand.New(rand.NewPCG(1, 0)),
-		}},
-		{"exponencial con full jitter", backoff.Policy{
-			Base: 500 * time.Millisecond, Max: 30 * time.Second,
-			Multiplier: 2, MaxAttempts: 5,
-			Rand: rand.New(rand.NewPCG(1, 0)),
-		}},
+		// Policy siempre aplica full jitter, así que el retroceso fijo se modela
+		// aparte: dos segundos, siempre, para todos a la vez.
+		{"retroceso fijo sin jitter", func(int) time.Duration { return 2 * time.Second }},
+		{"exponencial con full jitter", func(a int) time.Duration { return jitter.Backoff(a, 0) }},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			// Histograma de peticiones por segundo durante 10 s.
 			buckets := make([]int, 10)
 			for i := 0; i < pending; i++ {
 				elapsed := time.Duration(0)
-				for attempt := 1; attempt <= tc.policy.MaxAttempts; attempt++ {
-					elapsed += tc.policy.Backoff(attempt, 0)
+				for attempt := 1; attempt <= jitter.MaxAttempts; attempt++ {
+					elapsed += tc.delay(attempt)
 					if sec := int(elapsed.Seconds()); sec < len(buckets) {
 						buckets[sec]++
 					}
@@ -1664,15 +1739,24 @@ func TestAmplification(t *testing.T) {
 
 ```text
 retroceso fijo sin jitter  → [0 0 500 0 500 0 500 0 500 0]
-exponencial con full jitter → [128 97 74 61 48 39 31 24 19 15]
+exponencial con full jitter → [953 418 281 177 170 136 79 59 72 61]
 ```
 
-**Los picos de 500 frente a una curva que decae.** El socio que recibe la primera
-serie ve cuatro martillazos; el que recibe la segunda ve una recuperación gradual.
+**Los picos de 500 frente a una curva que decae, aunque no como esperabas.** El
+retroceso fijo da cuatro martillazos sincronizados. El exponencial con *full
+jitter* y base de 500 ms desincroniza, pero **mete 953 peticiones en el primer
+segundo**, porque los primeros techos son de medio segundo y de un segundo. El
+jitter reparte; no frena. Con base de 2 s, la misma espera inicial que el fijo,
+la curva queda en `[286 352 146 169 151 112 82 73 82 74]`, y ningún segundo pasa
+de 352.
 
 Y la segunda mitad del experimento, que es la que convence: **haz que el servidor
 falso se caiga si recibe más de 200 peticiones por segundo**, y corre las dos
-políticas. La primera nunca se recupera; la segunda sí.
+políticas. Con ese umbral, las dos lo tiran en los primeros segundos. La
+diferencia es lo que pasa después: el fijo vuelve con 500 cada dos segundos y no
+lo deja levantarse; el jitter baja de 200 desde el tercer segundo y sí. Para no
+tirarlo nunca hace falta además un techo de concurrencia o el cortacircuitos de
+§6.3.
 
 ---
 

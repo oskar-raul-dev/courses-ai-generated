@@ -252,6 +252,12 @@ wc -w docs/defensa.md
 > levanta todo, ejecuta el flujo completo y verifica el resultado. Es lo que le
 > enseñas a alguien en dos minutos, y es lo que demuestra que la plataforma existe.
 
+> 📝 **Revisado el 14/11/2026**: la plataforma integrada es la del lector y no se
+> reprodujo. Se fijó la imagen de Jaeger (`all-in-one:latest` dejó de publicarse
+> en diciembre de 2025) y se comprobó la v2.23.0. La suite de contrato que la fase
+> pone en `services/shared/contract/` viene hecha en `src/clearinghouse-
+> spring/contract/`.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -321,7 +327,9 @@ services:
     ports: ["9200:9200"]
 
   jaeger:
-    image: jaegertracing/all-in-one:latest
+    # all-in-one (la v1) dejó de publicarse el 03/12/2025; la v2 trae la UI en 16686
+    # y OTLP en 4317 por defecto. Versión fija: "latest" no es una versión.
+    image: jaegertracing/jaeger:2.23.0
     ports: ["16686:16686", "4317:4317"]
 ```
 
@@ -450,6 +458,11 @@ echo "✅ flujo completo verificado"
 // compose levantado, y su build tag propio la mantiene fuera de todo lo demás.
 package platform_test
 
+import (
+	"testing"
+	"time"
+)
+
 // TestFullFlow es la demostración de §6.2, como test.
 func TestFullFlow(t *testing.T) {
 	p := setupPlatform(t)
@@ -502,7 +515,7 @@ func TestResilience(t *testing.T) {
 			go func() { done <- p.RunFullFlow() }()
 
 			time.Sleep(5 * time.Second)
-			p.Kill(t, svc)              // SIGKILL, sin apagado ordenado
+			p.Kill(t, svc) // SIGKILL, sin apagado ordenado
 			time.Sleep(2 * time.Second)
 			p.Start(t, svc)
 
@@ -881,10 +894,17 @@ probada**.
 **El fix, y son tres cosas distintas:**
 
 ```go
-// 1. UN paquete de contrato compartido, con los tipos que cruzan la frontera.
-//    Es de las pocas cosas que el capstone SÍ comparte (§4), porque tiene una
-//    sola definición correcta y ninguna política dentro.
+//  1. UN paquete de contrato compartido, con los tipos que cruzan la frontera.
+//     Es de las pocas cosas que el capstone SÍ comparte (§4), porque tiene una
+//     sola definición correcta y ninguna política dentro.
 package contract
+
+import (
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"time"
+)
 
 type MovementUpload struct {
 	ID          string    `json:"id"`

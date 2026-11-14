@@ -102,9 +102,9 @@ el servidor como cualquier otra cosa.
 ### `ResponseWriter` y el orden que no se puede romper
 
 ```go
-w.Header().Set("Content-Type", "application/json")  // 1º cabeceras
-w.WriteHeader(http.StatusCreated)                   // 2º código de estado
-json.NewEncoder(w).Encode(payload)                  // 3º cuerpo
+w.Header().Set("Content-Type", "application/json") // 1º cabeceras
+w.WriteHeader(http.StatusCreated)                  // 2º código de estado
+json.NewEncoder(w).Encode(payload)                 // 3º cuerpo
 ```
 
 **Ese orden es obligatorio y no hay forma de deshacerlo.** En cuanto llamas a
@@ -117,7 +117,7 @@ cabeceras salieron por el cable. Un `w.Header().Set(...)` posterior no hace nada
 func handleBroken(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(result); err != nil {
 		// Demasiado tarde: el 200 ya salió con los primeros bytes del cuerpo.
-		w.WriteHeader(http.StatusInternalServerError)  // ignorado
+		w.WriteHeader(http.StatusInternalServerError) // ignorado
 		return
 	}
 }
@@ -252,7 +252,7 @@ curl -s -o /dev/null -w 'status=%{http_code} tiempo=%{time_total}s\n' \
 # --max-time aborta desde el cliente. Es cómo se comprueba que un endpoint lento
 # no cuelga a quien lo llama... y también cómo se descubre que tu servidor no
 # tiene timeouts.
-curl --max-time 2 localhost:8080/slow
+curl --max-time 2 localhost:9100/slow   # el socio falso de §6.6, no OpsReport
 
 # Ver el tráfico real, incluidas las cabeceras que Go añade solo.
 curl -v localhost:8080/work-items/WI-0001
@@ -280,6 +280,10 @@ go1.13 doc net/http | grep 'Status[A-Z]'
 > `http.StatusText(code)` te da el texto canónico si lo necesitas. Un `201`
 > literal en un handler es de las pocas cosas que un revisor de Go va a marcar sin
 > dudarlo.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: la suite HTTP, el servidor con `curl`, el socio falso
+> y el slowloris.
 
 ---
 
@@ -597,10 +601,10 @@ Y el montaje, que se lee de arriba abajo:
 ```go
 handler := middleware.Chain(
 	router,
-	middleware.RequestID,              // 1º: todos los de abajo tienen el ID
-	middleware.Logging,                // 2º: registra lo que pase dentro
-	middleware.Recover,                // 3º: un panic ya queda registrado arriba
-	middleware.MaxBodyBytes(1<<20),    // 4º: límite justo antes del handler
+	middleware.RequestID,           // 1º: todos los de abajo tienen el ID
+	middleware.Logging,             // 2º: registra lo que pase dentro
+	middleware.Recover,             // 3º: un panic ya queda registrado arriba
+	middleware.MaxBodyBytes(1<<20), // 4º: límite justo antes del handler
 )
 ```
 
@@ -630,6 +634,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/meridian/opsreport/internal/middleware"
 	"github.com/meridian/opsreport/internal/opsreport"
 	"github.com/meridian/opsreport/internal/workitem"
 )
@@ -751,7 +756,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
+	"time"
 
 	"github.com/meridian/opsreport/internal/router"
 	"github.com/meridian/opsreport/internal/workitem"
@@ -772,10 +777,11 @@ type WorkItemService interface {
 
 type WorkItemHandler struct {
 	svc WorkItemService
+	now func() time.Time // para calcular la prioridad efectiva de la respuesta
 }
 
 func NewWorkItemHandler(svc WorkItemService) *WorkItemHandler {
-	return &WorkItemHandler{svc: svc}
+	return &WorkItemHandler{svc: svc, now: time.Now}
 }
 
 // Register monta las rutas del recurso. Que el handler registre sus propias
@@ -817,8 +823,8 @@ func (h *WorkItemHandler) create(w http.ResponseWriter, r *http.Request, _ route
 	dec.DisallowUnknownFields()
 
 	if err := dec.Decode(&req); err != nil {
-		var maxErr *http.MaxBytesError // 🕰️ no existe en 1.13; ver nota abajo
-		_ = maxErr
+		// 🕰️ http.MaxBytesError (Go 1.19) no existe todavía: decodeError
+		// distingue el cuerpo demasiado grande por el texto. Ver la nota de abajo.
 		writeError(w, r, decodeError(err))
 		return
 	}
@@ -889,6 +895,13 @@ func (h *WorkItemHandler) cancel(w http.ResponseWriter, r *http.Request, p route
 }
 ```
 
+Para que esto compile faltan piezas mecánicas que quedan a tu cargo, porque no
+enseñan nada nuevo. En `opsreport.Service`, `Get` (un `FindByID` con la traducción
+de errores de la Fase 03) y `Cancel` (un `Start` hacia `StatusCancelled`). En
+`httpapi`, `toJSON` y `toJSONList`, que convierten al JSON de la Fase 03 con la
+prioridad efectiva calculada con `now`; `filterByStatus`; `listResponse`, con
+`Items` y `Count`; y `decodeError`, de la nota que sigue.
+
 > 📝 **Nota de época sobre `MaxBytesReader`.** En Go 1.13, cuando el cuerpo supera
 > el límite, `Read` devuelve un error cuyo mensaje es `"http: request body too
 > large"` y **no hay un tipo para comprobarlo**: hay que comparar el texto, que es
@@ -900,9 +913,31 @@ func (h *WorkItemHandler) cancel(w http.ResponseWriter, r *http.Request, p route
 
 ### 6.5 El servidor: los cuatro tiempos de espera
 
+Aquí los labs se mudan al servicio. `tiny-router` pasa a `internal/router`,
+`middleware-chain` a `internal/middleware`, `config-loader` a `internal/config`
+(Fase 03) y `fake-clock` a `internal/clock`. Se **copian**, cada uno con su
+`package`, en cada servicio que los use: cada módulo es independiente, y un
+paquete compartido entre módulos tendría que publicarse como módulo propio.
+
 ```go
 // services/opsreport/cmd/opsreport/main.go
 package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/meridian/opsreport/internal/clock"
+	"github.com/meridian/opsreport/internal/config"
+	"github.com/meridian/opsreport/internal/httpapi"
+	"github.com/meridian/opsreport/internal/memstore"
+	"github.com/meridian/opsreport/internal/middleware"
+	"github.com/meridian/opsreport/internal/opsreport"
+	"github.com/meridian/opsreport/internal/router"
+)
 
 func main() {
 	cfg, err := config.Load(os.Getenv("MERIDIAN_CONFIG"))
@@ -914,10 +949,9 @@ func main() {
 	log.Printf("arrancando con %s", cfg)
 
 	store := memstore.New()
-	clock := clock.System{}
-	ids := ulid.NewGenerator()
+	ids := &sequentialIDs{} // el de la Fase 02, con el ID en memoria; en la Fase 09 lo da la base
 
-	svc := opsreport.New(store, clock, ids)
+	svc := opsreport.New(store, clock.System{}, ids)
 
 	r := router.New()
 	httpapi.NewWorkItemHandler(svc).Register(r)
@@ -966,6 +1000,14 @@ func main() {
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("el servidor terminó con error: %v", err)
 	}
+}
+
+// sequentialIDs es el generador de la Fase 02, sin cambios.
+type sequentialIDs struct{ n int }
+
+func (g *sequentialIDs) NewID() string {
+	g.n++
+	return fmt.Sprintf("WI-%04d", g.n)
 }
 ```
 
@@ -1031,7 +1073,11 @@ func main() {
 
 	// /ok responde 200 siempre, leyendo y descartando el cuerpo.
 	mux.HandleFunc("/ok", func(w http.ResponseWriter, r *http.Request) {
-		body, _ := ioutil.ReadAll(io.LimitReader(r.Body, 1<<20))
+		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1<<20))
+		if err != nil {
+			http.Error(w, "cuerpo ilegible", http.StatusBadRequest)
+			return
+		}
 		atomic.AddUint64(&c.ok, 1)
 
 		log.Printf("OK   %s %d bytes evento=%s firma=%s",
@@ -1136,13 +1182,27 @@ Y ahora lo que hace que todo esto sea probable sin abrir un puerto:
 package httpapi_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/meridian/opsreport/internal/clock"
+	"github.com/meridian/opsreport/internal/httpapi"
+	"github.com/meridian/opsreport/internal/middleware"
+	"github.com/meridian/opsreport/internal/opsreport"
+	"github.com/meridian/opsreport/internal/router"
 )
+
+// fakeStore y seqIDs son los dobles de la Fase 04, copiados a
+// internal/httpapi/fakes_test.go: un _test.go no se puede importar desde otro
+// paquete, así que cada paquete de test tiene los suyos.
+// mustCreateViaAPI y mustPost, que usa el test del conflicto, son dos ayudantes de
+// cinco líneas (POST con httptest.NewRecorder, comprobar el código, decodificar el
+// ID) con t.Helper(): escríbelos tú.
+var testNow = time.Date(2026, 9, 11, 9, 0, 0, 0, time.UTC)
 
 // newTestAPI arma la API completa con dobles. Es el equivalente de
 // @SpringBootTest, escrito a mano en diez líneas y sin contexto que cachear.
@@ -1255,7 +1315,9 @@ func TestStartWorkItem_Conflict(t *testing.T) {
 	var body struct {
 		Code string `json:"code"`
 	}
-	json.Unmarshal(rec.Body.Bytes(), &body)
+	if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+		t.Fatal(err)
+	}
 	if body.Code != "conflict" {
 		t.Errorf("code = %q, quería conflict", body.Code)
 	}
@@ -1486,6 +1548,17 @@ importante: **es la única forma de que un bug en una petición mate el servidor
 
 ```go
 // labs/httptest-lab/slowloris_test.go
+package httptestlab
+
+import (
+	"fmt"
+	"net"
+	"net/http"
+	"runtime"
+	"testing"
+	"time"
+)
+
 // Abre N conexiones y manda una cabecera cada pocos segundos, sin terminar
 // nunca la petición. Contra un servidor sin ReadHeaderTimeout, cada conexión se
 // queda ocupada indefinidamente.
@@ -1496,8 +1569,15 @@ func TestSlowlorisWithoutTimeout(t *testing.T) {
 		}),
 		// ReadHeaderTimeout: 0  ← sin timeout, como http.Server{} por defecto
 	}
-	ln, _ := net.Listen("tcp", "127.0.0.1:0")
-	go srv.Serve(ln)
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	go func() {
+		if err := srv.Serve(ln); err != nil && err != http.ErrServerClosed {
+			t.Log(err)
+		}
+	}()
 	defer srv.Close()
 
 	const attackers = 50

@@ -32,7 +32,7 @@ meridian/
   labs/                    los 46 mini proyectos
   services/                los cuatro servicios + storeagent + shared
   reference/
-    clearinghouse-spring/  el gemelo Java, entregado hecho (Fase 16)
+    clearinghouse-spring/  el gemelo Java, copiado de src/clearinghouse-spring del curso (Fase 16)
 ```
 
 **Una sola rama principal**, `main`. El curso es lineal y las ramas no aportan

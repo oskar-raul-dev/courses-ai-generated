@@ -84,10 +84,11 @@ una JVM sin configurar es hacer trampa.
 Y termina diciendo **dónde quedarse en Spring Boot es la decisión correcta**.
 Si el resultado fuera "Go gana en todo", el curso estaría mal escrito.
 
-> ⚠️ El gemelo Spring Boot de ClearingHouse **todavía no se publica** con el curso:
-> la Fase 16 explica cómo seguir sin él. Y las cifras que verás en las salidas de las
-> fases son ilustrativas; las que cuentan son las que mides tú en
-> [`BENCHMARKS.md`](BENCHMARKS.md).
+> 📝 El gemelo Spring Boot de ClearingHouse viene hecho en
+> [`src/clearinghouse-spring/`](src/clearinghouse-spring/), en Spring Boot 4.1 sobre
+> Java 21, con su suite de contrato. Las cifras del duelo están en B-24 de
+> [`BENCHMARKS.md`](BENCHMARKS.md), medidas en la máquina del curso; las que cuentan
+> para tu decisión son las tuyas.
 
 ---
 
@@ -101,6 +102,7 @@ Documentos transversales:
 [`00-historia-de-la-empresa-meridian.md`](00-historia-de-la-empresa-meridian.md)
 (quién es Meridian y de dónde sale cada servicio),
 [`INSTINTOS.md`](INSTINTOS.md) (el catálogo de reflejos ☕),
+[`APRENDIZAJE.md`](APRENDIZAJE.md) (cómo estudiarlo sin olvidarlo a las tres semanas),
 [`BENCHMARKS.md`](BENCHMARKS.md) (el banco de pruebas) y
 [`00-convencion-de-git-y-tags.md`](00-convencion-de-git-y-tags.md).
 

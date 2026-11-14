@@ -108,11 +108,11 @@ func (w *Worker) run(ctx context.Context) {
 ### Las cuatro constructoras
 
 ```go
-ctx := context.Background()   // la raíz. En main, en tests, en TestMain.
-ctx := context.TODO()         // "aquí irá un contexto cuando sepa cuál". Marcador.
+ctx := context.Background() // la raíz. En main, en tests, en TestMain.
+ctx := context.TODO()       // "aquí irá un contexto cuando sepa cuál". Marcador.
 
 ctx, cancel := context.WithCancel(parent)
-defer cancel()                // ⚠️ SIEMPRE. Ver abajo.
+defer cancel() // ⚠️ SIEMPRE. Ver abajo.
 
 ctx, cancel := context.WithTimeout(parent, 5*time.Second)
 defer cancel()
@@ -393,6 +393,12 @@ go1.13 doc os/signal Notify
 > **cuánto tiempo lleva bloqueada**: `goroutine 847 [chan send, 62 minutes]`. Esos
 > "62 minutes" son el diagnóstico.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: los cuatro labs y el apagado ordenado con `SIGTERM`.
+> La integración en OpsReport y EventRelay (`ctx` en todas las firmas, el perfil
+> de goroutines de L792) no se reprodujo: la fase muestra fragmentos, y el
+> servicio completo lo escribes tú.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -409,7 +415,6 @@ package worker
 import (
 	"context"
 	"log"
-	"time"
 )
 
 // RunWithQuit es la versión de la Fase 06: un canal que alguien cierra.
@@ -521,7 +526,9 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -555,7 +562,7 @@ func FetchWithTimeout(parent context.Context, url string, timeout time.Duration)
 		}
 		return nil, fmt.Errorf("petición a %s: %w", url, err)
 	}
-	defer resp.Body.Close()  // ⚠️ en el CLIENTE esto es obligatorio (Fase 10)
+	defer resp.Body.Close() // ⚠️ en el CLIENTE esto es obligatorio (Fase 10)
 
 	return ioutil.ReadAll(resp.Body)
 }
@@ -700,8 +707,6 @@ package leak
 
 import (
 	"runtime"
-	"sort"
-	"strings"
 	"testing"
 	"time"
 )
@@ -884,7 +889,7 @@ func (e *Engine) execute(ctx context.Context, workerID int, item workitem.WorkIt
 
 	defer func() {
 		e.runningMu.Lock()
-		delete(e.running, item.ID)   // ← sin este delete, el mapa crece sin fin
+		delete(e.running, item.ID) // ← sin este delete, el mapa crece sin fin
 		e.runningMu.Unlock()
 	}()
 
@@ -963,8 +968,8 @@ func (h *WorkItemHandler) start(w http.ResponseWriter, r *http.Request, p router
 //     operador que mire el panel mañana.
 func (e *Engine) Shutdown(ctx context.Context) error {
 	e.quitOnce.Do(func() {
-		close(e.quit)   // Submit empieza a rechazar
-		close(e.jobs)   // los workers salen al vaciar la cola
+		close(e.quit) // Submit empieza a rechazar
+		close(e.jobs) // los workers salen al vaciar la cola
 	})
 
 	done := make(chan struct{})
@@ -1192,7 +1197,7 @@ parece que ahorra trabajo:
 ```go
 // ☕
 type ReportGenerator struct {
-	ctx    context.Context   // ← guardado en el struct
+	ctx    context.Context // ← guardado en el struct
 	store  Store
 	logger *log.Logger
 }

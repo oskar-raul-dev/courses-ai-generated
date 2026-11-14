@@ -109,16 +109,16 @@ func BenchmarkReconcile(b *testing.B) {
 
 ```go
 // La forma antigua, que vas a seguir viendo en todo el código anterior a 2025:
-var sink []LedgerEntry    // ← la defensa contra la eliminación
+var sink []LedgerEntry // ← la defensa contra la eliminación
 
 func BenchmarkReconcileOld(b *testing.B) {
 	movements := buildMovements(1000)
 	svc := newService(b)
 
-	b.ResetTimer()        // ← no medir la preparación
+	b.ResetTimer() // ← no medir la preparación
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		sink = svc.reconcileAll(movements)   // ← asignar para que no se elimine
+		sink = svc.reconcileAll(movements) // ← asignar para que no se elimine
 	}
 }
 ```
@@ -128,7 +128,7 @@ func BenchmarkReconcileOld(b *testing.B) {
 ```go
 func BenchmarkEliminated(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_ = expensiveComputation(42)   // el resultado se descarta
+		_ = expensiveComputation(42) // el resultado se descarta
 	}
 }
 ```
@@ -206,7 +206,7 @@ var entryPool = sync.Pool{
 
 func (s *Service) reconcileChunk(movements []Movement) []ledger.Entry {
 	entries := entryPool.Get().([]ledger.Entry)[:0]
-	defer entryPool.Put(entries)     // ☠️ y aquí hay un bug, además
+	defer entryPool.Put(entries) // ☠️ y aquí hay un bug, además
 
 	for _, m := range movements {
 		entries = append(entries, s.reconcile(m)...)
@@ -250,7 +250,7 @@ func (h *Handler) writeReport(w io.Writer, rows []Row) error {
 
 	// ... escribir en buf ...
 
-	_, err := buf.WriteTo(w)   // el contenido SALE del buffer antes de devolverlo
+	_, err := buf.WriteTo(w) // el contenido SALE del buffer antes de devolverlo
 	return err
 }
 ```
@@ -410,7 +410,7 @@ go test -run '^$' -bench . -benchtime=1000x ./...
 go test -run '^$' -bench . -cpu=1,2,4,8 ./...
 
 # benchstat: la comparación con estadística.
-go install golang.org/x/perf/cmd/benchstat@latest
+go install golang.org/x/perf/cmd/benchstat@v0.0.0-20260112171951-5abaabe9f1bd
 benchstat old.txt new.txt
 benchstat -col /cpu old.txt        # comparar por número de procesadores
 
@@ -477,7 +477,7 @@ k6 run --vus 50 --duration 60s scripts/load/opsreport.js
 # CLIENTE HTTP: lo que pprof tampoco ve, porque el tiempo no se gasta en tu CPU.
 # httptrace instrumenta el ciclo de vida de UNA petición: DNS, conexión, TLS,
 # si reutilizó una conexión del pool, y cuánto tardó el primer byte.
-go run ./labs/client-timeouts -trace -url https://api.frankfurter.app/latest
+go run ./labs/client-timeouts -trace -url https://api.frankfurter.dev/v1/latest
 
 # Y el comando que evita la mitad de las mediciones malas: comprobar que la
 # máquina está quieta antes de medir.
@@ -513,6 +513,12 @@ pmset -g thermlevel 2>/dev/null     # macOS: nivel térmico
 > `top` ves las hojas —`runtime.memmove`, `syscall.Syscall`— que rara vez son
 > accionables. Con `top -cum` ves **qué operación de negocio** consume el tiempo,
 > que es la pregunta real. Empieza siempre por `-cum`.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 en un
+> contenedor `linux/arm64`: el análisis de escape de `escape-lab`, que corrigió
+> tres comentarios (`[]byte(s)` ya no copia cuando no hace falta). Los perfiles de
+> `pprof` de OpsReport bajo carga no se reprodujeron: necesitan el servicio
+> completo.
 
 ---
 
@@ -715,13 +721,13 @@ func FormatDirect(n int) string {
 func FormatSprintf(n int) string {
 	return fmt.Sprintf("%d", n)       // n escapes to heap: any lo fuerza
 }
-// Diferencia medida: tres o cuatro veces en tiempo, y una asignación frente a
-// cero. Por eso strconv es preferible a fmt en caminos calientes, y por eso
+// Diferencia medida (14/11/2026, go1.25.1): 19 ns y una asignación (la del
+// propio string) frente a 65 ns y dos. Por eso strconv es preferible a fmt en caminos calientes, y por eso
 // slog.Int() es preferible a slog.Any().
 
 // CASO 2: el slice que se puede pre-dimensionar.
 func BuildGrow(n int) []Entry {
-	var out []Entry                   // escapa, y crece: log2(n) asignaciones
+	var out []Entry                   // escapa, y crece: 19 asignaciones para 10.000 (×2, y ×1,25 pasado cierto tamaño)
 	for i := 0; i < n; i++ {
 		out = append(out, Entry{ID: i})
 	}
@@ -736,10 +742,10 @@ func BuildPresized(n int) []Entry {
 }
 // Es B-04 de la Fase 01, ahora con la explicación completa del porqué.
 
-// CASO 3: string ↔ []byte, que SIEMPRE copia.
+// CASO 3: string ↔ []byte, que copia… salvo cuando el compilador demuestra que no hace falta.
 func CountBytes(s string) int {
-	b := []byte(s)                    // COPIA: los strings son inmutables
-	return len(b)
+	b := []byte(s)                    // en go1.25: "zero-copy string->[]byte conversion"
+	return len(b)                     // b no escapa ni se modifica, así que no se copia
 }
 func CountDirect(s string) int {
 	return len(s)                     // sin copia
@@ -1138,7 +1144,7 @@ type cachedResponse struct {
 }
 
 type Handler struct {
-	mu    sync.RWMutex                    // ← el problema está aquí
+	mu    sync.RWMutex // ← el problema está aquí
 	cache map[string]cachedResponse
 	ttl   time.Duration
 }
@@ -1163,7 +1169,7 @@ func (h *Handler) getCountry(w http.ResponseWriter, r *http.Request) {
 	}
 	body, _ := json.Marshal(country)
 
-	h.mu.Lock()                            // ← ESCRITURA EXCLUSIVA
+	h.mu.Lock() // ← ESCRITURA EXCLUSIVA
 	h.cache[code] = cachedResponse{body: body, at: time.Now()}
 	h.mu.Unlock()
 
@@ -1236,18 +1242,18 @@ de CPU para un problema que no es de CPU.
 **El fix, y son dos cosas distintas:**
 
 ```go
-// 1. Eliminar la contención: una caché fragmentada. N mapas con N mutex, y la
-//    clave decide cuál. Con 32 fragmentos, la probabilidad de que dos
-//    escrituras coincidan baja drásticamente.
+//  1. Eliminar la contención: una caché fragmentada. N mapas con N mutex, y la
+//     clave decide cuál. Con 32 fragmentos, la probabilidad de que dos
+//     escrituras coincidan baja drásticamente.
 //
-//    (Y la alternativa: la caché de la Fase 12, que ya estaba escrita y resuelve
-//    esto mejor. Reescribirla en el handler fue el error original.)
+//     (Y la alternativa: la caché de la Fase 12, que ya estaba escrita y resuelve
+//     esto mejor. Reescribirla en el handler fue el error original.)
 type shardedCache struct {
 	shards [32]struct {
 		mu sync.RWMutex
 		m  map[string]cachedResponse
-		_  [40]byte   // relleno para que cada fragmento ocupe su propia línea de
-		              // caché de CPU y no haya "false sharing"
+		_  [40]byte // relleno para que cada fragmento ocupe su propia línea de
+		// caché de CPU y no haya "false sharing"
 	}
 }
 
@@ -1259,7 +1265,7 @@ type shardedCache struct {
 ```go
 func BenchmarkGetCountryRealistic(b *testing.B) {
 	h := newHandler(b, 60*time.Second)
-	codes := allCountryCodes()   // 250, no uno
+	codes := allCountryCodes() // 250, no uno
 
 	b.RunParallel(func(pb *testing.PB) {
 		// Cada goroutine empieza en un punto distinto: sin esto, todas piden la
@@ -1395,7 +1401,7 @@ type CountersBad struct {
 // Con relleno, cada uno ocupa su propia línea.
 type CountersPadded struct {
 	a int64
-	_ [56]byte   // 8 + 56 = 64
+	_ [56]byte // 8 + 56 = 64
 	b int64
 	_ [56]byte
 }

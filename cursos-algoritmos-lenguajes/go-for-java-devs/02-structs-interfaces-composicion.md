@@ -119,7 +119,7 @@ type Notifier interface {
 
 type EmailNotifier struct{ sent int }
 
-func (n *EmailNotifier) Notify(message string) error {   // ← receptor POR PUNTERO
+func (n *EmailNotifier) Notify(message string) error { // ← receptor POR PUNTERO
 	n.sent++
 	return nil
 }
@@ -127,9 +127,9 @@ func (n *EmailNotifier) Notify(message string) error {   // ← receptor POR PUN
 func main() {
 	var n Notifier
 
-	n = &EmailNotifier{}  // ✅ compila
-	n = EmailNotifier{}   // ❌ cannot use EmailNotifier{} as Notifier:
-	                      //    Notify method has pointer receiver
+	n = &EmailNotifier{} // ✅ compila
+	n = EmailNotifier{}  // ❌ cannot use EmailNotifier literal (type EmailNotifier) as type Notifier:
+	//    EmailNotifier does not implement Notifier (Notify method has pointer receiver)
 }
 ```
 
@@ -158,7 +158,7 @@ func (b Base) Describe() string { return "entidad " + b.ID }
 func (b Base) Summary() string  { return "resumen de " + b.Describe() }
 
 type Store struct {
-	Base           // embedding: sin nombre de campo
+	Base // embedding: sin nombre de campo
 	Name string
 }
 
@@ -170,8 +170,8 @@ Y ahora el experimento que hay que hacer una vez:
 ```go
 s := Store{Base: Base{ID: "ST-014"}, Name: "Chapinero"}
 
-fmt.Println(s.Describe())  // "tienda Chapinero"     ← el de Store, como esperabas
-fmt.Println(s.Summary())   // "resumen de entidad ST-014"  ← ¿cómo?
+fmt.Println(s.Describe()) // "tienda Chapinero"     ← el de Store, como esperabas
+fmt.Println(s.Summary())  // "resumen de entidad ST-014"  ← ¿cómo?
 ```
 
 **`Summary()` llamó al `Describe()` de `Base`, no al de `Store`.** En Java, con
@@ -459,6 +459,10 @@ go1.13 test -run '^$' -bench . -benchmem -count=10 ./labs/shapes
 > lo más parecido que Go tiene a `implements`, y es opcional a propósito: se pone
 > **en el paquete que implementa**, cuando quieres esa garantía.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: los labs, OpsReport, EventRelay y los mensajes del
+> compilador. Las cifras de B-05 son de tu máquina.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -470,18 +474,21 @@ El "hola mundo" de las interfaces, que además nos sirve para medir su coste
 queremos:
 
 ```go
-// labs/shapes/java_style.go   ☕ — esto es lo que NO hay que escribir
-package shapes
+// labs/shapes/javastyle/java_style.go   ☕ — esto es lo que NO hay que escribir
+// Va en su propio paquete: su Rectangle chocaría con el de shapes.go.
+package javastyle
+
+import "fmt"
 
 // AbstractShape intenta ser una clase base. En Go no hay clase base.
 type AbstractShape struct {
 	name string
 }
 
-func (a *AbstractShape) GetName() string     { return a.name }
-func (a *AbstractShape) SetName(n string)    { a.name = n }
-func (a *AbstractShape) Area() float64       { return 0 } // "los hijos lo sobrescriben"
-func (a *AbstractShape) Describe() string    { return a.GetName() + " con área " + fmt.Sprint(a.Area()) }
+func (a *AbstractShape) GetName() string  { return a.name }
+func (a *AbstractShape) SetName(n string) { a.name = n }
+func (a *AbstractShape) Area() float64    { return 0 } // "los hijos lo sobrescriben"
+func (a *AbstractShape) Describe() string { return a.GetName() + " con área " + fmt.Sprint(a.Area()) }
 
 type Rectangle struct {
 	AbstractShape
@@ -493,8 +500,8 @@ func (r *Rectangle) Area() float64 { return r.Width * r.Height }
 
 ```go
 r := &Rectangle{AbstractShape: AbstractShape{name: "rect"}, Width: 3, Height: 4}
-fmt.Println(r.Area())      // 12   ✅
-fmt.Println(r.Describe())  // "rect con área 0"   ❌
+fmt.Println(r.Area())     // 12   ✅
+fmt.Println(r.Describe()) // "rect con área 0"   ❌
 ```
 
 **`Describe()` devuelve área 0.** El método promovido de `AbstractShape` llama a
@@ -776,7 +783,8 @@ import (
 	"time"
 )
 
-// ... Status, Kind, Priority y sus constantes, como en la Fase 01 ...
+// ... Status, Kind, Priority y sus constantes, los errores de validación,
+// maxDescriptionRunes y agingBoost: todo como en la Fase 01 ...
 
 type WorkItem struct {
 	ID                string
@@ -939,6 +947,7 @@ package opsreport
 
 import (
 	"errors"
+	"sort"
 	"time"
 
 	"github.com/meridian/opsreport/internal/workitem"
@@ -1107,6 +1116,8 @@ func (g *sequentialIDs) NewID() string {
 package memstore
 
 import (
+	"errors"
+
 	"github.com/meridian/opsreport/internal/workitem"
 )
 
@@ -1171,8 +1182,9 @@ func (s *Store) Update(item workitem.WorkItem) error {
 > ```bash
 > go1.13 list -f '{{.ImportPath}} → {{.Imports}}' ./internal/...
 > ```
-> `internal/memstore` importa `internal/workitem` y nada más. `internal/opsreport`
-> importa `internal/workitem` y nada más. **Ninguno importa al otro.**
+> De los paquetes del módulo, `internal/memstore` solo importa `internal/workitem`,
+> y lo mismo `internal/opsreport`; el resto de cada lista es de la biblioteca
+> estándar (`errors`, `sort`, `time`). **Ninguno importa al otro.**
 >
 > **La mentira de la pantalla:** que compile no prueba que `*memstore.Store`
 > satisfaga `opsreport.Store` — lo prueba el cableado de `main`, y si te equivocas
@@ -1242,10 +1254,14 @@ func main() {
 	}
 	fmt.Println("iniciado:", started)
 
-	// Y ahora el intento ilegal: un trabajo ya terminado no se puede reiniciar.
-	done, _ := service.Complete(started.ID, "")
+	done, err := service.Complete(started.ID, "")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "no se pudo terminar:", err)
+		os.Exit(1)
+	}
 	fmt.Println("terminado:", done)
 
+	// Y ahora el intento ilegal: un trabajo ya terminado no se puede reiniciar.
 	if _, err := service.Start(done.ID); err != nil {
 		fmt.Println("rechazado como se esperaba:", err)
 	}
@@ -1273,8 +1289,7 @@ su dominio, y su máquina de estados es más rica que la de OpsReport.
 
 ```bash
 mkdir -p services/eventrelay/internal/relay
-cd services/eventrelay && go mod init github.com/meridian/eventrelay
-# y edita go.mod para poner: go 1.13
+cd services/eventrelay && go1.13 mod init github.com/meridian/eventrelay
 ```
 
 ```go
@@ -1378,12 +1393,12 @@ type Event struct {
 type DeliveryStatus string
 
 const (
-	DeliveryPending   DeliveryStatus = "pending"    // esperando su turno
-	DeliveryInFlight  DeliveryStatus = "in_flight"  // petición HTTP en curso
-	DeliveryDelivered DeliveryStatus = "delivered"  // 2xx recibido
-	DeliveryFailing   DeliveryStatus = "failing"    // falló, quedan intentos
-	DeliveryDead      DeliveryStatus = "dead"       // agotó los intentos
-	DeliveryCancelled DeliveryStatus = "cancelled"  // el endpoint se dio de baja
+	DeliveryPending   DeliveryStatus = "pending"   // esperando su turno
+	DeliveryInFlight  DeliveryStatus = "in_flight" // petición HTTP en curso
+	DeliveryDelivered DeliveryStatus = "delivered" // 2xx recibido
+	DeliveryFailing   DeliveryStatus = "failing"   // falló, quedan intentos
+	DeliveryDead      DeliveryStatus = "dead"      // agotó los intentos
+	DeliveryCancelled DeliveryStatus = "cancelled" // el endpoint se dio de baja
 )
 
 // Delivery es el intento de hacer llegar un evento a un endpoint.
@@ -1403,12 +1418,12 @@ type Delivery struct {
 // DeliveryAttempt es el registro de UN intento. Se guardan todos: cuando un
 // socio dice "nunca me llegó", esta tabla es la que responde.
 type DeliveryAttempt struct {
-	ID         string
-	DeliveryID string
-	Number     int
-	StatusCode int
-	LatencyMS  int64
-	Error      string
+	ID          string
+	DeliveryID  string
+	Number      int
+	StatusCode  int
+	LatencyMS   int64
+	Error       string
 	AttemptedAt time.Time
 }
 
@@ -1615,7 +1630,7 @@ import "fmt"
 
 type Job struct{ id string }
 
-func (j Job) Name() string  { return "job-" + j.id }
+func (j Job) Name() string   { return "job-" + j.id }
 func (j Job) Banner() string { return ">>> " + j.Name() + " <<<" }
 
 type ReportJob struct {
@@ -1628,8 +1643,8 @@ func (r ReportJob) Name() string { return "report-" + r.id + "." + r.Format }
 
 func Demo() {
 	r := ReportJob{Job: Job{id: "42"}, Format: "csv"}
-	fmt.Println(r.Name())    // report-42.csv     ← el tuyo
-	fmt.Println(r.Banner())  // >>> job-42 <<<    ← NO el tuyo
+	fmt.Println(r.Name())   // report-42.csv     ← el tuyo
+	fmt.Println(r.Banner()) // >>> job-42 <<<    ← NO el tuyo
 }
 ```
 

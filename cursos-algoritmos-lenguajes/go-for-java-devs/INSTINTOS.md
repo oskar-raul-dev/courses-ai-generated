@@ -147,7 +147,7 @@ el contrato entre servicios. Lo demás se repite.
 movements := []string{"SALE", "REFUND", "VOID", "DEPOSIT"}
 firstTwo := movements[:2]
 firstTwo = append(firstTwo, "PATCHED")
-fmt.Println(movements)  // [SALE REFUND PATCHED DEPOSIT]  ← ¿perdón?
+fmt.Println(movements) // [SALE REFUND PATCHED DEPOSIT]  ← ¿perdón?
 ```
 
 **Qué cuesta.** Corrupción silenciosa de datos que pasa los tests y la revisión de
@@ -165,8 +165,8 @@ o documentas que es de solo lectura.
 ### ☕ "`substring` me da una cadena independiente"
 
 Cierto en Java desde la 7; falso para subslices en Go. Un subslice de treinta bytes
-puede retener un arreglo de diez megas. **Coste: tres órdenes de magnitud en
-memoria retenida.**
+puede retener un arreglo de diez megas. **Coste: los diez megas enteros
+retenidos, contra unas decenas de bytes si se copia.**
 
 **Fase 01**
 

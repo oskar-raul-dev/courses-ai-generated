@@ -248,8 +248,8 @@ func (s *Service) Create(item workitem.WorkItem) (result workitem.WorkItem, err 
 	}()
 
 	item.ID = s.ids.NewID()
-	mustValidate(item)          // hace panic si no valida
-	mustSave(s.store, item)     // hace panic si el almacén falla
+	mustValidate(item)      // hace panic si no valida
+	mustSave(s.store, item) // hace panic si el almacén falla
 	return item, nil
 }
 ```
@@ -326,7 +326,7 @@ go1.13 doc io.Reader
 
 # Lista los archivos de un paquete, incluidos los de test. Útil para entender un
 # paquete ajeno antes de tocarlo.
-go1.13 list -f '{{.GoFiles}} {{.TestGoFiles}}' ./internal/config
+(cd labs/config-loader && go1.13 list -f '{{.GoFiles}} {{.TestGoFiles}}' .)
 
 # El grafo de dependencias hacia una dirección concreta: quién importa qué.
 # Es cómo se detecta un ciclo antes de que el compilador lo detecte por ti.
@@ -344,6 +344,10 @@ go1.13 test -run '^$' -bench . -benchmem -count=10 ./labs/json-codec
 > proporción al documento, y la diferencia entre `Unmarshal` y `Decoder` se ve
 > mucho más clara en `B/op` que en `ns/op`. Cuando midas B-06, mira primero esa
 > columna.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: la cadena de errores, la validación, `defer`, el ciclo
+> de imports y las trampas de JSON. Las cifras de B-06 son de tu máquina.
 
 ---
 
@@ -365,8 +369,8 @@ import (
 
 // Nivel 4 — el fondo: un error del "driver", con datos dentro.
 type DriverError struct {
-	Code    int
-	Query   string
+	Code  int
+	Query string
 }
 
 func (e *DriverError) Error() string {
@@ -383,7 +387,7 @@ func storeFind(id string) error {
 	// orden importa: aquí elegimos conservar el del driver, y el centinela va
 	// como parte del mensaje... lo cual es exactamente el problema que
 	// errors.Join resuelve en Go 1.20. 🕰️
-	return fmt.Errorf("%s: %w", ErrRowNotFound, driverErr)
+	return fmt.Errorf("%s: %w", ErrRowNotFound, driverErr) //nolint:errorlint // el centinela queda como texto a propósito: es lo que el lab demuestra
 }
 
 // Nivel 2 — el servicio añade el identificador.
@@ -413,7 +417,7 @@ func Inspect() {
 	// 2. errors.As recupera el tipo del FONDO, a cuatro niveles de distancia.
 	var driverErr *DriverError
 	if errors.As(err, &driverErr) {
-		fmt.Println("código del driver:", driverErr.Code)  // 1032
+		fmt.Println("código del driver:", driverErr.Code) // 1032
 	}
 
 	// 3. errors.Unwrap pela un nivel. Casi nunca se usa directamente; está aquí
@@ -427,7 +431,7 @@ Y el descubrimiento incómodo, que es la mitad del valor del laboratorio:
 
 ```go
 // ¿Funciona errors.Is con el centinela?
-fmt.Println(errors.Is(err, ErrRowNotFound))  // false ❌
+fmt.Println(errors.Is(err, ErrRowNotFound)) // false ❌
 ```
 
 **No funciona**, porque en `storeFind` envolvimos el `DriverError` con `%w` y el
@@ -456,8 +460,8 @@ func (e *storeError) Unwrap() error { return e.cause }
 ```
 
 ```go
-errors.Is(err, ErrRowNotFound)  // true ✅
-errors.As(err, &driverErr)      // true ✅
+errors.Is(err, ErrRowNotFound) // true ✅
+errors.As(err, &driverErr)     // true ✅
 ```
 
 > 💡 **El método `Is(error) bool` es un punto de extensión oficial.** `errors.Is`
@@ -484,6 +488,7 @@ import (
 // Los centinelas del dominio. Son valores comparables y forman parte de la API
 // pública del paquete: cambiarlos rompe a los llamadores que preguntan por ellos.
 var (
+	ErrNotFound          = errors.New("el work item no existe")
 	ErrInvalidTransition = errors.New("transición de estado no permitida")
 	ErrInvalidPriority   = errors.New("prioridad fuera de rango")
 	ErrUnknownKind       = errors.New("tipo de trabajo desconocido")
@@ -541,6 +546,10 @@ func (e *TransitionError) Error() string {
 func (e *TransitionError) Is(target error) bool { return target == ErrInvalidTransition }
 ```
 
+`ErrInvalidTransition` vivía en `workitem.go` desde la Fase 02: ahora se muda aquí,
+así que bórrala de allí o el compilador te dirá `ErrInvalidTransition redeclared
+in this block`.
+
 Y `Validate` pasa a devolver todos los fallos:
 
 ```go
@@ -588,13 +597,29 @@ func (w *WorkItem) MarkRunning(now time.Time) error {
 }
 ```
 
-El servicio ahora puede distinguir de verdad:
+El centinela `ErrNotFound` vive en `workitem` y no en el almacén, por una razón
+de dirección: `opsreport` no puede preguntar por `memstore.ErrNotFound` sin
+importar `memstore`, y eso rompe la regla de la Fase 02 (el servicio no conoce
+implementaciones). Así que el almacén **envuelve** el centinela del dominio y
+conserva su propio vocabulario:
+
+```go
+// services/opsreport/internal/memstore/store.go (fragmento)
+
+// ErrNotFound sigue siendo el error del almacén, pero envuelve el del dominio:
+// errors.Is(err, workitem.ErrNotFound) lo reconoce sin conocer este paquete.
+var ErrNotFound = fmt.Errorf("%w en el almacén", workitem.ErrNotFound)
+```
+
+Y el servicio ahora puede distinguir de verdad:
 
 ```go
 // services/opsreport/internal/opsreport/service.go (fragmento)
 
 var (
-	ErrNotFound = errors.New("el work item no existe")
+	// ErrNotFound es el centinela del dominio, reexportado: quien use el
+	// servicio pregunta por opsreport.ErrNotFound y no necesita saber más.
+	ErrNotFound = workitem.ErrNotFound
 	ErrConflict = errors.New("el work item está en un estado que no lo permite")
 	ErrStorage  = errors.New("el almacén no está disponible")
 )
@@ -602,10 +627,10 @@ var (
 func (s *Service) Start(id string) (workitem.WorkItem, error) {
 	item, err := s.store.FindByID(id)
 	if err != nil {
-		if errors.Is(err, memstore.ErrNotFound) {
-			// Se traduce el error del almacén al vocabulario del servicio, pero
-			// se conserva la causa: quien depure tendrá la cadena completa.
-			return workitem.WorkItem{}, fmt.Errorf("%w: %s", ErrNotFound, id)
+		if errors.Is(err, ErrNotFound) {
+			// Se añade contexto y se conserva la causa: errors.Is encuentra
+			// opsreport.ErrNotFound Y memstore.ErrNotFound en la misma cadena.
+			return workitem.WorkItem{}, fmt.Errorf("work item %s: %w", id, err)
 		}
 		return workitem.WorkItem{}, fmt.Errorf("%w: %v", ErrStorage, err)
 	}
@@ -623,9 +648,14 @@ func (s *Service) Start(id string) (workitem.WorkItem, error) {
 }
 ```
 
+`Create`, `Complete` y `Fail` traducen igual: cada llamada al almacén que falla
+devuelve `fmt.Errorf("%w: %v", ErrStorage, err)`. La suite de la Fase 04 lo
+comprueba.
+
 > 🧭 **Regla del proyecto: la traducción de errores ocurre en los límites.** El
-> almacén tiene su vocabulario (`ErrNotFound` de `memstore`), el servicio el suyo
-> (`opsreport.ErrNotFound`), y el borde HTTP el suyo (códigos de estado, Fase 05).
+> almacén tiene su vocabulario (`memstore.ErrNotFound`, que envuelve
+> `workitem.ErrNotFound`), el servicio el suyo (`opsreport.ErrNotFound`,
+> `ErrConflict`, `ErrStorage`), y el borde HTTP el suyo (códigos de estado, Fase 05).
 > Cada capa traduce **una vez**, en su frontera, y conserva la causa. Lo que no se
 > hace nunca es dejar que un error de `database/sql` llegue hasta el handler.
 
@@ -652,7 +682,7 @@ ejecuta:**
 ```go
 func demo() {
 	start := time.Now()
-	defer fmt.Println("tardó", time.Since(start))  // ❌ imprime ~0s
+	defer fmt.Println("tardó", time.Since(start)) // ❌ imprime ~0s
 	time.Sleep(2 * time.Second)
 }
 ```
@@ -661,7 +691,7 @@ func demo() {
 nada. La forma correcta es diferir una closure:
 
 ```go
-defer func() { fmt.Println("tardó", time.Since(start)) }()  // ✅
+defer func() { fmt.Println("tardó", time.Since(start)) }() // ✅
 ```
 
 **2. El orden es LIFO**, como una pila:
@@ -868,7 +898,7 @@ for _, row := range rows {
 
 // Con buffer: una llamada al sistema cada 4 KB.
 w := bufio.NewWriter(file)
-defer w.Flush()  // ⚠️ sin este Flush pierdes lo último que escribiste
+defer w.Flush() // ⚠️ sin este Flush pierdes lo último que escribiste
 for _, row := range rows {
 	fmt.Fprintln(w, row)
 }
@@ -1067,10 +1097,7 @@ Fase 14 volvemos sobre esto con la comparación completa.
 // labs/json-codec/codec.go
 package codec
 
-import (
-	"encoding/json"
-	"time"
-)
+import "time"
 
 // WorkItemJSON es la representación externa de un work item.
 //
@@ -1088,13 +1115,13 @@ type WorkItemJSON struct {
 	EffectivePriority int        `json:"effective_priority"` // calculado, no está en el dominio
 	Status            string     `json:"status"`
 	CreatedAt         time.Time  `json:"created_at"`
-	StartedAt         *time.Time `json:"started_at,omitempty"`  // puntero: distingue "no empezó" de "época cero"
+	StartedAt         *time.Time `json:"started_at,omitempty"` // puntero: distingue "no empezó" de "época cero"
 	FinishedAt        *time.Time `json:"finished_at,omitempty"`
 	FailureReason     string     `json:"failure_reason,omitempty"`
 
 	// internalNotes no se exporta, así que json lo ignora por completo. No hace
 	// falta `json:"-"`: la mayúscula ya decide.
-	internalNotes string
+	internalNotes string //nolint:unused // está para demostrar que json lo ignora
 }
 ```
 
@@ -1105,14 +1132,14 @@ semántico":
 
 ```go
 type Filter struct {
-	Status   string `json:"status,omitempty"`
-	MinPrio  int    `json:"min_priority,omitempty"`
-	Active   bool   `json:"active,omitempty"`
+	Status  string `json:"status,omitempty"`
+	MinPrio int    `json:"min_priority,omitempty"`
+	Active  bool   `json:"active,omitempty"`
 }
 
 f := Filter{Status: "queued", MinPrio: 0, Active: false}
 b, _ := json.Marshal(f)
-fmt.Println(string(b))  // {"status":"queued"}
+fmt.Println(string(b)) // {"status":"queued"}
 ```
 
 `MinPrio: 0` y `Active: false` desaparecieron, y son valores **legítimos**. Si tu
@@ -1125,10 +1152,10 @@ más común del principiante:
 
 ```go
 type broken struct {
-	id   string  // minúscula → json lo ignora
+	id   string // minúscula → json lo ignora
 	Name string
 }
-json.Marshal(broken{id: "x", Name: "y"})  // {"Name":"y"}
+json.Marshal(broken{id: "x", Name: "y"}) // {"Name":"y"}
 ```
 
 **3. Un `interface{}` decodifica los números como `float64`.** Siempre:
@@ -1137,8 +1164,8 @@ json.Marshal(broken{id: "x", Name: "y"})  // {"Name":"y"}
 var data map[string]interface{}
 json.Unmarshal([]byte(`{"count": 42}`), &data)
 
-n := data["count"].(int)      // panic: interface {} is float64, not int
-n := int(data["count"].(float64))  // ✅
+n := data["count"].(int)          // panic: interface conversion: interface {} is float64, not int
+n := int(data["count"].(float64)) // ✅
 ```
 
 Por eso este curso decodifica a structs tipados salvo cuando de verdad no se
@@ -1173,7 +1200,7 @@ case "order.created":
 ```go
 t := time.Date(2026, 9, 11, 8, 0, 0, 0, time.FixedZone("COT", -5*3600))
 b, _ := json.Marshal(t)
-fmt.Println(string(b))  // "2026-09-11T08:00:00-05:00"
+fmt.Println(string(b)) // "2026-09-11T08:00:00-05:00"
 ```
 
 Si en la base de datos guardas UTC y en el JSON sale `-05:00`, dos clientes van a
@@ -1289,7 +1316,10 @@ func EncodeStream(w io.Writer, items []WorkItemJSON) error {
 ### 6.8 EventRelay: serialización y configuración
 
 Lo mismo aplicado al segundo servicio, con una diferencia que importa: el
-`Payload` de un evento es opaco.
+`Payload` de un evento es opaco. `ValidationError` y `FieldError` son los de
+`workitem/errors.go`, **copiados** en `relay/errors.go`: son dos módulos distintos
+y no comparten paquete, y un `commons` para dos tipos sería el antipatrón de la
+Fase 02.
 
 ```go
 // services/eventrelay/internal/relay/json.go
@@ -1379,14 +1409,14 @@ func (w WorkItem) Validate() *ValidationError {
 
 // Y en el llamador:
 func (s *Service) Create(item workitem.WorkItem) error {
-	if err := validateItem(item); err != nil {   // ← siempre entra aquí
+	if err := validateItem(item); err != nil { // ← siempre entra aquí
 		return err
 	}
 	return s.store.Save(item)
 }
 
-func validateItem(item workitem.WorkItem) error {  // ← devuelve error, la interfaz
-	return item.Validate()                          // ← pero Validate devuelve *ValidationError
+func validateItem(item workitem.WorkItem) error { // ← devuelve error, la interfaz
+	return item.Validate() // ← pero Validate devuelve *ValidationError
 }
 ```
 
@@ -1410,9 +1440,9 @@ Demostración, para que lo veas con tus ojos:
 var p *ValidationError = nil
 var err error = p
 
-fmt.Println(p == nil)    // true
-fmt.Println(err == nil)  // false   ← el mismo nil, dos respuestas
-fmt.Printf("%T %v\n", err, err)  // *codec.ValidationError <nil>
+fmt.Println(p == nil)           // true
+fmt.Println(err == nil)         // false   ← el mismo nil, dos respuestas
+fmt.Printf("%T %v\n", err, err) // *codec.ValidationError <nil>
 ```
 
 **El coste, en números de este curso:**
@@ -1515,7 +1545,7 @@ func WriteReportBroken(path string, rows []string) error {
 			return err
 		}
 	}
-	return nil  // ❌ falta w.Flush(): los últimos bytes se quedan en el buffer
+	return nil // ❌ falta w.Flush(): los últimos bytes se quedan en el buffer
 }
 ```
 

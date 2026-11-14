@@ -323,7 +323,16 @@ generación de código en el `Makefile`, y un test que verifica **que se llamó 
 **Compara con el fake.** Esto es el equivalente completo:
 
 ```go
-// internal/opsreport/fakes_test.go
+// services/opsreport/internal/opsreport/fakes_test.go
+package opsreport_test
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/meridian/opsreport/internal/memstore"
+	"github.com/meridian/opsreport/internal/workitem"
+)
 
 // fakeStore es un almacén en memoria para los tests. Veinte líneas, un mapa
 // dentro, comportamiento real.
@@ -368,6 +377,19 @@ func (s *fakeStore) Update(item workitem.WorkItem) error {
 	}
 	s.items[item.ID] = item
 	return nil
+}
+
+// fakeClock y seqIDs completan los dobles que usa la suite de §6.4: un reloj que
+// marca la hora que le digas e identificadores predecibles.
+type fakeClock struct{ now time.Time }
+
+func (c *fakeClock) Now() time.Time { return c.now }
+
+type seqIDs struct{ n int }
+
+func (g *seqIDs) NewID() string {
+	g.n++
+	return fmt.Sprintf("WI-%04d", g.n)
 }
 ```
 
@@ -517,6 +539,10 @@ go1.13 test -list '.*' ./internal/opsreport
 > `-race` y cobertura**, o los contadores de cobertura provocan carreras que el
 > detector va a reportar — y ese sería un falso positivo especialmente confuso.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: las suites, la cobertura y el experimento de "Rompe a
+> propósito".
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -524,7 +550,10 @@ go1.13 test -list '.*' ./internal/opsreport
 ### 6.1 Mini proyecto: `validator-tests`
 
 El laboratorio que compara lado a lado lo que en JUnit serían veinte métodos.
-Tomamos la validación de `WorkItem` de la Fase 03.
+Tomamos la validación de `WorkItem` de la Fase 03, y por eso este lab **no vive en
+`labs/`**: prueba un paquete `internal/` de OpsReport, y un paquete `internal/`
+solo se importa desde su propio módulo (Fase 03). Va junto al código que prueba,
+como test de caja negra (`package workitem_test`).
 
 **Lo que sería en Java** (para tenerlo delante, no para escribirlo):
 
@@ -546,8 +575,8 @@ void rejectsInvalidWorkItems(String ref, String kind, int prio, String expectedF
 **Y en Go:**
 
 ```go
-// labs/validator-tests/validate_test.go
-package validator_test
+// services/opsreport/internal/workitem/validate_test.go
+package workitem_test
 
 import (
 	"errors"
@@ -802,10 +831,10 @@ import (
 
 // Row es una fila del reporte operativo.
 type Row struct {
-	Kind      string
-	Status    string
-	Count     int
-	AvgSecs   float64
+	Kind    string
+	Status  string
+	Count   int
+	AvgSecs float64
 }
 
 // WriteCSV escribe el reporte en formato CSV. Es la función bajo prueba: tiene
@@ -889,7 +918,9 @@ func TestWriteCSV(t *testing.T) {
 ```
 
 ```bash
-# La primera vez, y cada vez que el formato cambie A PROPÓSITO:
+# La primera vez, y cada vez que el formato cambie A PROPÓSITO. El test escribe
+# el golden pero no crea el directorio:
+mkdir -p labs/golden-report/testdata
 go1.13 test -run TestWriteCSV -update ./labs/golden-report
 
 # A partir de ahí:
@@ -917,7 +948,7 @@ Aquí muere el `main` que verificaba por pantalla. Su contenido se reparte en te
 
 ```go
 // services/opsreport/internal/opsreport/service_test.go
-package opsreport_test  // ← paquete _test externo: ver la nota de abajo
+package opsreport_test // ← paquete _test externo: ver la nota de abajo
 
 import (
 	"errors"
@@ -1229,9 +1260,14 @@ make cover
 # o, sin el Makefile:
 go1.13 test -race -covermode=atomic -coverprofile=cover.out ./...
 go1.13 tool cover -func=cover.out | tail -n 1
-# total:  (statements)  84.2%
+# total:  (statements)  41.2%
 go1.13 tool cover -html=cover.out
 ```
+
+Ese 41,2% es lo que da la suite de esta sección, medido en OpsReport sobre
+`internal/`, y está lejos del umbral. Lo que falta son los caminos que la suite
+deja sin probar (`Complete`, `Fail`, `Queue`, `Validate` campo a campo), que son
+justo los ejercicios de la fase. El informe HTML te dice cuáles son.
 
 Y ahora la advertencia, que se escribe una vez y se sostiene todo el curso.
 **Demuéstrala, no te fíes de que te la crean:**
@@ -1240,15 +1276,15 @@ Y ahora la advertencia, que se escribe una vez y se sostiene todo el curso.
 // ❌ Este test da 100% de cobertura sobre Validate y no vale absolutamente nada.
 func TestValidate_Coverage(t *testing.T) {
 	items := []workitem.WorkItem{
-		{},                                    // falla por todo
-		{ExternalReference: "X"},              // falla por kind y priority
+		{},                       // falla por todo
+		{ExternalReference: "X"}, // falla por kind y priority
 		{ExternalReference: "X", Kind: workitem.KindImport},
 		{ExternalReference: "X", Kind: workitem.KindImport, Priority: 3},
 		{ExternalReference: "X", Kind: workitem.KindImport, Priority: 3,
 			Description: strings.Repeat("a", 501)},
 	}
 	for _, item := range items {
-		_ = item.Validate()   // ← se ejecutan todas las ramas, no se afirma nada
+		_ = item.Validate() // ← se ejecutan todas las ramas, no se afirma nada
 	}
 }
 ```
@@ -1271,13 +1307,17 @@ paga en la Fase 14, con el umbral en CI—, pero el objetivo se afina ya:
 ```makefile
 COVER_PKGS = ./internal/...
 
-cover: ## Cobertura sobre internal/, con informe
-	$(GO113) test -race -covermode=atomic -coverprofile=$(COVER_FILE) $(COVER_PKGS)
-	$(GO113) tool cover -func=$(COVER_FILE) | tail -n 1
+cover: ## Cobertura sobre internal/ de cada módulo que lo tenga, con su total
+	@$(call EACH,if [ -d internal ]; then \
+		$(GO113) test -race -covermode=atomic -coverprofile=$(COVER_FILE) $(COVER_PKGS) >/dev/null && \
+		printf '%-24s ' $$m && $(GO113) tool cover -func=$(COVER_FILE) | tail -n 1; fi)
 
-cover-html: cover ## Abre el informe HTML
-	$(GO113) tool cover -html=$(COVER_FILE)
+cover-html: ## Informe HTML de un módulo: make cover-html DIR=services/opsreport
+	cd $(DIR) && $(GO113) tool cover -html=$(COVER_FILE)
 ```
+
+Recorre los módulos igual que el resto del `Makefile` (Fase 00), y salta los labs,
+que no tienen `internal/`.
 
 ---
 
@@ -1439,7 +1479,9 @@ cobertura:
 2. Corre `make cover`. Anota el porcentaje de `internal/workitem`.
 3. Ahora **introduce un bug**: cambia `if w.Priority < MinPriority` por
    `if w.Priority < 0`.
-4. Corre los tests: **pasan**. Corre la cobertura: **el mismo número**.
+4. Corre los tests: **pasan**. Corre la cobertura: **casi el mismo número**. En la
+   corrida del curso, el paquete pasó de 27,9% a 26,2%: baja un pelo porque la
+   rama del error de prioridad ya no se ejecuta, y nadie frena un PR por eso.
 
 Una prioridad de `0` ahora se acepta y llegaría a la base de datos.
 

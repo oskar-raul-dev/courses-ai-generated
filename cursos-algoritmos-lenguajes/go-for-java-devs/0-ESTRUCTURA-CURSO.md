@@ -175,12 +175,20 @@ por profundidad— se resolvieron por la otra salida que el formato admite:
 **suavizar la afirmación a lo estructural**, porque ninguna de las dos cambia una
 decisión de diseño.
 
-> ⚠️ **Las salidas que muestran las fases son ilustrativas, no medidas.** Los bloques
-> de salida —un `benchstat`, una traza de `GODEBUG=gctrace=1`, un benchmark con
-> `-cpu=1,4,8,16`— enseñan **cómo se lee** lo que vas a obtener, y sus cifras no
-> salen de una corrida del curso. Las únicas que cuentan son las tuyas: las anotas
-> en la tabla de la entrada de [`BENCHMARKS.md`](BENCHMARKS.md), con tu máquina, y
-> si contradicen el veredicto provisional, gana tu número.
+> 📝 **Las salidas de las fases se corrieron el 14/11/2026**, en contenedores
+> `linux/arm64` sobre la máquina REF-1 de [`BENCHMARKS.md`](BENCHMARKS.md), y cada fase
+> dice en una nota, después de su §5, qué se reprodujo y qué no. Se reprodujo todo lo que
+> el curso entrega completo: los labs, los mensajes del compilador, las salidas de los
+> comandos, las migraciones, el gemelo y su duelo. Lo que no: lo que solo existe en tu
+> repositorio, es decir, los servicios que construyes a partir de los fragmentos de cada
+> fase. Los bloques muestran lo que la fase enseña; los tipos y ayudantes mecánicos que
+> no aparecen (un DTO, un generador de datos de prueba, un `searchDB` falso) los escribes
+> tú.
+>
+> Las cifras de rendimiento de las fases son de esa máquina. Las que cuentan para tus
+> decisiones son las tuyas: las anotas en la tabla vacía de cada entrada de
+> [`BENCHMARKS.md`](BENCHMARKS.md), al lado de los "Resultados de REF-1", y si contradicen
+> el veredicto, gana tu número.
 
 ---
 
@@ -303,3 +311,62 @@ rompe a propósito · 🏷️ tag.
    cerrar cada fase; si se dejan para la 17, ninguno se hace bien.
 
 **Requisitos:** ocho años o más de backend en Java, Docker, y un terminal.
+
+---
+
+## 🗓️ 11. Las versiones del curso, con su fecha
+
+El curso se escribió en septiembre de 2026 y fija sus versiones para que todo lo que
+ejecutas sea reproducible. Pero una versión sin fecha envejece sin que nadie lo note.
+Esta tabla le pone fecha a cada una, dice cuál es la vigente al **14/11/2026** y de
+dónde sale ese dato. **El curso no cambia de versión**: las fases siguen escritas
+contra la columna "Lo que fija el curso".
+
+| Pieza | Lo que fija el curso | Publicada | Vigente al 14/11/2026 | Qué significa para ti |
+|---|---|---|---|---|
+| Go, Bloque A | go1.13 | 03/09/2019 | — | Es la época a propósito (§1). No recibe parches desde 2020 y no se usa fuera del curso |
+| Go, Bloques B y C | go1.25.1 | 03/09/2025 | go1.27.3 (1.27: 19/08/2026) | Go da soporte a las dos últimas versiones mayores. La 1.25 quedó sin parches cuando salió la 1.27. Para el curso da igual; en producción usa la vigente |
+| JDK | 21 (LTS) | 19/09/2023 | 25 (LTS, 16/09/2025) | El 21 sigue con soporte de largo plazo, así que la comparación de la Fase 16 sigue siendo justa |
+| Spring Boot | 3 (texto) · 4.1 (gemelo) | 4.1.0: 10/06/2026 | 4.1.1 (20/08/2026) | La línea 3.5 perdió el soporte libre el 30/06/2026; por eso el gemelo de la Fase 16 se escribe en 4.1 |
+| PostgreSQL | 16 (`postgres:16-alpine`) | 14/09/2023 | 18; la 19 está en RC, con salida prevista el 19/11/2026 | Lo que usa el curso es SQL estándar y no cambia de la 16 a la 18 |
+| MongoDB | 7 (`mongo:7`) | 15/08/2023 | 8.0 (mayor) · 8.3 (rápida) | Nada de la Fase 11 depende de algo posterior a la 7 |
+| Valkey | 8 (`valkey/valkey:8-alpine`) | 15/09/2024 | 9.1.x · la 8.1 todavía recibe parches | Los comandos de la Fase 12 son los mismos en la 9 |
+
+### Las dependencias, fijadas a go1.25.1
+
+Las bibliotecas siguen subiendo su versión mínima de Go, y desde 2026 muchas piden
+Go 1.26. Con `GOTOOLCHAIN=auto`, el valor por defecto, un `go get` o un `go install`
+de una de esas versiones **te cambia de toolchain sin preguntar**: sube la directiva
+`go` de tu `go.mod` y descarga otro compilador. Para que el curso siga siendo el
+curso, cada dependencia se instala con la última versión que todavía compila con
+go1.25.1. Si quieres que Go falle en vez de cambiarte de toolchain sin avisar:
+`go env -w GOTOOLCHAIN=local`.
+
+| Dependencia | Fase | Versión fijada | La más nueva, y lo que pide |
+|---|---|---|---|
+| `golangci-lint` | 00 | v2.12.2 | v2.15.0, Go 1.26 |
+| `goimports` (`golang.org/x/tools`) | 00 | v0.49.0 | v0.52.0, Go 1.26 |
+| `modernize` (`golang.org/x/tools/gopls`) | 08 | v0.21.1 | v0.24.0, Go 1.27 |
+| `github.com/jackc/pgx/v5` | 09 | v5.13.0 | la misma |
+| `goose` (`github.com/pressly/goose/v3`) | 09 | v3.27.0 | v3.30.1, Go 1.26 |
+| `modernc.org/sqlite` | 09 | v1.59.0 | v1.62.0, Go 1.26 |
+| `testcontainers-go` y su módulo `postgres` | 09 | v0.44.0 | v0.45.0, Go 1.26 |
+| `mockgen` (`go.uber.org/mock`) | 10 | v0.6.0 | la misma |
+| `go.mongodb.org/mongo-driver/v2` | 11 | v2.10.0 | la misma |
+| `github.com/valkey-io/valkey-go` | 12 | v1.0.79 | la misma |
+| `golang.org/x/sync` (`errgroup`, `singleflight`) | 08, 12 | v0.22.0 | v0.25.0, Go 1.26 |
+| `github.com/prometheus/client_golang` | 14 | v1.24.1 | v1.25.0, Go 1.26 |
+| `govulncheck` (`golang.org/x/vuln`) | 14 | v1.7.0 | v1.9.0, Go 1.26 |
+| `benchstat` (`golang.org/x/perf`) | 15 | v0.0.0-20260112171951-5abaabe9f1bd | sin versiones etiquetadas; la de octubre de 2026 pide Go 1.26 |
+
+Para una biblioteca, `go get github.com/jackc/pgx/v5@v5.13.0`. Para una herramienta,
+el `go install …@versión` de su fase ya lleva la versión fijada.
+
+📝 **Fuentes**, consultadas el 14/11/2026: el historial de versiones de Go
+(https://go.dev/doc/devel/release) y su política de soporte; las versiones y el
+`go.mod` de cada dependencia en el proxy de módulos (https://proxy.golang.org); el blog de Spring
+(https://spring.io/blog), con los anuncios de 4.1.0 y 4.1.1; los anuncios de
+PostgreSQL (https://www.postgresql.org/about/news/), la descarga de Valkey
+(https://valkey.io/download/) y las notas de versión de MongoDB
+(https://www.mongodb.com/docs/manual/release-notes/). La próxima revisión del curso
+actualiza esta tabla antes de tocar una sola fase.

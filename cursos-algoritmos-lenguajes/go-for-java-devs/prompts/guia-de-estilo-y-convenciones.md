@@ -780,8 +780,8 @@ cual.
 |---|---|---|
 | Comentarios dentro del código en inglés | **En español, con tildes**, igual que los mensajes de error (§5) | El comentario es el canal del *porqué*, y el curso piensa en español; los identificadores siguen en inglés |
 | Apéndices `aNN-` | **Ninguno** (alcance §9) | "Diciendo y haciendo" pierde sentido si hay que saltar a otro archivo para ejecutar el siguiente comando |
-| Código ejecutable del curso en `src/` | **No hay `src/` ni `.gitignore` de curso**: el lector construye los cuatro servicios en su propio repositorio (`00-convencion-de-git-y-tags.md`) | El curso enseña a escribirlos; entregarlos hechos le quitaría el ejercicio. La única pieza que sí se entregaría hecha es el gemelo Spring Boot (§14.2) |
-| Ninguna salida inventada; lo no ejecutado se marca | **Las salidas de las fases son ilustrativas**, y así se le declara al lector en `0-ESTRUCTURA-CURSO.md` §6 y en el README. Las cifras que cuentan las mide el lector en `BENCHMARKS.md` | Decisión del 05/10/2026: las salidas no se ejecutaron al escribir el curso. Enseñan a leer la herramienta; ninguna sostiene una afirmación |
+| Código ejecutable del curso en `src/` | **Un solo `src/`: `src/clearinghouse-spring/`, el gemelo Spring Boot de la F16** (decisión del 14/11/2026), con su suite de contrato en `contract/`. Los cuatro servicios Go **no** se publican: el lector los construye en su repositorio (`00-convencion-de-git-y-tags.md`) | El curso enseña a escribir los servicios Go; entregarlos hechos le quitaría el ejercicio. El gemelo, en cambio, no se enseña: se lee y se mide, y sin él no hay duelo (§14.2) |
+| Ninguna salida inventada; lo no ejecutado se marca | **Las salidas se corrieron el 14/11/2026** (S1–S11 del plan de ejecución); cada fase lleva, después de su §5, una nota fechada con lo reproducido y lo que no. Lo que no se reprodujo es lo que solo existe en el repositorio del lector: los servicios armados a partir de los fragmentos | Hasta el 05/10/2026 las salidas se declaraban ilustrativas. Al correrlas aparecieron decenas de errores reales, y la corrida es ahora la fuente |
 | Diagramas a criterio de quien escribe | **Mermaid**, salvo árboles de archivos, salidas y correspondencias (D-12, §14.1) | Pedido explícito del autor en la revisión del 05/10/2026 |
 
 ### 14.1 D-12 · Diagramas en Mermaid
@@ -798,19 +798,26 @@ frente a Go (F16) y la plataforma del capstone (F17).
 
 ### 14.2 Deudas y ausencias declaradas
 
-- **El gemelo Spring Boot no se publicó.** El alcance §13, la historia §7, `proyecto-04-clearinghouse.md`
-  y la F16 lo dan por entregado en `reference/clearinghouse-spring/`, y no existe; el alcance §9
-  tampoco lo incluye en la estructura. Desde el 05/10/2026 la F16 y el README lo avisan al lector.
-  Cuando se escriba, se revisa además la versión: el curso nombra **Spring Boot 3**, y conviene
-  medir contra la línea vigente con fecha y fuente.
-- **Las versiones no tienen fecha ni fuente** (go1.25.1, PostgreSQL 16, MongoDB 7, Valkey 8). Quedan
-  como están; la próxima sesión que toque el curso las verifica antes de cambiar nada.
+- **El gemelo Spring Boot se publicó el 14/11/2026** en `src/clearinghouse-spring/`: Spring
+  Boot 4.1.1 sobre Java 21, porque la línea 3.5 perdió el soporte libre el 30/06/2026; el texto
+  del curso nombra Spring Boot 3, y la tabla de versiones (`0-ESTRUCTURA-CURSO.md` §11) lo
+  explica. Comparte el esquema con la versión Go (un mismo SQL para Flyway y goose), pasa la
+  suite de contrato de `contract/` y produce los mismos asientos que la versión Go de
+  referencia sobre un millón de movimientos (md5 del libro mayor). Esa versión Go vive en
+  `zz-code/` y no se publica. El lector lo copia a `reference/clearinghouse-spring/`, que es la
+  ruta que usa el texto.
+- **Versiones con fecha (14/11/2026).** Antes no tenían fecha ni fuente. Desde esa fecha,
+  `0-ESTRUCTURA-CURSO.md` §11 da para cada una su fecha de publicación, la vigente con su fuente y
+  qué significa. **Se fecharon sin subirlas** (decisión del autor): el Bloque C sigue en go1.25.1,
+  porque pasar a go1.27 obliga a revisar F08–F17. La F00 apunta a esa tabla.
 - **Plan de producción, diccionario de términos, contrato de nombres y README de `prompts/`** no
   existen con esos nombres: el curso es anterior a los lineamientos y está cerrado. Hacen su papel el
   diccionario del dominio del alcance §5.2, los `proyecto-0N-*.md` (nombres de cada servicio) y
   `prompts-extendidos-fases.md` (los prompts de fase).
-- **`aprendizaje.md` está en `prompts/`, pero es para el lector**: el método de estudio. Como
-  `prompts/` no se publica, si se quiere que el lector lo tenga hay que sacarlo a la raíz del curso.
+- **`APRENDIZAJE.md`, el método de estudio del lector**, vivía en `prompts/` como `aprendizaje.md`, que
+  no se publica. El 14/11/2026 se sacó a la raíz con nombre de guía maestra, junto a `INSTINTOS.md` y
+  `BENCHMARKS.md`, y el README lo enlaza. Al moverlo se corrigieron sus conteos: hay 29 hipótesis en
+  `BENCHMARKS.md`, no 24, y unas 85 entradas ☕ en `INSTINTOS.md`.
 - **Verificador:** `prompts/verificar-corpus.py`, subclase del perfil `courses-ia` de
   `prompts/verificador_base.py`, con los marcadores y callouts de §8. Se corre desde la raíz del curso
   con `python3 prompts/verificar-corpus.py`.

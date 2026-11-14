@@ -78,11 +78,11 @@ sabes Valkey: la compatibilidad es el punto.
 // también habla con Valkey sin problema y tiene más años de rodaje.
 //
 // Diferencias que importan:
-//  - valkey-go hace "pipelining" automático: agrupa comandos concurrentes de
-//    distintas goroutines en un solo viaje. Con mucha concurrencia, eso es una
-//    diferencia real de rendimiento, no cosmética.
-//  - go-redis tiene una API más familiar para quien viene de otros clientes, y
-//    muchísimo más material escrito.
+//   - valkey-go hace "pipelining" automático: agrupa comandos concurrentes de
+//     distintas goroutines en un solo viaje. Con mucha concurrencia, eso es una
+//     diferencia real de rendimiento, no cosmética.
+//   - go-redis tiene una API más familiar para quien viene de otros clientes, y
+//     muchísimo más material escrito.
 //
 // El curso usa valkey-go y la comparación se mide en el ejercicio 19.
 client, err := valkey.NewClient(valkey.ClientOption{
@@ -223,13 +223,13 @@ a mano cuesta unas cien líneas y te obliga a responderlas:
 ```go
 // La caché del curso: un tipo con las cuatro decisiones explícitas.
 type Cache[T any] struct {
-	client     valkey.Client
-	keys       KeyBuilder      // 1. esquema de claves, versionado
-	codec      Codec[T]        // 2. serialización explícita
-	ttl        time.Duration   // 3. TTL con jitter
-	jitter     float64
-	failOpen   bool            // 4. qué pasa si Valkey está caído
-	metrics    *Metrics
+	client   valkey.Client
+	keys     KeyBuilder    // 1. esquema de claves, versionado
+	codec    Codec[T]      // 2. serialización explícita
+	ttl      time.Duration // 3. TTL con jitter
+	jitter   float64
+	failOpen bool // 4. qué pasa si Valkey está caído
+	metrics  *Metrics
 }
 ```
 
@@ -255,25 +255,25 @@ depurar, e imposible migrar.
 //
 // Cada parte tiene su razón:
 //
-//  - "meridian"  → prefijo global. Permite compartir una instancia de Valkey
-//                  entre varios sistemas sin colisionar, y hace que un
-//                  `SCAN meridian:*` encuentre lo nuestro.
+//   - "meridian"  → prefijo global. Permite compartir una instancia de Valkey
+//     entre varios sistemas sin colisionar, y hace que un
+//     `SCAN meridian:*` encuentre lo nuestro.
 //
-//  - servicio    → aísla AtlasSync de EventRelay. Sin esto, un despliegue de uno
-//                  puede invalidar claves del otro por error.
+//   - servicio    → aísla AtlasSync de EventRelay. Sin esto, un despliegue de uno
+//     puede invalidar claves del otro por error.
 //
-//  - versión     → LA PARTE QUE MÁS SE OLVIDA Y MÁS SALVA. Cuando cambia la
-//                  forma del valor cacheado —un campo nuevo, otro formato—, se
-//                  sube la versión y TODO lo viejo queda huérfano y expira solo.
-//                  Sin versión, hay que borrar a mano en producción, o peor:
-//                  deserializar un valor viejo con el struct nuevo.
+//   - versión     → LA PARTE QUE MÁS SE OLVIDA Y MÁS SALVA. Cuando cambia la
+//     forma del valor cacheado —un campo nuevo, otro formato—, se
+//     sube la versión y TODO lo viejo queda huérfano y expira solo.
+//     Sin versión, hay que borrar a mano en producción, o peor:
+//     deserializar un valor viejo con el struct nuevo.
 //
-//  - entidad     → agrupa. Permite el SCAN por prefijo y da legibilidad.
+//   - entidad     → agrupa. Permite el SCAN por prefijo y da legibilidad.
 //
-//  - id          → normalizado: siempre en mayúsculas para los códigos ISO.
-//                  "co", "CO" y "Co" TIENEN que producir la misma clave, o
-//                  tienes tres entradas del mismo dato y una invalidación que
-//                  solo borra una.
+//   - id          → normalizado: siempre en mayúsculas para los códigos ISO.
+//     "co", "CO" y "Co" TIENEN que producir la misma clave, o
+//     tienes tres entradas del mismo dato y una invalidación que
+//     solo borra una.
 type KeyBuilder struct {
 	service string
 	version int
@@ -390,6 +390,13 @@ go test -tags=integration ./internal/cache -v
 > expiración que alguien escribió por descuido, y esas claves se acumulan hasta
 > llenar la memoria. Un `SCAN` periódico buscando claves sin TTL es un buen chivato.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 y
+> `valkey/valkey:8-alpine` (8.1.11) en contenedores `linux/arm64`: el histograma
+> de expiración sincronizada y la política por defecto (`noeviction`). AtlasSync
+> con caché, el limitador y la idempotencia de EventRelay no se reprodujeron,
+> porque usan piezas que la fase no muestra. B-17 y la estampida van a
+> `BENCHMARKS.md`.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -401,6 +408,17 @@ La caché tipada, con las cuatro decisiones explícitas.
 ```go
 // labs/cache-aside-lab/cache.go
 package cache
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"log/slog"
+	"math/rand"
+	"time"
+
+	"github.com/valkey-io/valkey-go"
+)
 
 // Codec serializa y deserializa el valor cacheado.
 //
@@ -434,7 +452,7 @@ type Cache[T any] struct {
 	client  valkey.Client
 	codec   Codec[T]
 	ttl     time.Duration
-	jitter  float64          // fracción del TTL, 0.2 = ±20%
+	jitter  float64 // fracción del TTL, 0.2 = ±20%
 	rand    *rand.Rand
 	metrics *Metrics
 	logger  *slog.Logger
@@ -588,13 +606,13 @@ func (l *Locker) TryLock(ctx context.Context, key string, ttl time.Duration) (to
 
 	res := l.client.Do(ctx, l.client.B().Set().
 		Key(lockKey).Value(token).
-		Nx().           // solo si no existe
-		Ex(ttl).        // con expiración obligatoria
+		Nx().    // solo si no existe
+		Ex(ttl). // con expiración obligatoria
 		Build())
 
 	if err := res.Error(); err != nil {
 		if valkey.IsValkeyNil(err) {
-			return "", false, nil   // otro lo tiene
+			return "", false, nil // otro lo tiene
 		}
 		return "", false, fmt.Errorf("adquiriendo el bloqueo %s: %w", key, err)
 	}
@@ -760,7 +778,7 @@ func (s *Service) getWithEarlyRefresh(ctx context.Context, key string, load func
 // caché es cambiar una línea en main — que es justo lo que vamos a necesitar
 // para medir B-17.
 type CachedCountryStore struct {
-	inner  CountryStore          // el de MongoDB, Fase 11
+	inner  CountryStore // el de MongoDB, Fase 11
 	cache  *cache.Cache[Country]
 	group  singleflight.Group
 	keys   cache.KeyBuilder
@@ -811,12 +829,12 @@ svc := atlassync.New(countryStore, ratesStore, logger)
 // 1. JSON. Legible en valkey-cli, estable, y el más lento.
 type JSONCodec[T any] struct{}
 
-// 2. JSON precodificado. La idea: si el valor se sirve tal cual por la API, se
-//    puede guardar YA SERIALIZADO y devolverlo sin decodificar y volver a
-//    codificar.
+//  2. JSON precodificado. La idea: si el valor se sirve tal cual por la API, se
+//     puede guardar YA SERIALIZADO y devolverlo sin decodificar y volver a
+//     codificar.
 //
-//    Es la optimización más rentable de una caché de lectura y casi nadie la
-//    hace: elimina DOS pasos de serialización por acierto.
+//     Es la optimización más rentable de una caché de lectura y casi nadie la
+//     hace: elimina DOS pasos de serialización por acierto.
 type RawJSONCodec struct{}
 
 func (RawJSONCodec) Encode(raw json.RawMessage) ([]byte, error) { return raw, nil }
@@ -826,17 +844,17 @@ func (RawJSONCodec) Decode(b []byte) (json.RawMessage, error)   { return b, nil 
 func (h *Handler) getCountry(w http.ResponseWriter, r *http.Request) {
 	if raw, ok := h.cache.GetRaw(r.Context(), key); ok {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(raw)   // ← cero decodificación, cero recodificación
+		w.Write(raw) // ← cero decodificación, cero recodificación
 		return
 	}
 	// ...
 }
 
-// 3. Compresión. Para valores grandes, gzip o s2 reduce memoria en Valkey y
-//    tráfico de red, a cambio de CPU en los dos extremos.
+//  3. Compresión. Para valores grandes, gzip o s2 reduce memoria en Valkey y
+//     tráfico de red, a cambio de CPU en los dos extremos.
 //
-//    El umbral importa: comprimir 200 bytes cuesta más de lo que ahorra.
-//    AtlasSync comprime a partir de 1 KB, y ese número sale de medirlo.
+//     El umbral importa: comprimir 200 bytes cuesta más de lo que ahorra.
+//     AtlasSync comprime a partir de 1 KB, y ese número sale de medirlo.
 type CompressedCodec[T any] struct {
 	inner     Codec[T]
 	threshold int
@@ -928,9 +946,9 @@ return {allowed, tostring(wait)}
 // ⚠️ Y AQUÍ LA DECISIÓN CONTRARIA A LA DE LA CACHÉ: si Valkey está caído, el
 // limitador falla CERRADO o ABIERTO, y hay que elegir conscientemente.
 //
-//  - Fallar abierto: dejar pasar todo. El socio recibe una avalancha si Valkey
-//    cae. Protege nuestra disponibilidad, arriesga la del socio.
-//  - Fallar cerrado: rechazar todo. Protege al socio, para nuestras entregas.
+//   - Fallar abierto: dejar pasar todo. El socio recibe una avalancha si Valkey
+//     cae. Protege nuestra disponibilidad, arriesga la del socio.
+//   - Fallar cerrado: rechazar todo. Protege al socio, para nuestras entregas.
 //
 // EventRelay falla abierto pero con un limitador LOCAL de respaldo, calibrado al
 // límite dividido entre el número de instancias. Es lo menos malo: degrada a un
@@ -977,11 +995,11 @@ func (s *Store) Begin(ctx context.Context, key string, bodyHash string) (*Stored
 		Key(k).
 		Value(`{"state":"in_flight","body_hash":"`+bodyHash+`"}`).
 		Nx().
-		Ex(s.inFlightTTL).   // corto: si morimos, otro puede reintentar pronto
+		Ex(s.inFlightTTL). // corto: si morimos, otro puede reintentar pronto
 		Build())
 
 	if err := reserved.Error(); err == nil {
-		return nil, true, nil   // la reserva es nuestra
+		return nil, true, nil // la reserva es nuestra
 	} else if !valkey.IsValkeyNil(err) {
 		return nil, false, fmt.Errorf("reservando la clave de idempotencia: %w", err)
 	}
@@ -1122,7 +1140,7 @@ func (c *Cache[T]) InvalidateTag(ctx context.Context, tag string) error {
 // Es la técnica que usa Rails con sus "cache key versioning", y para una
 // invalidación masiva —el final de una ingesta— es claramente la mejor.
 func (k *VersionedKeyBuilder) Country(ctx context.Context, code string) (string, error) {
-	gen, err := k.generation(ctx)   // cacheado en memoria unos segundos
+	gen, err := k.generation(ctx) // cacheado en memoria unos segundos
 	if err != nil {
 		return "", err
 	}
@@ -1426,10 +1444,12 @@ func TestSynchronizedExpiry(t *testing.T) {
 
 ```text
 jitter=0%   → [0 0 0 0 0 0 0 0 0 0 250 0 0 0 0]
-jitter=20%  → [0 0 0 0 0 0 0 0 21 32 29 34 31 28 25 ...]
+jitter=20%  → [0 0 0 0 0 0 0 0 68 64 56 62 0 0 0]
 ```
 
-**250 fallos de caché en un solo segundo frente a unos 30 repartidos.** Ahora
+**250 fallos de caché en un solo segundo frente a unos 60 por segundo repartidos en
+cuatro.** El 12 sale vacío porque `EX` trunca a segundos enteros. Para repartir
+más, más jitter o un TTL más largo: el ancho de la ventana es `2 × jitter × TTL`. Ahora
 conecta eso a MongoDB con `vegeta` corriendo y mira el p99: el pico es visible, y
 la media **no cambia**.
 

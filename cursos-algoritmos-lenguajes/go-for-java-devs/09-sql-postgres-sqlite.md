@@ -114,7 +114,7 @@ rows, err := db.QueryContext(ctx, "SELECT ...")
 if err != nil {
 	return err
 }
-defer rows.Close()   // ← inmediatamente después de comprobar el error
+defer rows.Close() // ← inmediatamente después de comprobar el error
 ```
 
 Con `MaxOpenConns = 25`, veinticinco peticiones con `return` temprano agotan el
@@ -131,10 +131,10 @@ se manifiesta como "la aplicación se quedó colgada".
 ### Los cuatro parámetros del pool
 
 ```go
-db.SetMaxOpenConns(25)                  // techo duro de conexiones simultáneas
-db.SetMaxIdleConns(25)                  // cuántas se mantienen abiertas sin uso
-db.SetConnMaxLifetime(5 * time.Minute)  // cuánto vive una conexión como máximo
-db.SetConnMaxIdleTime(2 * time.Minute)  // cuánto puede estar ociosa antes de cerrarse
+db.SetMaxOpenConns(25)                 // techo duro de conexiones simultáneas
+db.SetMaxIdleConns(25)                 // cuántas se mantienen abiertas sin uso
+db.SetConnMaxLifetime(5 * time.Minute) // cuánto vive una conexión como máximo
+db.SetConnMaxIdleTime(2 * time.Minute) // cuánto puede estar ociosa antes de cerrarse
 ```
 
 Y las cuatro justificaciones, porque copiar números de un blog es cómo se
@@ -304,11 +304,15 @@ docker compose exec postgres psql -U meridian -d meridian
 #   \timing        mostrar el tiempo de cada consulta
 
 # Migraciones con goose. La instalación es un go install, como todo.
-go install github.com/pressly/goose/v3/cmd/goose@latest
+go install github.com/pressly/goose/v3/cmd/goose@v3.27.0
 
 export GOOSE_DRIVER=postgres
 export GOOSE_DBSTRING="postgres://meridian:meridian@localhost:5432/meridian?sslmode=disable"
 export GOOSE_MIGRATION_DIR=services/opsreport/migrations
+# Una tabla de versiones POR SERVICIO. Los dos comparten la base meridian, y con la
+# tabla por defecto, en cuanto migra EventRelay, `goose redo` de OpsReport falla
+# con "no current version found": la versión actual es de otro directorio.
+export GOOSE_TABLE=opsreport_goose_db_version
 
 goose create add_work_items sql    # crea el archivo con su timestamp
 goose status                       # qué está aplicado y qué no
@@ -358,6 +362,13 @@ docker logs $(docker ps -a --filter "label=org.testcontainers=true" -q | head -1
 > porque nadie lo prueba— te enteras en un segundo en vez de en el peor momento
 > posible.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 y
+> `postgres:16-alpine` en contenedores `linux/arm64`: las migraciones con goose,
+> `SKIP LOCKED` con dos sesiones concurrentes, `pool-lab`, SQLite en WAL con sus
+> restricciones, y la compilación de los almacenes y del test de integración. Las
+> dependencias van fijadas como dice `0-ESTRUCTURA-CURSO.md` §11. El incidente de
+> L1966 no se reprodujo: necesita OpsReport completo.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -370,6 +381,12 @@ ocurre en producción.
 ```go
 // labs/pool-lab/main.go
 package main
+
+import (
+	"context"
+	"database/sql"
+	"log"
+)
 
 // LeakConnections hace veinte consultas sin cerrar las filas. Con
 // MaxOpenConns=5, la sexta se queda esperando para siempre.
@@ -616,7 +633,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/meridian/opsreport/internal/workitem"
 )
@@ -627,9 +643,10 @@ type WorkItemStore struct {
 
 func NewWorkItemStore(db *sql.DB) *WorkItemStore { return &WorkItemStore{db: db} }
 
-// ErrNotFound es el vocabulario de este paquete. El servicio lo traduce al suyo
-// con errors.Is, igual que hacía con memstore (Fase 03).
-var ErrNotFound = errors.New("la fila no existe")
+// ErrNotFound es el vocabulario de este paquete, y envuelve el centinela del
+// dominio, igual que memstore (Fase 03): el servicio pregunta por
+// workitem.ErrNotFound y no necesita importar este paquete.
+var ErrNotFound = fmt.Errorf("%w en PostgreSQL", workitem.ErrNotFound)
 
 // Las consultas van como constantes de paquete, no embebidas en el método.
 // Se leen mejor, se pueden pegar en psql tal cual, y el diff de un cambio de
@@ -686,7 +703,7 @@ type rowScanner interface {
 // compila, corre, y pone la descripción en el campo del estado.
 func scanWorkItem(row rowScanner) (workitem.WorkItem, error) {
 	var (
-		item       workitem.WorkItem
+		item workitem.WorkItem
 		// Las columnas NULLABLE necesitan un tipo que sepa representar NULL.
 		// sql.NullTime es el envoltorio de la stdlib; su alternativa es *time.Time,
 		// y las dos son válidas. Este curso usa sql.NullX en el escaneo y
@@ -727,7 +744,7 @@ func (s *WorkItemStore) ListByStatus(ctx context.Context, q DBTX, status workite
 	if err != nil {
 		return nil, fmt.Errorf("listando work items por estado %s: %w", status, err)
 	}
-	defer rows.Close()   // ← inmediatamente, y siempre
+	defer rows.Close() // ← inmediatamente, y siempre
 
 	// Pre-dimensionado con el límite conocido: es B-04 de la Fase 01 aplicado.
 	items := make([]workitem.WorkItem, 0, limit)
@@ -775,10 +792,10 @@ const (
 )
 
 var (
-	ErrDuplicate    = errors.New("la fila ya existe")
-	ErrInvalidRef   = errors.New("referencia a una fila inexistente")
-	ErrConstraint   = errors.New("la fila viola una restricción del esquema")
-	ErrRetryable    = errors.New("conflicto de concurrencia; se puede reintentar")
+	ErrDuplicate  = errors.New("la fila ya existe")
+	ErrInvalidRef = errors.New("referencia a una fila inexistente")
+	ErrConstraint = errors.New("la fila viola una restricción del esquema")
+	ErrRetryable  = errors.New("conflicto de concurrencia; se puede reintentar")
 )
 
 func translateError(err error) error {
@@ -948,6 +965,16 @@ Transacciones, aislamiento y el laboratorio de bloqueos.
 // labs/tx-lab/tx.go
 package txlab
 
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"fmt"
+	"log"
+	"math/rand/v2"
+	"time"
+)
+
 // El patrón del curso, en una función. Todo caso de uso transaccional tiene esta
 // forma, y no hay gestor de transacciones ni anotación.
 func WithTx(ctx context.Context, db *sql.DB, opts *sql.TxOptions, fn func(tx *sql.Tx) error) error {
@@ -968,7 +995,7 @@ func WithTx(ctx context.Context, db *sql.DB, opts *sql.TxOptions, fn func(tx *sq
 	}()
 
 	if err := fn(tx); err != nil {
-		return err   // el defer hace rollback
+		return err // el defer hace rollback
 	}
 
 	if err := tx.Commit(); err != nil {
@@ -1321,10 +1348,10 @@ func Open(ctx context.Context, path string) (*sql.DB, error) {
 	// abrir solo afecta a la conexión que lo ejecutó — que con un pool es una
 	// de varias, y ese es un bug muy desconcertante.
 	dsn := path + "?" +
-		"_pragma=journal_mode(WAL)" +      // lectores y escritor concurrentes
-		"&_pragma=busy_timeout(5000)" +    // esperar 5s en vez de fallar al instante
-		"&_pragma=synchronous(NORMAL)" +   // durabilidad razonable con WAL
-		"&_pragma=foreign_keys(ON)"        // ⚠️ SQLite las ignora si no se activan
+		"_pragma=journal_mode(WAL)" + // lectores y escritor concurrentes
+		"&_pragma=busy_timeout(5000)" + // esperar 5s en vez de fallar al instante
+		"&_pragma=synchronous(NORMAL)" + // durabilidad razonable con WAL
+		"&_pragma=foreign_keys(ON)" // ⚠️ SQLite las ignora si no se activan
 
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
@@ -1522,29 +1549,29 @@ func BusinessDayRange(day time.Time, tz string) (from, to time.Time, err error) 
 // Y el test, que es lo que de verdad prueba que esto está bien:
 func TestBusinessDayRange(t *testing.T) {
 	tests := []struct {
-		name       string
-		day        string
-		tz         string
-		wantFrom   string
-		wantTo     string
-		wantHours  float64
+		name      string
+		day       string
+		tz        string
+		wantFrom  string
+		wantTo    string
+		wantHours float64
 	}{
 		{
-			name:      "Bogotá, día normal: UTC-5 todo el año",
-			day:       "2026-09-04", tz: "America/Bogota",
-			wantFrom:  "2026-09-04T05:00:00Z", wantTo: "2026-09-05T05:00:00Z",
+			name: "Bogotá, día normal: UTC-5 todo el año",
+			day:  "2026-09-04", tz: "America/Bogota",
+			wantFrom: "2026-09-04T05:00:00Z", wantTo: "2026-09-05T05:00:00Z",
 			wantHours: 24,
 		},
 		{
-			name:      "Ciudad de México, día normal",
-			day:       "2026-09-04", tz: "America/Mexico_City",
-			wantFrom:  "2026-09-04T06:00:00Z", wantTo: "2026-09-05T06:00:00Z",
+			name: "Ciudad de México, día normal",
+			day:  "2026-09-04", tz: "America/Mexico_City",
+			wantFrom: "2026-09-04T06:00:00Z", wantTo: "2026-09-05T06:00:00Z",
 			wantHours: 24,
 		},
 		{
-			name:      "Santiago, día del cambio de horario: el día tiene 23 horas",
-			day:       "2026-09-06", tz: "America/Santiago",
-			wantHours: 23,   // ← el caso que Add(24*time.Hour) rompe
+			name: "Santiago, día del cambio de horario: el día tiene 23 horas",
+			day:  "2026-09-06", tz: "America/Santiago",
+			wantHours: 23, // ← el caso que Add(24*time.Hour) rompe
 		},
 	}
 	// ...
@@ -1581,6 +1608,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/pressly/goose/v3"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -1932,7 +1960,7 @@ func (h *Handler) leaky(w http.ResponseWriter, r *http.Request) {
 		var id, status string
 		if err := rows.Scan(&id, &status); err != nil {
 			writeError(w, r, err)
-			return    // ← AQUÍ. Salimos sin cerrar, y la conexión no vuelve.
+			return // ← AQUÍ. Salimos sin cerrar, y la conexión no vuelve.
 		}
 		items = append(items, id)
 	}

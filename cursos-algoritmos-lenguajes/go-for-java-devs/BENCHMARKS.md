@@ -26,10 +26,33 @@ veredicto provisional, corrige el veredicto** — eso es un resultado, no un fal
 
 ### La máquina de referencia
 
-Rellena esto una vez y cítalo desde cada entrada:
+Rellena esto una vez y cítalo desde cada entrada. La de abajo es la del curso: con ella se
+midieron los "Resultados de REF-1" de cada entrada, el 14/11/2026. Tus números van en las
+tablas vacías.
 
 ```text
-REF-1
+REF-1 (la del curso)
+  máquina:   macOS 26.7.2 · Apple M1 Pro
+  cpu:       Apple M1 Pro, 8 núcleos
+  ram:       32 GB
+  entorno:   Docker Desktop, VM linux/arm64 con 8 CPU y 8 GB
+             (las mediciones corren DENTRO de contenedores, no en macOS)
+  go:        go1.25.1 linux/arm64 (golang:1.25.1-bookworm)
+  go1.13:    go1.13 linux/arm64 (golang.org/dl)
+  jdk:       Temurin 21 (eclipse-temurin:21-jre)
+  graalvm:   GraalVM CE para Java 21 (native-image), si la entrada lo dice
+  postgres:  16-alpine (16.16) en Docker, sin límite de CPU ni de memoria
+  mongo:     7 (7.0.48) en Docker
+  valkey:    8-alpine (8.1.11) en Docker
+  servicios: --cpus=4 --memory=2g por contenedor, en las entradas del duelo
+  aislamiento: sin otras cargas durante la medición, alimentación conectada
+  generador de carga: [x] misma máquina  [ ] máquina separada
+```
+
+Rellena la tuya igual:
+
+```text
+REF-1 (la tuya)
   máquina:   macOS <versión> · Apple Silicon <modelo>
   cpu:       <marca>, <N> núcleos
   ram:       <N> GB
@@ -94,6 +117,25 @@ go build ./... && time ./build-all.sh && ls -lh bin/
 | windows/amd64 | | | |
 | **total** | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+`labs/build-info` (el `crossbuild` de la Fase 00 no trae su `main.go`), go1.25.1,
+`build-all.sh` de la fase. La caché solo estaba caliente para la plataforma nativa
+(linux/arm64), así que el tiempo incluye compilar la biblioteca estándar para las otras
+cuatro:
+
+| Plataforma | Tamaño (`-s -w`) | Tamaño sin `-s -w` |
+|---|---|---|
+| darwin/arm64 | 1,6 MB | 2,40 MB |
+| darwin/amd64 | 1,6 MB | 2,43 MB |
+| linux/amd64 | 1,5 MB | 2,27 MB |
+| linux/arm64 | 1,6 MB | 2,30 MB |
+| windows/amd64 | 1,6 MB | 2,34 MB |
+| **total** | **8,1 s** para las cinco | |
+
+**La hipótesis se confirma:** muy por debajo de 30 s, y ningún binario llega a 2,5 MB.
+`-s -w` quita un tercio.
+
 ### Veredicto
 La compilación cruzada no requiere toolchain adicional ni contenedor, y el coste
 por plataforma es marginal. **Es el argumento más corto a favor de Go que existe**
@@ -135,6 +177,22 @@ benchstat b02.txt
 | `JoinBuilderGrow` | | | |
 | `JoinStdlib` (`strings.Join`) | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+`go1.13` en el contenedor de REF-1, `-count=10`, mediana de `benchstat` (± variación):
+
+| Variante | ns/op | B/op | allocs/op |
+|---|---|---|---|
+| `JoinNaive` (`+=`) | 70,7 ms ± 5% | 796 MiB | 10.010 |
+| `JoinSprintf` | 137,5 ms ± 4% | 1,42 GiB | 42.530 |
+| `JoinBuilder` | 143 µs ± 2% | 838 KiB | 26 |
+| `JoinBuilderGrow` | 77 µs ± 1% | 160 KiB | 1 |
+| `JoinStdlib` (`strings.Join`) | 91 µs ± 0% | 160 KiB | 1 |
+
+**La hipótesis se confirma.** `Grow` asigna una vez frente a 10.010 (cuatro órdenes de
+magnitud), y `Sprintf` es casi el doble de lento que `+=`. `JoinBuilderGrow` le gana a
+`strings.Join` en tiempo (77 µs frente a 91), con las mismas asignaciones.
+
 ### Veredicto
 **Mira `allocs/op`, no `ns/op`:** ahí está el mecanismo. `+=` asigna una vez por
 iteración; `Grow` asigna una vez en total. Usa `strings.Join` cuando tengas el
@@ -172,6 +230,10 @@ go1.13 test -run '^$' -bench BenchmarkRegexp -benchmem -count=10 ./labs/log-grep
 | `MustCompile` en `var` de paquete | | | |
 | `MustCompile` dentro del bucle | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: el comando corre `BenchmarkRegexp`, que el curso no escribe: la Fase 01 (§6.3) muestra `matchSlow` y deja el benchmark al lector. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 Compilar una expresión regular construye un autómata: es trabajo real. **La
 compilación va siempre fuera del bucle**, en una `var` de paquete con
@@ -207,6 +269,10 @@ go1.13 test -run '^$' -bench BenchmarkPresize -benchmem -count=10 ./labs/text-to
 | `var items []T` + `append` | | | |
 | `make([]T, 0, n)` + `append` | | | |
 | `make([]T, n)` + índice | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `BenchmarkPresize` es el ejercicio 15 de la Fase 01; el curso no lo escribe. El mecanismo sí se midió en la Fase 15 (`escape-lab`): 10.000 elementos con `append` desde cero hacen 19 asignaciones (358 KB) en 51 µs; pre-dimensionado, 1 asignación (82 KB) en 16 µs. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 Pre-dimensionar cuando el tamaño se conoce. El crecimiento de `append` duplica la
@@ -246,6 +312,20 @@ go1.13 build -gcflags='-m' ./labs/shapes 2>&1 | grep -E 'inline|escape'
 | Llamada por interfaz | | | | |
 | Slice de interfaces | | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+`go1.13`, `-count=10`:
+
+| Variante | ns/op | B/op | allocs/op |
+|---|---|---|---|
+| Llamada directa | 3,57 ns ± 0% | 0 | 0 |
+| Llamada por interfaz | 3,81 ns ± 1% | 0 | 0 |
+| Slice de interfaces | 11,30 ns ± 1% | 0 | 0 |
+
+**La hipótesis se confirma:** la interfaz cuesta 0,24 ns más que la llamada directa. El
+tercer caso es tres veces más caro, pero por recorrer el slice y los saltos indirectos, no
+por asignar: con este código no hay ninguna asignación.
+
 ### Veredicto
 **Evitar interfaces por rendimiento es optimización prematura en el 99,9% de los
 casos.** El coste no está en el salto: está en que la llamada por interfaz impide
@@ -281,6 +361,21 @@ go1.13 test -run '^$' -bench . -benchmem -count=10 ./labs/json-codec
 |---|---|---|---|---|
 | `json.Unmarshal` completo | | | | |
 | `json.Decoder` en streaming | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+`go1.13`, `-count=10`, documento de 50.000 work items (~10,5 MB):
+
+| Variante | ns/op | B/op | allocs/op |
+|---|---|---|---|
+| `json.Unmarshal` completo | 120 ms ± 1% | 35,7 MiB | 300.100 |
+| `json.Decoder` en streaming | 129 ms ± 9% | 14,5 MiB | 350.000 |
+
+**La hipótesis se cumple a medias.** El tiempo sí: el streaming cuesta un 8% más (por
+debajo del 20%). La memoria no baja al 5%: `B/op` es el total asignado durante la
+decodificación, no el pico, y el streaming asigna el 41% de lo que asigna `Unmarshal`. El
+pico real (RSS máximo) no se midió aquí, y es la columna que falta para cerrar la
+hipótesis.
 
 ### Veredicto
 **Mira `B/op`, no `ns/op`.** El tiempo puede ser parecido; la memoria no lo es. Para
@@ -325,6 +420,26 @@ cd reference/concurrency-comparison
 | Hilos de plataforma (`-Xss512k`) | | | | |
 | **Hebras virtuales (Java 21)** | | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**Medición parcial**: el `reference/concurrency-comparison` que nombra el comando no existe en
+el curso; se usaron dos programas mínimos equivalentes, escritos por el autor para la medición, 100.000 tareas que
+duermen 10 ms, cada variante en un contenedor con `--cpus=4 --memory=2g`, 3 corridas:
+
+| Variante | Tiempo hasta que terminan todas | Pico de memoria del contenedor |
+|---|---|---|
+| Goroutines (go1.25.1) | 100 · 112 · 124 ms | 75 MB |
+| Hilos virtuales (Java 21) | 343 · 286 · 294 ms | 170–343 MB* |
+| Hilos de plataforma (Java 21) | 11,0 · 10,9 · 11,0 s | 200 MB* |
+
+\* El contenedor compila con `javac` antes de correr, y ese pico entra en la cifra. Los
+tiempos son solo de la ejecución.
+
+**Lo que dice:** la goroutine sigue siendo la más barata, pero **la distancia con los hilos
+virtuales es de 3×, no de los dos o tres órdenes de magnitud** de la comparación clásica con
+hilos de plataforma (100×). Con Java 21, el argumento "las goroutines son baratas" compara
+contra lo que ya no usarías.
+
 ### Veredicto
 ⚠️ **Esta es la entrada donde la regla 1 de honestidad más importa.** Medir solo
 contra hilos de plataforma produce un titular espectacular y **engañoso desde Java
@@ -367,6 +482,10 @@ go test -run '^$' -bench BenchmarkCounter -benchmem -cpu=1,4,8 -count=10 ./labs/
 | `sync.Mutex` | | | | |
 | Canal con búfer | | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `BenchmarkCounter` no está en el curso; lo escribe el lector en la Fase 06. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 **Esto NO significa que los canales sean lentos.** Significa que un canal es una
 herramienta de **transferencia de propiedad y sincronización**, no un sustituto de
@@ -403,6 +522,10 @@ go test -tags=stress -run TestSpikeComparison -v ./labs/unbounded-queue
 |---|---|---|---|---|
 | Sin límite | | | — | |
 | Acotada (1000/8) | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `TestSpikeComparison` (etiqueta `stress`) no está en el curso; la predicción de la Fase 06 (unos 49.000 rechazos con `Bounded(1000, 8)`) es aritmética, no medición. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 ⚠️ **"Rechazadas" no es una derrota: es el mecanismo funcionando.** Rechazar el 98%
@@ -441,6 +564,10 @@ time go test -race -count=1 ./internal/engine ./internal/dispatcher
 |---|---|---|---|---|---|
 | Fase 04 (unitaria) | | | | | |
 | Fase 06 (concurrente) | | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: mide el motor y el dispatcher completos, y la Fase 07 los muestra en fragmentos. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 **La diferencia entre los dos ratios es el resultado interesante**, más que el ratio
@@ -486,6 +613,10 @@ go clean -cache && time go build ./cmd/opsreport
 | Compilación desde limpio | | | |
 | Líneas de código (`--stat`) | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: compara dos etiquetas del repositorio del lector (`bloque-a-completo` y `fase-08`). Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 **Si tu medición dice que todo mejoró, desconfía y revisa las condiciones.** Trece
 versiones de stdlib añadida pesan.
@@ -529,6 +660,10 @@ go test -run '^$' -bench BenchmarkRouter -benchmem -count=10 ./labs/tiny-router
 | `tiny-router` lineal | | | | |
 | Árbol de prefijos (F05 ej23) | | | | |
 | `http.ServeMux` (1.22) | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `BenchmarkRouter` no está en el curso. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 **El rendimiento NO es la razón para adoptar el `ServeMux` moderno, y hay que
@@ -577,6 +712,10 @@ go test -tags=integration -run '^$' -bench BenchmarkDriver -benchmem -count=10 .
 | `INSERT` por lotes de 1.000 | | |
 | `pgx.CopyFrom` | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: los benchmarks `BenchmarkDriver` del almacén de PostgreSQL no están en el curso. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 **Condicional, no un ganador.** Usa `database/sql` con el driver de pgx por
 defecto: la portabilidad, los tests de contrato compartidos y el ecosistema valen
@@ -618,6 +757,10 @@ go test -tags=integration -run '^$' -bench BenchmarkORM -benchmem -count=10 ./in
 | SQL a mano | | | | ~25 | no |
 | `sqlc` | | | | ~6 (el SQL) | **sí** |
 | GORM | | | | ~5 | no |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita `sqlc` y GORM sobre el almacén completo, que la Fase 09 deja al lector. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 ⚠️ **El argumento de esta sección NO es el rendimiento, y el veredicto tiene que
@@ -668,6 +811,10 @@ docker compose exec postgres psql -U meridian -d meridian -c \
 | 1.000 | | | | |
 | 2.000 | | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `BenchmarkPagination` no está en el curso. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 Para listados profundos y para recorrer conjuntos grandes, cursor. **Y la
 comparación de tuplas `(created_at, id) < ($1, $2)` es la clave**: PostgreSQL la
@@ -705,6 +852,10 @@ go test -tags=integration -run '^$' -bench BenchmarkSQLite -count=10 ./internal/
 | journal=wal, `MaxOpenConns=8` | | | |
 | journal=wal, `synchronous=FULL` | | | |
 | journal=wal, `synchronous=NORMAL` | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `BenchmarkSQLite` no está en el curso. Lo que sí se comprobó (Fase 09): el agente abre la base en WAL y sus `CHECK` rechazan tipos y monedas inválidos. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 Para el agente de tienda: **WAL + `synchronous=NORMAL` + `MaxOpenConns=1`**. SQLite
@@ -763,6 +914,10 @@ done
 | TTL sin jitter | | |
 | TTL con jitter ±20% | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita AtlasSync completo con sus tres backends de caché. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 **Si tu medición dice que Valkey es más rápido que un mapa en memoria, revisa el
 experimento.** Un acceso a un mapa son nanosegundos; un viaje a Valkey, cientos de
@@ -814,6 +969,10 @@ go test -run '^$' -bench BenchmarkCodec -benchmem -count=10 ./internal/cache
 
 **Umbral donde comprimir compensa:** _____ bytes.
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: `BenchmarkCodec` de la caché no está en el curso. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 Los bytes precodificados son la optimización más rentable de una caché de lectura y
 casi nadie la hace: eliminan **dos** pasos de serialización por acierto.
@@ -853,6 +1012,10 @@ curl -s -o /dev/null -w 'primer byte: %{time_starttransfer}s total: %{time_total
 |---|---|---|---|---|
 | Carga completa | | | | |
 | Streaming | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita el comando `report` de OpsReport, que la Fase 13 muestra en fragmentos. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 El tiempo hasta el primer byte es donde el streaming gana de forma más visible para
@@ -899,6 +1062,28 @@ done
 | 5.000 | | | | |
 | 10.000 | | | | |
 | 50.000 | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**Con la versión Go de referencia del duelo** (la del lector la reemplaza): un millón de
+movimientos, contenedor con `--cpus=4 --memory=2g`, una corrida por tamaño:
+
+| Tamaño de fragmento | Tiempo total | Pico de memoria |
+|---|---|---|
+| 100 | 103,9 s | 25 MB |
+| 500 | 39,2 s | 28 MB |
+| 1.000 | 52,4 s | 45 MB |
+| 5.000 | 50,4 s | 171 MB |
+| 10.000 | **falla** | — |
+| 50.000 | **falla** | — |
+
+**El hallazgo que no estaba en la hipótesis:** desde 10.000, el cierre falla con `extended
+protocol limited to 65535 parameters`. La versión de referencia escribe los asientos de un
+fragmento en un solo `INSERT` de varias filas (6 parámetros por asiento, 2 asientos por
+movimiento), y PostgreSQL admite como mucho 65.535 parámetros por sentencia. Si tu cierre
+escribe así, el tamaño de fragmento tiene un techo que no es de memoria: o partes el
+`INSERT`, o usas `COPY` o `unnest`. El punto dulce medido está entre 500 y 5.000; por
+debajo, el coste por transacción domina.
 
 ### Veredicto
 Recomendación **con su condición**: ~5.000 para el cierre nocturno, **y se baja si
@@ -950,6 +1135,23 @@ docker images | grep meridian/ch
 | Java: JDK completo | | | | |
 | Java: JRE `alpine` | | | | |
 | **Java: `native-image`** | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+`docker images` (tamaño sin comprimir), el mismo ClearingHouse:
+
+| Imagen | Tamaño | Base |
+|---|---|---|
+| Go, `gcr.io/distroless/static-debian12:nonroot` | **19,7 MB** | 6,2 MB |
+| Spring Boot, `eclipse-temurin:21-jre` (capas de Spring Boot) | 586 MB | 481 MB |
+| Spring Boot, `eclipse-temurin:21-jre-alpine` | 396 MB | 287 MB |
+
+Compilación desde limpio, con las dependencias ya descargadas: **Go 7,3 s** (`go clean
+-cache`: recompila la biblioteca estándar y pgx) frente a **Maven 3,3 s** (`mvn clean
+package -DskipTests` con `~/.m2` caliente). En compilación incremental de este tamaño, Maven
+no es más lento.
+
+La Fase 14 decía "~180 MB frente a ~2 MB de base": las bases medidas son 287 MB y 6,2 MB.
 
 ### Veredicto
 ⚠️ **Comparar el binario de Go contra el JAR es hacer trampa**, y hay que decirlo:
@@ -1008,6 +1210,10 @@ done
 
 *(misma tabla)*
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita un servicio bajo carga sostenida; con el cierre de la versión Go de referencia se puede medir, y queda para la próxima revisión. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 **Por debajo del 5% de CPU en recolección no hay nada que ganar tocando `GOGC`**, y
 ese es el caso mayoritario. **El veredicto tiene que decir cuándo no tocar nada.**
@@ -1064,6 +1270,10 @@ done
 |---|---|---|
 | 2 (por defecto) | | |
 | 100 | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita EventRelay completo. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 El número que decide el dimensionado no es el rendimiento máximo: es **el ritmo al
@@ -1149,6 +1359,108 @@ línea base**.
 | Dependencias transitivas | | |
 | Tiempo hasta el primer endpoint | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+`native-image`: GraalVM CE **25.0.5** compilando la aplicación con `release 21`. La imagen
+`native-image-community:21` trae GraalVM 21.0.2 (enero de 2024) y Spring Boot 4.1 la rechaza
+por los metadatos de alcanzabilidad. La compilación tardó 3 min 42 s y pidió 6,4 GB de RAM;
+el binario pesa 127 MB.
+
+Las dos implementaciones del curso: la versión Go de referencia del autor (no se
+publica; tiene el mismo diseño que pide la Fase 13) y el gemelo de `src/clearinghouse-spring/`,
+Spring Boot 4.1.1 sobre Temurin 21. Cada una en su contenedor con `--cpus=4 --memory=2g`;
+PostgreSQL 16 compartido (con el `/dev/shm` de 64 MB por defecto: el `VACUUM` paralelo
+entre corridas lo agota y lo informa, sin efecto en las mediciones); el generador de carga (vegeta) en la misma máquina. **Antes de
+medir, las dos pasaron la misma suite de contrato (18 casos) y produjeron el mismo libro
+mayor sobre un millón de movimientos: 1.750.372 asientos con el mismo md5.**
+
+**1. Arranque en frío hasta la primera petición servida** (5 corridas, mediana y rango)
+
+| Variante | Mediana | Rango |
+|---|---|---|
+| Go | 24 ms | 21–40 ms |
+| JVM por defecto | 3.525 ms | 3.467–3.637 ms |
+| JVM ajustada (rendimiento) | 3.529 ms | 3.470–3.584 ms |
+| JVM ajustada para arrancar (`TieredStopAtLevel=1`, `SerialGC`, **sin** AppCDS) | 4.041 ms | 4.024–4.086 ms |
+| `native-image` | 305 ms | 301–399 ms |
+
+**2. Memoria.** En reposo es el RSS del proceso; bajo carga y en el cierre,
+`memory.current`/`memory.peak` del contenedor (incluye la caché de páginas del proceso).
+
+| Variante | En reposo (RSS) | Bajo carga, 500 rps | Pico en el cierre de 1 M |
+|---|---|---|---|
+| Go | 10 MB | 18 MB | 171 MB |
+| JVM por defecto | 366 MB | 673 MB | 415 MB |
+| JVM ajustada | 384 MB | 1.049 MB | 1.290 MB (`AlwaysPreTouch` toca medio heap al arrancar) |
+| JVM para arrancar | 273 MB | — | — |
+| `native-image` | 150 MB | 49 MB | 171 MB |
+
+**3. Latencia y rendimiento sostenido**, `GET /movements` (página de 50, ~9 KB), 500 rps
+durante 60 s tras 30 s de calentamiento a 200 rps:
+
+| Variante | p50 | p90 | p95 | p99 | máx. | Éxito |
+|---|---|---|---|---|---|---|
+| Go | 0,48 ms | 0,63 ms | 0,71 ms | 1,00 ms | 30,3 ms | 100% |
+| JVM por defecto | 0,58 ms | 0,78 ms | 0,88 ms | 1,25 ms | 9,0 ms | 100% |
+| JVM ajustada | 0,59 ms | 0,80 ms | 0,89 ms | 1,21 ms | 13,4 ms | 100% |
+| `native-image` | 0,82 ms | 0,98 ms | 1,12 ms | 2,60 ms | 65,0 ms | 100% |
+
+No se buscó el ritmo de saturación: a 500 rps ninguna se acerca, y ese tramo queda para tu
+máquina.
+
+**4. CPU por petición** (`usage_usec` del cgroup durante los 60 s, entre 30.000
+peticiones): Go 352 µs · JVM por defecto 488 µs · JVM ajustada 467 µs · `native-image` 629 µs.
+
+**5. Cierre de 1.000.000 de movimientos**, fragmentos de 5.000 (3 corridas):
+
+| Variante | Tiempos | Pico de memoria |
+|---|---|---|
+| Go | 54,3 · 43,5 · 42,6 s | 171 MB |
+| Spring Batch, JVM por defecto | 42,6 · 52,3 · 51,8 s | 415 MB |
+| Spring Batch, JVM ajustada | 50,1 · 49,4 · 48,6 s | 1.290 MB |
+| Spring Batch, `native-image` (por `POST /runs`: el modo `--batch` no funciona en nativo) | 56,5 · 50,9 · 50,9 s | 171 MB |
+| Spring Batch con `JdbcPagingItemReader` (primera versión, descartada) | 150,8 · 145,4 · 137,7 · 145,2 s | 410 MB |
+
+**El resultado incómodo, en las dos direcciones.** El cierre empata: los dos esperan a
+PostgreSQL. La primera versión del gemelo tardaba 3,4 veces más, y no era la JVM. Era el
+lector paginado de Spring Batch (780 ms por página, frente a 190 ms de la misma consulta en
+`psql`; la causa exacta no se aisló). Con `JdbcCursorItemReader`, empate. Si esta tabla se
+hubiera publicado con la primera versión, diría "Go es 3× más rápido en lotes", y sería
+falso.
+
+**6. Imagen y compilación** — ver B-21.
+
+**7. Pico de 10×** (50 rps 20 s → 500 rps 15 s → 50 rps 20 s), p99 de cada tramo:
+
+| Variante | Antes | Durante | Después | Fallos |
+|---|---|---|---|---|
+| Go | 3,6 ms | 0,85 ms | 3,7 ms | 0 |
+| JVM por defecto | 4,1 ms | 1,17 ms | 3,3 ms | 0 |
+| JVM ajustada | 4,9 ms | 0,92 ms | 3,7 ms | 0 |
+
+El p99 es **mayor a 50 rps que a 500** en las tres: con poco tráfico, las conexiones y las
+cachés se enfrían entre petición y petición. Ninguna se degrada con el pico.
+
+**8. Lo que no sale en un gráfico**
+
+| | Go | Spring Boot |
+|---|---|---|
+| Líneas de código (sin tests, comentarios ni blancos) | 445 en un archivo, `seed` incluido | 431 en 11 archivos |
+| Dependencias transitivas | 16 módulos (`go list -m all`) | 100 artefactos en runtime |
+| Artefacto | binario de 9,6 MB (`-s -w`) | JAR de 55 MB |
+
+**`native-image` no es "la JVM, pero mejor".** Arranca en 0,3 s (doce veces antes que la
+JVM, doce veces después que Go) y ocupa 49 MB bajo carga. Pero sin JIT, su p99 es el peor de
+las cuatro variantes y gasta más CPU por petición que la JVM calentada. Y tiene restricciones
+que no salen en la tabla: el tipo de aplicación se fija al compilar, así que el modo
+`--batch` del gemelo no funciona en nativo.
+
+**Lo que este duelo dice, y lo que no.** Go gana con claridad en arranque (×150), memoria en
+reposo (×37) y bajo carga, y en CPU por petición (un 25–30% menos). En latencia a 500 rps la
+diferencia es de décimas de milisegundo, y en el cierre por lotes no hay diferencia. Es un
+servicio pequeño y limitado por la base de datos: un servicio con más lógica de CPU, o con
+otro patrón de acceso, puede dar otra tabla.
+
 ### Veredicto
 **Tiene que doler un poco en las dos direcciones. Si el resultado es "Go gana en
 todo", la medición está mal montada o la estás leyendo con los ojos que querías
@@ -1223,6 +1535,24 @@ go run ./labs/backoff-lab -input fakeconsumer.log -bucket 1s
 estrategia. Es el entregable de la entrada: el número medio miente aquí, la forma
 de la curva no.
 
+### Resultados de REF-1 (14/11/2026)
+
+**Medición parcial**: no con EventRelay contra `fakeconsumer` (eso necesita el servicio
+completo), sino con el modelo del 🧨 de la Fase 10, que calcula cuándo llega cada reintento
+de 500 entregas en los primeros 10 segundos (`labs/backoff-lab`, `TestAmplification`):
+
+| Estrategia | Peticiones por segundo, segundos 0 a 9 | Pico |
+|---|---|---|
+| Fijo, 2 s, sin jitter | `[0 0 500 0 500 0 500 0 500 0]` | 500 |
+| Exponencial, base 500 ms, *full jitter* | `[953 418 281 177 170 136 79 59 72 61]` | 953 |
+| Exponencial, base 2 s, *full jitter* | `[286 352 146 169 151 112 82 73 82 74]` | 352 |
+
+**La hipótesis, tal como está escrita, no se sostiene con este modelo:** el jitter no
+produce diez veces menos carga. Desincroniza los picos, pero con una base corta concentra
+más peticiones al principio que el retroceso fijo. Lo que alivia al socio es el jitter **con**
+una base comparable a la espera fija, o un techo de concurrencia. La tabla de arriba, con el
+socio de verdad, es la que decide.
+
 ### Veredicto
 Provisional: **el retroceso sin jitter no arregla el problema, lo reprograma.**
 Todas las entregas fallan a la vez, esperan lo mismo y vuelven a la vez: el pico
@@ -1270,6 +1600,30 @@ mongosh --eval 'db.products.stats().avgObjSize'
 | 1.000 | | | | |
 | 10.000 | | | | |
 | 100.000 | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**Medición parcial**: solo la columna de `$push`, con el 🧨 de la Fase 11 (un documento,
+`$push` de un punto `{day, rate}` por iteración, 200.000 iteraciones, driver v2.10.0 contra
+`mongo:7` en la red de Docker). Las columnas de lectura completa y con proyección necesitan el
+benchmark de `labs/bson-lab`, que el curso no escribe entero.
+
+| Puntos en el array | Tamaño del doc | `$push` (ms, una muestra) |
+|---|---|---|
+| 0 | 0 KB | 1,9 |
+| 20.000 | 750 KB | 4,1 |
+| 60.000 | 2.274 KB | 11,8 |
+| 100.000 | 3.797 KB | 19,6 |
+| 140.000 | 5.360 KB | 28,6 |
+| 200.000 | 7.704 KB | 40,8 |
+
+Las 200.000 escrituras tardaron **73 min 46 s** (22 ms de media). El coste del `$push` crece
+**en proporción al tamaño del documento**, unos 5 ms por MB: de 1,9 ms a 41 ms, más de veinte
+veces, sin que el documento llegue a la mitad del límite. Con unos 39 bytes por punto, los
+16 MB se alcanzarían cerca de los 420.000 puntos (extrapolado, no corrido: serían más de cinco
+horas). **La parte de la hipótesis que se puede juzgar con esta medición se sostiene**: la
+escritura se vuelve inaceptable mucho antes del límite. La de la lectura queda pendiente de tu
+tabla.
 
 ### Veredicto
 Provisional: **"los documentos no crecen sin límite" deja de ser un consejo y pasa
@@ -1324,6 +1678,10 @@ done
 | 8 | | | | |
 | 16 | | | | |
 
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita el despachador del outbox completo con varias instancias. Aquí la cifra es tuya, y la tabla de arriba está para eso.
+
 ### Veredicto
 Provisional: **hay un punto en el que añadir instancias solo añade carga a la base
 de datos.** Ese punto —y no una cifra citada de un blog— es el que decide cuándo
@@ -1374,6 +1732,10 @@ benchstat mw.txt
 | + métricas | | | | |
 | + traza, muestreo 100% | | | | |
 | + traza, muestreo 1% | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: necesita la cadena de observabilidad completa de la Fase 14. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 Provisional: **la observabilidad se paga y el precio es barato, pero no es cero,
@@ -1426,6 +1788,10 @@ time go test ./services/... -run 'Mock'
 |---|---|---|---|---|
 | Fake a mano | | — | | — |
 | `go.uber.org/mock` | | | | |
+
+### Resultados de REF-1 (14/11/2026)
+
+**No medida por el curso**: compara la suite con fakes y con mocks generados de AtlasSync, que el curso no trae completa. Aquí la cifra es tuya, y la tabla de arriba está para eso.
 
 ### Veredicto
 Provisional: **la diferencia de tiempo es pequeña y el argumento real no es el

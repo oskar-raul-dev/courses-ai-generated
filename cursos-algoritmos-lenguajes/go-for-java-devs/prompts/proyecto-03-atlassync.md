@@ -46,9 +46,9 @@ diez años?"*.
 Todas públicas, **sin clave de API**, para que el curso funcione en cualquier
 máquina y en cualquier momento:
 
-- **REST Countries** — `https://restcountries.com/v3.1/all` — países, códigos
+- **REST Countries** — `https://restcountries.com/v3.1/all` (retirada en 2026; ver F10 §6.5) — países, códigos
   ISO, monedas, idiomas, zonas horarias, región y subregión.
-- **Frankfurter** — `https://api.frankfurter.app/latest` — tipos de cambio del
+- **Frankfurter** — `https://api.frankfurter.dev/v1/latest` (antes `api.frankfurter.app`) — tipos de cambio del
   Banco Central Europeo, con histórico por fecha.
 - 🔥 **Open-Meteo** — `https://open-meteo.com` — opcional, como segunda fuente
   para los ejercicios de agregación de proveedores.

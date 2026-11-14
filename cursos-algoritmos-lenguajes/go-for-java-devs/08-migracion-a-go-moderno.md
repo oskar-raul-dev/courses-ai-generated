@@ -167,7 +167,7 @@ cat go.mod
 # go.work: el workspace. Permite que varios módulos del monorepo se vean entre sí
 # sin `replace` en cada go.mod, que era el parche de la época anterior.
 go work init ./services/opsreport ./services/eventrelay
-go work use ./labs/text-toolkit
+go work use -r .            # todos los módulos del monorepo, labs incluidos (§6.2)
 go work edit -json          # ver el workspace resuelto
 cat go.work
 
@@ -176,7 +176,8 @@ go list -m -f '{{.Path}} {{.GoVersion}}' all
 
 # gopls tiene un modernizador: sugiere sustituciones seguras de API vieja por
 # nueva. NO lo apliques a ciegas: úsalo para descubrir candidatos y decide tú.
-go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest ./...
+# Versión fijada: gopls v0.22 en adelante exige Go 1.26 para compilarse.
+go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@v0.21.1 ./...
 
 # El vet moderno trae analizadores que en 1.13 no existían, como el de los
 # bucles y el de `loopclosure` actualizado.
@@ -189,7 +190,7 @@ go test -run '^$' -fuzz FuzzParseMovement -fuzztime 30s ./labs/movement-parser
 
 # El corpus que el fuzzer descubre se guarda en testdata/fuzz/ y SE COMMITEA:
 # es una regresión permanente.
-ls services/clearinghouse/testdata/fuzz/FuzzParseMovement/
+ls labs/movement-parser/testdata/fuzz/FuzzParseMovement/
 
 # -shuffle (Go 1.17): ejecuta los tests en orden aleatorio. Detecta la
 # dependencia entre tests que en el Bloque A era indetectable.
@@ -200,7 +201,7 @@ go test -shuffle=1699887654 ./...   # reproducir un orden concreto
 
 # El analizador de la variable de bucle, para el salto 1.22. Con GOEXPERIMENT se
 # podía probar antes de que fuera el comportamiento por defecto.
-go build -gcflags=all=-d=loopvar=2 ./...   # informa de cada bucle afectado
+go build -gcflags=-d=loopvar=2 ./...   # informa de cada bucle afectado (con all= también los del runtime)
 
 # Comparar el binario de las dos épocas (B-11).
 go1.13 build -ldflags "-s -w" -o bin/opsreport-113 ./cmd/opsreport
@@ -216,6 +217,12 @@ git diff bloque-a-completo fase-08 --stat
 > Bloque A, un test que dependía del orden pasaba siempre y nadie lo sabía.
 > Actívalo ya sobre la suite completa: si algo falla, acabas de encontrar un bug
 > real que llevaba siete fases escondido.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 en un
+> contenedor `linux/arm64`: `go get go@1.25.1`, `go.work`, `modernize`, el
+> fuzzing, `-d=loopvar=2` y los dos experimentos de época. La migración de los dos
+> servicios y el `git diff --stat` de L1172 no se reprodujeron: salen de tu
+> repositorio.
 
 ---
 
@@ -268,6 +275,7 @@ package report
 import (
 	"embed"
 	"html/template"
+	"io"
 )
 
 // El comentario //go:embed NO es un comentario: es una directiva del compilador.
@@ -331,13 +339,24 @@ go work use ./labs/text-toolkit
 
 ```text
 # go.work
-go 1.25
+go 1.25.1
 
 use (
-	./services/opsreport
-	./services/eventrelay
 	./labs/text-toolkit
+	./services/eventrelay
+	./services/opsreport
 )
+```
+
+Y un detalle que muerde el primer día: **con `go.work` en la raíz, todo módulo que
+cuelgue del directorio y no esté en la lista deja de compilar**. Entra en
+`labs/log-grep` y `go build .` responde `current directory is contained in a
+module that is not one of the workspace modules listed in go.work`. Los labs están
+todos en ese caso, y el `make` que recorre los módulos (Fase 00) también falla. La
+solución es meterlos a todos:
+
+```bash
+go work use -r .   # añade al workspace cada módulo que encuentre bajo la raíz
 ```
 
 ```gitignore
@@ -396,9 +415,9 @@ func NewSet[T comparable](items ...T) *Set[T] {
 	return s
 }
 
-func (s *Set[T]) Add(item T)           { s.items[item] = struct{}{} }
-func (s *Set[T]) Has(item T) bool      { _, ok := s.items[item]; return ok }
-func (s *Set[T]) Len() int             { return len(s.items) }
+func (s *Set[T]) Add(item T)      { s.items[item] = struct{}{} }
+func (s *Set[T]) Has(item T) bool { _, ok := s.items[item]; return ok }
+func (s *Set[T]) Len() int        { return len(s.items) }
 ```
 
 ```go
@@ -418,7 +437,7 @@ func decodeJSON[T any](w http.ResponseWriter, r *http.Request) (T, error) {
 	dec.DisallowUnknownFields()
 
 	if err := dec.Decode(&v); err != nil {
-		var maxErr *http.MaxBytesError   // 🎁 Go 1.19: tipo en vez de comparar texto
+		var maxErr *http.MaxBytesError // 🎁 Go 1.19: tipo en vez de comparar texto
 		switch {
 		case errors.As(err, &maxErr):
 			return v, fmt.Errorf("%w: máximo %d bytes", errBodyTooLarge, maxErr.Limit)
@@ -570,18 +589,22 @@ go test -run '^$' -fuzz FuzzParseMovement -fuzztime 60s ./labs/movement-parser
 ```
 
 ```text
-fuzz: elapsed: 3s, gathering baseline coverage: 6/6 completed
-fuzz: elapsed: 12s, execs: 284917 (28491/sec), new interesting: 14
---- FAIL: FuzzParseMovement (12.04s)
-    parse_fuzz_test.go:31: aceptó una línea sin moneda: "0|0|0|0|"
+fuzz: elapsed: 0s, gathering baseline coverage: 0/6 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 6/6 completed, now fuzzing with 8 workers
+fuzz: elapsed: 0s, execs: 1402 (12967/sec), new interesting: 2 (total: 8)
+--- FAIL: FuzzParseMovement (0.11s)
+    --- FAIL: FuzzParseMovement (0.00s)
+        parse_fuzz_test.go:33: aceptó una línea sin tienda: "|||0|"
+        parse_fuzz_test.go:36: aceptó una línea sin tipo: "|||0|"
+        parse_fuzz_test.go:39: aceptó una línea sin moneda: "|||0|"
 
-    Failing input written to testdata/fuzz/FuzzParseMovement/8f2a9c1b...
+    Failing input written to testdata/fuzz/FuzzParseMovement/ac81a9569990fd96
     To re-run:
-    go test -run=FuzzParseMovement/8f2a9c1b...
+    go test -run=FuzzParseMovement/ac81a9569990fd96
 ```
 
-**El fuzzer encontró en doce segundos que `"0|0|0|0|"` produce cinco campos con la
-moneda vacía**, y el parser lo aceptaba. Ningún test de tabla de la Fase 01 lo
+**El fuzzer encontró en una décima de segundo que `"|||0|"` produce cinco campos
+con tienda, tipo y moneda vacíos**, y el parser lo aceptaba. Ningún test de tabla de la Fase 01 lo
 cubría, porque a nadie se le ocurre escribir ese caso.
 
 Y el archivo que escribió en `testdata/fuzz/` **se commitea**: a partir de ahora,
@@ -610,7 +633,7 @@ defer func() { <-sem }()
 
 // DESPUÉS — semaphore.Weighted, que además soporta pesos y contexto
 if err := sem.Acquire(ctx, 1); err != nil {
-	return err   // el contexto se canceló mientras esperábamos: mejor que colgarse
+	return err // el contexto se canceló mientras esperábamos: mejor que colgarse
 }
 defer sem.Release(1)
 ```
@@ -621,10 +644,10 @@ defer sem.Release(1)
 
 func (s *Service) FanOutDeliveries(ctx context.Context, deliveries []relay.Delivery) error {
 	g, ctx := errgroup.WithContext(ctx)
-	g.SetLimit(s.maxConcurrent)   // ← el límite, que es la regla de la Fase 06
+	g.SetLimit(s.maxConcurrent) // ← el límite, que es la regla de la Fase 06
 
 	for _, d := range deliveries {
-		d := d   // 🕰️ innecesario desde 1.22; ver §6.4
+		d := d // 🕰️ innecesario desde 1.22; ver §6.4
 		g.Go(func() error {
 			return s.deliver(ctx, d)
 		})
@@ -690,21 +713,21 @@ Ahora `status >= 500` es una consulta, no una expresión regular.
 Tres decisiones del curso que se toman aquí:
 
 ```go
-// 1. El logger se INYECTA, no se usa el global. Es la regla 7 de la guía: cero
-//    estado global mutable. slog.Default() existe y no lo usamos.
+//  1. El logger se INYECTA, no se usa el global. Es la regla 7 de la guía: cero
+//     estado global mutable. slog.Default() existe y no lo usamos.
 type Service struct {
 	store  Store
 	logger *slog.Logger
 }
 
-// 2. LogAttrs en vez de Info(msg, args...). La forma variádica acepta pares
-//    clave-valor sueltos y un número impar de argumentos NO da error de
-//    compilación: produce un log corrupto en tiempo de ejecución.
-//    LogAttrs es tipada y además no asigna.
+//  2. LogAttrs en vez de Info(msg, args...). La forma variádica acepta pares
+//     clave-valor sueltos y un número impar de argumentos NO da error de
+//     compilación: produce un log corrupto en tiempo de ejecución.
+//     LogAttrs es tipada y además no asigna.
 logger.LogAttrs(ctx, slog.LevelInfo, "mensaje", slog.String("k", "v"))
 
-// 3. El logger se deriva con contexto en el borde, y baja por los parámetros.
-//    NO se mete en el context. Un *slog.Logger es un valor barato de pasar.
+//  3. El logger se deriva con contexto en el borde, y baja por los parámetros.
+//     NO se mete en el context. Un *slog.Logger es un valor barato de pasar.
 reqLogger := logger.With(slog.String("request_id", id))
 ```
 
@@ -1336,7 +1359,7 @@ import (
 )
 
 func main() {
-	for _, chunk := range slices.Chunk([]int{1, 2, 3, 4, 5}, 2) {
+	for chunk := range slices.Chunk([]int{1, 2, 3, 4, 5}, 2) { // devuelve un iterador: una sola variable
 		fmt.Println(chunk)
 	}
 }
@@ -1352,7 +1375,7 @@ go build .
 ```
 
 ```text
-./main.go:10:21: slices.Chunk requires go1.23 or later (module is go1.21)
+./main.go:10:21: cannot range over slices.Chunk([]int{…}, 2) (value of func type iter.Seq[[]int]): requires go1.23 or later (-lang was set to go1.21; check go.mod)
 ```
 
 **Mismo compilador, mismo código, y no compila.** El módulo declara qué versión

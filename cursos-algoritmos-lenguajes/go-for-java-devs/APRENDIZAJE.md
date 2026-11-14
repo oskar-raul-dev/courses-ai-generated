@@ -237,11 +237,11 @@ No las escribas desde cero. El curso ya tiene el material identificado y marcado
 
 | Fuente | Tipo | Volumen aproximado |
 |---|---|---|
-| `INSTINTOS.md`, cada entrada ☕ | Reflejo | ~40 |
+| `INSTINTOS.md`, cada entrada ☕ | Reflejo | ~85 → elige ~40 |
 | §7 de cada fase, "Errores comunes" | Diagnóstico | ~130 |
 | §10 de cada fase, ⚖️ "Cuándo NO usar esto" | Decisión | ~18 |
 | §10 de cada fase, 📖 diccionario | Traducción | ~250 filas → elige ~80 |
-| `BENCHMARKS.md`, las 24 hipótesis | Predicción | 24 |
+| `BENCHMARKS.md`, las 29 hipótesis | Predicción | 29 |
 | Los 🧭 "Regla del proyecto" | Regla | ~40 |
 | Los ⚰️ autopsias, una por fase | Decisión + coste | 16 |
 
@@ -621,7 +621,7 @@ de lo que decide.**
   releer al terminar cada fase.
 - **`0-ESTRUCTURA-CURSO.md`** §7 — el inventario de deudas 💸, que es un buen mapa
   de qué se conecta con qué.
-- **`BENCHMARKS.md`** — las 24 hipótesis, para las tarjetas de predicción.
+- **`BENCHMARKS.md`** — las 29 hipótesis, para las tarjetas de predicción.
 
 ---
 

@@ -97,12 +97,14 @@ la comparación no vale nada y todo el mundo lo sabrá.**
 
 **3. No se enseña a escribirlo.** Se lee, se compara y se mide.
 
-> ⚠️ **El gemelo todavía no se publica con el curso.** `reference/clearinghouse-spring/`
-> está pendiente, así que hoy esta fase se lee y se prepara —la suite de contrato, el
-> conjunto de datos, los comandos de B-24—, pero el duelo no se puede correr con el
-> material del curso. Si quieres correrlo ya, el gemelo lo escribes tú con las tres
-> reglas de arriba, y la regla de la suite de contrato pasa a ser también tu prueba de
-> que lo escribiste bien.
+> 📝 **El gemelo viene con el curso**, en `src/clearinghouse-spring/`: cópialo a
+> `reference/clearinghouse-spring/` de tu repositorio. Está escrito en **Spring Boot 4.1**
+> sobre Java 21, no en el Spring Boot 3 que nombra el resto del texto: la línea 3.5 perdió
+> el soporte libre el 30/06/2026 (`0-ESTRUCTURA-CURSO.md` §11), y comparar contra una
+> versión sin soporte sería otra forma de hacer trampa. Trae su `README.md`, con el
+> contrato y la regla contable, y la suite de contrato en `contract/`, con los casos que
+> esta fase da por escritos. Tu versión Go tiene que pasar esa suite y producir el mismo
+> md5 del libro mayor antes de medir nada.
 
 > 🧭 **Regla del proyecto.** Antes de medir nada, **las dos implementaciones tienen
 > que pasar la misma suite de contrato HTTP y producir asientos byte a byte
@@ -167,8 +169,9 @@ es el perfil de ejecución de mi servicio?"**:
 diferencia"*.
 
 `native-image` de GraalVM compila la aplicación anticipadamente a un binario
-nativo. Los arranques bajan a decenas de milisegundos y la memoria residente cae
-mucho. **Es una tecnología impresionante y cambia la conversación de verdad.**
+nativo. Los arranques bajan a cientos de milisegundos (unos 300 ms el gemelo, con
+Hibernate y Flyway, frente a 3,5 s en la JVM; B-24) y la memoria bajo carga cae
+mucho (49 MB frente a 673). **Es una tecnología impresionante y cambia la conversación de verdad.**
 
 Y tiene costes concretos que hay que medir, no suponer:
 
@@ -177,7 +180,7 @@ Y tiene costes concretos que hay que medir, no suponer:
 - **Se pierde el JIT**, así que **el rendimiento sostenido suele ser peor que el de
   la JVM caliente**. Se cambia arranque por techo.
 - **La reflexión, los *proxies* dinámicos y la carga dinámica de clases necesitan
-  configuración explícita.** Spring Boot 3 lo soporta oficialmente con sus *hints*,
+  configuración explícita.** Spring Boot lo soporta oficialmente con sus *hints*,
   y aun así hay librerías que no funcionan o requieren trabajo.
 - **El ecosistema de diagnóstico cambia**: JFR funciona con limitaciones, y
   herramientas que dabas por hechas puede que no.
@@ -316,6 +319,13 @@ du -sh ~/.m2/repository
 > cientos de milisegundos en servir la primera petición, porque el `DispatcherServlet`
 > se inicializa perezosamente. Go también tiene su parte: el pool de conexiones
 > abre la primera conexión en la primera consulta.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026**: el duelo completo
+> entre el gemelo de `src/clearinghouse-spring/` (JVM por defecto, ajustada,
+> ajustada para arrancar y `native-image`) y una versión Go de referencia, con la
+> misma suite de contrato y el mismo md5 del libro mayor sobre un millón de
+> movimientos. Las cifras, con sus condiciones, están en B-21 y B-24 de
+> `BENCHMARKS.md`. AppCDS no se midió.
 
 ---
 
@@ -476,7 +486,7 @@ for i in $(seq 1 $RUNS); do
 
   # El bucle es sin espera: cada intento cuesta microsegundos, así que la
   # resolución es buena. Con `sleep 0.1` entre intentos, el error sería de hasta
-  # 100 ms — que es la mitad del tiempo de arranque de Go.
+  # 100 ms — cuatro veces el arranque de Go (24 ms en REF-1, B-24).
   until curl -sf "http://localhost:$PORT/health" > /dev/null 2>&1; do
     kill -0 $pid 2>/dev/null || { echo "el proceso murió"; exit 1; }
   done
@@ -723,7 +733,7 @@ producción y un equipo agotado.
 | Arranque | Se midió el *"Started in"* del log, no la primera petición servida. Y el servicio arrancaba **una vez por despliegue**, dos veces por semana |
 | Memoria | `-Xmx` por defecto en una máquina de 32 GB: la JVM reservó lo que le dejaron. **Con `-XX:MaxRAMPercentage=25` bajaba a 180 MB** |
 | Latencia p99 | **La JVM se midió fría.** 500 peticiones tras arrancar, con el JIT en C1. Con calentamiento, 14 ms frente a 12 ms |
-| Imagen | Comparó `distroless` de Go contra `eclipse-temurin` **completo** con JDK. Con JRE `alpine`, 140 MB |
+| Imagen | Comparó `distroless` de Go contra `eclipse-temurin` **completo** con JDK. Con JRE `alpine`, 396 MB (B-21: base de 287 MB más la aplicación) |
 | `native-image` | **No se midió.** "No nos daba tiempo" |
 | El endpoint elegido | Un `/health` que devolvía `{"status":"ok"}`. **No ejercitaba la base de datos, ni la serialización, ni la lógica** |
 

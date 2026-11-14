@@ -91,6 +91,14 @@ llamadas al sistema.
 
 ```go
 // labs/race-counter/scale.go
+package counter
+
+import (
+	"sync"
+	"time"
+)
+
+// SpawnN arranca n goroutines que duermen 10 ms y espera a que terminen.
 func SpawnN(n int) {
 	var wg sync.WaitGroup
 	wg.Add(n)
@@ -139,13 +147,13 @@ casi nada: están todas aparcadas.
 ### Canales: colas tipadas con sincronización incorporada
 
 ```go
-ch := make(chan string)      // SIN búfer: cada envío espera a un receptor
-ch := make(chan string, 10)  // CON búfer de 10: los 10 primeros envíos no esperan
+ch := make(chan string)     // SIN búfer: cada envío espera a un receptor
+ch := make(chan string, 10) // CON búfer de 10: los 10 primeros envíos no esperan
 
-ch <- "hola"                 // enviar
-msg := <-ch                  // recibir
-msg, ok := <-ch              // recibir; ok es false si el canal está cerrado y vacío
-close(ch)                    // cerrar
+ch <- "hola"    // enviar
+msg := <-ch     // recibir
+msg, ok := <-ch // recibir; ok es false si el canal está cerrado y vacío
+close(ch)       // cerrar
 ```
 
 La diferencia entre con y sin búfer es **de semántica, no de rendimiento**:
@@ -156,7 +164,7 @@ La diferencia entre con y sin búfer es **de semántica, no de rendimiento**:
   completa, solo sabes que está en la cola. Es desacoplamiento.
 
 ```go
-for msg := range ch {        // recorre hasta que el canal se cierra
+for msg := range ch { // recorre hasta que el canal se cierra
 	fmt.Println(msg)
 }
 ```
@@ -250,14 +258,14 @@ construye con un canal y N goroutines:
 
 ```go
 // El worker pool de Go, completo. Diez líneas.
-jobs := make(chan workitem.WorkItem, queueSize)  // el límite, aquí
+jobs := make(chan workitem.WorkItem, queueSize) // el límite, aquí
 var wg sync.WaitGroup
 
-for i := 0; i < workerCount; i++ {               // los N workers, aquí
+for i := 0; i < workerCount; i++ { // los N workers, aquí
 	wg.Add(1)
 	go func(id int) {
 		defer wg.Done()
-		for job := range jobs {                   // cada uno consume hasta el cierre
+		for job := range jobs { // cada uno consume hasta el cierre
 			e.run(job)
 		}
 	}(i)
@@ -265,8 +273,8 @@ for i := 0; i < workerCount; i++ {               // los N workers, aquí
 
 // ... alguien envía a `jobs` ...
 
-close(jobs)   // el apagado, aquí: no hay más trabajo
-wg.Wait()     // esperar a que terminen el que tenían
+close(jobs) // el apagado, aquí: no hay más trabajo
+wg.Wait()   // esperar a que terminen el que tenían
 ```
 
 Diez líneas, y **cada una de las tres garantías está visible**: el búfer del canal
@@ -285,7 +293,7 @@ proteger estado compartido, un mutex es más simple:
 
 ```go
 type Store struct {
-	mu    sync.RWMutex                     // el mutex va JUNTO a lo que protege
+	mu    sync.RWMutex // el mutex va JUNTO a lo que protege
 	items map[string]workitem.WorkItem
 }
 
@@ -297,7 +305,7 @@ func (s *Store) Save(item workitem.WorkItem) error {
 }
 
 func (s *Store) FindByID(id string) (workitem.WorkItem, error) {
-	s.mu.RLock()                           // RLock: varios lectores a la vez
+	s.mu.RLock() // RLock: varios lectores a la vez
 	defer s.mu.RUnlock()
 	item, ok := s.items[id]
 	if !ok {
@@ -323,12 +331,12 @@ Y la pieza que falta, que a un dev de Java le sorprende:
 El resto de `sync`, en una pasada:
 
 ```go
-var wg sync.WaitGroup      // esperar a N goroutines. Add ANTES de lanzar.
-var once sync.Once         // ejecutar algo exactamente una vez
-var mu sync.Mutex          // exclusión mutua
-var rw sync.RWMutex        // varios lectores O un escritor
+var wg sync.WaitGroup // esperar a N goroutines. Add ANTES de lanzar.
+var once sync.Once    // ejecutar algo exactamente una vez
+var mu sync.Mutex     // exclusión mutua
+var rw sync.RWMutex   // varios lectores O un escritor
 
-atomic.AddInt64(&counter, 1)        // operaciones atómicas sin lock
+atomic.AddInt64(&counter, 1) // operaciones atómicas sin lock
 atomic.LoadInt64(&counter)
 ```
 
@@ -439,6 +447,12 @@ go1.13 test -run '^$' -bench . -benchmem -cpu=1,4,8 ./labs/race-counter
 > con más de un procesador lógico, y muchos deadlocks solo con uno. Ponerlo en CI
 > cuesta tiempo de compilación cero y encuentra cosas.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: los labs, el detector de carreras, los cuatro
+> deadlocks y la fuga de goroutines. Las rutas de las pilas son las del contenedor
+> (`/root/…`). La carrera del dispatcher de EventRelay no se reprodujo, porque la
+> fase no muestra el servicio entero. B-07 a B-09 van a `BENCHMARKS.md`.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -452,13 +466,16 @@ La carrera que `-race` encuentra y el ojo no. Y el detalle que la hace didáctic
 // labs/race-counter/counter.go
 package counter
 
-import "sync"
+import (
+	"sync"
+	"sync/atomic"
+)
 
 // Unsafe incrementa sin ninguna sincronización. Es lo que todo el mundo escribe
 // la primera vez, y produce un resultado equivocado sin dar ningún síntoma.
 type Unsafe struct{ n int }
 
-func (c *Unsafe) Inc() { c.n++ }
+func (c *Unsafe) Inc()     { c.n++ }
 func (c *Unsafe) Get() int { return c.n }
 
 // WithMutex protege con exclusión mutua.
@@ -483,7 +500,7 @@ func (c *WithMutex) Get() int {
 // operaciones que el hardware soporta— y bastante más rápida.
 type WithAtomic struct{ n int64 }
 
-func (c *WithAtomic) Inc() { atomic.AddInt64(&c.n, 1) }
+func (c *WithAtomic) Inc()       { atomic.AddInt64(&c.n, 1) }
 func (c *WithAtomic) Get() int64 { return atomic.LoadInt64(&c.n) }
 
 // WithChannel serializa a través de una goroutine propietaria del estado.
@@ -567,7 +584,8 @@ func TestUnsafe_LosesIncrements(t *testing.T) {
 
 ```bash
 go1.13 test -run TestUnsafe -v ./labs/race-counter
-# se perdieron 41208 incrementos de 100000 (41.2%)
+# se perdieron 43259 incrementos de 100000 (43.3%)
+# (cambia en cada corrida: 51,2%, 37,4% y 43,3% en tres seguidas)
 
 go1.13 test -race -run TestUnsafe ./labs/race-counter
 ```
@@ -575,20 +593,25 @@ go1.13 test -race -run TestUnsafe ./labs/race-counter
 ```text
 ==================
 WARNING: DATA RACE
-Read at 0x00c0000a4010 by goroutine 9:
-  github.com/meridian/labs/counter.(*Unsafe).Inc()
-      /Users/tu/dev/meridian/labs/race-counter/counter.go:9 +0x3c
+Read at 0x0040000a60d8 by goroutine 10:
+  github.com/meridian/labs/race-counter.TestUnsafe_LosesIncrements.func1()
+      /root/dev/meridian/labs/race-counter/counter.go:13 +0x6c
 
-Previous write at 0x00c0000a4010 by goroutine 8:
-  github.com/meridian/labs/counter.(*Unsafe).Inc()
-      /Users/tu/dev/meridian/labs/race-counter/counter.go:9 +0x50
+Previous write at 0x0040000a60d8 by goroutine 9:
+  github.com/meridian/labs/race-counter.TestUnsafe_LosesIncrements.func1()
+      /root/dev/meridian/labs/race-counter/counter.go:13 +0x80
 
-Goroutine 9 (running) created at:
-  github.com/meridian/labs/counter.TestUnsafe_LosesIncrements()
-      /Users/tu/dev/meridian/labs/race-counter/counter_test.go:12 +0xd8
+Goroutine 10 (running) created at:
+  github.com/meridian/labs/race-counter.TestUnsafe_LosesIncrements()
+      /root/dev/meridian/labs/race-counter/counter_test.go:17 +0xbc
 ...
 ==================
 ```
+
+El compilador **expandió en línea** `Inc()`, así que la pila no lo nombra: señala
+`counter.go:13`, que es el `c.n++` de dentro de `Inc`, dentro de la goroutine del
+test. Con `-gcflags=-l` (sin expansión en línea) aparece `(*Unsafe).Inc()` como
+marco propio.
 
 **Léelo entero, porque es el formato que vas a ver durante todo el curso.** Tiene
 tres partes: el acceso que disparó la detección, el acceso anterior en conflicto,
@@ -618,7 +641,10 @@ Cuatro formas de colgar un programa, y cómo se ve cada una.
 // labs/deadlock-lab/deadlock.go
 package deadlock
 
-import "sync"
+import (
+	"sync"
+	"time"
+)
 
 // 1. El canal sin búfer sin receptor.
 // Go DETECTA este caso: si TODAS las goroutines están dormidas, el runtime lo
@@ -632,15 +658,16 @@ func UnbufferedNoReceiver() {
 // Wait() espera un Done() que nunca llega. También lo detecta el runtime.
 func WaitGroupMismatch() {
 	var wg sync.WaitGroup
-	wg.Add(2)             // se prometieron dos
+	wg.Add(2)                 // se prometieron dos
 	go func() { wg.Done() }() // solo llegó una
-	wg.Wait()             // fatal error: all goroutines are asleep - deadlock!
+	wg.Wait()                 // fatal error: all goroutines are asleep - deadlock!
 }
 
 // 3. Dos mutex tomados en orden distinto. El clásico de los libros.
 // El runtime NO lo detecta si hay alguna otra goroutine viva (por ejemplo, el
 // servidor HTTP): el programa simplemente se cuelga, sin mensaje.
 type Account struct {
+	id      int // el orden total de TransferOrdered sale de aquí
 	mu      sync.Mutex
 	balance int64
 }
@@ -724,8 +751,10 @@ func (r *Registry) hasLocked(key string) bool {
 fatal error: all goroutines are asleep - deadlock!
 
 goroutine 1 [chan send]:
+main.UnbufferedNoReceiver(...)
+	/root/dev/meridian/labs/deadlock-lab/deadlock.go:14
 main.main()
-	/Users/tu/dev/meridian/labs/deadlock-lab/main.go:8 +0x3c
+	/root/dev/meridian/labs/deadlock-lab/main.go:11 +0x15c
 exit status 2
 ```
 
@@ -746,14 +775,19 @@ Y obtienes todas las pilas, con el estado de cada goroutine:
 
 ```text
 goroutine 18 [semacquire]:
-sync.runtime_SemacquireMutex(...)
-main.TransferDeadlock(...)
-	/Users/tu/dev/meridian/labs/deadlock-lab/deadlock.go:31
+sync.runtime_SemacquireMutex(0x400009a02c, 0x4f300, 0x1)
+	/root/sdk/go1.13/src/runtime/sema.go:71 +0x40
+sync.(*Mutex).lockSlow(0x400009a028)
+	/root/sdk/go1.13/src/sync/mutex.go:138 +0xec
+sync.(*Mutex).Lock(...)
+	/root/sdk/go1.13/src/sync/mutex.go:81
+main.TransferDeadlock(0x400009a000, 0x400009a020, 0x1)
+	/root/dev/meridian/labs/deadlock-lab/deadlock.go:42 +0x144
 
 goroutine 19 [semacquire]:
-sync.runtime_SemacquireMutex(...)
-main.TransferDeadlock(...)
-	/Users/tu/dev/meridian/labs/deadlock-lab/deadlock.go:31
+...
+main.TransferDeadlock(0x400009a020, 0x400009a000, 0x1)
+	/root/dev/meridian/labs/deadlock-lab/deadlock.go:42 +0x144
 ```
 
 Dos goroutines en `semacquire` en la misma línea: espera circular, diagnóstico
@@ -805,6 +839,14 @@ Y el test que la caza, **a mano**, porque `goleak` es de la Fase 08:
 
 ```go
 // labs/leak-lab/leak_test.go
+package leak
+
+import (
+	"runtime"
+	"testing"
+	"time"
+)
+
 func TestSearchLeaky_LeaksGoroutines(t *testing.T) {
 	// La línea base tiene que tomarse después de que el runtime se estabilice.
 	runtime.GC()
@@ -823,9 +865,9 @@ func TestSearchLeaky_LeaksGoroutines(t *testing.T) {
 	leaked := after - before
 
 	t.Logf("goroutines antes=%d después=%d fugadas=%d", before, after, leaked)
-	if leaked > 10 {
-		t.Errorf("se fugaron %d goroutines; el recolector NO las recoge", leaked)
-	}
+	// Deliberadamente NO falla, como TestUnsafe: un test rojo permanente en el
+	// repositorio enseña a ignorar los tests rojos. La versión que sí afirma es la
+	// de SearchFixed (ejercicio 9).
 }
 ```
 
@@ -860,6 +902,12 @@ Por qué la cola sin límite convierte un pico de tráfico en un OOM.
 ```go
 // labs/unbounded-queue/queue.go
 package queue
+
+import (
+	"errors"
+	"sync"
+	"time"
+)
 
 // Unbounded acepta trabajo sin límite. Cada Submit lanza una goroutine; con un
 // pico de tráfico, se lanzan tantas como peticiones lleguen.
@@ -973,7 +1021,9 @@ Todo lo anterior, aplicado. Este es el entregable de la fase.
 package engine
 
 import (
+	"fmt"
 	"log"
+	"runtime/debug"
 	"sync"
 	"time"
 
@@ -1178,8 +1228,8 @@ func (e *Engine) Stats() Stats {
 // atascado— es de la Fase 07.  💸
 func (e *Engine) Shutdown() {
 	e.quitOnce.Do(func() {
-		close(e.quit)  // Submit empieza a rechazar
-		close(e.jobs)  // los workers salen al vaciar la cola
+		close(e.quit) // Submit empieza a rechazar
+		close(e.jobs) // los workers salen al vaciar la cola
 	})
 	e.wg.Wait()
 	log.Printf("motor detenido: %+v", e.Stats())
@@ -1601,7 +1651,7 @@ archivos por lotes. Este era su motor:
 ```go
 // ☕
 type ImportPool struct {
-	size int                  // "el tamaño del pool"
+	size int // "el tamaño del pool"
 	sem  chan struct{}
 }
 
@@ -1611,17 +1661,17 @@ func NewImportPool(size int) *ImportPool {
 
 func (p *ImportPool) ProcessBatch(rows []Row) []error {
 	var (
-		mu     sync.Mutex
-		errs   []error
-		wg     sync.WaitGroup
+		mu   sync.Mutex
+		errs []error
+		wg   sync.WaitGroup
 	)
 
 	for _, row := range rows {
 		wg.Add(1)
-		go func(row Row) {            // ← una goroutine POR FILA
+		go func(row Row) { // ← una goroutine POR FILA
 			defer wg.Done()
 
-			p.sem <- struct{}{}        // el semáforo limita la EJECUCIÓN...
+			p.sem <- struct{}{} // el semáforo limita la EJECUCIÓN...
 			defer func() { <-p.sem }()
 
 			if err := importRow(row); err != nil {
@@ -1664,13 +1714,13 @@ respuesta, porque el canal **frena al productor**.
 
 ```go
 func (p *ImportPool) ProcessBatch(rows []Row) []error {
-	jobs := make(chan Row, p.size*2)  // la cola acotada FRENA al productor
+	jobs := make(chan Row, p.size*2) // la cola acotada FRENA al productor
 	errCh := make(chan error, len(rows))
 
 	var wg sync.WaitGroup
 	wg.Add(p.size)
 	for i := 0; i < p.size; i++ {
-		go func() {                    // p.size goroutines, no len(rows)
+		go func() { // p.size goroutines, no len(rows)
 			defer wg.Done()
 			for row := range jobs {
 				if err := importRow(row); err != nil {
@@ -1681,7 +1731,7 @@ func (p *ImportPool) ProcessBatch(rows []Row) []error {
 	}
 
 	for _, row := range rows {
-		jobs <- row  // ← aquí el productor SE BLOQUEA cuando la cola está llena
+		jobs <- row // ← aquí el productor SE BLOQUEA cuando la cola está llena
 	}
 	close(jobs)
 	wg.Wait()

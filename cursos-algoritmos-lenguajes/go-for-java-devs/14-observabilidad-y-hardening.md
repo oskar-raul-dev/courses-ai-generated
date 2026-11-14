@@ -116,8 +116,8 @@ func newLogger(cfg Config) *slog.Logger {
 	)
 }
 
-// 2. Se INYECTA. slog.Default() existe y no lo usamos: es estado global mutable,
-//    que es la regla 7 de la guía de estilo.
+//  2. Se INYECTA. slog.Default() existe y no lo usamos: es estado global mutable,
+//     que es la regla 7 de la guía de estilo.
 type Service struct {
 	store  Store
 	logger *slog.Logger
@@ -181,7 +181,7 @@ estas dos:
 
 // ☕ Opción B: meter el *slog.Logger en el context.Context y sacarlo en cada capa.
 func (s *Service) Create(ctx context.Context, item WorkItem) error {
-	log := LoggerFrom(ctx)   // ← y si nadie lo puso, devuelve... ¿qué?
+	log := LoggerFrom(ctx) // ← y si nadie lo puso, devuelve... ¿qué?
 	log.Info("creando")
 	// ...
 }
@@ -321,7 +321,7 @@ var httpDuration = prometheus.NewHistogramVec(
 			0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10,
 		},
 	},
-	[]string{"method", "route"},   // sin `status`: reduce series a la mitad
+	[]string{"method", "route"}, // sin `status`: reduce series a la mitad
 )
 ```
 
@@ -373,7 +373,7 @@ curl -s localhost:9090/metrics | grep '^meridian_' | \
   sed 's/{.*//' | sort | uniq -c | sort -rn | head
 
 # Trazas: Jaeger local para verlas.
-docker run -d --name jaeger -p 16686:16686 -p 4317:4317 jaegertracing/all-in-one:latest
+docker run -d --name jaeger -p 16686:16686 -p 4317:4317 jaegertracing/jaeger:2.23.0   # la v2; all-in-one (v1) ya no se publica
 open http://localhost:16686
 
 # Health y readiness, que responden cosas distintas.
@@ -401,7 +401,7 @@ docker inspect meridian/opsreport:dev --format '{{.Config.User}}'
 # Vulnerabilidades: govulncheck usa la base oficial de Go y —esto es lo
 # importante— solo reporta las que tu código PUEDE ALCANZAR, no todas las de tus
 # dependencias.
-go install golang.org/x/vuln/cmd/govulncheck@latest
+go install golang.org/x/vuln/cmd/govulncheck@v1.7.0
 govulncheck ./...
 govulncheck -show verbose ./...
 govulncheck -mode=binary ./bin/opsreport    # sobre el binario compilado
@@ -421,6 +421,12 @@ golangci-lint run ./...
 > `govulncheck` hace análisis de alcanzabilidad: te dice si **tu código llama** a
 > la función vulnerable. La diferencia en la práctica es pasar de cuarenta avisos
 > que nadie mira a dos que hay que arreglar hoy.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** en contenedores
+> `linux/arm64`: el `Dockerfile` distroless (que no construía desde un clon limpio
+> y se corrigió), su imagen no-root sin shell y la de Jaeger v2. La redacción de
+> logs, las métricas, las trazas, el dialer contra SSRF y la firma HMAC no se
+> reprodujeron como servicio: viven en `services/shared` y en fragmentos.
 
 ---
 
@@ -442,13 +448,13 @@ func (h *EndpointHandler) create(w http.ResponseWriter, r *http.Request) {
 
 	// "Registro la petición completa para poder depurar."
 	h.logger.LogAttrs(r.Context(), slog.LevelInfo, "creando endpoint",
-		slog.Any("request", req))       // ☠️ 1
+		slog.Any("request", req)) // ☠️ 1
 
 	ep, err := h.svc.Create(r.Context(), req.toDomain())
 	if err != nil {
 		// "Y el error con todo el contexto."
 		h.logger.LogAttrs(r.Context(), slog.LevelError, "no se pudo crear",
-			slog.Any("endpoint", ep),   // ☠️ 2
+			slog.Any("endpoint", ep), // ☠️ 2
 			slog.String("err", err.Error()))
 		writeError(w, r, err)
 		return
@@ -518,8 +524,8 @@ var sensitiveKeys = map[string]bool{
 var secretPatterns = []*regexp.Regexp{
 	regexp.MustCompile(`^whsec_[a-f0-9]{32}$`),
 	regexp.MustCompile(`^(sk|pk)_(live|test)_[A-Za-z0-9]{20,}$`),
-	regexp.MustCompile(`^eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.`),   // JWT
-	regexp.MustCompile(`^postgres(ql)?://[^:]+:[^@]+@`),          // DSN con contraseña
+	regexp.MustCompile(`^eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.`), // JWT
+	regexp.MustCompile(`^postgres(ql)?://[^:]+:[^@]+@`),        // DSN con contraseña
 }
 ```
 
@@ -537,11 +543,11 @@ var secretPatterns = []*regexp.Regexp{
 // específico de slog.
 type Secret string
 
-func (Secret) String() string                  { return "[REDACTADO]" }
-func (Secret) GoString() string                { return `"[REDACTADO]"` }
-func (Secret) LogValue() slog.Value            { return slog.StringValue("[REDACTADO]") }
-func (Secret) MarshalText() ([]byte, error)    { return []byte("[REDACTADO]"), nil }
-func (s Secret) Reveal() string                { return string(s) }
+func (Secret) String() string               { return "[REDACTADO]" }
+func (Secret) GoString() string             { return `"[REDACTADO]"` }
+func (Secret) LogValue() slog.Value         { return slog.StringValue("[REDACTADO]") }
+func (Secret) MarshalText() ([]byte, error) { return []byte("[REDACTADO]"), nil }
+func (s Secret) Reveal() string             { return string(s) }
 ```
 
 ```go
@@ -549,7 +555,7 @@ type Endpoint struct {
 	ID          string
 	PartnerName string
 	URL         string
-	Secret      Secret   // ← ya no se puede registrar por accidente
+	Secret      Secret // ← ya no se puede registrar por accidente
 }
 ```
 
@@ -644,11 +650,11 @@ prometió.
 
 // Metrics agrupa las métricas RED de un servicio HTTP.
 type Metrics struct {
-	requests  *prometheus.CounterVec
-	duration  *prometheus.HistogramVec
-	inFlight  prometheus.Gauge
-	reqSize   *prometheus.HistogramVec
-	respSize  *prometheus.HistogramVec
+	requests *prometheus.CounterVec
+	duration *prometheus.HistogramVec
+	inFlight prometheus.Gauge
+	reqSize  *prometheus.HistogramVec
+	respSize *prometheus.HistogramVec
 }
 
 // Middleware instrumenta un handler.
@@ -692,7 +698,7 @@ var (
 			Name: "meridian_batch_progress_ratio",
 			Help: "Fracción completada del lote en curso.",
 		},
-		[]string{"batch_type"},   // 2 valores, no el id del lote
+		[]string{"batch_type"}, // 2 valores, no el id del lote
 	)
 
 	// La ecuación de la Fase 13, expuesta como métrica. Un lote que no cuadra
@@ -702,7 +708,7 @@ var (
 			Name: "meridian_batch_movements_total",
 			Help: "Movimientos procesados por el cierre, por resultado.",
 		},
-		[]string{"outcome"},   // reconciled | skipped | failed
+		[]string{"outcome"}, // reconciled | skipped | failed
 	)
 
 	// La antigüedad del outbox pendiente: LA MÉTRICA que dice si el despachador
@@ -726,7 +732,7 @@ var (
 			Name: "meridian_cache_requests_total",
 			Help: "Consultas a la caché, por resultado.",
 		},
-		[]string{"cache", "result"},   // result: hit | miss | error
+		[]string{"cache", "result"}, // result: hit | miss | error
 	)
 
 	// La tasa de acierto NO se exporta como gauge: se calcula en Prometheus con
@@ -777,7 +783,7 @@ func newAdminServer(cfg Config, reg *prometheus.Registry) *http.Server {
 	// ...
 
 	return &http.Server{
-		Addr:              cfg.AdminAddr,   // ":9090", interno
+		Addr:              cfg.AdminAddr, // ":9090", interno
 		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
@@ -844,7 +850,7 @@ func Setup(ctx context.Context, cfg Config) (func(context.Context) error, error)
 // Servidor HTTP: un middleware.
 handler = otelhttp.NewHandler(handler, "meridian",
 	otelhttp.WithSpanNameFormatter(func(_ string, r *http.Request) string {
-		return r.Pattern   // el patrón, otra vez: cardinalidad
+		return r.Pattern // el patrón, otra vez: cardinalidad
 	}))
 
 // Cliente HTTP: un Transport envuelto.
@@ -924,7 +930,7 @@ func (h *HealthHandler) health(w http.ResponseWriter, r *http.Request) {
 //
 // La defensa: CACHEAR el resultado unos segundos.
 func (h *HealthHandler) ready(w http.ResponseWriter, r *http.Request) {
-	result := h.checker.Check(r.Context())   // cacheado 5 s
+	result := h.checker.Check(r.Context()) // cacheado 5 s
 
 	status := http.StatusOK
 	if !result.Ready {
@@ -1025,7 +1031,7 @@ más se equivoca en las configuraciones por defecto.
 
 // Load construye la configuración con la precedencia del curso:
 //
-//   valores por defecto  <  archivo  <  variables de entorno  <  banderas
+//	valores por defecto  <  archivo  <  variables de entorno  <  banderas
 //
 // Las banderas ganan porque son lo más explícito y lo que un operador usa para
 // una ejecución puntual.
@@ -1249,7 +1255,7 @@ func validateURLNaive(raw string) error {
 	ips, _ := net.LookupIP(u.Hostname())
 	for _, ip := range ips {
 		if ip.IsPrivate() || ip.IsLoopback() {
-			return ErrPrivateAddress   // ← se comprueba aquí y se conecta después
+			return ErrPrivateAddress // ← se comprueba aquí y se conecta después
 		}
 	}
 	return nil
@@ -1270,7 +1276,7 @@ IP a la que se va a conectar de verdad.
 // puede haber cambiado.
 type SafeDialer struct {
 	dialer  *net.Dialer
-	allowed []netip.Prefix   // lista blanca opcional, para entornos con excepciones
+	allowed []netip.Prefix // lista blanca opcional, para entornos con excepciones
 }
 
 func (d *SafeDialer) DialContext(ctx context.Context, network, addr string) (net.Conn, error) {
@@ -1316,15 +1322,15 @@ func (d *SafeDialer) checkIP(ip netip.Addr) error {
 	}
 
 	switch {
-	case ip.IsLoopback():                    // 127.0.0.0/8, ::1
+	case ip.IsLoopback(): // 127.0.0.0/8, ::1
 		return fmt.Errorf("%w: loopback %s", ErrBlockedAddress, ip)
-	case ip.IsPrivate():                     // 10/8, 172.16/12, 192.168/16, fc00::/7
+	case ip.IsPrivate(): // 10/8, 172.16/12, 192.168/16, fc00::/7
 		return fmt.Errorf("%w: rango privado %s", ErrBlockedAddress, ip)
-	case ip.IsLinkLocalUnicast():            // 169.254/16 ← LOS METADATOS DE LA NUBE
+	case ip.IsLinkLocalUnicast(): // 169.254/16 ← LOS METADATOS DE LA NUBE
 		return fmt.Errorf("%w: link-local %s", ErrBlockedAddress, ip)
 	case ip.IsLinkLocalMulticast(), ip.IsInterfaceLocalMulticast(), ip.IsMulticast():
 		return fmt.Errorf("%w: multicast %s", ErrBlockedAddress, ip)
-	case ip.IsUnspecified():                 // 0.0.0.0, ::
+	case ip.IsUnspecified(): // 0.0.0.0, ::
 		return fmt.Errorf("%w: no especificada %s", ErrBlockedAddress, ip)
 	}
 
@@ -1465,14 +1471,13 @@ FROM golang:1.25-alpine AS builder
 
 WORKDIR /src
 
-# Las dependencias en su propia capa: si go.mod y go.sum no cambian, Docker
-# reutiliza esta capa y no vuelve a descargar. Es la diferencia entre un build
-# de 8 segundos y uno de 2 minutos.
-COPY go.work go.work.sum ./
-COPY services/opsreport/go.mod services/opsreport/go.sum ./services/opsreport/
-RUN go mod download
-
-COPY . .
+# El go.work del repositorio lista TODOS los módulos (Fase 08) y go.work.sum no se
+# versiona: copiarlos rompe el build en un clon limpio ("/go.work.sum": not found)
+# y go mod download no encuentra los módulos que no copiaste. Se copian los dos
+# módulos que este servicio necesita y se arma con ellos un workspace propio.
+COPY services/opsreport ./services/opsreport
+COPY services/shared ./services/shared
+RUN go work init ./services/opsreport ./services/shared
 
 ARG VERSION=dev
 ARG COMMIT=none
@@ -1481,7 +1486,12 @@ ARG BUILD_DATE=unknown
 # CGO_ENABLED=0 → binario estático, que es lo que permite la imagen mínima.
 # -trimpath     → sin rutas absolutas de la máquina de compilación.
 # -s -w         → sin tabla de símbolos ni DWARF.
-RUN CGO_ENABLED=0 GOOS=linux go build \
+# Las cachés de módulos y de compilación van en montajes de BuildKit: sobreviven
+# entre builds sin ocupar una capa. Es la diferencia entre un build de segundos y
+# uno de minutos, sin el truco de la capa de dependencias.
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux go build \
     -trimpath \
     -ldflags="-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.buildDate=${BUILD_DATE}" \
     -o /out/opsreport \
@@ -1855,11 +1865,11 @@ func TestCardinalityExplosion(t *testing.T) {
 
 	bad := prometheus.NewCounterVec(
 		prometheus.CounterOpts{Name: "bad_requests_total"},
-		[]string{"method", "path", "status"},   // path CONCRETA
+		[]string{"method", "path", "status"}, // path CONCRETA
 	)
 	good := prometheus.NewCounterVec(
 		prometheus.CounterOpts{Name: "good_requests_total"},
-		[]string{"method", "route", "status"},  // PATRÓN
+		[]string{"method", "route", "status"}, // PATRÓN
 	)
 	reg.MustRegister(bad, good)
 
@@ -1903,7 +1913,7 @@ las consultas de todo el mundo se degradan.
 // TestMetricCardinality falla si alguna métrica supera un límite razonable.
 // Corre en CI, y es de las cosas más baratas que se pueden poner ahí.
 func TestMetricCardinality(t *testing.T) {
-	reg := setupServiceWithTraffic(t, 10000)   // tráfico sintético variado
+	reg := setupServiceWithTraffic(t, 10000) // tráfico sintético variado
 
 	mfs, err := reg.Gather()
 	if err != nil {
@@ -2212,7 +2222,7 @@ hacer dudar de si las métricas agregadas bastan, y esa duda es productiva.
 | `@Value("${x}")` | campo de la struct de configuración | Sin inyección por reflexión; el compilador verifica |
 | Spring Cloud Config | *(fuera del curso)* | Configuración por entorno y archivo |
 | Jib / Buildpacks | Dockerfile multi-etapa escrito | Jib construye sin Dockerfile y con capas óptimas; aquí se escribe (y son 25 líneas) |
-| `eclipse-temurin:21-jre-alpine` | `gcr.io/distroless/static` | ~180 MB frente a ~2 MB de base. B-21 lo mide |
+| `eclipse-temurin:21-jre-alpine` | `gcr.io/distroless/static` | 287 MB frente a 6,2 MB de base (medido el 14/11/2026, B-21) |
 | OWASP Dependency-Check | `govulncheck` | **Análisis de alcanzabilidad**: reporta lo que tu código puede llamar, no todo lo conocido |
 | Spring Security headers | middleware escrito, cabecera a cabecera | Sin valores por defecto; a cambio sabes por qué está cada una |
 | `MessageDigest.isEqual` | `hmac.Equal` | Mismo propósito: comparación en tiempo constante |

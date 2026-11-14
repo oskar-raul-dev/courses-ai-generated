@@ -292,9 +292,9 @@ Para un filtro simple da igual; para una clave compuesta de índice o para el
 operador `$and`, no.
 
 ```go
-bson.M{"cca3": "COL", "region": "Americas"}              // desordenado; para filtros
+bson.M{"cca3": "COL", "region": "Americas"}                // desordenado; para filtros
 bson.D{{Key: "cca3", Value: 1}, {Key: "region", Value: 1}} // ORDENADO; para índices
-bson.A{"COL", "MEX", "PER"}                               // array
+bson.A{"COL", "MEX", "PER"}                                // array
 ```
 
 > ⚠️ **`bson.M` en la definición de un índice compuesto es un bug.** El orden de
@@ -392,6 +392,11 @@ go doc go.mongodb.org/mongo-driver/v2/bson
 > devolver 20, falta un índice o el que hay no sirve para esa consulta. Es el
 > equivalente exacto de ver un `Seq Scan` en un `EXPLAIN` de PostgreSQL.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 y
+> `mongo:7` en un contenedor `linux/arm64`: las trampas BSON y el 🧨 del documento
+> que crece (§7), que no llega a romperse con 200.000 puntos (B-26). AtlasSync con
+> Mongo no se reprodujo: la fase lo muestra en fragmentos.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -404,11 +409,18 @@ Las trampas del mapeo, una por una.
 // labs/bson-lab/traps.go
 package bsonlab
 
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/v2/bson"
+)
+
 // 1. LA ETIQUETA AUSENTE.
 type NoTags struct {
 	CommonName string
 	UpdatedAt  time.Time
 }
+
 // Se guarda como: { commonname: "...", updatedat: ... }
 // Todo junto, todo en minúsculas. NO es CommonName ni commonName.
 
@@ -416,6 +428,7 @@ type NoTags struct {
 type Timestamped struct {
 	At time.Time `bson:"at"`
 }
+
 // Mongo guarda las fechas como Date: milisegundos desde la época, UTC.
 // Un time.Time con nanosegundos PIERDE los nanosegundos al guardarse, y además
 // pierde la zona horaria (siempre vuelve en UTC).
@@ -427,7 +440,7 @@ type Timestamped struct {
 
 // 3. DINERO EN float64.
 type BadMoney struct {
-	Rate float64 `bson:"rate"`   // ❌ double de IEEE 754
+	Rate float64 `bson:"rate"` // ❌ double de IEEE 754
 }
 type GoodMoney struct {
 	// Decimal128 es el tipo decimal exacto de Mongo, equivalente a NUMERIC de
@@ -438,9 +451,10 @@ type GoodMoney struct {
 
 // 4. OMITEMPTY Y EL VALOR CERO.
 type WithOmit struct {
-	Population int64 `bson:"population,omitempty"`  // ❌ population: 0 desaparece
-	Active     bool  `bson:"active,omitempty"`      // ❌ active: false desaparece
+	Population int64 `bson:"population,omitempty"` // ❌ population: 0 desaparece
+	Active     bool  `bson:"active,omitempty"`     // ❌ active: false desaparece
 }
+
 // Si necesitas distinguir "no se sabe" de "es cero", el campo es un puntero.
 
 // 5. EL CAMPO AÑADIDO Y LOS DOCUMENTOS VIEJOS.
@@ -453,8 +467,8 @@ type V2 struct {
 	// vacío.
 	//
 	// La defensa es el campo de versión, y actuar sobre él.
-	ISO4217    string `bson:"iso4217"`
-	SchemaVersion int `bson:"schemaVersion"`
+	ISO4217       string `bson:"iso4217"`
+	SchemaVersion int    `bson:"schemaVersion"`
 }
 
 // 6. EL CAMPO ELIMINADO DEL STRUCT.
@@ -474,9 +488,9 @@ func TestReplaceOneLosesFields(t *testing.T) {
 
 	// Guardamos un documento con un campo extra que nuestro struct no conoce.
 	_, err := coll.InsertOne(ctx, bson.M{
-		"_id":          "COL",
-		"commonName":   "Colombia",
-		"legacyField":  "dato que alguien necesitaba",  // no está en el struct
+		"_id":         "COL",
+		"commonName":  "Colombia",
+		"legacyField": "dato que alguien necesitaba", // no está en el struct
 	})
 
 	// Leemos, modificamos y guardamos con ReplaceOne.
@@ -595,7 +609,7 @@ func EnsureIndexes(ctx context.Context, db *mongo.Database) error {
 			// El índice sobre un array indexa CADA elemento: es un índice
 			// multiclave, y es una de las cosas que Mongo hace mejor que una
 			// columna con un array en SQL.
-			Keys: bson.D{{Key: "currencies.code", Value: 1}},
+			Keys:    bson.D{{Key: "currencies.code", Value: 1}},
 			Options: options.Index().SetName("currencies_code_idx"),
 		},
 		{
@@ -741,11 +755,11 @@ func (s *CountryStore) UpsertAll(ctx context.Context, countries []countries.Coun
 
 			// Se devuelve el resultado parcial Y el error: quien llama decide.
 			return UpsertResult{
-				Inserted: res.UpsertedCount,
-				Updated:  res.ModifiedCount,
-				Failed:   len(bwe.WriteErrors),
-			}, fmt.Errorf("ingesta parcial: %d de %d fallaron: %w",
-				len(bwe.WriteErrors), len(models), err)
+					Inserted: res.UpsertedCount,
+					Updated:  res.ModifiedCount,
+					Failed:   len(bwe.WriteErrors),
+				}, fmt.Errorf("ingesta parcial: %d de %d fallaron: %w",
+					len(bwe.WriteErrors), len(models), err)
 		}
 		return UpsertResult{}, fmt.Errorf("escribiendo la ingesta: %w", err)
 	}
@@ -891,14 +905,24 @@ La agregación con su paralelo a SQL al lado, que es como se aprende de verdad.
 // labs/aggregation-lab/pipelines.go
 package agglab
 
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+)
+
 // CountriesByRegion: cuántos países por región, con su población total.
 //
 // EN SQL:
-//   SELECT region, COUNT(*) AS countries, SUM(population) AS population
-//   FROM countries
-//   WHERE region <> ''
-//   GROUP BY region
-//   ORDER BY population DESC
+//
+//	SELECT region, COUNT(*) AS countries, SUM(population) AS population
+//	FROM countries
+//	WHERE region <> ''
+//	GROUP BY region
+//	ORDER BY population DESC
 func CountriesByRegion(ctx context.Context, coll *mongo.Collection) ([]RegionStats, error) {
 	pipeline := mongo.Pipeline{
 		// $match = WHERE. VA PRIMERO SIEMPRE, y no es estético: si va después
@@ -913,7 +937,7 @@ func CountriesByRegion(ctx context.Context, coll *mongo.Collection) ([]RegionSta
 			"countries":  bson.M{"$sum": 1},
 			"population": bson.M{"$sum": "$population"},
 			// $avg, $min, $max, $first, $last — los mismos de SQL.
-			"avgPop":     bson.M{"$avg": "$population"},
+			"avgPop": bson.M{"$avg": "$population"},
 			// $push acumula en un array. NO tiene equivalente directo en SQL
 			// estándar (se parece a array_agg de PostgreSQL), y es una de las
 			// cosas que la agregación hace con naturalidad.
@@ -951,11 +975,12 @@ func CountriesByRegion(ctx context.Context, coll *mongo.Collection) ([]RegionSta
 // RateVolatility: la volatilidad de cada moneda en los últimos 30 días.
 //
 // EN SQL sería una consulta con funciones de ventana:
-//   SELECT quote, STDDEV(rate), MIN(rate), MAX(rate)
-//   FROM fx_rates
-//   WHERE base = 'EUR' AND day >= CURRENT_DATE - 30
-//   GROUP BY quote
-//   HAVING COUNT(*) >= 20
+//
+//	SELECT quote, STDDEV(rate), MIN(rate), MAX(rate)
+//	FROM fx_rates
+//	WHERE base = 'EUR' AND day >= CURRENT_DATE - 30
+//	GROUP BY quote
+//	HAVING COUNT(*) >= 20
 func RateVolatility(ctx context.Context, coll *mongo.Collection, base string, since time.Time) ([]Volatility, error) {
 	pipeline := mongo.Pipeline{
 		{{Key: "$match", Value: bson.M{
@@ -1066,7 +1091,7 @@ func (s *CountryStore) All(ctx context.Context) iter.Seq2[Country, error] {
 				return
 			}
 			if !yield(c, nil) {
-				return   // el consumidor hizo break; cerramos limpiamente
+				return // el consumidor hizo break; cerramos limpiamente
 			}
 		}
 		if err := cursor.Err(); err != nil {
@@ -1387,7 +1412,7 @@ necesitarlas.
 *Fix mínimo:* modelar el campo. Y ponerlo en la lista de revisión de código.
 
 **14. Incrustar un array que crece.**
-*Síntoma:* documentos que se acercan a 16 MB; escrituras cada vez más lentas.
+*Síntoma:* escrituras cada vez más lentas, mucho antes de acercarse a los 16 MB.
 *Causa:* cada actualización reescribe el documento entero.
 *Fix mínimo:* referenciar, o el patrón de cubo con tamaño acotado.
 
@@ -1414,7 +1439,7 @@ func TestDocumentGrowth(t *testing.T) {
 			}}})
 		elapsed := time.Since(start)
 
-		if i%20000 == 0 {
+		if i%20000 == 0 || i == 199999 {
 			var doc bson.Raw
 			coll.FindOne(ctx, bson.M{"_id": "EUR/COP"}).Decode(&doc)
 			t.Logf("puntos=%d tamaño=%d KB último push=%s",
@@ -1428,17 +1453,22 @@ func TestDocumentGrowth(t *testing.T) {
 ```
 
 ```text
-puntos=0      tamaño=0 KB      último push=412µs
-puntos=20000  tamaño=1152 KB   último push=1.84ms
-puntos=60000  tamaño=3456 KB   último push=5.21ms
-puntos=140000 tamaño=8064 KB   último push=12.7ms
-    falló en el punto 187431: ... object to insert too large ...
+puntos=0 tamaño=0 KB último push=1.923ms
+puntos=20000 tamaño=750 KB último push=4.076ms
+puntos=60000 tamaño=2274 KB último push=11.801ms
+puntos=100000 tamaño=3797 KB último push=19.603ms
+puntos=140000 tamaño=5360 KB último push=28.567ms
+puntos=199999 tamaño=7704 KB último push=40.821ms
+--- PASS: TestDocumentGrowth (4417.84s)
 ```
 
-**Dos lecciones en un experimento.** La primera, obvia: el límite de 16 MB existe y
-se alcanza. La segunda, la que importa: **el `$push` se vuelve más lento
-proporcionalmente al tamaño del documento**, porque cada actualización reescribe el
-documento completo. Mucho antes de romperse, ya era inaceptable.
+**Dos lecciones en un experimento, y una sorpresa.** La sorpresa: no se rompe. Con
+unos 39 bytes por punto, 200.000 puntos son 7,5 MB, y el límite de 16 MB queda cerca
+de los 420.000. La lección que importa no la necesita: **el `$push` se vuelve más
+lento en proporción al tamaño del documento**, porque cada actualización reescribe el
+documento completo. De 1,9 ms a 41 ms, más de veinte veces, y las 200.000 escrituras
+tardan casi 74 minutos. Mucho antes de romperse, ya era inaceptable. Las cifras, con
+su máquina, están en B-26 de `BENCHMARKS.md`.
 
 Ahora hazlo con el patrón de cubo —un documento por mes— y repite la medición. El
 tiempo de `$push` es constante.

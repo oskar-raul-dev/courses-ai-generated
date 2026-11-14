@@ -85,6 +85,10 @@ Esa línea te dice tres cosas: la versión, el sistema operativo y la arquitectu
 para la que ese toolchain compila **por defecto**. Guárdatela, porque en cuanto
 lleguemos a la compilación cruzada vas a cambiar las dos últimas a voluntad.
 
+> 📝 El curso fija **go1.25.1**, publicada el 03/09/2025. Al 14/11/2026 la vigente
+> es la go1.27.3. Las fechas, y lo que eso significa, están en
+> [`0-ESTRUCTURA-CURSO.md` §11](0-ESTRUCTURA-CURSO.md).
+
 ### Por qué instalamos dos versiones
 
 El Bloque A del curso (Fases 00–07) se escribe en **Go 1.13**, y no por nostalgia.
@@ -107,8 +111,12 @@ go1.13 version
 
 > 📝 **Nota de época.** `go1.13` no trae binario nativo para Apple Silicon: el
 > soporte `darwin/arm64` llegó en Go 1.16. En un Mac M-series el binario de 1.13
-> corre bajo Rosetta 2 y funciona perfectamente para lo que hace el curso. Si
-> Rosetta no está instalada, `softwareupdate --install-rosetta` la deja lista.
+> corre bajo Rosetta 2 y funciona perfectamente para lo que hace el curso, **pero
+> hay que pedirlo así**. El envoltorio `go1.13` descarga el SDK de su propia
+> plataforma, y compilado en un Mac M-series pide `go1.13.darwin-arm64.tar.gz`,
+> que no existe: `go1.13 download` termina en `no binary release of go1.13 for
+> darwin/arm64`. La receta para Apple Silicon está en §6.1. Si Rosetta no está
+> instalada, `softwareupdate --install-rosetta` la deja lista.
 
 ### 🪞 Tu instinto de Java dice… y esta vez se equivoca
 
@@ -229,7 +237,7 @@ go list -f '{{.ImportPath}} {{.Imports}}' ./...
 
 # Instala un binario de un módulo en $GOBIN, sin tocar el go.mod de tu proyecto.
 # El @version es obligatorio desde Go 1.16 y es una buena decisión de diseño.
-go install golang.org/x/tools/cmd/goimports@latest
+go install golang.org/x/tools/cmd/goimports@v0.49.0
 
 # Borra cachés. -testcache es el que más vas a usar: obliga a que los tests
 # vuelvan a correr aunque nada haya cambiado.
@@ -252,6 +260,13 @@ go tool dist list
 > un patrón de paquetes. `.` es el paquete del directorio actual; `./...` es ese
 > y todos los de abajo; `all` son todos los del módulo más sus dependencias. El
 > 90% de los comandos del curso terminan en `./...`.
+
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** en un contenedor
+> `linux/arm64`, con go1.25.1 y go1.13, y el `compose.yaml` con Docker Compose 5.7.
+> Donde la fase muestra `darwin/arm64` o `darwin/amd64`, la corrida dio lo mismo
+> con `linux/…`. La instalación en macOS, Rosetta 2 incluida, se dedujo del código
+> del envoltorio `golang.org/dl` y no se probó en un Mac. Los tiempos y tamaños de
+> `build-all.sh` dependen de la máquina: los tuyos van en B-01.
 
 ---
 
@@ -292,6 +307,22 @@ $env:GOOS="linux"; $env:GOARCH="amd64"; go build -o bin/opsreport-linux-amd64 ./
 
 ```bash
 go install golang.org/dl/go1.13@latest
+go1.13 download
+go1.13 version
+# go version go1.13 darwin/amd64
+```
+
+**En Apple Silicon** ese primer `go install` deja un envoltorio `darwin/arm64`, y el
+`download` falla porque Go 1.13 no se publicó para esa plataforma. El arreglo es
+compilar el envoltorio para Intel: así pide el SDK `darwin/amd64`, que corre bajo
+Rosetta 2.
+
+```bash
+# Solo en Apple Silicon. Con GOBIN puesto, go install se niega a dejar un binario
+# de otra arquitectura ("cannot install cross-compiled binaries when GOBIN is set").
+go env -u GOBIN
+GOARCH=amd64 go install golang.org/dl/go1.13@latest
+mv "$(go env GOPATH)/bin/darwin_amd64/go1.13" "$(go env GOPATH)/bin/go1.13"
 go1.13 download
 go1.13 version
 # go version go1.13 darwin/amd64
@@ -407,7 +438,7 @@ func main() {
 	count := 42
 	fmt.Println("Meridian platform tooling check")
 }
-// ./main.go:6:2: count declared and not used
+// ./main.go:6:2: declared and not used: count
 ```
 
 Viniendo de Java —donde un import sobrante es, como mucho, un subrayado gris del
@@ -603,7 +634,7 @@ meridian/
     clearinghouse/         Nace en la Fase 09
     storeagent/            Nace en la Fase 09
   reference/
-    clearinghouse-spring/  El gemelo Java, entregado hecho, se usa en la Fase 16
+    clearinghouse-spring/  El gemelo Java, copiado de src/clearinghouse-spring del curso (Fase 16)
 ```
 
 > 🧭 **Regla del proyecto.** Un módulo por servicio, no un módulo para todo. La
@@ -668,6 +699,16 @@ GO113      ?= go1.13
 COVER_FILE ?= cover.out
 COVER_MIN  ?= 80
 
+# El monorepo no tiene un go.mod en la raíz: cada lab y cada servicio es su propio
+# módulo, y `go fmt ./...` desde aquí falla con "directory prefix . does not contain
+# main module". Hasta que llegue go.work en la Fase 08, cada objetivo recorre los
+# módulos uno por uno, y salta los que todavía no tienen ningún .go.
+MODULES := $(sort $(patsubst %/go.mod,%,$(shell find . -name go.mod -not -path '*/bin/*')))
+EACH     = for m in $(MODULES); do \
+             [ -n "$$(find $$m -name '*.go' -print -quit)" ] || continue; \
+             (cd $$m && $(1)) || exit 1; \
+           done
+
 .PHONY: help fmt vet lint test test-race cover up down clean
 
 help: ## Lista los objetivos disponibles
@@ -675,23 +716,23 @@ help: ## Lista los objetivos disponibles
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
 fmt: ## Formatea todo el repositorio
-	$(GO) fmt ./...
+	@$(call EACH,$(GO) fmt ./...)
 
 vet: ## Análisis estático del toolchain
-	$(GO) vet ./...
+	@$(call EACH,$(GO) vet ./...)
 
 lint: ## golangci-lint con la configuración del curso
-	golangci-lint run ./...
+	@$(call EACH,golangci-lint run ./...)
 
 test: ## Suite rápida
-	$(GO) test ./...
+	@$(call EACH,$(GO) test ./...)
 
 test-race: ## Suite con el detector de carreras
-	$(GO) test -race ./...
+	@$(call EACH,$(GO) test -race ./...)
 
-cover: ## Cobertura con umbral
-	$(GO) test -race -covermode=atomic -coverprofile=$(COVER_FILE) ./...
-	$(GO) tool cover -func=$(COVER_FILE) | tail -n 1
+cover: ## Cobertura con umbral, un total por módulo
+	@$(call EACH,$(GO) test -race -covermode=atomic -coverprofile=$(COVER_FILE) ./... >/dev/null && \
+		printf '%-40s ' $$m && $(GO) tool cover -func=$(COVER_FILE) | tail -n 1)
 
 up: ## Levanta PostgreSQL, MongoDB y Valkey
 	docker compose up -d
@@ -700,7 +741,7 @@ down: ## Apaga la infraestructura y borra sus volúmenes
 	docker compose down -v
 
 clean: ## Borra binarios y artefactos de cobertura
-	rm -rf bin $(COVER_FILE)
+	@$(call EACH,rm -rf bin $(COVER_FILE))
 ```
 
 > 💸 **Deuda técnica intencional.** Este `Makefile` tiene rutas fijas, no valida
@@ -825,9 +866,15 @@ docker compose --profile rs down
 ### 6.9 `golangci-lint` y la configuración del curso
 
 ```bash
-go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.12.2
 golangci-lint version
 ```
+
+> ⚠️ **La versión va fijada, y no por manía.** Desde la v2.13, `golangci-lint` exige
+> Go 1.26 para compilarse. Con `@latest` y el go1.25.1 del curso, `go install`
+> baja en silencio otro toolchain (`GOTOOLCHAIN=auto`) o, si lo tienes en `local`,
+> falla con `requires go >= 1.26.0`. La v2.12.2 es la última que compila con
+> go1.25. Y la misma versión fija es la que pondrás en CI en la Fase 14.
 
 ```yaml
 # .golangci.yml
@@ -840,7 +887,6 @@ linters:
     - staticcheck   # el analizador más profundo del ecosistema
     - ineffassign   # asignaciones cuyo valor nunca se lee
     - unused        # identificadores sin uso
-    - misspell      # erratas en comentarios e identificadores
     - bodyclose     # response.Body sin cerrar: la fuga de la Fase 10
     - noctx         # peticiones HTTP sin context: la regla de la Fase 07
     - errorlint     # comparaciones de error con == en vez de errors.Is
@@ -851,6 +897,30 @@ linters:
     errcheck:
       # Comprobar también los errores que se ignoran con la asignación en blanco.
       check-blank: true
+    errorlint:
+      # Go 1.13 admite un solo %w por Errorf (varios llegan en Go 1.20), así que
+      # el idioma del Bloque A es "%w: %v": centinela envuelto, causa como texto.
+      # Con esto, errorlint no protesta por el %v cuando ya hay un %w.
+      errorf-multi: false
+    govet:
+      # El analizador `inline` propone sustituir APIs marcadas con //go:fix inline
+      # (ioutil.ReadFile → os.ReadFile). En un módulo `go 1.13` no puede hacerlo y
+      # avisa igual. El Bloque A usa esas APIs a propósito; la Fase 08 las migra.
+      disable:
+        - inline
+
+  exclusions:
+    # El preset que el ecosistema da por bueno: sin él, cada `defer f.Close()` de
+    # un archivo de solo lectura es un aviso, y la regla de cero tolerancia se
+    # convierte en ruido. Un Close de escritura sí se comprueba, a mano (Fase 03).
+    presets:
+      - std-error-handling
+    rules:
+      # noctx pide NewRequestWithContext (Go 1.23) también en los tests, donde
+      # httptest.NewRequest es lo idiomático y no hay nada que cancelar.
+      - path: _test\.go
+        linters:
+          - noctx
 
 issues:
   # Cero tolerancia: si un linter dice algo, se arregla o se justifica con
@@ -874,6 +944,10 @@ conexiones del pool**. Son el tipo de bug que en Java no existe porque el
 `try-with-resources` y las excepciones lo cubren, y en Go se te cuela entero hasta
 producción. Que el linter esté puesto desde el primer día evita tener que ir a
 buscarlos después.
+
+Y uno que **no** está, a propósito: `misspell`. Revisa la ortografía en inglés, y
+los comentarios de este curso van en español: en `cuánto` ve una palabra `nto` y
+propone `not`. Con comentarios en inglés, ponlo.
 
 ### 6.10 El editor: VS Code
 
@@ -1003,15 +1077,16 @@ cat labs/hello-go/go.mod
 ```text
 module github.com/meridian/labs/hello-go
 
-go 1.25
+go 1.25.1
 ```
 
 Tres líneas. El `pom.xml` más corto que has visto tenía veinte. La diferencia no
 es cosmética: **el `go.mod` no declara cómo se construye el proyecto, solo qué
 depende de qué**. La construcción es siempre la misma y la sabe el comando `go`.
 
-La directiva `go 1.25` **no es "la versión con la que compilé"**: es la versión
-mínima del lenguaje que este módulo requiere, y afecta a la semántica. Es el
+La directiva `go 1.25.1` **no es "la versión con la que compilé"**, aunque `go mod
+init` la copie del toolchain que lo ejecuta: es la versión mínima de Go que este
+módulo requiere, y afecta a la semántica. Es el
 equivalente exacto del `<release>17</release>` del compilador de Maven. Y es la
 directiva que, en el Bloque A, va a decir `go 1.13` — que es lo que hace que
 nuestra disciplina de época sea verificable y no un pacto de honor.
@@ -1028,10 +1103,13 @@ cat go.sum
 ```text
 module github.com/meridian/labs/hello-go
 
-go 1.25
+go 1.25.1
 
-require github.com/google/uuid v1.6.0
+require github.com/google/uuid v1.6.0 // indirect
 ```
+
+El `// indirect` no es un error: ningún archivo del módulo importa todavía el
+paquete, así que `go get` lo anota como dependencia que no se usa directamente.
 
 El `go.sum` tiene ahora dos líneas por dependencia: el hash del módulo y el hash
 de su `go.mod`. **Se commitea siempre.** Es la garantía de que lo que descargue tu
@@ -1121,40 +1199,44 @@ disciplina central del Bloque A:
 ```bash
 mkdir -p /tmp/epoch-test && cd /tmp/epoch-test
 go mod init epochtest
+go mod edit -go=1.13   # como cualquier módulo del Bloque A
 ```
 
 ```go
-// main.go — usa slices.Sort, que llegó en Go 1.21
+// main.go — usa strings.Cut, que llegó en Go 1.18
 package main
 
 import (
 	"fmt"
-	"slices"
+	"strings"
 )
 
 func main() {
-	priorities := []int{5, 2, 9, 1}
-	slices.Sort(priorities)
-	fmt.Println(priorities)
+	store, kind, _ := strings.Cut("ST-014|SALE", "|")
+	fmt.Println(store, kind)
 }
 ```
 
 ```bash
-go build .      # compila sin problema
-go1.13 build .  # falla
+go build . && ./epochtest   # compila y funciona, aunque el go.mod diga go 1.13
+go vet .                    # tampoco dice nada
+go1.13 build .              # falla
 ```
 
-Con el toolchain moderno: compila y funciona. Con `go1.13`:
+Con el toolchain moderno: compila, funciona y `go vet` calla, **aunque el `go.mod`
+declare `go 1.13`**. Con `go1.13`:
 
 ```text
-main.go:5:2: cannot find package "slices" in any of:
-	/Users/tu/sdk/go1.13/src/slices (from $GOROOT)
-	/Users/tu/go/src/slices (from $GOPATH)
+# epochtest
+./main.go:10:20: undefined: strings.Cut
 ```
 
-**Esa es la red de seguridad del Bloque A.** El compilador moderno te habría
-dejado escribir `slices.Sort` en la Fase 01 sin decir nada, y habrías roto la
-regla de época sin enterarte. Por eso `go1.13` está instalado y por eso los
+**Esa es la red de seguridad del Bloque A.** La directiva `go 1.13` le pide al
+compilador moderno que rechace **lo que cambió en el lenguaje** —un genérico, por
+ejemplo, falla con `implicit function instantiation requires go1.18 or later`—,
+pero no lo que se añadió a la **biblioteca estándar**. El compilador moderno te
+habría dejado escribir `strings.Cut` en la Fase 01 sin decir nada, y habrías roto
+la regla de época sin enterarte. Por eso `go1.13` está instalado y por eso los
 módulos del Bloque A dicen `go 1.13` en su `go.mod`.
 
 ---

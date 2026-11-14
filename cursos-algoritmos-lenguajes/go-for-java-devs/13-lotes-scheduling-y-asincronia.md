@@ -213,15 +213,15 @@ func (s *Service) CloseDay(ctx context.Context, storeID string, day time.Time) (
 
 	for {
 		if err := ctx.Err(); err != nil {
-			return batch.Report(), err   // cancelable entre fragmentos
+			return batch.Report(), err // cancelable entre fragmentos
 		}
 
-		processed, err := s.processChunk(ctx, batch)   // ← transacción por fragmento
+		processed, err := s.processChunk(ctx, batch) // ← transacción por fragmento
 		if err != nil {
 			return batch.Report(), err
 		}
 		if processed == 0 {
-			break   // no queda nada
+			break // no queda nada
 		}
 	}
 	return s.finalize(ctx, batch)
@@ -325,6 +325,14 @@ go test -tags=integration -run TestBatchResumable -v ./internal/batch
 > milisegundos. `Maximum resident set size` lo captura siempre. En macOS, donde no
 > está `time -v`, se usa `runtime.ReadMemStats` desde dentro del proceso.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.25.1 y
+> `postgres:16-alpine` en contenedores `linux/arm64`: la migración de `batches`
+> (que no parseaba: le sobraba un `StatementEnd`) y el cierre por fragmentos con
+> punto de control, sobre la versión Go de referencia del duelo (un millón de
+> movimientos, B-20 y B-24). Las trazas del cierre ingenuo (L175, L372) y el
+> incidente de L1408 no se reprodujeron: describen el código del lector antes de
+> corregirlo.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -342,7 +350,7 @@ más.** Escribe la versión ingenua, córrela con un millón de movimientos, y m
 // ⚠️ Está en el repositorio a propósito, con este comentario, y con un test que
 // verifica que muere. Borrarla haría que la lección se perdiera con el tiempo.
 func (s *Service) CloseDayNaive(ctx context.Context, day time.Time) (Report, error) {
-	movements, err := s.store.AllMovementsForDay(ctx, day)   // sin LIMIT
+	movements, err := s.store.AllMovementsForDay(ctx, day) // sin LIMIT
 	if err != nil {
 		return Report{}, err
 	}
@@ -481,7 +489,7 @@ func (s *Store) StreamMovements(ctx context.Context, day time.Time, fn func(ledg
 		rows.Close()
 
 		if n == 0 {
-			return nil   // el cursor se agotó
+			return nil // el cursor se agotó
 		}
 	}
 }
@@ -583,7 +591,10 @@ CREATE TABLE ledger_entries (
 );
 
 CREATE UNIQUE INDEX ledger_entries_movement_uniq ON ledger_entries (movement_id, account);
--- +goose StatementEnd
+
+-- +goose Down
+DROP TABLE ledger_entries;
+DROP TABLE batches;
 ```
 
 ```go
@@ -625,7 +636,7 @@ func (s *Service) processChunk(ctx context.Context, batch *Batch) (int, error) {
 				//
 				// Es la decisión de diseño más importante del lote. Abortar por
 				// un movimiento malo entre un millón significa que una noche se
-                // pierde por un dato corrupto.
+				// pierde por un dato corrupto.
 				//
 				// 📖 Spring Batch llama a esto skip policy, con su skipLimit, y
 				// lo trae hecho. Aquí se escribe, y el límite también.
@@ -855,7 +866,7 @@ func (d *Dispatcher) Run(ctx context.Context) error {
 				break
 			}
 			if n < d.batchSize {
-				break   // no quedaba nada más
+				break // no quedaba nada más
 			}
 		}
 	}
@@ -891,7 +902,7 @@ func (d *Dispatcher) dispatchBatch(ctx context.Context) (int, error) {
 		// una vez" la da el CONSUMIDOR, nunca el productor.
 		if err := d.publisher.Publish(ctx, r); err != nil {
 			d.logger.Warn("no se pudo publicar", slog.Int64("id", r.ID))
-			continue   // se reintentará; el arrendamiento del SKIP LOCKED expira
+			continue // se reintentará; el arrendamiento del SKIP LOCKED expira
 		}
 		published = append(published, r.ID)
 	}
@@ -1000,7 +1011,7 @@ func (l *Locker) TryAcquire(ctx context.Context, name string, ttl time.Duration)
 		name, l.holder, now, now.Add(ttl)).Scan(&holder)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		return false, nil   // otro lo tiene y no ha caducado
+		return false, nil // otro lo tiene y no ha caducado
 	}
 	if err != nil {
 		return false, fmt.Errorf("adquiriendo el arrendamiento %q: %w", name, err)
@@ -1067,7 +1078,7 @@ func (h *ReportHandler) downloadReport(w http.ResponseWriter, r *http.Request) {
 
 	meta, err := h.svc.ReportMeta(r.Context(), id)
 	if err != nil {
-		writeError(w, r, err)   // aquí TODAVÍA se puede
+		writeError(w, r, err) // aquí TODAVÍA se puede
 		return
 	}
 	if meta.Status != report.StatusReady {
@@ -1083,7 +1094,7 @@ func (h *ReportHandler) downloadReport(w http.ResponseWriter, r *http.Request) {
 	// casi nadie la usa.
 	w.Header().Set("Trailer", "X-Meridian-Row-Count, X-Meridian-Status")
 
-	w.WriteHeader(http.StatusOK)   // ← a partir de aquí no hay vuelta atrás
+	w.WriteHeader(http.StatusOK) // ← a partir de aquí no hay vuelta atrás
 
 	buf := bufio.NewWriterSize(w, 64<<10)
 
@@ -1100,7 +1111,7 @@ func (h *ReportHandler) downloadReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := buf.Flush(); err != nil {   // ← el Flush de la Fase 03, otra vez
+	if err := buf.Flush(); err != nil { // ← el Flush de la Fase 03, otra vez
 		h.logger.Error("no se pudo vaciar el buffer del reporte",
 			slog.String("report", id), slog.String("err", err.Error()))
 		w.Header().Set("X-Meridian-Status", "error")
@@ -1201,7 +1212,7 @@ func WriteCSV(ctx context.Context, w io.Writer, rows iter.Seq2[report.Row, error
 		}
 	}
 
-	ew.w.Flush()                        // el Flush de la Fase 03, una vez más
+	ew.w.Flush() // el Flush de la Fase 03, una vez más
 	if err := ew.w.Error(); err != nil {
 		return n, fmt.Errorf("vaciando el csv: %w", err)
 	}
@@ -1429,18 +1440,18 @@ func (s *Service) processChunk(ctx context.Context, batch *Batch) (int, error) {
 		if err != nil {
 			// "Un movimiento que no concilia no debe parar el cierre."
 			s.logger.Warn("movimiento omitido", slog.String("id", m.ID))
-			continue                                          // ← BUG 1
+			continue // ← BUG 1
 		}
 		entries = append(entries, e...)
 	}
 
-	if err := s.store.InsertEntries(ctx, entries); err != nil {   // transacción A
+	if err := s.store.InsertEntries(ctx, entries); err != nil { // transacción A
 		return 0, err
 	}
 
 	last := movements[len(movements)-1]
-	if err := s.store.AdvanceCheckpoint(ctx, batch.ID, last.ID); err != nil {  // transacción B
-		return 0, err                                          // ← BUG 2
+	if err := s.store.AdvanceCheckpoint(ctx, batch.ID, last.ID); err != nil { // transacción B
+		return 0, err // ← BUG 2
 	}
 	return len(movements), nil
 }
@@ -1617,7 +1628,7 @@ func (s *Service) processChunkBroken(ctx context.Context, batch *Batch) (int, er
 
 	// Y aquí matamos el proceso, un fragmento de cada veinte.
 	if batch.ChunksDone%20 == 19 {
-		os.Exit(137)   // simula un OOM
+		os.Exit(137) // simula un OOM
 	}
 
 	entries := s.reconcileAll(ctx, movements)

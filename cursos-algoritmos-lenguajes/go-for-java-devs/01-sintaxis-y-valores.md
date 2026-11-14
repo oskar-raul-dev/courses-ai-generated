@@ -67,9 +67,9 @@ primer tipo de la plataforma Meridian.
 ### Declarar: tres formas y una que vas a usar siempre
 
 ```go
-var name string          // valor cero: ""
-var count int = 10       // explícita, casi nunca hace falta
-count2 := 10             // inferencia; solo dentro de funciones
+var name string    // valor cero: ""
+var count int = 10 // explícita, casi nunca hace falta
+count2 := 10       // inferencia; solo dentro de funciones
 ```
 
 La tercera es la que usarás el 95% del tiempo. La primera aparece cuando quieres
@@ -84,7 +84,7 @@ interfaces.
 
 ```go
 var s string
-fmt.Println(len(s), s == "")  // 0 true — no hay NullPointerException posible aquí
+fmt.Println(len(s), s == "") // 0 true — no hay NullPointerException posible aquí
 ```
 
 > 🧠 **Modelo mental.** En Java, `String s;` en un campo de clase es `null`, y
@@ -105,8 +105,8 @@ compilador no los mezcla:
 
 ```go
 var p Priority = 5
-var n int = p          // ./main.go:8:14: cannot use p (type Priority) as type int
-var n2 int = int(p)    // bien: conversión explícita
+var n int = p       // ./main.go:8:6: cannot use p (type Priority) as type int in assignment
+var n2 int = int(p) // bien: conversión explícita
 ```
 
 Vienes de un mundo donde `int` se promueve a `long` y a `double` sin que nadie
@@ -191,12 +191,12 @@ func main() {
 
 	// "Solo quiero los dos primeros para procesarlos aparte."
 	firstTwo := movements[:2]
-	fmt.Println(firstTwo)  // [SALE REFUND]
+	fmt.Println(firstTwo) // [SALE REFUND]
 
 	// Y añado uno a mi copia local. Es mi slice, ¿no?
 	firstTwo = append(firstTwo, "PATCHED")
 
-	fmt.Println(movements)  // [SALE REFUND PATCHED DEPOSIT]  ← ¿perdón?
+	fmt.Println(movements) // [SALE REFUND PATCHED DEPOSIT]  ← ¿perdón?
 }
 ```
 
@@ -223,9 +223,9 @@ Y lo que lo vuelve peligroso de verdad es que **a veces no pasa**:
 
 ```go
 movements := []string{"SALE", "REFUND", "VOID", "DEPOSIT"}
-firstTwo := movements[:2:2]          // ← el tercer índice limita la capacidad
+firstTwo := movements[:2:2] // ← el tercer índice limita la capacidad
 firstTwo = append(firstTwo, "PATCHED")
-fmt.Println(movements)               // [SALE REFUND VOID DEPOSIT] — intacto
+fmt.Println(movements) // [SALE REFUND VOID DEPOSIT] — intacto
 ```
 
 Con `cap=2`, `append` no tiene sitio, reserva un arreglo nuevo, copia y desacopla.
@@ -254,10 +254,10 @@ de compilación sino un dato corrupto en producción.
 
 ```go
 var counts map[string]int
-fmt.Println(counts == nil)     // true
-fmt.Println(len(counts))       // 0   — leer está permitido
-fmt.Println(counts["SALE"])    // 0   — leer una clave ausente también
-counts["SALE"] = 1             // panic: assignment to entry in nil map
+fmt.Println(counts == nil)  // true
+fmt.Println(len(counts))    // 0   — leer está permitido
+fmt.Println(counts["SALE"]) // 0   — leer una clave ausente también
+counts["SALE"] = 1          // panic: assignment to entry in nil map
 ```
 
 **Leer un mapa nulo funciona; escribir en él revienta.** Esa asimetría es
@@ -266,7 +266,7 @@ práctica: un mapa siempre se crea antes de usarlo.
 
 ```go
 counts := make(map[string]int)
-counts := map[string]int{}      // equivalente
+counts := map[string]int{} // equivalente
 ```
 
 Y el acceso con el idioma de las dos variables, que es cómo Go distingue "la clave
@@ -293,8 +293,8 @@ resuelves con `containsKey` o con `Optional`.
 
 ```go
 s := "ñandú"
-fmt.Println(len(s))              // 7, no 5
-fmt.Println(len([]rune(s)))      // 5
+fmt.Println(len(s))         // 7, no 5
+fmt.Println(len([]rune(s))) // 5
 ```
 
 Un `string` en Go es **una secuencia inmutable de bytes**, y la convención es que
@@ -328,8 +328,8 @@ fmt.Printf("%c\n", s[0]) // Ã   — basura, como era de esperar
 Y la conversión que hay que tener clara:
 
 ```go
-b := []byte(s)   // copia, porque los strings son inmutables
-r := []rune(s)   // copia y decodifica UTF-8 a code points
+b := []byte(s) // copia, porque los strings son inmutables
+r := []rune(s) // copia y decodifica UTF-8 a code points
 ```
 
 Las dos **copian**. Eso importa cuando el string es grande y estás en un bucle, y
@@ -340,7 +340,7 @@ es el origen del mini proyecto `text-toolkit`.
 ```go
 item := WorkItem{ID: "WI-1"}
 p := &item
-p.Priority = 7           // sin (*p).Priority: Go desreferencia solo
+p.Priority = 7             // sin (*p).Priority: Go desreferencia solo
 fmt.Println(item.Priority) // 7
 ```
 
@@ -355,10 +355,10 @@ cuesta**. Para lo demás, valores.
 
 ```go
 // Pasar por valor COPIA el struct entero
-func markDone(item WorkItem) { item.Status = StatusDone }   // no hace nada útil
+func markDone(item WorkItem) { item.Status = StatusDone } // no hace nada útil
 
 // Pasar por puntero permite modificar
-func markDone(item *WorkItem) { item.Status = StatusDone }  // sí
+func markDone(item *WorkItem) { item.Status = StatusDone } // sí
 ```
 
 > 🧠 **Modelo mental.** En Java todo objeto es una referencia y no lo piensas; los
@@ -401,7 +401,7 @@ de borrarlo. Configura `goimports` al guardar y deja de pensar en ello.
 # el código va a compilar igual y la disciplina de época se pierde en silencio.
 go1.13 build ./...
 go1.13 vet ./...
-go1.13 run ./labs/movement-parser
+(cd labs/movement-parser && go1.13 run .)   # abre testdata/ relativo al directorio actual
 
 # Formatea y verifica formato. -l lista los archivos mal formateados sin tocarlos:
 # es el comando exacto que se pone en CI.
@@ -432,6 +432,11 @@ go1.13 build -gcflags='-m' ./labs/text-toolkit
 > son más estables entre máquinas que los nanosegundos. Cuando compares dos
 > implementaciones, mira primero las asignaciones.
 
+> 📝 **Las salidas de esta fase se corrieron el 14/11/2026** con go1.13 en un
+> contenedor `linux/arm64`: los tres labs, OpsReport y los fragmentos con su
+> salida en comentario. Las cifras de los benchmarks no se copian aquí: son de tu
+> máquina y van a B-02 y B-03.
+
 ---
 
 ## 💻 6. Construcción guiada
@@ -441,6 +446,16 @@ go1.13 build -gcflags='-m' ./labs/text-toolkit
 El laboratorio de strings, conversiones y el primer `error`. Y no es un ejemplo
 inventado: **este parser es el germen del que ClearingHouse va a usar en la Fase
 09** para leer los movimientos que el agente de tienda acumula sin red.
+
+Cada lab es su propio módulo, y en el Bloque A se crea con `go1.13`, para que su
+`go.mod` diga `go 1.13`. Con el `go` moderno diría `go 1.25.1`:
+
+```bash
+mkdir -p labs/movement-parser/testdata && cd labs/movement-parser
+go1.13 mod init github.com/meridian/labs/movement-parser
+```
+
+Los otros dos labs de la fase, `text-toolkit` y `log-grep`, nacen igual.
 
 Un movimiento de caja llega como una línea de texto plano, separada por tuberías:
 
@@ -473,11 +488,11 @@ import (
 // El monto viaja en la unidad mínima de la moneda (centavos) para no arrastrar
 // errores de coma flotante: nunca se usa float64 para dinero.
 type Movement struct {
-	StoreID  string
-	Occurred string // se parsea a time.Time en la Fase 03, con su zona horaria
-	Kind     string
+	StoreID     string
+	Occurred    string // se parsea a time.Time en la Fase 03, con su zona horaria
+	Kind        string
 	AmountMinor int64
-	Currency string
+	Currency    string
 }
 
 // parseMovement convierte una línea del archivo del punto de venta en un
@@ -554,7 +569,8 @@ cd labs/movement-parser && go1.13 run .
 # línea 5: se esperaban 5 campos, llegaron 4
 # aceptados: 3 · rechazados: 2
 #   ST-014 2026-09-11T08:14:02Z SALE 145900 COP
-#   ...
+#   ST-014 2026-09-11T08:15:41Z REFUND -32000 COP
+#   ST-014 2026-09-11T08:16:10Z VOID 0 COP
 ```
 
 Cuatro cosas de este código que vale la pena señalar, porque son idioma y no
@@ -584,12 +600,16 @@ salida de error; los datos, a la estándar. Eso es lo que permite
 `go1.13 run . > movimientos.txt` y seguir viendo los rechazos en pantalla.
 
 > 🧪 **Prueba de fuego.** Añade una línea con un monto de veinte dígitos
-> (`99999999999999999999`) y corre. Vas a ver `monto inválido` con un mensaje de
-> `strconv` sobre el rango. **La mentira de la pantalla:** el mensaje dice "value
-> out of range", y podrías pensar que el bug está en tu código. No: `ParseInt` con
-> `bitSize=64` está haciendo exactamente su trabajo, y `AmountMinor int64` es el
-> límite real de tu modelo. Si tu negocio necesita más, el tipo está mal elegido —
-> y esa es una decisión de dominio, no de parseo.
+> (`99999999999999999999`) y corre. Vas a ver `línea 6: monto inválido
+> "99999999999999999999"`, y nada más, porque el parser descarta el `err` de
+> `strconv`. Añádelo un momento al mensaje (`fmt.Errorf("monto inválido %q: %v",
+> fields[3], err)`) y aparece la causa: `strconv.ParseInt: parsing
+> "99999999999999999999": value out of range`. **La mentira de la pantalla:** el
+> mensaje dice "value out of range", y podrías pensar que el bug está en tu código.
+> No: `ParseInt` con `bitSize=64` está haciendo exactamente su trabajo, y
+> `AmountMinor int64` es el límite real de tu modelo. Si tu negocio necesita más,
+> el tipo está mal elegido, y esa es una decisión de dominio, no de parseo. Lo que
+> sí es un bug es haber tirado el `err`. Envolverlo con `%w` es de la Fase 03.
 
 ### 6.2 Mini proyecto: `text-toolkit`
 
@@ -810,8 +830,8 @@ func TruncateBytesBroken(s string, n int) string {
 	return s[:n] + "…"
 }
 
-fmt.Println(TruncateBytesBroken("conciliación nocturna", 12))
-// concilia?i…   ← el byte 12 cae en mitad de la 'ó'
+fmt.Println(TruncateBytesBroken("conciliación nocturna", 11))
+// conciliaci�…   ← el corte deja el primer byte de la 'ó' y se lleva el segundo
 ```
 
 Eso no da error, no da panic y no lo detecta ningún linter. Aparece en un reporte
@@ -910,7 +930,7 @@ y que hoy vive en una hoja de cálculo. `WorkItem` es ese trabajo.
 ```bash
 mkdir -p services/opsreport/internal/workitem
 cd services/opsreport
-go mod init github.com/meridian/opsreport
+go1.13 mod init github.com/meridian/opsreport
 ```
 
 Y ahora **edita el `go.mod` a mano** para fijar la época:
@@ -1150,8 +1170,8 @@ func main() {
 go1.13 run ./cmd/opsreport
 # WI-003 rechazado: la referencia externa es obligatoria
 # cola de ejecución:
-#   WI-001  declarada=3  efectiva=7  reconciliation
 #   WI-002  declarada=8  efectiva=8  import
+#   WI-001  declarada=3  efectiva=7  reconciliation
 ```
 
 > 🧪 **Prueba de fuego.** `WI-001` tiene prioridad declarada 3 y `WI-002` tiene 8,
@@ -1255,8 +1275,9 @@ func FirstLineSafe(path string) ([]byte, error) {
 
 Genera un archivo de diez megas, llama a las dos versiones guardando el resultado
 en un slice global, fuerza una recolección con `runtime.GC()` y lee
-`runtime.ReadMemStats`. La diferencia es de tres órdenes de magnitud en memoria
-retenida, y **el código de las dos versiones se ve igual de correcto**.
+`runtime.ReadMemStats`. `FirstLineLeaky` retiene los diez megas enteros;
+`FirstLineSafe`, unas decenas de bytes. Y **el código de las dos versiones se ve
+igual de correcto**.
 
 Este es el bug que en Java no existe: `substring` dejó de compartir el arreglo de
 respaldo en Java 7 precisamente por esta razón. Go tomó la decisión contraria —el
