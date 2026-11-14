@@ -2,8 +2,8 @@
 
 > **Curso:** go-for-java-devs · **Tandas:** S0–S11 (cerradas el 14/11/2026) · **Creado:** 2026-11-14
 > **Propósito:** ejecutar las salidas de las fases por tandas y, en S10, escribir y medir el gemelo
-> Spring Boot de ClearingHouse. El plan con el estado y la tabla de cada tanda está en el `prompts/`
-> del curso: `_desechable-plan-de-ejecucion.md`.
+> Spring Boot de ClearingHouse. El plan con el estado y la tabla de cada tanda está en
+> `plan-de-ejecucion-final.md` (copia del desechable del curso, borrado el 14/11/2026).
 
 ## 1. 🎯 Qué se prueba y para qué
 
@@ -121,7 +121,8 @@ en `exit 0` después de `make fmt vet lint test`.
 ## 8. 📂 Salidas
 
 - `corridas/` (versionado): un log por script.
-- `salidas/` (ignorado): el inventario inicial de Docker y `versiones/` de `extraer.py`.
+- `salidas/` (ignorado): el inventario inicial de Docker y `versiones/` de `extraer.py`. Borrado el
+  14/11/2026, al cerrar; `extraer.py` y §3 lo vuelven a crear.
 - `lector/` (versionado, salvo `bin/`): el repositorio del lector, tal como queda al cierre de cada
   tanda.
 

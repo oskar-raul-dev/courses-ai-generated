@@ -85,7 +85,7 @@ curso corregido y termina con `make fmt vet lint test` en verde. Imágenes: `gol
 | Fase:línea | Caso | Qué se hizo |
 |---|---|---|
 | F00:80, 274, 467 | no reproducible | `darwin/arm64` → la corrida da `linux/arm64`, con la misma forma. Se deja |
-| F00:106, 297 + nota de época | **distinta** | En Apple Silicon, `go1.13 download` falla: el envoltorio pide `go1.13.darwin-arm64.tar.gz`, que da 404 (está en el código de `golang.org/dl`). Se añadió la receta `GOARCH=amd64 go install` + `mv` y el aviso sobre `GOBIN` ("cannot install cross-compiled binaries when GOBIN is set"). **Sin probar en un Mac** |
+| F00:106, 297 + nota de época | **distinta** | En Apple Silicon, `go1.13 download` falla: el envoltorio pide `go1.13.darwin-arm64.tar.gz`, que da 404 (está en el código de `golang.org/dl`). Se añadió la receta `GOARCH=amd64 go install` + `mv` y el aviso sobre `GOBIN` ("cannot install cross-compiled binaries when GOBIN is set"). **Probada en el Mac (M1 Pro, macOS 26, go1.27.1) el 14/11/2026**: `go1.13 version` da `darwin/amd64`; compila, pasa `vet` y ejecuta. Se añadió el `export PATH` antes de `go1.13 download` (sin él, `command not found`) y el aviso de que `go env -u GOBIN` se queja si no existe `go/env` |
 | F00:414 | distinta | `count declared and not used` → `declared and not used: count` (formato desde Go 1.20) |
 | F00:1010, 1035 + prosa | distinta | `go mod init` escribe `go 1.25.1`, no `go 1.25`; `go get` de un paquete sin importar lo marca `// indirect` |
 | F00:832 | **distinta** | `golangci-lint@latest` (v2.15.0) exige Go 1.26. Se fija en `@v2.12.2`, la última que compila con go1.25 |
