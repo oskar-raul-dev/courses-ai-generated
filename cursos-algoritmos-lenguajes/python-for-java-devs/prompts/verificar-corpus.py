@@ -22,7 +22,7 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from verificador_base import PerfilCoursesIA, main  # noqa: E402
+from verificador_base import PERFILES, PerfilCoursesIA, PerfilPublicacion, main  # noqa: E402
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -34,9 +34,10 @@ ROTULO_PROBADO = "Salida (Python 3.14.7"
 
 class VerificadorDelCurso(PerfilCoursesIA):
     # Marcadores y callouts de la guía §7.
+    # ⏳ 🟡 ✅: el estado de una medición (pendiente, en parte, ejecutada), como en BENCHMARKS.md.
     CALLOUTS = {"💸", "🔥", "⭐", "🧱", "📏", "🏷️", "🪦", "🧨", "📌",
                 "📝", "📚", "⚠️", "💡", "🧭", "⚖️", "🧠",
-                "🪞", "🩻", "⚰️", "📖", "🍽️", "✅"}
+                "🪞", "🩻", "⚰️", "📖", "🍽️", "✅", "⏳", "🟡"}
     EMOJI_PERMITIDOS_H3 = PerfilCoursesIA.EMOJI_PERMITIDOS_H3 | CALLOUTS | {c.replace("️", "") for c in CALLOUTS}
     # El encabezado de las fases y de los complementos (plantilla de fase).
     CAMPOS_ENCABEZADO = ("Python para desarrolladores Java senior",)
@@ -126,6 +127,20 @@ class VerificadorDelCurso(PerfilCoursesIA):
                 entre = "\n".join(crudas[fin_a:ini_b])
                 if ROTULO not in entre and ROTULO_PROBADO not in entre:
                     self.aviso("CARTA-SALIDA", f"{nombre}:{ini_b + 1}: salida sin el rótulo «{ROTULO}»")
+
+
+class VerificadorDePublicacion(VerificadorDelCurso):
+    """`--perfil=publicacion` con las reglas del curso: las restricciones de E9 (nada que entre en
+    `prompts/` ni que nombre material privado) sobre los callouts y los chequeos de la carta."""
+    AUTOCONTENIDO = PerfilPublicacion.AUTOCONTENIDO
+    PROHIBIR_ENLACES_A_PROMPTS = PerfilPublicacion.PROHIBIR_ENLACES_A_PROMPTS
+    PROHIBIDOS_EN_PUBLICADOS = PerfilPublicacion.PROHIBIDOS_EN_PUBLICADOS
+
+
+# Sin esto, `--perfil=` cambia la clase entera por la del repositorio y se pierden los callouts y los
+# chequeos de la carta (341 avisos CALLOUT falsos con `publicacion` el 14/11/2026).
+PERFILES["courses-ia"] = VerificadorDelCurso
+PERFILES["publicacion"] = VerificadorDePublicacion
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@ Errores (salida con código 1):
   MOJIBAKE  codificación rota tras una sustitución (Ã, â€) fuera de código
   EMOJI     emoji en un encabezado ###, salvo la escala de dificultad (EMOJI_PERMITIDOS_H3)
   SECCION   capítulo sin una sección obligatoria (SECCIONES_OBLIGATORIAS)
+  TAG       capítulo que no nombra su tag de cierre (TAG_DE_FASE, de la convención de git)
   SINCRO    capítulo con distinto número de preguntas que su solucionario
   LITERAL   enunciado del solucionario que no es copia literal del capítulo (si LITERAL_ES_ERROR)
   FALTA     pregunta del capítulo sin entrada en el solucionario
@@ -50,6 +51,9 @@ import unicodedata
 
 FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+IMAGEN_RE = re.compile(r"!\[[^\]]*\]\([^)]*\)")
+# el cierre `](destino)` de un enlace cuyo texto empezó en una línea anterior: LINK_RE no lo ve
+CIERRE_RE = re.compile(r"\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MARCA_PLANTILLA_RE = re.compile(r"✏️\s*\*\*Plantilla")   # la nota de plantilla; ✏️ suelto es contenido
 PLACEHOLDER_RE = re.compile(r"\{\{(?![\s.$]|json\b|range\b|if\b|end\b|with\b)")   # no plantillas de Go
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
@@ -210,8 +214,9 @@ class Verificador:
     EXCLUIR_DIRS = {"node_modules", "vendor", ".git", "target", "__pycache__", ".venv", "build", "dist"}
     DIR_PROMPTS = "prompts"                 # maquinaria: se revisan sus enlaces, no su contenido
     BLOQUE_RE = re.compile(r"^\d{2}-")      # carpeta de bloque (repasos); si no hay, el curso es plano
+    PISTA_RE = re.compile(r"^pista-")        # carpeta de pista: sus bloques van un nivel más abajo
     CAPITULO_RE = re.compile(r"^(\d{2})-.*\.md$")
-    NO_CAPITULO = ("respuestas", "simulacion", "readme")   # partes del nombre que no son capítulo
+    NO_CAPITULO = ("respuestas", "simulacion", "readme", "convencion-de-git")   # partes del nombre que no son capítulo
     SOLUCIONARIO_RE = re.compile(r"respuestas\.md$")
 
     # --- reglas de forma
@@ -232,6 +237,8 @@ class Verificador:
     SECCIONES_OBLIGATORIAS = ()             # p. ej. ("🎯 El problema", "🧠 Preguntas")
     ANCHO_MAXIMO = None                     # p. ej. 100 caracteres de prosa
     BANDA_LINEAS = None                     # p. ej. (200, 450)
+    TAG_DE_FASE = None                      # p. ej. "fase-{slug}" o, con bloques, "fase-{bloque}-{slug}":
+                                            # el tag que cada capítulo nombra en su bloque 🏷️ de cierre
 
     # --- preguntas y solucionario
     SECCION_PREGUNTAS = "🧠 Preguntas"
@@ -278,8 +285,12 @@ class Verificador:
         return not any(p in nombre.lower() for p in self.NO_CAPITULO)
 
     def bloques(self):
-        dirs = [os.path.join(self.raiz, d) for d in sorted(os.listdir(self.raiz))
-                if self.BLOQUE_RE.match(d) and os.path.isdir(os.path.join(self.raiz, d))]
+        def hijos(base, regex):
+            return [os.path.join(base, d) for d in sorted(os.listdir(base))
+                    if regex.match(d) and os.path.isdir(os.path.join(base, d))]
+        dirs = hijos(self.raiz, self.BLOQUE_RE)
+        for pista in hijos(self.raiz, self.PISTA_RE):    # curso en pistas paralelas
+            dirs += hijos(pista, self.BLOQUE_RE)
         return dirs or [self.raiz]           # curso plano: la raíz es el único bloque
 
     # --- anclas
@@ -307,9 +318,16 @@ class Verificador:
         return None
 
     # --- validaciones de todo documento
+    def destinos(self, linea):
+        """Los destinos de los enlaces de una línea, incluido el cierre de uno cuyo texto cruza un salto
+        de línea (`[Errores⏎frecuentes](#-errores-frecuentes)`), que GitHub enlaza igual."""
+        limpia = sin_inline(linea)
+        resto = IMAGEN_RE.sub("", LINK_RE.sub("", limpia))
+        return LINK_RE.findall(limpia) + CIERRE_RE.findall(resto)
+
     def verificar_enlaces(self, ruta, lineas):
         for n, linea in lineas:
-            for destino in LINK_RE.findall(sin_inline(linea)):
+            for destino in self.destinos(linea):
                 if re.match(r"^[a-z][a-z0-9+.-]*:", destino) or destino.startswith("{{"):
                     continue
                 camino, _, ancla = destino.partition("#")
@@ -400,6 +418,11 @@ class Verificador:
         for obligatoria in self.SECCIONES_OBLIGATORIAS:
             if not any(obligatoria in s for s in self.secciones(lineas)):
                 self.error("SECCION", f"{nombre}: falta «{obligatoria}»")
+        if self.TAG_DE_FASE:
+            tag = self.TAG_DE_FASE.format(slug=os.path.basename(ruta)[:-3],
+                                          bloque=os.path.basename(os.path.dirname(ruta))[:2])
+            if not re.search(re.escape(tag) + r"(?![\w-])", texto):
+                self.error("TAG", f"{nombre}: no nombra su tag «{tag}» (convención de git)")
         encabezado = "\n".join(l for _, l in lineas[:25] if l.startswith(">"))
         for campo in self.CAMPOS_ENCABEZADO:
             alternativas = (campo,) if isinstance(campo, str) else campo
@@ -447,7 +470,11 @@ class Verificador:
         if re.search(r"\bpendiente\b", texto, re.I):
             self.aviso("PENDIENTE", f"{self.rel(ruta)} dice «pendiente»")
         if self.CAPAS:
-            for bloque in re.split(r"\n(?=\*\*\d{2} → |#)", texto):
+            # se corta por entrada o por encabezado fuera de los bloques de código: un comentario
+            # `# …` de Python o de bash dentro de una respuesta no es un encabezado
+            visibles = dict(lineas_sin_codigo(texto))
+            sin_codigo = "\n".join(visibles.get(n, "") for n in range(1, texto.count("\n") + 2))
+            for bloque in re.split(r"\n(?=\*\*\d{2} → |#)", sin_codigo):
                 if not re.match(r"\*\*\d{2} → \d+\.", bloque):
                     continue                # simulaciones y ejercicios tienen otro formato
                 if not all(c in bloque for c in self.CAPAS):

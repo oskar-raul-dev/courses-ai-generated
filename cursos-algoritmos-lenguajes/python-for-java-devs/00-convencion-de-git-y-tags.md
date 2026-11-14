@@ -8,7 +8,7 @@ esto.
 > vez que el bloque 🏷️ de cierre de una fase te mande aquí.
 > **Vigencia:** 2026-10-07.
 
-> 🔑 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa espacio, no agrega
+> 🧠 **La frase para memorizar:** un tag es un puntero a un commit. No ocupa espacio, no agrega
 > overhead y se borra con `git tag -d`. La pregunta no es "¿vale la pena etiquetar esto?", es "¿por
 > qué no?".
 
