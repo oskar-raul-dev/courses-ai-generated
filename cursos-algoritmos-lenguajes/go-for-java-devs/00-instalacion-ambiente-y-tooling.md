@@ -264,8 +264,9 @@ go tool dist list
 > 📝 **Las salidas de esta fase se corrieron el 14/11/2026** en un contenedor
 > `linux/arm64`, con go1.25.1 y go1.13, y el `compose.yaml` con Docker Compose 5.7.
 > Donde la fase muestra `darwin/arm64` o `darwin/amd64`, la corrida dio lo mismo
-> con `linux/…`. La instalación en macOS, Rosetta 2 incluida, se dedujo del código
-> del envoltorio `golang.org/dl` y no se probó en un Mac. Los tiempos y tamaños de
+> con `linux/…`. La receta de Apple Silicon (§6.1) se probó después, el mismo día, en
+> un Mac M1 Pro con macOS 26 y go1.27.1: `go1.13 version` da `darwin/amd64` bajo
+> Rosetta 2, y compila, pasa `vet` y ejecuta. Los tiempos y tamaños de
 > `build-all.sh` dependen de la máquina: los tuyos van en B-01.
 
 ---
@@ -306,6 +307,7 @@ $env:GOOS="linux"; $env:GOARCH="amd64"; go build -o bin/opsreport-linux-amd64 ./
 **Y ahora la de 1.13**, que es la que hace posible el Bloque A:
 
 ```bash
+export PATH="$PATH:$(go env GOPATH)/bin"   # si aún no lo tienes; §6.2 explica por qué
 go install golang.org/dl/go1.13@latest
 go1.13 download
 go1.13 version
@@ -320,6 +322,7 @@ Rosetta 2.
 ```bash
 # Solo en Apple Silicon. Con GOBIN puesto, go install se niega a dejar un binario
 # de otra arquitectura ("cannot install cross-compiled binaries when GOBIN is set").
+# Si nunca usaste go env -w, se queja de que no existe el archivo go/env: es inofensivo.
 go env -u GOBIN
 GOARCH=amd64 go install golang.org/dl/go1.13@latest
 mv "$(go env GOPATH)/bin/darwin_amd64/go1.13" "$(go env GOPATH)/bin/go1.13"
