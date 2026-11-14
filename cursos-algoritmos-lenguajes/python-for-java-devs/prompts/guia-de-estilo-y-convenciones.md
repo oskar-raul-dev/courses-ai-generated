@@ -713,7 +713,7 @@ nombra.
 | Cada ejercicio con solución de referencia o rúbrica | **Cada ejercicio cierra con `**Criterio:**` verificable**; los 🔴 llevan además una rúbrica de tres o cuatro puntos. No se publican soluciones | *Por defecto, a revisar*: el criterio verificable es lo que el lector necesita para saber si terminó, y una solución escrita por inspección sería código sin correr presentado como respuesta |
 | El código de cada documento vive en `src/<nombre del documento>/` (§8.2) | **El código va en la sección**, completo y en un solo bloque por archivo; `src/opNNN-…/` se genera desde la sección (T24, 07/10/2026) y **la sección manda** si difieren | *Por defecto, a revisar*: escribir cada archivo dos veces sin poder correrlo duplica el riesgo de que diverjan, que es justo lo que la regla de `src/` quiere evitar |
 | Ninguna salida inventada | Las salidas van **rotuladas como esperadas y sin correr**; ningún número de rendimiento se presenta como medido | Mismo método que las mediciones `⏳` del curso: la especificación se publica, el número espera |
-| Diagramas a criterio de quien escribe | **Mermaid**, salvo árboles de archivos, salidas y correspondencias en columnas, que van en `text` | *Por defecto, a revisar*: es la elección que el autor pidió el 05/10/2026 para los cursos de esta familia; el camino base no se convierte aquí |
+| Diagramas a criterio de quien escribe | **Mermaid**, salvo árboles de archivos, salidas y correspondencias en columnas, que van en `text` | *Por defecto, a revisar*: es la elección que el autor pidió el 05/10/2026 para los cursos de esta familia; desde el 14/11/2026 la cumple el curso entero (§15) |
 | Una sección por plataforma | **Linux y macOS**; lo que solo corre en Windows se dice y no se escribe | El curso no fija Windows, y la carta no lo agrega |
 
 ### 14.3 Reglas de producción que heredan todas las secciones
@@ -780,7 +780,7 @@ excepciones propias de la carta están en §14.2.
 | 20–30 ejercicios por sección (repositorio) | **20 mínimo, 25 ideal** por fase (§9); 8–12 en la carta (§14.2) | El miniproyecto obligatorio consolida la fase; más volumen sería relleno |
 | Solución de referencia o rúbrica por ejercicio (repositorio); solución plegada en 🟢🟡 (plantilla) | **Sin soluciones publicadas.** En el camino base, la evaluación verificable es el miniproyecto con sus criterios de aceptación (`formato-de-miniproyectos.md`); en la carta, cada ejercicio cierra con `**Criterio:**` y los 🔴 con rúbrica | Los ejercicios son enunciados accionables y verificables (§9); escribir cientos de soluciones duplicaría el curso |
 | Apéndices `aNN-` y su propuesta | **Ninguno** (alcance §6) | Todo es fase, complemento o sección de la carta |
-| Diagramas a criterio de quien escribe (`D-12` de los lineamientos) | **Mermaid** para los diagramas; `text` para árboles de archivos, muestras de datos, salidas y correspondencias en columnas | Pedido explícito del autor el 05/10/2026 para los cursos de esta familia. La carta ya lo cumple; la conversión del camino base y de los complementos es una tarea aparte, pendiente |
+| Diagramas a criterio de quien escribe (`D-12` de los lineamientos) | **Mermaid** para los diagramas; `text` para árboles de archivos, muestras de datos, salidas y correspondencias en columnas | Pedido explícito del autor el 05/10/2026 para los cursos de esta familia. La carta nació así; el camino base y los complementos se convirtieron el 14/11/2026, y eran solo dos diagramas (Fase 16 §5.6, el orden de optimización, y `ds09` §5.5, el reentrenamiento): el resto de sus bloques `text` son salidas, muestras de datos, árboles y columnas, y se quedan en `text` |
 
 ### 15.1 Lo que el curso no tiene, y qué hace su papel
 
@@ -803,6 +803,12 @@ excepciones propias de la carta están en §14.2.
   `python3 prompts/verificar-corpus.py`. Con `--perfil=publicacion` da 0 errores desde el
   07/10/2026: se quitaron los emoji de los 292 encabezados `###` (la escala 🟢🟡🟠🔴🔥💀 se
   conserva; los `##` conservan los suyos), los enlaces y menciones a `prompts/` desde material
-  publicado, y las fases del camino base llevan su fecha de verificación. Quedan avisos: los 🧭,
-  callout del repositorio que ese perfil no lista.
+  publicado, y las fases del camino base llevan su fecha de verificación.
+  **Desde el 14/11/2026 da 0 errores y 0 avisos en los tres modos** (sin perfil,
+  `--perfil=courses-ia` y `--perfil=publicacion`). Ese día se recopió `verificador_base.py` de los
+  lineamientos, y `verificar-corpus.py` registra sus propias clases en `PERFILES`: antes, `--perfil=`
+  cambiaba la clase entera por la del repositorio, se perdían los callouts y los chequeos de la carta,
+  y `publicacion` daba 341 avisos `CALLOUT` falsos. `VerificadorDePublicacion` suma las restricciones
+  de E9 a las del curso. Los callouts ganaron ⏳ y 🟡 (estado de una medición, junto a ✅), y el 🔑 de
+  la convención de git pasó a 🧠.
 
