@@ -1,0 +1,53 @@
+/root/dev/meridian/services/atlassync/cmd/atlassync/main.go:7:1: expected declaration, found 'if'
+/root/dev/meridian/services/atlassync/cmd/atlassync/main.go:7:1: expected declaration, found 'if'
+-- labs/bson-lab
+./traps.go:39:7: undefined: bson
+-- labs/aggregation-lab
+./pipelines.go:108:53: undefined: mongo
+./pipelines.go:108:83: undefined: Enriched
+./pipelines.go:109:14: undefined: mongo
+./pipelines.go:109:2: declared and not used: pipeline
+./pipelines.go:110:27: undefined: bson
+./pipelines.go:110:3: missing type in composite literal
+./pipelines.go:111:28: undefined: bson
+./pipelines.go:111:3: missing type in composite literal
+./pipelines.go:118:16: undefined: mongo
+./pipelines.go:119:28: undefined: bson
+./pipelines.go:119:35: missing type in composite literal
+./pipelines.go:119:5: missing type in composite literal
+./pipelines.go:120:5: missing type in composite literal
+./pipelines.go:125:1: missing return
+./pipelines.go:19:51: undefined: mongo
+./pipelines.go:19:72: undefined: RegionStats
+./pipelines.go:20:14: undefined: mongo
+./pipelines.go:24:27: undefined: bson
+./pipelines.go:24:3: missing type in composite literal
+./pipelines.go:28:27: undefined: bson
+./pipelines.go:28:3: missing type in composite literal
+./pipelines.go:30:18: undefined: bson
+./pipelines.go:31:18: undefined: bson
+./pipelines.go:33:14: undefined: bson
+./pipelines.go:37:18: undefined: bson
+./pipelines.go:41:26: undefined: bson
+./pipelines.go:41:33: missing type in composite literal
+./pipelines.go:41:3: missing type in composite literal
+./pipelines.go:44:29: undefined: bson
+./pipelines.go:44:3: missing type in composite literal
+./pipelines.go:49:18: undefined: bson
+./pipelines.go:61:12: undefined: RegionStats
+./pipelines.go:77:48: undefined: mongo
+./pipelines.go:77:99: undefined: Volatility
+./pipelines.go:78:14: undefined: mongo
+./pipelines.go:78:2: declared and not used: pipeline
+./pipelines.go:79:27: undefined: bson
+./pipelines.go:79:3: missing type in composite literal
+./pipelines.go:81:12: undefined: bson
+./pipelines.go:83:27: undefined: bson
+-- labs/cache-aside-lab
+./cache.go:42:10: undefined: valkey
+./cache.go:47:11: undefined: Metrics
+./cache.go:63:6: undefined: valkey
+./cache.go:81:9: c.Delete undefined (type *Cache[T] has no field or method Delete)
+-- labs/stampede-lab
+	go get github.com/valkey-io/valkey-go
+lock.go:9:2: no required module provides package github.com/valkey-io/valkey-go; to add it:

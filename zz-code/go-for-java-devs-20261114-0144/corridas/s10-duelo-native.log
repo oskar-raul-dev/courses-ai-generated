@@ -1,0 +1,24 @@
+### contrato
+2026-11-14T10:26:59.278Z  INFO 1 --- [clearinghouse] [           main] c.m.c.ClearingHouseApplication           : Started ClearingHouseApplication in 0.467 seconds (process running for 0.594)
+ok  	github.com/meridian/clearinghouse-contract	0.417s
+### arranque en frío y RSS en reposo
+arranque_ms=399 rss_reposo_mb=150  ← native
+arranque_ms=312 rss_reposo_mb=150  ← native
+arranque_ms=301 rss_reposo_mb=150  ← native
+arranque_ms=307 rss_reposo_mb=150  ← native
+arranque_ms=305 rss_reposo_mb=150  ← native
+### bajo carga
+Requests      [total, rate, throughput]         30000, 500.02, 500.01
+Duration      [total, attack, wait]             59.999s, 59.998s, 946.125µs
+Latencies     [min, mean, 50, 90, 95, 99, max]  666.125µs, 919.273µs, 822.724µs, 981.901µs, 1.117ms, 2.602ms, 65.005ms
+Bytes In      [total, mean]                     277710000, 9257.00
+Bytes Out     [total, mean]                     0, 0.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:30000  
+Error Set:
+CPU por petición: 629 µs   memoria bajo carga: 49 MB
+### cierre de un millón (3 corridas)
+memory.peak=155717632 
+memory.peak=155172864 
+memory.peak=153812992 
+

@@ -1,0 +1,76 @@
+# compose.yaml
+# Infraestructura local de la plataforma Meridian. Nada de esto se instala en el
+# anfitrión: se levanta con `make up` y se tira con `make down`.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: meridian-postgres
+    environment:
+      POSTGRES_USER: meridian
+      POSTGRES_PASSWORD: meridian
+      POSTGRES_DB: meridian
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # pg_isready devuelve 0 solo cuando el servidor acepta conexiones; sin esto,
+      # los tests arrancan contra un puerto abierto pero un servidor a medio subir.
+      test: ["CMD-SHELL", "pg_isready -U meridian -d meridian"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  mongo:
+    image: mongo:7
+    container_name: meridian-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: meridian-valkey
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  # Mongo en conjunto de réplicas de un solo nodo. NO arranca con `make up`:
+  # vive tras un perfil porque solo lo necesita un ejercicio de la Fase 11, el de
+  # transacciones multi-documento. El `mongo` de arriba es una instancia suelta y
+  # se queda así a propósito: ese ejercicio pide demostrar que la transacción
+  # FALLA contra una instancia suelta antes de hacerla funcionar aquí.
+  mongo-rs:
+    image: mongo:7
+    container_name: meridian-mongo-rs
+    profiles: ["rs"]
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-rs-data:/data/db
+    healthcheck:
+      # Se inicia solo la primera vez: rs.status() falla mientras no haya conjunto,
+      # y entonces rs.initiate() lo crea. Idempotente, que es lo que quieres en un
+      # healthcheck.
+      test: >
+        mongosh --quiet --eval
+        "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]}).ok }"
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  postgres-data:
+  mongo-data:
+  mongo-rs-data:

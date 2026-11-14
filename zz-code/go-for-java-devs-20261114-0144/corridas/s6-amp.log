@@ -1,0 +1,7 @@
+    amplification_test.go:44: retroceso fijo sin jitter → peticiones por segundo: [0 0 500 0 500 0 500 0 500 0]
+    amplification_test.go:44: exponencial con full jitter → peticiones por segundo: [953 418 281 177 170 136 79 59 72 61]
+--- PASS: TestAmplification (0.00s)
+    --- PASS: TestAmplification/retroceso_fijo_sin_jitter (0.00s)
+    --- PASS: TestAmplification/exponencial_con_full_jitter (0.00s)
+PASS
+ok  	github.com/meridian/labs/backoff-lab	0.003s

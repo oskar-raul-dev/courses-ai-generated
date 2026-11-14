@@ -1,0 +1,27 @@
+### F00:L802 make up (docker compose up -d --wait)
+ Container meridian-valkey Waiting 
+ Container meridian-postgres Waiting 
+ Container meridian-valkey Healthy 
+ Container meridian-postgres Healthy 
+ Container meridian-mongo Healthy 
+NAME                IMAGE                    STATUS
+meridian-mongo      mongo:7                  Up 3 seconds (healthy)
+meridian-postgres   postgres:16-alpine       Up 2 seconds (healthy)
+meridian-valkey     valkey/valkey:8-alpine   Up 3 seconds (healthy)
+### F00:L810 perfil rs
+ Container meridian-mongo-rs Started 
+ Container meridian-mongo-rs Waiting 
+ Container meridian-mongo-rs Healthy 
+NAME                STATUS
+meridian-mongo      Up 6 seconds (healthy)
+meridian-mongo-rs   Up 2 seconds (healthy)
+meridian-postgres   Up 5 seconds (healthy)
+meridian-valkey     Up 5 seconds (healthy)
+rs0 PRIMARY
+7.0.48
+PostgreSQL 16.16 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+valkey_version:8.1.11
+### make down
+ Volume gfjd_postgres-data Removed 
+ Volume gfjd_mongo-data Removed 
+ Network gfjd_default Removed 

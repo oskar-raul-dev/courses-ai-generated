@@ -1,0 +1,76 @@
+
+### F06:L569 TestUnsafe -v (tres corridas)
+    counter_test.go:28: se perdieron 51163 incrementos de 100000 (51.2%)
+    counter_test.go:28: se perdieron 37380 incrementos de 100000 (37.4%)
+    counter_test.go:28: se perdieron 43259 incrementos de 100000 (43.3%)
+
+### F06:L572 -race
+==================
+WARNING: DATA RACE
+Read at 0x0040000a60d8 by goroutine 10:
+  github.com/meridian/labs/race-counter.TestUnsafe_LosesIncrements.func1()
+      /root/dev/meridian/labs/race-counter/counter.go:13 +0x6c
+
+Previous write at 0x0040000a60d8 by goroutine 9:
+  github.com/meridian/labs/race-counter.TestUnsafe_LosesIncrements.func1()
+      /root/dev/meridian/labs/race-counter/counter.go:13 +0x80
+
+Goroutine 10 (running) created at:
+  github.com/meridian/labs/race-counter.TestUnsafe_LosesIncrements()
+      /root/dev/meridian/labs/race-counter/counter_test.go:17 +0xbc
+  testing.tRunner()
+      /root/sdk/go1.13/src/testing/testing.go:909 +0x138
+
+
+### F06:L434 -cpu=1,4,8 (una pasada)
+
+### F06 deadlocks: un main por caso
+-- caso 1
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan send]:
+main.UnbufferedNoReceiver(...)
+	/tmp/dl/deadlock.go:14
+main.main()
+-- caso 2
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [semacquire]:
+sync.runtime_Semacquire(0x4000092028)
+	/root/sdk/go1.13/src/runtime/sema.go:56 +0x38
+sync.(*WaitGroup).Wait(0x4000092020)
+-- caso 3 con SIGQUIT
+goroutine 18 [semacquire]:
+sync.runtime_SemacquireMutex(0x400009c02c, 0x4f800, 0x1)
+	/root/sdk/go1.13/src/runtime/sema.go:71 +0x40
+sync.(*Mutex).lockSlow(0x400009c028)
+--
+goroutine 19 [semacquire]:
+sync.runtime_SemacquireMutex(0x400009c00c, 0x4f800, 0x1)
+	/root/sdk/go1.13/src/runtime/sema.go:71 +0x40
+sync.(*Mutex).lockSlow(0x400009c008)
+-- caso 4 (mutex no reentrante)
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [semacquire]:
+sync.runtime_SemacquireMutex(0x40000aa014, 0x0, 0x1)
+	/root/sdk/go1.13/src/runtime/sema.go:71 +0x40
+sync.(*Mutex).lockSlow(0x40000aa010)
+exit 2
+
+### F06:L833 fuga de goroutines
+--- FAIL: TestSearchLeaky_LeaksGoroutines (0.81s)
+    leak_test.go:27: goroutines antes=2 después=202 fugadas=200
+    leak_test.go:29: se fugaron 200 goroutines; el recolector NO las recoge
+FAIL
+FAIL	github.com/meridian/labs/leak-lab	0.816s
+FAIL
+
+### SpawnN(100000): memoria
+goroutines≈98268  StackInuse=206 MB  Sys=283 MB  (2.1 KB por goroutine)
+
+### servicios con -race
+ok  	github.com/meridian/opsreport/internal/httpapi	1.009s
+ok  	github.com/meridian/opsreport/internal/opsreport	1.007s
+ok  	github.com/meridian/opsreport/internal/workitem	1.006s
+ok  	github.com/meridian/eventrelay/internal/relay	1.015s

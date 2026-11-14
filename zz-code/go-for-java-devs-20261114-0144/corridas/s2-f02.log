@@ -1,0 +1,89 @@
+
+### módulos nuevos con go1.13 mod init
+/scripts/s2-f02.sh: line 8: continue: only meaningful in a `for', `while', or `until' loop
+/scripts/s2-f02.sh: line 8: continue: only meaningful in a `for', `while', or `until' loop
+/scripts/s2-f02.sh: line 8: continue: only meaningful in a `for', `while', or `until' loop
+
+### gofmt -l
+services/opsreport/internal/workitem/workitem.go
+
+### go1.13 vet + build por módulo
+-- labs/shapes
+ok
+-- labs/store-registry
+ok
+-- labs/notifier
+ok
+-- services/opsreport
+ok
+-- services/eventrelay
+ok
+
+### F02:L431 go1.13 list imports (opsreport)
+github.com/meridian/opsreport/internal/memstore imports [errors github.com/meridian/opsreport/internal/workitem]
+github.com/meridian/opsreport/internal/opsreport imports [errors github.com/meridian/opsreport/internal/workitem sort time]
+github.com/meridian/opsreport/internal/workitem imports [errors fmt strings time]
+github.com/meridian/opsreport/internal/workitem
+github.com/meridian/opsreport/internal/opsreport
+package opsreport // import "github.com/meridian/opsreport/internal/opsreport"
+
+Package opsreport contiene los casos de uso del servicio: registrar
+trabajos, consultarlos y moverlos por su ciclo de vida.
+
+Este paquete DECLARA las interfaces de todo lo que necesita del exterior
+—almacén, reloj, generador de identificadores— y no conoce ninguna
+implementación concreta. Quien las implementa no importa este paquete.
+
+var ErrNotFound = errors.New("el work item no existe") ...
+type Clock interface{ ... }
+type IDGenerator interface{ ... }
+type Service struct{ ... }
+    func New(store Store, clock Clock, ids IDGenerator) *Service
+type Store interface{ ... }
+package opsreport // import "github.com/meridian/opsreport/internal/opsreport"
+
+type Service struct {
+	// Has unexported fields.
+}
+    Service implementa los casos de uso de OpsReport.
+
+    Es un struct concreto y exportado. NO hay una interfaz `WorkItemService` al
+package workitem // import "github.com/meridian/opsreport/internal/workitem"
+
+func (w WorkItem) CanTransitionTo(next Status) bool
+    CanTransitionTo dice si el trabajo puede pasar al estado dado.
+
+
+### opsreport run
+creado: WI-0001[reconciliation/queued p3]
+iniciado: WI-0001[reconciliation/running p3]
+terminado: WI-0001[reconciliation/done p3]
+rechazado como se esperaba: el work item está en un estado que no lo permite
+
+### eventrelay tests/build
+?   	github.com/meridian/eventrelay/internal/relay	[no test files]
+
+### F02:L494 Describe (javastyle) y L1606 Demo (shapes)
+=== RUN   TestZZ
+12
+rect con área 0
+--- PASS: TestZZ (0.00s)
+=== RUN   TestZZ
+report-42.csv
+>>> job-42 <<<
+--- PASS: TestZZ (0.00s)
+
+### B-05 una pasada
+goos: linux
+goarch: arm64
+pkg: github.com/meridian/labs/shapes
+BenchmarkDirectCall-8       	338368204	         3.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkInterfaceCall-8    	290996742	         4.53 ns/op	       0 B/op	       0 allocs/op
+BenchmarkInterfaceSlice-8   	100000000	        11.1 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/meridian/labs/shapes	4.415s
+
+### L115 receptor por puntero (go1.13)
+# ptr
+./main.go:17:4: cannot use EmailNotifier literal (type EmailNotifier) as type Notifier in assignment:
+	EmailNotifier does not implement Notifier (Notify method has pointer receiver)

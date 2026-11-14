@@ -1,0 +1,13 @@
+--- FAIL: TestWriteCSV (0.00s)
+    report_test.go:34: actualizando el golden: open testdata/monthly_report.csv.golden: no such file or directory
+FAIL
+exit status 1
+FAIL	github.com/meridian/labs/golden-report	0.002s
+ls: cannot access 'testdata': No such file or directory
+--- FAIL: TestCreate (0.00s)
+    --- FAIL: TestCreate/propaga_el_fallo_del_almacén (0.00s)
+        service_test.go:109: Create() = disco lleno, quería que fuera ErrStorage
+FAIL
+FAIL	github.com/meridian/opsreport/internal/opsreport	0.002s
+FAIL
+/go/bin/goimports

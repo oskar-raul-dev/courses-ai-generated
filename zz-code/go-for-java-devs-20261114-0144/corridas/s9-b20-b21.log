@@ -1,0 +1,20 @@
+### B-20: cierre de un millón por tamaño de fragmento
+chunk=100 cierre 2026-09-11 completado en 1m43.859s memory.peak=24526848 
+chunk=500 cierre 2026-09-11 completado en 39.226s memory.peak=28278784 
+chunk=1000 cierre 2026-09-11 completado en 52.438s memory.peak=44982272 
+chunk=5000 cierre 2026-09-11 completado en 50.383s memory.peak=171167744 
+2026/11/14 10:15:04 extended protocol limited to 65535 parameters
+memory.peak=47128576 
+2026/11/14 10:15:14 extended protocol limited to 65535 parameters
+memory.peak=157380608 
+### B-21: imágenes
+gfjd-ch:jvm-alpine 396MB
+gfjd-ch:jvm 586MB
+gfjd-ch:go 19.7MB
+base gcr.io/distroless/static-debian12:nonroot: 6.18MB
+base eclipse-temurin:21-jre: 481MB
+base eclipse-temurin:21-jre-alpine: 287MB
+
+### compilación desde limpio
+Go: real	0m7.286s
+Maven: real	0m3.314s

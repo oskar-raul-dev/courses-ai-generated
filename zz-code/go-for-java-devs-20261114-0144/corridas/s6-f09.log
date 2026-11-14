@@ -1,0 +1,88 @@
+
+### goose@v3.27.0
+goose version: v3.27.0
+NOTICE:  drop cascades to 8 other objects
+DETAIL:  drop cascades to table opsreport_goose_db_version
+drop cascades to table eventrelay_goose_db_version
+drop cascades to table endpoints
+drop cascades to table events
+drop cascades to table deliveries
+drop cascades to table delivery_attempts
+drop cascades to table work_items
+drop cascades to table job_executions
+
+### goose up opsreport
+2026/11/14 08:33:34 OK   20260911120000_create_work_items.sql (13.74ms)
+2026/11/14 08:33:34 goose: successfully migrated database to version: 20260911120000
+
+### goose status
+2026/11/14 08:33:34     Applied At                  Migration
+2026/11/14 08:33:34     =======================================
+2026/11/14 08:33:34     Sat Nov 14 08:33:34 2026 -- 20260911120000_create_work_items.sql
+
+### goose up eventrelay en la MISMA base
+2026/11/14 08:33:34 OK   20260911121000_create_deliveries.sql (20.62ms)
+2026/11/14 08:33:34 goose: successfully migrated database to version: 20260911121000
+
+### goose redo opsreport (prueba el Down)
+2026/11/14 08:33:34 goose run: no current version found
+
+### con una tabla de versiones por servicio (-table)
+NOTICE:  drop cascades to 7 other objects
+DETAIL:  drop cascades to table goose_db_version
+drop cascades to table work_items
+drop cascades to table job_executions
+drop cascades to table endpoints
+drop cascades to table events
+drop cascades to table deliveries
+drop cascades to table delivery_attempts
+2026/11/14 08:33:34 goose: successfully migrated database to version: 20260911120000
+2026/11/14 08:33:34 goose: successfully migrated database to version: 20260911121000
+2026/11/14 08:33:34 OK   20260911120000_create_work_items.sql (6.38ms)
+2026/11/14 08:33:34 OK   20260911120000_create_work_items.sql (14.9ms)
+2026/11/14 08:33:34     Sat Nov 14 08:33:34 2026 -- 20260911120000_create_work_items.sql
+
+### \d deliveries
+                         Table "public.deliveries"
+    Column    |           Type           | Collation | Nullable | Default  
+--------------+--------------------------+-----------+----------+----------
+ id           | text                     |           | not null | 
+ event_id     | text                     |           | not null | 
+ endpoint_id  | text                     |           | not null | 
+ status       | text                     |           | not null | 
+ attempts     | integer                  |           | not null | 0
+ max_attempts | integer                  |           | not null | 
+ next_attempt | timestamp with time zone |           | not null | 
+ last_error   | text                     |           | not null | ''::text
+ created_at   | timestamp with time zone |           | not null | 
+ delivered_at | timestamp with time zone |           |          | 
+ claimed_at   | timestamp with time zone |           |          | 
+Indexes:
+    "deliveries_pkey" PRIMARY KEY, btree (id)
+    "deliveries_claim_idx" btree (next_attempt, id) WHERE status = 'pending'::text
+    "deliveries_endpoint_idx" btree (endpoint_id, created_at DESC)
+    "deliveries_reaper_idx" btree (claimed_at) WHERE status = 'in_flight'::text
+Check constraints:
+    "deliveries_status_valid" CHECK (status = ANY (ARRAY['pending'::text, 'in_flight'::text, 'delivered'::text, 'failing'::text, 'dead'::text, 'cancelled'::text]))
+Foreign-key constraints:
+    "deliveries_endpoint_id_fkey" FOREIGN KEY (endpoint_id) REFERENCES endpoints(id)
+    "deliveries_event_id_fkey" FOREIGN KEY (event_id) REFERENCES events(id)
+Referenced by:
+
+### SKIP LOCKED: dos reclamaciones concurrentes
+D-4 D-5 D-6 D-7  ← sesión B
+D-1 D-10 D-2 D-3  ← sesión A
+
+### F09:L400 pool-lab (plazo de 3 s)
+consulta 0 → abiertas=1 en_uso=1 ociosas=0 esperando=0 espera_total=0s
+consulta 1 → abiertas=2 en_uso=2 ociosas=0 esperando=0 espera_total=0s
+consulta 2 → abiertas=3 en_uso=3 ociosas=0 esperando=0 espera_total=0s
+consulta 3 → abiertas=4 en_uso=4 ociosas=0 esperando=0 espera_total=0s
+consulta 4 → abiertas=5 en_uso=5 ociosas=0 esperando=0 espera_total=0s
+consulta 5 falló: context deadline exceeded
+
+### storeagent: WAL y restricciones
+journal_mode=wal movimientos=1
+error: constraint failed: CHECK constraint failed: kind IN ('SALE','REFUND','VOID','DEPOSIT','WITHDRAWAL') (275)
+error: constraint failed: CHECK constraint failed: currency GLOB '[A-Z][A-Z][A-Z]' (275)
+/tmp/storeagent.db

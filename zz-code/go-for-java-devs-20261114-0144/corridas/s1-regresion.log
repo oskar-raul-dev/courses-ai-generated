@@ -1,0 +1,29 @@
+### gofmt -l
+(fin gofmt)
+### go1.13 build/vet de los módulos del Bloque A
+ok labs/movement-parser
+ok labs/text-toolkit
+ok labs/log-grep
+ok services/opsreport
+### opsreport
+WI-003 rechazado: la referencia externa es obligatoria
+cola de ejecución:
+  WI-002  declarada=8  efectiva=8  import
+  WI-001  declarada=3  efectiva=7  reconciliation
+### make fmt vet lint test
+0 issues.
+0 issues.
+0 issues.
+0 issues.
+0 issues.
+0 issues.
+0 issues.
+?   	github.com/meridian/labs/buildinfo	[no test files]
+?   	github.com/meridian/labs/crossbuild	[no test files]
+?   	github.com/meridian/labs/hello-go	[no test files]
+?   	github.com/meridian/labs/log-grep	[no test files]
+?   	github.com/meridian/labs/movement-parser	[no test files]
+ok  	github.com/meridian/labs/text-toolkit	0.002s [no tests to run]
+?   	github.com/meridian/opsreport/cmd/opsreport	[no test files]
+?   	github.com/meridian/opsreport/internal/workitem	[no test files]
+exit 0

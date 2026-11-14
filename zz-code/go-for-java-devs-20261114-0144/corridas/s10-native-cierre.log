@@ -1,0 +1,7 @@
+ERROR:  could not resize shared memory segment "/PostgreSQL.93646638" to 67145248 bytes: No space left on device
+native corrida 1: completed en 56.500359000 s, memory.peak=171048960
+ERROR:  could not resize shared memory segment "/PostgreSQL.1416819882" to 67145248 bytes: No space left on device
+native corrida 2: completed en 50.900164000 s, memory.peak=170655744
+ERROR:  could not resize shared memory segment "/PostgreSQL.1252675018" to 67145248 bytes: No space left on device
+native corrida 3: completed en 50.931044000 s, memory.peak=170844160
+1750372 786e77277d64e4b33ccfd919bfa704fc

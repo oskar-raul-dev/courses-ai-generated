@@ -1,0 +1,28 @@
+### binario Go
+tamaño: 10027192
+### Spring Boot (defecto), corrida 1
+cierre 2026-09-11 completado en 145404 ms
+memory.peak=432926720
+real 149.90
+asientos Spring: 1750372 786e77277d64e4b33ccfd919bfa704fc
+estados Spring: matched|875186 unmatched|124814 
+### Spring Boot (defecto), corrida 2
+cierre 2026-09-11 completado en 137686 ms
+memory.peak=376160256
+real 142.52
+### Spring Boot (defecto), corrida 3
+cierre 2026-09-11 completado en 145171 ms
+memory.peak=428265472
+real 149.95
+### Spring Boot (ajustada), corrida 1
+cierre 2026-09-11 completado en 139223 ms
+memory.peak=1307500544
+real 143.99
+### Spring Boot (ajustada), corrida 2
+cierre 2026-09-11 completado en 140116 ms
+memory.peak=1283702784
+real 144.39
+### Spring Boot (ajustada), corrida 3
+cierre 2026-09-11 completado en 139560 ms
+memory.peak=1299271680
+real 143.98

@@ -1,0 +1,5 @@
+/root/dev/meridian/services/atlassync/cmd/atlassync/main.go:7:1: expected declaration, found 'if'
+    ttl_test.go:42: jitter=0% → [0 0 0 0 0 0 0 0 0 0 250 0 0 0 0]
+    ttl_test.go:42: jitter=20% → [0 0 0 0 0 0 0 0 68 64 56 62 0 0 0]
+    ttl_test.go:46: maxmemory-policy por defecto: map[maxmemory-policy:noeviction]
+ok  	ttl	0.092s

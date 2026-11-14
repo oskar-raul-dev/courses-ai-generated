@@ -1,0 +1,28 @@
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan send]:
+main.UnbufferedNoReceiver(...)
+	/tmp/dlm/deadlock.go:14
+main.main()
+	/tmp/dlm/main.go:11 +0x15c
+
+goroutine 18 [semacquire]:
+sync.runtime_SemacquireMutex(0x400009a02c, 0x4f300, 0x1)
+	/root/sdk/go1.13/src/runtime/sema.go:71 +0x40
+sync.(*Mutex).lockSlow(0x400009a028)
+	/root/sdk/go1.13/src/sync/mutex.go:138 +0xec
+sync.(*Mutex).Lock(...)
+	/root/sdk/go1.13/src/sync/mutex.go:81
+main.TransferDeadlock(0x400009a000, 0x400009a020, 0x1)
+	/tmp/dlm/deadlock.go:42 +0x144
+--
+
+goroutine 19 [semacquire]:
+sync.runtime_SemacquireMutex(0x400009a00c, 0x4f300, 0x1)
+	/root/sdk/go1.13/src/runtime/sema.go:71 +0x40
+sync.(*Mutex).lockSlow(0x400009a008)
+	/root/sdk/go1.13/src/sync/mutex.go:138 +0xec
+sync.(*Mutex).Lock(...)
+	/root/sdk/go1.13/src/sync/mutex.go:81
+main.TransferDeadlock(0x400009a020, 0x400009a000, 0x1)
+	/tmp/dlm/deadlock.go:42 +0x144

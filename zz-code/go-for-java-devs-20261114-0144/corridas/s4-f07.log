@@ -1,0 +1,17 @@
+-- labs/cancellable-worker
+./worker.go:7:2: imported and not used: "time"
+-- labs/timeout-client
+-- labs/graceful-server
+-- labs/leak-detector
+# github.com/meridian/labs/cancellable-worker
+./worker.go:7:2: imported and not used: "time"
+?   	github.com/meridian/labs/timeout-client	[no test files]
+?   	github.com/meridian/labs/graceful-server	[no test files]
+?   	github.com/meridian/labs/leak-detector	[no test files]
+
+### F07 graceful-server: SIGTERM con una petición en curso
+terminé
+curl: 200 en 3.003000s
+2026/11/14 08:19:03 escuchando en :8080
+2026/11/14 08:19:04 recibida la señal terminated, apagando
+2026/11/14 08:19:08 servidor detenido

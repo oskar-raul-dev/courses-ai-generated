@@ -1,0 +1,23 @@
+/root/dev/meridian/services/atlassync/cmd/atlassync/main.go:7:1: expected declaration, found 'if'
+
+### goose up de la migración de batches (F13)
+2026/11/14 08:46:36 OK   20260912100000_create_batches.sql (13.97ms)
+2026/11/14 08:46:36 goose: successfully migrated database to version: 20260912100000
+             List of relations
+ Schema |      Name      | Type  |  Owner   
+--------+----------------+-------+----------
+ public | batches        | table | meridian
+ public | ch_goose       | table | meridian
+ public | ledger_entries | table | meridian
+(3 rows)
+
+
+### goose down
+2026/11/14 08:46:36 OK   20260912100000_create_batches.sql (6.32ms)
+
+### chunked-stream
+# github.com/meridian/labs/chunked-stream
+vet: ./stream.go:19:10: undefined: Store
+./stream.go:47:12: too many errors
+FAIL	github.com/meridian/labs/chunked-stream [build failed]
+FAIL

@@ -1,0 +1,15 @@
+fuzz: elapsed: 0s, gathering baseline coverage: 0/6 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 6/6 completed, now fuzzing with 8 workers
+fuzz: elapsed: 0s, execs: 1402 (12967/sec), new interesting: 2 (total: 8)
+--- FAIL: FuzzParseMovement (0.11s)
+    --- FAIL: FuzzParseMovement (0.00s)
+        parse_fuzz_test.go:33: aceptó una línea sin tienda: "|||0|"
+        parse_fuzz_test.go:36: aceptó una línea sin tipo: "|||0|"
+        parse_fuzz_test.go:39: aceptó una línea sin moneda: "|||0|"
+    
+    Failing input written to testdata/fuzz/FuzzParseMovement/ac81a9569990fd96
+    To re-run:
+    go test -run=FuzzParseMovement/ac81a9569990fd96
+FAIL
+exit status 1
+exit 0

@@ -1,0 +1,18 @@
+
+### gofmt + vet + test por módulo (F05)
+-- labs/tiny-router
+?   	github.com/meridian/labs/tiny-router	[no test files]
+-- labs/middleware-chain
+?   	github.com/meridian/labs/middleware-chain	[no test files]
+-- labs/httptest-lab
+ok  	github.com/meridian/labs/httptest-lab	3.011s
+-- services/opsreport
+ok  	github.com/meridian/opsreport/internal/httpapi	0.003s
+?   	github.com/meridian/opsreport/internal/memstore	[no test files]
+?   	github.com/meridian/opsreport/internal/middleware	[no test files]
+ok  	github.com/meridian/opsreport/internal/opsreport	0.003s
+?   	github.com/meridian/opsreport/internal/router	[no test files]
+ok  	github.com/meridian/opsreport/internal/workitem	0.002s
+-- services/eventrelay
+?   	github.com/meridian/eventrelay/cmd/fakeconsumer	[no test files]
+ok  	github.com/meridian/eventrelay/internal/relay	0.002s

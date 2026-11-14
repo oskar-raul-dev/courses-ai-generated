@@ -1,0 +1,17 @@
+
+### con GOBIN puesto (go env -w GOBIN=…): GOARCH=amd64 go install
+go: cannot install cross-compiled binaries when GOBIN is set
+exit 1
+
+### sin GOBIN
+exit 0
+total 8412
+drwxr-xr-x 2 root root    4096 Nov 14 07:09 .
+drwxrwxrwt 3 root root    4096 Nov 14 07:09 ..
+-rwxr-xr-x 1 root root 8604560 Nov 14 07:09 go1.13
+ 177   E   L   F 002 001 001  \0  \0  \0  \0  \0  \0  \0  \0  \0
+ 002  \0   >  \0
+
+### con GOBIN vacío en el entorno
+go: cannot install cross-compiled binaries when GOBIN is set
+exit 1

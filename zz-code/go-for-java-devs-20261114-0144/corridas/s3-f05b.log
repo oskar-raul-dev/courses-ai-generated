@@ -1,0 +1,107 @@
+
+### F05:L237 /health
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-Request-Id: req-1
+Date: Sat, 14 Nov 2026 08:06:01 GMT
+Content-Length: 15
+
+{"status":"ok"}
+### F05:L240 POST
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Location: /work-items/WI-0001
+X-Request-Id: req-2
+Date: Sat, 14 Nov 2026 08:06:01 GMT
+Content-Length: 172
+
+{"id":"WI-0001","external_reference":"SAP-2026-000123","kind":"import","priority":3,"effective_priority":3,"status":"queued","created_at":"2026-11-14T08:06:01.804110178Z"}
+
+### F05:L245 jq
+{
+  "id": "WI-0001",
+  "status": "queued",
+  "priority": 3
+}
+
+### F05:L249 -w
+status=200 tiempo=0.000354s
+
+### F05:L255 /slow en 8080
+404
+
+### F05:L258 -v
+< HTTP/1.1 200 OK
+< Content-Type: application/json; charset=utf-8
+< X-Request-Id: req-6
+< Date: Sat, 14 Nov 2026 08:06:01 GMT
+< Content-Length: 172
+< 
+{ [172 bytes data]
+{"id":"WI-0001","external_reference":"SAP-2026-000123","kind":"import","priority":3,"effective_priority":3,"status":"queued","created_at":"2026-11-14T08:06:01.804110178Z"}
+
+### F05 405 y 404
+HTTP/1.1 405 Method Not Allowed
+Allow: POST, GET
+Content-Type: text/plain; charset=utf-8
+X-Content-Type-Options: nosniff
+HTTP/1.1 404 Not Found
+HTTP/1.1 200 OK
+
+### F05 400 json
+{"error":"el cuerpo de la petición no es json válido","code":"bad_request","request_id":"req-10"}
+
+{"error":"la petición tiene campos inválidos","code":"validation_failed","fields":[{"field":"external_reference","reason":"es obligatoria"},{"field":"kind","reason":"no es un tipo de trabajo conocido"},{"field":"priority","reason":"debe estar entre 1 y 9"}],"request_id":"req-11"}
+
+
+### F05 cuerpo > 1 MiB
+{"error":"el cuerpo de la petición supera el límite","code":"payload_too_large","request_id":"req-12"}
+
+
+### log del servidor
+2026/11/14 08:06:00 arrancando con addr=:8080 workers=4 shutdown=15s log=info db=(vacía)
+2026/11/14 08:06:00 escuchando en :8080
+2026/11/14 08:06:01 req-1 GET /health 200 15B 17µs
+2026/11/14 08:06:01 req-2 POST /work-items 201 172B 263µs
+2026/11/14 08:06:01 req-3 GET /work-items 200 194B 107µs
+2026/11/14 08:06:01 req-4 GET /work-items 200 194B 35µs
+2026/11/14 08:06:01 req-5 GET /slow 404 34B 13µs
+2026/11/14 08:06:01 req-6 GET /work-items/WI-0001 200 172B 18µs
+
+### F05:L1155 fakeconsumer
+HTTP/1.1 200 OK
+Date: Sat, 14 Nov 2026 08:06:03 GMT
+Content-Length: 18
+Content-Type: text/plain; charset=utf-8
+
+{"received":true}
+
+HTTP/1.1 503 Service Unavailable
+Date: Sat, 14 Nov 2026 08:06:03 GMT
+Content-Length: 0
+
+
+HTTP/1.1 429 Too Many Requests
+Retry-After: 3
+Date: Sat, 14 Nov 2026 08:06:03 GMT
+Content-Length: 0
+
+
+{
+  "ok": 1,
+  "slow": 0,
+  "failed": 2
+}
+
+### F05:L1123 /slow con --max-time 2
+
+real	0m2.006s
+user	0m0.003s
+sys	0m0.003s
+curl exit 28
+
+### F05 slowloris (con y sin ReadHeaderTimeout)
+    slowloris_test.go:46: goroutines vivas con 50 atacantes: 103
+ok  	github.com/meridian/labs/httptest-lab	3.005s
+    slowloris_test.go:46: goroutines vivas con 50 atacantes: 53
+ok  	github.com/meridian/labs/httptest-lab	3.004s

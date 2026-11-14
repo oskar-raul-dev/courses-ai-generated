@@ -1,0 +1,12 @@
+
+### solo el test sin aserciones
+ok  	github.com/meridian/opsreport/internal/workitem	0.002s	coverage: 27.9% of statements
+
+### con el bug
+ok  	github.com/meridian/opsreport/internal/workitem	0.002s	coverage: 26.2% of statements
+
+### tabla de §6.1 con el bug
+--- FAIL: TestValidate (0.00s)
+    --- FAIL: TestValidate/prioridad_por_debajo_del_mínimo (0.00s)
+FAIL
+FAIL	github.com/meridian/opsreport/internal/workitem	0.002s

@@ -1,0 +1,57 @@
+
+### gofmt + vet + test por módulo (F04)
+kind,status,count,avg_seconds
+import,done,87,12.25
+import,failed,3,1.00
+-- labs/fake-clock
+?   	github.com/meridian/labs/fake-clock	[no test files]
+-- labs/golden-report
+ok  	github.com/meridian/labs/golden-report	0.002s
+-- services/opsreport
+?   	github.com/meridian/opsreport/cmd/opsreport	[no test files]
+?   	github.com/meridian/opsreport/internal/memstore	[no test files]
+ok  	github.com/meridian/opsreport/internal/opsreport	0.003s
+ok  	github.com/meridian/opsreport/internal/workitem	0.002s
+-- services/eventrelay
+ok  	github.com/meridian/eventrelay/internal/relay	0.002s
+
+### F04:L189 go1.13 test -v -run TestEffectivePriority ./internal/workitem
+=== RUN   TestEffectivePriority
+=== RUN   TestEffectivePriority/recién_creado_conserva_su_prioridad
+=== RUN   TestEffectivePriority/sube_un_punto_por_día_completo_esperando
+=== RUN   TestEffectivePriority/nunca_supera_el_máximo
+=== RUN   TestEffectivePriority/un_trabajo_en_curso_no_envejece
+--- PASS: TestEffectivePriority (0.00s)
+    --- PASS: TestEffectivePriority/recién_creado_conserva_su_prioridad (0.00s)
+    --- PASS: TestEffectivePriority/sube_un_punto_por_día_completo_esperando (0.00s)
+    --- PASS: TestEffectivePriority/nunca_supera_el_máximo (0.00s)
+    --- PASS: TestEffectivePriority/un_trabajo_en_curso_no_envejece (0.00s)
+PASS
+ok  	github.com/meridian/opsreport/internal/workitem	0.002s
+
+### F04:L466 go1.13 test -v ./internal/workitem (cabeza)
+=== RUN   TestEffectivePriority
+=== RUN   TestEffectivePriority/recién_creado_conserva_su_prioridad
+=== RUN   TestEffectivePriority/sube_un_punto_por_día_completo_esperando
+=== RUN   TestEffectivePriority/nunca_supera_el_máximo
+=== RUN   TestEffectivePriority/un_trabajo_en_curso_no_envejece
+
+### F04:L511 go1.13 test -list
+TestCreate
+TestStart
+TestStart_NotFound
+ok  	github.com/meridian/opsreport/internal/opsreport	0.002s
+
+### F04:L1230 cobertura
+?   	github.com/meridian/opsreport/cmd/opsreport	[no test files]
+?   	github.com/meridian/opsreport/internal/memstore	[no test files]
+ok  	github.com/meridian/opsreport/internal/opsreport	1.007s	coverage: 41.5% of statements
+ok  	github.com/meridian/opsreport/internal/workitem	1.007s	coverage: 41.0% of statements
+total:									(statements)		41.2%
+total:									(statements)		41.2%
+
+### F04 -run sobre subtest
+=== RUN   TestEffectivePriority
+=== RUN   TestEffectivePriority/nunca_supera_el_máximo
+--- PASS: TestEffectivePriority (0.00s)
+    --- PASS: TestEffectivePriority/nunca_supera_el_máximo (0.00s)

@@ -1,0 +1,4 @@
+make fmt: ok
+make vet: ok
+make lint: ok
+make test: ok

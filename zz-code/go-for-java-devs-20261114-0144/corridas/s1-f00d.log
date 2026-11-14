@@ -1,0 +1,16 @@
+go: creating new go.mod: module epochtest
+module epochtest
+
+go 1.13
+
+### go build . && ./epochtest
+ST-014 SALE
+exit 0
+
+### go vet .
+exit 0
+
+### go1.13 build .
+# epochtest
+./main.go:10:20: undefined: strings.Cut
+exit 2

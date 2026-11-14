@@ -1,0 +1,47 @@
+
+### F08:L164 go get go@1.25.1 (en un lab del Bloque A)
+module github.com/meridian/labs/movement-parser
+
+go 1.13
+go: upgraded go 1.13 => 1.25.1
+	note: expanded dependencies to upgrade to go 1.17 or higher; run 'go mod tidy' to clean up
+module github.com/meridian/labs/movement-parser
+
+go 1.25.1
+
+### F08:L169 go work init + use + cat go.work
+go 1.25.1
+
+use (
+	./labs/text-toolkit
+	./services/eventrelay
+	./services/opsreport
+)
+github.com/meridian/eventrelay 1.25.1
+github.com/meridian/labs/text-toolkit 1.25.1
+github.com/meridian/opsreport 1.25.1
+
+### F08:L179 modernize@latest
+go: downloading golang.org/x/tools/gopls v0.24.0
+go: golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest: golang.org/x/tools/gopls@v0.24.0 requires go >= 1.27.0 (running go 1.25.1; GOTOOLCHAIN=local)
+
+### F08:L203 -d=loopvar=2
+current directory is contained in a module that is not one of the workspace modules listed in go.work. You can add the module to the workspace using:
+	go work use .
+exit 1
+
+### F08:L187 fuzz 30 s
+# .
+current directory is contained in a module that is not one of the workspace modules listed in go.work. You can add the module to the workspace using:
+	go work use .
+FAIL	. [setup failed]
+
+### F08:L1346 slices.Chunk con go 1.21
+# epochdemo
+./main.go:10:9: range over slices.Chunk([]int{…}, 2) (value of func type iter.Seq[[]int]) permits only one iteration variable
+# epochdemo
+./main.go:10:24: cannot range over slices.Chunk([]int{…}, 2) (value of func type iter.Seq[[]int]): requires go1.23 or later (-lang was set to go1.21; check go.mod)
+exit 1
+
+### go test -shuffle=on (labs que tienen tests)
+ok  	github.com/meridian/labs/text-toolkit	0.002s [no tests to run]

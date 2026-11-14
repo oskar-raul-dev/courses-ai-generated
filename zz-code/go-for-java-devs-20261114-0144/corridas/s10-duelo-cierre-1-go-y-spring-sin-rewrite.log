@@ -1,0 +1,30 @@
+### binario Go
+tamaño: 10027192
+### base y semilla (1000000 movimientos)
+sembrados 1000000 movimientos para 2026-09-11
+
+real	0m43.847s
+user	0m0.020s
+sys	0m0.013s
+deposit|125319 refund|124849 sale|500219 void|124814 withdrawal|124799 
+### Go, corrida 1
+cierre 2026-09-11 completado en 54.277s
+memory.peak=171282432
+real 55.05
+asientos Go: 1750372 786e77277d64e4b33ccfd919bfa704fc
+estados Go: matched|875186 unmatched|124814 
+### Go, corrida 2
+cierre 2026-09-11 completado en 43.524s
+memory.peak=170516480
+real 44.73
+### Go, corrida 3
+cierre 2026-09-11 completado en 42.559s
+memory.peak=174698496
+real 43.14
+### Spring Boot (defecto), corrida 1
+cierre 2026-09-11 completado en 150814 ms
+memory.peak=407179264
+real 155.96
+asientos Spring: 1750372 786e77277d64e4b33ccfd919bfa704fc
+estados Spring: matched|875186 unmatched|124814 
+### Spring Boot (defecto), corrida 2

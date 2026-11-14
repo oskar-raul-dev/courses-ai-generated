@@ -1,0 +1,50 @@
+# .golangci.yml
+version: "2"
+
+linters:
+  enable:
+    - errcheck      # errores devueltos y no comprobados: el linter más importante del curso
+    - govet         # el vet del toolchain
+    - staticcheck   # el analizador más profundo del ecosistema
+    - ineffassign   # asignaciones cuyo valor nunca se lee
+    - unused        # identificadores sin uso
+    - bodyclose     # response.Body sin cerrar: la fuga de la Fase 10
+    - noctx         # peticiones HTTP sin context: la regla de la Fase 07
+    - errorlint     # comparaciones de error con == en vez de errors.Is
+    - rowserrcheck  # rows.Err() sin comprobar tras recorrer un sql.Rows: la Fase 09
+    - sqlclosecheck # sql.Rows y sql.Stmt sin cerrar: la otra mitad del mismo bug
+
+  settings:
+    errcheck:
+      # Comprobar también los errores que se ignoran con la asignación en blanco.
+      check-blank: true
+    errorlint:
+      # Go 1.13 admite un solo %w por Errorf (varios llegan en Go 1.20), así que
+      # el idioma del Bloque A es "%w: %v": centinela envuelto, causa como texto.
+      # Con esto, errorlint no protesta por el %v cuando ya hay un %w.
+      errorf-multi: false
+    govet:
+      # El analizador `inline` propone sustituir APIs marcadas con //go:fix inline
+      # (ioutil.ReadFile → os.ReadFile). En un módulo `go 1.13` no puede hacerlo y
+      # avisa igual. El Bloque A usa esas APIs a propósito; la Fase 08 las migra.
+      disable:
+        - inline
+
+  exclusions:
+    # El preset que el ecosistema da por bueno: sin él, cada `defer f.Close()` de
+    # un archivo de solo lectura es un aviso, y la regla de cero tolerancia se
+    # convierte en ruido. Un Close de escritura sí se comprueba, a mano (Fase 03).
+    presets:
+      - std-error-handling
+    rules:
+      # noctx pide NewRequestWithContext (Go 1.23) también en los tests, donde
+      # httptest.NewRequest es lo idiomático y no hay nada que cancelar.
+      - path: _test\.go
+        linters:
+          - noctx
+
+issues:
+  # Cero tolerancia: si un linter dice algo, se arregla o se justifica con
+  # //nolint y su motivo escrito al lado.
+  max-issues-per-linter: 0
+  max-same-issues: 0

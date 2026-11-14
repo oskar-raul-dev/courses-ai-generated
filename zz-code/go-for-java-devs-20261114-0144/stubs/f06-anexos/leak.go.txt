@@ -1,0 +1,5 @@
+
+// Completado en zz-code: la F06 usa estas búsquedas falsas y no las escribe.
+func searchDB(q string) string    { time.Sleep(30 * time.Millisecond); return "db:" + q }
+func searchCache(q string) string { time.Sleep(5 * time.Millisecond); return "cache:" + q }
+func searchIndex(q string) string { time.Sleep(15 * time.Millisecond); return "index:" + q }

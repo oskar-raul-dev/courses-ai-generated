@@ -1,0 +1,157 @@
+
+### gofmt -l sobre lo que entrega la F01
+labs/movement-parser/main.go
+
+### F01:L911 opsreport: go mod init (el comando literal, con go moderno)
+go: creating new go.mod: module github.com/meridian/opsreport
+go: to add module requirements and sums:
+	go mod tidy
+module github.com/meridian/opsreport
+
+go 1.25.1
+
+### variante: go1.13 mod init
+go: creating new go.mod: module github.com/meridian/opsreport
+module github.com/meridian/opsreport
+
+go 1.13
+
+### labs: un módulo por lab, con go1.13 mod init
+module github.com/meridian/labs/movement-parser  go 1.13 
+module github.com/meridian/labs/text-toolkit  go 1.13 
+module github.com/meridian/labs/log-grep  go 1.13 
+
+### F01:L552 movement-parser (stderr y stdout juntos, en orden)
+línea 4: monto inválido "abc"
+línea 5: se esperaban 5 campos, llegaron 4
+aceptados: 3 · rechazados: 2
+  ST-014 2026-09-11T08:14:02Z SALE 145900 COP
+  ST-014 2026-09-11T08:15:41Z REFUND -32000 COP
+  ST-014 2026-09-11T08:16:10Z VOID 0 COP
+
+### F01 prueba de fuego: monto de veinte dígitos
+línea 4: monto inválido "abc"
+línea 5: se esperaban 5 campos, llegaron 4
+línea 6: monto inválido "99999999999999999999"
+
+### go1.13 vet movement-parser
+exit 0
+
+### F01:L742 text-toolkit: benchmarks (una pasada; las cifras van a B-02)
+goos: linux
+goarch: arm64
+pkg: github.com/meridian/labs/text-toolkit
+BenchmarkJoinNaive-8         	      13	  82278263 ns/op	834886441 B/op	   10009 allocs/op
+BenchmarkJoinSprintf-8       	       7	 151302958 ns/op	1529329473 B/op	   42528 allocs/op
+BenchmarkJoinBuilder-8       	    7696	    176627 ns/op	  858097 B/op	      26 allocs/op
+BenchmarkJoinBuilderGrow-8   	   15099	     79681 ns/op	  163841 B/op	       1 allocs/op
+BenchmarkJoinStdlib-8        	   10000	    101162 ns/op	  163840 B/op	       1 allocs/op
+PASS
+ok  	github.com/meridian/labs/text-toolkit	7.712s
+
+### F01:L813 TruncateBytesBroken con 12 y con 11
+conciliaciM-CM-3M-bM-^@M-&
+conciliaciM-CM-bM-^@M-&
+"conciliaci\xc3M-bM-^@M-&"
+conciliació…
+conciliaci�…
+"conciliaci\xc3…"
+
+### F01:L874 log-grep con un relay.log de prueba
+2026-09-11T08:14:02Z → endpoint EP-0042 respondió 200
+2026-09-11T08:14:03Z → endpoint EP-0107 respondió 503
+2026-09-11T08:14:09Z → endpoint EP-0107 respondió 200
+líneas coincidentes: 3
+vet exit 0
+
+### F01:L1150 opsreport
+WI-003 rechazado: la referencia externa es obligatoria
+cola de ejecución:
+  WI-002  declarada=8  efectiva=8  import
+  WI-001  declarada=3  efectiva=7  reconciliation
+
+### prueba de fuego: -4 → -6
+WI-003 rechazado: la referencia externa es obligatoria
+cola de ejecución:
+  WI-001  declarada=3  efectiva=9  reconciliation
+  WI-002  declarada=8  efectiva=8  import
+
+### F01 conceptos: fragmentos con salida en comentario
+0 true
+[SALE REFUND]
+[SALE REFUND PATCHED DEPOSIT]
+[SALE REFUND VOID DEPOSIT]
+7
+5
+0: ñ (241)
+2: a (97)
+3: n (110)
+4: d (100)
+5: ú (250)
+195
+Ã
+7
+true
+0
+0
+panic: assignment to entry in nil map
+
+goroutine 1 [running]:
+
+### F01:L108 cannot use p (go1.13 y go1.25.1)
+# conc
+./main.go:9:6: cannot use p (type Priority) as type int in assignment
+./main.go:9:14: cannot use p (variable of int type Priority) as int value in variable declaration
+
+### F01 error común 5: comparar structs con slices
+# conc
+./main.go:9:16: invalid operation: a == b (struct containing []string cannot be compared)
+./main.go:9:14: invalid operation: a == b (struct containing []string cannot be compared)
+
+### F01:L399 CLI de la fase
+package strings // import "strings"
+
+type Builder struct {
+	// Has unexported fields.
+}
+package strconv // import "strconv"
+
+func Atoi(s string) (int, error)
+    Atoi is equivalent to ParseInt(s, 10, 0), converted to type int.
+
+# github.com/meridian/labs/text-toolkit
+./join.go:17:27: inlining call to strings.TrimSuffix
+./join.go:17:27: inlining call to strings.HasSuffix
+./join.go:27:27: inlining call to strings.TrimSuffix
+./join.go:27:27: inlining call to strings.HasSuffix
+./join.go:36:17: inlining call to strings.(*Builder).WriteString
+./join.go:36:17: inlining call to strings.(*Builder).copyCheck
+./join.go:36:17: inlining call to strings.noescape
+./join.go:38:16: inlining call to strings.(*Builder).WriteString
+./join.go:38:16: inlining call to strings.(*Builder).copyCheck
+./join.go:38:16: inlining call to strings.noescape
+./join.go:40:17: inlining call to strings.(*Builder).String
+diff main.go.orig main.go
+--- main.go.orig
++++ main.go
+@@ -13,11 +13,11 @@
+ // El monto viaja en la unidad mínima de la moneda (centavos) para no arrastrar
+ // errores de coma flotante: nunca se usa float64 para dinero.
+ type Movement struct {
+-	StoreID  string
+-	Occurred string // se parsea a time.Time en la Fase 03, con su zona horaria
+-	Kind     string
++	StoreID     string
++	Occurred    string // se parsea a time.Time en la Fase 03, con su zona horaria
++	Kind        string
+ 	AmountMinor int64
+-	Currency string
++	Currency    string
+ }
+ 
+ // parseMovement convierte una línea del archivo del punto de venta en un
+
+### F01 rompe a propósito: FirstLineLeaky frente a FirstLineSafe (10 MB)
+    retain_test.go:35: FirstLineLeaky retiene 10494376 bytes
+    retain_test.go:36: FirstLineSafe  retiene 18446744073709550352 bytes
+ok  	github.com/meridian/labs/text-toolkit	0.090s

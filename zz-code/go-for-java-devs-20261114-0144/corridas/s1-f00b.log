@@ -1,0 +1,30 @@
+
+### dl: fuente del envoltorio (darwin/arm64 < 1.16)
+/go/pkg/mod/golang.org/dl@v0.0.0-20261110170429-b9769cbc5f78/internal/version/version.go
+
+### golangci-lint: versión de go que exige cada v2
+v2.15.0: go 1.26.0 
+v2.12.0: go 1.25.0 
+v2.10.0: go 1.25.0 
+v2.8.0: go 1.24.0 
+v2.6.2: go 1.24.0 
+v2.5.0: go 1.24.0 
+v2.4.0: go 1.24.0 
+v2.4.0 v2.5.0 v2.6.0 v2.6.1 v2.6.2 v2.7.0 v2.7.1 v2.7.2 v2.8.0 v2.9.0 v2.10.0 v2.10.1 v2.11.0 v2.11.1 v2.11.2 v2.11.3 v2.11.4 v2.12.0 v2.12.1 v2.12.2 v2.13.0 v2.13.1 v2.13.2 v2.14.0 v2.15.0 
+
+### golangci-lint @latest con GOTOOLCHAIN=auto (lo que le pasa al lector)
+go: downloading google.golang.org/protobuf v1.36.12
+go: downloading github.com/hashicorp/golang-lru/v2 v2.0.7
+go: downloading github.com/matttproud/golang_protobuf_extensions v1.0.1
+total 74380
+drwxrwxrwt 2 root root     4096 Nov 14 07:08 .
+drwxrwxrwt 5 root root     4096 Nov 14 07:06 ..
+-rwxr-xr-x 1 root root  8146636 Nov 14 07:06 go1.13
+-rwxr-xr-x 1 root root 68009680 Nov 14 07:08 golangci-lint
+
+### API posterior sin genéricos: strings.Cut (1.18) con go.mod en 1.13
+go build exit 0
+go vet exit 0
+# cut
+./main.go:9:22: undefined: strings.Cut
+go1.13 build exit 2

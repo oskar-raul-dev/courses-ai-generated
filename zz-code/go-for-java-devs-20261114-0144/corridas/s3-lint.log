@@ -1,0 +1,7 @@
+labs/json-codec/codec.go:28:2: field internalNotes is unused (unused)
+	internalNotes string
+	^
+1 issues:
+* unused: 1
+make: *** [Makefile:33: lint] Error 1
+exit 0

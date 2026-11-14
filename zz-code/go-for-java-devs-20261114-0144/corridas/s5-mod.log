@@ -1,0 +1,20 @@
+== gopls v0.21.1
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:49:14: b.N can be modernized using b.Loop()
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:58:14: b.N can be modernized using b.Loop()
+/root/dev/meridian/labs/text-toolkit/join.go:15:3: using string += string in a loop is inefficient
+exit status 3
+exit 0
+== gopls v0.21.0
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:49:14: b.N can be modernized using b.Loop()
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:58:14: b.N can be modernized using b.Loop()
+/root/dev/meridian/labs/text-toolkit/join.go:15:3: using string += string in a loop is inefficient
+exit status 3
+exit 0
+== gopls v0.20.0
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:40:14: b.N can be modernized using b.Loop()
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:49:14: b.N can be modernized using b.Loop()
+/root/dev/meridian/labs/text-toolkit/join_bench_test.go:58:14: b.N can be modernized using b.Loop()
+exit status 3
+exit 0
+== x/tools passes/modernize
+go: golang.org/x/tools/go/analysis/passes/modernize/cmd/modernize@latest: golang.org/x/tools@v0.52.0 requires go >= 1.26.0 (running go 1.25.1; GOTOOLCHAIN=local)

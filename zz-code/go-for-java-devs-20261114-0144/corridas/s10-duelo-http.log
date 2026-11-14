@@ -1,0 +1,63 @@
+### arranque en frío y RSS en reposo (5 corridas por configuración)
+arranque_ms=24 rss_reposo_mb=8  ← Go
+arranque_ms=40 rss_reposo_mb=10  ← Go
+arranque_ms=21 rss_reposo_mb=10  ← Go
+arranque_ms=22 rss_reposo_mb=10  ← Go
+arranque_ms=24 rss_reposo_mb=10  ← Go
+arranque_ms=3637 rss_reposo_mb=366  ← Spring (defecto)
+arranque_ms=3513 rss_reposo_mb=368  ← Spring (defecto)
+arranque_ms=3467 rss_reposo_mb=366  ← Spring (defecto)
+arranque_ms=3540 rss_reposo_mb=356  ← Spring (defecto)
+arranque_ms=3525 rss_reposo_mb=377  ← Spring (defecto)
+arranque_ms=3584 rss_reposo_mb=382  ← Spring (ajustada)
+arranque_ms=3470 rss_reposo_mb=384  ← Spring (ajustada)
+arranque_ms=3529 rss_reposo_mb=390  ← Spring (ajustada)
+arranque_ms=3545 rss_reposo_mb=385  ← Spring (ajustada)
+arranque_ms=3518 rss_reposo_mb=380  ← Spring (ajustada)
+arranque_ms=4055 rss_reposo_mb=273  ← Spring (arranque)
+arranque_ms=4041 rss_reposo_mb=273  ← Spring (arranque)
+arranque_ms=4086 rss_reposo_mb=273  ← Spring (arranque)
+arranque_ms=4032 rss_reposo_mb=273  ← Spring (arranque)
+arranque_ms=4024 rss_reposo_mb=273  ← Spring (arranque)
+### Go bajo carga
+Requests      [total, rate, throughput]         30000, 500.02, 500.01
+Duration      [total, attack, wait]             59.998s, 59.998s, 541.083µs
+Latencies     [min, mean, 50, 90, 95, 99, max]  308.083µs, 518.296µs, 484.578µs, 625.798µs, 708.194µs, 1ms, 30.275ms
+Bytes In      [total, mean]                     276720000, 9224.00
+Bytes Out     [total, mean]                     0, 0.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:30000  
+Error Set:
+CPU por petición: 352 µs   RSS bajo carga: 18 MB
+-- pico de 10×: 50 rps 20 s → 500 rps 15 s → 50 rps 20 s (p99 de cada tramo)
+Latencies     [min, mean, 50, 90, 95, 99, max]  463.667µs, 1.04ms, 872.947µs, 1.391ms, 2.09ms, 3.581ms, 17.952ms Success       [ratio]                           100.00% 
+Latencies     [min, mean, 50, 90, 95, 99, max]  303.791µs, 448.64µs, 395.323µs, 483.942µs, 563.694µs, 848.797µs, 31.696ms Success       [ratio]                           100.00% 
+Latencies     [min, mean, 50, 90, 95, 99, max]  439.25µs, 1.083ms, 914.827µs, 1.544ms, 2.385ms, 3.66ms, 11.484ms Success       [ratio]                           100.00% 
+### Spring (defecto) bajo carga
+Requests      [total, rate, throughput]         30000, 500.02, 500.01
+Duration      [total, attack, wait]             59.998s, 59.998s, 550.583µs
+Latencies     [min, mean, 50, 90, 95, 99, max]  384.167µs, 626.871µs, 581.33µs, 780.307µs, 875.566µs, 1.248ms, 9.036ms
+Bytes In      [total, mean]                     276690000, 9223.00
+Bytes Out     [total, mean]                     0, 0.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:30000  
+Error Set:
+CPU por petición: 488 µs   RSS bajo carga: 673 MB
+-- pico de 10×: 50 rps 20 s → 500 rps 15 s → 50 rps 20 s (p99 de cada tramo)
+Latencies     [min, mean, 50, 90, 95, 99, max]  540.667µs, 1.247ms, 1.129ms, 1.682ms, 1.883ms, 4.101ms, 6.787ms Success       [ratio]                           100.00% 
+Latencies     [min, mean, 50, 90, 95, 99, max]  363.958µs, 519.148µs, 482.086µs, 601.273µs, 691.555µs, 1.174ms, 5.788ms Success       [ratio]                           100.00% 
+Latencies     [min, mean, 50, 90, 95, 99, max]  556.417µs, 1.25ms, 1.15ms, 1.686ms, 1.966ms, 3.259ms, 7.591ms Success       [ratio]                           100.00% 
+### Spring (ajustada) bajo carga
+Requests      [total, rate, throughput]         30000, 500.01, 500.01
+Duration      [total, attack, wait]             59.999s, 59.998s, 519.791µs
+Latencies     [min, mean, 50, 90, 95, 99, max]  371.917µs, 631.346µs, 589.712µs, 800.38µs, 890.975µs, 1.206ms, 13.38ms
+Bytes In      [total, mean]                     276690000, 9223.00
+Bytes Out     [total, mean]                     0, 0.00
+Success       [ratio]                           100.00%
+Status Codes  [code:count]                      200:30000  
+Error Set:
+CPU por petición: 467 µs   RSS bajo carga: 1049 MB
+-- pico de 10×: 50 rps 20 s → 500 rps 15 s → 50 rps 20 s (p99 de cada tramo)
+Latencies     [min, mean, 50, 90, 95, 99, max]  587.291µs, 1.407ms, 1.213ms, 2.042ms, 2.862ms, 4.86ms, 9.598ms Success       [ratio]                           100.00% 
+Latencies     [min, mean, 50, 90, 95, 99, max]  357.541µs, 495.936µs, 466.251µs, 581.033µs, 670.391µs, 921.911µs, 4.568ms Success       [ratio]                           100.00% 
+Latencies     [min, mean, 50, 90, 95, 99, max]  582.667µs, 1.283ms, 1.154ms, 1.811ms, 2.144ms, 3.652ms, 6.417ms Success       [ratio]                           100.00% 

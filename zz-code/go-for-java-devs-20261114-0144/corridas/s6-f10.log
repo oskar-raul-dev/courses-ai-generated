@@ -1,0 +1,53 @@
+-- labs/client-timeouts
+./scenarios.go:10:29: undefined: httptest
+./scenarios.go:11:28: undefined: http
+./scenarios.go:11:9: undefined: httptest
+./scenarios.go:22:25: undefined: httptest
+./scenarios.go:23:28: undefined: http
+./scenarios.go:23:9: undefined: httptest
+./scenarios.go:25:17: undefined: http
+./scenarios.go:30:4: undefined: time
+./scenarios.go:38:27: undefined: httptest
+./scenarios.go:38:55: missing return
+-- labs/backoff-lab
+./amplification_test.go:17:10: undefined: backoff
+./amplification_test.go:19:33: undefined: backoff
+./amplification_test.go:23:35: undefined: backoff
+-- services/atlassync
+	go get golang.org/x/sync/singleflight
+internal/atlassync/nonetwork_test.go:24:9: undefined: atlassync
+internal/atlassync/ports.go:16:44: undefined: fxrates
+internal/atlassync/ports.go:17:63: undefined: fxrates
+internal/countries/client.go:36:10: undefined: backoff
+internal/countries/client.go:48:51: undefined: Country
+internal/countries/client.go:51:15: undefined: backoff
+internal/countries/client.go:63:8: undefined: drainAndClose
+internal/countries/client.go:68:12: undefined: countryDTO
+internal/countries/client.go:74:16: undefined: Country
+internal/countries/client.go:93:81: undefined: ErrUnexpectedShape
+internal/countries/client_test.go:40:50: undefined: backoff
+internal/countries/client_test.go:40:7: undefined: countries
+internal/countries/client_test.go:52:12: undefined: find
+internal/fxrates/service.go:11:2: no required module provides package golang.org/x/sync/singleflight; to add it:
+-- eventrelay circuit/httpsender
+# github.com/meridian/eventrelay/internal/circuit
+vet: internal/circuit/breaker.go:35:19: undefined: Clock
+# github.com/meridian/eventrelay/internal/httpsender
+vet: internal/httpsender/sender.go:18:11: undefined: backoff
+-- storeagent sync
+# github.com/meridian/storeagent/internal/sync
+vet: internal/sync/sync.go:18:10: undefined: Syncer
+
+### APIs reales (E8: pocas llamadas)
+restcountries fields: 301 167 B
+restcountries sin fields: 301
+frankfurter.app: 301 https://api.frankfurter.dev/v1/latest?from=EUR
+<html>
+<head><title>301 Moved Permanently</title></head>
+<body>
+<center><h1>301 Moved Permanently</h1></center>
+<hr><center>cloudflare</center>
+</body>
+</html>
+
+frankfurter.dev: 200

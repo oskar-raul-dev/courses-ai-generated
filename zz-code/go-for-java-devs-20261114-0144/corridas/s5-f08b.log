@@ -1,0 +1,55 @@
+
+### un lab fuera del workspace
+current directory is contained in a module that is not one of the workspace modules listed in go.work. You can add the module to the workspace using:
+	go work use .
+
+### go work use -r .
+go 1.25.1
+
+use (
+	./labs/build-info
+	./labs/cancellable-worker
+	./labs/config-loader
+	./labs/deadlock-lab
+	./labs/error-chain
+	./labs/fake-clock
+	./labs/golden-report
+	./labs/graceful-server
+	./labs/hello-go
+...
+log-grep compila
+
+### F08 fuzz 30 s
+        parse_fuzz_test.go:33: aceptó una línea sin tienda: "|||0|"
+        parse_fuzz_test.go:36: aceptó una línea sin tipo: "|||0|"
+        parse_fuzz_test.go:39: aceptó una línea sin moneda: "|||0|"
+    
+    Failing input written to testdata/fuzz/FuzzParseMovement/ac81a9569990fd96
+    To re-run:
+    go test -run=FuzzParseMovement/ac81a9569990fd96
+FAIL
+exit status 1
+FAIL	github.com/meridian/labs/movement-parser	0.025s
+ac81a9569990fd96
+
+### F08 loopvar=2
+# runtime
+/usr/local/go/src/runtime/mgcmark.go:932:6: loop variable d now per-iteration, stack-allocated
+/usr/local/go/src/runtime/proc.go:2288:7: loop variable freem now per-iteration, stack-allocated
+/usr/local/go/src/runtime/proc.go:3811:7: loop variable enum now per-iteration, stack-allocated
+exit 0
+
+### slices.Chunk corregido
+module epochdemo
+
+go 1.25.1
+[1 2]
+[3 4]
+[5]
+# epochdemo
+./main.go:10:21: cannot range over slices.Chunk([]int{…}, 2) (value of func type iter.Seq[[]int]): requires go1.23 or later (-lang was set to go1.21; check go.mod)
+exit 1
+# epochdemo
+# [epochdemo]
+vet: ./main.go:10:21: cannot range over slices.Chunk([]int{…}, 2) (value of func type iter.Seq[[]int]): requires go1.23 or later
+vet exit 1

@@ -1,0 +1,18 @@
+    growth_test.go:43: puntos=0 tamaño=0 KB último push=1.923ms
+    growth_test.go:43: puntos=20000 tamaño=750 KB último push=4.076ms
+    growth_test.go:43: puntos=40000 tamaño=1512 KB último push=7.825ms
+    growth_test.go:43: puntos=60000 tamaño=2274 KB último push=11.801ms
+    growth_test.go:43: puntos=80000 tamaño=3036 KB último push=15.781ms
+    growth_test.go:43: puntos=100000 tamaño=3797 KB último push=19.603ms
+    growth_test.go:43: puntos=120000 tamaño=4579 KB último push=29.457ms
+    growth_test.go:43: puntos=140000 tamaño=5360 KB último push=28.567ms
+    growth_test.go:43: puntos=160000 tamaño=6141 KB último push=39.034ms
+    growth_test.go:43: puntos=180000 tamaño=6922 KB último push=45.055ms
+    growth_test.go:43: puntos=199999 tamaño=7704 KB último push=40.821ms
+--- PASS: TestDocumentGrowth (4417.84s)
+PASS
+ok  	b26	4417.841s
+
+real	73m45.837s
+user	0m58.608s
+sys	0m25.142s

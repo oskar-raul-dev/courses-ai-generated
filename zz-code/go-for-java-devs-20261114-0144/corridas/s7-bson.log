@@ -1,0 +1,8 @@
+/root/dev/meridian/services/atlassync/cmd/atlassync/main.go:7:1: expected declaration, found 'if'
+1. <nil> {"_id": "t1","commonname": "Colombia","updatedat": {"$date":{"$numberLong":"1794645760820"}}}
+2. original 2026-09-11 08:14:02.123456789 -0500 COT → vuelta 2026-09-11 13:14:02.123 +0000 UTC Equal: false Equal truncado: true
+4. {"_id": "t4"}
+6. tras Replace: {"_id": "t6","name": "b"}
+--- PASS: TestZZTraps (0.01s)
+PASS
+ok  	github.com/meridian/labs/bson-lab	0.017s

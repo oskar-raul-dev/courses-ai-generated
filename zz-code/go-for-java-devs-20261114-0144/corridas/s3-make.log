@@ -1,0 +1,11 @@
+./services/eventrelay    total:								(statements)	21.3%
+./services/opsreport     total:									(statements)		41.2%
+cover exit 0
+== test falla
+--- FAIL: TestWriteCSV (0.00s)
+    report_test.go:42: leyendo el golden (¿falta correr con -update?): open testdata/monthly_report.csv.golden: no such file or directory
+FAIL
+FAIL	github.com/meridian/labs/golden-report	0.002s
+FAIL
+make: *** [Makefile:36: test] Error 1
+fin

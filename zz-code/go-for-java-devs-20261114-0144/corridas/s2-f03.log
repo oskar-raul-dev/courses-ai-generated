@@ -1,0 +1,75 @@
+
+### gofmt -l
+
+### vet + build
+-- labs/error-chain
+ok
+-- labs/config-loader
+ok
+-- labs/json-codec
+ok
+-- services/opsreport
+ok
+-- services/eventrelay
+ok
+
+### F03:L405 Inspect
+petición req-8821: obteniendo work item WI-0007: fila no encontrada: driver devolvió 1032 ejecutando "SELECT * FROM work_items WHERE id = $1"
+código del driver: 1032
+obteniendo work item WI-0007: fila no encontrada: driver devolvió 1032 ejecutando "SELECT * FROM work_items WHERE id = $1"
+L430 errors.Is: false
+L459 errors.Is: true errors.As: true
+
+### F03:L632 prueba de fuego: tres campos inválidos
+validación fallida: external_reference: es obligatoria; kind: no es un tipo de trabajo conocido; priority: debe estar entre 1 y 9
+  external_reference: es obligatoria
+  kind: no es un tipo de trabajo conocido
+  priority: debe estar entre 1 y 9
+
+### F03 defer: ~0s, LIFO
+tardó 42ns
+tardó 200ms
+true
+false
+*main.ValidationError <nil>
+count 3
+recover: interface conversion: interface {} is float64, not int
+3
+2
+1
+
+### F03:L786 ciclo de imports
+import cycle not allowed
+package github.com/meridian/opsreport/cmd/opsreport
+	imports github.com/meridian/opsreport/internal/memstore
+	imports github.com/meridian/opsreport/internal/opsreport
+	imports github.com/meridian/opsreport/internal/memstore
+can't load package: import cycle not allowed
+package github.com/meridian/opsreport/cmd/opsreport
+	imports github.com/meridian/opsreport/internal/memstore from main.go
+	imports github.com/meridian/opsreport/internal/opsreport from store.go
+	imports github.com/meridian/opsreport/internal/memstore from service.go: import cycle not allowed
+
+### F03:L307 golangci-lint errcheck en opsreport
+0 issues.
+exit 0
+[store.go] []
+[service.go] []
+[errors.go workitem.go] []
+
+### B-06 una pasada
+goarch: arm64
+pkg: github.com/meridian/labs/json-codec
+BenchmarkUnmarshalAll-8   	       8	 152052339 ns/op	  72.67 MB/s	37432392 B/op	  300055 allocs/op
+BenchmarkDecodeStream-8   	       8	 151858479 ns/op	  72.77 MB/s	15202516 B/op	  350008 allocs/op
+PASS
+ok  	github.com/meridian/labs/json-codec	2.950s
+
+### F03 json: omitempty, no exportados, time
+{"status":"queued"}
+{"Name":"y"}
+"2026-09-11T08:00:00-05:00"
+
+### F04 adelantado: errors.Is servicio + almacén
+work item WI-NO-EXISTE: el work item no existe en el almacén
+true true

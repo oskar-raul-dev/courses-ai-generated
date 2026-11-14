@@ -1,0 +1,6 @@
+
+// String vuelve a formatear el movimiento como línea del punto de venta.
+// Completado en zz-code: el fuzz test de la F08 lo usa y la fase no lo escribe.
+func (m Movement) String() string {
+	return fmt.Sprintf("%s|%s|%s|%d|%s", m.StoreID, m.Occurred, m.Kind, m.AmountMinor, m.Currency)
+}

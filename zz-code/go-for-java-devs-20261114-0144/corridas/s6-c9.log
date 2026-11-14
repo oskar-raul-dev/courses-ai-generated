@@ -1,0 +1,8 @@
+-- labs/pool-lab
+-- labs/tx-lab
+-- services/storeagent
+-- services/clearinghouse
+-- opsreport/internal/postgres
+-- eventrelay/internal/postgres
+# github.com/meridian/eventrelay/internal/postgres
+vet: internal/postgres/delivery.go:22:38: undefined: claimPendingSQL

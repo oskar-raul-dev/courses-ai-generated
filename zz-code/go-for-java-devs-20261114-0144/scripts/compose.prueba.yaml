@@ -1,0 +1,10 @@
+# Override de prueba: sin puertos publicados y con la etiqueta del curso.
+services:
+  postgres: { ports: !reset [], labels: { curso: go-for-java-devs } }
+  mongo:    { ports: !reset [], labels: { curso: go-for-java-devs } }
+  valkey:   { ports: !reset [], labels: { curso: go-for-java-devs } }
+  mongo-rs: { ports: !reset [], labels: { curso: go-for-java-devs } }
+volumes:
+  postgres-data: { labels: { curso: go-for-java-devs } }
+  mongo-data:    { labels: { curso: go-for-java-devs } }
+  mongo-rs-data: { labels: { curso: go-for-java-devs } }

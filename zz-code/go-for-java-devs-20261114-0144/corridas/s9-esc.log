@@ -1,0 +1,26 @@
+# github.com/meridian/labs/escape-lab
+./escape.go:15:20: ... argument does not escape
+./escape.go:15:27: n escapes to heap
+./escape.go:26:15: append escapes to heap
+./escape.go:31:13: make([]Entry, 0, n) escapes to heap
+./escape.go:33:15: append escapes to heap
+./escape.go:41:17: s does not escape
+./escape.go:42:14: ([]byte)(s) does not escape
+./escape.go:42:14: zero-copy string->[]byte conversion
+./escape.go:45:18: s does not escape
+./escape.go:57:15: rows does not escape
+./escape.go:60:17: "strings: illegal use of non-zero Builder copied by value" escapes to heap
+./escape.go:60:17: append escapes to heap
+./escape.go:68:7: c does not escape
+BenchmarkFormatDirect-8    	63242496	        18.90 ns/op	       8 B/op	       1 allocs/op
+BenchmarkFormatDirect-8    	62263672	        19.10 ns/op	       8 B/op	       1 allocs/op
+BenchmarkFormatDirect-8    	63494720	        19.89 ns/op	       8 B/op	       1 allocs/op
+BenchmarkFormatSprintf-8   	15981664	        63.48 ns/op	      16 B/op	       2 allocs/op
+BenchmarkFormatSprintf-8   	19490736	        69.61 ns/op	      16 B/op	       2 allocs/op
+BenchmarkFormatSprintf-8   	18973868	        63.23 ns/op	      16 B/op	       2 allocs/op
+BenchmarkBuildGrow-8       	   24344	     50139 ns/op	  357627 B/op	      19 allocs/op
+BenchmarkBuildGrow-8       	   22658	     52037 ns/op	  357627 B/op	      19 allocs/op
+BenchmarkBuildGrow-8       	   22962	     51062 ns/op	  357627 B/op	      19 allocs/op
+BenchmarkBuildPresized-8   	   89446	     15113 ns/op	   81920 B/op	       1 allocs/op
+BenchmarkBuildPresized-8   	   72501	     15892 ns/op	   81920 B/op	       1 allocs/op
+BenchmarkBuildPresized-8   	   67321	     18773 ns/op	   81920 B/op	       1 allocs/op

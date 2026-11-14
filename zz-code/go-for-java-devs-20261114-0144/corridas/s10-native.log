@@ -1,0 +1,35 @@
+Unable to find image 'ghcr.io/graalvm/native-image-community:25i5-25.0.5.0.3-ol9-20261103' locally
+25i5-25.0.5.0.3-ol9-20261103: Pulling from graalvm/native-image-community
+Digest: sha256:4d3519cd0d45001df81d938d1f9c5eed64d652bf24cc472a0b17f38575a91969
+Status: Downloaded newer image for ghcr.io/graalvm/native-image-community:25i5-25.0.5.0.3-ol9-20261103
+Recommendations:
+ FUTR: Use '--future-defaults=all' to prepare for future releases.
+ AWT:  Use the tracing agent to collect metadata for AWT.
+ HEAP: Set max heap for improved and more predictable memory usage.
+ CPU:  Enable more CPU features with '-march=native' for improved performance.
+------------------------------------------------------------------------------------------------------------------------
+                      28.0s (12.5% of total time) in 591 GCs | Peak RSS: 6.42GiB | CPU load: 5.45
+------------------------------------------------------------------------------------------------------------------------
+Build artifacts:
+ /app/target/clearinghouse (executable, 127.19MiB)
+ /app/target/libawt.so (jdk_library, 807.27KiB)
+ /app/target/libawt_headless.so (jdk_library, 72.38KiB)
+ /app/target/libawt_xawt.so (jdk_library, 544.77KiB)
+ /app/target/libfontmanager.so (jdk_library, 1.66MiB)
+ /app/target/libjava.so (jdk_library_shim, 65.25KiB)
+ /app/target/libjavajpeg.so (jdk_library, 277.05KiB)
+ /app/target/libjsound.so (jdk_library, 84.05KiB)
+ /app/target/libjvm.so (jdk_library_shim, 65.25KiB)
+ /app/target/liblcms.so (jdk_library, 512.10KiB)
+ /app/target/libmanagement_ext.so (jdk_library, 73.56KiB)
+========================================================================================================================
+Finished generating 'clearinghouse' in 3m 42s.
+
+The build process encountered 8 warnings.
+
+-rwxr-xr-x 1 root root 133368704 Nov 14 10:26 target/clearinghouse
+native-image 25.0.5.0.3 2026-10-24
+
+real	4m5.447s
+user	0m0.034s
+sys	0m0.031s

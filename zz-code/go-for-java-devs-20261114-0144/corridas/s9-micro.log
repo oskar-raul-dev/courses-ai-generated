@@ -1,0 +1,95 @@
+8
+MemTotal:        8198292 kB
+
+### B-01
+/scripts/s9-micro.sh: line 7: cd: labs/crossbuild: No such file or directory
+go: go.mod file not found in current directory or any parent directory; see 'go help modules'
+ls: cannot access '/tmp/full-darwin-arm64': No such file or directory
+go: go.mod file not found in current directory or any parent directory; see 'go help modules'
+ls: cannot access '/tmp/full-linux-amd64': No such file or directory
+
+### B-02 (go1.13, -count=10)
+goos: linux
+goarch: arm64
+pkg: github.com/meridian/labs/text-toolkit
+                  │ /tmp/B-02.txt │
+                  │    sec/op     │
+JoinNaive-8           70.68m ± 5%
+JoinSprintf-8         137.5m ± 4%
+JoinBuilder-8         143.0µ ± 2%
+JoinBuilderGrow-8     77.09µ ± 1%
+JoinStdlib-8          91.39µ ± 0%
+geomean               1.578m
+
+                  │ /tmp/B-02.txt │
+                  │     B/op      │
+JoinNaive-8          796.2Mi ± 0%
+JoinSprintf-8        1.424Gi ± 0%
+JoinBuilder-8        838.0Ki ± 0%
+JoinBuilderGrow-8    160.0Ki ± 0%
+JoinStdlib-8         160.0Ki ± 0%
+geomean              7.466Mi
+
+                  │ /tmp/B-02.txt │
+                  │   allocs/op   │
+JoinNaive-8           10.01k ± 0%
+JoinSprintf-8         42.53k ± 0%
+JoinBuilder-8          26.00 ± 0%
+JoinBuilderGrow-8      1.000 ± 0%
+JoinStdlib-8           1.000 ± 0%
+geomean                102.1
+
+### B-05 (go1.13, -count=10)
+goos: linux
+goarch: arm64
+pkg: github.com/meridian/labs/shapes
+                 │ /tmp/B-05.txt │
+                 │    sec/op     │
+DirectCall-8         3.570n ± 0%
+InterfaceCall-8      3.810n ± 1%
+InterfaceSlice-8     11.30n ± 1%
+geomean              5.357n
+
+                 │ /tmp/B-05.txt │
+                 │     B/op      │
+DirectCall-8        0.000 ± 0%
+InterfaceCall-8     0.000 ± 0%
+InterfaceSlice-8    0.000 ± 0%
+geomean                        ¹
+¹ summaries must be >0 to compute geomean
+
+                 │ /tmp/B-05.txt │
+                 │   allocs/op   │
+DirectCall-8        0.000 ± 0%
+InterfaceCall-8     0.000 ± 0%
+InterfaceSlice-8    0.000 ± 0%
+geomean                        ¹
+¹ summaries must be >0 to compute geomean
+
+### B-06 (go1.13, -count=10)
+goos: linux
+goarch: arm64
+pkg: github.com/meridian/labs/json-codec
+               │ /tmp/B-06.txt │
+               │    sec/op     │
+UnmarshalAll-8     120.0m ± 1%
+DecodeStream-8     129.2m ± 9%
+geomean            124.5m
+
+               │ /tmp/B-06.txt │
+               │      B/s      │
+UnmarshalAll-8    87.80Mi ± 1%
+DecodeStream-8    82.15Mi ± 9%
+geomean           84.93Mi
+
+               │ /tmp/B-06.txt │
+               │     B/op      │
+UnmarshalAll-8    35.70Mi ± 0%
+DecodeStream-8    14.50Mi ± 0%
+geomean           22.75Mi
+
+               │ /tmp/B-06.txt │
+               │   allocs/op   │
+UnmarshalAll-8     300.1k ± 0%
+DecodeStream-8     350.0k ± 0%
+geomean            324.1k

@@ -1,0 +1,12 @@
+caché caliente:
+-rwxr-xr-x 1 root root 1.6M Nov 14 10:19 buildinfo-darwin-amd64
+-rwxr-xr-x 1 root root 1.6M Nov 14 10:19 buildinfo-darwin-arm64
+-rwxr-xr-x 1 root root 1.5M Nov 14 10:19 buildinfo-linux-amd64
+-rwxr-xr-x 1 root root 1.6M Nov 14 10:19 buildinfo-linux-arm64
+-rwxr-xr-x 1 root root 1.6M Nov 14 10:19 buildinfo-windows-amd64.exe
+real	0m8.061s
+darwin/arm64 sin -s -w: 2404594
+darwin/amd64 sin -s -w: 2430896
+linux/amd64 sin -s -w: 2266989
+linux/arm64 sin -s -w: 2295056
+windows/amd64 sin -s -w: 2339840

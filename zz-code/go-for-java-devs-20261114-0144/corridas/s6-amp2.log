@@ -1,0 +1,2 @@
+    amplification_test.go:44: retroceso fijo sin jitter → peticiones por segundo: [0 0 500 0 500 0 500 0 500 0]
+    amplification_test.go:44: exponencial con full jitter → peticiones por segundo: [286 352 146 169 151 112 82 73 82 74]

@@ -1,0 +1,35 @@
+
+### go install golangci-lint@v2.12.2
+go: downloading google.golang.org/protobuf v1.36.10
+go: downloading codeberg.org/chavacava/garif v0.2.0
+golangci-lint has version 2.12.2 built with go1.25.1 from (unknown, modified: ?, mod sum: "h1:7+d1uY0bq1MU2UV3R5pW5Q7QWdcoq4naMRXM+gsJKrs=") on (unknown)
+
+### config verify
+exit 0
+
+### F00:L43 golangci-lint run ./... en la raíz del monorepo
+level=error msg="[linters_context] typechecking error: pattern ./...: directory prefix . does not contain main module or its selected dependencies"
+0 issues.
+exit 7
+
+### golangci-lint run ./... en labs/hello-go
+0 issues.
+exit 0
+
+### F00:L1075 make fmt vet lint test en la raíz
+go fmt ./...
+pattern ./...: directory prefix . does not contain main module or its selected dependencies
+make: *** [Makefile:16: fmt] Error 1
+exit 2
+
+### make help
+  [36mhelp            [0m Lista los objetivos disponibles
+  [36mfmt             [0m Formatea todo el repositorio
+  [36mvet             [0m Análisis estático del toolchain
+  [36mlint            [0m golangci-lint con la configuración del curso
+  [36mtest            [0m Suite rápida
+  [36mtest-race       [0m Suite con el detector de carreras
+  [36mcover           [0m Cobertura con umbral
+  [36mup              [0m Levanta PostgreSQL, MongoDB y Valkey
+  [36mdown            [0m Apaga la infraestructura y borra sus volúmenes
+  [36mclean           [0m Borra binarios y artefactos de cobertura

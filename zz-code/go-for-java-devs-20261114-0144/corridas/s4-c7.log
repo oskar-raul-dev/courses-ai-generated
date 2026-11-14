@@ -1,0 +1,76 @@
+-- labs/cancellable-worker
+./worker.go:11:30: undefined: Job
+./worker.go:14:16: select case must be receive, send or assign recv
+./worker.go:18:4: undefined: process
+./worker.go:27:54: undefined: Job
+./worker.go:30:16: select case must be receive, send or assign recv
+./worker.go:37:4: undefined: processCtx
+./worker.go:7:2: imported and not used: "time"
+-- labs/timeout-client
+-- labs/graceful-server
+./main.go:17:22: undefined: buildHandler
+-- labs/leak-detector
+./detect.go:6:2: imported and not used: "sort"
+./detect.go:7:2: imported and not used: "strings"
+-- services/opsreport
+	have (string)
+	have (workitem.Status)
+	have (workitem.WorkItem)
+	want (context.Context, string)
+	want (context.Context, workitem.Status)
+	want (context.Context, workitem.WorkItem)
+internal/engine/engine.go:102:9: e.wg undefined (type *Engine has no field or method wg)
+internal/engine/engine.go:104:21: e.jobs undefined (type *Engine has no field or method jobs)
+internal/engine/engine.go:105:12: not enough arguments in call to e.execute
+internal/engine/engine.go:115:46: e.maxJobDuration undefined (type *Engine has no field or method maxJobDuration)
+internal/engine/engine.go:128:12: e.clock undefined (type *Engine has no field or method clock)
+internal/engine/engine.go:129:13: e.runWithRecover undefined (type *Engine has no field or method runWithRecover)
+internal/engine/engine.go:130:13: e.clock undefined (type *Engine has no field or method clock)
+internal/engine/engine.go:137:4: e.countCancelled undefined (type *Engine has no field or method countCancelled)
+internal/engine/engine.go:142:78: e.maxJobDuration undefined (type *Engine has no field or method maxJobDuration)
+internal/engine/engine.go:154:3: e.persist undefined (type *Engine has no field or method persist)
+internal/engine/engine.go:158:3: e.mu undefined (type *Engine has no field or method mu)
+internal/engine/engine.go:159:9: e.mu undefined (type *Engine has no field or method mu)
+internal/engine/engine.go:160:3: e.completed undefined (type *Engine has no field or method completed)
+internal/engine/engine.go:164:3: e.mu undefined (type *Engine has no field or method mu)
+internal/engine/engine.go:165:9: e.mu undefined (type *Engine has no field or method mu)
+internal/engine/engine.go:166:3: e.failed undefined (type *Engine has no field or method failed)
+internal/engine/engine.go:173:3: e.mu undefined (type *Engine has no field or method mu)
+internal/engine/engine.go:174:9: e.mu undefined (type *Engine has no field or method mu)
+internal/engine/engine.go:176:15: e.completed undefined (type *Engine has no field or method completed)
+internal/engine/engine.go:177:15: e.failed undefined (type *Engine has no field or method failed)
+internal/engine/engine.go:178:15: e.rejected undefined (type *Engine has no field or method rejected)
+internal/engine/engine.go:179:19: e.jobs undefined (type *Engine has no field or method jobs)
+internal/engine/engine.go:180:19: e.jobs undefined (type *Engine has no field or method jobs)
+internal/engine/engine.go:193:3: e.quitOnce undefined (type *Engine has no field or method quitOnce)
+internal/engine/engine.go:194:10: e.quit undefined (type *Engine has no field or method quit)
+internal/engine/engine.go:195:10: e.jobs undefined (type *Engine has no field or method jobs)
+internal/engine/engine.go:197:3: e.wg undefined (type *Engine has no field or method wg)
+internal/engine/engine.go:52:3: unknown field 'runner' in struct literal of type Engine
+internal/engine/engine.go:53:3: unknown field 'store' in struct literal of type Engine
+internal/engine/engine.go:54:3: unknown field 'clock' in struct literal of type Engine
+internal/engine/engine.go:55:3: unknown field 'workers' in struct literal of type Engine
+internal/engine/engine.go:56:3: unknown field 'jobs' in struct literal of type Engine
+internal/engine/engine.go:57:3: unknown field 'quit' in struct literal of type Engine
+internal/engine/engine.go:63:12: e.workers undefined (type *Engine has no field or method workers)
+-- services/eventrelay
+	have (context.Context, relay.Delivery)
+	have (int, relay.Delivery)
+	want (context.Context, int, relay.Delivery)
+	want (relay.Delivery)
+internal/dispatcher/dispatcher.go:108:22: delivery.Requeue undefined (type relay.Delivery has no field or method Requeue)
+internal/dispatcher/dispatcher.go:116:5: d.perDeliveryTimeout undefined (type *Dispatcher has no field or method perDeliveryTimeout)
+internal/dispatcher/dispatcher.go:136:34: too many arguments in call to d.store.UpdateDelivery
+internal/dispatcher/dispatcher.go:46:12: not enough arguments in call to d.deliver
+internal/dispatcher/dispatcher.go:94:43: d.perDeliveryTimeout undefined (type *Dispatcher has no field or method perDeliveryTimeout)
+internal/dispatcher/dispatcher.go:98:22: too many arguments in call to d.sender.Send
+internal/dispatcher/shutdown_test.go:11:12: undefined: leak
+internal/dispatcher/shutdown_test.go:12:8: undefined: leak
+internal/dispatcher/shutdown_test.go:15:10: undefined: senderFunc
+internal/dispatcher/shutdown_test.go:15:49: undefined: relay
+internal/dispatcher/shutdown_test.go:24:11: undefined: newFakeStore
+internal/dispatcher/shutdown_test.go:25:35: undefined: clock
+internal/dispatcher/shutdown_test.go:25:49: undefined: testNow
+internal/dispatcher/shutdown_test.go:25:7: undefined: dispatcher
+internal/dispatcher/shutdown_test.go:28:13: undefined: makeDelivery
+internal/dispatcher/shutdown_test.go:46:18: undefined: relay

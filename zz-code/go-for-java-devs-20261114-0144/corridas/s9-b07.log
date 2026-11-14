@@ -1,0 +1,22 @@
+goroutines n=100000 tiempo=100 ms
+memory.peak=75317248
+goroutines n=100000 tiempo=112 ms
+memory.peak=74289152
+goroutines n=100000 tiempo=124 ms
+memory.peak=74768384
+Unable to find image 'eclipse-temurin:21-jdk' locally
+21-jdk: Pulling from library/eclipse-temurin
+Digest: sha256:0a3f329821dcadf54b2a3033a15e2e9f007069a9db43d7f51897e6b80e726b07
+Status: Downloaded newer image for eclipse-temurin:21-jdk
+virtual n=100000 tiempo=343 ms
+memory.peak=343085056
+virtual n=100000 tiempo=286 ms
+memory.peak=170029056
+virtual n=100000 tiempo=294 ms
+memory.peak=199135232
+platform n=100000 tiempo=11019 ms
+memory.peak=200400896
+platform n=100000 tiempo=10930 ms
+memory.peak=200441856
+platform n=100000 tiempo=11009 ms
+memory.peak=202514432

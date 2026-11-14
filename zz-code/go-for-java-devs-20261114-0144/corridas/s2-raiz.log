@@ -1,0 +1,11 @@
+
+### go1.13 desde la raíz con ./labs/… (GO111MODULE=auto, sin go.mod raíz)
+
+BenchmarkJoinStdlib-8   	   10000	    104341 ns/op	  163840 B/op	       1 allocs/op
+PASS
+ok  	_/root/dev/meridian/labs/text-toolkit	1.061s
+no se pudo abrir el archivo: open testdata/movements.txt: no such file or directory
+exit status 1
+ok  	_/root/dev/meridian/labs/shapes	0.002s [no tests to run]
+ok  	_/root/dev/meridian/labs/json-codec	0.002s [no tests to run]
+build ./internal/config: cannot find module for path ./internal/config

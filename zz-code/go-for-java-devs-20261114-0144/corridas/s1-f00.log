@@ -1,0 +1,158 @@
+
+### F00:L80 go version
+go version go1.25.1 linux/arm64
+
+### F00:L106 go install golang.org/dl/go1.13@latest && go1.13 download && go1.13 version
+go: downloading golang.org/dl v0.0.0-20261110170429-b9769cbc5f78
+Downloaded 100.0% (97601763 / 97601763 bytes)
+Unpacking /root/sdk/go1.13/go1.13.linux-arm64.tar.gz ...
+Success. You may now run 'go1.13'
+go version go1.13 linux/arm64
+
+### dl: ¿qué hace el envoltorio en darwin/arm64 con versiones < 1.16?
+
+### F00:L136 mkdir services/opsreport && go mod init (con go1.25.1)
+go: creating new go.mod: module github.com/meridian/opsreport
+module github.com/meridian/opsreport
+
+go 1.25.1
+
+### F00:L174 go env GOROOT GOPATH GOMODCACHE GOBIN GOFLAGS
+/usr/local/go
+/go
+/go/pkg/mod
+
+
+
+### F00:L330 go env GOROOT GOPATH GOBIN GOMODCACHE GOFLAGS GOPROXY GOPRIVATE GONOSUMDB
+/usr/local/go
+/go
+
+/go/pkg/mod
+
+https://proxy.golang.org,direct
+
+
+
+### ejercicio 2: go1.13 env GOROOT
+/root/sdk/go1.13
+
+### F00:L252 go tool dist list | wc -l
+48
+
+### F00:L369 hello-go
+go: creating new go.mod: module github.com/meridian/labs/hello-go
+go: to add module requirements and sums:
+	go mod tidy
+
+### F00:L388 go run .
+Meridian platform tooling check
+
+### F00:L1004 cat go.mod
+module github.com/meridian/labs/hello-go
+
+go 1.25.1
+
+### F00:L402 import os sin usar
+# github.com/meridian/labs/hello-go
+./main.go:6:2: "os" imported and not used
+
+### F00:L414 variable sin usar
+# github.com/meridian/labs/hello-go
+./main.go:7:2: declared and not used: count
+
+### F00:L1027 go get uuid
+go: downloading github.com/google/uuid v1.6.0
+go: added github.com/google/uuid v1.6.0
+module github.com/meridian/labs/hello-go
+
+go 1.25.1
+
+require github.com/google/uuid v1.6.0 // indirect
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+
+### F00:L1048 go mod tidy
+module github.com/meridian/labs/hello-go
+
+go 1.25.1
+
+### F00:L1060 go mod why / graph / list
+# github.com/google/uuid
+(main module does not need package github.com/google/uuid)
+github.com/meridian/labs/hello-go go@1.25.1
+go@1.25.1 toolchain@go1.25.1
+github.com/meridian/labs/hello-go
+
+### F00:L435 build-info
+go: creating new go.mod: module github.com/meridian/labs/buildinfo
+go: to add module requirements and sums:
+	go mod tidy
+
+### F00:L464 go build && ./bin/buildinfo
+opsreport dev (commit none, built unknown)
+go go1.25.1 · linux/arm64
+
+### F00:L473 -ldflags -X (sin git: commit fijo)
+opsreport 0.1.0 (commit 4f2a19c, built 2026-11-14T07:06:21Z)
+go go1.25.1 · linux/arm64
+
+### F00:L491 -s -w: tamaño antes y después
+2295096 bin/full
+1573048 bin/stripped
+
+### F00:L517 crossbuild
+go: creating new go.mod: module github.com/meridian/labs/crossbuild
+
+### F00:L559 time ./build-all.sh
+==> darwin/arm64
+==> darwin/amd64
+==> linux/amd64
+==> linux/arm64
+==> windows/amd64
+total 7.6M
+-rwxr-xr-x 1 root root 1.6M Nov 14 07:06 crossbuild-darwin-amd64
+-rwxr-xr-x 1 root root 1.6M Nov 14 07:06 crossbuild-darwin-arm64
+-rwxr-xr-x 1 root root 1.5M Nov 14 07:06 crossbuild-linux-amd64
+-rwxr-xr-x 1 root root 1.6M Nov 14 07:06 crossbuild-linux-arm64
+-rwxr-xr-x 1 root root 1.6M Nov 14 07:06 crossbuild-windows-amd64.exe
+
+real	0m14.462s
+user	0m37.409s
+sys	0m6.246s
+
+### F00:L832 golangci-lint
+go: downloading github.com/golangci/golangci-lint/v2 v2.15.0
+go: downloading github.com/golangci/golangci-lint v1.64.8
+go: github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest: github.com/golangci/golangci-lint/v2@v2.15.0 requires go >= 1.26.0 (running go 1.25.1; GOTOOLCHAIN=local)
+/scripts/s1-f00.sh: line 138: golangci-lint: command not found
+
+### golangci-lint con .golangci.yml del curso
+-rw-r--r-- 1 root root 1111 Nov 14 07:06 .golangci.yml
+/scripts/s1-f00.sh: line 141: golangci-lint: command not found
+/scripts/s1-f00.sh: line 142: golangci-lint: command not found
+
+### F00:L1126 epoch-test
+go: creating new go.mod: module epochtest
+module epochtest
+
+go 1.25.1
+
+### F00:L1147 go build .
+compila: exit 0
+
+### F00:L1148 go1.13 build .
+build epochtest: cannot load slices: malformed module path "slices": missing dot in first path element
+exit 1
+
+### variante: go.mod con go 1.13
+module epochtest
+
+go 1.13
+build epochtest: cannot load slices: malformed module path "slices": missing dot in first path element
+exit 1
+
+### variante: go build con go.mod en 1.13 (toolchain moderno)
+# epochtest
+./main.go:11:2: implicit function instantiation requires go1.18 or later (-lang was set to go1.13; check go.mod)
+exit 1
