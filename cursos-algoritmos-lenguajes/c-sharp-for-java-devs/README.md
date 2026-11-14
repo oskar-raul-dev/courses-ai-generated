@@ -154,3 +154,13 @@ condiciones, competidores y el comando exacto, con ⏳ donde va cada número. Lo
 Ninguna cifra de este curso es inventada porque ninguna cifra de este curso existe todavía.
 
 > ⚖️ **Si al final resultara que .NET moderno ganó todo, el curso estaría mal escrito.**
+
+---
+
+## 📜 Licencia y ficción
+
+El texto, bajo **CC BY 4.0**; el código de `src/` y de los fragmentos, bajo **MIT**. Los detalles y los
+enlaces están en [`LICENSE.md`](LICENSE.md).
+
+Cordillera Media, SIGE y su gente son **inventados** para este curso. Si un nombre se parece al de una
+empresa, un producto o una persona reales, es coincidencia.
