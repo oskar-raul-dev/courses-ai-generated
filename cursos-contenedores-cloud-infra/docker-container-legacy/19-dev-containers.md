@@ -6,6 +6,7 @@
 > **Archivo que nace aquí:** `.devcontainer/devcontainer.json`
 > **Requisitos:** **[F10](10-vscode-y-debugging.md)** (VS Code Modo A), **[F17](17-usuarios-permisos-y-volumenes.md)** (permisos) y **[F18](18-networking-de-contenedores.md)** (puertos)
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el `docker run` equivalente al `devcontainer.json` (imagen, montajes, `--init`, tests y dev server); la extensión de VS Code no se ejecutó, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 > **Estado de la imagen al terminar:** sin cambios — Dev Containers **reutiliza** nuestra imagen, no construye otra
 > **Código de esta fase:** [`src/19-dev-containers/`](src/19-dev-containers/)
 > **Objetivo:** convertir el contenedor en el ambiente completo del IDE, sabiendo exactamente qué automatiza cada línea del `devcontainer.json`

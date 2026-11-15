@@ -4,6 +4,7 @@
 > **Cierra el bucle de:** [F28](28-publicar-la-imagen.md) §7
 > **Requisitos:** **[F27](27-registries-por-dentro.md)** (registries por dentro) y **F28** (publicar)
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
+> **Sin verificación ejecutada:** en la pasada del 14 de noviembre de 2026 no se publicó nada en GHCR ni en GitLab. El build multiplataforma de §1.3 es el del ejercicio 24 de [F21](21-arquitecturas-y-emulacion.md), que sí se corrió contra un registry local
 > **Qué encontrarás:** los dos registries gestionados que probablemente ya tienes sin saberlo, con sus flujos de autenticación —que es lo único que cambia respecto a F28
 
 [F28](28-publicar-la-imagen.md) publicó en un registry local y en Docker Hub. **El mecanismo es idéntico en cualquier
@@ -73,6 +74,7 @@ docker push ghcr.io/tu-usuario/legacy-node-toolchain:1.0.0
 
 # multi-plataforma, como en F28 §7.1
 docker buildx build --platform linux/amd64,linux/arm64 \
+  --file dockerfiles/08-multiarch.Dockerfile \
   -t ghcr.io/tu-usuario/legacy-node-toolchain:1.0.0 --push .
 ```
 

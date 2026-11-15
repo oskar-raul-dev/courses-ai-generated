@@ -6,7 +6,7 @@
 > **Dockerfile pedagógico de esta fase:** `dockerfiles/08-multiarch.Dockerfile`
 > **Requisitos:** **[F12](12-capas-cache-y-contexto.md)** (build), **[F14](14-abi-libc-y-prebuilds.md)** (ABI y binarios)
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — Buildx y QEMU sobre Docker 29.6.2
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — el fallo de §7.1 y las mediciones de §7.4 están corridos sobre Docker 29.6.2 con Rosetta, en un MacBook con Apple Silicon
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — el fallo de §7.1 y las mediciones de §7.4 están corridos sobre Docker 29.6.2 con Rosetta, en un MacBook con Apple Silicon. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: §4, el `rosetta error` de §7.1, una segunda medición de §7.4 y los builds de §6.2 (el multiplataforma con `--load` incluido)
 > **Estado de la imagen al terminar:** aprendes a construirla para dos arquitecturas
 > **Código de esta fase:** [`src/21-arquitecturas-y-emulacion/`](src/21-arquitecturas-y-emulacion/)
 > **Objetivo:** entender qué es una arquitectura de CPU sin diseñar silicio, cómo un tag contiene varias imágenes, y cómo tu Mac ARM ejecuta un binario x86 sin que se lo pidas
@@ -262,14 +262,25 @@ docker buildx build \
   .
 ```
 
-> ⚠️ **Un build multi-plataforma no se puede cargar en tu almacén local con `--load`**, porque
-> tu almacén guarda una imagen por tag y aquí hay dos. Las opciones son `--push` a un registry
-> —que es de **[F28](28-publicar-la-imagen.md)**—, o construir de una en una con `--load` para probar.
+> ⚠️ **Si `--load` acepta las dos plataformas depende de tu almacén local.** Con el almacén
+> clásico de Docker no se puede: guarda una imagen por tag y aquí hay dos, así que las opciones
+> son `--push` a un registry —que es de **[F28](28-publicar-la-imagen.md)**— o construir de una
+> en una. Con el **image store de containerd** —el de Docker Desktop, que [F27](27-registries-por-dentro.md) §6.1 te enseña
+> a reconocer— sí se puede: el almacén guarda el index entero. En la pasada del 14/11/2026,
+> el `buildx build` de arriba con `--load` y el builder por defecto terminó en 46 s y dejó las
+> dos variantes bajo un solo tag (`docker image ls --tree legacy-node-toolchain:phase21`). Es
+> lo que usa la matriz de [F23](23-estudios-de-caso-multiplataforma.md) §6.
 
 ```bash
-# de una en una, para probar en local
-docker buildx build --platform linux/arm64 --load -t legacy-node-toolchain:arm64 .
+# de una en una, para probar en local — con el Dockerfile multiarch, no con el de la raíz
+docker buildx build --platform linux/arm64 --load \
+  --file dockerfiles/08-multiarch.Dockerfile \
+  -t legacy-node-toolchain:arm64 .
 ```
+
+Sin el `--file`, el build usa el `Dockerfile` de la raíz, que sigue descargando el Node `x64`,
+y se cae al ejecutar `node --version` con `rosetta error: failed to open elf at
+/lib64/ld-linux-x86-64.so.2`: el mismo síntoma de §7.1, dentro de tu propio build.
 
 ---
 
@@ -393,11 +404,14 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 una sorpresa dentro.
 
 El experimento controla lo que hay que controlar: **la misma versión de Node** (16.20.2), **el
-mismo script**, **el mismo host** y **la misma imagen oficial**, cambiando solo `--platform`.
+mismo script**, **el mismo host** y **la misma imagen oficial** —`node:16.20.2`—, cambiando
+solo `--platform` (`docker run --rm --platform linux/amd64 -v "$PWD:/m" node:16.20.2 node /m/cpu.js`,
+y lo mismo con `linux/arm64`).
 Primero, una carga puramente de CPU —treinta millones de raíces cuadradas, sin tocar disco ni
 red—:
 
 ```javascript
+// cpu.js
 let acc = 0;
 const t0 = Date.now();
 for (let i = 0; i < 30000000; i++) { acc += Math.sqrt(i) % 7; }
@@ -417,6 +431,19 @@ arm64 nativo     arm64    377 ms
 Ahora la sorpresa. El mismo experimento con una carga dominada por **I/O** —escribir y releer
 dos mil archivos de 4 KB—:
 
+```javascript
+// io.js
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'io-'));
+const buf = Buffer.alloc(4096, 'x');
+const t0 = Date.now();
+for (let i = 0; i < 2000; i++) { fs.writeFileSync(path.join(dir, 'f' + i), buf); }
+for (let i = 0; i < 2000; i++) { fs.readFileSync(path.join(dir, 'f' + i)); }
+console.log(process.arch, (Date.now() - t0) + ' ms');
+```
+
 ```text
 amd64 emulado    x64      113 ms
                  x64      107 ms
@@ -425,6 +452,11 @@ arm64 nativo     arm64     77 ms
 ```
 
 **Vez y media**, no dieciocho.
+
+> 📝 **Segunda medición, 14/11/2026** (Docker 29.9.3, el mismo Mac): CPU 6.573 / 7.285 ms emulado
+> contra 357 / 328 ms nativo (≈19×), y el laboratorio 6.772 / 6.745 ms; I/O, con el `io.js` de
+> arriba, 129 / 165 ms contra 87 / 81 ms (≈1,7×). Las cifras se mueven unos puntos; la
+> conclusión —la CPU paga la traducción y el I/O casi no— no se mueve.
 
 > 🧠 **El modelo mental que explica las dos cifras.** La emulación traduce **instrucciones de
 > CPU**, no llamadas al sistema: un `write()` lo atiende el kernel ARM64 nativo a velocidad
@@ -571,9 +603,12 @@ Escribe el de §6.1 y construye para las dos arquitecturas, una a una con `--loa
 
 ### 🟡 Ejercicio 11 — `buildx` con las dos a la vez
 
-Intenta `--platform linux/amd64,linux/arm64 --load`.
+Intenta `--platform linux/amd64,linux/arm64 --load`, con `--file dockerfiles/08-multiarch.Dockerfile`.
 
-**Pregunta:** ¿qué error da? ¿Qué alternativas tienes? §6.2.
+**Pregunta:** ¿funciona en tu Docker? Depende del almacén (§6.2): con el image store de
+containerd —el de Docker Desktop— carga un index con las dos; con el clásico, falla. Averigua
+cuál tienes (`docker info --format '{{.DriverStatus}}'`) y, si es el clásico, qué alternativas
+te quedan.
 
 ### 🟡 Ejercicio 12 — Node en las dos
 
@@ -712,19 +747,24 @@ Juntar `buildx` con un registry es donde todo esto deja de ser teoría. Levanta 
 local, construye el canónico para **las dos** arquitecturas de una sola pasada y publícalo:
 
 ```bash
-docker run -d -p 5000:5000 --name registry registry:2
-docker buildx create --use --name multi
+docker run -d -p 127.0.0.1:5001:5000 --name registry registry:2
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t localhost:5000/legacy-node-toolchain:multi --push .
-docker manifest inspect localhost:5000/legacy-node-toolchain:multi
+  --file dockerfiles/08-multiarch.Dockerfile \
+  -t localhost:5001/legacy-node-toolchain:multi --push .
+docker manifest inspect localhost:5001/legacy-node-toolchain:multi
 ```
+
+El 5001 y no el 5000 porque en macOS el 5000 es de AirPlay, y sin crear un builder aparte porque
+uno `docker-container` no llega al `localhost` del host ([F28](28-publicar-la-imagen.md) §5 y §7.1). Si tu Docker usa el
+almacén clásico y necesitas ese builder, créalo con `--driver-opt network=host` (comprobado:
+con esa opción sí publica en el registry local).
 
 **Objetivo:** obtener un index con **dos** entradas y demostrar que funciona de las dos formas:
 `docker pull --platform` de cada una, comprobando `node -p process.arch` dentro.
 
-**Pregunta de cierre:** ese `--push` no es un detalle: con `--load` no habrías podido. Explica
-por qué el almacén local no puede guardar una imagen de dos plataformas de la misma forma que
-lo hace un registry — y qué relación tiene eso con el `.Descriptor` que
+**Pregunta de cierre:** ese `--push` no es un detalle: con el almacén clásico, `--load` no habría
+podido (con el de containerd sí, §6.2). Explica por qué el almacén clásico no puede guardar una
+imagen de dos plataformas de la misma forma que lo hace un registry — y qué relación tiene eso con el `.Descriptor` que
 [F27](27-registries-por-dentro.md) §6.1 te hace mirar. Termina diciendo cuánto tardó cada mitad
 del build y cuál de las dos se emuló.
 

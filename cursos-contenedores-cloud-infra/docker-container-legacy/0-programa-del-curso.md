@@ -4,7 +4,7 @@
 > **Imagen que construyes:** `legacy-node-toolchain`
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · Node 10.24.1 / 12.22.12 / 14.21.3 / 16.20.2 · npm 6.14.12
 > **Arquitecturas:** `linux/amd64` baseline, `linux/arm64` adicional
-> **Estructura:** dos partes, 36 fases numeradas y 16 apéndices opcionales
+> **Estructura:** dos partes, 36 fases numeradas y 17 apéndices opcionales
 > **Objetivo:** que un proyecto de 2018 vuelva a compilar hoy, y que entiendas por qué
 
 Este documento es el índice y el mapa de rutas. Dice qué hay, en qué orden leerlo y —lo
@@ -61,7 +61,7 @@ namespaces, OverlayFS, ABI, QEMU, manifests OCI, rootless, supply chain y forens
 |---|---|---|---|---|
 | **[Parte I — Taller](00-PARTE-I-taller.md)** | 12 (F00–F11) | ~51.500 | 255 | ~31 h |
 | **[Parte II — Laboratorio](00-PARTE-II-laboratorio.md)** | 24 (F12–F35) | ~117.000 | 595 | ~83 h |
-| **Apéndices** | 16 (a01–a16) | ~30.000 | 91 | consulta |
+| **Apéndices** | 17 (a01–a17) | ~33.000 | 97 | consulta |
 
 Las horas salen del volumen, no de un cronómetro. Sirven para planificar, no para
 prometer.
@@ -155,6 +155,7 @@ tratado que se agradece por separado y que dentro de una fase la asfixia.
 | **a14** | [CI con GitHub Actions](a14-ci-github-actions.md) | Cuando quieras automatizar lo que ya sabes hacer a mano |
 | **a15** | [Chuleta de comandos](a15-chuleta-de-comandos.md) | Una página imprimible, para tenerla al lado |
 | **a16** | [Glosario](a16-glosario.md) | Cuando una sigla te frene |
+| **a17** | [Compilar Node desde fuente](a17-compilar-node-desde-fuente.md) | Cuando quieras ver qué te ahorra el tarball oficial: dos eras de Node compiladas en VM de Lima, medidas |
 
 ---
 
@@ -261,20 +262,20 @@ salida completa, y solo después la corrección. El error editado no enseña.
 
 ## 9. 📌 Estado del curso
 
-El curso está **completo y navegable**: las 36 fases y los 16 apéndices de este índice
+El curso está **completo y navegable**: las 36 fases y los 17 apéndices de este índice
 existen, están escritos y se citan entre sí con **enlaces que resuelven** —unos 1.700, todos
 comprobados—. Puedes empezar por cualquiera de las seis rutas de §6 sin encontrarte un
 documento vacío ni un enlace muerto.
 
-**Qué está medido y qué no.** Ocho documentos llevan en su cabecera una **fecha de verificación
-ejecutada**, con la salida real del comando pegada debajo en lugar de un ejemplo:
-[F12](12-capas-cache-y-contexto.md), [F13](13-overlayfs-y-copy-on-write.md),
-[F14](14-abi-libc-y-prebuilds.md), [F15](15-laboratorios-dependencias-nativas.md),
-[F16](16-pid1-senales-y-ciclo-de-vida.md), [F20](20-validacion-sistematica-y-evidencia.md),
-[F21](21-arquitecturas-y-emulacion.md) y [F27](27-registries-por-dentro.md). Y lo contrario
-también se declara: los comandos `podman` de [F24](24-docker-y-podman-arquitectura.md),
-[F25](25-rootless-y-user-namespaces.md) y [F26](26-portabilidad-entre-motores.md) están
-contrastados contra la documentación oficial **pero no ejecutados**, y sus cabeceras lo dicen.
+**Qué está medido y qué no.** 44 documentos llevan en su cabecera una **fecha de verificación
+ejecutada**, con la salida real del comando pegada debajo en lugar de un ejemplo: las fases
+[F02](02-dockerfile-esencial.md) a [F34](34-proyecto-final.md) —con los comandos `podman` de
+[F24](24-docker-y-podman-arquitectura.md)–[F26](26-portabilidad-entre-motores.md)— y once
+apéndices, el último [a17](a17-compilar-node-desde-fuente.md). Salen de la pasada del 14 de
+noviembre de 2026, el curso entero tomado desde cero en macOS con Apple Silicon. Y lo contrario
+también se declara: lo que no se pudo ejecutar (el Dev Container con la extensión de VS Code,
+Colima, WebStorm, Windows, los registries externos, la firma *keyless* y el CI en GitHub
+Actions) lo dice la cabecera de su documento.
 
 Lo que **no** vas a encontrar, a propósito, es un **solucionario**. Cada ejercicio trae su
 criterio de éxito —una línea `Objetivo:` o una `Pregunta:` que solo se responde habiéndolo

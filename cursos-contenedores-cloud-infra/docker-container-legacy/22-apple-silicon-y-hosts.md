@@ -6,6 +6,7 @@
 > **Requisitos:** **[F21](21-arquitecturas-y-emulacion.md)** (arquitecturas y emulación) y **[F14](14-abi-libc-y-prebuilds.md)** (ABI)
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
 > **Fecha de revisión de documentación externa:** 10 de septiembre de 2026 — la documentación de Apple sobre binarios Intel en VM Linux (§5)
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — `uname -m` con y sin `--platform`, las dos líneas de §6.4 y la contaminación cruzada de volúmenes con un proyecto Angular 8 real; Podman (§6.2) el mismo día, en la pasada de F24–F26; Colima (§6.3) no se ejecutó, sobre Docker 29.9.3 en macOS Apple Silicon
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** bajar la teoría de F21 a tu máquina real — las cinco rutas que tienes en un Mac ARM, qué motor elegir, y por qué el nombre del volumen tiene que crecer
 
@@ -178,14 +179,27 @@ docker info --format '{{.OperatingSystem}} · {{.Architecture}}'
 
 ### 6.2 Podman Desktop
 
-El segundo camino principal del curso, no un anexo. Usa `applehv` —el framework de Apple— para
-su máquina, y también sabe usar Rosetta para la traducción.
+El segundo camino principal del curso, no un anexo. Su máquina corre sobre el framework de
+virtualización de Apple, y con Podman 6.1 el proveedor por defecto es **`libkrun`** (antes,
+`applehv`); la traducción de amd64 **no** es Rosetta sino `qemu-x86_64-static` dentro de la VM.
 
 ```bash
 podman machine list
-podman machine inspect | jq '.[0].Resources'
+podman machine inspect | jq '.[0] | {Resources, Rosetta}'
 podman version --format '{{.Server.OsArch}}'
 ```
+```text
+NAME                     VM TYPE     CREATED      LAST UP            CPUS  MEMORY  DISK SIZE
+podman-machine-default*  libkrun     …            Currently running  4     2GiB    100GiB
+{ "Resources": { "CPUs": 4, "DiskSize": 100, "Memory": 2048, "USBs": [] }, "Rosetta": false }
+linux/arm64
+```
+
+> ⚠️ **Sin Rosetta, amd64 va por la ruta lenta de [F21](21-arquitecturas-y-emulacion.md).** El
+> `ps` de la VM muestra `/usr/bin/qemu-x86_64-static /bin/sleep …` como proceso del contenedor.
+> Para el laboratorio se nota en lo pesado: el canónico de F15 construye en frío en Podman en **3 min 58 s**
+> y en Docker Desktop con Rosetta en **2 min 17 s**, con las dos VM a 8 CPU y 8 GiB (14 de
+> noviembre de 2026, [F26](26-portabilidad-entre-motores.md) §5.3).
 
 Podman construye multi-plataforma con `podman build --platform`, y las diferencias reales con
 Buildx están en **[F24](24-docker-y-podman-arquitectura.md)**.

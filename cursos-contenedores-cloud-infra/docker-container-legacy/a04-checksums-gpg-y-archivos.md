@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra los bucles de:** [F06](06-instalacion-node.md) §8.1 · [F35](35-referencias.md) §5
 > **Requisitos:** F06 (instalación de Node) y [F03](03-apt-y-utilidades.md) (firmas de APT)
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los checksums de §1, el flujo GPG de §2.1 completo sobre Node 10.24.1 (con la corrección del paso 3), y los archivos históricos de §3, dentro de `legacy-node-toolchain:phase15` con `gnupg` 2.2.12 instalado aparte
 > **Qué encontrarás:** qué demuestra un checksum y qué no, cómo se verifica una firma GPG de verdad, y las cinco máquinas del tiempo que hacen posible desenterrar software que el presente ya olvidó
 
 [F06](06-instalacion-node.md) verifica los tarballs de Node con SHA-256 dentro del build y sigue adelante. Este apéndice
@@ -79,8 +80,8 @@ Node publica, junto a cada release, tres archivos:
 
 ```text
 SHASUMS256.txt        los hashes
-SHASUMS256.txt.asc    la firma, en formato ASCII
-SHASUMS256.txt.sig    la firma, binaria
+SHASUMS256.txt.asc    los hashes Y la firma, en un solo archivo (clearsigned)
+SHASUMS256.txt.sig    la firma sola, binaria, separada de los hashes
 ```
 
 **La cadena de confianza completa:**
@@ -99,18 +100,21 @@ verificación automática y empieza la confianza.
 ### 2.1 El flujo, en comandos
 
 ```bash
+# 0. en la imagen del curso no hay gpg (solo gpgv)
+apt-get update && apt-get install -y --no-install-recommends gnupg dirmngr
+
 # 1. importar las claves de release de Node
 curl -sL https://raw.githubusercontent.com/nodejs/release-keys/main/keys.list \
-  | while read -r key; do gpg --keyserver hkps://keys.openpgp.org --recv-keys "$key"; done
+  | while read -r key; do gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys "$key"; done
 
 # 2. bajar los tres archivos
 V=10.24.1
 curl -fsSLO "https://nodejs.org/dist/v$V/SHASUMS256.txt"
-curl -fsSLO "https://nodejs.org/dist/v$V/SHASUMS256.txt.asc"
+curl -fsSLO "https://nodejs.org/dist/v$V/SHASUMS256.txt.sig"
 curl -fsSLO "https://nodejs.org/dist/v$V/node-v$V-linux-x64.tar.xz"
 
-# 3. verificar la FIRMA de los hashes
-gpg --verify SHASUMS256.txt.asc SHASUMS256.txt
+# 3. verificar la FIRMA de los hashes: la separada (.sig) contra el archivo
+gpg --verify SHASUMS256.txt.sig SHASUMS256.txt
 
 # 4. y ahora sí, el tarball contra su hash
 grep " node-v$V-linux-x64.tar.xz$" SHASUMS256.txt | sha256sum -c -
@@ -119,9 +123,20 @@ grep " node-v$V-linux-x64.tar.xz$" SHASUMS256.txt | sha256sum -c -
 **Lo que verás en el paso 3**, y hay que saber leerlo:
 
 ```text
-gpg: Good signature from "Beth Griggs <...>"        ← ✅ la firma es válida
-gpg: WARNING: This key is not certified with a trusted signature.   ← ⚠️ no la has firmado tú
+gpg: Signature made Tue Apr  6 19:56:51 2021 UTC
+gpg:                using RSA key 0EFFE1BCEFD9C84E3D098152933B01F40B5CA946
+gpg: Good signature from "Myles Borins <myles.borins@gmail.com>" [unknown]   ← ✅ la firma es válida
+gpg: WARNING: This key is not certified with a trusted signature!            ← ⚠️ no la has firmado tú
+gpg:          There is no indication that the signature belongs to the owner.
 ```
+
+> ⚠️ **Dos tropiezos que este flujo esquiva a propósito.** Con el `.asc`, `gpg --verify
+> SHASUMS256.txt.asc SHASUMS256.txt` responde `not a detached signature`: ese archivo ya trae los
+> hashes dentro y se verifica solo (`gpg --verify SHASUMS256.txt.asc`), así que la forma de dos
+> argumentos es la del `.sig`. Y el servidor de llaves importa: `keys.openpgp.org` quita las
+> identidades que el dueño no confirmó por correo, y 12 de las 29 llaves de Node llegan como
+> `new key but contains no user ID - skipped`; desde `keyserver.ubuntu.com` llegan 28 con su
+> identidad y ninguna vacía (14 de noviembre de 2026).
 
 > 🧭 **Ese `WARNING` no significa que la firma sea mala.** Significa que GPG no puede decidir por
 > ti si esa clave pertenece a quien dice. La firma es criptográficamente correcta; **la

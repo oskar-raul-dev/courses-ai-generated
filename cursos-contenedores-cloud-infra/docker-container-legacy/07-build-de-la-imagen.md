@@ -11,6 +11,7 @@
 > **Código de esta fase:** [`src/07-build-de-la-imagen/`](src/07-build-de-la-imagen/)
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — Buildx y la referencia de `docker build`
 > **Objetivo:** entender qué es realmente un build, qué es el build context y por qué ese `.` final es el argumento más caro de ignorar
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el build sin `-f` desde el canónico, el `inspect` y la prueba de humo de §9, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 

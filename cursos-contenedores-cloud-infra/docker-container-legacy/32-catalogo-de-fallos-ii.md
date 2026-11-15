@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · Node 10.24.1 / 12.22.12 / 14.21.3 / 16.20.2
 > **Requisitos:** **[F30](30-troubleshooting-metodo-y-herramientas.md)** (el método) y **[F31](31-catalogo-de-fallos-i.md)** (las capas exteriores)
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — §5.2 y §5.3 provocados con npm 6.14.12 y 8.19.4 en `legacy-node-toolchain:phase15`; las entradas de APT, `node-gyp`, ABI y montajes se reprodujeron en sus fases de origen (F03–F05, F09, F14, F15, F17, F23) durante la misma pasada
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** el catálogo de las capas interiores — donde viven los fallos que más tiempo cuestan y que más se parecen entre sí siendo distintos
 
@@ -121,7 +122,18 @@ las que sí. [F08](08-run-el-contenedor-como-proceso.md) §6.
 
 ### 5.3 `npm ci can only install packages when your package.json and package-lock.json are in sync`
 
-**Causa.** Alguien tocó uno sin el otro.
+**Causa.** Alguien tocó uno sin el otro. npm 6 lo firma como `cipm can only install packages…`
+y npm 8 como `` `npm ci` can only install packages… `` (`code EUSAGE`), y los dos añaden la
+línea que lo explica: `Invalid: lock file's vue@2.6.12 does not satisfy vue@2.7.16`.
+
+Si lo que falta es una dependencia entera, la línea es `Missing: is-odd@3.0.1` (npm 8 añade
+`from lock file` y lista también sus dependencias).
+
+> 📝 **El caso que no salta.** Si añades al `package.json` un paquete que el lock **ya tenía**
+> como dependencia transitiva, en una versión compatible —aquí `left-pad@1.3.0`, que el fixture
+> de Vue 2 traía como dependencia de desarrollo indirecta—, `npm ci` no se queja en ninguna de las
+> dos versiones e instala: para npm el árbol del lock ya satisface el `package.json`. No es un
+> lock desincronizado en sentido estricto, y explica por qué "a mí me funcionó" a veces es cierto.
 
 ```bash
 git log --oneline -3 -- package.json package-lock.json

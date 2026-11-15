@@ -1,8 +1,8 @@
+# syntax=docker/dockerfile:1
+
 # Archivo compuesto por el curso: en el `.md` de la fase solo aparece el fragmento
 # que cambia. Aquí está el archivo completo, listo para construir.
 # Fase: F15 §8 — canónico + librerías de canvas, sqlite3 y Chromium
-
-# syntax=docker/dockerfile:1
 
 FROM debian/eol:buster
 

@@ -5,7 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · Node 10.24.1 baseline
 > **Fixtures:** `src/11-validar-tu-proyecto/`
 > **Requisitos:** **[F11](11-validar-tu-proyecto.md)** (el protocolo de ocho pasos) y **[F14](14-abi-libc-y-prebuilds.md)** (dependencias nativas)
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — la matriz de §7.1 está corrida sobre Docker 29.6.2, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — la matriz de §7.1 está corrida sobre Docker 29.6.2, imagen `linux/amd64` bajo emulación en macOS Apple Silicon. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: la matriz de §7.1, otra vez doce ceros de doce
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** investigar un proyecto **antes** de ejecutarlo, producir evidencia que sirva para investigar, y reducir un problema hasta su causa mínima
 
@@ -228,8 +228,13 @@ npm ci 2>&1 | tee install.log
 echo "npm=${PIPESTATUS[0]} tee=${PIPESTATUS[1]}"
 ```
 
+La opción A vale en Bash y en zsh. La B es solo de Bash: en zsh —el shell por defecto de
+macOS desde Catalina— `PIPESTATUS` no existe, la línea imprime `npm= tee=` y el arreglo se
+llama `pipestatus`, en minúsculas y empezando en 1 (`${pipestatus[1]}`). Si tus comandos de
+validación corren en el shell de tu Mac, usa la A o abre el expediente con `bash`.
+
 > 🧠 **El patrón a memorizar.** Cada vez que veas `| tee` en un script de validación o de CI,
-> comprueba si mira `${PIPESTATUS[0]}` o `$?`. Si es lo segundo, ese pipeline **puede estar
+> comprueba si mira `${PIPESTATUS[0]}`, si usa `pipefail` o si mira `$?` a secas. Si es lo último, ese pipeline **puede estar
 > reportando éxitos falsos** — y lo lleva haciendo desde que se escribió.
 
 ### 6.4 Más verbosidad cuando hace falta

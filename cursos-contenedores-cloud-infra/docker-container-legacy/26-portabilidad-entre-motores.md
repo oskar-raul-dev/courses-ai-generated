@@ -6,7 +6,7 @@
 > **Script que nace aquí:** `scripts/engine.sh`
 > **Requisitos:** **[F24](24-docker-y-podman-arquitectura.md)** (arquitecturas) y **[F25](25-rootless-y-user-namespaces.md)** (rootless)
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
-> **⚠️ Alcance de la verificación (6 de septiembre de 2026):** el barrido de verificación ejecutada del curso se corrió sobre **Docker 29.6.2** y no sobre Podman, que no estaba instalado en la máquina de referencia. **Los comandos `podman` de esta fase están contrastados contra la documentación oficial de Podman, no ejecutados**, y así se declaran por lo que pide la guía del curso: si no está verificado, se dice. Si los corres y algo no coincide, tu terminal tiene razón y este documento no.
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — la fase corrida con los dos motores a la vez en un Mac con Apple Silicon: Docker Desktop 29.9.3 y Podman 6.1.4 en Podman Machine, las dos VM igualadas a 8 CPU y 8 GiB; `engine.sh` (detección y `ENGINE` forzado), el benchmark de §5.3, los sockets de §7 y el bucle de §8 con dos fixtures. El Dev Container con Podman (ejercicio 11) y las plataformas de §4.3 no se ejecutaron. Si los corres y algo no coincide, tu terminal tiene razón y este documento no.
 > **Estado de la imagen al terminar:** sin cambios — cierra el bloque de motores
 > **Código de esta fase:** [`src/26-portabilidad-entre-motores/`](src/26-portabilidad-entre-motores/)
 > **Objetivo:** escribir scripts que funcionen en los dos motores sin volverse ilegibles, entender por qué el IDE puede fallar cuando la CLI funciona, y llegar a una matriz de decisión con tradeoffs en lugar de un podio
@@ -68,8 +68,11 @@ flowchart TD
     VM --> CT["contenedor"]
 ```
 
-**Los bind mounts cruzan la frontera macOS ↔ VM**, y ese cruce es el cuello de botella real de
-casi todo lo lento en un Mac. No es el motor: es el sistema de compartición de archivos.
+**Los bind mounts cruzan la frontera macOS ↔ VM**, y ese cruce fue durante años el cuello de
+botella de casi todo lo lento en un Mac. No era el motor: era el sistema de compartición de
+archivos. Con virtiofs, el de los dos motores en 2026, la diferencia se ha estrechado mucho —en
+el `npm ci` del fixture de Vue 2, menos de un 5 % (§5.3)—, y cuando el proyecto es amd64 en un
+Mac con chip M, la capa que domina pasa a ser la de traducción: Rosetta o qemu.
 
 ### 4.3 Windows
 
@@ -88,7 +91,7 @@ contenedor de WSL2, cruza una frontera cara**. Tenerlo dentro de WSL2 cambia muc
 docker info --format '{{.OperatingSystem}} · {{.KernelVersion}} · {{.NCPU}} CPU · {{.MemTotal}}'
 
 # Podman Machine
-podman machine inspect | jq '.[0] | {Name, Resources, Rootful}'
+podman machine inspect <máquina> | jq '.[0] | {Name, Resources, Rootful}'   # sin nombre: la de por defecto
 podman info --format '{{.Host.OS}} · {{.Host.Kernel}}'
 
 # Colima
@@ -119,11 +122,8 @@ arranque, y el I/O de un `npm ci` sobre bind mount y sobre volumen.
 ### 5.3 El benchmark mínimo reproducible
 
 ```bash
-# COLD BUILD — sin caché, mide el trabajo completo
-docker builder prune -af >/dev/null 2>&1
+# COLD BUILD — --no-cache rehace todos los pasos; la imagen base ya descargada se reutiliza
 /usr/bin/time -p docker build --no-cache --platform linux/amd64 -t bench:docker .
-
-podman rmi -a -f >/dev/null 2>&1
 /usr/bin/time -p podman build --no-cache --platform linux/amd64 -t bench:podman .
 
 # WARM BUILD — con caché, mide lo que haces veinte veces al día
@@ -139,6 +139,33 @@ podman rmi -a -f >/dev/null 2>&1
 
 **Y declara el contexto siempre**, como en [F23](23-estudios-de-caso-multiplataforma.md): hardware, sistema, versiones de los dos motores,
 recursos de cada VM, y mecanismo de traducción si estás emulando.
+
+> ⚠️ **No limpies con `docker builder prune -af` ni `podman rmi -a -f`.** Son las recetas que
+> circulan para "empezar en frío", y borran **toda** la caché de build de Docker y **todas** las
+> imágenes de Podman, también las que no son del laboratorio. `--no-cache` ya rehace cada paso,
+> que es lo que quieres medir; descargar otra vez la imagen base solo añade ruido de red.
+
+📝 **Lo que dio en la máquina de referencia** (14 de noviembre de 2026): MacBook Pro M1 Pro,
+macOS 26.7; Docker Desktop 29.9.3 con Rosetta y Podman 6.1.4 en Podman Machine (libkrun, qemu
+para amd64), **las dos VM a 8 CPU y 8 GiB**; el canónico de F15 en `linux/amd64`, una corrida
+por motor y en secuencia, nunca a la vez.
+
+| Medición | Docker Desktop | Podman Machine |
+|---|---|---|
+| Cold build (`--no-cache`) | 137 s | 238 s |
+| Warm build | 2,2 s | 2,2 s |
+| Arranque, `node -e ''` (5 corridas) | 9,9 · 0,87 · 0,88 · 0,85 · 0,95 s | 1,65 · 1,28 · 1,55 · 1,38 · 1,32 s |
+| §8, Vue 2 (`npm ci` + `build`) | 39 s | 114 s |
+| §8, React 16 | 44 s | 113 s |
+| `npm ci` de Vue 2, `node_modules` en volumen | 27,8 s | 67,6 s |
+| `npm ci` de Vue 2, `node_modules` en bind mount | 29,1 s | 68,4 s |
+
+Léelo con §5.2 en la mano. El factor de ≈2,5× en todo lo que ejecuta código amd64 **no es el
+motor**: es Rosetta contra qemu, la diferencia de [F21](21-arquitecturas-y-emulacion.md), y es
+justo lo que la igualación de CPU y memoria no puede igualar. Lo que no ejecuta código emulado
+—el warm build— empata. El primer arranque de Docker (9,9 s) es la primera ejecución después del
+build y no se repite. Y la fila que más enseña es la última pareja: con virtiofs, sacar
+`node_modules` del bind mount ahorra menos de un 5 % en este fixture, en los dos motores (§4.2).
 
 > 🧠 **El número que decide, otra vez, no es el factor bruto.** Es cuánto te cuesta el ciclo
 > real de un día de trabajo. Un cold build 30 segundos más lento no importa si lo haces una vez
@@ -223,6 +250,20 @@ engine run -d --name "${CONTAINER_NAME}" \
   arregla".
 - **Falla con códigos distintos** según sea "no hay motor" o "motor desconocido".
 
+> ⚠️ **Que `docker` responda no garantiza que sea Docker.** Con Docker Desktop cerrado y una
+> Podman Machine arrancada, `/var/run/docker.sock` es de Podman ([F24](24-docker-y-podman-arquitectura.md) §5.1), y el cliente
+> `docker` con el contexto `default` **responde**: `docker info` da `6.1.4 · fedora`. `engine.sh`
+> elegiría `docker` y estarías usando Podman con el `VOLUME_OPTS` de Docker. Si sospechas, el
+> nombre del servidor lo dice:
+>
+> ```bash
+> docker version --format '{{range .Server.Components}}{{.Name}} {{end}}'   # "Podman Engine …"
+> ```
+>
+> Y `host.docker.internal` resuelve también en Podman (F24 §10): `HOST_ALIAS` sigue en el script
+> porque el nombre propio de cada motor es el que documenta cada uno, pero el que funciona en los
+> dos es el de Docker.
+
 > 🧭 **La regla:** abstrae **después** de conocer las diferencias, y abstrae **poco**. Un
 > wrapper que oculta que Podman necesita `:U` no te ha ahorrado el problema: te ha quitado la
 > pista para cuando falle.
@@ -239,7 +280,7 @@ un socket compatible con la API de Docker**. Si ese socket no está, la herramie
 nada — aunque tu motor esté impecable.
 
 ```bash
-# levanta el servicio de Podman (F24 §5.4)
+# Linux: levanta el servicio de Podman (F24 §5.4)
 systemctl --user start podman.socket
 systemctl --user enable podman.socket
 
@@ -248,7 +289,19 @@ export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
 docker ps    # el cliente de Docker hablando con Podman
 ```
 
-En VS Code, la configuración equivalente es indicarle qué socket usar.
+En macOS no hay `systemctl` (`command not found`) ni `XDG_RUNTIME_DIR`, y no hace falta: el
+servicio ya está activo **dentro** de la VM y `podman machine start` lo publica en el Mac. La
+ruta te la da la propia máquina:
+
+```bash
+# macOS: el socket que publica Podman Machine
+export DOCKER_HOST="unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')"
+docker ps    # …/T/podman/podman-machine-default-api.sock
+```
+
+Si Docker Desktop está cerrado, la máquina además se queda con `/var/run/docker.sock` (F24 §5.1),
+y muchas herramientas la encuentran sin configurar nada. En VS Code, la configuración
+equivalente es indicarle qué socket usar.
 
 ### 7.1 El diagnóstico, en orden
 
@@ -256,7 +309,7 @@ En VS Code, la configuración equivalente es indicarle qué socket usar.
 flowchart TD
     Q1{"1 · ¿funciona el motor desde la terminal?<br/>podman run --rm alpine echo ok"}
     Q1 -- "no" --> R1["el problema es el motor, no el IDE"]
-    Q1 -- "sí" --> Q2{"2 · ¿existe el socket compatible?<br/>ls -la $XDG_RUNTIME_DIR/podman/podman.sock"}
+    Q1 -- "sí" --> Q2{"2 · ¿existe el socket compatible?<br/>Linux: ls -la $XDG_RUNTIME_DIR/podman/podman.sock<br/>macOS: la ruta de podman machine inspect"}
     Q2 -- "no" --> R2["§7, levántalo"]
     Q2 -- "sí" --> Q3{"3 · ¿el cliente de Docker lo alcanza?<br/>DOCKER_HOST=... docker ps"}
     Q3 -- "no" --> R3["permisos o ruta del socket"]
@@ -280,7 +333,7 @@ La evidencia que cierra el bloque:
 source scripts/engine.sh
 
 for eng in docker podman; do
-  command -v "$eng" >/dev/null 2>&1 || continue
+  "$eng" info >/dev/null 2>&1 || continue          # que responda, no solo que exista (§6)
   vol="crossengine-vue2-node10-amd64-${eng}"      # ⚠️ un volumen POR MOTOR
   "$eng" volume rm "$vol" >/dev/null 2>&1 || true
   "$eng" volume create "$vol" >/dev/null
@@ -300,6 +353,12 @@ done
 > distintos, pero un bind mount al mismo directorio del host sí es compartido. Reutilizar el
 > mismo `node_modules` entre motores durante una comparación contamina el resultado de una forma
 > que **no da error** — simplemente mides otra cosa.
+
+> 📝 **Por qué la guarda es `info` y no `command -v`.** El bucle hereda el `set -euo pipefail` de
+> `engine.sh`. Con la guarda `command -v docker` y Docker Desktop cerrado, el binario existe, el
+> `volume create` falla (`failed to connect to the docker API…`) y `set -e` **termina el script
+> entero** sin llegar a Podman. Con `info`, Docker se salta y Podman da `ci=✅ build=✅` (Vue 2,
+> 1 min 56 s en una Podman Machine de 2 GiB, 14 de noviembre de 2026).
 
 ---
 
@@ -342,8 +401,10 @@ Tradeoffs, no podio. Cada fila es una situación real.
 **`docker` existe pero `docker info` falla.** El daemon está parado. Es lo que la detección de
 §6 comprueba.
 
-**Todo va lento en macOS con los dos motores.** No es el motor: es el cruce del bind mount.
-§4.2, y `node_modules` en volumen —[F09](09-montar-tu-proyecto.md)— es la mitigación que el curso ya aplicaba.
+**Todo va lento en macOS con los dos motores.** No es el motor: es la VM. Mira primero si estás
+emulando amd64 (qemu es ≈2,5× más lento que Rosetta, §5.3) y después el cruce del bind mount
+(§4.2); `node_modules` en volumen —[F09](09-montar-tu-proyecto.md)— es la mitigación que el curso ya aplicaba, y con
+virtiofs pesa menos de lo que pesaba.
 
 ---
 
@@ -447,7 +508,9 @@ plataforma.
 
 ### 🟠 Ejercicio 13 — Contamina la comparación
 
-Repite el ejercicio 10 **compartiendo** el volumen entre motores.
+Repite el ejercicio 10 **compartiendo** el volumen entre motores. En macOS no se puede con un
+named volume —cada motor tiene el suyo dentro de **su** VM—: compártelo como bind mount de un
+directorio del Mac, que es justo la forma en que la contaminación ocurre sin que nadie la busque.
 
 **Pregunta:** ¿cambió algún resultado? ¿Te habrías dado cuenta si no lo supieras?
 

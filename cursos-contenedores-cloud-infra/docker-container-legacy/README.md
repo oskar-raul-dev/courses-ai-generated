@@ -3,7 +3,7 @@
 > Un laboratorio de contenedores para resucitar proyectos JavaScript de 2018.
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · Node 10.24.1 / 12.22.12 / 14.21.3 / 16.20.2 · npm 6.14.12
 > **Arquitecturas:** `linux/amd64` de referencia, `linux/arm64` cubierto aparte
-> **Volumen:** 36 fases + 16 apéndices · ~204.000 palabras · 941 ejercicios · 86 archivos en [`src/`](src/)
+> **Volumen:** 36 fases + 17 apéndices · ~207.000 palabras · 947 ejercicios · 87 archivos en [`src/`](src/)
 
 ---
 
@@ -44,7 +44,7 @@ El curso son dos preguntas distintas, y puedes venir solo a la primera.
 |---|---|---|---|---|
 | **[Parte I — Taller](00-PARTE-I-taller.md)** | 12 · [F00](00-problema-y-contrato.md)–[F11](11-validar-tu-proyecto.md) | ~51.500 | 255 | ~31 h |
 | **[Parte II — Laboratorio](00-PARTE-II-laboratorio.md)** | 24 · [F12](12-capas-cache-y-contexto.md)–[F35](35-referencias.md) | ~117.000 | 595 | ~83 h |
-| **Apéndices** · [a01](a01-debian-y-apt-a-fondo.md)–[a16](a16-glosario.md) | 16 | ~30.000 | 91 | consulta |
+| **Apéndices** · [a01](a01-debian-y-apt-a-fondo.md)–[a17](a17-compilar-node-desde-fuente.md) | 17 | ~33.000 | 97 | consulta |
 
 **[Parte I — Taller](00-PARTE-I-taller.md).** El camino entero desde una máquina limpia hasta tu
 proyecto haciendo `npm ci`, `build`, `test`, `start` y el debugger de VS Code conectado. Es un
@@ -66,7 +66,8 @@ hizo usar: capas y [OverlayFS](13-overlayfs-y-copy-on-write.md),
 [Colima](a07-colima-y-lima.md), [Windows/PowerShell](a08-windows-y-powershell.md),
 [Compose](a10-docker-compose.md), [Harbor](a12-harbor.md),
 [air-gapped](a13-air-gapped.md), [CI](a14-ci-github-actions.md),
-[chuleta de comandos](a15-chuleta-de-comandos.md) y [glosario](a16-glosario.md).
+[chuleta de comandos](a15-chuleta-de-comandos.md), [glosario](a16-glosario.md) y
+[compilar Node desde fuente](a17-compilar-node-desde-fuente.md).
 
 ---
 
@@ -125,17 +126,17 @@ un proyecto propio a mano.
 
 ## Qué está verificado, y qué no
 
-El curso mide en lugar de suponer, y declara la diferencia. Ocho documentos llevan en su cabecera
-una **fecha de verificación ejecutada**, con la salida real pegada debajo:
-[F12](12-capas-cache-y-contexto.md), [F13](13-overlayfs-y-copy-on-write.md),
-[F14](14-abi-libc-y-prebuilds.md), [F15](15-laboratorios-dependencias-nativas.md),
-[F16](16-pid1-senales-y-ciclo-de-vida.md), [F20](20-validacion-sistematica-y-evidencia.md),
-[F21](21-arquitecturas-y-emulacion.md) y [F27](27-registries-por-dentro.md).
+El curso mide en lugar de suponer, y declara la diferencia. Desde la pasada del 14 de noviembre
+de 2026, en la que el autor tomó el curso desde cero en un Mac con Apple Silicon, **44 documentos**
+llevan en su cabecera una **fecha de verificación ejecutada**, con la salida real pegada debajo:
+las fases [F02](02-dockerfile-esencial.md) a [F34](34-proyecto-final.md), incluidos los comandos
+`podman` de F24–F26, y los apéndices a01–a05, a07, a09, a10, a13, a14 y
+[a17](a17-compilar-node-desde-fuente.md). F00, F01 y F35 no tienen nada que ejecutar.
 
-Y lo que **no** está verificado también se dice: los comandos `podman` de
-[F24](24-docker-y-podman-arquitectura.md), [F25](25-rootless-y-user-namespaces.md) y
-[F26](26-portabilidad-entre-motores.md) están contrastados contra la documentación oficial pero
-**no ejecutados**, y sus cabeceras lo declaran.
+Y lo que **no** está verificado también se dice, en la cabecera de cada documento: el Dev
+Container con la extensión de VS Code (F19), Colima (a07), WebStorm (a06), Windows (a08), la
+publicación en registries externos (a11, a12), la firma *keyless* de Cosign (F29) y el workflow de
+a14 corriendo en GitHub Actions.
 
 ---
 

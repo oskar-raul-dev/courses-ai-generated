@@ -207,7 +207,7 @@ Cuando esta falle, mira el contexto completo antes de "arreglar" nada.
 
 ### 5.6 Ningún apéndice huérfano
 
-Cada uno de los 16 apéndices tiene que estar enlazado desde al menos una fase.
+Cada uno de los 17 apéndices tiene que estar enlazado desde al menos una fase.
 
 **Por qué existe:** durante mucho tiempo **solo uno** de los dieciséis estaba enlazado. Los
 otros quince se mencionaban por su código —`a05`, `a07`— sin ruta, así que para abrirlos había

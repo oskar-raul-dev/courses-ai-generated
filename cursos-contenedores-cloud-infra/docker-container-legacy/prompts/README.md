@@ -5,7 +5,7 @@ Este directorio no es material del curso: es **lo que se usó para escribirlo** 
 para tocarlo sin romperlo. El lector nunca lo abre, y no viaja cuando el curso se publica en su
 propio repositorio. Quien vaya a editar una fase lo lee entero antes de teclear la primera línea.
 
-> **Estado:** cerrado: 36 fases, 16 apéndices y 941 ejercicios (cifras del README). Revisado el
+> **Estado:** cerrado: 36 fases, 17 apéndices y 947 ejercicios (cifras del README). Revisado el
 > 05/10/2026 contra los lineamientos de producción del repositorio: diagramas a Mermaid,
 > excepciones declaradas en la guía §16 y verificador de los lineamientos agregado.
 

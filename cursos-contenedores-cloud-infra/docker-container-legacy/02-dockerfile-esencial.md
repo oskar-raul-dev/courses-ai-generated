@@ -10,6 +10,7 @@
 > **Código de esta fase:** [`src/02-dockerfile-esencial/`](src/02-dockerfile-esencial/)
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — la CLI de Docker y la referencia de Dockerfile
 > **Objetivo:** entender qué es un Dockerfile, qué instrucciones vamos a usar durante todo el curso, y construir la primera imagen del laboratorio sin copiar una sola línea a ciegas
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el build y las cuatro comprobaciones de §8, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -488,8 +489,13 @@ permanente. `--no-cache` fuerza un build limpio, y **[F12](12-capas-cache-y-cont
 la solución correcta.
 
 **En Apple Silicon, `uname -m` responde `aarch64` en vez de `x86_64`.** Olvidaste
-`--platform linux/amd64` en el `run`, o en el `build`, o en los dos. La bandera hay que
-ponerla en ambos: construir para amd64 no obliga a ejecutar en amd64.
+`--platform linux/amd64` en el **build**: la imagen salió para arm64, la arquitectura nativa
+del Mac. Si solo lo olvidas en el `run` y la imagen local es únicamente amd64, el motor la
+corre igual y te avisa con `WARNING: The requested image's platform (linux/amd64) does not
+match the detected host platform (linux/arm64/v8)…` — funciona, pero es ruido que conviene
+no tener. Pon la bandera en los dos: construir para amd64 no obliga a ejecutar en amd64, y
+cuando haya varias variantes de la misma imagen ([F21](21-arquitecturas-y-emulacion.md)), el `run` sin `--platform`
+elige la nativa.
 
 **`exec format error` al arrancar.** La imagen es de una arquitectura y el motor intenta
 correrla en otra sin emulación disponible. Es el síntoma clásico de mezclar plataformas, y

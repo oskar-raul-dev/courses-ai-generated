@@ -5,6 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64` y `linux/arm64`
 > **Requisitos:** **[F27](27-registries-por-dentro.md)** (registries por dentro) y **[F21](21-arquitecturas-y-emulacion.md)** (multi-plataforma)
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el registry local de §5 (corrido en `127.0.0.1:15000`; el texto usa el 5001, libre en macOS), el push, la deduplicación, el disco, el pull, la publicación de las dos arquitecturas en ese registry, la metadata OCI de §8 y el digest de §10, sobre Docker Desktop 29.9.3 en macOS Apple Silicon; Docker Hub (§7) no se tocó: nada se publicó fuera de la máquina
 > **Estado de la imagen al terminar:** publicada, con metadata OCI y una convención de tags defendible
 > **Objetivo:** publicar de verdad — empezando por un registry local, con tags que signifiquen algo y sin filtrar credenciales por el camino
 
@@ -104,7 +105,7 @@ docker volume create registry-data
 
 docker run -d \
   --name registry-local \
-  -p 127.0.0.1:5000:5000 \
+  -p 127.0.0.1:5001:5000 \
   --mount type=volume,src=registry-data,dst=/var/lib/registry \
   registry:2
 ```
@@ -114,22 +115,30 @@ docker run -d \
 - **`127.0.0.1:` en la publicación**, por lo de [F18](18-networking-de-contenedores.md) §6: un registry sin autenticación abierto a
   tu red es una mala idea gratuita.
 - **Un volumen para los datos**, porque si no, [F13](13-overlayfs-y-copy-on-write.md) te dice qué pasa al borrar el contenedor.
+- **El 5001 del host, no el 5000.** El registry escucha en el 5000 *dentro* del contenedor, y
+  hacia fuera da igual el número.
 
 ```bash
-curl -s http://localhost:5000/v2/ && echo "registry vivo ✅"
+curl -sf http://localhost:5001/v2/ && echo "registry vivo ✅"
 ```
+
+> ⚠️ **En macOS, el 5000 ya está ocupado.** Lo escucha el receptor de AirPlay (`lsof -iTCP:5000
+> -sTCP:LISTEN` muestra `ControlCe`), y con él la versión ingenua del chequeo miente: `curl -s
+> http://localhost:5000/v2/` recibe un `HTTP 403` de `AirTunes`, sale con 0 y el `echo` imprime
+> "registry vivo ✅" sin que haya registry. Por eso el puerto es otro y el `curl` lleva `-f`, que
+> convierte cualquier respuesta de error en un exit code distinto de cero.
 
 ### 5.1 Etiquetar y publicar
 
 ```bash
-docker tag legacy-node-toolchain:phase15 localhost:5000/legacy-node-toolchain:1.0.0
-docker push localhost:5000/legacy-node-toolchain:1.0.0
+docker tag legacy-node-toolchain:phase15 localhost:5001/legacy-node-toolchain:1.0.0
+docker push localhost:5001/legacy-node-toolchain:1.0.0
 ```
 
 La salida es el protocolo de [F27](27-registries-por-dentro.md) §7 en acción:
 
 ```text
-The push refers to repository [localhost:5000/legacy-node-toolchain]
+The push refers to repository [localhost:5001/legacy-node-toolchain]
 a1b2c3d4e5f6: Pushed
 b2c3d4e5f6a1: Pushed
 ...
@@ -137,14 +146,16 @@ b2c3d4e5f6a1: Pushed
 ```
 
 **Ese `digest:` del final es el manifest digest**, y es el que tienes que guardar si algún día
-quieres volver exactamente aquí.
+quieres volver exactamente aquí. Con el image store de containerd —el de Docker Desktop—, es el
+digest del **index** que envuelve a la imagen ([F27](27-registries-por-dentro.md) §6.1): un `size` de unos 856 bytes, el mismo
+que muestra `docker images` como `IMAGE ID`.
 
 ### 5.2 La deduplicación, con tus ojos
 
 ```bash
-# publica una segunda versión que solo cambie una capa alta
-docker tag legacy-node-toolchain:phase15 localhost:5000/legacy-node-toolchain:1.0.1
-docker push localhost:5000/legacy-node-toolchain:1.0.1
+# la misma imagen bajo otro tag: ninguna capa debería viajar
+docker tag legacy-node-toolchain:phase15 localhost:5001/legacy-node-toolchain:1.0.1
+docker push localhost:5001/legacy-node-toolchain:1.0.1
 ```
 ```text
 a1b2c3d4e5f6: Layer already exists
@@ -153,7 +164,9 @@ b2c3d4e5f6a1: Layer already exists
 ```
 
 **Nada se subió dos veces.** Las capas están direccionadas por contenido —[F27](27-registries-por-dentro.md) §5— así que el
-registry ya las tenía. Es el mismo mecanismo que hace un `pull` instantáneo.
+registry ya las tenía, y el digest de `1.0.1` sale idéntico al de `1.0.0`: dos tags, un solo
+manifest. Si reconstruyes tocando solo la última instrucción y publicas, verás lo mismo en todas
+las capas menos una. Es el mismo mecanismo que hace un `pull` instantáneo.
 
 ### 5.3 Y compruébalo en el disco
 
@@ -168,10 +181,14 @@ Vas a ver la estructura de [F27](27-registries-por-dentro.md): un directorio de 
 ### 5.4 Un `pull` de verdad
 
 ```bash
-docker rmi localhost:5000/legacy-node-toolchain:1.0.0 legacy-node-toolchain:phase15
-docker pull localhost:5000/legacy-node-toolchain:1.0.0
-docker run --rm localhost:5000/legacy-node-toolchain:1.0.0 node --version
+docker rmi localhost:5001/legacy-node-toolchain:1.0.0 legacy-node-toolchain:phase15
+docker pull --platform linux/amd64 localhost:5001/legacy-node-toolchain:1.0.0
+docker run --rm --platform linux/amd64 localhost:5001/legacy-node-toolchain:1.0.0 node --version
 ```
+
+> ⚠️ **En un Mac con chip M, sin `--platform` el pull falla:** `no matching manifest for
+> linux/arm64/v8 in the manifest list entries`. La imagen que publicaste es solo amd64 y el
+> motor pide la variante del host, que es lo que [F21](21-arquitecturas-y-emulacion.md) §5 explica. En un PC amd64 no hace falta.
 
 Borrar la copia local **antes** del pull es lo que hace honesta la prueba: si no, el pull no
 descarga nada y no demuestras nada.
@@ -223,6 +240,11 @@ acotados y revocables. Tu contraseña abre también la configuración de la cuen
 **Configura un credential helper** —`osxkeychain`, `secretservice`, `wincred`— para que las
 credenciales vivan en el llavero del sistema y no en un JSON.
 
+> 📝 **Docker Desktop ya lo trae configurado.** En un Mac, `jq '.credsStore' ~/.docker/config.json`
+> responde `"osxkeychain"` y las entradas de `auths` no llevan campo `auth`: la credencial está en
+> el llavero. El Base64 en claro es lo que verás en Docker Engine sobre Linux sin helper, y en
+> cualquier `config.json` que alguien haya copiado a mano a un servidor de CI.
+
 > ⚠️ **Y la que arruina la fase entera:** una credencial que entra en la imagen **se queda en
 > ella**, aunque la borres en la capa siguiente. Es [F13](13-overlayfs-y-copy-on-write.md) §12, y es el motivo de que
 > `~/.docker/config.json` esté en tu `.dockerignore` desde [F07](07-build-de-la-imagen.md).
@@ -244,8 +266,6 @@ Aquí es donde [F21](21-arquitecturas-y-emulacion.md) §6.2 se completa. Buildx 
 registry sí sabe guardar un index:
 
 ```bash
-docker buildx create --name multiarch --use 2>/dev/null || docker buildx use multiarch
-
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
   --file dockerfiles/08-multiarch.Dockerfile \
@@ -254,8 +274,13 @@ docker buildx build \
   .
 ```
 
-**`--push` en lugar de `--load`.** Era exactamente el problema de [F21](21-arquitecturas-y-emulacion.md): dos plataformas no caben
-en tu almacén local bajo un tag, y sí caben en un registry.
+**`--push` publica el index entero** en el registry, que es lo que quieres aquí. Con el image
+store de containerd —el de Docker Desktop— el builder por defecto ya construye y carga las dos
+plataformas ([F21](21-arquitecturas-y-emulacion.md) §6.2), así que no hace falta crear otro. Si tu Docker usa el almacén clásico,
+necesitas un builder `docker-container` (`docker buildx create --name multiarch --use`), con dos
+efectos que conviene conocer: queda como builder **por defecto** hasta que hagas
+`docker buildx use default`, y corre en su propio contenedor, así que **no llega a un registry
+en `localhost`** del host (`dial tcp [::1]:15000: i/o timeout` con el registry de la verificación).
 
 Y se verifica con lo de [F27](27-registries-por-dentro.md):
 
@@ -265,7 +290,12 @@ docker manifest inspect tu-usuario/legacy-node-toolchain:1.0.0 | jq '.manifests[
 ```text
 { "architecture": "amd64", "os": "linux" }
 { "architecture": "arm64", "os": "linux" }
+{ "architecture": "unknown", "os": "unknown" }
+{ "architecture": "unknown", "os": "unknown" }
 ```
+
+Las dos `unknown` son las atestaciones (procedencia) que BuildKit publica junto a cada
+plataforma; [F27](27-registries-por-dentro.md) §7 las presenta y [F29](29-supply-chain-sbom-firma.md) las usa.
 
 ---
 
@@ -332,11 +362,17 @@ tags pedagógicos (phase15)   → mientras el curso los use
 
 ```bash
 # guarda esto CUANDO funciona, no cuando falla
-docker inspect --format '{{index .RepoDigests 0}}' tu-usuario/legacy-node-toolchain:1.0.0
+docker inspect --format '{{range .RepoDigests}}{{println .}}{{end}}' \
+  tu-usuario/legacy-node-toolchain:1.0.0 | grep '^tu-usuario/'
 
 # y vuelve
 docker pull tu-usuario/legacy-node-toolchain@sha256:...
 ```
+
+> ⚠️ **No uses `{{index .RepoDigests 0}}`.** Una imagen local con varios nombres tiene un
+> `RepoDigest` por cada uno —incluidos tags que nunca subiste—, y el primero no tiene por qué ser
+> el del registry: aquí salió `legacy-node-toolchain@sha256:035c…`, un tag local. El `grep` por
+> repositorio, o el `digest:` de la salida del push, no dejan lugar a dudas.
 
 > 🧭 **La costumbre que salva:** registra el digest de cada imagen que despliegues o valides, en
 > el `VALIDATION-REPORT.md` de [F11](11-validar-tu-proyecto.md) o donde corresponda. El día que lo necesites, el tag ya se
@@ -602,7 +638,7 @@ CREDENCIALES    config.json guarda Base64, no cifrado
                 y lo que entra en una capa, se queda (F13)
 
 MULTI-PLATAFORMA  buildx --platform a,b --push
-                  --push sí, --load no: dos imágenes no caben bajo un tag local
+                  --load también, con el store de containerd; con el clásico, solo --push
 
 METADATA OCI    source · revision · created · version
                 documentación que viaja dentro del artefacto

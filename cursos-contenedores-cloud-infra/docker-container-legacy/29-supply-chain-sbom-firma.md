@@ -5,6 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** **[F27](27-registries-por-dentro.md)** (digests) y **[F28](28-publicar-la-imagen.md)** (publicar)
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — Syft v1.18.1, Trivy 0.58.1 y Cosign v2.4.1 desde sus imágenes oficiales, las attestations de BuildKit 0.34.2 y la firma, todo contra el registry local de [F28](28-publicar-la-imagen.md), sobre Docker Desktop 29.9.3 en macOS Apple Silicon. La firma se probó **con llave** y sin subir nada a Rekor; el modelo *keyless* (OIDC) de §7 no se ejecutó
 > **Estado de la imagen al terminar:** publicada, con inventario, procedencia y firma
 > **Objetivo:** responder tres preguntas distintas sobre una imagen —qué contiene, cómo se construyó y quién lo dice— sin que se conviertan en sopa de siglas
 
@@ -90,7 +91,7 @@ Y consultarlo es donde se vuelve útil:
 ```bash
 # cuántos paquetes hay, por ecosistema
 jq -r '.packages[].externalRefs[]?.referenceLocator' sbom-spdx.json \
-  | grep -oP '^pkg:\w+' | sort | uniq -c | sort -rn
+  | grep -oE '^pkg:[a-z]+' | sort | uniq -c | sort -rn
 
 # ¿está openssl y en qué versión?
 jq -r '.packages[] | select(.name=="openssl") | "\(.name) \(.versionInfo)"' sbom-spdx.json
@@ -98,6 +99,23 @@ jq -r '.packages[] | select(.name=="openssl") | "\(.name) \(.versionInfo)"' sbom
 # todos los paquetes de Debian
 jq -r '.packages[] | select(.externalRefs[]?.referenceLocator | test("pkg:deb")) | .name' sbom-spdx.json | head -20
 ```
+```text
+   1549 pkg:npm
+    376 pkg:deb
+      4 pkg:generic
+      3 pkg:nuget
+      2 pkg:pypi
+      1 pkg:oci
+openssl 1.1.1n-0+deb10u6
+```
+
+Los 1.549 de npm no son tu proyecto, que no está en la imagen: son el `npm` que trae cada una de
+las cuatro versiones de Node. Y `openssl` sale en la última revisión que Debian publicó para
+Buster, no en la `1.1.1d` con la que se lanzó: `debian/eol` congela el final de la rama.
+
+> ⚠️ **`grep -oE`, no `grep -oP`.** El `grep` de macOS es BSD y no tiene `-P`
+> (`grep: invalid option -- P`): la versión con PCRE que circula por ahí deja el conteo vacío sin
+> más aviso que ese mensaje.
 
 > 🩺 **El uso real, y por qué vale la pena.** Aparece una vulnerabilidad grave en una librería un
 > martes por la mañana. Con SBOM guardado de cada imagen publicada, la pregunta *"¿cuáles de
@@ -108,12 +126,28 @@ jq -r '.packages[] | select(.externalRefs[]?.referenceLocator | test("pkg:deb"))
 Un uso que cierra el bloque anterior:
 
 ```bash
-syft legacy-node-toolchain:1.0.0 --platform linux/amd64 -o json | jq -r '.artifacts[].name' | sort > sbom-amd64.txt
-syft legacy-node-toolchain:1.0.0 --platform linux/arm64 -o json | jq -r '.artifacts[].name' | sort > sbom-arm64.txt
+syft tu-usuario/legacy-node-toolchain:1.0.0 --platform linux/amd64 -o json | jq -r '.artifacts[].name' | sort > sbom-amd64.txt
+syft tu-usuario/legacy-node-toolchain:1.0.0 --platform linux/arm64 -o json | jq -r '.artifacts[].name' | sort > sbom-arm64.txt
 diff sbom-amd64.txt sbom-arm64.txt
 ```
 
-**Deberían ser casi idénticos.** Si difieren mucho, algo en tu Dockerfile depende de la
+Contra la imagen **publicada** con las dos arquitecturas ([F28](28-publicar-la-imagen.md) §7.1): la copia local de §8 de F28 es solo
+amd64, y ahí no hay variante arm64 que inventariar.
+
+```text
+135a136
+> binutils-aarch64-linux-gnu
+137d137
+< binutils-x86-64-linux-gnu
+893d892
+< libmpx2
+971d969
+< libquadmath0
+```
+
+**Deberían ser casi idénticos, y lo son:** 1.934 artefactos contra 1.932, y las cuatro líneas de
+diferencia son el `binutils` de cada arquitectura y dos librerías de GCC que solo existen en
+x86-64. Si difieren mucho, algo en tu Dockerfile depende de la
 arquitectura de una forma que no controlas — y es exactamente lo que [F21](21-arquitecturas-y-emulacion.md) §6.1 te enseñó a
 buscar.
 
@@ -154,8 +188,15 @@ trivy image --severity HIGH,CRITICAL legacy-node-toolchain:1.0.0
 trivy sbom sbom-spdx.json         # también escanea un SBOM ya generado
 ```
 
+> ⚠️ **Escanear el SBOM no es escanear la imagen.** Con la imagen del curso, `trivy image` da
+> 519 vulnerabilidades (314 de Debian, 205 de npm); `trivy sbom` sobre el SPDX de Syft da **111**,
+> todas de npm, porque no reconoce el sistema operativo en ese documento y no mira Debian; sobre
+> el CycloneDX da 48 de Debian y 111 de npm. El SBOM guardado sirve para la pregunta de §4.1
+> —*"¿tengo yo eso?"*—, y para la lista completa de CVE se escanea la imagen.
+
 > ⚠️ **Prepárate: va a salir una lista larga.** Debian 10 está fuera de soporte desde 2024,
-> Node 10 desde 2021, y las dependencias de 2018 llevan años sin parchear. **Es lo esperado y
+> Node 10 desde 2021, y las dependencias de 2018 llevan años sin parchear. Con Trivy 0.58.1, el
+> 14 de noviembre de 2026: **16 CRITICAL, 263 HIGH, 182 MEDIUM y 58 LOW**. **Es lo esperado y
 > no es un fallo del laboratorio**: es la condición que [F01](01-decisiones-debian-zonas-node.md) §4.5 declaró desde el principio.
 
 ### 5.1 Cómo leerlo sin pánico y sin negación
@@ -213,6 +254,11 @@ docker buildx imagetools inspect tu-usuario/legacy-node-toolchain:1.0.0 \
   --format '{{json .Provenance}}' | jq
 ```
 
+Lo que devuelve BuildKit 0.34 es un documento **SLSA v1**, con dos bloques: `buildDefinition`
+(qué se pidió: el Dockerfile, los argumentos, y en `resolvedDependencies` la imagen base exacta
+y el frontend) y `runDetails` (quién y cómo lo construyó). Si construyes dentro de un repo git,
+`vcs:revision` lleva el commit, y `vcs:source` la URL del remoto si lo hay.
+
 **Por qué importa.** Con provenance, la pregunta *"¿esta imagen salió de nuestro repositorio o
 alguien la publicó desde su portátil?"* tiene respuesta verificable. Sin ella, la única respuesta
 es la confianza.
@@ -233,10 +279,31 @@ Ni el SBOM ni la provenance dicen **quién** los afirma. Eso lo hace la firma.
 # firmar (por digest — F27 §6.2: firmar un tag no significa nada)
 cosign sign tu-usuario/legacy-node-toolchain@sha256:...
 
-# verificar
+# verificar: QUIÉN tiene que haber firmado, y quién lo certificó
 cosign verify tu-usuario/legacy-node-toolchain@sha256:... \
-  --certificate-identity-regexp '.*' --certificate-oidc-issuer-regexp '.*'
+  --certificate-identity tu-correo@ejemplo.com \
+  --certificate-oidc-issuer https://github.com/login/oauth
 ```
+
+> ⚠️ **`--certificate-identity-regexp '.*'` verifica que alguien firmó, no quién.** Es la versión
+> que se copia de los tutoriales para "que funcione", y acepta la firma de cualquier cuenta de
+> Sigstore: deja la pregunta de esta sección sin responder.
+
+Sin cuenta OIDC, el mismo ciclo se practica con un par de llaves propio y sin publicar nada en el
+log público:
+
+```bash
+cosign generate-key-pair
+cosign sign --key cosign.key --tlog-upload=false localhost:5001/legacy-node-toolchain@sha256:...
+cosign verify --key cosign.pub --insecure-ignore-tlog=true localhost:5001/legacy-node-toolchain@sha256:...
+```
+
+Con la llave correcta, `verify` lista las comprobaciones hechas; con otra, falla con
+`invalid signature when validating ASN.1 encoded signature`, y una imagen sin firmar da
+`no signatures found`. La firma no se queda en tu máquina: `cosign tree` la muestra en el
+registry como un tag más, `sha256-<digest>.sig`, junto a la imagen. Detalle de laboratorio:
+Cosign solo habla HTTP plano con `localhost`, así que contra el registry de F28 corre en el
+host, o en la red del contenedor del registry, no por `host.docker.internal`.
 
 **Lo que hace posible el modelo *keyless* de Sigstore**, que es lo que ha hecho práctica esta
 tecnología: en lugar de gestionar claves privadas eternamente, se firma con una identidad OIDC

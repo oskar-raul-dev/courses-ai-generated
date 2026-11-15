@@ -9,6 +9,7 @@
 > **Estado de la imagen al terminar:** Debian 10, utilidades, toolchain C/C++ y los dos intérpretes de Python. Sigue sin Node
 > **Código de esta fase:** [`src/05-python-y-node-gyp/`](src/05-python-y-node-gyp/)
 > **Objetivo:** entender por qué aparece Python en un proyecto que no tiene una línea de Python, cómo `node-gyp` conecta npm con el compilador de [F04](04-toolchain-de-compilacion.md), y por qué la pregunta correcta nunca es "¿qué Python necesito?"
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los 21 paquetes y las tres pruebas de §9, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -537,7 +538,7 @@ que el `Can't find Python executable` original?
 ### 🟠 Ejercicio 16 — Reconstruye la decisión desde un `package-lock.json`
 
 Toma el `package-lock.json` de tu proyecto legacy —o el del fixture Vue 2 de
-`src/10-validar-tu-proyecto/10-vue2-min/`— y busca en él `node-gyp`.
+`src/11-validar-tu-proyecto/10-vue2-min/`— y busca en él `node-gyp`.
 
 **Pregunta:** ¿qué versión aparece? ¿Es la que esperabas viendo la versión de Node del
 proyecto? Si no aparece ninguna, ¿qué significa eso?

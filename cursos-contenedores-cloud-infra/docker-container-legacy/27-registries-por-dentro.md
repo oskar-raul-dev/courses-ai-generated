@@ -5,7 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** **[F12](12-capas-cache-y-contexto.md)** (capas y digests) y **[F21](21-arquitecturas-y-emulacion.md)** (image index)
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — Docker 29.6.2 con image store de containerd, sobre macOS Apple Silicon. **Todos los digests de esta fase son reales y salen de los comandos que la acompañan**
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — Docker 29.6.2 con image store de containerd, sobre macOS Apple Silicon. **Todos los digests de esta fase son reales y salen de los comandos que la acompañan**. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: los cuatro digests y el index de §5–§6, al byte
 > **Estado de la imagen al terminar:** sin cambios — esta fase disecciona, la siguiente publica
 > **Objetivo:** entender qué es exactamente un registry, qué son manifests, indexes, descriptors y blobs, y por qué un digest es identidad de contenido y un tag no
 
@@ -399,6 +399,13 @@ curl -s -H "Authorization: Bearer $token" \
      https://registry-1.docker.io/v2/library/debian/manifests/bookworm | jq '.manifests[].platform'
 ```
 
+> 📝 **Y entre las plataformas, unas que no lo son.** En una imagen oficial moderna verás
+> entradas `{"architecture": "unknown", "os": "unknown"}` intercaladas con las reales (así
+> salió `debian:bookworm` el 14/11/2026). No son plataformas: son los manifests de
+> **atestación** —el SBOM y la procedencia— que BuildKit publica junto a cada imagen y cuelga
+> del mismo index. El cliente las ignora al elegir qué descargar; qué contienen y para qué
+> sirven es materia de **[F29](29-supply-chain-sbom-firma.md)**.
+
 > 💡 **Hacerlo una vez a mano cambia cómo lees el resto.** Un registry deja de ser un servicio
 > misterioso y pasa a ser lo que es: un servidor HTTP que devuelve JSON y archivos.
 
@@ -409,12 +416,17 @@ curl -s -H "Authorization: Bearer $token" \
 `docker manifest inspect` sirve para lo básico. **Skopeo** es la herramienta que hace esto en
 serio, y su gracia es que **no necesita un motor de contenedores corriendo**.
 
+No viene con Docker. En macOS se instala con `brew install skopeo`, y en Debian o Ubuntu con
+`apt-get install skopeo`; si no quieres instalar nada, corre como contenedor con la imagen
+oficial: `docker run --rm quay.io/skopeo/stable:v1.16.1 inspect --raw docker://…`.
+
 ```bash
 # qué plataformas tiene, sin descargar nada
 skopeo inspect --raw docker://docker.io/debian/eol:buster | jq '.manifests[].platform'
 
 # la configuración de una imagen concreta
-skopeo inspect docker://docker.io/debian/eol:buster | jq '{Digest, Architecture, Os, Created, Labels}'
+# (--override-arch: sin él, en un Mac con chip M describe la variante arm64, la del host)
+skopeo inspect --override-arch amd64 docker://docker.io/debian/eol:buster | jq '{Digest, Architecture, Os, Created, Labels}'
 
 # qué tags tiene un repositorio
 skopeo list-tags docker://docker.io/debian/eol | jq '.Tags[:20]'

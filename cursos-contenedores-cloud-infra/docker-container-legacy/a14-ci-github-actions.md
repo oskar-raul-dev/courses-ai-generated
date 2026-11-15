@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra los bucles de:** [F20](20-validacion-sistematica-y-evidencia.md) §11 · [F28](28-publicar-la-imagen.md) §7 · [a11](a11-ghcr-y-gitlab.md) §1.2
 > **Requisitos:** **[F11](11-validar-tu-proyecto.md)** (el protocolo), **F20** (evidencia) y **F28** (publicar)
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — solo en parte: el workflow pasa `actionlint` 1.7.4 sin avisos, y cada paso que construye, valida y publica se ejecutó a mano en este curso (F11, F20, F28, F29). **No se ha corrido en GitHub Actions**; dos correcciones salen de lo medido en local (el Dockerfile del job `publish`, V26) y una de la documentación de Sigstore (instalar `cosign`)
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
 > **Código de este apéndice:** [`src/a14-ci-github-actions/`](src/a14-ci-github-actions/)
 > **Qué encontrarás:** el pipeline que construye, valida y publica el toolchain — con las tres cosas que un CI de este curso tiene que hacer bien y casi ningún ejemplo hace
@@ -118,7 +119,7 @@ jobs:
               legacy-node-toolchain:ci "$@" 2>&1 | tee "evidencia/${etapa}.log"
             local code=${PIPESTATUS[0]}     # ← §3.1: el de docker, no el de tee
             echo "${etapa}=${code}" >> evidencia/exit-codes.txt
-            return $code
+            return "$code"
           }
 
           mkdir -p evidencia
@@ -165,12 +166,15 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
+          file: dockerfiles/08-multiarch.Dockerfile   # el de TARGETARCH, F21 §6.1
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true                        # F29 §4.5
           provenance: mode=max              # F29 §6
+
+      - uses: sigstore/cosign-installer@v3   # cosign no se da por instalado en el runner
 
       - name: Firmar por digest
         run: cosign sign --yes "${IMAGE_NAME}@${{ steps.push.outputs.digest }}"

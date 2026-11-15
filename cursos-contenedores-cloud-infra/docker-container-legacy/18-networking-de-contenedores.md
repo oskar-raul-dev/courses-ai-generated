@@ -5,6 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** **[F09](09-montar-tu-proyecto.md)** (ejecutar el proyecto) y **[F16](16-pid1-senales-y-ciclo-de-vida.md)** (namespaces)
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — modelo de red de Docker 29.6.2
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — `ip addr`, escuchar en `127.0.0.1` contra `0.0.0.0`, `docker port`, DNS en una red de usuario, `host.docker.internal` y `docker logs`, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** entender el network namespace, qué hace realmente `-p`, por qué `EXPOSE` no expone nada, y cómo se hablan dos contenedores entre sí
 
@@ -274,9 +275,11 @@ que leerlo con `docker exec cat`.
 al log del contenedor. Es la razón de que el entrypoint de [F08](08-run-el-contenedor-como-proceso.md) mande su aviso a `stderr` y no a
 un archivo.
 
-**El logging driver decide dónde acaban.** Por defecto es `json-file`, que los guarda en disco
-y **crece sin límite** salvo que configures rotación. En un contenedor de desarrollo que lleva
-semanas vivo, eso se nota.
+**El logging driver decide dónde acaban**, y el de por defecto depende del motor. En Docker
+Engine sobre Linux es `json-file`, que los guarda en disco y **crece sin límite** salvo que
+configures rotación; en un contenedor de desarrollo que lleva semanas vivo, eso se nota.
+Docker Desktop trae `local`, que rota solo (comprobado con 29.9.3 el 14/11/2026). Pregúntaselo
+al tuyo:
 
 ```bash
 docker inspect --format '{{.HostConfig.LogConfig.Type}}' mi-contenedor

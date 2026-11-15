@@ -10,6 +10,7 @@
 > **Código de esta fase:** [`src/10-vscode-y-debugging/`](src/10-vscode-y-debugging/)
 > **Estado de la imagen al terminar:** sin cambios — la imagen es la de [F09](09-montar-tu-proyecto.md); lo que cambia es que tu editor ya habla con ella
 > **Objetivo:** conectar tu editor y tu debugger a un runtime que vive dentro del contenedor, sin instalar Node 10 en el host
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — las tasks y el inspector con un breakpoint, conectado con el cliente `node inspect` (el F5 de VS Code no se ejecutó), sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -510,7 +511,7 @@ después con ellos activados.
 
 ### 🟠 Ejercicio 17 — Depura un fixture real
 
-Toma el fixture Vue 2 de `src/10-validar-tu-proyecto/10-vue2-min/` y depura **el servidor de
+Toma el fixture Vue 2 de `src/11-validar-tu-proyecto/10-vue2-min/` y depura **el servidor de
 desarrollo**, no el componente.
 
 **Pregunta:** ¿qué puedes inspeccionar y qué no? Relaciónalo con §7 y explica por qué tu

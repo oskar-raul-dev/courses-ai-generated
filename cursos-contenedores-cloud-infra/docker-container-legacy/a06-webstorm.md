@@ -4,6 +4,7 @@
 > **Cierra el bucle de:** [F00](00-problema-y-contrato.md) §8 · [F10](10-vscode-y-debugging.md) §3
 > **Requisitos:** haber hecho [F09](09-montar-tu-proyecto.md) y F10. Lo que aquí cambia es el IDE, no el laboratorio
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
+> **Sin verificación ejecutada:** en la pasada del 14 de noviembre de 2026 no había WebStorm en la máquina. Los comandos que el IDE lanza por debajo son los de F08–F10, que sí se corrieron
 > **Qué encontrarás:** los dos caminos para trabajar con WebStorm sobre el toolchain, cuál elegir, y por qué un IDE moderno puede llevarse mal con Node 10
 
 [F10](10-vscode-y-debugging.md) usa VS Code porque es lo más extendido, no porque sea mejor. Si tu editor es WebStorm,

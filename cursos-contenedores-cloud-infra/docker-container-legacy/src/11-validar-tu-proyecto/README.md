@@ -79,7 +79,10 @@ Los cinco se validaron de punta a punta con Node 10.24.1 y npm 6.14.12 sobre
 ⁽¹⁾ Los unit tests de Angular 8 son Karma + navegador. Eso arrastra Chromium y
 dependencias gráficas, así que queda fuera del baseline y se reporta como
 **N/A**, no como "no hay tests". Fingir que un test no existe es peor que
-declararlo fuera de alcance.
+declararlo fuera de alcance. Por eso su `npm test` **falla a propósito** con ese motivo:
+sin script `test`, npm 6 imprime `Error: no test specified` y sale con 0, que en un
+expediente se lee como un ✅. El de `10-vue2-min` llama a los mismos tests que
+`test:unit`.
 
 ---
 

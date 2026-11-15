@@ -4,6 +4,7 @@
 > **Cierra el bucle de:** [F14](14-abi-libc-y-prebuilds.md) §7.1 — *"el lockfile no puede congelar Internet"* · [F28](28-publicar-la-imagen.md) §9 · [a04](a04-checksums-gpg-y-archivos.md) §4
 > **Requisitos:** **[F27](27-registries-por-dentro.md)** (digests) y **F28** (publicar)
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — `docker save`/`load` y sus equivalentes en Podman
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — §1 y §2 con Docker Desktop 29.9.3 y Podman 6.1 (los dos destinos), y el certificado de §4.1 contra un servidor HTTPS firmado por una CA de prueba, con Node 10 y 16, en macOS Apple Silicon; Skopeo (§1.2) y el proxy de §4.2 no se ejecutaron
 > **Qué encontrarás:** cómo mover una imagen a una máquina sin Internet, cómo sobrevivir al proxy corporativo que hay en medio (§4), y —lo más importante para el legacy— cómo dejar de depender de que un servidor de 2018 siga vivo
 
 Es el apéndice más corto y resuelve el problema más grande que el curso ha dejado abierto: **tus
@@ -36,6 +37,10 @@ sha256sum toolchain-1.0.0.tar.gz > toolchain-1.0.0.tar.gz.sha256
 sha256sum -c toolchain-1.0.0.tar.gz.sha256    # ⚠️ ANTES de cargar
 gunzip -c toolchain-1.0.0.tar.gz | docker load
 ```
+
+> 📝 **Con el image store de containerd, el `gzip` ahorra poco.** `docker save` ya escribe las
+> capas comprimidas: la imagen del curso pesa 396 MB en el `tar` y 394 MB después de `gzip`. No
+> estorba, y en un Docker con el almacén clásico, que guarda las capas sin comprimir, sí ahorra.
 
 **El checksum no es opcional aquí.** Es el mismo razonamiento de [a04](a04-checksums-gpg-y-archivos.md) §1.2: en un transporte
 físico, la corrupción es más probable que en una descarga HTTPS, y un tar corrupto produce un
@@ -91,6 +96,12 @@ docker image inspect legacy-node-toolchain:1.0.0 --format '{{.Id}}'
 
 Los dos `Id` —la identidad local de la imagen, [F27](27-registries-por-dentro.md) §6.1— tienen que coincidir. Si no, algo cambió por el
 camino.
+
+> ⚠️ **Con el mismo motor en los dos lados.** Si el origen es Docker y el destino Podman, el `Id`
+> sale distinto aunque la imagen sea la misma ([F24](24-docker-y-podman-arquitectura.md), ejercicio 21), y un `podman save --format
+> oci-archive` seguido de `podman load` también lo cambia, porque reescribe el config. Lo que se
+> conserva en todos los casos son las capas: compara
+> `--format '{{range .RootFS.Layers}}{{println .}}{{end}}'` en los dos lados.
 
 **Y la verificación que de verdad cierra el círculo:** ejecuta el protocolo de validación de [F11](11-validar-tu-proyecto.md)
 **sobre la imagen cargada en destino**, no sobre la de origen. Es el mismo criterio del boss
@@ -191,6 +202,17 @@ ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 `update-ca-certificates` toma lo que dejaste en `/usr/local/share/ca-certificates/` y lo funde
 en el bundle `/etc/ssl/certs/ca-certificates.crt`. `NODE_EXTRA_CA_CERTS` le dice a Node que
 **añada** ese bundle al suyo, sin sustituirlo.
+
+📝 **Los dos almacenes, medidos** (14 de noviembre de 2026), contra un servidor HTTPS firmado por
+una CA de prueba:
+
+| Imagen | `curl` | Node 10 | Node 16 |
+|---|---|---|---|
+| `phase15` tal cual | ❌ exit 60 | ❌ `UNABLE_TO_VERIFY_LEAF_SIGNATURE` | ❌ ídem |
+| con el fragmento de arriba | ✅ | ✅ 200 | ✅ 200 |
+| CA en el sistema, `NODE_EXTRA_CA_CERTS` vacío | ✅ | ❌ `UNABLE_TO_VERIFY_LEAF_SIGNATURE` | ❌ ídem |
+
+La tercera fila es el arreglo "a medias" de [F31](31-catalogo-de-fallos-i.md) §7.6: `curl` ya funciona, y Node falla exactamente igual que antes.
 
 Con npm 6 —el del baseline— conviene además ser explícito, porque su cliente HTTP tiene su
 propia configuración:

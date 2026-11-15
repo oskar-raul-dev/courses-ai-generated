@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra los bucles de:** [F01](01-decisiones-debian-zonas-node.md) §7.2 · [F06](06-instalacion-node.md) §5 · [F08](08-run-el-contenedor-como-proceso.md) §6
 > **Requisitos:** haber hecho F06 y F08, o al menos tenerlas a mano
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el `PATH` de §5, los CLI globales de §6 y §8 (con el enlace que les faltaba) y los tres builds parametrizados de §9, sobre `legacy-node-toolchain:phase15` en Docker Desktop 29.9.3
 > **Qué encontrarás:** el razonamiento largo detrás de decisiones que las fases toman en dos líneas — por qué no `nvm`, por qué no NodeSource, por qué no compilar desde source, por qué no `FROM node:10`, qué es el `PATH` y por qué `npm run` lo cambia, cuándo `npx` te ayuda y cuándo te sabotea, y por qué de momento no hay Yarn
 
 Ningún apéndice es requisito de ninguna fase. Este existe porque [F01](01-decisiones-debian-zonas-node.md) y [F06](06-instalacion-node.md) cierran cinco
@@ -121,6 +122,11 @@ cuatro generaciones.
 **Cuándo sí:** cuando necesitas una plataforma exótica sin binarios oficiales, o cuando
 investigas un bug del propio runtime. Los dos son escenarios legítimos y ninguno es un
 laboratorio de mantenimiento.
+
+> 📝 **Medido.** [a17](a17-compilar-node-desde-fuente.md) compila Node 14 y Node 26 en VM de Lima sobre un M1 Pro y
+> pone números a este párrafo: Node 14 tardó 10 min 37 s con 8 trabajos en paralelo, y Node 26,
+> 1 h 13 min con 5, porque con 8 se quedó sin memoria en una VM de 12 GiB. Y el binario que sale
+> no es el oficial: el Node 14 compilado en Debian 11 ya no arranca en Buster.
 
 ---
 
@@ -242,8 +248,15 @@ global y el local compiten y ninguno de los dos avisa.
 ```dockerfile
 # ⚠️ CLI global: ata esta imagen a un proyecto concreto. Documenta por qué.
 ARG ANGULAR_CLI_VERSION=8.3.29
-RUN npm install -g "@angular/cli@${ANGULAR_CLI_VERSION}"
+RUN npm install -g "@angular/cli@${ANGULAR_CLI_VERSION}" \
+    && ln -s "$(npm prefix -g)/bin/ng" /usr/local/bin/ng
 ```
+
+> ⚠️ **Sin ese `ln -s`, el CLI se instala y no existe.** `npm install -g` deja el binario en
+> `/opt/node/<versión por defecto>/bin/`, que no está en el `PATH`: los shims de [F08](08-run-el-contenedor-como-proceso.md) solo
+> publican `node`, `npm` y `npx` en `/usr/local/bin`. El síntoma es un build limpio seguido de
+> `command not found`. El enlace lo publica, y el CLI corre con el `node` que elija el shim en ese
+> momento, sea cual sea `NODE_VERSION`.
 
 Con versión exacta, como `ARG` para poder cambiarla sin editar el archivo, y con el comentario
 que explica por qué se aceptó la excepción. Una CLI global sin versión fijada es de las cosas
@@ -301,8 +314,12 @@ que es su equivalente exacto —instala lo que dice el lock y falla si no cuadra
 ```dockerfile
 # Yarn 1.x, la generación contemporánea de nuestros proyectos objetivo
 ARG YARN_VERSION=1.22.19
-RUN npm install -g "yarn@${YARN_VERSION}"
+RUN npm install -g "yarn@${YARN_VERSION}" \
+    && ln -s "$(npm prefix -g)/bin/yarn" /usr/local/bin/yarn
 ```
+
+El enlace es el mismo de §6, por la misma razón; con él, `yarn --version` da `1.22.19` con
+Node 10 y con Node 16.
 
 Lo que **no** debes hacer es mezclar: un proyecto con `yarn.lock` al que le ejecutas `npm ci`
 resuelve un árbol distinto, y ahí tienes un problema nuevo encima del que ya tenías.

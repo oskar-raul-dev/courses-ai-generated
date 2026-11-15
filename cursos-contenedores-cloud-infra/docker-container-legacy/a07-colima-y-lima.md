@@ -4,6 +4,7 @@
 > **Cierra los bucles de:** [F00](00-problema-y-contrato.md) §5 · [F22](22-apple-silicon-y-hosts.md) §6.3 · [F26](26-portabilidad-entre-motores.md) §4.2
 > **Requisitos:** F22 (Apple Silicon) y F26 (portabilidad entre motores)
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — **solo la capa Lima**: Lima 2.3.0 con las plantillas `debian-11` y `debian-13`, con `vz` y con QEMU 11.1.3, a través de las dos VM de [a17](a17-compilar-node-desde-fuente.md) en macOS 26.7.2 sobre M1 Pro. **Colima no se ha ejecutado**: los comandos `colima` siguen contrastados con su documentación, no corridos
 > **Qué encontrarás:** qué son exactamente Lima y Colima, por qué son la ruta más interesante en Apple Silicon para quien quiere control, y cómo arrancar una VM x86-64 completa cuando la emulación no basta
 
 El curso menciona Colima desde [F00](00-problema-y-contrato.md) como uno de los cuatro motores soportados. Este apéndice
@@ -157,7 +158,7 @@ arranques.
 | Quieres controlar CPU, RAM, hipervisor y compartición | **Colima** |
 | Necesitas dos arquitecturas a la vez | **Colima con perfiles** — §2.1 |
 | Sospechas de la traducción por proceso | **Colima con `--arch x86_64`** — §3 |
-| Solo quieres una VM Linux, sin contenedores | **Lima a secas** |
+| Solo quieres una VM Linux, sin contenedores | **Lima a secas**, como en [a17](a17-compilar-node-desde-fuente.md) §2 |
 | Estás midiendo rendimiento entre motores | **Colima**, porque puedes igualar las VM |
 
 > 🧭 **La recomendación honesta:** si Docker Desktop te funciona y la licencia no es un problema,
@@ -181,6 +182,17 @@ de macOS.
 
 **Los cambios de configuración no se aplican.** `colima stop && colima start` con las opciones
 nuevas; algunas exigen `colima delete` y volver a crear.
+
+**La VM de Lima con la plantilla `debian-11` no arranca con `--vm-type=vz`.** Medido con Lima
+2.3.0: diez minutos de espera y `did not receive an event with the running status`. Con
+`--vm-type=qemu` arranca. [a17](a17-compilar-node-desde-fuente.md) §2.
+
+**`limactl start` devuelve código 1, pero la VM funciona.** Con QEMU, en dos de tres arranques Lima 2.3.0
+agotó sus diez minutos esperando el paso `Sshfs binary to be installed` y aun así la VM respondía a
+`limactl shell`. Comprueba con `limactl list` antes de darla por muerta.
+
+**Lima arranca `containerd` dentro de la VM aunque no lo uses.** Las plantillas lo traen, y
+cuando la VM se queda sin memoria el kernel lo mata a él primero. [a17](a17-compilar-node-desde-fuente.md) §6.
 
 ---
 

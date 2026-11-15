@@ -9,6 +9,7 @@
 > **Estado de la imagen al terminar:** el toolchain sin cambios. Lo que cambia es que ahora tu proyecto vive dentro
 > **Código de esta fase:** [`src/09-montar-tu-proyecto/`](src/09-montar-tu-proyecto/)
 > **Objetivo:** conectar tu código con el contenedor, entender por qué `node_modules` va aparte, y ejecutar el laboratorio end-to-end que junta todo lo de la Parte I
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — `run-dev.sh` y el laboratorio de §8 con un proyecto Angular 8 real (`npm ci` de 1.612 paquetes, build y `node-sass`), sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -136,6 +137,12 @@ El segundo mount se aplica **sobre un subdirectorio del primero** y gana. Result
 tu código desde el host, y `node_modules` vive en un volumen gestionado por Docker que tu host
 nunca ve.
 
+> 📝 **Lo único que sí aparece en tu host es un `node_modules/` vacío.** Es el punto de
+> montaje: para montar el volumen en `/workspace/node_modules`, el motor necesita que ese
+> directorio exista dentro del bind mount, y lo crea. Queda vacío del lado del host —las
+> dependencias están en el volumen— y por eso conviene que `node_modules` siga en tu
+> `.gitignore`.
+
 ### 5.1 Por qué, en tres razones concretas
 
 **El host permanece limpio.** No aparecen decenas de miles de archivos Linux en tu disco, ni
@@ -256,7 +263,19 @@ docker exec -e NODE_VERSION=16.20.2 legacy-node-dev node --version   # con otra 
 ### 7.1 `scripts/run-dev.sh`
 
 Automatizar **después** de entender, que es la regla del curso. Este script no hace nada que
-no hayas hecho a mano en esta fase:
+no hayas hecho a mano en esta fase.
+
+Antes, el tag. Esta fase no cambia la imagen —no toca el `Dockerfile`—, pero el script
+arranca con `legacy-node-toolchain:phase09`, y ese tag hay que crearlo:
+
+```bash
+docker tag legacy-node-toolchain:phase08 legacy-node-toolchain:phase09
+```
+
+Un `docker tag` no construye ni copia nada: le pone un segundo nombre a la misma imagen, con
+el mismo ID. Sin esta línea, el script falla con `Unable to find image
+'legacy-node-toolchain:phase09' locally` y un `pull access denied`, porque el motor la busca
+en Docker Hub.
 
 📄 **`scripts/run-dev.sh`**
 
@@ -322,12 +341,14 @@ NODE_VERSION_VALUE=14.21.3 MODULES_VOLUME=otro-node14-modules ./scripts/run-dev.
 ## 8. 🔥 El laboratorio end-to-end
 
 Aquí se junta todo. Usa tu proyecto real o el fixture de control de
-`src/10-validar-tu-proyecto/00-node-smoke/`, que existe justamente para esto.
+`src/11-validar-tu-proyecto/00-node-smoke/`, que existe justamente para esto.
 
-**1. Arranca el toolbox:**
+**1. Arranca el toolbox desde el directorio del proyecto.** El script monta `$PWD`, así que
+lo que importa es dónde estás parado, no dónde vive el script:
 
 ```bash
-./scripts/run-dev.sh
+cd ~/repos/tu-proyecto
+~/legacy-node-toolchain-lab/scripts/run-dev.sh
 ```
 ```text
 Creando volumen legacy-node10-modules...
@@ -432,7 +453,7 @@ tiene binarios de otra generación de Node. Bórralo y reinstala.
 [ ] npm test y npm run build se ejecutan
 [ ] El artefacto de build aparece en tu host
 [ ] Editas un archivo en el host y el cambio se ve dentro sin reconstruir
-[ ] node_modules NO aparece en tu host
+[ ] En tu host, node_modules/ es solo el punto de montaje, vacío: las dependencias viven en el volumen
 [ ] docker rm -f y volume rm limpian sin dejar restos
 ```
 
@@ -568,7 +589,7 @@ volumen sin bind mount.
 
 ### 🔴 Ejercicio 18 — Arqueología de un `npm ci` que falla
 
-Toma el fixture Vue 2 de `src/10-validar-tu-proyecto/10-vue2-min/` y ejecútalo con Node 16 en
+Toma el fixture Vue 2 de `src/11-validar-tu-proyecto/10-vue2-min/` y ejecútalo con Node 16 en
 lugar de Node 10.
 
 **Objetivo:** documentar qué falla, en qué momento, y si la causa es el lock, la versión de npm

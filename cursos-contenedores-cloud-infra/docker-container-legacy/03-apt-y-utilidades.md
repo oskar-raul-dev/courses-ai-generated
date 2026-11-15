@@ -10,6 +10,7 @@
 > **Fecha de revisión de documentación externa:** 3 de septiembre de 2026
 > **Código de esta fase:** [`src/03-apt-y-utilidades/`](src/03-apt-y-utilidades/)
 > **Objetivo:** instalar la caja de herramientas con APT entendiendo cada opción, y responder la pregunta que casi ningún tutorial responde: por qué `apt-get update` funciona sobre un repositorio que se firmó hace años
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los dos archivos de §5.2, el experimento de §5.3 y la prueba de fuego de §8, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -374,7 +375,13 @@ ENV SHELL=/bin/bash
 **`SHELL`** cambia el intérprete que usan los `RUN` **siguientes** en el propio Dockerfile,
 lo que evita sorpresas al escribir scripts multilínea en las fases que vienen. **`ENV
 SHELL`** deja constancia para los programas que consultan esa variable en runtime, y es lo
-que hace que `docker exec -it ... bash` se sienta como un shell de verdad.
+que hace que `docker exec -it ... bash` se sienta como un shell de verdad. Se comprueba con
+`docker exec <contenedor> printenv SHELL`: `/bin/bash` en `phase03`, nada en `phase02`.
+
+> ⚠️ **No lo compruebes con `readlink -f /proc/$$/exe`.** En un Mac con chip M, la imagen
+> `linux/amd64` corre bajo Rosetta y ese enlace apunta a `/run/rosetta/rosetta`, no a Bash
+> ([F22](22-apple-silicon-y-hosts.md) lo explica). Y escrito en una sola línea desde el host, el `$$` lo expande tu
+> shell, no el del contenedor.
 
 ---
 
@@ -518,7 +525,7 @@ Comprueba el shebang del script y la forma del `RUN`.
 [ ] Las once herramientas de la prueba de fuego responden con una ruta
 [ ] curl -sI https://nodejs.org/dist/ devuelve HTTP/2 200 desde dentro
 [ ] /var/lib/apt/lists/ está vacío
-[ ] readlink -f /proc/$$/exe dentro de un docker exec devuelve bash
+[ ] docker exec <contenedor> printenv SHELL devuelve /bin/bash (en phase02, nada)
 [ ] Leíste los dos archivos de /etc/apt/apt.conf.d/ de §5.2 con tus ojos
 [ ] Ejecutaste el experimento de §5.3 y viste que apt funciona sin esas dos opciones
 [ ] Puedes explicar por qué update, install y rm van en el mismo RUN

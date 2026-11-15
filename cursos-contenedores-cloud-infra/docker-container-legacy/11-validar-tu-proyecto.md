@@ -8,6 +8,7 @@
 > **Entregable:** `VALIDATION-REPORT.md`
 > **Estado de la imagen al terminar:** sin cambios — esta fase no construye, valida. Cierra la Parte I con el toolchain de [F09](09-montar-tu-proyecto.md) intacto
 > **Objetivo:** definir qué significa "compatible", ejecutar un protocolo repetible sobre tu proyecto real, y producir un veredicto que se sostenga con evidencia
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los cinco fixtures, el protocolo de ocho pasos sobre un proyecto Angular 8 real y la matriz del ejercicio 24, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -227,6 +228,19 @@ docker exec legacy-node-dev npm run build 2>&1 | tee build.log; echo "exit=${PIP
 > **último** comando — que es `tee`, y `tee` casi siempre tiene éxito. Sin esto registrarías
 > "exit=0" en un paso que falló. Es una trampa clásica y **[F20](20-validacion-sistematica-y-evidencia.md)** la desarrolla entera.
 
+> ⚠️ **Y en un Mac, mira qué shell tienes.** `PIPESTATUS` es de Bash, y estos comandos corren
+> en el shell de **tu host**. Desde macOS Catalina el shell por defecto es **zsh**, donde
+> `${PIPESTATUS[0]}` no existe y la línea imprime `exit=` vacío: un expediente sin exit codes
+> que parece completo. En zsh el equivalente es `${pipestatus[1]}` —minúsculas y base 1—. Lo
+> más simple es abrir el expediente con `bash` y trabajar ahí; la alternativa que vale en los
+> dos shells es `set -o pipefail` y leer `$?`, que entonces devuelve el fallo de `npm` y no el
+> éxito de `tee`.
+
+> ⚠️ **Un `npm test` sin script sale con 0.** Si el `package.json` no declara `"test"`, npm 6
+> imprime `Error: no test specified` y termina **con éxito**, así que el expediente apunta un
+> ✅ que no probó nada. Antes del paso 6, `npm run` sin argumentos lista los scripts que
+> existen; si `test` no está, la casilla es **N/A**.
+
 No todos los proyectos tienen los tres scripts. Un script que no existe se anota como **N/A**,
 que no es lo mismo que "falló" ni que "pasó".
 
@@ -253,6 +267,11 @@ archivo fuente desde tu editor con el dev server corriendo, y mira si recompila.
 > ```bash
 > CHOKIDAR_USEPOLLING=true npm run serve
 > ```
+>
+> La variable la leen Vue CLI y Create React App; el CLI de Angular usa su propia bandera,
+> `ng serve --poll 1000`. En la pasada del 14/11/2026, con Docker Desktop 29.9.3 en macOS
+> (bind mount por VirtioFS), un proyecto Angular 8 recompiló **sin** sondeo: el "no siempre"
+> depende de la versión del motor, y por eso el paso se comprueba en vez de suponerse.
 >
 > Cuesta CPU y es la respuesta correcta para este escenario. En Linux nativo no suele hacer
 > falta.
@@ -465,12 +484,17 @@ for p in 00-node-smoke 10-vue2-min 20-angular8-min 30-react16-min 40-svelte3-min
   vol="${p}-node10-modules"
   docker volume rm "$vol" >/dev/null 2>&1; docker volume create "$vol" >/dev/null
   printf '%-18s ' "$p"
-  /usr/bin/time -f '%e s' docker run --rm --platform linux/amd64 \
+  /usr/bin/time -p docker run --rm --platform linux/amd64 \
     --mount type=bind,src="$PWD/src/11-validar-tu-proyecto/$p",dst=/workspace \
     --mount type=volume,src="$vol",dst=/workspace/node_modules \
-    legacy-node-toolchain:phase09 npm ci >/dev/null
+    legacy-node-toolchain:phase09 npm ci 2>&1 >/dev/null | awk '/^real/ {print $2 " s"}'
 done
 ```
+
+`-p` es la única salida de `time` que entienden igual el de GNU (Linux) y el de BSD (macOS):
+`-f '%e s'` es solo de GNU, y en un Mac responde `illegal option -- f`. El `2>&1 >/dev/null`
+manda la salida de `npm` a la basura y deja pasar por la tubería lo que `time` escribe en
+stderr, del que `awk` se queda con la línea `real`.
 
 **Pregunta:** ordena los cinco por tiempo y compáralo con el número de entradas de su
 `package-lock.json` (`jq '.dependencies | length'`). ¿Es proporcional? Si alguno se sale de la

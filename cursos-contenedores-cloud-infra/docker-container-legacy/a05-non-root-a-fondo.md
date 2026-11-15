@@ -4,6 +4,7 @@
 > **Cierra el bucle de:** [F02](02-dockerfile-esencial.md) §7.10 · [F01](01-decisiones-debian-zonas-node.md) §4.5
 > **Requisitos:** haber hecho [F09](09-montar-tu-proyecto.md), porque el problema aparece al montar volúmenes
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — `--user`, `--userns` y sus equivalentes en Podman
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — §3 y §4 sobre Docker Desktop 29.9.3 en macOS (UID 501, GID 20): el Dockerfile de §4.1 con los dos juegos de valores, el volumen de §4.2 y el `--user` de §4.3; el comportamiento en Linux nativo no se ejecutó aquí
 > **Qué encontrarás:** por qué el laboratorio corre como `root`, qué cuesta esa decisión, qué se rompe exactamente al cambiarla, y cómo hacerlo bien si decides pagar el precio
 
 El curso toma esta decisión en dos líneas y sigue adelante. Aquí está el razonamiento
@@ -124,7 +125,8 @@ Si decides pagar el precio, este es el camino que funciona.
 ARG APP_UID=1000
 ARG APP_GID=1000
 
-RUN groupadd --gid "${APP_GID}" dev \
+# si el GID ya existe en Debian (en un Mac, `id -g` es 20 = dialout), se reutiliza ese grupo
+RUN (getent group "${APP_GID}" >/dev/null || groupadd --gid "${APP_GID}" dev) \
     && useradd --uid "${APP_UID}" --gid "${APP_GID}" --create-home --shell /bin/bash dev \
     && mkdir -p /workspace \
     && chown -R "${APP_UID}:${APP_GID}" /workspace
@@ -144,6 +146,11 @@ docker build \
   --platform linux/amd64 -t legacy-node-toolchain:nonroot .
 ```
 
+> ⚠️ **En un Mac, `id -g` es 20, y Debian ya tiene un grupo 20: `dialout`.** Con un `groupadd`
+> a secas, el build falla con `exit code: 4`. El `getent` del Dockerfile lo evita reutilizando
+> el grupo que existe: el usuario queda `uid=501(dev) gid=20(dialout)`, raro de leer y correcto,
+> porque lo que importa son los números.
+
 ### 4.2 Resolver el ownership del volumen
 
 Es el paso que casi todo el mundo olvida. Un volumen recién creado pertenece a `root`, así que
@@ -152,11 +159,15 @@ hay que prepararlo **una vez**, desde un contenedor con privilegios:
 ```bash
 docker volume create miproyecto-node10-modules
 
-docker run --rm \
+docker run --rm --user 0 \
   --mount type=volume,src=miproyecto-node10-modules,dst=/vol \
-  legacy-node-toolchain:nonroot-build \
+  legacy-node-toolchain:nonroot \
   chown -R 1000:1000 /vol
 ```
+
+El `--user 0` es el "con privilegios" de la frase de arriba: la imagen `nonroot` arranca como
+`dev`, y `dev` no puede cambiar el dueño de nada (`chown: changing ownership of '/vol':
+Operation not permitted`). Sirve igual cualquier imagen que corra como root.
 
 A partir de ahí, el contenedor non-root puede escribir en él.
 

@@ -6,6 +6,7 @@
 > **Requisitos:** **[F09](09-montar-tu-proyecto.md)** (montajes) y **[F16](16-pid1-senales-y-ciclo-de-vida.md)** (namespaces). Conviene tener **[a05](a05-non-root-a-fondo.md)** a mano
 > **Estado de la imagen al terminar:** sin cambios; el laboratorio sigue como `root` por lo decidido en a05
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — el mapeo de usuarios de Docker y de Podman
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — `id`, la traducción de UID de Docker Desktop, `--user`, el `EACCES` del volumen y su `chown`, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 > **Objetivo:** entender por qué un archivo creado dentro del contenedor aparece en tu host como de `root`, por qué eso pasa en Linux y no en macOS, y qué opciones tienes de verdad
 
 ---
@@ -140,6 +141,11 @@ docker run --rm \
 La sintaxis acepta `nombre`, `UID`, `UID:GID` o `nombre:grupo`. **Usa números**: el nombre solo
 funciona si existe en el `/etc/passwd` **del contenedor**, y el UID de tu host casi nunca está
 ahí.
+
+> 📝 **En un Mac, el grupo sale con un nombre raro.** El primer usuario de macOS es UID 501 y
+> GID 20 (`staff`), así que dentro verás `uid=501 gid=20(dialout)`: en Debian el GID 20 es
+> `dialout`. No significa nada; el número es lo que cuenta, y el nombre lo pone el
+> `/etc/group` del contenedor.
 
 Y ahí empiezan las tres trampas.
 
@@ -320,7 +326,7 @@ escribir dónde, porque va a repetirse.
 [ ] Creaste un archivo desde el contenedor y comprobaste su dueño en el host
 [ ] Sabes si tu plataforma traduce el UID o no, y lo comprobaste
 [ ] --user "$(id -u):$(id -g)" produce archivos con tu usuario
-[ ] Provocaste el EACCES del volumen sin preparar
+[ ] Provocaste el EACCES del volumen sin preparar (con un proyecto que tenga dependencias: 00-node-smoke no escribe nada)
 [ ] Preparaste un volumen con chown y el EACCES desapareció
 [ ] Sabes qué pasa con $HOME cuando el UID no está en /etc/passwd
 [ ] Los shims de Node siguen funcionando con --user, y select-node no

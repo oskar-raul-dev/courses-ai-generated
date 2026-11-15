@@ -9,6 +9,7 @@
 > **Estado de la imagen al terminar:** Debian 10, doce utilidades y un toolchain C/C++ completo. Sigue sin Node ni Python
 > **Código de esta fase:** [`src/04-toolchain-de-compilacion/`](src/04-toolchain-de-compilacion/)
 > **Objetivo:** entender por qué un proyecto de JavaScript necesita un compilador de C, instalarlo entendiendo qué arrastra, y compilar algo de verdad dentro del contenedor
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los 19 paquetes, las versiones de gcc, make y pkg-config, y `hello.c` con su Makefile, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -164,6 +165,10 @@ adivinar rutas:
 ```bash
 pkg-config --cflags --libs zlib
 ```
+
+En `phase04` esa línea responde `No package 'zlib' found` y sale con 1: la librería de
+ejecución está, pero falta `zlib1g-dev`, el paquete que trae las cabeceras y el `zlib.pc`. Es
+justo la trampa del párrafo siguiente.
 
 Es lo que usan `canvas`, `sharp` y compañía para encontrar sus dependencias del sistema.
 Cuando falta, el error habla de una librería que sí está instalada — y ahí es donde se

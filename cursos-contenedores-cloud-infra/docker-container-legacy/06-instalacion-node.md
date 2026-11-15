@@ -10,6 +10,7 @@
 > **Estado de la imagen al terminar:** el toolchain está completo. Cuatro Node instalados, uno activo, npm y `node-gyp` disponibles
 > **Código de esta fase:** [`src/06-instalacion-node/`](src/06-instalacion-node/)
 > **Objetivo:** instalar cuatro generaciones de Node desde los tarballs oficiales, verificarlas, y separar dos operaciones que casi todo el mundo confunde: instalar y activar
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el build con las cuatro verificaciones `sha256sum` y la prueba de fuego de §9, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -44,7 +45,8 @@ Al terminar deberías poder explicar:
 - **Checksums, SHA-256, `SHASUMS256.txt` y firmas GPG a fondo** → **[a04](a04-checksums-gpg-y-archivos.md)**. Aquí queda la
   verificación operativa que el build ejecuta, no el tratado.
 - **Por qué no `nvm`, NodeSource, compilar desde source ni `FROM node:10`**, con el
-  razonamiento largo, `PATH`, `npx` y Yarn → **[a02](a02-estrategia-node-y-clis.md)**. Aquí va la versión corta.
+  razonamiento largo, `PATH`, `npx` y Yarn → **[a02](a02-estrategia-node-y-clis.md)**. Aquí va la versión corta. Y si quieres
+  ver qué cuesta compilar de verdad, con los minutos y la RAM medidos → **[a17](a17-compilar-node-desde-fuente.md)**.
 - El **despachador definitivo** que sustituye a `select-node` en runtime → **[F08](08-run-el-contenedor-como-proceso.md)**. El
   `select-node` de esta fase resuelve el build; tiene un límite y lo declaramos.
 - El ABI y por qué un addon compilado para Node 10 no sirve en Node 12 → **[F14](14-abi-libc-y-prebuilds.md)**.
@@ -448,7 +450,7 @@ docker run --rm --platform linux/amd64 legacy-node-toolchain:phase06 \
   bash -c 'for v in 10.24.1 12.22.12 14.21.3 16.20.2; do
              printf "%-10s node %s  npm %s\n" "$v" \
                "$(/opt/node/$v/bin/node --version)" \
-               "$(/opt/node/$v/bin/npm --version)"
+               "$(PATH=/opt/node/$v/bin:$PATH npm --version)"
            done'
 ```
 ```text
@@ -457,6 +459,11 @@ docker run --rm --platform linux/amd64 legacy-node-toolchain:phase06 \
 14.21.3    node v14.21.3  npm 6.14.18
 16.20.2    node v16.20.2  npm 8.19.4
 ```
+
+> ⚠️ **El `PATH=` delante de `npm` no es decoración.** Es el mismo shebang de §8: npm
+> arranca con `#!/usr/bin/env node`, y sin ese `PATH` el `node` que encuentra es el activo,
+> la 10. Con `/opt/node/16.20.2/bin/npm --version` a secas, el npm 8 corre sobre Node 10 y
+> responde `ERROR: npm is known not to run on Node.js v10.24.1`, con la columna vacía.
 
 Esa última línea es la advertencia de §4 hecha salida real: **npm 8**.
 

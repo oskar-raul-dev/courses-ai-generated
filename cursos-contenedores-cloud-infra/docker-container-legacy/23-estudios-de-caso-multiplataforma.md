@@ -6,6 +6,7 @@
 > **Requisitos:** **[F21](21-arquitecturas-y-emulacion.md)**, **[F22](22-apple-silicon-y-hosts.md)** y **[F15](15-laboratorios-dependencias-nativas.md)** (los cuatro dragones)
 > **Estado de la imagen al terminar:** sin cambios
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — Colima, Docker Desktop y sus opciones de emulación
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — la matriz de §6 (diez ✅ de diez con `phase21`) y los dragones de §4 en arm64, sobre Docker 29.9.3 en macOS Apple Silicon
 > **Objetivo:** poner números donde llevamos tres fases poniendo argumentos — qué pasa exactamente con los cuatro dragones en ARM64, cuánto cuesta la emulación de verdad, y un árbol de decisión que no dependa de la intuición
 
 ---
@@ -64,6 +65,11 @@ npm view node-sass@4.14.1 dist.tarball
 # y en los releases de GitHub del paquete, busca "linux-arm64" en los artefactos
 ```
 
+> 📝 **Medido el 14/11/2026** con la imagen `:arm64` de [F21](21-arquitecturas-y-emulacion.md) y un proyecto Angular 8 real: el
+> instalador intenta `…/v4.14.1/linux-arm64-64_binding.node`, no lo encuentra, compila LibSass y
+> el módulo carga. El `npm ci` entero tardó 2 min 22 s, contra 1 min 37 s del mismo proyecto en
+> amd64 emulado con el prebuild: aquí la emulación sale **más barata** que compilar nativo.
+
 > 🧭 **Este caso, solo, justifica que el baseline del curso sea amd64.** No es una preferencia
 > por Intel: es que en 2018 los binarios se publicaron para donde estaba la gente.
 
@@ -90,7 +96,13 @@ prebuild con SQLite incrustado  →  ¿existe para arm64? depende de la versión
 compilar contra el del sistema  →  funciona en arm64: libsqlite3-dev existe para todas
 ```
 
-En ARM64, la segunda estrategia pasa de ser una opción a ser **la salida fiable**.
+En ARM64, la segunda estrategia pasa de ser una opción a ser **la salida fiable**. Con
+`sqlite3@4.2.0` se ve entero (14/11/2026): el prebuild arm64 no existe (`Tried to
+download(403): …/node-v64-linux-arm64.tar.gz`), el instalador cae a compilar el SQLite que
+trae dentro y se estrella con `/bin/sh: 1: python: not found` → `Error 127`, porque ese
+script llama a `python` a secas y la imagen, por la decisión de [F05](05-python-y-node-gyp.md), no lo tiene. Con
+`--build-from-source --sqlite=/usr` compila contra el `libsqlite3` de Debian arm64 y funciona.
+`canvas`, en cambio, compila en arm64 sin tocar nada, como dice §4.2.
 
 ### 4.4 Puppeteer: el que de verdad se rompe
 
@@ -200,7 +212,7 @@ for arch in amd64 arm64; do
       -e NODE_VERSION=10.24.1 \
       --mount type=bind,src="$PWD/src/11-validar-tu-proyecto/${fx}",dst=/workspace \
       --mount type=volume,src="$vol",dst=/workspace/node_modules \
-      legacy-node-toolchain:phase15 \
+      legacy-node-toolchain:phase21 \
       bash -c 'npm ci >/dev/null 2>&1 && printf "ci=✅ " || printf "ci=❌ "
                npm run build >/dev/null 2>&1 && printf "build=✅\n" || printf "build=❌\n"'
   done
@@ -209,6 +221,10 @@ done
 
 **Detalles con intención:**
 
+- **La imagen es `phase21`, la multiarch de [F21](21-arquitecturas-y-emulacion.md) §6.2**, cargada con sus dos variantes. `phase15`
+  solo existe para amd64: con `--platform linux/arm64` el motor no la encuentra y la busca en
+  Docker Hub (`pull access denied`). Si tu almacén es el clásico y no admite el `--load` de las
+  dos plataformas, usa `:phase15` para la columna amd64 y `:arm64` para la otra.
 - **Volumen limpio por fixture y arquitectura**, con la convención completa de [F22](22-apple-silicon-y-hosts.md) §7. Sin eso
   la matriz miente.
 - **`00-node-smoke` primero**, porque si el control falla en una arquitectura, todo lo demás de

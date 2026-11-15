@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra los bucles de:** [F03](03-apt-y-utilidades.md) §4 · [F31](31-catalogo-de-fallos-i.md) §4 · [F32](32-catalogo-de-fallos-ii.md) §4
 > **Requisitos:** haber hecho F03. Aquí está lo que esa fase resumió en cuatro opciones
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — las consultas de `apt-cache` y `dpkg`, el `sources.list`, las relaciones de `curl`, el árbol de §4.1, `docker-clean` y la supervivencia de §6, dentro de `legacy-node-toolchain:phase15` sobre Docker Desktop 29.9.3
 > **Qué encontrarás:** por qué Debian tiene media docena de comandos para instalar paquetes, la anatomía del `sources.list`, cómo se resuelven las dependencias de verdad, y una guía de supervivencia para cuando estés dentro del contenedor y no sepas por dónde empezar
 
 [F03](03-apt-y-utilidades.md) te dio lo operativo: cuatro opciones de un `RUN` y por qué van juntas. Este apéndice es el
@@ -83,8 +84,19 @@ APT necesita saber de dónde bajar. En Debian 10 eso vive en `/etc/apt/sources.l
 docker run --rm --platform linux/amd64 legacy-node-toolchain:phase15 \
   cat /etc/apt/sources.list
 ```
+```text
+# deb http://snapshot.debian.org/archive/debian-archive/20250625T172521Z/debian buster main
+deb http://archive.debian.org/debian buster main
+# deb http://snapshot.debian.org/archive/debian-archive/20250625T172521Z/debian-security buster/updates main
+deb http://archive.debian.org/debian-security buster/updates main
+# deb http://snapshot.debian.org/archive/debian-archive/20250625T172521Z/debian buster-updates main
+deb http://archive.debian.org/debian buster-updates main
+```
 
-Y la anatomía de una línea:
+Tres suites —la release, la de seguridad y la de actualizaciones, que se explican más abajo—,
+solo el componente `main`, y encima de cada una la misma fuente en `snapshot.debian.org`,
+comentada, por si `archive.debian.org` fallara ([a04](a04-checksums-gpg-y-archivos.md)). Y la anatomía de una línea, con los tres
+componentes:
 
 ```text
 deb  http://archive.debian.org/debian  buster  main contrib non-free
@@ -172,14 +184,16 @@ incluidas sus propias `Depends` — las **transitivas**.
 
 ```text
 pides:        curl
-Depends:      libcurl4, zlib1g, libssl1.1 …
-              └── y cada una tiene las suyas: dependencias TRANSITIVAS
-Recommends:   ca-certificates      ← esto es lo que se omite
+Depends:      libc6, libcurl4, zlib1g
+              └── libcurl4 Depends: libssl1.1, libnghttp2-14, … ← TRANSITIVAS
+                  libcurl4 Recommends: ca-certificates          ← esto es lo que se omite
 ```
 
-> ⚠️ **Y el caso que produce más confusión:** `ca-certificates` es un `Recommends` de `curl`,
-> no un `Depends`. Con `--no-install-recommends`, `curl` se instala perfectamente y **falla en
-> cualquier descarga HTTPS**. Por eso [F03](03-apt-y-utilidades.md) §6 lo lista explícitamente en la caja de herramientas.
+> ⚠️ **Y el caso que produce más confusión:** `ca-certificates` no es dependencia de `curl`
+> —en Buster, `curl` no tiene ningún `Recommends`—, sino un `Recommends` de **`libcurl4`**, la
+> librería que `curl` arrastra. Con `--no-install-recommends`, `curl` se instala perfectamente y
+> **falla en cualquier descarga HTTPS**, y mirar solo los `Recommends` de `curl` no te lo
+> explica: hay que bajar un nivel. Por eso [F03](03-apt-y-utilidades.md) §6 lo lista explícitamente en la caja de herramientas.
 > La lección general: **si un paquete no funciona tras usar la opción, mira sus `Recommends`
 > antes de quitar la opción.**
 
@@ -187,10 +201,12 @@ Recommends:   ca-certificates      ← esto es lo que se omite
 
 ```bash
 apt-cache depends --recurse --no-recommends --no-suggests \
-  --no-conflicts --no-breaks --no-replaces --no-enhances curl | grep -c Depends
+  --no-conflicts --no-breaks --no-replaces --no-enhances curl | grep -v '^ ' | sort -u | wc -l
 ```
 
-Ese número es la cantidad real de paquetes que arrastra `curl`. Suele sorprender.
+Ese número —**49** en Buster, contando a `curl`— es la cantidad real de paquetes que arrastra.
+Suele sorprender. (Con `grep -c Depends` al final saldría 120: eso cuenta **aristas** del grafo,
+cada vez que un paquete depende de otro, no paquetes distintos.)
 
 ---
 
@@ -311,7 +327,9 @@ apropos <tema>          # buscar comandos por tema
 
 > 🧭 **El orden práctico:** `--help` primero, `man` si necesitas el detalle, e Internet solo
 > después. En un contenedor legacy, la documentación **de la versión que tienes instalada** está
-> en el `man`, y la de Internet describe otra.
+> en el `man`, y la de Internet describe otra. En la imagen del curso las páginas están en
+> `/usr/share/man`, pero el programa no: `man` da `command not found` hasta que haces
+> `apt-get update && apt-get install -y man-db` dentro del contenedor.
 
 ### 6.8 Práctica de cinco minutos
 

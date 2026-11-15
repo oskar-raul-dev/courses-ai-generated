@@ -6,7 +6,7 @@
 > **Arquitectura objetivo del laboratorio:** `linux/amd64`
 > **Código de esta fase:** [`src/16-pid1-senales-y-ciclo-de-vida/`](src/16-pid1-senales-y-ciclo-de-vida/)
 > **Requisitos:** **[F08](08-run-el-contenedor-como-proceso.md)**, que usó `exec "$@"` sin explicarlo del todo
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — el laboratorio de §7.1 y los zombies de §8 están corridos sobre Docker 29.6.2, imagen `linux/amd64` bajo Rosetta en macOS Apple Silicon
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — el laboratorio de §7.1 y los zombies de §8 están corridos sobre Docker 29.6.2, imagen `linux/amd64` bajo Rosetta en macOS Apple Silicon. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: §7.1 y los 41 zombies de §8; el periodo de gracia por defecto midió 3 s (ver §7)
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** entender qué hace especial al proceso 1 de un contenedor, por qué `docker stop` tarda diez segundos cuando algo va mal, y qué son exactamente los zombies
 
@@ -299,6 +299,13 @@ el mismo resultado que el caso anterior. Es la razón de la regla de [F02](02-do
 ❌ shell form                   PID 1 = /bin/sh -c    stop en 10s, SIGKILL
 ```
 
+> ⚠️ **Mide tu periodo de gracia antes de comparar.** Los 10 s son el valor por defecto que
+> documenta Docker para contenedores Linux. En la pasada del 14/11/2026, con Docker Desktop
+> 29.9.3, un `docker stop` sin `-t` mató el proceso a los **3,1 s** —en amd64 y en arm64, y con
+> `StopTimeout` vacío en el `inspect`—, y con `-t 10` volvieron los 10,1 s. Para que este
+> laboratorio no dependa del motor, haz las tres filas de ❌ con `time docker stop -t 10`: lo
+> que mides es si hubo cierre ordenado (exit 0) o SIGKILL (exit 137), no cuánto vale el defecto.
+
 ---
 
 ## 8. 🧟 Zombies, y qué hace `--init`
@@ -503,7 +510,7 @@ crash. §9.2.
 [ ] docker inspect --format '{{.State.Pid}}' da un número distinto: el del host
 [ ] El servidor de §7 responde y registra su PID
 [ ] docker stop tarda menos de un segundo y el log muestra el cierre ordenado
-[ ] Quitaste el handler y comprobaste que tarda exactamente 10 segundos
+[ ] Quitaste el handler y comprobaste que docker stop -t 10 tarda exactamente 10 segundos y sale con 137
 [ ] Quitaste el exec del entrypoint y viste el script como PID 1
 [ ] Provocaste al menos un zombie y lo viste con estado Z
 [ ] --init cambia quién es PID 1: comprobado con ps -ef

@@ -5,7 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** **[F17](17-usuarios-permisos-y-volumenes.md)** (usuarios y permisos) y **[F24](24-docker-y-podman-arquitectura.md)** (los dos motores)
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
-> **⚠️ Alcance de la verificación (6 de septiembre de 2026):** el barrido de verificación ejecutada del curso se corrió sobre **Docker 29.6.2** y no sobre Podman, que no estaba instalado en la máquina de referencia. **Los comandos `podman` de esta fase están contrastados contra la documentación oficial de Podman, no ejecutados**, y así se declaran por lo que pide la guía del curso: si no está verificado, se dice. Si los corres y algo no coincide, tu terminal tiene razón y este documento no.
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los comandos `podman` de la fase, corridos por primera vez sobre **Podman 6.1.4** en Podman Machine (Fedora 44, rootless, SELinux en `Enforcing`) desde un Mac con Apple Silicon, y los de Docker sobre Docker Desktop 29.9.3; el experimento de §10, corregido con lo que salió. Docker `userns-remap` y Docker rootless (§6.2, §6.3) no se ejecutaron. Si los corres y algo no coincide, tu terminal tiene razón y este documento no.
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** entender qué es un user namespace, por qué "root dentro del contenedor" es una frase imprecisa, y qué gana y qué cuesta cada modelo — con un threat model honesto
 
@@ -132,6 +132,22 @@ significa "rootful".
 > 🧠 **Ese archivo de tres números es la fase entera.** Cuando quieras saber en qué modelo
 > estás, no preguntes al producto: pregunta a `/proc/self/uid_map`.
 
+> 📝 **En Podman Machine (macOS, Windows), los números son de la VM.** Tu Mac no tiene
+> `/etc/subuid` (`No such file or directory`): el rango vive dentro de la VM, para su usuario
+> `core`, que Podman crea con **tu mismo UID** (501 en un Mac). Lo que sale, medido:
+>
+> ```bash
+> podman machine ssh "cat /etc/subuid"          # core:100000:1000000
+> podman run --rm alpine cat /proc/self/uid_map
+> ```
+> ```text
+>          0        501          1
+>          1     100000    1000000
+> ```
+>
+> Y la conexión rootful de la misma máquina (`podman --connection podman-machine-default-root
+> run …`) da la identidad de Docker, `0 0 4294967295`.
+
 ---
 
 ## 6. 🗺️ Los cuatro modelos
@@ -215,6 +231,8 @@ podman run --rm --userns=keep-id legacy-node-toolchain:phase15 id
 uid=1000(oskar) gid=1000(oskar)
 ```
 
+En Podman Machine sale `uid=501(core) gid=1000(core)`: el usuario de la VM, con tu UID del Mac.
+
 Con eso, los archivos que crees en un bind mount tienen tu dueño en los dos lados, sin `chown`,
 sin preparar volúmenes y sin `-e HOME`. Es la respuesta más limpia al problema de [F17](17-usuarios-permisos-y-volumenes.md).
 
@@ -231,6 +249,11 @@ En Linux, los puertos por debajo del 1024 requieren privilegios. En rootless no 
 ```bash
 podman run -p 80:80 nginx      # ❌ permission denied
 podman run -p 8080:80 nginx    # ✅
+```
+```text
+Error: rootlessport cannot expose privileged port 80, you can add
+'net.ipv4.ip_unprivileged_port_start=80' to /etc/sysctl.conf (currently 1024),
+or choose a larger port number (>= 1024): listen tcp :80: bind: permission denied
 ```
 
 Para el laboratorio da igual —3000, 4200, 8080 y 9229 están todos por encima—, y para servir en
@@ -337,19 +360,33 @@ podman run --rm alpine cat /proc/self/uid_map
 # ¿qué rango tengo prestado?
 grep "^$(whoami):" /etc/subuid /etc/subgid
 
-# el archivo que sale al host
-podman run --rm --userns=keep-id \
-  --mount type=bind,src="$PWD",dst=/w \
-  alpine touch /w/keepid.txt
-ls -ln keepid.txt
-
-podman run --rm \
-  --mount type=bind,src="$PWD",dst=/w \
-  alpine touch /w/rootless.txt
-ls -ln rootless.txt
+# el archivo que sale al host: root del contenedor, keep-id, y un UID cualquiera
+podman run --rm -v "$PWD":/w:Z alpine touch /w/rootless.txt
+podman run --rm --userns=keep-id -v "$PWD":/w:Z alpine touch /w/keepid.txt
+podman unshare chmod 777 .        # para que el UID 1234 del contenedor pueda escribir
+podman run --rm --user 1234:1234 -v "$PWD":/w:Z alpine touch /w/uid1234.txt
+ls -ln
+```
+```text
+-rw-r--r--. 1    501   1000 0 nov 14 15:42 keepid.txt
+-rw-r--r--. 1    501   1000 0 nov 14 15:42 rootless.txt
+-rw-r--r--. 1 101233 101233 0 nov 14 15:42 uid1234.txt
 ```
 
-Compara los dueños de los dos archivos. Ahí está §7 en dos líneas de `ls`.
+**Los dos primeros tienen el mismo dueño, y eso es lo instructivo.** El root rootless se mapea
+a tu usuario (la primera línea del `uid_map`), así que escribir como root dentro deja tus
+archivos fuera. La diferencia aparece con cualquier otro UID: el 1234 de dentro es el
+`100000 + 1233` de fuera, un UID prestado que no es nadie. Por eso el problema real de
+[F17](17-usuarios-permisos-y-volumenes.md) en rootless es la imagen que corre con `--user` o con
+un `USER` propio, y para eso existe `keep-id`: hace que **tu** UID sea el mismo dentro (§7), así
+que un proceso que no es root escribe archivos tuyos. El `:Z` es la etiqueta de SELinux de F17
+§7: sin ella, en un Linux con SELinux en `Enforcing` el `touch` falla con `Permission denied`.
+
+> ⚠️ **En macOS, este experimento no muestra nada sobre un directorio del Mac.** Hecho en
+> `$PWD` del Mac, los tres archivos salen `501:20`: la compartición de archivos de la VM
+> (virtiofs) presenta todo con tu dueño, escriba quien escriba, y desde dentro un contenedor
+> rootless ve esos mismos archivos como `0:0`. Para ver el mapeo de verdad, corre el bloque
+> dentro de la VM, en un directorio suyo (`podman machine ssh`, luego `mkdir ~/f25 && cd ~/f25`).
 
 ---
 
@@ -416,7 +453,7 @@ Ejecuta `id` en un contenedor Docker rootful y en uno Podman rootless.
 
 Ejecuta la comparación de archivos de §10.
 
-**Objetivo:** ver los dos dueños distintos con `ls -ln`.
+**Objetivo:** ver con `ls -ln` que `rootless.txt` y `keepid.txt` comparten dueño y que `uid1234.txt` no, y explicar por qué con el `uid_map`.
 
 ### 🟢 Ejercicio 5 — `keep-id` en acción
 

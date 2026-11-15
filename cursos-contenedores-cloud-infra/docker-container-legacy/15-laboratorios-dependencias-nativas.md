@@ -8,7 +8,7 @@
 > **Tag pedagógico:** `legacy-node-toolchain:phase15`
 > **Estado de la imagen al terminar:** el toolchain gana las librerías del sistema que necesitan `canvas`, `sqlite3` y Chromium
 > **Requisitos:** **[F14](14-abi-libc-y-prebuilds.md)**, imprescindible. Esta fase aplica su teoría a cuatro casos reales
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — el dragón de `canvas` (§5) está corrido de punta a punta: el fallo sin librerías, la compilación con ellas, el `ldd` y el PNG. Docker 29.6.2, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — el dragón de `canvas` (§5) está corrido de punta a punta: el fallo sin librerías, la compilación con ellas, el `ldd` y el PNG. Docker 29.6.2, imagen `linux/amd64` bajo emulación en macOS Apple Silicon. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: `canvas` (el mismo PNG de 5.387 bytes), `sqlite3` por las dos vías y la URL de Chromium
 > **Código de esta fase:** [`src/15-laboratorios-dependencias-nativas/`](src/15-laboratorios-dependencias-nativas/)
 > **Objetivo:** diseccionar los cuatro paquetes que más tardes han costado en proyectos de 2018, y salir con una política de reparación que no destruya la evidencia
 
@@ -238,6 +238,13 @@ instalados. Ese archivo es el curso entero en 5.387 bytes. 😉
 > 🔥 **Prueba de fuego.** Ejecútalo, sal del contenedor y abre `salida.png` en tu host. Si el
 > texto sale como rectángulos, te faltan **fuentes** —no librerías—, que es un fallo distinto
 > con el mismo aspecto. `fonts-liberation` lo arregla, y **[a09](a09-browsers-legacy.md)** explica por qué.
+>
+> Y aun con las fuentes, mira bien la imagen: el texto se corta en "Debian 1" y el 👋 no
+> sale. `fc-match sans-serif` resuelve a **Liberation Mono**, que es ancha, y Debian 10 no trae
+> ninguna fuente de emoji. Los 5.387 bytes son correctos —la pasada del 14/11/2026 dio el
+> mismo archivo, byte a byte—; lo que enseña es que "renderiza" y "renderiza lo que
+> esperabas" son dos verificaciones distintas. Con `ctx.font = '24px "Liberation Sans"'` o un
+> lienzo de 560 px de ancho, el texto entra entero.
 
 ---
 
@@ -328,7 +335,7 @@ a la imagen.
 Sobre el canónico, se añaden las librerías que los cuatro laboratorios justificaron:
 
 ```dockerfile
-# … todo lo del canónico de F09 …
+# … el canónico de F09; este RUN va justo después del RUN de APT de F03, antes de Node …
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

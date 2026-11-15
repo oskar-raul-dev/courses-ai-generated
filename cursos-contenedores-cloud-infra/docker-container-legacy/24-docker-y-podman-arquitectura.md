@@ -5,7 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** **[F12](12-capas-cache-y-contexto.md)** (build), **[F16](16-pid1-senales-y-ciclo-de-vida.md)** (procesos), **[F18](18-networking-de-contenedores.md)** (red)
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
-> **⚠️ Alcance de la verificación (6 de septiembre de 2026):** el barrido de verificación ejecutada del curso se corrió sobre **Docker 29.6.2** y no sobre Podman, que no estaba instalado en la máquina de referencia. **Los comandos `podman` de esta fase están contrastados contra la documentación oficial de Podman, no ejecutados**, y así se declaran por lo que pide la guía del curso: si no está verificado, se dice. Si los corres y algo no coincide, tu terminal tiene razón y este documento no.
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los comandos `podman` de la fase, corridos por primera vez sobre **Podman 6.1.3** (cliente de macOS) y **6.1.4** (la VM de Podman Machine: Fedora 44, libkrun, rootless), junto a Docker Desktop 29.9.3, en un Mac con Apple Silicon; el pod de §10.1 con `busybox` en lugar de la app y `buildah` (§11) dentro de su imagen oficial, porque Podman Machine no lo trae. La primera versión de la fase (6 de septiembre) solo los contrastaba con la documentación, y lo que no coincidió está corregido aquí. Si los corres y algo no coincide, tu terminal tiene razón y este documento no.
 > **Estado de la imagen al terminar:** sin cambios — el Dockerfile es el mismo para los dos motores
 > **Objetivo:** comparar dos arquitecturas sin hacer fútbol: cliente/daemon frente a fork-exec, qué estandariza OCI y qué no, y por qué "la CLI es compatible" no significa "son lo mismo"
 
@@ -125,6 +125,33 @@ ps -ef | grep -E 'dockerd|containerd|shim' | grep -v grep
 
 La frase famosa es *"Podman es daemonless"*, y como toda frase famosa necesita matices.
 
+### 5.0 Antes de seguir: Podman en tu máquina
+
+En Linux, Podman es un paquete de la distribución (`apt install podman`, `dnf install podman`) y
+corre directamente sobre tu kernel. En macOS y Windows necesita, igual que Docker Desktop, una VM
+Linux: **Podman Machine**. Son tres pasos en un Mac:
+
+```bash
+brew install podman          # o el instalador .pkg de podman.io, que deja el binario en /opt/podman/bin
+podman machine init          # descarga la imagen de la VM (Fedora); 1 min 12 s en la máquina de referencia
+podman machine start
+```
+
+```text
+API forwarding listening on: /var/run/docker.sock
+Docker API clients default to this address. You do not need to set DOCKER_HOST.
+
+Machine "podman-machine-default" started successfully
+```
+
+> ⚠️ **Los valores por defecto no son los de Docker Desktop.** La máquina nace con **4 CPU,
+> 2 GiB de memoria**, en modo rootless, y en Apple Silicon **sin Rosetta**: un contenedor
+> `--platform linux/amd64` corre bajo `qemu-x86_64-static` dentro de la VM, la emulación lenta
+> de [F21](21-arquitecturas-y-emulacion.md). Para el laboratorio, súbele la memoria con la
+> máquina parada (`podman machine stop`, `podman machine set --memory 8192 --cpus 8`,
+> `podman machine start`). Y fíjate en la primera línea de la salida: la máquina se apropia de
+> `/var/run/docker.sock`, cosa que §5.1 explica.
+
 ```mermaid
 flowchart TD
     C["podman run ..."] -- "fork-exec: el proceso lo lanza TU comando, con TU usuario" --> L["libpod<br/>la biblioteca donde vive la lógica"]
@@ -136,8 +163,18 @@ flowchart TD
 ### 5.1 El modelo fork-exec
 
 No hay un servicio central que reciba tu petición y lance el contenedor **por ti**. Tu comando
-`podman` hace el trabajo directamente, y el contenedor resulta ser **descendiente de tu
-proceso**, con tu usuario.
+`podman` hace el trabajo directamente: crea el contenedor **con tu usuario**, arranca su
+`conmon` y termina. El árbol de procesos lo dice con precisión —esto es dentro de un Linux, con
+un `podman run` en primer plano todavía vivo—:
+
+```text
+systemd(1)───conmon(6088)───sleep(6090)
+```
+
+`conmon` hace un doble *fork* y se desprende de tu shell a propósito, y systemd lo adopta. Así
+que "hijo tuyo" es cierto en el sentido que importa —**tu UID, tu sesión de systemd, tus
+cgroups**— y no en el del árbol: el contenedor no cuelga de tu terminal, y por eso sobrevive si
+la cierras o si matas el `podman` que lo lanzó (ejercicios 6 y 22).
 
 De ahí salen tres consecuencias:
 
@@ -145,6 +182,15 @@ De ahí salen tres consecuencias:
 - **Rootless es natural**, no un modo especial. Es de **[F25](25-rootless-y-user-namespaces.md)**.
 - **Se integra con `systemd`** de forma directa, porque los contenedores son procesos normales
   del usuario.
+
+> 📝 **En macOS y Windows, Podman también es cliente/servidor.** El `podman` de tu Mac es un
+> binario de macOS (`Mach-O arm64`) que no puede crear namespaces de Linux: habla por SSH con el
+> servicio `podman.socket` de systemd **dentro de la VM**, y es ahí donde ocurre el fork-exec.
+> `podman version` lo delata con dos versiones (`cliente 6.1.3 darwin/arm64 · servidor 6.1.4
+> linux/arm64`). Y `podman machine start` publica esa API en `/var/run/docker.sock`: con Docker
+> Desktop cerrado, el `curl` de §4.1 responde `"Name": "Podman Engine"` y el cliente `docker`
+> con el contexto `default` habla con Podman sin saberlo. El modelo de §5.1 sigue valiendo
+> **dentro** de la VM; lo que cambia es dónde la miras (§5.5).
 
 ### 5.2 `conmon` es el equivalente al shim
 
@@ -174,6 +220,13 @@ cuando alguien se conecta y lo para cuando no. No hay un daemon permanente como 
 podman info --format '{{.Version.Version}} · {{.Store.GraphDriverName}}'
 podman info --format '{{.Host.OCIRuntime.Name}} · {{.Host.OCIRuntime.Version}}'
 ps -ef | grep -E 'conmon|crun|runc' | grep -v grep
+
+# en macOS o Windows los procesos viven en la VM: el ps del host no los ve
+podman machine ssh "ps -ef | grep -E 'conmon|crun|runc' | grep -v grep"
+```
+```text
+6.1.4 · overlay
+crun · crun version 1.30
 ```
 
 ---
@@ -193,8 +246,9 @@ ps -ef | grep -E 'conmon|crun|runc' | grep -v grep
 | **Concepto de pod** | no | sí, nativo |
 | **Almacén local** | el suyo | el suyo, **distinto** |
 
-> 🧭 **La diferencia que lo explica casi todo:** en Docker, el contenedor es hijo de un servicio
-> del sistema. En Podman, es hijo tuyo. Casi todas las demás diferencias se derivan de ahí.
+> 🧭 **La diferencia que lo explica casi todo:** en Docker, el contenedor lo crea un servicio
+> del sistema, con sus privilegios. En Podman, lo crea tu comando, con los tuyos. Casi todas las
+> demás diferencias se derivan de ahí.
 
 ---
 
@@ -272,7 +326,7 @@ Hay incluso quien hace `alias docker=podman`, y funciona sorprendentemente bien.
 | **SELinux** | no lo gestiona | `:z` y `:Z` | **F17 §7** |
 | **Usuarios** | `--user` | `--user` y `--userns=keep-id` | **[F25](25-rootless-y-user-namespaces.md)** |
 | **Red** | `bridge` propio | `netavark` o `slirp4netns` | §10 |
-| **Host desde el contenedor** | `host.docker.internal` | `host.containers.internal` | §10 |
+| **Host desde el contenedor** | `host.docker.internal` | `host.containers.internal` y también `host.docker.internal` | §10 |
 | **Restart policies** | las gestiona el daemon | dependen de systemd | **[F16](16-pid1-senales-y-ciclo-de-vida.md) §10** |
 | **Build** | BuildKit | Buildah | §11 |
 | **Compose** | integrado | `podman-compose` o el servicio | **[a10](a10-docker-compose.md)** |
@@ -287,7 +341,10 @@ Cada motor guarda sus imágenes en su propio sitio, con su propio formato:
 Docker   → /var/lib/docker/       (o dentro de la VM en macOS/Windows)
 Podman   → ~/.local/share/containers/storage/   (rootless)
            /var/lib/containers/storage/          (rootful)
+           (en macOS, dentro de la VM: /var/home/core/.local/share/containers/storage/)
 ```
+
+En un Mac la separación es todavía más literal: **son dos VM distintas**, con dos discos.
 
 **No se ven entre sí.** Una imagen construida con Docker **no aparece** en `podman images`,
 aunque sea la misma máquina.
@@ -317,16 +374,27 @@ correcto cuando hay más de una máquina.
 CNI—, y en rootless usa `slirp4netns` o `pasta`, que emulan la red en espacio de usuario. El
 resultado funcional es parecido y el rendimiento y los detalles no son idénticos.
 
-**Y el nombre del host cambia:**
+**Y el nombre del host cambia, en un solo sentido.** Con un servidor escuchando en el host
+(`python3 -m http.server 18482 --bind 127.0.0.1`), las cuatro combinaciones:
 
 ```bash
-# Docker
-docker run --rm alpine ping -c1 host.docker.internal
-# Podman
-podman run --rm alpine ping -c1 host.containers.internal
+docker run --rm alpine wget -qO- -T3 http://host.docker.internal:18482/       # ✅
+docker run --rm alpine wget -qO- -T3 http://host.containers.internal:18482/   # ❌ no resuelve
+podman run --rm alpine wget -qO- -T3 http://host.containers.internal:18482/   # ✅
+podman run --rm alpine wget -qO- -T3 http://host.docker.internal:18482/       # ✅
 ```
 
-Es una de esas diferencias pequeñas que rompen un script y cuestan veinte minutos.
+Podman escribe **los dos** nombres en el `/etc/hosts` del contenedor
+(`192.168.127.254 host.containers.internal host.docker.internal` en Podman Machine 6.1),
+justamente para que los scripts escritos para Docker no se rompan; Docker no conoce el nombre
+de Podman. Así que el nombre portable es `host.docker.internal`, y un script que use
+`host.containers.internal` es el que falla en un motor. Es una de esas diferencias pequeñas que
+rompen un script y cuestan veinte minutos.
+
+> ⚠️ **No lo pruebes con `ping`.** En Podman rootless, `ping` falla con
+> `ping: permission denied (are you root?)` aunque el nombre resuelva: el contenedor no tiene
+> permiso para abrir sockets ICMP (es [F25](25-rootless-y-user-namespaces.md)). `wget` contra un
+> puerto prueba lo que de verdad te importa.
 
 ### 10.1 Pods: el concepto que Docker no tiene
 
@@ -366,7 +434,7 @@ caminos distintos.
 comandos de shell:
 
 ```bash
-ctr=$(buildah from debian/eol:buster)
+ctr=$(buildah from docker.io/debian/eol:buster)
 buildah run "$ctr" -- apt-get update
 buildah config --workingdir /workspace "$ctr"
 buildah commit "$ctr" mi-imagen:v1
@@ -374,6 +442,16 @@ buildah commit "$ctr" mi-imagen:v1
 
 Es útil para generar imágenes desde un script, y es exactamente lo que un `Dockerfile` no te
 deja hacer.
+
+> 📝 **`buildah` no viene con Podman Machine.** `podman build` lleva Buildah dentro como
+> biblioteca, pero el comando `buildah` no está ni en tu Mac ni en la VM (`command -v buildah`
+> sale vacío). En macOS, el ejercicio 13 se hace con su imagen —`podman run --rm --privileged
+> quay.io/buildah/stable:v1.37 bash`, y dentro los cuatro comandos de arriba: verificados con
+> Buildah 1.37.5, dejan `localhost/mi-imagen:v1` de 132 MB con `WorkingDir /workspace`— o en un
+> Linux con el paquete `buildah`. Fíjate en el `docker.io/` del `from`: sin él, Buildah se niega
+> a adivinar el registry cuando no tiene una terminal donde preguntarte
+> (`short-name resolution enforced but cannot prompt without a TTY`), y es lo que pasa en un
+> script o en CI.
 
 > ⚠️ **Las extensiones de BuildKit no son portables.** Un Dockerfile con
 > `RUN --mount=type=cache` puede no funcionar igual con Buildah. El curso no las usa en el
@@ -399,7 +477,8 @@ contra él.
 **`podman run` intenta descargar una imagen que acabas de construir con Docker.** Dos almacenes.
 §9.
 
-**`host.docker.internal` no resuelve en Podman.** Es `host.containers.internal`. §10.
+**`host.containers.internal` no resuelve en Docker.** Es solo de Podman, que además resuelve
+`host.docker.internal`. Usa ese. §10.
 
 **Un script funciona con Docker y falla con Podman.** El 90% traduce; esto es el 10%. Mira la
 tabla de §8 y localiza el área.
@@ -451,10 +530,10 @@ Con un contenedor corriendo, ejecuta el `ps -ef` de §4.4.
 
 ### 🟢 Ejercicio 3 — Los procesos de Podman
 
-Repite con Podman y el `ps -ef` de §5.5.
+Repite con Podman y el `ps -ef` de §5.5 —en macOS, el de `podman machine ssh`—.
 
-**Pregunta:** ¿quién es el padre del contenedor ahora? Es la diferencia de §5.1 hecha árbol de
-procesos.
+**Pregunta:** ¿quién es el padre del contenedor ahora, y con qué usuario corre? Es la diferencia
+de §5.1 hecha árbol de procesos.
 
 ### 🟢 Ejercicio 4 — El mismo Dockerfile
 
@@ -539,17 +618,22 @@ Con un contenedor corriendo en cada motor, dibuja los dos árboles completos:
 
 ```bash
 pstree -p $(pgrep -f 'dockerd|containerd' | head -1) 2>/dev/null | head -20
-pstree -p $$ | head -20        # desde tu shell, con el contenedor de Podman corriendo
+pstree -ps $(pgrep -x -f 'sleep 600' | head -1)   # con el contenedor de Podman corriendo
 ```
 
-**Objetivo:** un diagrama por motor —a mano, o en Mermaid como los de esta fase— que llegue desde el proceso
-más alto hasta el `sleep` de dentro del contenedor, nombrando cada eslabón: cliente, demonio,
-`containerd`, `shim`, `runc` en un caso; cliente, `conmon`, `crun`/`runc` en el otro.
+En macOS los dos motores viven en una VM: para Podman, corre el segundo `pstree` dentro de
+`podman machine ssh`; el árbol de Docker Desktop no es accesible desde el Mac, y ahí el
+ejercicio se hace en un Linux.
 
-**Pregunta:** en uno de los dos árboles, tu contenedor **desciende de tu shell**; en el otro,
-no desciende de nada tuyo. Señala cuál es cuál y explica qué consecuencia tiene eso para tres
-cosas concretas: quién recibe las señales, quién es el dueño de los archivos que el contenedor
-escribe, y qué pasa si el proceso de más arriba se cae.
+**Objetivo:** un diagrama por motor —a mano, o en Mermaid como los de esta fase— que llegue desde el proceso
+más alto hasta el `sleep` de dentro del contenedor, nombrando cada eslabón: demonio,
+`containerd`, `shim`, `runc` en un caso; `systemd`, `conmon`, `crun`/`runc` en el otro.
+
+**Pregunta:** en **ninguno** de los dos árboles cuelga el contenedor de tu shell —`conmon` se
+desprende, §5.1—, y sin embargo los dos modelos no son iguales. Señala qué cambia entre uno y
+otro para tres cosas concretas: con qué UID corre el proceso, quién es el dueño de los archivos
+que el contenedor escribe, y qué pasa si el proceso de más arriba —`dockerd` en un caso, el
+`podman` que lanzaste en el otro— se cae.
 
 ## 🟠 Difícil — donde la compatibilidad se rompe (15–21)
 
@@ -626,6 +710,13 @@ los digests de las dos copias. ¿Son el mismo? Si lo son, ¿por qué entonces no
 ellas — es un problema de formato o de ubicación? La respuesta separa dos ideas que se
 confunden todo el tiempo: **el formato OCI es un estándar; el almacén local no lo es**, y §9 lo
 explica.
+
+> ⚠️ **Compara el digest correcto.** Tras `docker save | podman load`, el `IMAGE ID` de cada
+> motor sale distinto (`035c5f9ba879` en Docker Desktop, `6f172fadbb3c` en Podman) y es la misma
+> imagen: con el image store de containerd, Docker enseña el digest del **index**
+> ([F27](27-registries-por-dentro.md) §6) y Podman el del **config**. Lo que coincide son los
+> `diff_ids` de las capas (`.RootFS.Layers` en los dos `inspect`) y el config, que puedes leer
+> en el `manifest.json` del tar de `docker save` (`blobs/sha256/6f172f…`).
 
 ## 🔴 Muy difícil — migración y criterio (22–25)
 
@@ -739,7 +830,8 @@ DOCKER      cliente → dockerd → containerd → shim → runc → tu proceso
             el socket es una API de control: acceso ≈ root en el host
 
 PODMAN      podman (fork-exec) → libpod → conmon → crun/runc → tu proceso
-            sin daemon obligatorio; el contenedor es hijo TUYO
+            sin daemon obligatorio; el contenedor corre con TU usuario
+            (en macOS y Windows, cliente remoto de un servicio dentro de la VM)
             servicio opcional, activable por socket
             pods nativos, integración directa con systemd
 
@@ -751,7 +843,7 @@ PORTABILIDAD  la imagen  🟢 total
               los comandos  🟠 compatibles, no idénticos
 
 Y LO PRÁCTICO  dos almacenes que no se ven: docker save | podman load
-               host.docker.internal ≠ host.containers.internal
+               host.docker.internal sirve en los dos; host.containers.internal solo en Podman
 ```
 
 > **La señal de que quedó bien:** *"cuando algo funciona en un motor y no en el otro, sé en cuál

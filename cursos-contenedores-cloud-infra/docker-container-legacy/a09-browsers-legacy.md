@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra el bucle de:** [F00](00-problema-y-contrato.md) §9 · [F01](01-decisiones-debian-zonas-node.md) §5 (Zona C) · [F11](11-validar-tu-proyecto.md) §4 (nivel 3)
 > **Requisitos:** haber hecho [F09](09-montar-tu-proyecto.md) y F11. Esto es una capacidad adicional, no el camino mínimo
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el Chromium de Debian 10 con Karma (§1) sobre los tests de un proyecto Angular 8 real, y Selenium en contenedor (§4) con su healthcheck, en Docker Desktop 29.9.3 sobre macOS Apple Silicon, todo amd64 emulado; Cypress (§3) y Puppeteer (§5) no se ejecutaron
 > **Qué encontrarás:** las tres estrategias para ejecutar pruebas de navegador desde el toolchain, qué dependencias gráficas hacen falta y por qué, y por qué ARM64 complica esto mucho más que todo lo demás
 
 Las pruebas de navegador son la **Zona C** de [F01](01-decisiones-debian-zonas-node.md): aparecen solo si tu proyecto las necesita, y
@@ -90,6 +91,13 @@ Las banderas no son adorno y cada una tiene su motivo en este curso: `--no-sandb
 contenedor no trae los permisos que el sandbox de Chrome necesita, y `--disable-dev-shm-usage`
 por el `/dev/shm` de 64 MB que explica §4. `--disable-gpu` es inofensivo y ahorra ruido en los
 logs.
+
+📝 **Lo que dio** (14 de noviembre de 2026): dentro de `legacy-node-toolchain:phase15`,
+`apt-get install -y --no-install-recommends chromium` trae la `90.0.4430.212-1~deb10u1` del
+archivo de Buster en 46 s, sin ninguna librería `not found`. Con `CHROME_BIN=/usr/bin/chromium` y
+`ng test --watch=false --browsers=ChromeHeadlessNoSandbox`, la suite de un proyecto Angular 8
+real dio `TOTAL: 3 SUCCESS` en 23 s, amd64 emulado en un Mac con chip M: el nivel 3 de
+[F11](11-validar-tu-proyecto.md) que sin navegador quedaba en N/A.
 
 > ⚠️ **Una advertencia de alcance, porque esto no es un cambio cosmético.** Cambiar de navegador
 > **cambia los resultados**. Un test que pasaba en PhantomJS puede fallar en Chromium headless
@@ -205,8 +213,8 @@ docker run --rm --network legacy-e2e \
 
 **Dos detalles con intención:**
 
-- **`--shm-size=2g`.** Chrome usa memoria compartida intensivamente y el 1 GB por defecto de
-  `/dev/shm` se le queda corto. El síntoma es un navegador que se cierra solo a mitad de la
+- **`--shm-size=2g`.** Chrome usa memoria compartida intensivamente y los 64 MB por defecto
+  de `/dev/shm` se le quedan cortos. El síntoma es un navegador que se cierra solo a mitad de la
   suite con un error genérico. Es el problema más común de Selenium en contenedores.
 - **El nombre `selenium` como host.** Dentro de la red, los contenedores se resuelven por nombre
   gracias al DNS interno de Docker. No hace falta publicar el puerto 4444 al host si solo lo

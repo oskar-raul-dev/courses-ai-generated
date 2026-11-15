@@ -5,7 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · Node 10.24.1 / 12.22.12 / 14.21.3 / 16.20.2
 > **Arquitectura objetivo del laboratorio:** `linux/amd64`
 > **Requisitos:** **[F05](05-python-y-node-gyp.md)** (Python y node-gyp), **[F09](09-montar-tu-proyecto.md)** (volúmenes) y **[F13](13-overlayfs-y-copy-on-write.md)** (capas y copy-up)
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — Docker 29.6.2 sobre macOS Apple Silicon, imagen `linux/amd64` bajo emulación
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — Docker 29.6.2 sobre macOS Apple Silicon, imagen `linux/amd64` bajo emulación. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: los cuatro ABI, la glibc y la disección de un `.node`
 > **Estado de la imagen al terminar:** sin cambios. Esta fase explica por qué las cosas se rompen, no añade software
 > **Objetivo:** entender qué es realmente una "dependencia nativa" —son cuatro casos distintos, no uno—, qué contrato binario obliga a recompilar entre versiones de Node, y por qué un `node_modules` no es portable
 

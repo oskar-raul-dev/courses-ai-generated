@@ -1,8 +1,8 @@
+# syntax=docker/dockerfile:1
+
 # Archivo compuesto por el curso: en el `.md` de la fase solo aparece el fragmento
 # que cambia. Aquí está el archivo completo, listo para construir.
 # Fase: F08 §7 — canónico con entrypoint y shims
-
-# syntax=docker/dockerfile:1
 
 FROM debian/eol:buster
 

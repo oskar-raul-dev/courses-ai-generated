@@ -5,7 +5,7 @@
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`)
 > **Arquitectura objetivo del laboratorio:** `linux/amd64`
 > **Requisitos:** **[F12](12-capas-cache-y-contexto.md)** (capas y caché) y **[F09](09-montar-tu-proyecto.md)** (bind mounts y volumes)
-> **Fecha de verificación ejecutada:** 3 de septiembre de 2026 y reverificada el 6 de septiembre de 2026 — Docker 29.6.2 con image store de containerd; la tabla A/B/C de §12 se reprodujo entera
+> **Fecha de verificación ejecutada:** 3 de septiembre de 2026 y reverificada el 6 de septiembre de 2026 — Docker 29.6.2 con image store de containerd; la tabla A/B/C de §12 se reprodujo entera. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: el overlay a mano, `docker diff`, `docker ps -s` y la tabla A/B/C
 > **Estado de la imagen al terminar:** sin cambios. Lo que cambia es que ya sabes por qué pesa lo que pesa
 > **Objetivo:** entender qué mecanismo del kernel convierte una pila de capas de solo lectura en un filesystem que se puede escribir, y usar ese modelo para explicar el tamaño de tus imágenes, la salida de `docker diff` y por qué el `node_modules` del laboratorio vive donde vive
 
@@ -260,6 +260,12 @@ Tres letras y ninguna magia:
 - **`A`** (added) — existe en `upperdir` y no venía de abajo. Es `/nuevo`.
 - **`C`** (changed) — hubo copy-up. `/etc/motd` se copió entero y se modificó; `/etc` aparece porque el directorio que lo contiene también tuvo que materializarse arriba.
 - **`D`** (deleted) — hay un whiteout. El `/etc/os-release` de la imagen sigue intacto en su capa; lo que ves es la marca.
+
+> 📝 **Si estás en un Mac con chip M, verás tres líneas más.** Con Docker Desktop 29.9.3 (14/11/2026),
+> el mismo experimento añade `C /root`, `A /root/.cache` y `A /root/.cache/rosetta`, **aunque el
+> proceso no toque nada**: es la caché de traducción de Rosetta, que se escribe en la capa del
+> contenedor la primera vez que un binario amd64 arranca. Con `--platform linux/arm64` no
+> aparecen. Es justo lo que esta sección enseña a cazar: una escritura que tú no hiciste.
 
 > 🩺 **Uso real en diagnóstico.** Cuando un build "funciona pero la imagen pesa 400 MB de más", o cuando un contenedor de **[F09](09-montar-tu-proyecto.md)** se comporta distinto al de ayer, `docker diff` te dice **exactamente qué tocó el proceso**. Es la forma más rápida de descubrir que algo está escribiendo dentro del contenedor lo que debería estar escribiendo en un volume.
 

@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra el bucle de:** [F00](00-problema-y-contrato.md) §9 — *"Compose podrá aparecer después, cuando realmente simplifique escenarios multi-contenedor"*
 > **Requisitos:** **[F09](09-montar-tu-proyecto.md)** (montajes), **[F16](16-pid1-senales-y-ciclo-de-vida.md)** (ciclo de vida) y **[F18](18-networking-de-contenedores.md)** (redes). Sin las tres, esto es una caja negra
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los dos `compose` de `src/` con Docker Compose v5.7.0 sobre Docker Desktop 29.9.3 (con un fixture de Vue 2 y con Selenium hasta `healthy`), y el primero también contra Podman 6.1 por su socket, en macOS Apple Silicon
 > **Código de este apéndice:** [`src/a10-docker-compose/`](src/a10-docker-compose/)
 > **Qué encontrarás:** Compose traducido línea por línea desde los comandos que ya sabes, y el escenario donde de verdad gana: Selenium en su propio contenedor
 
@@ -188,10 +189,18 @@ avanzadas.
 **El servicio de Podman más el Compose de Docker** —[F24](24-docker-y-podman-arquitectura.md) §5.4—:
 
 ```bash
+# Linux
 systemctl --user start podman.socket
 export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/podman/podman.sock"
 docker compose up -d
+
+# macOS: el socket ya lo publica la máquina (F26 §7)
+export DOCKER_HOST="unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')"
+docker compose up -d
 ```
+
+Con el `compose.yaml` de este apéndice, el contenedor arranca igual y lo único que cambia a la
+vista es el PID 1: `podman-init` en lugar de `docker-init`.
 
 Esta segunda suele dar menos sorpresas, porque usa el Compose de verdad contra un socket
 compatible.

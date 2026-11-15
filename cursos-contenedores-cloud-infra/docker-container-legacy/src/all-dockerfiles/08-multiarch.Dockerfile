@@ -1,8 +1,8 @@
+# syntax=docker/dockerfile:1
+
 # Archivo compuesto por el curso: en el `.md` de la fase solo aparece el fragmento
 # que cambia. Aquí está el archivo completo, listo para construir.
-# Fase: F21 §7 — canónico con el RUN de Node traducido a TARGETARCH
-
-# syntax=docker/dockerfile:1
+# Fase: F21 §6.1 — canónico de F15 con el RUN de Node traducido a TARGETARCH
 
 FROM debian/eol:buster
 
@@ -32,6 +32,39 @@ RUN apt-get update \
        wget \
        xz-utils \
        zip \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       # canvas: Cairo, Pango y los formatos de imagen
+       libcairo2-dev \
+       libgif-dev \
+       libjpeg-dev \
+       libpango1.0-dev \
+       librsvg2-dev \
+       # sqlite3 compilado contra el sistema
+       libsqlite3-dev \
+       sqlite3 \
+       # Chromium headless: NSS, X11, GTK, render y fuentes (a09 §2)
+       fonts-liberation \
+       libasound2 \
+       libatk-bridge2.0-0 \
+       libatk1.0-0 \
+       libcups2 \
+       libdbus-1-3 \
+       libdrm2 \
+       libgbm1 \
+       libgtk-3-0 \
+       libnspr4 \
+       libnss3 \
+       libx11-xcb1 \
+       libxcomposite1 \
+       libxdamage1 \
+       libxfixes3 \
+       libxrandr2 \
+       libxss1 \
+       xdg-utils \
     && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
@@ -68,6 +101,7 @@ RUN set -euxo pipefail; \
         "/opt/node/${version}/bin/node" --version; \
     done; \
     rm -rf /tmp/node-downloads
+
 
 COPY scripts/select-node          /usr/local/bin/select-node
 COPY scripts/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

@@ -4,7 +4,7 @@
 > **Imagen:** `legacy-node-toolchain`
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** la Parte I hecha. Esta fase abre lo que [F07](07-build-de-la-imagen.md) usó sin explicar del todo
-> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — las salidas de `CACHED` de §4.3 están corridas sobre Docker 29.6.2 con BuildKit
+> **Fecha de verificación ejecutada:** 6 de septiembre de 2026 — las salidas de `CACHED` de §4.3 están corridas sobre Docker 29.6.2 con BuildKit. **Reverificada el 14 de noviembre de 2026** con Docker 29.9.3: las dos reglas de §4.3, las capas y los digests
 > **Estado de la imagen al terminar:** sin cambios. Lo que cambia es cuánto entiendes de cómo se produjo
 > **Objetivo:** dejar de tratar la caché como magia negra — saber por qué un paso se reutiliza, qué es realmente una capa, y en qué se diferencian un tag, un ID y un digest
 
@@ -150,8 +150,9 @@ idéntico letra por letra**, porque va después: es la cascada de §4.1, ocurrie
 
 > 💡 **Dos detalles de lectura de esa salida, que despistan la primera vez.** Los números `#6`,
 > `#7`… son identificadores internos de BuildKit y **no siguen el orden del Dockerfile**;
-> fíjate en los `[n/5]`, que sí. Y en la primera pasada verás el `[4/5] COPY` resolverse antes
-> que el `[3/5] RUN`: BuildKit paraleliza lo que puede, y leer el contexto no depende de que
+> fíjate en los `[n/5]`, que sí. Y en la primera pasada **puede** que veas el `[4/5] COPY`
+> resolverse antes que el `[3/5] RUN` —con Docker 29.6.2 salió así; con 29.9.3, el 14/11/2026,
+> salieron en orden—: BuildKit paraleliza lo que puede, y leer el contexto no depende de que
 > el `RUN` anterior haya terminado. La cascada de invalidación sigue siendo estrictamente en
 > orden; lo que se adelanta es el trabajo, no la decisión.
 

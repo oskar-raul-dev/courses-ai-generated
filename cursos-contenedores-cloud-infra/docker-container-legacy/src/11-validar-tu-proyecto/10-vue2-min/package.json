@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --host 0.0.0.0 --port 8080",
     "build": "vue-cli-service build",
+    "test": "vue-cli-service test:unit --runInBand",
     "test:unit": "vue-cli-service test:unit --runInBand"
   },
   "dependencies": {

@@ -973,18 +973,13 @@ bash prompts/check-course.sh                        # las trece comprobaciones d
 
 ### 16.4 Lo que queda abierto
 
-- **El apéndice a17, compilar Node desde fuente**, está diseñado pero no
-  escrito: el curso publica salidas reales y hace falta una sesión de
-  laboratorio antes. El protocolo está fuera del curso, en el borrador de
-  complemento de `propuestas-cursos/`, y ningún documento publicado lo enlaza.
-- **Los comandos `podman` de F24, F25 y F26** están contrastados con la
-  documentación oficial, no ejecutados, y sus cabeceras lo declaran.
-
-Los dos se cierran en la pasada del autor como lector: tomar el curso desde
-cero, montar todos los contenedores y rehacer todas las pruebas. Desde el
-19/10/2026 el curso **se publica antes de esa pasada**, porque lo no ejecutado
-ya está declarado al lector; la pasada queda como edición posterior. Sus
-reglas y lo que pide atención en cada tramo están en
-[`pendientes-a-futuro.md`](pendientes-a-futuro.md), junto con las tres decisiones
-del autor, ya cerradas: el solucionario, publicar antes de la pasada y la matriz
-de F11 (basta la de F20).
+Los dos huecos que esta sección declaraba se cerraron en la pasada del autor como
+lector (14/11/2026): los comandos `podman` de F24, F25 y F26 se ejecutaron con
+Podman 6.1 sobre Podman Machine, y el apéndice a17 se escribió tras compilar Node 14
+y Node 26 en dos VM de Lima. Lo que sigue sin ejecutar está declarado en la cabecera
+de cada documento: las corridas `amd64` y Windows del a17, Colima (a07), el Dev Container
+de VS Code (F19), WebStorm (a06), Windows (a08), los registries externos (a11, a12), la firma *keyless* de
+Cosign y el workflow de a14 en GitHub Actions. El detalle y la bitácora de la pasada
+están en [`pendientes-a-futuro.md`](pendientes-a-futuro.md), junto con las tres
+decisiones del autor, ya cerradas: el solucionario, publicar antes de la pasada y la
+matriz de F11 (basta la de F20).

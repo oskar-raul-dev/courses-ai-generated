@@ -6,6 +6,7 @@
 > **Dockerfile pedagógico de esta fase:** `dockerfiles/09-diagnostic.Dockerfile`
 > **Código de esta fase:** [`src/30-troubleshooting-metodo-y-herramientas/`](src/30-troubleshooting-metodo-y-herramientas/)
 > **Requisitos:** haber recorrido la Parte II. Esta fase generaliza lo que llevas viendo
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — el protocolo de §4, la imagen de diagnóstico (47 s), el sidecar y `strace` de §9.1 y el script de §10 con dos secretos de prueba (los dos salen `<redacted>`), sobre Docker Desktop 29.9.3 en macOS Apple Silicon
 > **Estado de la imagen al terminar:** el toolchain sin cambios, más una imagen de diagnóstico separada
 > **Objetivo:** un método que funcione con fallos que este curso no anticipó — porque el catálogo se acaba y el método no
 
@@ -326,6 +327,22 @@ docker run --rm -it \
 ```
 
 **`--cap-add=SYS_PTRACE`, no `--privileged`.** Es el ejemplo canónico de [F25](25-rootless-y-user-namespaces.md) §9.3.
+
+> ⚠️ **En un Mac con chip M, `strace` contra el laboratorio amd64 no dice nada útil.** Lo que
+> corre debajo es el traductor de Rosetta —`docker top` lo enseña como
+> `/run/rosetta/rosetta /bin/sleep sleep infinity`—, y `strace` lo ve así:
+>
+> ```text
+> strace: Process 1 attached
+> strace: [ Process PID=1 runs in x32 mode. ]
+> syscall_0x55555555a0cd(0x1, 0x7ffffffd5cb8, 0x7ffffffd5ae0, 0, 0xf, 0x80
+> ```
+>
+> Para trazar llamadas al sistema, reproduce el fallo en la variante arm64
+> (`legacy-node-toolchain:arm64` de [F21](21-arquitecturas-y-emulacion.md) §6.2, con la imagen de diagnóstico construida con
+> `--platform linux/arm64`), donde `strace` adjunta y se lee con normalidad, o en un Linux amd64.
+> Si el fallo **solo** ocurre emulado, `strace` no es la herramienta: lo son los logs, la
+> taxonomía de capas de §6 y las hipótesis falsables de §7.
 
 ---
 

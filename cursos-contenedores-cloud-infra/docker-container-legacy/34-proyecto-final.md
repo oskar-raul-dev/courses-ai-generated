@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · Node 10.24.1 / 12.22.12 / 14.21.3 / 16.20.2
 > **Requisitos:** el curso entero. Esta fase no enseña nada nuevo: te pide demostrarlo
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — la autocomprobación de §10 contra el laboratorio del curso y el expediente de LabCore (seis OK; la séptima dio 2 porque ese expediente no trae la matriz de cuatro generaciones), y el procedimiento de §6 sobre un proyecto archivado ajeno (nivel 5, el ejercicio 22 de F11), en Docker Desktop 29.9.3 sobre macOS Apple Silicon
 > **Entregables:** una imagen reproducible · `VALIDATION-REPORT.md` · un veredicto razonado · la lista honesta de lo que no resolviste
 > **Estado de la imagen al terminar:** la del curso queda como estaba; la que cuenta es **la tuya**, construida para el proyecto que elijas
 > **Fase exenta del mínimo de 20 ejercicios**, por la razón contraria a [F00](00-problema-y-contrato.md) y [F01](01-decisiones-debian-zonas-node.md): **la fase entera es un ejercicio**
@@ -143,7 +144,7 @@ No es obligatorio, y saltárselo suele costar caro.
    parte del toolchain del curso · ajusta lo que este proyecto pida
 
 4. VALIDACIÓN           F11 §6, los ocho pasos
-   volumen limpio · evidencia con PIPESTATUS · para si npm ci falla
+   volumen limpio · evidencia con pipefail o PIPESTATUS · para si npm ci falla
 
 5. DIAGNÓSTICO          F30 · F31 · F32
    cuando falle: sitúa la capa, confirma, corrige
@@ -238,7 +239,7 @@ Cien puntos. Está aquí para que sepas qué se evalúa **antes** de empezar.
 |---|---|
 | Los ocho pasos del protocolo, en orden | 5 |
 | Volumen limpio, con la convención de nombres correcta | 5 |
-| Logs con los dos canales y exit codes con `PIPESTATUS` | 5 |
+| Logs con los dos canales y exit codes con `pipefail` o `PIPESTATUS` (no `$?` a secas) | 5 |
 | Matriz de las cuatro generaciones | 5 |
 | Expediente completo y reproducible por otra persona | 5 |
 
@@ -391,10 +392,10 @@ docker build --no-cache --platform linux/amd64 -t proyecto-final:v1 . && echo "O
 ! grep -nE ':(latest|[0-9]+\.x)|\^[0-9]|~[0-9]' Dockerfile && echo "OK 2"
 
 # 3. el proyecto NO está dentro de la imagen
-! docker run --rm proyecto-final:v1 test -e /workspace/package.json && echo "OK 3"
+! docker run --rm --platform linux/amd64 proyecto-final:v1 test -e /workspace/package.json && echo "OK 3"
 
 # 4. el volumen sigue la convención de nombres con la generación
-docker volume ls --format '{{.Name}}' | grep -qE '\-node(10|12|14|16)\-modules$' && echo "OK 4"
+docker volume ls --format '{{.Name}}' | grep -qE '\-node(10|12|14|16)\-modules$' && echo "OK 4"   # cualquier volumen que la siga: mira que sea el tuyo
 
 # 5. el expediente tiene sus tres piezas
 test -f VALIDATION-REPORT.md && test -d evidencia && ls evidencia/*.log >/dev/null && echo "OK 5"
@@ -413,7 +414,7 @@ La segunda es de criterio y la contestas tú, honestamente:
 [ ] Registré el estado inicial antes de ejecutar nada
 [ ] Escribí la hipótesis antes de instalar, y la contrasté después
 [ ] Los ocho pasos del protocolo, con su evidencia
-[ ] Los exit codes usan PIPESTATUS y no $?
+[ ] Los exit codes usan pipefail o PIPESTATUS, no $? a secas
 [ ] Cada fallo tiene capa, confirmación, causa contribuyente y causa raíz
 [ ] No usé ningún anti-patrón de F30 §8
 [ ] Cada decisión no evidente del Dockerfile tiene su porqué en un comentario

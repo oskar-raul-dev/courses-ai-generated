@@ -5,6 +5,7 @@
 > **Requisitos:** **[F30](30-troubleshooting-metodo-y-herramientas.md)**, imprescindible. Este catálogo sin el método es una lista de recetas
 > **Estado de la imagen al terminar:** sin cambios
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — Buildx, el registry y los mensajes del motor
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — cada mensaje provocado a propósito sobre Docker Desktop 29.9.3 en macOS Apple Silicon (§4.1, §4.2, §5.1–§5.7, §6.3–§6.5, §7.2, §7.4, §8.1); donde el texto actual del motor ya no es el del título, va debajo. §6.1, §6.2 y §6.6 piden un registry con cuenta y no se provocaron
 > **Objetivo:** el catálogo de las cuatro capas exteriores — motor, build, registry y red — con el síntoma literal, la causa, la comprobación que la confirma y la corrección
 
 ---
@@ -59,6 +60,10 @@ sintaxis, el contenedor está haciendo exactamente su trabajo al decírtelo.
 
 ### 4.1 `Cannot connect to the Docker daemon at unix:///var/run/docker.sock`
 
+> 📝 **Docker 29.9.3 lo dice así** (14 de noviembre de 2026): `failed to connect to the docker API at
+> unix:///…/docker.sock; check if the path is correct and if the daemon is running`. Busca por
+> las dos frases: el título es el de las versiones anteriores, y sigue en tutoriales y en CI.
+
 **Causa.** El daemon no está corriendo, o tu usuario no puede hablar con el socket, o el
 contexto apunta a otro sitio.
 
@@ -77,6 +82,9 @@ añádete al grupo `docker` sabiendo lo que concedes: [F24](24-docker-y-podman-a
 > arrancado.** Antes de investigar nada, mira el icono.
 
 ### 4.2 `docker: 'buildx' is not a docker command`
+
+> 📝 **Docker 29.9.3 lo dice así** (14 de noviembre de 2026): `docker: unknown command: docker buildx`, la misma
+> frase que da cualquier subcomando que no existe.
 
 **Causa.** Falta el plugin de Buildx o la instalación es antigua.
 
@@ -123,6 +131,10 @@ pwd && ls -la Dockerfile dockerfiles/
 ```
 
 ### 5.2 `COPY failed: file not found in build context`
+
+> 📝 **Docker 29.9.3 lo dice así** (14 de noviembre de 2026): BuildKit ya no escribe `COPY failed`, sino
+> `failed to compute cache key: failed to calculate checksum of ref …: "/secreto.txt": not found`,
+> con la línea del Dockerfile marcada con `>>>`. Sale idéntico en las dos causas de abajo.
 
 **Causa.** Dos, y dan **el mismo mensaje**: el archivo está fuera del contexto, o lo excluye tu
 `.dockerignore`.
@@ -222,6 +234,9 @@ docker info --format '{{.IndexServerAddress}}'
 
 ### 6.3 `manifest unknown` / `manifest for X not found`
 
+> 📝 **Docker 29.9.3 lo dice así** (14 de noviembre de 2026): con el image store de containerd,
+> `failed to resolve reference "<registry>/<repo>:<tag>": …: not found`.
+
 **Causa.** Ese tag no existe en ese repositorio.
 
 ```bash
@@ -229,6 +244,10 @@ skopeo list-tags docker://<registry>/<repo> | jq '.Tags'
 ```
 
 ### 6.4 `no matching manifest for linux/arm64 in the manifest list entries`
+
+> 📝 **Docker 29.9.3 lo dice así** (14 de noviembre de 2026): en un Mac con chip M lleva la variante y
+> una coletilla: `no matching manifest for linux/arm64/v8 in the manifest list entries: no match
+> for platform in manifest: not found`. Busca por `no matching manifest`.
 
 **Causa.** Esa imagen no publicó tu plataforma. **No es un fallo tuyo.**
 
@@ -339,6 +358,13 @@ imprimió fue un `docker exec` — que va a tu terminal, no al log. [F18](18-net
 ### 8.1 `exec format error`
 
 **Causa.** Arquitectura equivocada. [F21](21-arquitecturas-y-emulacion.md) §7.1.
+
+> 📝 **En Docker Desktop casi nunca lo verás con este texto.** Su VM registra emuladores para
+> otras arquitecturas, así que el binario ajeno **se intenta ejecutar**: un ejecutable amd64
+> dentro de un contenedor arm64 falla con `rosetta error: failed to open elf at
+> /lib64/ld-linux-x86-64.so.2` (exit 133) —le falta su cargador—, y hasta
+> `--platform linux/s390x` arranca, por qemu. `exec format error` es lo que da un Linux sin esos
+> emuladores, típicamente un runner de CI.
 
 ```bash
 file <el binario>

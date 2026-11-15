@@ -4,6 +4,7 @@
 > **Imagen de diagnóstico:** `legacy-node-toolchain:diagnostic`
 > **Baseline:** Debian 10 Buster (`debian/eol:buster`) · `linux/amd64`
 > **Requisitos:** **[F30](30-troubleshooting-metodo-y-herramientas.md)**, **[F31](31-catalogo-de-fallos-i.md)** y **[F32](32-catalogo-de-fallos-ii.md)**. Esta fase asume el método y el catálogo
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los comandos de §4 sobre `legacy-node-toolchain:phase15` y sobre una imagen de F13 con whiteouts, y el reloj de §5.3, en Docker Desktop 29.9.3 (image store de containerd) en macOS Apple Silicon
 > **Estado de la imagen al terminar:** sin cambios
 > **Objetivo:** las técnicas que quedan cuando el catálogo se agota — y un Boss Fight que encadena todo el curso
 
@@ -91,11 +92,14 @@ Cuando `history` no basta:
 
 ```bash
 mkdir /tmp/forense && docker save <imagen> | tar -x -C /tmp/forense
-ls /tmp/forense                       # manifest, config, blobs
+ls /tmp/forense                       # blobs  index.json  manifest.json  oci-layout
 jq . /tmp/forense/manifest.json
 ```
 
-Ahí tienes el grafo de [F27](27-registries-por-dentro.md) §5 como archivos reales. Y para buscar dentro de una capa concreta:
+Ahí tienes el grafo de [F27](27-registries-por-dentro.md) §5 como archivos reales: con el image store de containerd, `docker save`
+escribe un layout OCI, y `manifest.json` te da en `Config` y `Layers` qué blob es cada cosa. Las
+capas van comprimidas en gzip, y `tar -tvf` las lee igual. Y para buscar dentro de una capa
+concreta:
 
 ```bash
 tar -tvf /tmp/forense/blobs/sha256/<digest> | head -40
@@ -112,9 +116,12 @@ tar -tvf /tmp/forense/blobs/sha256/<digest> | grep -i '\.wh\.'   # ← los white
 # crear sin ejecutar, y exportar su filesystem
 docker create --name forense <imagen>
 docker export forense | tar -tv | head -50
-docker cp forense:/etc/os-release ./
+docker cp -L forense:/etc/os-release ./   # -L: sigue el enlace
 docker rm forense
 ```
+
+El `-L` no es decoración: en Debian, `/etc/os-release` es un enlace a `../usr/lib/os-release`,
+y sin `-L` lo que llega a tu disco es el enlace, roto fuera del contenedor.
 
 **Nada se ejecuta.** Para una imagen en la que no confías, es la diferencia entre inspeccionar y
 arriesgarte.
@@ -169,7 +176,7 @@ git log --all --diff-filter=A --name-only | grep -E '^\.env|node_modules/' | hea
 
 ```bash
 date -u
-docker run --rm legacy-node-toolchain:phase15 date -u
+docker run --rm --platform linux/amd64 legacy-node-toolchain:phase15 date -u
 ```
 
 Si difieren mucho —la VM del motor puede desincronizarse tras suspender el portátil—, cualquier

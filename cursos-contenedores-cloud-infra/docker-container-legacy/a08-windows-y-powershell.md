@@ -4,6 +4,7 @@
 > **Cierra los bucles de:** [F09](09-montar-tu-proyecto.md) §6 · [F18](18-networking-de-contenedores.md) §7.1 · [F22](22-apple-silicon-y-hosts.md) §3
 > **Requisitos:** la Parte I hecha. Aquí van las diferencias de tu plataforma
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
+> **Sin verificación ejecutada:** la pasada del 14 de noviembre de 2026 se hizo en macOS; nada de este apéndice se ha corrido en Windows
 > **Qué encontrarás:** cómo se traducen los comandos del curso a PowerShell, dónde tiene que vivir tu proyecto para que esto no sea lento, y las tres diferencias de Windows que producen fallos que no verás en ningún otro sitio
 
 Los ejemplos del curso están escritos para Bash y Zsh. En Windows la mayoría funcionan igual

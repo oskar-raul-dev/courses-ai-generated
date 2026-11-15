@@ -11,6 +11,7 @@
 > **Código de esta fase:** [`src/08-run-el-contenedor-como-proceso/`](src/08-run-el-contenedor-como-proceso/)
 > **Fecha de revisión de documentación externa:** 6 de septiembre de 2026 — la referencia de `docker run` y `docker exec`
 > **Objetivo:** entender qué es un contenedor en ejecución, quién manda al arrancar, y pagar la deuda que dejó `select-node`
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — los shims, el entrypoint y la matriz de §9, sobre Docker 29.9.3, imagen `linux/amd64` bajo emulación en macOS Apple Silicon
 
 ---
 
@@ -266,10 +267,10 @@ Y ahora lo que esto te permite:
 
 ```bash
 # este contenedor usa Node 10
-docker run --rm legacy-node-toolchain:phase08 node --version
+docker run --rm --platform linux/amd64 legacy-node-toolchain:phase08 node --version
 
 # este otro usa Node 14, sin tocar nada
-docker run --rm -e NODE_VERSION=14.21.3 legacy-node-toolchain:phase08 node --version
+docker run --rm --platform linux/amd64 -e NODE_VERSION=14.21.3 legacy-node-toolchain:phase08 node --version
 
 # y dentro de un contenedor vivo, un solo comando con otra versión
 docker exec -e NODE_VERSION=16.20.2 mi-contenedor node --version
@@ -281,6 +282,14 @@ Esa última línea es la que `select-node` nunca pudo dar.
 > build**, donde fijar la versión por defecto es exactamente lo que queremos y el estado global
 > no molesta. Lo que se retira es su uso dentro de un contenedor en marcha. Los dos mecanismos
 > conviven con papeles distintos, y eso queda documentado en el Dockerfile.
+
+> 📝 **Un aviso que vas a ver desde F09, y que no es un fallo.** Con los shims, cada script de
+> npm 6 (Node 10, 12 y 14) empieza con `npm WARN lifecycle The node binary used for scripts is
+> /usr/local/bin/node but npm is using /opt/node/10.24.1/bin/node itself`. npm compara el
+> `node` que encuentra en el `PATH` —el shim— con el binario que lo está ejecutando, y no sabe
+> que el shim resuelve exactamente esa versión por `NODE_VERSION`. Es inocuo; npm 8 (Node 16)
+> ya no lo imprime. Si molesta en los logs, `npm_config_scripts_prepend_node_path=false` lo
+> silencia.
 
 ---
 
@@ -379,7 +388,7 @@ done
 Y el fallo también está cubierto:
 
 ```bash
-docker run --rm -e NODE_VERSION=11.0.0 legacy-node-toolchain:phase08 node --version
+docker run --rm --platform linux/amd64 -e NODE_VERSION=11.0.0 legacy-node-toolchain:phase08 node --version
 ```
 ```text
 ERROR: Node 11.0.0 no está instalado en esta imagen.

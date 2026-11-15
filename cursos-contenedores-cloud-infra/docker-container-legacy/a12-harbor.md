@@ -4,6 +4,7 @@
 > **Cierra el bucle de:** [F28](28-publicar-la-imagen.md) §5 — *"para cualquier otra cosa hace falta TLS y credenciales; a12 trata el caso empresarial"*
 > **Requisitos:** **[F27](27-registries-por-dentro.md)** y **F28**
 > **Fecha de revisión de comportamiento de productos:** 3 de septiembre de 2026
+> **Sin verificación ejecutada:** en la pasada del 14 de noviembre de 2026 no se levantó Harbor; el escaneo con Trivy sobre la imagen del curso sí está medido en [F29](29-supply-chain-sbom-firma.md)
 > **Qué encontrarás:** qué añade un registry empresarial sobre el `registry:2` de F28, y —lo más útil para este curso— qué pasa cuando le pones un escáner de vulnerabilidades a una imagen legacy
 
 Harbor es el registry que probablemente tenga tu empresa. Este apéndice no es un manual de

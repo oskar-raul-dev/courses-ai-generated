@@ -3,6 +3,7 @@
 > **Curso:** Docker Legacy Node · **Apéndice opcional**
 > **Cierra los bucles de:** [F04](04-toolchain-de-compilacion.md) §5.2 · [F14](14-abi-libc-y-prebuilds.md) §8
 > **Requisitos:** F04 (el toolchain) y F14 (ABI y binarios)
+> **Fecha de verificación ejecutada:** 14 de noviembre de 2026 — las etapas de `gcc`, y `file`, `ldd`, `readelf`, `nm` y `objdump` sobre un `hello` y sobre el `canvas.node` de F15, dentro de `legacy-node-toolchain:phase15`
 > **Qué encontrarás:** qué hay dentro de un binario de Linux y cuáles de las herramientas de Binutils te sirven de verdad para diagnosticar un módulo nativo
 
 [F14](14-abi-libc-y-prebuilds.md) §8 te dio cuatro herramientas y el orden en que usarlas. Este apéndice explica **qué están
@@ -94,9 +95,14 @@ De la docena que trae Binutils, estas cinco resuelven el 95% de los casos.
 file build/Release/binding.node
 ```
 ```text
-ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked,
+ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked,
 BuildID[sha1]=..., not stripped
 ```
+
+> 📝 **"pie executable" en un `.node` no es un error.** El `file` de Buster (5.35) llama así a
+> cualquier objeto ELF de tipo `DYN`, y un addon lo es, igual que una librería `.so`. Las
+> versiones modernas de `file` dicen `shared object`. Si dudas, `readelf -h` responde sin
+> heurísticas: `Type: DYN (Shared object file)`.
 
 **Arquitectura, tipo y si está stripped, en una línea.** Técnicamente no es de Binutils, y es la
 que más veces resuelve el diagnóstico.

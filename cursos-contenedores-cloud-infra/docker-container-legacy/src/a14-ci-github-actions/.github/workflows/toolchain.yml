@@ -74,7 +74,7 @@ jobs:
               legacy-node-toolchain:ci "$@" 2>&1 | tee "evidencia/${etapa}.log"
             local code=${PIPESTATUS[0]}     # ← §3.1: el de docker, no el de tee
             echo "${etapa}=${code}" >> evidencia/exit-codes.txt
-            return $code
+            return "$code"
           }
 
           mkdir -p evidencia
@@ -121,12 +121,15 @@ jobs:
         id: push
         uses: docker/build-push-action@v6
         with:
+          file: dockerfiles/08-multiarch.Dockerfile   # el de TARGETARCH, F21 §6.1
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           sbom: true                        # F29 §4.5
           provenance: mode=max              # F29 §6
+
+      - uses: sigstore/cosign-installer@v3   # cosign no se da por instalado en el runner
 
       - name: Firmar por digest
         run: cosign sign --yes "${IMAGE_NAME}@${{ steps.push.outputs.digest }}"

@@ -50,9 +50,9 @@ docker build --no-cache ...
 # parametrizar el build                                              F06 §8
 docker build --build-arg NODE12_VERSION= --build-arg DEFAULT_NODE_VERSION=14.21.3 ...
 
-# multi-plataforma: --push sí, --load no                             F21 §6.2 · F28 §7.1
-docker buildx build --platform linux/amd64,linux/arm64 -t <img> --push .
-docker buildx build --platform linux/arm64 --load -t <img> .
+# multi-plataforma: --push siempre; --load solo con el store de containerd   F21 §6.2 · F28 §7.1
+docker buildx build --platform linux/amd64,linux/arm64 -f dockerfiles/08-multiarch.Dockerfile -t <img> --push .
+docker buildx build --platform linux/arm64 -f dockerfiles/08-multiarch.Dockerfile --load -t <img> .
 ```
 
 ---
@@ -157,8 +157,9 @@ docker run --rm -it --pid=container:<ct> --cap-add=SYS_PTRACE \
 
 ```bash
 # la evidencia, con el exit code CORRECTO                            F20 §6.3
-set -o pipefail
-docker exec <ct> npm ci 2>&1 | tee install.log; echo "exit=${PIPESTATUS[0]}"
+set -o pipefail                       # vale en bash y en zsh
+docker exec <ct> npm ci 2>&1 | tee install.log; echo "exit=$?"
+# solo bash: echo "exit=${PIPESTATUS[0]}"  ·  solo zsh: echo "exit=${pipestatus[1]}"
 
 # volumen limpio antes de validar                                    F11 §6
 docker volume rm <vol> 2>/dev/null; docker volume create <vol>
@@ -187,11 +188,11 @@ docker run --rm <img> bash -c '
 
 ```bash
 # registry local, para aprender sin tocar Internet                   F28 §5
-docker run -d --name registry-local -p 127.0.0.1:5000:5000 \
+docker run -d --name registry-local -p 127.0.0.1:5001:5000 \
   --mount type=volume,src=registry-data,dst=/var/lib/registry registry:2
 
-docker tag <img> localhost:5000/legacy-node-toolchain:1.0.0
-docker push localhost:5000/legacy-node-toolchain:1.0.0
+docker tag <img> localhost:5001/legacy-node-toolchain:1.0.0
+docker push localhost:5001/legacy-node-toolchain:1.0.0
 
 # autenticación SIN dejar la credencial en el historial              F28 §6
 echo "$TOKEN" | docker login <registry> -u <usuario> --password-stdin
