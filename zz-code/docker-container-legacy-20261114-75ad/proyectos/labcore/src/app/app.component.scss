@@ -1,0 +1,13 @@
+// A02 §6.3: las tres piezas de Bootstrap sin CSS, en ese orden.
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+.patient-form-footer {
+  border-top: 1px solid $gray-300;
+
+  @include media-breakpoint-up(md) {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

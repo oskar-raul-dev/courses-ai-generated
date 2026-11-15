@@ -1,0 +1,5 @@
+# Repositorio anidado del lector: se regenera siguiendo el curso (ver MANIFIESTO.md)
+/lab/
+# node_modules de los proyectos copiados
+node_modules/
+*.tar

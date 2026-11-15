@@ -1,0 +1,9 @@
+{
+  "name": "canvas-lab",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "sqlite3": "^4.2.0"
+  }
+}

@@ -1,0 +1,9 @@
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+v10.24.1
+6.14.12
+64
+Python 2.7.16
+Python 3.7.3
+gcc (Debian 8.3.0-6) 8.3.0
+x86_64

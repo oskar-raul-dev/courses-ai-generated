@@ -1,0 +1,7 @@
+intentos=6
+HTTP/1.1 200 OK
+
+WARNING in /workspace/src/environments/environment.prod.ts is part of the TypeScript compilation but it's unused.
+Add only entry points to the 'files' or 'include' properties in your tsconfig.
+** Angular Live Development Server is listening on 0.0.0.0:4200, open your browser on http://localhost:4200/ **
+: Compiled successfully.

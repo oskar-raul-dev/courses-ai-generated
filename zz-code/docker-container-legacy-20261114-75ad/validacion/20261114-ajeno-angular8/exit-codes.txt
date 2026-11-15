@@ -1,0 +1,4 @@
+install exit=0 57s
+test exit=1 52s
+lint exit=1 15s
+build exit=0 90s
